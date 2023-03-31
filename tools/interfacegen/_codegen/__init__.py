@@ -1,3 +1,3 @@
 from .cparser import *
-from .packagegen import PackageGenerator
+from .packagegen import *
 from .nodes import *

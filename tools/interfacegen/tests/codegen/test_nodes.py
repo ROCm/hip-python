@@ -23,6 +23,8 @@ struct nested_outer {
   struct nested_inner1 {
     int field1;
   } field1;
+
+  simple_t field2;
 };
 
 int test(struct nested_outer n, simple_t s);

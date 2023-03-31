@@ -78,9 +78,9 @@ class CParser:
         result = ""
         for (level,cursor) in self.walk_cursors_preorder(cursor):
             indent = "-"*(level)
-            result += f"{indent}{str(cursor.kind).replace('CursorKind.','')} {cursor.spelling} {cursor.displayname} [TYPE-INFO {cursor.type.kind}] [PY-INFO {id(cursor)}]"
+            result += f"{indent}{str(cursor.kind).replace('CursorKind.','')} '{cursor.spelling}' '{cursor.displayname}' [TYPE-INFO {str(cursor.type.kind).replace('TypeKind.','')} '{cursor.type.spelling}' '{cursor.type.get_canonical().spelling}']"
             if cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
-                underlying_decl = cursor.underlying_typedef_type.get_declaration()
-                result += f" [TYPEDEF-INFO {underlying_decl.kind} {underlying_decl.spelling}]"
+                underlying_typedef_type = cursor.underlying_typedef_type
+                result += f" [TYPEDEF-INFO '{underlying_typedef_type.spelling}']"
             result += "\n"
         return result
