@@ -1,3 +1,6 @@
-setuptools
+# Python dependencies required for development
+setuptools>=42
 cython
 libclang
+wheel
+build

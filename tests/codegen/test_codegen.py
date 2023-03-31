@@ -71,5 +71,5 @@ with tempfile.NamedTemporaryFile("w",suffix=".c") as tmpfile_handle:
         [tmpfile.name],
         "libhipamd64.so"
     )
-    print(pkg_gen_hip.render_cython_bindings())
-    print(pkg_gen_hip.render_python_interfaces())
+    print(pkg_gen_hip.render_cython_c_bindings())
+    print(pkg_gen_hip.render_python_interfaces("hip"))
