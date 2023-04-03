@@ -9,7 +9,6 @@ Always include the appropriate copyright and MIT X11 notice (see below)
 #### Standard ongoing code readiness and release obligations:
 * Follow the Developer Guidelines here: http://confluence.amd.com/pages/viewpage.action?pageId=52793191
 
-
 ```
 MIT License
  
