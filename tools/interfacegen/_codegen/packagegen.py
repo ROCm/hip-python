@@ -164,7 +164,9 @@ cdef void* {lib_handle} = loader.open_library("{self._dll}")
             if isinstance(node,cython.MacroDefinition):
                 result.append(f"from {cython_c_bindings_module} cimport {node.name}")
             elif isinstance(node,cython.Enum):
-                result.append(node.render_python_interface())
+                result.append(node.render_python_interface(
+                    prefix=f"{cython_c_bindings_module}."
+                ))
             elif isinstance(node,cython.Typedef):
                 pass#result.append(node.render_python_interface())
             elif isinstance(node,cython.Function):
