@@ -475,11 +475,26 @@ class Enum(Type):
             "\n".join(self._render_cython_enums()), indent
         )
     
-    def render_python_interface(self):
+    def _render_python_enums(self,prefix: str):
+        """Yields the enum constants' names."""
+        for child_cursor in self.cursor.get_children():
+            yield f"{child_cursor.spelling} = {prefix}{child_cursor.spelling}"
+    
+    def render_python_interface(self,prefix: str):
+        """Renders an enum.IntEnum class.
+
+        Note:
+            Does not create an enum.IntEnum class but only exposes the enum constants 
+            from the Cython package corresponding to the prefix if the 
+            Enum is anonymous.
+        """
         global indent
-        return f"class {self.name}(enum.IntEnum):\n" + textwrap.indent(
-            "\n".join(self._render_cython_enums()), indent
-        )
+        if self.is_anonymous:
+            return "\n".join(self._render_python_enums(prefix))
+        else:
+            return f"class {self.name}(enum.IntEnum):\n" + textwrap.indent(
+                "\n".join(self._render_python_enums(prefix)), indent
+            )
 
 class NestedType:
 
