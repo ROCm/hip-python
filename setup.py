@@ -207,7 +207,7 @@ if HIP_PYTHON_SETUP_GENERATE:
     pkg_gen = PackageGenerator(
         "hip",
         rocm_inc,
-        ["hip/hip_runtime_api.h","hip/hip_ext.h"],
+        ["hip/hip_runtime_api.h"],
         "libhipamd64.so",
         hip_node_filter,
         runtime_linking = HIP_PYTHON_SETUP_RUNTIME_LINKING,
