@@ -5,7 +5,7 @@ import enum
 import textwrap
 
 from . import cparser
-from . import nodes
+from . import cython
 
 __author__ = "AMD_AUTHOR"
 
@@ -26,9 +26,9 @@ class PackageGenerator:
         headers: list,
         dll: str,
         node_filter: callable = lambda node: True,
-        macro_type: callable = lambda node: "int",
-        param_intent: callable = lambda node: nodes.ParmDecl.Intent.IN,
-        param_rank: callable = lambda node: nodes.ParmDecl.Rank.SCALAR,
+        macro_type: callable = lambda macro: "int",
+        param_intent: callable = lambda parm: cython.Intent.IN,
+        param_rank: callable = lambda parm: cython.Rank.SCALAR,
         runtime_linking = True,
         cflags=[],
     ):
@@ -38,6 +38,7 @@ class PackageGenerator:
             pkg_name (str): Name of the package that should be generated. Influences filesnames.
             include_dir (str): Name of the main include dir.
             headers (list): Name of the header files. Absolute paths or w.r.t. to include dir.
+                            Entries might also be tuples of file name and file content.
             dll (str): Name of the DLL/shared object to link.
             node_filter (callable, optional): Filter for selecting the nodes to include in generated output. Defaults to lambdax:True.
             macro_type (callable, optional): Assigns a type to a macro node.
@@ -59,17 +60,26 @@ class PackageGenerator:
 
         self.apis = {}
         for h in self.headers:
-            print(h) # todo logging
-            self.apis[h] = []
-            if include_dir != None:
-                abspath = os.path.join(include_dir, h)
+            if isinstance(h,str):
+                filename = h
+                unsaved_files = None
+            elif isinstance(h,tuple):
+                filename = h[0]
+                unsaved_files = [h]
             else:
-                abspath = h
+                raise ValueError("type of 'headers' must be str or tuple")
+            print(filename) # todo logging
+            self.apis[filename] = []
+            if include_dir != None:
+                abspath = os.path.join(include_dir, filename)
+            else:
+                abspath = filename
             cflags = self.cflags + ["-I", f"{include_dir}"]
-            parser = cparser.CParser(abspath, append_cflags=cflags)
+            parser = cparser.CParser(abspath, append_cflags=cflags, unsaved_files=unsaved_files)
             parser.parse()
             #print(parser.render_cursors())
-            self.apis[h] = nodes.create_nodes(parser,node_filter)
+            self.apis[filename] = [c for c in cython.CythonBackend(parser.translation_unit).generate_nodes().child_nodes
+                                   if node_filter(c)]
         self._dll = dll
         # self._node_renamer = lambda name: name # unused, symbol renamer might be better name
 
@@ -92,17 +102,15 @@ class PackageGenerator:
             is_extern = True
             prev_is_extern = False
             for node in nodelist:
-                if self.runtime_linking and isinstance(node,nodes.FunctionDecl):
+                if self.runtime_linking and isinstance(node,cython.Function):
                     result.append(node.render_cython_lazy_loader_decl())
                     curr_indent = ""
                     is_extern = False
                 else:
+                    assert isinstance(node,cython.Node)
                     contrib = node.render_cython_c_binding()
                     if contrib != None:
-                        is_extern = (
-                            not isinstance(node, nodes.ElaboratedTypeDeclBase)
-                            or not node.is_helper_type
-                        )
+                        is_extern = not isinstance(node, cython.NestedType)
                         if is_extern:
                             if not prev_is_extern:
                                 result.append(f'cdef extern from "{filename}":')
@@ -118,7 +126,7 @@ class PackageGenerator:
     def create_cython_lazy_loader_decls(self):
         result = []
         for node in self.apis_from_all_files():
-            if isinstance(node,nodes.FunctionDecl):
+            if isinstance(node,cython.FunctionDecl):
                 result.append(node.render_cython_lazy_loader_decl())
         return result
 
@@ -131,7 +139,7 @@ cimport hip._util.posixloader as loader
 cdef void* {lib_handle} = loader.open_library("{self._dll}")
 """.splitlines(keepends=True)
         for node in self.apis_from_all_files():
-            if isinstance(node,nodes.FunctionDecl):
+            if isinstance(node,cython.Function):
                 result.append(node.render_cython_lazy_loader_def(lib_handle=lib_handle))
         return result
 
@@ -153,16 +161,14 @@ cdef void* {lib_handle} = loader.open_library("{self._dll}")
         """
         result = []
         for node in self.apis_from_all_files():
-            if isinstance(node,nodes.MacroDefinition):
+            if isinstance(node,cython.MacroDefinition):
                 result.append(f"from {cython_c_bindings_module} cimport {node.name}")
-            elif isinstance(node,nodes.EnumDecl):
-                if not node.is_helper_type:
-                    result.append(node.render_python_interface())
-            elif isinstance(node,nodes.TypedefDecl):
-                if node.is_aliasing_enum_decl:
-                    result.append(node.render_python_interface())
-            elif isinstance(node,nodes.FunctionDecl):
+            elif isinstance(node,cython.Enum):
                 result.append(node.render_python_interface())
+            elif isinstance(node,cython.Typedef):
+                pass#result.append(node.render_python_interface())
+            elif isinstance(node,cython.Function):
+                pass#result.append(node.render_python_interface())
         return result
 
     def render_python_interfaces(self,cython_c_bindings_module):

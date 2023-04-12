@@ -57,19 +57,16 @@ typedef struct hipArrayMapInfo {
      unsigned int reserved[2];                       ///< Reserved for future use, must be zero now.
 } hipArrayMapInfo;\
 """
+file_name = "input.h"
+parser = CParser(file_name,unsaved_files=[(file_name,file_content)])
+parser.parse()
+print(parser.render_cursors())
 
-with tempfile.NamedTemporaryFile("w",suffix=".c") as tmpfile_handle:
-    with tmpfile_handle.file as tmpfile:
-        tmpfile.write(file_content)
-    parser = CParser(tmpfile.name)
-    parser.parse()
-    print(parser.render_cursors())
-    
-    pkg_gen_hip = PackageGenerator(
-        "hip",
-        None,
-        [tmpfile.name],
-        "libhipamd64.so"
-    )
-    print(pkg_gen_hip.render_cython_c_bindings())
-    print(pkg_gen_hip.render_python_interfaces("hip"))
+pkg_gen_hip = PackageGenerator(
+    "hip",
+    None,
+    [file_name],
+    "libhipamd64.so"
+)
+print(pkg_gen_hip.render_cython_c_bindings())
+print(pkg_gen_hip.render_python_interfaces("hip"))

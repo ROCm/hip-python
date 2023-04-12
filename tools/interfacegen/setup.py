@@ -16,7 +16,7 @@ import textwrap
 import setuptools
 import Cython.Build
 
-from _codegen import PackageGenerator, Node, MacroDefinition, FieldDecl, FunctionDecl
+from _codegen import PackageGenerator, Node, MacroDefinition, Field, Function
 
 __author__ = "AMD_AUTHOR"
 
@@ -98,8 +98,6 @@ def generate_files(pkg_gen: PackageGenerator):
 if HIP_PYTHON_SETUP_GENERATE:
     # hiprtc
     def hiprtc_node_filter(node: Node):
-        if isinstance(node,FieldDecl):
-            return False
         if isinstance(node,MacroDefinition):
             return node.name.startswith("hiprtc")
         if node.file.endswith("hiprtc.h"):
@@ -112,7 +110,7 @@ if HIP_PYTHON_SETUP_GENERATE:
         cflags=hip_platform.cflags
     )
     generate_files(pkg_gen)
-
+  
     # hip
     hip_int_macros = (
         #  from hip/hip_version.h
@@ -196,9 +194,7 @@ if HIP_PYTHON_SETUP_GENERATE:
     )
     
     def hip_node_filter(node: Node):
-        if isinstance(node,FieldDecl):
-            return False
-        if isinstance(node,FunctionDecl):
+        if isinstance(node,Function):
             if not node.name.startswith("hip"):
                 return False
         if node.name in hip_int_macros:
