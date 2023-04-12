@@ -49,9 +49,7 @@ typedef const int*[20] int_ptr2;
 typedef const int*[] int_ptr3;
 """
 
-with tempfile.NamedTemporaryFile("w",suffix=".c") as tmpfile_handle:
-    with tmpfile_handle.file as tmpfile:
-        tmpfile.write(file_content)
-    parser = CParser(tmpfile.name)
-    parser.parse()
-    print(parser.render_cursors())
+file_name = "input.h"
+parser = CParser(file_name,unsaved_files=[(file_name,file_content)])
+parser.parse()
+print(parser.render_cursors())
