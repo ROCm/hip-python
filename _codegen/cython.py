@@ -1,5 +1,6 @@
 #AMD_COPYRIGHT
 
+import collections
 import re
 import sys
 import textwrap
@@ -38,15 +39,15 @@ class CythonBackend:
 
         def lookup_referenced_type_(typeref_cursor: clang.cindex.Cursor):
             nonlocal root
-            if not typeref_cursor is None:
-                canonical_typename = typeref_cursor.type.get_canonical().spelling
-                return root.types.get(canonical_typename,None)
+            if typeref_cursor is not None:
+                return root.lookup_type(typeref_cursor.type.get_canonical().spelling,
+                                        typeref_cursor.type.spelling)
             return None
 
         def handle_top_level_cursor_(cursor: clang.cindex.Cursor,root: Root):
-            if cursor.kind in  ( clang.cindex.CursorKind.STRUCT_DECL,
-                                 clang.cindex.CursorKind.UNION_DECL,
-                                 clang.cindex.CursorKind.ENUM_DECL, ):
+            if cursor.kind in  (clang.cindex.CursorKind.STRUCT_DECL,
+                                clang.cindex.CursorKind.UNION_DECL,
+                                clang.cindex.CursorKind.ENUM_DECL, ):
                 handle_record_enum_or_field_cursor_(cursor,root)
             elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
                 node = Typedef(cursor,root)
@@ -252,7 +253,51 @@ class Root(Node):
         cursor: clang.cindex.Cursor,
     ):
         Node.__init__(self,cursor,None)
-        self.types = {}
+        self.types = collections.OrderedDict()
+
+    def lookup_all_types(self,canonical_typename: str) -> list:
+        return self.types.get(canonical_typename,[])
+
+    def lookup_type(self,
+                    canonical_typename: str,
+                    typename: str):
+        """Lookup Type instances with the given canonical and non-canonical name.
+
+        Lookup Type instances with the given canonical type spelling 
+        `canonical_typename` and non-canonical type spelling `typename`.
+
+        Note:
+            Employs a two-step strategy to ensure that types are looked up correctly
+            for references to combined typedef declarations such as
+            
+                `typedef struct same_name {/*...*/} same_name;`
+
+            which, if parsed with libclang, result in
+
+            * A libclang STRUCT_DECL cursor with type spelling "struct same_name" and canonical type spelling "struct same_name"
+            * A libclang TYPEDEF_DECL cursor with type spelling "same_name" (!) and canonical type spelling "struct same_name"
+
+            However, in Cython, we must specify a `cdef struct same_name` and cannot specify an
+            additional `ctypedef struct same_name same_name`.
+            (See the Cython guide on "Interfacing with External C Code".)
+            Hence for such constructs only a single type node is emitted.
+
+            To take the above case (reference to typedef declaration) into account, this method therefore performs two lookups:
+            
+            * First, it performs a lookup with the cursor's canonical typename ("struct same_name") 
+                and the cursor's typename ("same_name") 
+            * Second, it performs a lookup with the cursor's canonical typename ("struct same_name") 
+                and the cursor's canonical typename ("struct same_name") instead of the cursor's typename.
+            
+            In the above scenario, the second lookup would then find the node that represents the `cdef struct same_name` node.
+            
+            Note that only in the above scenario, the second lookup will find a node. In all other scenarios, the 
+            second lookup will return None.
+        """
+        for node in self.lookup_all_types(canonical_typename):
+            if node.cursor.type.spelling in (typename,canonical_typename):
+                return node
+        return None
 
     def _canonical_typename(self,node: Node):
         return node.cursor.type.get_canonical().spelling
@@ -260,19 +305,28 @@ class Root(Node):
     def append(self,node):
         assert isinstance(node,Node)
         if isinstance(node,Type):
-            self.types[self._canonical_typename(node)] = node
+            canonical_typename = self._canonical_typename(node)
+            if not canonical_typename in self.types:
+                self.types[canonical_typename] = []
+            self.types[canonical_typename].append(node)
         self.child_nodes.append(node)
 
     def remove(self,node):
         assert isinstance(node,Node)
         if isinstance(node,Type):
-            del self.types[self._canonical_typename(node)]
+            canonical_typename = self._canonical_typename(node)
+            if canonical_typename in self.types:
+                assert node in self.types[canonical_typename]
+                self.types[canonical_typename].remove(node)
         self.child_nodes.remove(node)
 
     def insert(self,pos: int,node):
         assert isinstance(node,Node)
         if isinstance(node,Type):
-            self.types[self._canonical_typename(node)] = node
+            canonical_typename = self._canonical_typename(node)
+            if not canonical_typename in self.types:
+                self.types[canonical_typename] = []
+            self.types[canonical_typename].append(node)
         self.child_nodes.insert(pos,node)
 
 class MacroDefinition(Node):
@@ -296,7 +350,7 @@ class TypeHandlerMixin:
         self._clang_type = clang_type
 
     @staticmethod
-    def canonical_typename(clang_type,forced_record_enum_name = None):
+    def canonical_typename(clang_type,searched_canonical_typename,repl_typename = None):
         """Returns a Cython-compatible typename for the given Clang type.
 
         If `record_enum_name` is provided, replaces elaborated C type names, e.g. `struct Foo`, 
@@ -308,16 +362,16 @@ class TypeHandlerMixin:
                                         canonical Clang typename.
         """
         result = clang_type.get_canonical().spelling
-        if forced_record_enum_name == None:
+        if repl_typename == None:
             return result
         else:
-            assert type(forced_record_enum_name) == str and forced_record_enum_name.isidentifier(), forced_record_enum_name
+            assert type(repl_typename) == str and repl_typename.isidentifier(), repl_typename
             typehandler = TypeHandler(clang_type)
-            for clang_type_part in typehandler.walk_clang_types(canonical=True):
-                if clang_type_part.kind in (clang.cindex.TypeKind.RECORD,clang.cindex.TypeKind.ENUM):
+            for clang_type_layer in typehandler.walk_clang_type_layers(canonical=True):
+                if clang_type_layer.get_canonical().spelling == searched_canonical_typename: 
                     result = result.replace(
-                        clang_type_part.get_canonical().spelling,
-                        forced_record_enum_name
+                        searched_canonical_typename,
+                        repl_typename
                     )
             return result
 
@@ -325,10 +379,12 @@ class TypeHandlerMixin:
     def typename(self):
         if self._cached_typename == None:
             if self.typeref != None:
-                forced_typename = self.typeref.name
+                searched_typename = self.typeref.cursor.type.get_canonical().spelling
+                repl_typename = self.typeref.name # TODO Set search pattern and subst here
             else:
-                forced_typename = None
-            self._cached_typename = TypeHandlerMixin.canonical_typename(self._clang_type,forced_typename)
+                searched_typename = None
+                repl_typename = None
+            self._cached_typename = TypeHandlerMixin.canonical_typename(self._clang_type,searched_typename,repl_typename)
         return self._cached_typename
     
     def clang_type_kinds(self,
