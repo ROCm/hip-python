@@ -312,7 +312,7 @@ class TypeHandler:
     def is_typedef_type(type_kind: clang.cindex.TypeKind):
         return type_kind == clang.cindex.TypeKind.TYPEDEF
 
-    def walk_clang_types(self,postorder=False,canonical=False):
+    def walk_clang_type_layers(self,postorder=False,canonical=False):
         """Walks through the constitutents of a Clang type.
 
         Args:
@@ -369,7 +369,7 @@ class TypeHandler:
         else:
             yield from descend_(self.clang_type)
 
-    def clang_type_kinds(self,postorder=False,canonical=False):
+    def clang_type_layer_kinds(self,postorder=False,canonical=False):
         """Yields the Clang type kinds that constitute this type.
 
         Args:
@@ -380,7 +380,7 @@ class TypeHandler:
             Note that this is by default a pre-order walk, e.g., if we have a type `void *`,
             we will obtain first the pointer type and then the `void` type.
         """
-        for clang_type in self.walk_clang_types(postorder,canonical):
+        for clang_type in self.walk_clang_type_layers(postorder,canonical):
             yield clang_type.kind
 
     @staticmethod
@@ -424,7 +424,7 @@ class TypeHandler:
         else:
             return result
 
-    def categorized_type_kinds(self,
+    def categorized_type_layers(self,
                                postorder=False,
                                consider_const=False,
                                subdivide_basic_types: bool = False):
@@ -441,7 +441,7 @@ class TypeHandler:
             Note that this is by default a pre-order walk, e.g., if we have a type `void *`,
             we will obtain first the pointer type and then the `void` type.
         """
-        for clang_type in self.walk_clang_types(postorder,canonical=True):
+        for clang_type in self.walk_clang_type_layers(postorder,canonical=True):
             yield TypeHandler.categorize_clang_type_kind(
                 clang_type.kind,
                 is_const = consider_const and clang_type.is_const_qualified(),
@@ -460,25 +460,25 @@ class Analysis:
     def _type_analysis_part_header():
         return [
             "cursor.type.spelling",
-            "Type Kind Parts",
+            "Type Layer Kinds",
             "cursor.type.get_canonical().spelling",
-            "Canonical Type Kind Parts",
-            "Canonical Type Kind Parts (Categorized)",
-            "Canonical Type Kind Parts (Categorized, Const)",
-            "Canonical Type Kind Parts (Categorized, Const, Finer)",
+            "Canonical Type Layer Kinds",
+            "Canonical Type Layer Kinds (Categorized)",
+            "Canonical Type Layer Kinds (Categorized, Const)",
+            "Canonical Type Layer Kinds (Categorized, Const, Finer)",
             "Cython C Typename"
         ]
 
     @staticmethod
     def _type_analysis_part(clang_type: clang.cindex.Type):
         typehandler = TypeHandler(clang_type)
-        type_kinds = ",".join([str(t) for t in typehandler.clang_type_kinds(canonical=False,postorder=False)])
-        canonical_type_kinds = ",".join([str(t) for t in typehandler.clang_type_kinds(canonical=True,postorder=False)])
-        categorized_canonical_type_kinds = ",".join([str(t) for t in typehandler.categorized_type_kinds(
+        type_kinds = ",".join([str(t) for t in typehandler.clang_type_layer_kinds(canonical=False,postorder=False)])
+        canonical_type_kinds = ",".join([str(t) for t in typehandler.clang_type_layer_kinds(canonical=True,postorder=False)])
+        categorized_canonical_type_layer_kinds = ",".join([str(t) for t in typehandler.categorized_type_layers(
             postorder=False)])
-        categorized_canonical_type_kinds_w_const = ",".join([str(t) for t in typehandler.categorized_type_kinds(
+        categorized_canonical_type_layer_kinds_w_const = ",".join([str(t) for t in typehandler.categorized_type_layers(
             postorder=False,consider_const=True)])
-        categorized_canonical_type_kinds_finer_w_const = ",".join([str(t) for t in typehandler.categorized_type_kinds(
+        categorized_canonical_type_layer_kinds_finer_w_const = ",".join([str(t) for t in typehandler.categorized_type_layers(
             postorder=False,consider_const=True,subdivide_basic_types=True)])
 
         return [
@@ -486,9 +486,9 @@ class Analysis:
           f"[{type_kinds}]",
           f"{clang_type.get_canonical().spelling}",
           f"[{canonical_type_kinds}]",
-          f"[{categorized_canonical_type_kinds}]",
-          f"[{categorized_canonical_type_kinds_w_const}]",
-          f"[{categorized_canonical_type_kinds_finer_w_const}]",
+          f"[{categorized_canonical_type_layer_kinds}]",
+          f"[{categorized_canonical_type_layer_kinds_w_const}]",
+          f"[{categorized_canonical_type_layer_kinds_finer_w_const}]",
           f"{typehandler.get_canonical_cython_type_name()}",
         ]
 
