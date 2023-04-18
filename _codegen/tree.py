@@ -5,8 +5,6 @@ __author__ = "AMD_AUTHOR"
 import collections
 import re
 import sys
-import textwrap
-import enum
 import clang.cindex
 
 from . import control
@@ -194,9 +192,6 @@ class Root(Node):
         if cursor is not None:
             result = self.lookup_type(cursor.type.get_canonical().spelling,
                                       cursor.type.spelling)
-            if cursor.type.spelling.endswith("hipExternalSemaphoreHandleDesc_st"):
-                result_found = result is not None
-                print(f"{result_found=} {str(cursor.kind)=}")
             return result
         return None
 

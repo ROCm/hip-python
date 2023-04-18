@@ -59,6 +59,13 @@ class MacroDefinitionMixin(CythonMixin):
         from . import tree
         assert isinstance(self,tree.MacroDefinition)
         return f"cdef {self.macro_type(self)} {self._cython_and_c_name(self.name)}"
+    
+    def render_python_interface(self,prefix: str):
+        """Renders '{self.name} = {prefix}{self.name}'."""
+        from . import tree
+        assert isinstance(self,tree.MacroDefinition)
+        name = self.renamer(self.name)
+        return f"{name} = {prefix}{name}"
 
 class FieldMixin(CythonMixin):
 
@@ -151,8 +158,7 @@ class EnumMixin(CythonMixin):
             name = self.renamer(child_cursor.spelling)
             yield f"{name} = {prefix}{name}"
     
-    def render_python_interface(self,prefix: str,
-                                renamer: callable = DEFAULT_RENAMER):
+    def render_python_interface(self,prefix: str):
         """Renders an enum.IntEnum class.
 
         Note:
@@ -274,19 +280,19 @@ cdef {typename} {name}({parm_decls}) {modifiers}
                                       modifiers="nogil"):
         from . import tree
         assert isinstance(self,tree.Function)
-        funptr_name = {self.cython_funptr_name()}
+        funptr_name = self.cython_funptr_name()
         parm_types = ",".join(self.global_parm_types(self.sep,self.renamer))
         parm_names = ",".join(self.parm_names(self.renamer))
         typename = self.global_typename(self.sep,self.renamer)
         return f"""\
-cdef void* {funptr_name}
+cdef void* {funptr_name} = NULL
 {self.render_cython_lazy_loader_decl(modifiers).strip()}:
-global {lib_handle}
-global {funptr_name}
-if {funptr_name} == NULL:
-    with gil:
-        {funptr_name} = loader.load_symbol({lib_handle}, "{self.name}")
-return (<{typename} (*)({parm_types})> {funptr_name})({parm_names})
+    global {lib_handle}
+    global {funptr_name}
+    if {funptr_name} == NULL:
+        with gil:
+            {funptr_name} = loader.load_symbol({lib_handle}, "{self.name}")
+    return (<{typename} (*)({parm_types}) nogil> {funptr_name})({parm_names})
 """
 
 # TODO render_python_interfaces
@@ -371,27 +377,21 @@ class CythonBackend:
         curr_indent = ""
         result = []
         
-        prev_is_extern = False
+        last_was_extern = False
         for node in self._walk_filtered_nodes():
-            is_extern = True
-            #prev_is_extern = False
             if runtime_linking and isinstance(node,FunctionMixin):
-                result.append(node.render_cython_lazy_loader_decl())
+                contrib = node.render_cython_lazy_loader_decl()
                 curr_indent = ""
-                #is_extern = False
+                last_was_extern = False
             else:
-                is_extern = True # check simple way first, old: not isinstance(node,tree.Nested) or not node.is_anonymous
-                if is_extern:
-                    if not prev_is_extern:
-                        result.append(f'cdef extern from "{self.filename}":')
-                    curr_indent = indent
-                else:
-                    curr_indent = ""
+                if not last_was_extern:
+                    result.append(f'cdef extern from "{self.filename}":')
+                curr_indent = indent
                 contrib = node.render_cython_c_binding()
-                result.append(
-                    textwrap.indent(contrib, curr_indent)
-                )
-                prev_is_extern = is_extern
+                last_was_extern = True
+            result.append(
+                textwrap.indent(contrib, curr_indent)
+            )
         return result
     
     def create_cython_lazy_loader_decls(self):
@@ -408,7 +408,7 @@ class CythonBackend:
         lib_handle = "_lib_handle"
         result = f"""\
 cimport hip._util.posixloader as loader
-cdef void* {lib_handle} = loader.open_library("{dll}")
+cdef void* {lib_handle} = loader.open_library(\"{dll}\")
 """.splitlines(keepends=True)
         for node in self._walk_filtered_nodes():
             if isinstance(node,FunctionMixin):
@@ -421,7 +421,9 @@ cdef void* {lib_handle} = loader.open_library("{dll}")
         result = []
         for node in self._walk_filtered_nodes():
             if isinstance(node,MacroDefinitionMixin):
-                result.append(f"from {c_interface_module} cimport {node.name}")
+                result.append(node.render_python_interface(
+                    prefix=f"{c_interface_module}."
+                ))
             elif isinstance(node,EnumMixin):
                 result.append(node.render_python_interface(
                     prefix=f"{c_interface_module}."
@@ -445,11 +447,14 @@ cdef void* {lib_handle} = loader.open_library("{dll}")
         nl = "\n\n"
         return nl.join(self.create_cython_declaration_part(runtime_linking))
     
-    def render_cython_definition_part(self,runtime_linking: bool = False):
+    def render_cython_definition_part(self,runtime_linking: bool = False,
+                                           dll: str = None):
         """Returns the Cython bindings file content for the given headers."""
         nl = "\n\n"
         if runtime_linking:
-            return nl.join(self.create_cython_lazy_loader_defs())
+            if dll is None:
+                raise ValueError("argument 'dll' must not be 'None' if 'runtime_linking' is set to 'True'")
+            return nl.join(self.create_cython_lazy_loader_defs(dll))
         else:
             return ""
 
@@ -506,6 +511,7 @@ from libc.stdint cimport *
         self.python_interface_preamble = """\
 # AMD_COPYRIGHT
 from libc.stdint cimport *
+import enum
 """
 
         if isinstance(header,str):
@@ -555,7 +561,8 @@ from libc.stdint cimport *
         with open(f"{output_dir}/c{self.pkg_name}.pyx", "w") as outfile:
             outfile.write(c_interface_preamble)
             outfile.write(self.backend.render_cython_definition_part(
-                runtime_linking=self.runtime_linking
+                runtime_linking=self.runtime_linking,
+                dll = self.dll
             ))
         with open(f"{output_dir}/{self.pkg_name}.pyx", "w") as outfile:
             outfile.write(python_interface_preamble)

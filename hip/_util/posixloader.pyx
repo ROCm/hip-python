@@ -1,6 +1,6 @@
 cimport posix.dlfcn
 
-cdef void* open_library(path):
+cdef void* open_library(char* path):
     """
     Note:
         Uses gil because of `bytes`, `RuntimeError`.

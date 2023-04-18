@@ -58,7 +58,7 @@ def get_bool_environ_var(env_var,default):
     return os.environ.get(env_var,default).lower() in ("true","1","t","y","yes")
 HIP_PYTHON_SETUP_GENERATE = get_bool_environ_var("HIP_PYTHON_SETUP_GENERATE","true")
 HIP_PYTHON_SETUP_BUILD = get_bool_environ_var("HIP_PYTHON_SETUP_BUILD","true")
-HIP_PYTHON_SETUP_RUNTIME_LINKING = get_bool_environ_var("HIP_PYTHON_SETUP_RUNTIME_LINKING","false")
+HIP_PYTHON_SETUP_RUNTIME_LINKING = get_bool_environ_var("HIP_PYTHON_SETUP_RUNTIME_LINKING","true")
 HIP_PYTHON_SETUP_VERBOSE = get_bool_environ_var("HIP_PYTHON_SETUP_VERBOSE","true")
 
 if HIP_PYTHON_SETUP_VERBOSE:
@@ -98,9 +98,9 @@ if HIP_PYTHON_SETUP_GENERATE:
         "HIP_VERSION_MAJOR",
         "HIP_VERSION_MINOR",
         "HIP_VERSION_PATCH",
-        "HIP_VERSION_GITHASH",
+        #"HIP_VERSION_GITHASH", # no int, is char*
         "HIP_VERSION_BUILD_ID",
-        "HIP_VERSION_BUILD_NAME",
+        # "HIP_VERSION_BUILD_NAME", # is char*
         "HIP_VERSION",
         # from hip/hip_texture_types.h
         "hipTextureType1D", 
@@ -170,7 +170,7 @@ if HIP_PYTHON_SETUP_GENERATE:
         "hipStreamWaitValueEq",
         "hipStreamWaitValueAnd",
         "hipStreamWaitValueNor",
-        "hipStreamPerThread",
+        #"hipStreamPerThread", # no int, type is struct ihipStream_t *
         #"USE_PEER_NON_UNIFIED",
     )
     
@@ -247,8 +247,8 @@ if HIP_PYTHON_SETUP_BUILD:
     cython_module_sources = [
         ("hip.chiprtc",["./hip/chiprtc.pyx"]),
         ("hip.chip",["./hip/chip.pyx"]),
-        #("hip.hiprtc",["./hip/hiprtc.pyx"]),
-        #("hip.hip",["./hip/hip.pyx"]),
+        ("hip.hiprtc",["./hip/hiprtc.pyx"]),
+        ("hip.hip",["./hip/hip.pyx"]),
     ]
     if HIP_PYTHON_SETUP_RUNTIME_LINKING:
         cython_module_sources.insert(0,("hip._util.posixloader",["./hip/_util/posixloader.pyx"]))
