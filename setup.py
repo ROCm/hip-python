@@ -185,7 +185,7 @@ if HIP_PYTHON_SETUP_GENERATE:
                 return True
         return False
     
-    CythonPackageGenerator(
+    gen = CythonPackageGenerator(
         "hip",
         rocm_inc,
         "hip/hip_runtime_api.h",
@@ -193,7 +193,10 @@ if HIP_PYTHON_SETUP_GENERATE:
         dll = "libamdhip64.so",
         node_filter = hip_node_filter,
         cflags=hip_platform.cflags
-    ).write_package_files(output_dir="hip")
+    )
+    #for canonical_name, nodes in gen.backend.root.types.items():
+    #    print(canonical_name)
+    gen.write_package_files(output_dir="hip")
    
 #    # hipblas
 #    def hipblas_node_filter(node: Node):

@@ -35,18 +35,23 @@ class Node:
         self.cursor = cursor
         self.parent = parent
         self.child_nodes = []
-        self.anon_type_decls = []
 
     def append(self,node):
         assert isinstance(node,Node)
+        if isinstance(node,Type):
+            self.get_root().append_type(node)
         self.child_nodes.append(node)
 
     def remove(self,node):
         assert isinstance(node,Node)
+        if isinstance(node,Type):
+            self.get_root().remove_type(node)
         self.child_nodes.remove(node)
 
     def insert(self,pos: int,node):
         assert isinstance(node,Node)
+        if isinstance(node,Type):
+            self.get_root().append_type(node)
         self.child_nodes.insert(pos,node)
 
     @property
@@ -78,7 +83,7 @@ class Node:
             Always use the raw cursor as 'name' might be overwritten.
         """
         assert isinstance(self,(Node))
-        return len(self.cursor.spelling) > 0
+        return len(self.cursor.spelling) == 0
     
     @property
     def file(self):
@@ -198,32 +203,17 @@ class Root(Node):
     def _canonical_typename(self,node: Node):
         return node.cursor.type.get_canonical().spelling
 
-    def append(self,node):
-        assert isinstance(node,Node)
-        if isinstance(node,Type):
-            canonical_typename = self._canonical_typename(node)
-            if not canonical_typename in self.types:
-                self.types[canonical_typename] = []
-            self.types[canonical_typename].append(node)
-        self.child_nodes.append(node)
+    def append_type(self,node):
+        canonical_typename = self._canonical_typename(node)
+        if not canonical_typename in self.types:
+            self.types[canonical_typename] = []
+        self.types[canonical_typename].append(node)
 
-    def remove(self,node):
-        assert isinstance(node,Node)
-        if isinstance(node,Type):
-            canonical_typename = self._canonical_typename(node)
-            if canonical_typename in self.types:
-                assert node in self.types[canonical_typename]
-                self.types[canonical_typename].remove(node)
-        self.child_nodes.remove(node)
-
-    def insert(self,pos: int,node):
-        assert isinstance(node,Node)
-        if isinstance(node,Type):
-            canonical_typename = self._canonical_typename(node)
-            if not canonical_typename in self.types:
-                self.types[canonical_typename] = []
-            self.types[canonical_typename].append(node)
-        self.child_nodes.insert(pos,node)
+    def remove_type(self,node):
+        canonical_typename = self._canonical_typename(node)
+        if canonical_typename in self.types:
+            assert node in self.types[canonical_typename]
+            self.types[canonical_typename].remove(node)
 
 class MacroDefinition(Node,*__MacroDefinitionMixins):
 
@@ -328,9 +318,11 @@ class Type(Node):
         self,
         cursor: clang.cindex.Cursor,
         parent,
-        name = None,
     ):
         Node.__init__(self,cursor,parent)
+        self._name = None
+
+    def overwrite_name(self,name):
         self._name = name
 
     @property
@@ -351,9 +343,6 @@ class Record(Type):
         Type.__init__(self,cursor,parent)
         self._from_typedef_with_anon_child: bool = from_typedef_with_anon_child
 
-    def overwrite_name(self,name):
-        self._name = name
-
     @property
     def fields(self):
         for child in self.child_nodes:
@@ -372,15 +361,10 @@ class Enum(Type,*__EnumMixins):
         self,
         cursor: clang.cindex.Cursor,
         parent: Node,
-        name = None,
         from_typedef_with_anon_child: bool = False
     ):
-        Type.__init__(self,cursor,parent,name=name)
+        Type.__init__(self,cursor,parent)
         self._from_typedef_with_anon_child: bool = from_typedef_with_anon_child
-
-    @property
-    def is_cursor_anonymous(self):
-        return not len(self.cursor.spelling)
     
 class Nested:
     """A marker for nested struct/union/enum types."""
@@ -676,13 +660,13 @@ def from_libclang_translation_unit(
         In case of the former three, three different cases have to be handled:
         
         1. The inner type is anonymous.
-            * In this case, a previously inserted anonymous AnonNestedStruct/-Union/-Enum node has to
+            * In this case, a previously inserted anonymous Struct/-Union/-Enum node has to
             be replaced by Struct/Union/Enum node that uses a `ctypedef struct <name>`/... 
             instead of `cdef struct <name>`/...  when rendering Cython code,
             where `<name>` is the spelling of the `TYPEDEF_DECL` cursor.
         2. Inner type and typedef name are the same.
             * In this case, no Typedef node is inserted as only `cdef struct <name>`/...  needs to be specified
-            in the rendered Cython code.
+              in the rendered Cython code.
         3. Inner type and typedef name differ.
             * In this case a Typedef case is inserted that specifies a previously added
                 Struct/Union/Enum as typeref argument.
@@ -704,8 +688,8 @@ def from_libclang_translation_unit(
             descend_into_child_cursors_(node) # post-order walk, 
             root.append(node)
         elif not len(type_decl_cursor.spelling): # found anonymous struct/union/enum child
-                                                    # in case of anon enum
-                                                    # replace the original node with the given one
+                                                 # in case of anon enum
+                                                # replace the original node with the given one
             anon_type_decl = root.lookup_type_from_cursor(type_decl_cursor)
             assert anon_type_decl != None and isinstance(anon_type_decl,(Enum,Record))
             type_decl = handle_anon_typedef_child_cursor_(type_decl_cursor,node)
@@ -733,7 +717,7 @@ def from_libclang_translation_unit(
         assert (cursor.spelling == '' and cursor.type.spelling == parent_cursor.type.spelling)
         if cursor.kind in structure_types:
             cls = structure_types[cursor.kind]
-            node = cls(cursor, root,
+            node = cls(cursor, root, 
                         from_typedef_with_anon_child=True)
             node.overwrite_name(parent_cursor.spelling)
         else:
@@ -753,14 +737,13 @@ def from_libclang_translation_unit(
         
         if cursor.kind in structure_types:
             cls = structure_types[cursor.kind]
-            cls_anon = nested_structure_types[cursor.kind]
+            cls_nested = nested_structure_types[cursor.kind]
             if is_anonymous:
-                node = cls_anon(cursor,parent)
+                node = cls_nested(cursor,parent)
             else:
-                node = cls(cursor,root)
+                node = cls(cursor,parent)
             descend_into_child_cursors_(node)
-            root.append(node)
-            parent.anon_type_decls.append(node)
+            parent.append(node)
 
     def handle_param_or_field_decl_cursor_(cursor: clang.cindex.Cursor,parent: Node):
         """Handle PARAM_DECL/FIELD_DECL cursors.

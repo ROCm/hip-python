@@ -641,47 +641,47 @@ cdef extern from "hip/hip_runtime_api.h":
 
     ctypedef HIPresourceViewFormat_enum HIPresourceViewFormat
 
-    cdef struct hipResourceDesc__:
+    cdef struct hipResourceDesc_union_0_struct_0:
         hipArray_t array
 
-    cdef struct hipResourceDesc__:
+    cdef struct hipResourceDesc_union_0_struct_1:
         hipMipmappedArray_t mipmap
 
-    cdef struct hipResourceDesc__:
+    cdef struct hipResourceDesc_union_0_struct_2:
         void * devPtr
         hipChannelFormatDesc desc
         int sizeInBytes
 
-    cdef struct hipResourceDesc__:
+    cdef struct hipResourceDesc_union_0_struct_3:
         void * devPtr
         hipChannelFormatDesc desc
         int width
         int height
         int pitchInBytes
 
-    cdef union hipResourceDesc_:
-        hipResourceDesc__ array
-        hipResourceDesc__ mipmap
-        hipResourceDesc__ linear
-        hipResourceDesc__ pitch2D
+    cdef union hipResourceDesc_union_0:
+        hipResourceDesc_union_0_struct_0 array
+        hipResourceDesc_union_0_struct_1 mipmap
+        hipResourceDesc_union_0_struct_2 linear
+        hipResourceDesc_union_0_struct_3 pitch2D
 
     cdef struct hipResourceDesc:
         hipResourceType resType
-        hipResourceDesc_ res
+        hipResourceDesc_union_0 res
 
-    cdef struct HIP_RESOURCE_DESC_st__:
+    cdef struct HIP_RESOURCE_DESC_st_union_0_struct_0:
         hipArray_t hArray
 
-    cdef struct HIP_RESOURCE_DESC_st__:
+    cdef struct HIP_RESOURCE_DESC_st_union_0_struct_1:
         hipMipmappedArray_t hMipmappedArray
 
-    cdef struct HIP_RESOURCE_DESC_st__:
+    cdef struct HIP_RESOURCE_DESC_st_union_0_struct_2:
         hipDeviceptr_t devPtr
         hipArray_Format format
         unsigned int numChannels
         int sizeInBytes
 
-    cdef struct HIP_RESOURCE_DESC_st__:
+    cdef struct HIP_RESOURCE_DESC_st_union_0_struct_3:
         hipDeviceptr_t devPtr
         hipArray_Format format
         unsigned int numChannels
@@ -689,19 +689,19 @@ cdef extern from "hip/hip_runtime_api.h":
         int height
         int pitchInBytes
 
-    cdef struct HIP_RESOURCE_DESC_st__:
+    cdef struct HIP_RESOURCE_DESC_st_union_0_struct_4:
         int[32] reserved
 
-    cdef union HIP_RESOURCE_DESC_st_:
-        HIP_RESOURCE_DESC_st__ array
-        HIP_RESOURCE_DESC_st__ mipmap
-        HIP_RESOURCE_DESC_st__ linear
-        HIP_RESOURCE_DESC_st__ pitch2D
-        HIP_RESOURCE_DESC_st__ reserved
+    cdef union HIP_RESOURCE_DESC_st_union_0:
+        HIP_RESOURCE_DESC_st_union_0_struct_0 array
+        HIP_RESOURCE_DESC_st_union_0_struct_1 mipmap
+        HIP_RESOURCE_DESC_st_union_0_struct_2 linear
+        HIP_RESOURCE_DESC_st_union_0_struct_3 pitch2D
+        HIP_RESOURCE_DESC_st_union_0_struct_4 reserved
 
     cdef struct HIP_RESOURCE_DESC_st:
         HIPresourcetype_enum resType
-        HIP_RESOURCE_DESC_st_ res
+        HIP_RESOURCE_DESC_st_union_0 res
         unsigned int flags
 
     ctypedef HIP_RESOURCE_DESC_st HIP_RESOURCE_DESC
@@ -1228,17 +1228,17 @@ cdef extern from "hip/hip_runtime_api.h":
 
     ctypedef hipExternalMemoryHandleType_enum hipExternalMemoryHandleType
 
-    cdef struct hipExternalMemoryHandleDesc_st__:
+    cdef struct hipExternalMemoryHandleDesc_st_union_0_struct_0:
         void * handle
         const void * name
 
-    cdef union hipExternalMemoryHandleDesc_st_:
+    cdef union hipExternalMemoryHandleDesc_st_union_0:
         int fd
-        hipExternalMemoryHandleDesc_st__ win32
+        hipExternalMemoryHandleDesc_st_union_0_struct_0 win32
 
     cdef struct hipExternalMemoryHandleDesc_st:
         hipExternalMemoryHandleType_enum type
-        hipExternalMemoryHandleDesc_st_ handle
+        hipExternalMemoryHandleDesc_st_union_0 handle
         unsigned long long size
         unsigned int flags
 
@@ -1261,55 +1261,55 @@ cdef extern from "hip/hip_runtime_api.h":
 
     ctypedef hipExternalSemaphoreHandleType_enum hipExternalSemaphoreHandleType
 
-    cdef struct hipExternalSemaphoreHandleDesc_st__:
+    cdef struct hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
         void * handle
         const void * name
 
-    cdef union hipExternalSemaphoreHandleDesc_st_:
+    cdef union hipExternalSemaphoreHandleDesc_st_union_0:
         int fd
-        hipExternalSemaphoreHandleDesc_st__ win32
+        hipExternalSemaphoreHandleDesc_st_union_0_struct_0 win32
 
     cdef struct hipExternalSemaphoreHandleDesc_st:
         hipExternalSemaphoreHandleType_enum type
-        hipExternalSemaphoreHandleDesc_st_ handle
+        hipExternalSemaphoreHandleDesc_st_union_0 handle
         unsigned int flags
 
     ctypedef hipExternalSemaphoreHandleDesc_st hipExternalSemaphoreHandleDesc
 
     ctypedef void * hipExternalSemaphore_t
 
-    cdef struct hipExternalSemaphoreSignalParams_st__:
+    cdef struct hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
         unsigned long long value
 
-    cdef struct hipExternalSemaphoreSignalParams_st__:
+    cdef struct hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
         unsigned long long key
 
-    cdef struct hipExternalSemaphoreSignalParams_st_:
-        hipExternalSemaphoreSignalParams_st__ fence
-        hipExternalSemaphoreSignalParams_st__ keyedMutex
+    cdef struct hipExternalSemaphoreSignalParams_st_struct_0:
+        hipExternalSemaphoreSignalParams_st_struct_0_struct_0 fence
+        hipExternalSemaphoreSignalParams_st_struct_0_struct_1 keyedMutex
         unsigned int[12] reserved
 
     cdef struct hipExternalSemaphoreSignalParams_st:
-        hipExternalSemaphoreSignalParams_st_ params
+        hipExternalSemaphoreSignalParams_st_struct_0 params
         unsigned int flags
         unsigned int[16] reserved
 
     ctypedef hipExternalSemaphoreSignalParams_st hipExternalSemaphoreSignalParams
 
-    cdef struct hipExternalSemaphoreWaitParams_st__:
+    cdef struct hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
         unsigned long long value
 
-    cdef struct hipExternalSemaphoreWaitParams_st__:
+    cdef struct hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
         unsigned long long key
         unsigned int timeoutMs
 
-    cdef struct hipExternalSemaphoreWaitParams_st_:
-        hipExternalSemaphoreWaitParams_st__ fence
-        hipExternalSemaphoreWaitParams_st__ keyedMutex
+    cdef struct hipExternalSemaphoreWaitParams_st_struct_0:
+        hipExternalSemaphoreWaitParams_st_struct_0_struct_0 fence
+        hipExternalSemaphoreWaitParams_st_struct_0_struct_1 keyedMutex
         unsigned int[10] reserved
 
     cdef struct hipExternalSemaphoreWaitParams_st:
-        hipExternalSemaphoreWaitParams_st_ params
+        hipExternalSemaphoreWaitParams_st_struct_0 params
         unsigned int flags
         unsigned int[16] reserved
 
@@ -1450,7 +1450,7 @@ cdef extern from "hip/hip_runtime_api.h":
     cdef enum hipGraphInstantiateFlags:
         hipGraphInstantiateFlagAutoFreeOnLaunch
 
-    cdef struct hipMemAllocationProp_:
+    cdef struct hipMemAllocationProp_struct_0:
         unsigned char compressionType
         unsigned char gpuDirectRDMACapable
         unsigned short usage
@@ -1460,7 +1460,7 @@ cdef extern from "hip/hip_runtime_api.h":
         hipMemAllocationHandleType requestedHandleType
         hipMemLocation location
         void * win32HandleMetaData
-        hipMemAllocationProp_ allocFlags
+        hipMemAllocationProp_struct_0 allocFlags
 
     cdef struct ihipMemGenericAllocationHandle:
         pass
@@ -1482,11 +1482,11 @@ cdef extern from "hip/hip_runtime_api.h":
         hipArraySparseSubresourceTypeSparseLevel
         hipArraySparseSubresourceTypeMiptail
 
-    cdef union hipArrayMapInfo_:
+    cdef union hipArrayMapInfo_union_0:
         hipMipmappedArray mipmap
         hipArray_t array
 
-    cdef struct hipArrayMapInfo__:
+    cdef struct hipArrayMapInfo_union_1_struct_0:
         unsigned int level
         unsigned int layer
         unsigned int offsetX
@@ -1496,26 +1496,26 @@ cdef extern from "hip/hip_runtime_api.h":
         unsigned int extentHeight
         unsigned int extentDepth
 
-    cdef struct hipArrayMapInfo__:
+    cdef struct hipArrayMapInfo_union_1_struct_1:
         unsigned int layer
         unsigned long long offset
         unsigned long long size
 
-    cdef union hipArrayMapInfo_:
-        hipArrayMapInfo__ sparseLevel
-        hipArrayMapInfo__ miptail
+    cdef union hipArrayMapInfo_union_1:
+        hipArrayMapInfo_union_1_struct_0 sparseLevel
+        hipArrayMapInfo_union_1_struct_1 miptail
 
-    cdef union hipArrayMapInfo_:
+    cdef union hipArrayMapInfo_union_2:
         hipMemGenericAllocationHandle_t memHandle
 
     cdef struct hipArrayMapInfo:
         hipResourceType resourceType
-        hipArrayMapInfo_ resource
+        hipArrayMapInfo_union_0 resource
         hipArraySparseSubresourceType subresourceType
-        hipArrayMapInfo_ subresource
+        hipArrayMapInfo_union_1 subresource
         hipMemOperationType memOperationType
         hipMemHandleType memHandleType
-        hipArrayMapInfo_ memHandle
+        hipArrayMapInfo_union_2 memHandle
         unsigned long long offset
         unsigned int deviceBitMask
         unsigned int flags
