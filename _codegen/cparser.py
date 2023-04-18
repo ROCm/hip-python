@@ -3,7 +3,6 @@
 __author__ = "AMD_AUTHOR"
 
 import enum
-import hashlib
 
 import clang.cindex
 
@@ -61,7 +60,7 @@ class CParser:
             args=["-x", "c"] + self.append_cflags,
             options=(
                 clang.cindex.TranslationUnit.PARSE_SKIP_FUNCTION_BODIES |
-                clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD # keeps the macro defs as "fake" nodes
+                clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD # keeps the macro defs as "fake" nodes without location
             ),
             unsaved_files = self.unsaved_files
 
