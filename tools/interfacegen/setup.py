@@ -13,10 +13,10 @@ import os
 import enum
 import textwrap
 
-import setuptools
-import Cython.Build
+from setuptools import setup, Extension
+from Cython.Build import cythonize
 
-from _codegen import PackageGenerator, Node, MacroDefinition, Field, Function
+from _codegen import CythonPackageGenerator, Node, MacroDefinition, Function
 
 __author__ = "AMD_AUTHOR"
 
@@ -52,13 +52,13 @@ class HipPlatform(enum.IntEnum):
     def cflags(self):
         return ["-D", f"__HIP_PLATFORM_{self.name}__"]
 
-hip_platform=HipPlatform.from_string(HIP_PLATFORM)
+hip_platform = HipPlatform.from_string(HIP_PLATFORM)
 
 def get_bool_environ_var(env_var,default):
     return os.environ.get(env_var,default).lower() in ("true","1","t","y","yes")
 HIP_PYTHON_SETUP_GENERATE = get_bool_environ_var("HIP_PYTHON_SETUP_GENERATE","true")
-HIP_PYTHON_SETUP_BUILD = get_bool_environ_var("HIP_PYTHON_SETUP_BUILD","false")
-HIP_PYTHON_SETUP_RUNTIME_LINKING = get_bool_environ_var("HIP_PYTHON_SETUP_RUNTIME_LINKING","true")
+HIP_PYTHON_SETUP_BUILD = get_bool_environ_var("HIP_PYTHON_SETUP_BUILD","true")
+HIP_PYTHON_SETUP_RUNTIME_LINKING = get_bool_environ_var("HIP_PYTHON_SETUP_RUNTIME_LINKING","false")
 HIP_PYTHON_SETUP_VERBOSE = get_bool_environ_var("HIP_PYTHON_SETUP_VERBOSE","true")
 
 if HIP_PYTHON_SETUP_VERBOSE:
@@ -70,46 +70,27 @@ if HIP_PYTHON_SETUP_VERBOSE:
     print(f"{HIP_PYTHON_SETUP_RUNTIME_LINKING=}")
     print(f"{HIP_PYTHON_SETUP_VERBOSE=}")
 
-# Generate Cython files
-def generate_files(pkg_gen: PackageGenerator):
-    cython_c_preamble = textwrap.dedent("""\
-        # AMD_COPYRIGHT
-        from libc.stdint import *
-
-        """)
-    python_cython_preamble_template = textwrap.dedent("""\
-        # AMD_COPYRIGHT
-        from . cimport c{pkg}
-
-        """)
-    
-    with open(f"hip/c{pkg_gen.pkg_name}.pxd", "w") as outfile:
-        outfile.write(cython_c_preamble)
-        outfile.write(pkg_gen.render_cython_declaration_part())
-
-    with open(f"hip/c{pkg_gen.pkg_name}.pyx", "w") as outfile:
-        outfile.write(cython_c_preamble)
-        outfile.write(pkg_gen.render_cython_definition_part())
-
-    with open(f"hip/{pkg_gen.pkg_name}.pyx", "w") as outfile:
-        outfile.write(python_cython_preamble_template.format(pkg=pkg_gen.pkg_name))
-        outfile.write(pkg_gen.render_python_interfaces(f"c{pkg_gen.pkg_name}"))
-
 if HIP_PYTHON_SETUP_GENERATE:
     # hiprtc
     def hiprtc_node_filter(node: Node):
         if isinstance(node,MacroDefinition):
             return node.name.startswith("hiprtc")
+        if node.file is None:
+            print(f"node.file is None: {node.cursor.kind}")
         if node.file.endswith("hiprtc.h"):
             return True
         return False
     
-    pkg_gen = PackageGenerator(
-        "hiprtc", rocm_inc, ["hip/hiprtc.h"], "libhiprtc.so", hiprtc_node_filter,
+    CythonPackageGenerator(
+        "hiprtc", 
+        rocm_inc, 
+        "hip/hiprtc.h",
         runtime_linking = HIP_PYTHON_SETUP_RUNTIME_LINKING,
-        cflags=hip_platform.cflags
-    )
-    generate_files(pkg_gen)
+        dll = "libhiprtc.so", 
+        node_filter = hiprtc_node_filter,
+        cflags = hip_platform.cflags
+    ).write_package_files(output_dir="hip")
+
   
     # hip
     hip_int_macros = (
@@ -204,16 +185,41 @@ if HIP_PYTHON_SETUP_GENERATE:
                 return True
         return False
     
-    pkg_gen = PackageGenerator(
+    CythonPackageGenerator(
         "hip",
         rocm_inc,
-        ["hip/hip_runtime_api.h"],
-        "libhipamd64.so",
-        hip_node_filter,
+        "hip/hip_runtime_api.h",
         runtime_linking = HIP_PYTHON_SETUP_RUNTIME_LINKING,
+        dll = "libamdhip64.so",
+        node_filter = hip_node_filter,
         cflags=hip_platform.cflags
-    )
-    generate_files(pkg_gen)
+    ).write_package_files(output_dir="hip")
+   
+#    # hipblas
+#    def hipblas_node_filter(node: Node):
+#        if not isinstance(node,MacroDefinition):
+#            if node.name[0:7] in ("hipblas,HIPBLAS"):
+#                return True
+#        elif node.name in (
+#          "hipblasVersionMajor",
+#          "hipblaseVersionMinor",
+#          "hipblasVersionMinor",
+#          "hipblasVersionPatch",
+#          "hipblasVersionTweak",
+#        ):
+#            return True
+#        return False
+#
+#    pkg_gen = PackageGenerator(
+#        "hipblas",
+#        rocm_inc,
+#        ["hipblas.h"],
+#        "libhipblas.so",
+#        hipblas_node_filter,
+#        runtime_linking = HIP_PYTHON_SETUP_RUNTIME_LINKING,
+#        cflags=hip_platform.cflags
+#    )
+#    generate_files(pkg_gen)
 
 # Build Cython packages
 if HIP_PYTHON_SETUP_BUILD:
@@ -222,14 +228,14 @@ if HIP_PYTHON_SETUP_BUILD:
         library_dirs = []
     else:
         library_dirs = [os.path.join(ROCM_PATH,"lib")]
-        libraries = ["hiprtc","hipamd64"]
+        libraries = ["hiprtc","amdhip64"]
 
     extra_compile_args = hip_platform.cflags
     if CFLAGS == None: 
         extra_compile_args += ["-O3"]
 
     def create_extension(name,sources):
-        return setuptools.Extension(name,
+        return Extension(name,
             sources = sources,
             include_dirs = [rocm_inc],
             library_dirs = library_dirs,
@@ -240,7 +246,7 @@ if HIP_PYTHON_SETUP_BUILD:
   
     cython_module_sources = [
         ("hip.chiprtc",["./hip/chiprtc.pyx"]),
-        #("hip.chip",["./hip/chip.pyx"]),
+        ("hip.chip",["./hip/chip.pyx"]),
         #("hip.hiprtc",["./hip/hiprtc.pyx"]),
         #("hip.hip",["./hip/hip.pyx"]),
     ]
@@ -250,15 +256,14 @@ if HIP_PYTHON_SETUP_BUILD:
     ext_modules = []
     for (name,sources) in cython_module_sources:
         extension = create_extension(name,sources)
-        ext_module = Cython.Build.cythonize(
+        ext_modules += cythonize(
             [extension],
             compiler_directives = dict(
                 embedsignature = True,
                 language_level = 3,
             )
         )
-        ext_modules.append(ext_module)
 
-    setuptools.setup(
-        ext_modules=ext_modules
+    setup(
+      ext_modules=ext_modules
     )
