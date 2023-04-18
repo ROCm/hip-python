@@ -1,4 +1,4 @@
-#AMD_COPYRIGHT
+# AMD_COPYRIGHT
 
 __author__ = "AMD_AUTHOR"
 
@@ -6,7 +6,7 @@ import tempfile
 
 import addtoplevelpath
 from _codegen import CParser, PackageGenerator
-    
+
 file_content = """\
 typedef unsigned int GLuint;
 
@@ -58,15 +58,10 @@ typedef struct hipArrayMapInfo {
 } hipArrayMapInfo;\
 """
 file_name = "input.h"
-parser = CParser(file_name,unsaved_files=[(file_name,file_content)])
+parser = CParser(file_name, unsaved_files=[(file_name, file_content)])
 parser.parse()
 print(parser.render_cursors())
 
-pkg_gen_hip = PackageGenerator(
-    "hip",
-    None,
-    [file_name],
-    "libhipamd64.so"
-)
+pkg_gen_hip = PackageGenerator("hip", None, [file_name], "libhipamd64.so")
 print(pkg_gen_hip.render_cython_c_bindings())
 print(pkg_gen_hip.render_python_interfaces("hip"))

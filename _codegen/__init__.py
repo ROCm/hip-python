@@ -1,4 +1,4 @@
-#AMD_COPYRIGHT
+# AMD_COPYRIGHT
 
 __author__ = "AMD_AUTHOR"
 
