@@ -1,4 +1,4 @@
-#AMD_COPYRIGHT
+# AMD_COPYRIGHT
 
 __author__ = "AMD_AUTHOR"
 
@@ -6,12 +6,13 @@ import enum
 
 import clang.cindex
 
-def walk_cursors(root: clang.cindex.Cursor,postorder=False):
+
+def walk_cursors(root: clang.cindex.Cursor, postorder=False):
     """Yields a triple of cursor, level, parents per traversed cursor.
-    
+
     Yields a triple per cursor that consists of the cursor, its level
     and a stack of parent cursors (in that order).
-    
+
     Args:
         root (clang.cindex.Cursor): The cursor to do the walk on.
         postorder (bool, optional): Post-order walk. Defaults to False.
@@ -21,20 +22,25 @@ def walk_cursors(root: clang.cindex.Cursor,postorder=False):
     Note:
         The first cursor is the cursor for the translation unit, it has level 0.
     """
-    def descend_(cursor,level=0,parent_stack=[]):
+
+    def descend_(cursor, level=0, parent_stack=[]):
         if postorder:
             for child in cursor.get_children():
-                yield from descend_(child,level+1,parent_stack+[cursor])
-        yield (cursor, level, parent_stack) # yield current
+                yield from descend_(child, level + 1, parent_stack + [cursor])
+        yield (cursor, level, parent_stack)  # yield current
         if not postorder:
             for child in cursor.get_children():
-                yield from descend_(child,level+1,parent_stack+[cursor])
+                yield from descend_(child, level + 1, parent_stack + [cursor])
+
     yield from descend_(root)
+
 
 class CParser:
     """Parser for C APIs."""
 
-    def __init__(self, filename: str, append_cflags: list[str] = [], unsaved_files = None):
+    def __init__(
+        self, filename: str, append_cflags: list[str] = [], unsaved_files=None
+    ):
         """Parse the specified file.
 
         Args:
@@ -59,20 +65,19 @@ class CParser:
             self.filename,
             args=["-x", "c"] + self.append_cflags,
             options=(
-                clang.cindex.TranslationUnit.PARSE_SKIP_FUNCTION_BODIES |
-                clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD # keeps the macro defs as "fake" nodes without location
+                clang.cindex.TranslationUnit.PARSE_SKIP_FUNCTION_BODIES
+                | clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD  # keeps the macro defs as "fake" nodes without location
             ),
-            unsaved_files = self.unsaved_files
-
+            unsaved_files=self.unsaved_files,
         )
         return self
 
-    def walk_cursors(self,cursor=None,postorder=False):
+    def walk_cursors(self, cursor=None, postorder=False):
         """Yields a tuple per cursor that consists of the cursor's level and the cursor.
-        
+
         Yields a triple per cursor that consists of the cursor, its level
         and a stack of parent cursors (in that order).
-        
+
         Args:
             cursor (bool, optional): The cursor to do the walk on, or None if the cparser's root cursor
                                      should be used. Defaults to None, i.e. usage of the cparser's root cursor.
@@ -85,14 +90,14 @@ class CParser:
         """
         if cursor is None:
             cursor = self.cursor
-        yield from walk_cursors(cursor,postorder)
-    
-    def render_cursors(self,cursor=None):
+        yield from walk_cursors(cursor, postorder)
+
+    def render_cursors(self, cursor=None):
         if cursor is None:
             cursor = self.cursor
         result = ""
-        for (cursor,level,_) in self.walk_cursors_preorder(cursor):
-            indent = "-"*(level)
+        for (cursor, level, _) in self.walk_cursors_preorder(cursor):
+            indent = "-" * (level)
             result += f"{indent}{str(cursor.kind).replace('CursorKind.','')} '{cursor.spelling}' '{cursor.displayname}' [TYPE-INFO {str(cursor.type.kind).replace('TypeKind.','')} '{cursor.type.spelling}' '{cursor.type.get_canonical().spelling}']"
             if cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
                 underlying_typedef_type = cursor.underlying_typedef_type
@@ -100,12 +105,12 @@ class CParser:
             result += "\n"
         return result
 
+
 class TypeHandler:
-    
     class TypeCategory(enum.IntEnum):
         UNCategorized = -1
         VOID = 0
-        BASIC = 10 # basic datatype
+        BASIC = 10  # basic datatype
         BOOL = BASIC + 1
         CHAR = BASIC + 2
         INT = BASIC + 3
@@ -118,7 +123,7 @@ class TypeHandler:
         FUNCTION = RECORD + 5
         # const variants
         CONST_VOID = VOID + 100
-        CONST_BASIC = BASIC + 100 # basic datatype
+        CONST_BASIC = BASIC + 100  # basic datatype
         CONST_BOOL = BOOL + 100
         CONST_CHAR = CHAR + 100
         CONST_INT = INT + 100
@@ -129,20 +134,22 @@ class TypeHandler:
         CONST_ARRAY = ARRAY + 100
         CONST_COMPLEX = COMPLEX + 100
         CONST_FUNCTION = FUNCTION + 100
-  
+
         @property
         def is_const(self):
             return self.value >= TypeHandler.TypeCategory.CONST_VOID.value
-        
+
         @property
         def is_basic(self):
             value = self.value
             if self.is_const:
                 value -= TypeHandler.TypeCategory.CONST_VOID.value
-            return ( value >= TypeHandler.TypeCategory.BASIC.value 
-                     and value < TypeHandler.TypeCategory.RECORD.value )
+            return (
+                value >= TypeHandler.TypeCategory.BASIC.value
+                and value < TypeHandler.TypeCategory.RECORD.value
+            )
 
-    def __init__(self,clang_type: clang.cindex.Type):
+    def __init__(self, clang_type: clang.cindex.Type):
         self.clang_type = clang_type
 
     @staticmethod
@@ -168,16 +175,16 @@ class TypeHandler:
     @staticmethod
     def is_int_type(type_kind: clang.cindex.TypeKind):
         return type_kind in (
-          clang.cindex.TypeKind.USHORT,
-          clang.cindex.TypeKind.UINT,
-          clang.cindex.TypeKind.ULONG,
-          clang.cindex.TypeKind.ULONGLONG,
-          clang.cindex.TypeKind.UINT128,
-          clang.cindex.TypeKind.SHORT,
-          clang.cindex.TypeKind.INT,
-          clang.cindex.TypeKind.LONG,
-          clang.cindex.TypeKind.LONGLONG,
-          clang.cindex.TypeKind.INT128,
+            clang.cindex.TypeKind.USHORT,
+            clang.cindex.TypeKind.UINT,
+            clang.cindex.TypeKind.ULONG,
+            clang.cindex.TypeKind.ULONGLONG,
+            clang.cindex.TypeKind.UINT128,
+            clang.cindex.TypeKind.SHORT,
+            clang.cindex.TypeKind.INT,
+            clang.cindex.TypeKind.LONG,
+            clang.cindex.TypeKind.LONGLONG,
+            clang.cindex.TypeKind.INT128,
         )
 
     @staticmethod
@@ -190,7 +197,7 @@ class TypeHandler:
             clang.cindex.TypeKind.HALF,
             clang.cindex.TypeKind.IBM128,
         )
-    
+
     @staticmethod
     def is_basic_datatype(type_kind: clang.cindex.TypeKind):
         return (
@@ -266,32 +273,32 @@ class TypeHandler:
     @staticmethod
     def is_pointer_type(type_kind: clang.cindex.TypeKind):
         return type_kind in (
-            clang.cindex.TypeKind.POINTER, # ATT
-            clang.cindex.TypeKind.BLOCKPOINTER, # ATT
-            clang.cindex.TypeKind.MEMBERPOINTER, #ATT
+            clang.cindex.TypeKind.POINTER,  # ATT
+            clang.cindex.TypeKind.BLOCKPOINTER,  # ATT
+            clang.cindex.TypeKind.MEMBERPOINTER,  # ATT
         )
 
     @staticmethod
     def is_function_type(type_kind: clang.cindex.TypeKind):
         return type_kind in (
-            clang.cindex.TypeKind.FUNCTIONNOPROTO, # ATT
-            clang.cindex.TypeKind.FUNCTIONPROTO, # ATT
+            clang.cindex.TypeKind.FUNCTIONNOPROTO,  # ATT
+            clang.cindex.TypeKind.FUNCTIONPROTO,  # ATT
         )
 
     @staticmethod
     def is_arraylike_type(type_kind: clang.cindex.TypeKind):
         return type_kind in (
-            clang.cindex.TypeKind.VECTOR, # ATT
-            clang.cindex.TypeKind.VARIABLEARRAY, # ATT
-            clang.cindex.TypeKind.DEPENDENTSIZEDARRAY, # ATT
-            clang.cindex.TypeKind.CONSTANTARRAY, #ATT
-            clang.cindex.TypeKind.INCOMPLETEARRAY, #ATT
+            clang.cindex.TypeKind.VECTOR,  # ATT
+            clang.cindex.TypeKind.VARIABLEARRAY,  # ATT
+            clang.cindex.TypeKind.DEPENDENTSIZEDARRAY,  # ATT
+            clang.cindex.TypeKind.CONSTANTARRAY,  # ATT
+            clang.cindex.TypeKind.INCOMPLETEARRAY,  # ATT
         )
 
     @staticmethod
     def is_record_type(type_kind: clang.cindex.TypeKind):
         return type_kind == clang.cindex.TypeKind.RECORD
-    
+
     @staticmethod
     def is_enum_type(type_kind: clang.cindex.TypeKind):
         return type_kind == clang.cindex.TypeKind.ENUM
@@ -299,19 +306,19 @@ class TypeHandler:
     @staticmethod
     def is_record_or_enum_type(type_kind: clang.cindex.TypeKind):
         return type_kind in (
-            clang.cindex.TypeKind.RECORD, # ATT
-            clang.cindex.TypeKind.ENUM, # ATT
+            clang.cindex.TypeKind.RECORD,  # ATT
+            clang.cindex.TypeKind.ENUM,  # ATT
         )
-    
+
     @staticmethod
     def is_elaborated_type(type_kind: clang.cindex.TypeKind):
-        return type_kind == clang.cindex.TypeKind.ELABORATED #ATT
-    
+        return type_kind == clang.cindex.TypeKind.ELABORATED  # ATT
+
     @staticmethod
     def is_typedef_type(type_kind: clang.cindex.TypeKind):
         return type_kind == clang.cindex.TypeKind.TYPEDEF
 
-    def walk_clang_type_layers(self,postorder=False,canonical=False):
+    def walk_clang_type_layers(self, postorder=False, canonical=False):
         """Walks through the constitutents of a Clang type.
 
         Args:
@@ -322,17 +329,16 @@ class TypeHandler:
             Note that this is by default a pre-order walk, e.g., if we have a type `void *`,
             we will obtain first the pointer type and then the `void` type.
         """
-        
+
         def descend_(clang_type: clang.cindex.TypeKind):
             nonlocal postorder
             type_kind = clang_type.kind
-            if ( 
-                TypeHandler.is_void_type(type_kind)
-                or TypeHandler.is_basic_datatype(type_kind)
+            if TypeHandler.is_void_type(type_kind) or TypeHandler.is_basic_datatype(
+                type_kind
             ):
                 yield clang_type
             elif TypeHandler.is_pointer_type(type_kind):
-                pointee = clang_type.get_pointee() 
+                pointee = clang_type.get_pointee()
                 if postorder:
                     yield from descend_(clang_type.get_pointee())
                 yield clang_type
@@ -340,8 +346,9 @@ class TypeHandler:
                     yield from descend_(clang_type.get_pointee())
             elif TypeHandler.is_function_type(type_kind):
                 yield clang_type
-            elif ( TypeHandler.is_arraylike_type(type_kind)
-                   or TypeHandler.is_complex_type(type_kind) ):
+            elif TypeHandler.is_arraylike_type(
+                type_kind
+            ) or TypeHandler.is_complex_type(type_kind):
                 if postorder:
                     yield from descend_(clang_type.get_array_element_type())
                 yield clang_type
@@ -351,24 +358,31 @@ class TypeHandler:
                 yield clang_type
             elif TypeHandler.is_typedef_type(type_kind):
                 underlying_type = clang_type.get_declaration().underlying_typedef_type
-                if postorder: yield from descend_(underlying_type)
+                if postorder:
+                    yield from descend_(underlying_type)
                 yield clang_type
-                if not postorder: yield from descend_(underlying_type)
+                if not postorder:
+                    yield from descend_(underlying_type)
             elif TypeHandler.is_elaborated_type(type_kind):
                 named_type = clang_type.get_named_type()
-                if postorder: yield from descend_(named_type)
+                if postorder:
+                    yield from descend_(named_type)
                 yield clang_type
-                if not postorder: yield from descend_(named_type)
+                if not postorder:
+                    yield from descend_(named_type)
             elif TypeHandler.is_other_type(type_kind):
-                raise RuntimeError(f"handling types of kind '{type_kind.spelling}' not implemented")
+                raise RuntimeError(
+                    f"handling types of kind '{type_kind.spelling}' not implemented"
+                )
             else:
                 raise RuntimeError(f"unknown type kind '{type_kind.spelling}'")
+
         if canonical:
             yield from descend_(self.clang_type.get_canonical())
         else:
             yield from descend_(self.clang_type)
 
-    def clang_type_layer_kinds(self,postorder=False,canonical=False):
+    def clang_type_layer_kinds(self, postorder=False, canonical=False):
         """Yields the Clang type kinds that constitute this type.
 
         Args:
@@ -379,15 +393,17 @@ class TypeHandler:
             Note that this is by default a pre-order walk, e.g., if we have a type `void *`,
             we will obtain first the pointer type and then the `void` type.
         """
-        for clang_type in self.walk_clang_type_layers(postorder,canonical):
+        for clang_type in self.walk_clang_type_layers(postorder, canonical):
             yield clang_type.kind
 
     @staticmethod
-    def categorize_clang_type_kind(type_kind: clang.cindex.TypeKind,
-                                   is_const: bool = False,
-                                   subdivide_basic_types: bool = False):
+    def categorize_clang_type_kind(
+        type_kind: clang.cindex.TypeKind,
+        is_const: bool = False,
+        subdivide_basic_types: bool = False,
+    ):
         """
-        is_const (bool): If the type is const qualified, a special type category is returned. 
+        is_const (bool): If the type is const qualified, a special type category is returned.
                                    If you do no want this behaviour, just pass False. Defaults to False.
         subdivide_basic_types (bool,optional): If basic datatypes should be further categorized into
                                                the categories: bool, char, int, float. Defaults to false
@@ -419,14 +435,15 @@ class TypeHandler:
         else:
             raise ValueError(f"type kind '{type_kind}' could not be Categorized")
         if is_const:
-             return TypeHandler.TypeCategory(result.value + TypeHandler.TypeCategory.CONST_VOID.value)
+            return TypeHandler.TypeCategory(
+                result.value + TypeHandler.TypeCategory.CONST_VOID.value
+            )
         else:
             return result
 
-    def categorized_type_layers(self,
-                               postorder=False,
-                               consider_const=False,
-                               subdivide_basic_types: bool = False):
+    def categorized_type_layers(
+        self, postorder=False, consider_const=False, subdivide_basic_types: bool = False
+    ):
         """Yields the Clang type kinds that constitute this type.
         Always uses the canonical type.
 
@@ -440,20 +457,20 @@ class TypeHandler:
             Note that this is by default a pre-order walk, e.g., if we have a type `void *`,
             we will obtain first the pointer type and then the `void` type.
         """
-        for clang_type in self.walk_clang_type_layers(postorder,canonical=True):
+        for clang_type in self.walk_clang_type_layers(postorder, canonical=True):
             yield TypeHandler.categorize_clang_type_kind(
                 clang_type.kind,
-                is_const = consider_const and clang_type.is_const_qualified(),
-                subdivide_basic_types = subdivide_basic_types,
-                )
+                is_const=consider_const and clang_type.is_const_qualified(),
+                subdivide_basic_types=subdivide_basic_types,
+            )
 
     def is_canonical_const_qualified(self):
         """Returns if the canonical (=fully resolved) type is const qualified."""
         return self.clang_type.get_canonical().is_const_qualified()
-    
+
+
 class Analysis:
-    """Collection of routines for analyzing the contents of a C translation unit.
-    """
+    """Collection of routines for analyzing the contents of a C translation unit."""
 
     @staticmethod
     def _type_analysis_part_header():
@@ -465,37 +482,63 @@ class Analysis:
             "Canonical Type Layer Kinds (Categorized)",
             "Canonical Type Layer Kinds (Categorized, Const)",
             "Canonical Type Layer Kinds (Categorized, Const, Finer)",
-            "Cython C Typename"
+            "Cython C Typename",
         ]
 
     @staticmethod
     def _type_analysis_part(clang_type: clang.cindex.Type):
         typehandler = TypeHandler(clang_type)
-        type_kinds = ",".join([str(t) for t in typehandler.clang_type_layer_kinds(canonical=False,postorder=False)])
-        canonical_type_kinds = ",".join([str(t) for t in typehandler.clang_type_layer_kinds(canonical=True,postorder=False)])
-        categorized_canonical_type_layer_kinds = ",".join([str(t) for t in typehandler.categorized_type_layers(
-            postorder=False)])
-        categorized_canonical_type_layer_kinds_w_const = ",".join([str(t) for t in typehandler.categorized_type_layers(
-            postorder=False,consider_const=True)])
-        categorized_canonical_type_layer_kinds_finer_w_const = ",".join([str(t) for t in typehandler.categorized_type_layers(
-            postorder=False,consider_const=True,subdivide_basic_types=True)])
+        type_kinds = ",".join(
+            [
+                str(t)
+                for t in typehandler.clang_type_layer_kinds(
+                    canonical=False, postorder=False
+                )
+            ]
+        )
+        canonical_type_kinds = ",".join(
+            [
+                str(t)
+                for t in typehandler.clang_type_layer_kinds(
+                    canonical=True, postorder=False
+                )
+            ]
+        )
+        categorized_canonical_type_layer_kinds = ",".join(
+            [str(t) for t in typehandler.categorized_type_layers(postorder=False)]
+        )
+        categorized_canonical_type_layer_kinds_w_const = ",".join(
+            [
+                str(t)
+                for t in typehandler.categorized_type_layers(
+                    postorder=False, consider_const=True
+                )
+            ]
+        )
+        categorized_canonical_type_layer_kinds_finer_w_const = ",".join(
+            [
+                str(t)
+                for t in typehandler.categorized_type_layers(
+                    postorder=False, consider_const=True, subdivide_basic_types=True
+                )
+            ]
+        )
 
         return [
-          f"{clang_type.spelling}",
-          f"[{type_kinds}]",
-          f"{clang_type.get_canonical().spelling}",
-          f"[{canonical_type_kinds}]",
-          f"[{categorized_canonical_type_layer_kinds}]",
-          f"[{categorized_canonical_type_layer_kinds_w_const}]",
-          f"[{categorized_canonical_type_layer_kinds_finer_w_const}]",
-          f"{typehandler.get_canonical_cython_type_name()}",
+            f"{clang_type.spelling}",
+            f"[{type_kinds}]",
+            f"{clang_type.get_canonical().spelling}",
+            f"[{canonical_type_kinds}]",
+            f"[{categorized_canonical_type_layer_kinds}]",
+            f"[{categorized_canonical_type_layer_kinds_w_const}]",
+            f"[{categorized_canonical_type_layer_kinds_finer_w_const}]",
+            f"{typehandler.get_canonical_cython_type_name()}",
         ]
 
     @staticmethod
-    def subtree_as_csv(root: clang.cindex.Cursor,
-                       spelling: str,
-                       maxlevel: int,
-                       sep: str = ";"):
+    def subtree_as_csv(
+        root: clang.cindex.Cursor, spelling: str, maxlevel: int, sep: str = ";"
+    ):
         """Render a subtree as CSV table.
 
         Args:
@@ -505,13 +548,13 @@ class Analysis:
         """
         result = ""
         header = ["Location"]
-        header += [f"Level {l}" for l in range(0,maxlevel+1)]
+        header += [f"Level {l}" for l in range(0, maxlevel + 1)]
         header += ["cursor.spelling"] + Analysis._type_analysis_part_header()
-                   
+
         result += sep.join(header) + "\n"
         activate_printing = False
-        
-        def descend_(cursor,level=0):
+
+        def descend_(cursor, level=0):
             nonlocal result
             nonlocal activate_printing
             nonlocal spelling
@@ -523,19 +566,23 @@ class Analysis:
                         activate_printing = True
                     if activate_printing:
                         result += f"{cursor.location.file}:{cursor.location.line}:{cursor.location.column}{sep}"
-                        indent = f"{sep}"*(level)
-                        result += f"{indent}{str(cursor.kind).replace('CursorKind.','')}"
-                        result += (maxlevel-level)*f"{sep}"
+                        indent = f"{sep}" * (level)
+                        result += (
+                            f"{indent}{str(cursor.kind).replace('CursorKind.','')}"
+                        )
+                        result += (maxlevel - level) * f"{sep}"
 
                         result += f"{sep}{cursor.spelling}"
 
-                        result += sep + sep.join(Analysis._type_analysis_part(cursor.type))
+                        result += sep + sep.join(
+                            Analysis._type_analysis_part(cursor.type)
+                        )
                         result += "\n"
             for child in cursor.get_children():
-                descend_(child,level+1)
+                descend_(child, level + 1)
             if cursor.spelling == spelling:
                 activate_printing = False
-        
+
         descend_(root)
         return result
 
@@ -544,8 +591,9 @@ class Analysis:
         root: clang.cindex.Cursor,
         cursor_filter: callable = lambda cursor: True,
         maxlevel: int = 8,
-        include_fields = True,
-        sep: str = ";"):
+        include_fields=True,
+        sep: str = ";",
+    ):
         """Renders nodes associated with type declarations.
 
         Args:
@@ -555,10 +603,10 @@ class Analysis:
         """
         result = ""
         header = ["Location"]
-        header += [f"Level {l}" for l in range(0,maxlevel+1)] 
+        header += [f"Level {l}" for l in range(0, maxlevel + 1)]
         header += ["cursor.spelling"] + Analysis._type_analysis_part_header()
         result += sep.join(header) + "\n"
-        for (cursor,level,_) in walk_cursors(root):
+        for (cursor, level, _) in walk_cursors(root):
             if level > maxlevel:
                 continue
             if cursor.kind in (
@@ -571,9 +619,10 @@ class Analysis:
                 clang.cindex.CursorKind.ENUM_CONSTANT_DECL,
             ):
                 if not include_fields and (
-                    cursor.kind in (
+                    cursor.kind
+                    in (
                         clang.cindex.CursorKind.FIELD_DECL,
-                        clang.cindex.CursorKind.ENUM_CONSTANT_DECL
+                        clang.cindex.CursorKind.ENUM_CONSTANT_DECL,
                     )
                 ):
                     continue
@@ -581,12 +630,16 @@ class Analysis:
                     if cursor.location.file != None:
                         if cursor_filter(cursor):
                             result += f"{cursor.location.file}:{cursor.location.line}:{cursor.location.column}{sep}"
-                            indent = f"{sep}"*(level)
-                            result += f"{indent}{str(cursor.kind).replace('CursorKind.','')}"
-                            result += (maxlevel-level)*f"{sep}"
+                            indent = f"{sep}" * (level)
+                            result += (
+                                f"{indent}{str(cursor.kind).replace('CursorKind.','')}"
+                            )
+                            result += (maxlevel - level) * f"{sep}"
                             result += f"{sep}{cursor.spelling}"
 
-                            result += sep + sep.join(Analysis._type_handler_part(cursor.type))
+                            result += sep + sep.join(
+                                Analysis._type_handler_part(cursor.type)
+                            )
                             result += "\n"
         return result
 
@@ -594,8 +647,8 @@ class Analysis:
     def macros_as_csv(
         root: clang.cindex.Cursor,
         cursor_filter: callable = lambda cursor: True,
-        sep: str =";"
-        ):
+        sep: str = ";",
+    ):
         """Returns an overview table of macro definitions.
 
         Args:
@@ -604,23 +657,25 @@ class Analysis:
             sep (str,optional): CSV column separator
         """
         result = ""
-        header = ["cursor.spelling","Tokens (contains macro name and arguments)"]
+        header = ["cursor.spelling", "Tokens (contains macro name and arguments)"]
         result += sep.join(header) + "\n"
-        for (cursor,_,parent_stack) in walk_cursors(root):
+        for (cursor, _, parent_stack) in walk_cursors(root):
             if cursor.kind == clang.cindex.CursorKind.MACRO_DEFINITION:
                 if cursor_filter(cursor):
                     result += f"{cursor.spelling}"
-                    tokens = ",".join([f"'{tk.spelling}'" for tk in cursor.get_tokens()])
+                    tokens = ",".join(
+                        [f"'{tk.spelling}'" for tk in cursor.get_tokens()]
+                    )
                     result += f"{sep}[{tokens}]"
                     result += "\n"
         return result
 
     @staticmethod
     def parameter_and_return_types_as_csv(
-            root: clang.cindex.Cursor,
-            cursor_filter: callable = lambda cursor: True,
-            sep: str =";"
-        ):
+        root: clang.cindex.Cursor,
+        cursor_filter: callable = lambda cursor: True,
+        sep: str = ";",
+    ):
         """Returns an overview table of parameter and return values and their types as CSV table.
 
         Args:
@@ -630,16 +685,21 @@ class Analysis:
         """
         result = ""
         header = ["Location"]
-        header += ["Function","Reference Kind","CursorKind","cursor.spelling"] + Analysis._type_analysis_part_header()
+        header += [
+            "Function",
+            "Reference Kind",
+            "CursorKind",
+            "cursor.spelling",
+        ] + Analysis._type_analysis_part_header()
         result += sep.join(header) + "\n"
-        for (cursor,_,parent_stack) in walk_cursors(root):
+        for (cursor, _, parent_stack) in walk_cursors(root):
             if cursor.kind in (
                 clang.cindex.CursorKind.PARM_DECL,
                 clang.cindex.CursorKind.FUNCTION_DECL,
             ):
                 if cursor.location is not None:
                     if cursor.location.file != None:
-                        if cursor_filter(cursor): 
+                        if cursor_filter(cursor):
                             if cursor.kind == clang.cindex.CursorKind.PARM_DECL:
                                 func = parent_stack[1].spelling
                                 kind = "Parameter"
@@ -647,13 +707,17 @@ class Analysis:
                             else:
                                 func = cursor.spelling
                                 kind = "Result"
-                                clang_type = cursor.result_type                                
-                            
+                                clang_type = cursor.result_type
+
                             result += f"{cursor.location.file}:{cursor.location.line}:{cursor.location.column}"
                             result += f"{sep}{func}{sep}{kind}"
-                            result += f"{sep}{str(cursor.kind).replace('CursorKind.','')}"
+                            result += (
+                                f"{sep}{str(cursor.kind).replace('CursorKind.','')}"
+                            )
                             result += f"{sep}{cursor.spelling}"
 
-                            result += sep + sep.join(Analysis._type_handler_part(clang_type))
+                            result += sep + sep.join(
+                                Analysis._type_handler_part(clang_type)
+                            )
                             result += "\n"
         return result
