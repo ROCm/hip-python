@@ -22,10 +22,10 @@ restricted_names =  keyword.kwlist + [
      ]
 
 def DEFAULT_RENAMER(name): # backend-specific
-     result = name
-     while result in restricted_names:
-         result += "_"
-     return result
+    result = name
+    while result in restricted_names:
+        result += "_"
+    return result
 
 def DEFAULT_MACRO_TYPE(node): # backend-specific
     return "int"
@@ -55,7 +55,7 @@ class MacroDefinitionMixin(CythonMixin):
         CythonMixin.__init__(self)
         self.macro_type = DEFAULT_MACRO_TYPE
 
-    def render_cython_c_binding(self):
+    def render_c_interface(self):
         from . import tree
         assert isinstance(self,tree.MacroDefinition)
         return f"cdef {self.macro_type(self)} {self._cython_and_c_name(self.name)}"
@@ -79,6 +79,15 @@ class FieldMixin(CythonMixin):
         typename = self.global_typename(self.sep,self.renamer)
         name = self._cython_and_c_name(self.name)
         return f"{typename} {name}"
+    
+    # def python_getter_setter(self,prefix: str):
+    #     from . import tree
+    #     assert isinstance(self,tree.Field)
+    #     TypeCategory = cparser.TypeHandler.TypeCategory
+    #     categories = self.categorized_type_kinds()
+    #     if categories == [TypeCategory]
+    #     result = """"""
+    #     """"""
 
 class RecordMixin(CythonMixin):
     
@@ -89,15 +98,14 @@ class RecordMixin(CythonMixin):
         else:
             return "union"
 
-    def _render_cython_c_binding_head(self) -> str:
+    def _render_c_interface_head(self) -> str:
         from . import tree
         assert isinstance(self,tree.Record)
         name = self._cython_and_c_name(self.global_name(self.sep))
         cython_def_kind = "ctypedef" if self._from_typedef_with_anon_child else "cdef"
-        
         return f"{cython_def_kind} {self.c_record_kind} {name}:\n"
     
-    def render_cython_c_binding(self):
+    def render_c_interface(self) -> str:
         """Render Cython binding for this struct/union declaration.
 
         Renders a Cython binding for this struct/union declaration, does
@@ -109,7 +117,7 @@ class RecordMixin(CythonMixin):
         from . import tree
         assert isinstance(self,tree.Record)
         global indent
-        result = self._render_cython_c_binding_head()
+        result = self._render_c_interface_head()
         fields = list(self.fields)
         if len(fields):
             result += textwrap.indent(
@@ -118,6 +126,31 @@ class RecordMixin(CythonMixin):
         else:
             result += f"{indent}pass"
         return result
+    
+    def _render_python_interface_head(self) -> str:
+        from . import tree
+        assert isinstance(self,tree.Record)
+        name = self.renamer(self.global_name(self.sep))
+        return f"cdef class {name}:\n"
+    
+    def render_python_interface(self) -> str:
+        """Render Cython binding for this struct/union declaration.
+
+        Renders a Cython binding for this struct/union declaration, does
+        not render declarations for nested types.
+
+        Returns:
+            str: Cython C-binding representation of this struct declaration.
+        """
+        from . import tree
+        assert isinstance(self,tree.Record)
+        global indent
+        
+        result = self._render_python_interface_head()
+        #fields = list(self.fields)
+        result += f"{indent}pass"
+        return result
+
 
 class StructMixin(RecordMixin):
     pass
@@ -135,18 +168,18 @@ class EnumMixin(CythonMixin):
             name = self._cython_and_c_name(child_cursor.spelling)
             yield name
 
-    def _render_cython_c_binding_head(self) -> str:
+    def _render_c_interface_head(self) -> str:
         from . import tree
         assert isinstance(self,tree.Enum)
         cython_def_kind = "ctypedef" if self._from_typedef_with_anon_child else "cdef"
         name = self._cython_and_c_name(self.global_name(self.sep))
         return f"{cython_def_kind} enum{'' if self.is_cursor_anonymous else ' '+name}:\n"
 
-    def render_cython_c_binding(self):
+    def render_c_interface(self):
         from . import tree
         # assert isinstance(self,tree.Enum)
         global indent
-        return self._render_cython_c_binding_head() + textwrap.indent(
+        return self._render_c_interface_head() + textwrap.indent(
             "\n".join(self._render_cython_enums()), indent
         )
     
@@ -188,7 +221,7 @@ class EnumMixin(CythonMixin):
 
 class TypedefMixin(CythonMixin):
     
-    def render_cython_c_binding(self):
+    def render_c_interface(self):
         from . import tree
         assert isinstance(self,tree.Typedef)
         """Returns a Cython binding for this Typedef.
@@ -200,7 +233,7 @@ class TypedefMixin(CythonMixin):
 
 class FunctionPointerMixin(CythonMixin):
     
-    def render_cython_c_binding(self):
+    def render_c_interface(self):
         """Returns a Cython binding for this Typedef.
         """
         from . import tree
@@ -246,7 +279,7 @@ class FunctionMixin(CythonMixin):
         assert isinstance(self,tree.Function)
         return f'"""{"".join(self._raw_comment_stripped()).rstrip()}\n"""'
 
-    def render_cython_c_binding(self, modifiers="nogil"):
+    def render_c_interface(self, modifiers="nogil"):
         from . import tree
         assert isinstance(self,tree.Function)
         typename = self.global_typename(self.sep,self.renamer)
@@ -387,7 +420,7 @@ class CythonBackend:
                 if not last_was_extern:
                     result.append(f'cdef extern from "{self.filename}":')
                 curr_indent = indent
-                contrib = node.render_cython_c_binding()
+                contrib = node.render_c_interface()
                 last_was_extern = True
             result.append(
                 textwrap.indent(contrib, curr_indent)
@@ -428,6 +461,8 @@ cdef void* {lib_handle} = loader.open_library(\"{dll}\")
                 result.append(node.render_python_interface(
                     prefix=f"{c_interface_module}."
                 ))
+            elif isinstance(node,(StructMixin,UnionMixin)):
+                result.append(node.render_python_interface())
             elif isinstance(node,TypedefMixin):
                 pass#result.append(node.render_python_interface())
             elif isinstance(node,FunctionMixin):

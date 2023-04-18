@@ -148,12 +148,24 @@ HIP_ERROR_INVALID_VALUE = chip.HIP_ERROR_INVALID_VALUE
 HIP_ERROR_NOT_INITIALIZED = chip.HIP_ERROR_NOT_INITIALIZED
 HIP_ERROR_LAUNCH_OUT_OF_RESOURCES = chip.HIP_ERROR_LAUNCH_OUT_OF_RESOURCES
 
+cdef class hipDeviceArch_t:
+    pass
+
+cdef class hipUUID_t:
+    pass
+
+cdef class hipDeviceProp_t:
+    pass
+
 class hipMemoryType(enum.IntEnum):
     hipMemoryTypeHost = chip.hipMemoryTypeHost
     hipMemoryTypeDevice = chip.hipMemoryTypeDevice
     hipMemoryTypeArray = chip.hipMemoryTypeArray
     hipMemoryTypeUnified = chip.hipMemoryTypeUnified
     hipMemoryTypeManaged = chip.hipMemoryTypeManaged
+
+cdef class hipPointerAttribute_t:
+    pass
 
 class hipError_t(enum.IntEnum):
     hipSuccess = chip.hipSuccess
@@ -362,6 +374,9 @@ class hipChannelFormatKind(enum.IntEnum):
     hipChannelFormatKindFloat = chip.hipChannelFormatKindFloat
     hipChannelFormatKindNone = chip.hipChannelFormatKindNone
 
+cdef class hipChannelFormatDesc:
+    pass
+
 class hipArray_Format(enum.IntEnum):
     HIP_AD_FORMAT_UNSIGNED_INT8 = chip.HIP_AD_FORMAT_UNSIGNED_INT8
     HIP_AD_FORMAT_UNSIGNED_INT16 = chip.HIP_AD_FORMAT_UNSIGNED_INT16
@@ -371,6 +386,21 @@ class hipArray_Format(enum.IntEnum):
     HIP_AD_FORMAT_SIGNED_INT32 = chip.HIP_AD_FORMAT_SIGNED_INT32
     HIP_AD_FORMAT_HALF = chip.HIP_AD_FORMAT_HALF
     HIP_AD_FORMAT_FLOAT = chip.HIP_AD_FORMAT_FLOAT
+
+cdef class HIP_ARRAY_DESCRIPTOR:
+    pass
+
+cdef class HIP_ARRAY3D_DESCRIPTOR:
+    pass
+
+cdef class hipArray:
+    pass
+
+cdef class hip_Memcpy2D:
+    pass
+
+cdef class hipMipmappedArray:
+    pass
 
 class hipResourceType(enum.IntEnum):
     hipResourceTypeArray = chip.hipResourceTypeArray
@@ -393,6 +423,9 @@ class HIPaddress_mode_enum(enum.IntEnum):
 class HIPfilter_mode_enum(enum.IntEnum):
     HIP_TR_FILTER_MODE_POINT = chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = chip.HIP_TR_FILTER_MODE_LINEAR
+
+cdef class HIP_TEXTURE_DESC_st:
+    pass
 
 class hipResourceViewFormat(enum.IntEnum):
     hipResViewFormatNone = chip.hipResViewFormatNone
@@ -468,12 +501,72 @@ class HIPresourceViewFormat_enum(enum.IntEnum):
     HIP_RES_VIEW_FORMAT_SIGNED_BC6H = chip.HIP_RES_VIEW_FORMAT_SIGNED_BC6H
     HIP_RES_VIEW_FORMAT_UNSIGNED_BC7 = chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
 
+cdef class hipResourceDesc_union_0_struct_0:
+    pass
+
+cdef class hipResourceDesc_union_0_struct_1:
+    pass
+
+cdef class hipResourceDesc_union_0_struct_2:
+    pass
+
+cdef class hipResourceDesc_union_0_struct_3:
+    pass
+
+cdef class hipResourceDesc_union_0:
+    pass
+
+cdef class hipResourceDesc:
+    pass
+
+cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
+    pass
+
+cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
+    pass
+
+cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
+    pass
+
+cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
+    pass
+
+cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
+    pass
+
+cdef class HIP_RESOURCE_DESC_st_union_0:
+    pass
+
+cdef class HIP_RESOURCE_DESC_st:
+    pass
+
+cdef class hipResourceViewDesc:
+    pass
+
+cdef class HIP_RESOURCE_VIEW_DESC_st:
+    pass
+
 class hipMemcpyKind(enum.IntEnum):
     hipMemcpyHostToHost = chip.hipMemcpyHostToHost
     hipMemcpyHostToDevice = chip.hipMemcpyHostToDevice
     hipMemcpyDeviceToHost = chip.hipMemcpyDeviceToHost
     hipMemcpyDeviceToDevice = chip.hipMemcpyDeviceToDevice
     hipMemcpyDefault = chip.hipMemcpyDefault
+
+cdef class hipPitchedPtr:
+    pass
+
+cdef class hipExtent:
+    pass
+
+cdef class hipPos:
+    pass
+
+cdef class hipMemcpy3DParms:
+    pass
+
+cdef class HIP_MEMCPY3D:
+    pass
 
 class hipFunction_attribute(enum.IntEnum):
     HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
@@ -507,6 +600,153 @@ class hipPointer_attribute(enum.IntEnum):
     HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS = chip.HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS
     HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
 
+cdef class uchar1:
+    pass
+
+cdef class uchar2:
+    pass
+
+cdef class uchar3:
+    pass
+
+cdef class uchar4:
+    pass
+
+cdef class char1:
+    pass
+
+cdef class char2:
+    pass
+
+cdef class char3:
+    pass
+
+cdef class char4:
+    pass
+
+cdef class ushort1:
+    pass
+
+cdef class ushort2:
+    pass
+
+cdef class ushort3:
+    pass
+
+cdef class ushort4:
+    pass
+
+cdef class short1:
+    pass
+
+cdef class short2:
+    pass
+
+cdef class short3:
+    pass
+
+cdef class short4:
+    pass
+
+cdef class uint1:
+    pass
+
+cdef class uint2:
+    pass
+
+cdef class uint3:
+    pass
+
+cdef class uint4:
+    pass
+
+cdef class int1:
+    pass
+
+cdef class int2:
+    pass
+
+cdef class int3:
+    pass
+
+cdef class int4:
+    pass
+
+cdef class ulong1:
+    pass
+
+cdef class ulong2:
+    pass
+
+cdef class ulong3:
+    pass
+
+cdef class ulong4:
+    pass
+
+cdef class long1:
+    pass
+
+cdef class long2:
+    pass
+
+cdef class long3:
+    pass
+
+cdef class long4:
+    pass
+
+cdef class ulonglong1:
+    pass
+
+cdef class ulonglong2:
+    pass
+
+cdef class ulonglong3:
+    pass
+
+cdef class ulonglong4:
+    pass
+
+cdef class longlong1:
+    pass
+
+cdef class longlong2:
+    pass
+
+cdef class longlong3:
+    pass
+
+cdef class longlong4:
+    pass
+
+cdef class float1:
+    pass
+
+cdef class float2:
+    pass
+
+cdef class float3:
+    pass
+
+cdef class float4:
+    pass
+
+cdef class double1:
+    pass
+
+cdef class double2:
+    pass
+
+cdef class double3:
+    pass
+
+cdef class double4:
+    pass
+
+cdef class __hip_texture:
+    pass
+
 class hipTextureAddressMode(enum.IntEnum):
     hipAddressModeWrap = chip.hipAddressModeWrap
     hipAddressModeClamp = chip.hipAddressModeClamp
@@ -521,16 +761,55 @@ class hipTextureReadMode(enum.IntEnum):
     hipReadModeElementType = chip.hipReadModeElementType
     hipReadModeNormalizedFloat = chip.hipReadModeNormalizedFloat
 
+cdef class textureReference:
+    pass
+
+cdef class hipTextureDesc:
+    pass
+
+cdef class __hip_surface:
+    pass
+
+cdef class surfaceReference:
+    pass
+
 class hipSurfaceBoundaryMode(enum.IntEnum):
     hipBoundaryModeZero = chip.hipBoundaryModeZero
     hipBoundaryModeTrap = chip.hipBoundaryModeTrap
     hipBoundaryModeClamp = chip.hipBoundaryModeClamp
+
+cdef class ihipCtx_t:
+    pass
 
 class hipDeviceP2PAttr(enum.IntEnum):
     hipDevP2PAttrPerformanceRank = chip.hipDevP2PAttrPerformanceRank
     hipDevP2PAttrAccessSupported = chip.hipDevP2PAttrAccessSupported
     hipDevP2PAttrNativeAtomicSupported = chip.hipDevP2PAttrNativeAtomicSupported
     hipDevP2PAttrHipArrayAccessSupported = chip.hipDevP2PAttrHipArrayAccessSupported
+
+cdef class ihipStream_t:
+    pass
+
+cdef class hipIpcMemHandle_st:
+    pass
+
+cdef class hipIpcEventHandle_st:
+    pass
+
+cdef class ihipModule_t:
+    pass
+
+cdef class ihipModuleSymbol_t:
+    pass
+
+cdef class ihipMemPoolHandle_t:
+    pass
+
+cdef class hipFuncAttributes:
+    pass
+
+cdef class ihipEvent_t:
+    pass
 
 class hipLimit_t(enum.IntEnum):
     hipLimitStackSize = chip.hipLimitStackSize
@@ -574,10 +853,16 @@ class hipMemLocationType(enum.IntEnum):
     hipMemLocationTypeInvalid = chip.hipMemLocationTypeInvalid
     hipMemLocationTypeDevice = chip.hipMemLocationTypeDevice
 
+cdef class hipMemLocation:
+    pass
+
 class hipMemAccessFlags(enum.IntEnum):
     hipMemAccessFlagsProtNone = chip.hipMemAccessFlagsProtNone
     hipMemAccessFlagsProtRead = chip.hipMemAccessFlagsProtRead
     hipMemAccessFlagsProtReadWrite = chip.hipMemAccessFlagsProtReadWrite
+
+cdef class hipMemAccessDesc:
+    pass
 
 class hipMemAllocationType(enum.IntEnum):
     hipMemAllocationTypeInvalid = chip.hipMemAllocationTypeInvalid
@@ -589,6 +874,12 @@ class hipMemAllocationHandleType(enum.IntEnum):
     hipMemHandleTypePosixFileDescriptor = chip.hipMemHandleTypePosixFileDescriptor
     hipMemHandleTypeWin32 = chip.hipMemHandleTypeWin32
     hipMemHandleTypeWin32Kmt = chip.hipMemHandleTypeWin32Kmt
+
+cdef class hipMemPoolProps:
+    pass
+
+cdef class hipMemPoolPtrExportData:
+    pass
 
 class hipJitOption(enum.IntEnum):
     hipJitOptionMaxRegisters = chip.hipJitOptionMaxRegisters
@@ -626,6 +917,12 @@ class hipSharedMemConfig(enum.IntEnum):
     hipSharedMemBankSizeFourByte = chip.hipSharedMemBankSizeFourByte
     hipSharedMemBankSizeEightByte = chip.hipSharedMemBankSizeEightByte
 
+cdef class dim3:
+    pass
+
+cdef class hipLaunchParams_t:
+    pass
+
 class hipExternalMemoryHandleType_enum(enum.IntEnum):
     hipExternalMemoryHandleTypeOpaqueFd = chip.hipExternalMemoryHandleTypeOpaqueFd
     hipExternalMemoryHandleTypeOpaqueWin32 = chip.hipExternalMemoryHandleTypeOpaqueWin32
@@ -635,11 +932,56 @@ class hipExternalMemoryHandleType_enum(enum.IntEnum):
     hipExternalMemoryHandleTypeD3D11Resource = chip.hipExternalMemoryHandleTypeD3D11Resource
     hipExternalMemoryHandleTypeD3D11ResourceKmt = chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
 
+cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
+    pass
+
+cdef class hipExternalMemoryHandleDesc_st_union_0:
+    pass
+
+cdef class hipExternalMemoryHandleDesc_st:
+    pass
+
+cdef class hipExternalMemoryBufferDesc_st:
+    pass
+
 class hipExternalSemaphoreHandleType_enum(enum.IntEnum):
     hipExternalSemaphoreHandleTypeOpaqueFd = chip.hipExternalSemaphoreHandleTypeOpaqueFd
     hipExternalSemaphoreHandleTypeOpaqueWin32 = chip.hipExternalSemaphoreHandleTypeOpaqueWin32
     hipExternalSemaphoreHandleTypeOpaqueWin32Kmt = chip.hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
     hipExternalSemaphoreHandleTypeD3D12Fence = chip.hipExternalSemaphoreHandleTypeD3D12Fence
+
+cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
+    pass
+
+cdef class hipExternalSemaphoreHandleDesc_st_union_0:
+    pass
+
+cdef class hipExternalSemaphoreHandleDesc_st:
+    pass
+
+cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
+    pass
+
+cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
+    pass
+
+cdef class hipExternalSemaphoreSignalParams_st_struct_0:
+    pass
+
+cdef class hipExternalSemaphoreSignalParams_st:
+    pass
+
+cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
+    pass
+
+cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
+    pass
+
+cdef class hipExternalSemaphoreWaitParams_st_struct_0:
+    pass
+
+cdef class hipExternalSemaphoreWaitParams_st:
+    pass
 
 class hipGLDeviceList(enum.IntEnum):
     hipGLDeviceListAll = chip.hipGLDeviceListAll
@@ -652,6 +994,21 @@ class hipGraphicsRegisterFlags(enum.IntEnum):
     hipGraphicsRegisterFlagsWriteDiscard = chip.hipGraphicsRegisterFlagsWriteDiscard
     hipGraphicsRegisterFlagsSurfaceLoadStore = chip.hipGraphicsRegisterFlagsSurfaceLoadStore
     hipGraphicsRegisterFlagsTextureGather = chip.hipGraphicsRegisterFlagsTextureGather
+
+cdef class _hipGraphicsResource:
+    pass
+
+cdef class ihipGraph:
+    pass
+
+cdef class hipGraphNode:
+    pass
+
+cdef class hipGraphExec:
+    pass
+
+cdef class hipUserObject:
+    pass
 
 class hipGraphNodeType(enum.IntEnum):
     hipGraphNodeTypeKernel = chip.hipGraphNodeTypeKernel
@@ -668,6 +1025,15 @@ class hipGraphNodeType(enum.IntEnum):
     hipGraphNodeTypeMemcpyToSymbol = chip.hipGraphNodeTypeMemcpyToSymbol
     hipGraphNodeTypeCount = chip.hipGraphNodeTypeCount
 
+cdef class hipHostNodeParams:
+    pass
+
+cdef class hipKernelNodeParams:
+    pass
+
+cdef class hipMemsetParams:
+    pass
+
 class hipKernelNodeAttrID(enum.IntEnum):
     hipKernelNodeAttributeAccessPolicyWindow = chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = chip.hipKernelNodeAttributeCooperative
@@ -676,6 +1042,12 @@ class hipAccessProperty(enum.IntEnum):
     hipAccessPropertyNormal = chip.hipAccessPropertyNormal
     hipAccessPropertyStreaming = chip.hipAccessPropertyStreaming
     hipAccessPropertyPersisting = chip.hipAccessPropertyPersisting
+
+cdef class hipAccessPolicyWindow:
+    pass
+
+cdef class hipKernelNodeAttrValue:
+    pass
 
 class hipGraphExecUpdateResult(enum.IntEnum):
     hipGraphExecUpdateSuccess = chip.hipGraphExecUpdateSuccess
@@ -716,6 +1088,15 @@ class hipUserObjectRetainFlags(enum.IntEnum):
 class hipGraphInstantiateFlags(enum.IntEnum):
     hipGraphInstantiateFlagAutoFreeOnLaunch = chip.hipGraphInstantiateFlagAutoFreeOnLaunch
 
+cdef class hipMemAllocationProp_struct_0:
+    pass
+
+cdef class hipMemAllocationProp:
+    pass
+
+cdef class ihipMemGenericAllocationHandle:
+    pass
+
 class hipMemAllocationGranularity_flags(enum.IntEnum):
     hipMemAllocationGranularityMinimum = chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityRecommended = chip.hipMemAllocationGranularityRecommended
@@ -730,3 +1111,21 @@ class hipMemOperationType(enum.IntEnum):
 class hipArraySparseSubresourceType(enum.IntEnum):
     hipArraySparseSubresourceTypeSparseLevel = chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeMiptail = chip.hipArraySparseSubresourceTypeMiptail
+
+cdef class hipArrayMapInfo_union_0:
+    pass
+
+cdef class hipArrayMapInfo_union_1_struct_0:
+    pass
+
+cdef class hipArrayMapInfo_union_1_struct_1:
+    pass
+
+cdef class hipArrayMapInfo_union_1:
+    pass
+
+cdef class hipArrayMapInfo_union_2:
+    pass
+
+cdef class hipArrayMapInfo:
+    pass
