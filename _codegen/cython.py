@@ -34,6 +34,7 @@ def DEFAULT_RENAMER(name):  # backend-specific
 def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
 
+
 wrapper_class_base_template = """
 cdef class {{name}}:
     cdef {{cname}}* _ptr
@@ -81,50 +82,56 @@ cdef class {{name}}:
 """
 
 wrapper_class_property_template = """\
-{{if is_basic}}
+{{if is_basic_type}}
 def get_{{attr}}(self, i):
-    \"""Getter for ``{{attr}}`` of element ``i``.
+    \"""Get value ``{{attr}}`` of ``self._ptr[i]``.
     \"""
     return self._ptr[i].{{attr}}
 def set_{{attr}}(self, i, {{typename}} value):
-    \"""Setter for ``{{attr}}`` of element ``i``.
+    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
     \"""
     self._ptr[i].{{attr}} = value
 @property
 def {{attr}}(self):
-    \"""Getter for ``{{attr}}``.\"""
     return self.get_{{attr}}(0)
 @{{attr}}.setter
 def {{attr}}(self, {{typename}} value):
-    \"""Setter for ``{{attr}}``.\"""
     self.set_{{attr}}(0,value)
+{{elif is_basic_type_constantarray}}
+def get_{{attr}}(self, i):
+    \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
+    \"""
+    return self._ptr[i].{{attr}}
+@property
+def {{attr}}(self):
+    return self.get_{{attr}}(0)
+# TODO is_basic_type_constantarray: add setters
 {{elif is_enum}}
 def get_{{attr}}(self, i):
-    \"""Getter for ``{{attr}}`` of element ``i``.
+    \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
     \"""
     return {{typename}}(self._ptr[i].{{attr}})
 def set_{{attr}}(self, i, value):
-    \"""Setter for ``{{attr}}`` of element ``i``.
+    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
     \"""
     if not isinstance(value, {{typename}}):
         raise TypeError("'value' must be of type '{{typename}}'")
     self._ptr[i].{{attr}} = value.value
 @property
 def {{attr}}(self):
-    \"""Getter for ``{{attr}}``.\"""
     return self.get_{{attr}}(0)
 @{{attr}}.setter
 def {{attr}}(self, value):
-    \"""Setter for ``{{attr}}``.\"""
     self.set_{{attr}}(0,value)
+{{elif is_enum_constantarray}}
+# TODO is_enum_constantarray: add
 {{elif is_record}}
 def get_{{attr}}(self, i):
-    \"""Getter for ``{{attr}}`` of element ``i``.
+    \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
     \"""
     return {{typename}}.from_ptr(&self._ptr[i].{{attr}})
 @property
 def {{attr}}(self):
-    \"""Getter for ``{{attr}}``.\"""
     return self.get_{{attr}}(0)
 {{endif}}
 """
@@ -182,19 +189,26 @@ class FieldMixin(CythonMixin):
         name = self._cython_and_c_name(self.name)
         return f"{typename} {name}"
 
-    def render_python_property(self,cprefix: str):
+    def render_python_property(self, cprefix: str):
         from . import tree
 
         assert isinstance(self, tree.Field)
         attr = self.renamer(self.name)
         template = Cython.Tempita.Template(wrapper_class_property_template)
         return template.substitute(
-          typename = self.global_typename(self.sep, self.renamer),
-          attr = attr,
-          is_basic = self.is_basic_type or self.is_char_pointer, # TODO user should be consulted if char pointer is a string
-          is_record = self.is_record,
-          is_enum = self.is_enum,
+            typename=self.global_typename(self.sep, self.renamer),
+            attr=attr,
+            is_basic_type=(
+                self.is_basic_type
+                or self.is_char_pointer  # TODO user should be consulted if char pointer is a string
+            ),
+            is_basic_type_constantarray=self.is_basic_type_constarray,
+            is_record=self.is_record,
+            is_enum=self.is_enum,
+            is_enum_constantarray=self.is_enum_constantarray,
+            is_record_constantarray=self.is_record_constantarray,
         )
+
 
 class RecordMixin(CythonMixin):
     @property
@@ -235,7 +249,7 @@ class RecordMixin(CythonMixin):
             result += f"{indent}pass"
         return result
 
-    def _render_python_interface_head(self,cprefix: str) -> str:
+    def _render_python_interface_head(self, cprefix: str) -> str:
         from . import tree
 
         assert isinstance(self, tree.Record)
@@ -243,12 +257,12 @@ class RecordMixin(CythonMixin):
         name = self.renamer(self.global_name(self.sep))
         template = Cython.Tempita.Template(wrapper_class_base_template)
         return template.substitute(
-          name = name,
-          cname = cprefix + name,
-          has_new = not self.is_incomplete,
+            name=name,
+            cname=cprefix + name,
+            has_new=not self.is_incomplete,
         )
 
-    def render_python_interface(self,cprefix: str) -> str:
+    def render_python_interface(self, cprefix: str) -> str:
         """Render Cython binding for this struct/union declaration.
 
         Renders a Cython binding for this struct/union declaration, does
@@ -264,9 +278,9 @@ class RecordMixin(CythonMixin):
 
         result = self._render_python_interface_head(cprefix)
         for field in self.fields:
-            result += textwrap.indent(field.render_python_property(cprefix),indent)
+            result += textwrap.indent(field.render_python_property(cprefix), indent)
         # fields = list(self.fields)
-        #result += f"{indent}pass"
+        # result += f"{indent}pass"
         return result
 
 
@@ -334,8 +348,8 @@ class EnumMixin(CythonMixin):
                 "\n".join(self._render_python_enums(cprefix)), indent
             )
 
+
 class TypedefMixin(CythonMixin):
-   
     def render_c_interface(self):
         from . import tree
 
@@ -347,14 +361,16 @@ class TypedefMixin(CythonMixin):
 
         return f"ctypedef {underlying_type_name} {name}"
 
-    def render_python_interface(self,cprefix: str) -> str:
+    def render_python_interface(self, cprefix: str) -> str:
         from . import tree
+
         assert isinstance(self, tree.Typedef)
         name = self.renamer(self.global_name(self.sep))
         if self.is_record_or_enum_pointer:
             return f"{name} = {self.renamer(self.typeref.global_name(self.sep))}"
         else:
             return None
+
 
 class FunctionPointerMixin(CythonMixin):
     def render_c_interface(self):
@@ -368,8 +384,8 @@ class FunctionPointerMixin(CythonMixin):
             self.global_name(self.sep)
         )  # might be AnonymousFunctionPointer
         return f"ctypedef {underlying_type_name} (*{typename}) ({parm_types})"
-    
-    def render_python_interface(self,cprefix: str) -> str:
+
+    def render_python_interface(self, cprefix: str) -> str:
         from . import tree
 
         assert isinstance(self, tree.FunctionPointer)
@@ -377,10 +393,11 @@ class FunctionPointerMixin(CythonMixin):
         name = self.renamer(self.global_name(self.sep))
         template = Cython.Tempita.Template(wrapper_class_base_template)
         return template.substitute(
-          name = name,
-          cname = cprefix + name,
-          has_new = False,
+            name=name,
+            cname=cprefix + name,
+            has_new=False,
         )
+
 
 class TypedefedFunctionPointerMixin(FunctionPointerMixin):
     pass
@@ -422,7 +439,7 @@ class FunctionMixin(CythonMixin):
         assert isinstance(self, tree.Function)
         return f'"""{"".join(self._raw_comment_stripped()).rstrip()}\n"""'
 
-    def render_c_interface(self, modifiers=" nogil",modifiers_front=""):
+    def render_c_interface(self, modifiers=" nogil", modifiers_front=""):
         from . import tree
 
         assert isinstance(self, tree.Function)
@@ -464,6 +481,7 @@ cdef void* {funptr_name} = NULL
             {funptr_name} = loader.load_symbol({lib_handle}, "{self.name}")
     return (<{typename} (*)({parm_types}) nogil> {funptr_name})({parm_names})
 """
+
 
 # TODO render_python_interfaces
 
@@ -564,12 +582,17 @@ class CythonBackend:
 
         last_was_extern = False
         for node in self._walk_filtered_nodes():
-            if  (  (runtime_linking and isinstance(node, FunctionMixin))
-                   or isinstance(node,AnonymousFunctionPointerMixin)
-                   or (isinstance(node,(tree.NestedEnum,tree.NestedStruct,tree.NestedUnion))
-                       and node.is_cursor_anonymous)
+            if (
+                (runtime_linking and isinstance(node, FunctionMixin))
+                or isinstance(node, AnonymousFunctionPointerMixin)
+                or (
+                    isinstance(
+                        node, (tree.NestedEnum, tree.NestedStruct, tree.NestedUnion)
+                    )
+                    and node.is_cursor_anonymous
+                )
             ):
-                if isinstance(node,FunctionMixin):
+                if isinstance(node, FunctionMixin):
                     contrib = node.render_cython_lazy_loader_decl()
                 else:
                     contrib = node.render_c_interface()
@@ -610,18 +633,22 @@ cdef void* {lib_handle} = loader.open_library(\"{dll}\")
     def create_python_interfaces(self, cmodule):
         """Renders Python interfaces in Cython."""
         from . import tree
+
         result = []
-        cprefix=f"{cmodule}."
+        cprefix = f"{cmodule}."
         for node in self._walk_filtered_nodes():
             contrib = None
-            if isinstance(node, (
-                MacroDefinitionMixin,
-                EnumMixin,
-                StructMixin,UnionMixin,
-                TypedefedFunctionPointerMixin,
-                AnonymousFunctionPointerMixin,
-                TypedefMixin,
-              )
+            if isinstance(
+                node,
+                (
+                    MacroDefinitionMixin,
+                    EnumMixin,
+                    StructMixin,
+                    UnionMixin,
+                    TypedefedFunctionPointerMixin,
+                    AnonymousFunctionPointerMixin,
+                    TypedefMixin,
+                ),
             ):
                 contrib = node.render_python_interface(cprefix=cprefix)
             elif isinstance(node, FunctionMixin):

@@ -38,9 +38,8 @@ class Rank(enum.IntEnum):
 
     @property
     def might_be_array(self):
-        """Returns if this ``Rank`` would match an array.
-        """
-        return self.value in (Rank.ARRAY.value,Rank.ANY.value)
+        """Returns if this ``Rank`` would match an array."""
+        return self.value in (Rank.ARRAY.value, Rank.ANY.value)
 
 
 def DEFAULT_PTR_PARM_INTENT(node: "tree.Node"):

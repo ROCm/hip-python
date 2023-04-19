@@ -208,6 +208,14 @@ cdef class hipUUID_t:
             raise MemoryError
         # TODO init values, if present
         return hipUUID_t.from_ptr(_ptr, owner=True)
+    def get_bytes(self, i):
+        """Get value of ``bytes`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].bytes
+    @property
+    def bytes(self):
+        return self.get_bytes(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 
@@ -248,749 +256,704 @@ cdef class hipDeviceProp_t:
             raise MemoryError
         # TODO init values, if present
         return hipDeviceProp_t.from_ptr(_ptr, owner=True)
+    def get_name(self, i):
+        """Get value of ``name`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].name
+    @property
+    def name(self):
+        return self.get_name(0)
+    # TODO is_basic_type_constantarray: add setters
     def get_totalGlobalMem(self, i):
-        """Getter for ``totalGlobalMem`` of element ``i``.
+        """Get value ``totalGlobalMem`` of ``self._ptr[i]``.
         """
         return self._ptr[i].totalGlobalMem
     def set_totalGlobalMem(self, i, int value):
-        """Setter for ``totalGlobalMem`` of element ``i``.
+        """Set value ``totalGlobalMem`` of ``self._ptr[i]``.
         """
         self._ptr[i].totalGlobalMem = value
     @property
     def totalGlobalMem(self):
-        """Getter for ``totalGlobalMem``."""
         return self.get_totalGlobalMem(0)
     @totalGlobalMem.setter
     def totalGlobalMem(self, int value):
-        """Setter for ``totalGlobalMem``."""
         self.set_totalGlobalMem(0,value)
     def get_sharedMemPerBlock(self, i):
-        """Getter for ``sharedMemPerBlock`` of element ``i``.
+        """Get value ``sharedMemPerBlock`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sharedMemPerBlock
     def set_sharedMemPerBlock(self, i, int value):
-        """Setter for ``sharedMemPerBlock`` of element ``i``.
+        """Set value ``sharedMemPerBlock`` of ``self._ptr[i]``.
         """
         self._ptr[i].sharedMemPerBlock = value
     @property
     def sharedMemPerBlock(self):
-        """Getter for ``sharedMemPerBlock``."""
         return self.get_sharedMemPerBlock(0)
     @sharedMemPerBlock.setter
     def sharedMemPerBlock(self, int value):
-        """Setter for ``sharedMemPerBlock``."""
         self.set_sharedMemPerBlock(0,value)
     def get_regsPerBlock(self, i):
-        """Getter for ``regsPerBlock`` of element ``i``.
+        """Get value ``regsPerBlock`` of ``self._ptr[i]``.
         """
         return self._ptr[i].regsPerBlock
     def set_regsPerBlock(self, i, int value):
-        """Setter for ``regsPerBlock`` of element ``i``.
+        """Set value ``regsPerBlock`` of ``self._ptr[i]``.
         """
         self._ptr[i].regsPerBlock = value
     @property
     def regsPerBlock(self):
-        """Getter for ``regsPerBlock``."""
         return self.get_regsPerBlock(0)
     @regsPerBlock.setter
     def regsPerBlock(self, int value):
-        """Setter for ``regsPerBlock``."""
         self.set_regsPerBlock(0,value)
     def get_warpSize(self, i):
-        """Getter for ``warpSize`` of element ``i``.
+        """Get value ``warpSize`` of ``self._ptr[i]``.
         """
         return self._ptr[i].warpSize
     def set_warpSize(self, i, int value):
-        """Setter for ``warpSize`` of element ``i``.
+        """Set value ``warpSize`` of ``self._ptr[i]``.
         """
         self._ptr[i].warpSize = value
     @property
     def warpSize(self):
-        """Getter for ``warpSize``."""
         return self.get_warpSize(0)
     @warpSize.setter
     def warpSize(self, int value):
-        """Setter for ``warpSize``."""
         self.set_warpSize(0,value)
     def get_maxThreadsPerBlock(self, i):
-        """Getter for ``maxThreadsPerBlock`` of element ``i``.
+        """Get value ``maxThreadsPerBlock`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxThreadsPerBlock
     def set_maxThreadsPerBlock(self, i, int value):
-        """Setter for ``maxThreadsPerBlock`` of element ``i``.
+        """Set value ``maxThreadsPerBlock`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxThreadsPerBlock = value
     @property
     def maxThreadsPerBlock(self):
-        """Getter for ``maxThreadsPerBlock``."""
         return self.get_maxThreadsPerBlock(0)
     @maxThreadsPerBlock.setter
     def maxThreadsPerBlock(self, int value):
-        """Setter for ``maxThreadsPerBlock``."""
         self.set_maxThreadsPerBlock(0,value)
+    def get_maxThreadsDim(self, i):
+        """Get value of ``maxThreadsDim`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].maxThreadsDim
+    @property
+    def maxThreadsDim(self):
+        return self.get_maxThreadsDim(0)
+    # TODO is_basic_type_constantarray: add setters
+    def get_maxGridSize(self, i):
+        """Get value of ``maxGridSize`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].maxGridSize
+    @property
+    def maxGridSize(self):
+        return self.get_maxGridSize(0)
+    # TODO is_basic_type_constantarray: add setters
     def get_clockRate(self, i):
-        """Getter for ``clockRate`` of element ``i``.
+        """Get value ``clockRate`` of ``self._ptr[i]``.
         """
         return self._ptr[i].clockRate
     def set_clockRate(self, i, int value):
-        """Setter for ``clockRate`` of element ``i``.
+        """Set value ``clockRate`` of ``self._ptr[i]``.
         """
         self._ptr[i].clockRate = value
     @property
     def clockRate(self):
-        """Getter for ``clockRate``."""
         return self.get_clockRate(0)
     @clockRate.setter
     def clockRate(self, int value):
-        """Setter for ``clockRate``."""
         self.set_clockRate(0,value)
     def get_memoryClockRate(self, i):
-        """Getter for ``memoryClockRate`` of element ``i``.
+        """Get value ``memoryClockRate`` of ``self._ptr[i]``.
         """
         return self._ptr[i].memoryClockRate
     def set_memoryClockRate(self, i, int value):
-        """Setter for ``memoryClockRate`` of element ``i``.
+        """Set value ``memoryClockRate`` of ``self._ptr[i]``.
         """
         self._ptr[i].memoryClockRate = value
     @property
     def memoryClockRate(self):
-        """Getter for ``memoryClockRate``."""
         return self.get_memoryClockRate(0)
     @memoryClockRate.setter
     def memoryClockRate(self, int value):
-        """Setter for ``memoryClockRate``."""
         self.set_memoryClockRate(0,value)
     def get_memoryBusWidth(self, i):
-        """Getter for ``memoryBusWidth`` of element ``i``.
+        """Get value ``memoryBusWidth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].memoryBusWidth
     def set_memoryBusWidth(self, i, int value):
-        """Setter for ``memoryBusWidth`` of element ``i``.
+        """Set value ``memoryBusWidth`` of ``self._ptr[i]``.
         """
         self._ptr[i].memoryBusWidth = value
     @property
     def memoryBusWidth(self):
-        """Getter for ``memoryBusWidth``."""
         return self.get_memoryBusWidth(0)
     @memoryBusWidth.setter
     def memoryBusWidth(self, int value):
-        """Setter for ``memoryBusWidth``."""
         self.set_memoryBusWidth(0,value)
     def get_totalConstMem(self, i):
-        """Getter for ``totalConstMem`` of element ``i``.
+        """Get value ``totalConstMem`` of ``self._ptr[i]``.
         """
         return self._ptr[i].totalConstMem
     def set_totalConstMem(self, i, int value):
-        """Setter for ``totalConstMem`` of element ``i``.
+        """Set value ``totalConstMem`` of ``self._ptr[i]``.
         """
         self._ptr[i].totalConstMem = value
     @property
     def totalConstMem(self):
-        """Getter for ``totalConstMem``."""
         return self.get_totalConstMem(0)
     @totalConstMem.setter
     def totalConstMem(self, int value):
-        """Setter for ``totalConstMem``."""
         self.set_totalConstMem(0,value)
     def get_major(self, i):
-        """Getter for ``major`` of element ``i``.
+        """Get value ``major`` of ``self._ptr[i]``.
         """
         return self._ptr[i].major
     def set_major(self, i, int value):
-        """Setter for ``major`` of element ``i``.
+        """Set value ``major`` of ``self._ptr[i]``.
         """
         self._ptr[i].major = value
     @property
     def major(self):
-        """Getter for ``major``."""
         return self.get_major(0)
     @major.setter
     def major(self, int value):
-        """Setter for ``major``."""
         self.set_major(0,value)
     def get_minor(self, i):
-        """Getter for ``minor`` of element ``i``.
+        """Get value ``minor`` of ``self._ptr[i]``.
         """
         return self._ptr[i].minor
     def set_minor(self, i, int value):
-        """Setter for ``minor`` of element ``i``.
+        """Set value ``minor`` of ``self._ptr[i]``.
         """
         self._ptr[i].minor = value
     @property
     def minor(self):
-        """Getter for ``minor``."""
         return self.get_minor(0)
     @minor.setter
     def minor(self, int value):
-        """Setter for ``minor``."""
         self.set_minor(0,value)
     def get_multiProcessorCount(self, i):
-        """Getter for ``multiProcessorCount`` of element ``i``.
+        """Get value ``multiProcessorCount`` of ``self._ptr[i]``.
         """
         return self._ptr[i].multiProcessorCount
     def set_multiProcessorCount(self, i, int value):
-        """Setter for ``multiProcessorCount`` of element ``i``.
+        """Set value ``multiProcessorCount`` of ``self._ptr[i]``.
         """
         self._ptr[i].multiProcessorCount = value
     @property
     def multiProcessorCount(self):
-        """Getter for ``multiProcessorCount``."""
         return self.get_multiProcessorCount(0)
     @multiProcessorCount.setter
     def multiProcessorCount(self, int value):
-        """Setter for ``multiProcessorCount``."""
         self.set_multiProcessorCount(0,value)
     def get_l2CacheSize(self, i):
-        """Getter for ``l2CacheSize`` of element ``i``.
+        """Get value ``l2CacheSize`` of ``self._ptr[i]``.
         """
         return self._ptr[i].l2CacheSize
     def set_l2CacheSize(self, i, int value):
-        """Setter for ``l2CacheSize`` of element ``i``.
+        """Set value ``l2CacheSize`` of ``self._ptr[i]``.
         """
         self._ptr[i].l2CacheSize = value
     @property
     def l2CacheSize(self):
-        """Getter for ``l2CacheSize``."""
         return self.get_l2CacheSize(0)
     @l2CacheSize.setter
     def l2CacheSize(self, int value):
-        """Setter for ``l2CacheSize``."""
         self.set_l2CacheSize(0,value)
     def get_maxThreadsPerMultiProcessor(self, i):
-        """Getter for ``maxThreadsPerMultiProcessor`` of element ``i``.
+        """Get value ``maxThreadsPerMultiProcessor`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxThreadsPerMultiProcessor
     def set_maxThreadsPerMultiProcessor(self, i, int value):
-        """Setter for ``maxThreadsPerMultiProcessor`` of element ``i``.
+        """Set value ``maxThreadsPerMultiProcessor`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxThreadsPerMultiProcessor = value
     @property
     def maxThreadsPerMultiProcessor(self):
-        """Getter for ``maxThreadsPerMultiProcessor``."""
         return self.get_maxThreadsPerMultiProcessor(0)
     @maxThreadsPerMultiProcessor.setter
     def maxThreadsPerMultiProcessor(self, int value):
-        """Setter for ``maxThreadsPerMultiProcessor``."""
         self.set_maxThreadsPerMultiProcessor(0,value)
     def get_computeMode(self, i):
-        """Getter for ``computeMode`` of element ``i``.
+        """Get value ``computeMode`` of ``self._ptr[i]``.
         """
         return self._ptr[i].computeMode
     def set_computeMode(self, i, int value):
-        """Setter for ``computeMode`` of element ``i``.
+        """Set value ``computeMode`` of ``self._ptr[i]``.
         """
         self._ptr[i].computeMode = value
     @property
     def computeMode(self):
-        """Getter for ``computeMode``."""
         return self.get_computeMode(0)
     @computeMode.setter
     def computeMode(self, int value):
-        """Setter for ``computeMode``."""
         self.set_computeMode(0,value)
     def get_clockInstructionRate(self, i):
-        """Getter for ``clockInstructionRate`` of element ``i``.
+        """Get value ``clockInstructionRate`` of ``self._ptr[i]``.
         """
         return self._ptr[i].clockInstructionRate
     def set_clockInstructionRate(self, i, int value):
-        """Setter for ``clockInstructionRate`` of element ``i``.
+        """Set value ``clockInstructionRate`` of ``self._ptr[i]``.
         """
         self._ptr[i].clockInstructionRate = value
     @property
     def clockInstructionRate(self):
-        """Getter for ``clockInstructionRate``."""
         return self.get_clockInstructionRate(0)
     @clockInstructionRate.setter
     def clockInstructionRate(self, int value):
-        """Setter for ``clockInstructionRate``."""
         self.set_clockInstructionRate(0,value)
     def get_arch(self, i):
-        """Getter for ``arch`` of element ``i``.
+        """Get value of ``arch`` of ``self._ptr[i]``.
         """
         return hipDeviceArch_t.from_ptr(&self._ptr[i].arch)
     @property
     def arch(self):
-        """Getter for ``arch``."""
         return self.get_arch(0)
     def get_concurrentKernels(self, i):
-        """Getter for ``concurrentKernels`` of element ``i``.
+        """Get value ``concurrentKernels`` of ``self._ptr[i]``.
         """
         return self._ptr[i].concurrentKernels
     def set_concurrentKernels(self, i, int value):
-        """Setter for ``concurrentKernels`` of element ``i``.
+        """Set value ``concurrentKernels`` of ``self._ptr[i]``.
         """
         self._ptr[i].concurrentKernels = value
     @property
     def concurrentKernels(self):
-        """Getter for ``concurrentKernels``."""
         return self.get_concurrentKernels(0)
     @concurrentKernels.setter
     def concurrentKernels(self, int value):
-        """Setter for ``concurrentKernels``."""
         self.set_concurrentKernels(0,value)
     def get_pciDomainID(self, i):
-        """Getter for ``pciDomainID`` of element ``i``.
+        """Get value ``pciDomainID`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pciDomainID
     def set_pciDomainID(self, i, int value):
-        """Setter for ``pciDomainID`` of element ``i``.
+        """Set value ``pciDomainID`` of ``self._ptr[i]``.
         """
         self._ptr[i].pciDomainID = value
     @property
     def pciDomainID(self):
-        """Getter for ``pciDomainID``."""
         return self.get_pciDomainID(0)
     @pciDomainID.setter
     def pciDomainID(self, int value):
-        """Setter for ``pciDomainID``."""
         self.set_pciDomainID(0,value)
     def get_pciBusID(self, i):
-        """Getter for ``pciBusID`` of element ``i``.
+        """Get value ``pciBusID`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pciBusID
     def set_pciBusID(self, i, int value):
-        """Setter for ``pciBusID`` of element ``i``.
+        """Set value ``pciBusID`` of ``self._ptr[i]``.
         """
         self._ptr[i].pciBusID = value
     @property
     def pciBusID(self):
-        """Getter for ``pciBusID``."""
         return self.get_pciBusID(0)
     @pciBusID.setter
     def pciBusID(self, int value):
-        """Setter for ``pciBusID``."""
         self.set_pciBusID(0,value)
     def get_pciDeviceID(self, i):
-        """Getter for ``pciDeviceID`` of element ``i``.
+        """Get value ``pciDeviceID`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pciDeviceID
     def set_pciDeviceID(self, i, int value):
-        """Setter for ``pciDeviceID`` of element ``i``.
+        """Set value ``pciDeviceID`` of ``self._ptr[i]``.
         """
         self._ptr[i].pciDeviceID = value
     @property
     def pciDeviceID(self):
-        """Getter for ``pciDeviceID``."""
         return self.get_pciDeviceID(0)
     @pciDeviceID.setter
     def pciDeviceID(self, int value):
-        """Setter for ``pciDeviceID``."""
         self.set_pciDeviceID(0,value)
     def get_maxSharedMemoryPerMultiProcessor(self, i):
-        """Getter for ``maxSharedMemoryPerMultiProcessor`` of element ``i``.
+        """Get value ``maxSharedMemoryPerMultiProcessor`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxSharedMemoryPerMultiProcessor
     def set_maxSharedMemoryPerMultiProcessor(self, i, int value):
-        """Setter for ``maxSharedMemoryPerMultiProcessor`` of element ``i``.
+        """Set value ``maxSharedMemoryPerMultiProcessor`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxSharedMemoryPerMultiProcessor = value
     @property
     def maxSharedMemoryPerMultiProcessor(self):
-        """Getter for ``maxSharedMemoryPerMultiProcessor``."""
         return self.get_maxSharedMemoryPerMultiProcessor(0)
     @maxSharedMemoryPerMultiProcessor.setter
     def maxSharedMemoryPerMultiProcessor(self, int value):
-        """Setter for ``maxSharedMemoryPerMultiProcessor``."""
         self.set_maxSharedMemoryPerMultiProcessor(0,value)
     def get_isMultiGpuBoard(self, i):
-        """Getter for ``isMultiGpuBoard`` of element ``i``.
+        """Get value ``isMultiGpuBoard`` of ``self._ptr[i]``.
         """
         return self._ptr[i].isMultiGpuBoard
     def set_isMultiGpuBoard(self, i, int value):
-        """Setter for ``isMultiGpuBoard`` of element ``i``.
+        """Set value ``isMultiGpuBoard`` of ``self._ptr[i]``.
         """
         self._ptr[i].isMultiGpuBoard = value
     @property
     def isMultiGpuBoard(self):
-        """Getter for ``isMultiGpuBoard``."""
         return self.get_isMultiGpuBoard(0)
     @isMultiGpuBoard.setter
     def isMultiGpuBoard(self, int value):
-        """Setter for ``isMultiGpuBoard``."""
         self.set_isMultiGpuBoard(0,value)
     def get_canMapHostMemory(self, i):
-        """Getter for ``canMapHostMemory`` of element ``i``.
+        """Get value ``canMapHostMemory`` of ``self._ptr[i]``.
         """
         return self._ptr[i].canMapHostMemory
     def set_canMapHostMemory(self, i, int value):
-        """Setter for ``canMapHostMemory`` of element ``i``.
+        """Set value ``canMapHostMemory`` of ``self._ptr[i]``.
         """
         self._ptr[i].canMapHostMemory = value
     @property
     def canMapHostMemory(self):
-        """Getter for ``canMapHostMemory``."""
         return self.get_canMapHostMemory(0)
     @canMapHostMemory.setter
     def canMapHostMemory(self, int value):
-        """Setter for ``canMapHostMemory``."""
         self.set_canMapHostMemory(0,value)
     def get_gcnArch(self, i):
-        """Getter for ``gcnArch`` of element ``i``.
+        """Get value ``gcnArch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].gcnArch
     def set_gcnArch(self, i, int value):
-        """Setter for ``gcnArch`` of element ``i``.
+        """Set value ``gcnArch`` of ``self._ptr[i]``.
         """
         self._ptr[i].gcnArch = value
     @property
     def gcnArch(self):
-        """Getter for ``gcnArch``."""
         return self.get_gcnArch(0)
     @gcnArch.setter
     def gcnArch(self, int value):
-        """Setter for ``gcnArch``."""
         self.set_gcnArch(0,value)
+    def get_gcnArchName(self, i):
+        """Get value of ``gcnArchName`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].gcnArchName
+    @property
+    def gcnArchName(self):
+        return self.get_gcnArchName(0)
+    # TODO is_basic_type_constantarray: add setters
     def get_integrated(self, i):
-        """Getter for ``integrated`` of element ``i``.
+        """Get value ``integrated`` of ``self._ptr[i]``.
         """
         return self._ptr[i].integrated
     def set_integrated(self, i, int value):
-        """Setter for ``integrated`` of element ``i``.
+        """Set value ``integrated`` of ``self._ptr[i]``.
         """
         self._ptr[i].integrated = value
     @property
     def integrated(self):
-        """Getter for ``integrated``."""
         return self.get_integrated(0)
     @integrated.setter
     def integrated(self, int value):
-        """Setter for ``integrated``."""
         self.set_integrated(0,value)
     def get_cooperativeLaunch(self, i):
-        """Getter for ``cooperativeLaunch`` of element ``i``.
+        """Get value ``cooperativeLaunch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].cooperativeLaunch
     def set_cooperativeLaunch(self, i, int value):
-        """Setter for ``cooperativeLaunch`` of element ``i``.
+        """Set value ``cooperativeLaunch`` of ``self._ptr[i]``.
         """
         self._ptr[i].cooperativeLaunch = value
     @property
     def cooperativeLaunch(self):
-        """Getter for ``cooperativeLaunch``."""
         return self.get_cooperativeLaunch(0)
     @cooperativeLaunch.setter
     def cooperativeLaunch(self, int value):
-        """Setter for ``cooperativeLaunch``."""
         self.set_cooperativeLaunch(0,value)
     def get_cooperativeMultiDeviceLaunch(self, i):
-        """Getter for ``cooperativeMultiDeviceLaunch`` of element ``i``.
+        """Get value ``cooperativeMultiDeviceLaunch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].cooperativeMultiDeviceLaunch
     def set_cooperativeMultiDeviceLaunch(self, i, int value):
-        """Setter for ``cooperativeMultiDeviceLaunch`` of element ``i``.
+        """Set value ``cooperativeMultiDeviceLaunch`` of ``self._ptr[i]``.
         """
         self._ptr[i].cooperativeMultiDeviceLaunch = value
     @property
     def cooperativeMultiDeviceLaunch(self):
-        """Getter for ``cooperativeMultiDeviceLaunch``."""
         return self.get_cooperativeMultiDeviceLaunch(0)
     @cooperativeMultiDeviceLaunch.setter
     def cooperativeMultiDeviceLaunch(self, int value):
-        """Setter for ``cooperativeMultiDeviceLaunch``."""
         self.set_cooperativeMultiDeviceLaunch(0,value)
     def get_maxTexture1DLinear(self, i):
-        """Getter for ``maxTexture1DLinear`` of element ``i``.
+        """Get value ``maxTexture1DLinear`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxTexture1DLinear
     def set_maxTexture1DLinear(self, i, int value):
-        """Setter for ``maxTexture1DLinear`` of element ``i``.
+        """Set value ``maxTexture1DLinear`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxTexture1DLinear = value
     @property
     def maxTexture1DLinear(self):
-        """Getter for ``maxTexture1DLinear``."""
         return self.get_maxTexture1DLinear(0)
     @maxTexture1DLinear.setter
     def maxTexture1DLinear(self, int value):
-        """Setter for ``maxTexture1DLinear``."""
         self.set_maxTexture1DLinear(0,value)
     def get_maxTexture1D(self, i):
-        """Getter for ``maxTexture1D`` of element ``i``.
+        """Get value ``maxTexture1D`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxTexture1D
     def set_maxTexture1D(self, i, int value):
-        """Setter for ``maxTexture1D`` of element ``i``.
+        """Set value ``maxTexture1D`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxTexture1D = value
     @property
     def maxTexture1D(self):
-        """Getter for ``maxTexture1D``."""
         return self.get_maxTexture1D(0)
     @maxTexture1D.setter
     def maxTexture1D(self, int value):
-        """Setter for ``maxTexture1D``."""
         self.set_maxTexture1D(0,value)
+    def get_maxTexture2D(self, i):
+        """Get value of ``maxTexture2D`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].maxTexture2D
+    @property
+    def maxTexture2D(self):
+        return self.get_maxTexture2D(0)
+    # TODO is_basic_type_constantarray: add setters
+    def get_maxTexture3D(self, i):
+        """Get value of ``maxTexture3D`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].maxTexture3D
+    @property
+    def maxTexture3D(self):
+        return self.get_maxTexture3D(0)
+    # TODO is_basic_type_constantarray: add setters
     def get_memPitch(self, i):
-        """Getter for ``memPitch`` of element ``i``.
+        """Get value ``memPitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].memPitch
     def set_memPitch(self, i, int value):
-        """Setter for ``memPitch`` of element ``i``.
+        """Set value ``memPitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].memPitch = value
     @property
     def memPitch(self):
-        """Getter for ``memPitch``."""
         return self.get_memPitch(0)
     @memPitch.setter
     def memPitch(self, int value):
-        """Setter for ``memPitch``."""
         self.set_memPitch(0,value)
     def get_textureAlignment(self, i):
-        """Getter for ``textureAlignment`` of element ``i``.
+        """Get value ``textureAlignment`` of ``self._ptr[i]``.
         """
         return self._ptr[i].textureAlignment
     def set_textureAlignment(self, i, int value):
-        """Setter for ``textureAlignment`` of element ``i``.
+        """Set value ``textureAlignment`` of ``self._ptr[i]``.
         """
         self._ptr[i].textureAlignment = value
     @property
     def textureAlignment(self):
-        """Getter for ``textureAlignment``."""
         return self.get_textureAlignment(0)
     @textureAlignment.setter
     def textureAlignment(self, int value):
-        """Setter for ``textureAlignment``."""
         self.set_textureAlignment(0,value)
     def get_texturePitchAlignment(self, i):
-        """Getter for ``texturePitchAlignment`` of element ``i``.
+        """Get value ``texturePitchAlignment`` of ``self._ptr[i]``.
         """
         return self._ptr[i].texturePitchAlignment
     def set_texturePitchAlignment(self, i, int value):
-        """Setter for ``texturePitchAlignment`` of element ``i``.
+        """Set value ``texturePitchAlignment`` of ``self._ptr[i]``.
         """
         self._ptr[i].texturePitchAlignment = value
     @property
     def texturePitchAlignment(self):
-        """Getter for ``texturePitchAlignment``."""
         return self.get_texturePitchAlignment(0)
     @texturePitchAlignment.setter
     def texturePitchAlignment(self, int value):
-        """Setter for ``texturePitchAlignment``."""
         self.set_texturePitchAlignment(0,value)
     def get_kernelExecTimeoutEnabled(self, i):
-        """Getter for ``kernelExecTimeoutEnabled`` of element ``i``.
+        """Get value ``kernelExecTimeoutEnabled`` of ``self._ptr[i]``.
         """
         return self._ptr[i].kernelExecTimeoutEnabled
     def set_kernelExecTimeoutEnabled(self, i, int value):
-        """Setter for ``kernelExecTimeoutEnabled`` of element ``i``.
+        """Set value ``kernelExecTimeoutEnabled`` of ``self._ptr[i]``.
         """
         self._ptr[i].kernelExecTimeoutEnabled = value
     @property
     def kernelExecTimeoutEnabled(self):
-        """Getter for ``kernelExecTimeoutEnabled``."""
         return self.get_kernelExecTimeoutEnabled(0)
     @kernelExecTimeoutEnabled.setter
     def kernelExecTimeoutEnabled(self, int value):
-        """Setter for ``kernelExecTimeoutEnabled``."""
         self.set_kernelExecTimeoutEnabled(0,value)
     def get_ECCEnabled(self, i):
-        """Getter for ``ECCEnabled`` of element ``i``.
+        """Get value ``ECCEnabled`` of ``self._ptr[i]``.
         """
         return self._ptr[i].ECCEnabled
     def set_ECCEnabled(self, i, int value):
-        """Setter for ``ECCEnabled`` of element ``i``.
+        """Set value ``ECCEnabled`` of ``self._ptr[i]``.
         """
         self._ptr[i].ECCEnabled = value
     @property
     def ECCEnabled(self):
-        """Getter for ``ECCEnabled``."""
         return self.get_ECCEnabled(0)
     @ECCEnabled.setter
     def ECCEnabled(self, int value):
-        """Setter for ``ECCEnabled``."""
         self.set_ECCEnabled(0,value)
     def get_tccDriver(self, i):
-        """Getter for ``tccDriver`` of element ``i``.
+        """Get value ``tccDriver`` of ``self._ptr[i]``.
         """
         return self._ptr[i].tccDriver
     def set_tccDriver(self, i, int value):
-        """Setter for ``tccDriver`` of element ``i``.
+        """Set value ``tccDriver`` of ``self._ptr[i]``.
         """
         self._ptr[i].tccDriver = value
     @property
     def tccDriver(self):
-        """Getter for ``tccDriver``."""
         return self.get_tccDriver(0)
     @tccDriver.setter
     def tccDriver(self, int value):
-        """Setter for ``tccDriver``."""
         self.set_tccDriver(0,value)
     def get_cooperativeMultiDeviceUnmatchedFunc(self, i):
-        """Getter for ``cooperativeMultiDeviceUnmatchedFunc`` of element ``i``.
+        """Get value ``cooperativeMultiDeviceUnmatchedFunc`` of ``self._ptr[i]``.
         """
         return self._ptr[i].cooperativeMultiDeviceUnmatchedFunc
     def set_cooperativeMultiDeviceUnmatchedFunc(self, i, int value):
-        """Setter for ``cooperativeMultiDeviceUnmatchedFunc`` of element ``i``.
+        """Set value ``cooperativeMultiDeviceUnmatchedFunc`` of ``self._ptr[i]``.
         """
         self._ptr[i].cooperativeMultiDeviceUnmatchedFunc = value
     @property
     def cooperativeMultiDeviceUnmatchedFunc(self):
-        """Getter for ``cooperativeMultiDeviceUnmatchedFunc``."""
         return self.get_cooperativeMultiDeviceUnmatchedFunc(0)
     @cooperativeMultiDeviceUnmatchedFunc.setter
     def cooperativeMultiDeviceUnmatchedFunc(self, int value):
-        """Setter for ``cooperativeMultiDeviceUnmatchedFunc``."""
         self.set_cooperativeMultiDeviceUnmatchedFunc(0,value)
     def get_cooperativeMultiDeviceUnmatchedGridDim(self, i):
-        """Getter for ``cooperativeMultiDeviceUnmatchedGridDim`` of element ``i``.
+        """Get value ``cooperativeMultiDeviceUnmatchedGridDim`` of ``self._ptr[i]``.
         """
         return self._ptr[i].cooperativeMultiDeviceUnmatchedGridDim
     def set_cooperativeMultiDeviceUnmatchedGridDim(self, i, int value):
-        """Setter for ``cooperativeMultiDeviceUnmatchedGridDim`` of element ``i``.
+        """Set value ``cooperativeMultiDeviceUnmatchedGridDim`` of ``self._ptr[i]``.
         """
         self._ptr[i].cooperativeMultiDeviceUnmatchedGridDim = value
     @property
     def cooperativeMultiDeviceUnmatchedGridDim(self):
-        """Getter for ``cooperativeMultiDeviceUnmatchedGridDim``."""
         return self.get_cooperativeMultiDeviceUnmatchedGridDim(0)
     @cooperativeMultiDeviceUnmatchedGridDim.setter
     def cooperativeMultiDeviceUnmatchedGridDim(self, int value):
-        """Setter for ``cooperativeMultiDeviceUnmatchedGridDim``."""
         self.set_cooperativeMultiDeviceUnmatchedGridDim(0,value)
     def get_cooperativeMultiDeviceUnmatchedBlockDim(self, i):
-        """Getter for ``cooperativeMultiDeviceUnmatchedBlockDim`` of element ``i``.
+        """Get value ``cooperativeMultiDeviceUnmatchedBlockDim`` of ``self._ptr[i]``.
         """
         return self._ptr[i].cooperativeMultiDeviceUnmatchedBlockDim
     def set_cooperativeMultiDeviceUnmatchedBlockDim(self, i, int value):
-        """Setter for ``cooperativeMultiDeviceUnmatchedBlockDim`` of element ``i``.
+        """Set value ``cooperativeMultiDeviceUnmatchedBlockDim`` of ``self._ptr[i]``.
         """
         self._ptr[i].cooperativeMultiDeviceUnmatchedBlockDim = value
     @property
     def cooperativeMultiDeviceUnmatchedBlockDim(self):
-        """Getter for ``cooperativeMultiDeviceUnmatchedBlockDim``."""
         return self.get_cooperativeMultiDeviceUnmatchedBlockDim(0)
     @cooperativeMultiDeviceUnmatchedBlockDim.setter
     def cooperativeMultiDeviceUnmatchedBlockDim(self, int value):
-        """Setter for ``cooperativeMultiDeviceUnmatchedBlockDim``."""
         self.set_cooperativeMultiDeviceUnmatchedBlockDim(0,value)
     def get_cooperativeMultiDeviceUnmatchedSharedMem(self, i):
-        """Getter for ``cooperativeMultiDeviceUnmatchedSharedMem`` of element ``i``.
+        """Get value ``cooperativeMultiDeviceUnmatchedSharedMem`` of ``self._ptr[i]``.
         """
         return self._ptr[i].cooperativeMultiDeviceUnmatchedSharedMem
     def set_cooperativeMultiDeviceUnmatchedSharedMem(self, i, int value):
-        """Setter for ``cooperativeMultiDeviceUnmatchedSharedMem`` of element ``i``.
+        """Set value ``cooperativeMultiDeviceUnmatchedSharedMem`` of ``self._ptr[i]``.
         """
         self._ptr[i].cooperativeMultiDeviceUnmatchedSharedMem = value
     @property
     def cooperativeMultiDeviceUnmatchedSharedMem(self):
-        """Getter for ``cooperativeMultiDeviceUnmatchedSharedMem``."""
         return self.get_cooperativeMultiDeviceUnmatchedSharedMem(0)
     @cooperativeMultiDeviceUnmatchedSharedMem.setter
     def cooperativeMultiDeviceUnmatchedSharedMem(self, int value):
-        """Setter for ``cooperativeMultiDeviceUnmatchedSharedMem``."""
         self.set_cooperativeMultiDeviceUnmatchedSharedMem(0,value)
     def get_isLargeBar(self, i):
-        """Getter for ``isLargeBar`` of element ``i``.
+        """Get value ``isLargeBar`` of ``self._ptr[i]``.
         """
         return self._ptr[i].isLargeBar
     def set_isLargeBar(self, i, int value):
-        """Setter for ``isLargeBar`` of element ``i``.
+        """Set value ``isLargeBar`` of ``self._ptr[i]``.
         """
         self._ptr[i].isLargeBar = value
     @property
     def isLargeBar(self):
-        """Getter for ``isLargeBar``."""
         return self.get_isLargeBar(0)
     @isLargeBar.setter
     def isLargeBar(self, int value):
-        """Setter for ``isLargeBar``."""
         self.set_isLargeBar(0,value)
     def get_asicRevision(self, i):
-        """Getter for ``asicRevision`` of element ``i``.
+        """Get value ``asicRevision`` of ``self._ptr[i]``.
         """
         return self._ptr[i].asicRevision
     def set_asicRevision(self, i, int value):
-        """Setter for ``asicRevision`` of element ``i``.
+        """Set value ``asicRevision`` of ``self._ptr[i]``.
         """
         self._ptr[i].asicRevision = value
     @property
     def asicRevision(self):
-        """Getter for ``asicRevision``."""
         return self.get_asicRevision(0)
     @asicRevision.setter
     def asicRevision(self, int value):
-        """Setter for ``asicRevision``."""
         self.set_asicRevision(0,value)
     def get_managedMemory(self, i):
-        """Getter for ``managedMemory`` of element ``i``.
+        """Get value ``managedMemory`` of ``self._ptr[i]``.
         """
         return self._ptr[i].managedMemory
     def set_managedMemory(self, i, int value):
-        """Setter for ``managedMemory`` of element ``i``.
+        """Set value ``managedMemory`` of ``self._ptr[i]``.
         """
         self._ptr[i].managedMemory = value
     @property
     def managedMemory(self):
-        """Getter for ``managedMemory``."""
         return self.get_managedMemory(0)
     @managedMemory.setter
     def managedMemory(self, int value):
-        """Setter for ``managedMemory``."""
         self.set_managedMemory(0,value)
     def get_directManagedMemAccessFromHost(self, i):
-        """Getter for ``directManagedMemAccessFromHost`` of element ``i``.
+        """Get value ``directManagedMemAccessFromHost`` of ``self._ptr[i]``.
         """
         return self._ptr[i].directManagedMemAccessFromHost
     def set_directManagedMemAccessFromHost(self, i, int value):
-        """Setter for ``directManagedMemAccessFromHost`` of element ``i``.
+        """Set value ``directManagedMemAccessFromHost`` of ``self._ptr[i]``.
         """
         self._ptr[i].directManagedMemAccessFromHost = value
     @property
     def directManagedMemAccessFromHost(self):
-        """Getter for ``directManagedMemAccessFromHost``."""
         return self.get_directManagedMemAccessFromHost(0)
     @directManagedMemAccessFromHost.setter
     def directManagedMemAccessFromHost(self, int value):
-        """Setter for ``directManagedMemAccessFromHost``."""
         self.set_directManagedMemAccessFromHost(0,value)
     def get_concurrentManagedAccess(self, i):
-        """Getter for ``concurrentManagedAccess`` of element ``i``.
+        """Get value ``concurrentManagedAccess`` of ``self._ptr[i]``.
         """
         return self._ptr[i].concurrentManagedAccess
     def set_concurrentManagedAccess(self, i, int value):
-        """Setter for ``concurrentManagedAccess`` of element ``i``.
+        """Set value ``concurrentManagedAccess`` of ``self._ptr[i]``.
         """
         self._ptr[i].concurrentManagedAccess = value
     @property
     def concurrentManagedAccess(self):
-        """Getter for ``concurrentManagedAccess``."""
         return self.get_concurrentManagedAccess(0)
     @concurrentManagedAccess.setter
     def concurrentManagedAccess(self, int value):
-        """Setter for ``concurrentManagedAccess``."""
         self.set_concurrentManagedAccess(0,value)
     def get_pageableMemoryAccess(self, i):
-        """Getter for ``pageableMemoryAccess`` of element ``i``.
+        """Get value ``pageableMemoryAccess`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pageableMemoryAccess
     def set_pageableMemoryAccess(self, i, int value):
-        """Setter for ``pageableMemoryAccess`` of element ``i``.
+        """Set value ``pageableMemoryAccess`` of ``self._ptr[i]``.
         """
         self._ptr[i].pageableMemoryAccess = value
     @property
     def pageableMemoryAccess(self):
-        """Getter for ``pageableMemoryAccess``."""
         return self.get_pageableMemoryAccess(0)
     @pageableMemoryAccess.setter
     def pageableMemoryAccess(self, int value):
-        """Setter for ``pageableMemoryAccess``."""
         self.set_pageableMemoryAccess(0,value)
     def get_pageableMemoryAccessUsesHostPageTables(self, i):
-        """Getter for ``pageableMemoryAccessUsesHostPageTables`` of element ``i``.
+        """Get value ``pageableMemoryAccessUsesHostPageTables`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pageableMemoryAccessUsesHostPageTables
     def set_pageableMemoryAccessUsesHostPageTables(self, i, int value):
-        """Setter for ``pageableMemoryAccessUsesHostPageTables`` of element ``i``.
+        """Set value ``pageableMemoryAccessUsesHostPageTables`` of ``self._ptr[i]``.
         """
         self._ptr[i].pageableMemoryAccessUsesHostPageTables = value
     @property
     def pageableMemoryAccessUsesHostPageTables(self):
-        """Getter for ``pageableMemoryAccessUsesHostPageTables``."""
         return self.get_pageableMemoryAccessUsesHostPageTables(0)
     @pageableMemoryAccessUsesHostPageTables.setter
     def pageableMemoryAccessUsesHostPageTables(self, int value):
-        """Setter for ``pageableMemoryAccessUsesHostPageTables``."""
         self.set_pageableMemoryAccessUsesHostPageTables(0,value)
 
 
@@ -1040,70 +1003,62 @@ cdef class hipPointerAttribute_t:
         # TODO init values, if present
         return hipPointerAttribute_t.from_ptr(_ptr, owner=True)
     def get_memoryType(self, i):
-        """Getter for ``memoryType`` of element ``i``.
+        """Get value of ``memoryType`` of ``self._ptr[i]``.
         """
         return hipMemoryType(self._ptr[i].memoryType)
     def set_memoryType(self, i, value):
-        """Setter for ``memoryType`` of element ``i``.
+        """Set value ``memoryType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemoryType):
             raise TypeError("'value' must be of type 'hipMemoryType'")
         self._ptr[i].memoryType = value.value
     @property
     def memoryType(self):
-        """Getter for ``memoryType``."""
         return self.get_memoryType(0)
     @memoryType.setter
     def memoryType(self, value):
-        """Setter for ``memoryType``."""
         self.set_memoryType(0,value)
     def get_device(self, i):
-        """Getter for ``device`` of element ``i``.
+        """Get value ``device`` of ``self._ptr[i]``.
         """
         return self._ptr[i].device
     def set_device(self, i, int value):
-        """Setter for ``device`` of element ``i``.
+        """Set value ``device`` of ``self._ptr[i]``.
         """
         self._ptr[i].device = value
     @property
     def device(self):
-        """Getter for ``device``."""
         return self.get_device(0)
     @device.setter
     def device(self, int value):
-        """Setter for ``device``."""
         self.set_device(0,value)
     def get_isManaged(self, i):
-        """Getter for ``isManaged`` of element ``i``.
+        """Get value ``isManaged`` of ``self._ptr[i]``.
         """
         return self._ptr[i].isManaged
     def set_isManaged(self, i, int value):
-        """Setter for ``isManaged`` of element ``i``.
+        """Set value ``isManaged`` of ``self._ptr[i]``.
         """
         self._ptr[i].isManaged = value
     @property
     def isManaged(self):
-        """Getter for ``isManaged``."""
         return self.get_isManaged(0)
     @isManaged.setter
     def isManaged(self, int value):
-        """Setter for ``isManaged``."""
         self.set_isManaged(0,value)
     def get_allocationFlags(self, i):
-        """Getter for ``allocationFlags`` of element ``i``.
+        """Get value ``allocationFlags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].allocationFlags
     def set_allocationFlags(self, i, unsigned int value):
-        """Setter for ``allocationFlags`` of element ``i``.
+        """Set value ``allocationFlags`` of ``self._ptr[i]``.
         """
         self._ptr[i].allocationFlags = value
     @property
     def allocationFlags(self):
-        """Getter for ``allocationFlags``."""
         return self.get_allocationFlags(0)
     @allocationFlags.setter
     def allocationFlags(self, unsigned int value):
-        """Setter for ``allocationFlags``."""
         self.set_allocationFlags(0,value)
 
 
@@ -1353,86 +1308,76 @@ cdef class hipChannelFormatDesc:
         # TODO init values, if present
         return hipChannelFormatDesc.from_ptr(_ptr, owner=True)
     def get_x(self, i):
-        """Getter for ``x`` of element ``i``.
+        """Get value ``x`` of ``self._ptr[i]``.
         """
         return self._ptr[i].x
     def set_x(self, i, int value):
-        """Setter for ``x`` of element ``i``.
+        """Set value ``x`` of ``self._ptr[i]``.
         """
         self._ptr[i].x = value
     @property
     def x(self):
-        """Getter for ``x``."""
         return self.get_x(0)
     @x.setter
     def x(self, int value):
-        """Setter for ``x``."""
         self.set_x(0,value)
     def get_y(self, i):
-        """Getter for ``y`` of element ``i``.
+        """Get value ``y`` of ``self._ptr[i]``.
         """
         return self._ptr[i].y
     def set_y(self, i, int value):
-        """Setter for ``y`` of element ``i``.
+        """Set value ``y`` of ``self._ptr[i]``.
         """
         self._ptr[i].y = value
     @property
     def y(self):
-        """Getter for ``y``."""
         return self.get_y(0)
     @y.setter
     def y(self, int value):
-        """Setter for ``y``."""
         self.set_y(0,value)
     def get_z(self, i):
-        """Getter for ``z`` of element ``i``.
+        """Get value ``z`` of ``self._ptr[i]``.
         """
         return self._ptr[i].z
     def set_z(self, i, int value):
-        """Setter for ``z`` of element ``i``.
+        """Set value ``z`` of ``self._ptr[i]``.
         """
         self._ptr[i].z = value
     @property
     def z(self):
-        """Getter for ``z``."""
         return self.get_z(0)
     @z.setter
     def z(self, int value):
-        """Setter for ``z``."""
         self.set_z(0,value)
     def get_w(self, i):
-        """Getter for ``w`` of element ``i``.
+        """Get value ``w`` of ``self._ptr[i]``.
         """
         return self._ptr[i].w
     def set_w(self, i, int value):
-        """Setter for ``w`` of element ``i``.
+        """Set value ``w`` of ``self._ptr[i]``.
         """
         self._ptr[i].w = value
     @property
     def w(self):
-        """Getter for ``w``."""
         return self.get_w(0)
     @w.setter
     def w(self, int value):
-        """Setter for ``w``."""
         self.set_w(0,value)
     def get_f(self, i):
-        """Getter for ``f`` of element ``i``.
+        """Get value of ``f`` of ``self._ptr[i]``.
         """
         return hipChannelFormatKind(self._ptr[i].f)
     def set_f(self, i, value):
-        """Setter for ``f`` of element ``i``.
+        """Set value ``f`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipChannelFormatKind):
             raise TypeError("'value' must be of type 'hipChannelFormatKind'")
         self._ptr[i].f = value.value
     @property
     def f(self):
-        """Getter for ``f``."""
         return self.get_f(0)
     @f.setter
     def f(self, value):
-        """Setter for ``f``."""
         self.set_f(0,value)
 
 
@@ -1485,70 +1430,62 @@ cdef class HIP_ARRAY_DESCRIPTOR:
         # TODO init values, if present
         return HIP_ARRAY_DESCRIPTOR.from_ptr(_ptr, owner=True)
     def get_Width(self, i):
-        """Getter for ``Width`` of element ``i``.
+        """Get value ``Width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Width
     def set_Width(self, i, int value):
-        """Setter for ``Width`` of element ``i``.
+        """Set value ``Width`` of ``self._ptr[i]``.
         """
         self._ptr[i].Width = value
     @property
     def Width(self):
-        """Getter for ``Width``."""
         return self.get_Width(0)
     @Width.setter
     def Width(self, int value):
-        """Setter for ``Width``."""
         self.set_Width(0,value)
     def get_Height(self, i):
-        """Getter for ``Height`` of element ``i``.
+        """Get value ``Height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Height
     def set_Height(self, i, int value):
-        """Setter for ``Height`` of element ``i``.
+        """Set value ``Height`` of ``self._ptr[i]``.
         """
         self._ptr[i].Height = value
     @property
     def Height(self):
-        """Getter for ``Height``."""
         return self.get_Height(0)
     @Height.setter
     def Height(self, int value):
-        """Setter for ``Height``."""
         self.set_Height(0,value)
     def get_Format(self, i):
-        """Getter for ``Format`` of element ``i``.
+        """Get value of ``Format`` of ``self._ptr[i]``.
         """
         return hipArray_Format(self._ptr[i].Format)
     def set_Format(self, i, value):
-        """Setter for ``Format`` of element ``i``.
+        """Set value ``Format`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipArray_Format):
             raise TypeError("'value' must be of type 'hipArray_Format'")
         self._ptr[i].Format = value.value
     @property
     def Format(self):
-        """Getter for ``Format``."""
         return self.get_Format(0)
     @Format.setter
     def Format(self, value):
-        """Setter for ``Format``."""
         self.set_Format(0,value)
     def get_NumChannels(self, i):
-        """Getter for ``NumChannels`` of element ``i``.
+        """Get value ``NumChannels`` of ``self._ptr[i]``.
         """
         return self._ptr[i].NumChannels
     def set_NumChannels(self, i, unsigned int value):
-        """Setter for ``NumChannels`` of element ``i``.
+        """Set value ``NumChannels`` of ``self._ptr[i]``.
         """
         self._ptr[i].NumChannels = value
     @property
     def NumChannels(self):
-        """Getter for ``NumChannels``."""
         return self.get_NumChannels(0)
     @NumChannels.setter
     def NumChannels(self, unsigned int value):
-        """Setter for ``NumChannels``."""
         self.set_NumChannels(0,value)
 
 
@@ -1591,102 +1528,90 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         # TODO init values, if present
         return HIP_ARRAY3D_DESCRIPTOR.from_ptr(_ptr, owner=True)
     def get_Width(self, i):
-        """Getter for ``Width`` of element ``i``.
+        """Get value ``Width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Width
     def set_Width(self, i, int value):
-        """Setter for ``Width`` of element ``i``.
+        """Set value ``Width`` of ``self._ptr[i]``.
         """
         self._ptr[i].Width = value
     @property
     def Width(self):
-        """Getter for ``Width``."""
         return self.get_Width(0)
     @Width.setter
     def Width(self, int value):
-        """Setter for ``Width``."""
         self.set_Width(0,value)
     def get_Height(self, i):
-        """Getter for ``Height`` of element ``i``.
+        """Get value ``Height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Height
     def set_Height(self, i, int value):
-        """Setter for ``Height`` of element ``i``.
+        """Set value ``Height`` of ``self._ptr[i]``.
         """
         self._ptr[i].Height = value
     @property
     def Height(self):
-        """Getter for ``Height``."""
         return self.get_Height(0)
     @Height.setter
     def Height(self, int value):
-        """Setter for ``Height``."""
         self.set_Height(0,value)
     def get_Depth(self, i):
-        """Getter for ``Depth`` of element ``i``.
+        """Get value ``Depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Depth
     def set_Depth(self, i, int value):
-        """Setter for ``Depth`` of element ``i``.
+        """Set value ``Depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].Depth = value
     @property
     def Depth(self):
-        """Getter for ``Depth``."""
         return self.get_Depth(0)
     @Depth.setter
     def Depth(self, int value):
-        """Setter for ``Depth``."""
         self.set_Depth(0,value)
     def get_Format(self, i):
-        """Getter for ``Format`` of element ``i``.
+        """Get value of ``Format`` of ``self._ptr[i]``.
         """
         return hipArray_Format(self._ptr[i].Format)
     def set_Format(self, i, value):
-        """Setter for ``Format`` of element ``i``.
+        """Set value ``Format`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipArray_Format):
             raise TypeError("'value' must be of type 'hipArray_Format'")
         self._ptr[i].Format = value.value
     @property
     def Format(self):
-        """Getter for ``Format``."""
         return self.get_Format(0)
     @Format.setter
     def Format(self, value):
-        """Setter for ``Format``."""
         self.set_Format(0,value)
     def get_NumChannels(self, i):
-        """Getter for ``NumChannels`` of element ``i``.
+        """Get value ``NumChannels`` of ``self._ptr[i]``.
         """
         return self._ptr[i].NumChannels
     def set_NumChannels(self, i, unsigned int value):
-        """Setter for ``NumChannels`` of element ``i``.
+        """Set value ``NumChannels`` of ``self._ptr[i]``.
         """
         self._ptr[i].NumChannels = value
     @property
     def NumChannels(self):
-        """Getter for ``NumChannels``."""
         return self.get_NumChannels(0)
     @NumChannels.setter
     def NumChannels(self, unsigned int value):
-        """Setter for ``NumChannels``."""
         self.set_NumChannels(0,value)
     def get_Flags(self, i):
-        """Getter for ``Flags`` of element ``i``.
+        """Get value ``Flags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Flags
     def set_Flags(self, i, unsigned int value):
-        """Setter for ``Flags`` of element ``i``.
+        """Set value ``Flags`` of ``self._ptr[i]``.
         """
         self._ptr[i].Flags = value
     @property
     def Flags(self):
-        """Getter for ``Flags``."""
         return self.get_Flags(0)
     @Flags.setter
     def Flags(self, unsigned int value):
-        """Setter for ``Flags``."""
         self.set_Flags(0,value)
 
 
@@ -1729,142 +1654,125 @@ cdef class hipArray:
         # TODO init values, if present
         return hipArray.from_ptr(_ptr, owner=True)
     def get_desc(self, i):
-        """Getter for ``desc`` of element ``i``.
+        """Get value of ``desc`` of ``self._ptr[i]``.
         """
         return hipChannelFormatDesc.from_ptr(&self._ptr[i].desc)
     @property
     def desc(self):
-        """Getter for ``desc``."""
         return self.get_desc(0)
     def get_type(self, i):
-        """Getter for ``type`` of element ``i``.
+        """Get value ``type`` of ``self._ptr[i]``.
         """
         return self._ptr[i].type
     def set_type(self, i, unsigned int value):
-        """Setter for ``type`` of element ``i``.
+        """Set value ``type`` of ``self._ptr[i]``.
         """
         self._ptr[i].type = value
     @property
     def type(self):
-        """Getter for ``type``."""
         return self.get_type(0)
     @type.setter
     def type(self, unsigned int value):
-        """Setter for ``type``."""
         self.set_type(0,value)
     def get_width(self, i):
-        """Getter for ``width`` of element ``i``.
+        """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
     def set_width(self, i, unsigned int value):
-        """Setter for ``width`` of element ``i``.
+        """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
     @property
     def width(self):
-        """Getter for ``width``."""
         return self.get_width(0)
     @width.setter
     def width(self, unsigned int value):
-        """Setter for ``width``."""
         self.set_width(0,value)
     def get_height(self, i):
-        """Getter for ``height`` of element ``i``.
+        """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
     def set_height(self, i, unsigned int value):
-        """Setter for ``height`` of element ``i``.
+        """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
     @property
     def height(self):
-        """Getter for ``height``."""
         return self.get_height(0)
     @height.setter
     def height(self, unsigned int value):
-        """Setter for ``height``."""
         self.set_height(0,value)
     def get_depth(self, i):
-        """Getter for ``depth`` of element ``i``.
+        """Get value ``depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].depth
     def set_depth(self, i, unsigned int value):
-        """Setter for ``depth`` of element ``i``.
+        """Set value ``depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].depth = value
     @property
     def depth(self):
-        """Getter for ``depth``."""
         return self.get_depth(0)
     @depth.setter
     def depth(self, unsigned int value):
-        """Setter for ``depth``."""
         self.set_depth(0,value)
     def get_Format(self, i):
-        """Getter for ``Format`` of element ``i``.
+        """Get value of ``Format`` of ``self._ptr[i]``.
         """
         return hipArray_Format(self._ptr[i].Format)
     def set_Format(self, i, value):
-        """Setter for ``Format`` of element ``i``.
+        """Set value ``Format`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipArray_Format):
             raise TypeError("'value' must be of type 'hipArray_Format'")
         self._ptr[i].Format = value.value
     @property
     def Format(self):
-        """Getter for ``Format``."""
         return self.get_Format(0)
     @Format.setter
     def Format(self, value):
-        """Setter for ``Format``."""
         self.set_Format(0,value)
     def get_NumChannels(self, i):
-        """Getter for ``NumChannels`` of element ``i``.
+        """Get value ``NumChannels`` of ``self._ptr[i]``.
         """
         return self._ptr[i].NumChannels
     def set_NumChannels(self, i, unsigned int value):
-        """Setter for ``NumChannels`` of element ``i``.
+        """Set value ``NumChannels`` of ``self._ptr[i]``.
         """
         self._ptr[i].NumChannels = value
     @property
     def NumChannels(self):
-        """Getter for ``NumChannels``."""
         return self.get_NumChannels(0)
     @NumChannels.setter
     def NumChannels(self, unsigned int value):
-        """Setter for ``NumChannels``."""
         self.set_NumChannels(0,value)
     def get_isDrv(self, i):
-        """Getter for ``isDrv`` of element ``i``.
+        """Get value ``isDrv`` of ``self._ptr[i]``.
         """
         return self._ptr[i].isDrv
     def set_isDrv(self, i, int value):
-        """Setter for ``isDrv`` of element ``i``.
+        """Set value ``isDrv`` of ``self._ptr[i]``.
         """
         self._ptr[i].isDrv = value
     @property
     def isDrv(self):
-        """Getter for ``isDrv``."""
         return self.get_isDrv(0)
     @isDrv.setter
     def isDrv(self, int value):
-        """Setter for ``isDrv``."""
         self.set_isDrv(0,value)
     def get_textureType(self, i):
-        """Getter for ``textureType`` of element ``i``.
+        """Get value ``textureType`` of ``self._ptr[i]``.
         """
         return self._ptr[i].textureType
     def set_textureType(self, i, unsigned int value):
-        """Setter for ``textureType`` of element ``i``.
+        """Set value ``textureType`` of ``self._ptr[i]``.
         """
         self._ptr[i].textureType = value
     @property
     def textureType(self):
-        """Getter for ``textureType``."""
         return self.get_textureType(0)
     @textureType.setter
     def textureType(self, unsigned int value):
-        """Setter for ``textureType``."""
         self.set_textureType(0,value)
 
 
@@ -1907,168 +1815,148 @@ cdef class hip_Memcpy2D:
         # TODO init values, if present
         return hip_Memcpy2D.from_ptr(_ptr, owner=True)
     def get_srcXInBytes(self, i):
-        """Getter for ``srcXInBytes`` of element ``i``.
+        """Get value ``srcXInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcXInBytes
     def set_srcXInBytes(self, i, int value):
-        """Setter for ``srcXInBytes`` of element ``i``.
+        """Set value ``srcXInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcXInBytes = value
     @property
     def srcXInBytes(self):
-        """Getter for ``srcXInBytes``."""
         return self.get_srcXInBytes(0)
     @srcXInBytes.setter
     def srcXInBytes(self, int value):
-        """Setter for ``srcXInBytes``."""
         self.set_srcXInBytes(0,value)
     def get_srcY(self, i):
-        """Getter for ``srcY`` of element ``i``.
+        """Get value ``srcY`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcY
     def set_srcY(self, i, int value):
-        """Setter for ``srcY`` of element ``i``.
+        """Set value ``srcY`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcY = value
     @property
     def srcY(self):
-        """Getter for ``srcY``."""
         return self.get_srcY(0)
     @srcY.setter
     def srcY(self, int value):
-        """Setter for ``srcY``."""
         self.set_srcY(0,value)
     def get_srcMemoryType(self, i):
-        """Getter for ``srcMemoryType`` of element ``i``.
+        """Get value of ``srcMemoryType`` of ``self._ptr[i]``.
         """
         return hipMemoryType(self._ptr[i].srcMemoryType)
     def set_srcMemoryType(self, i, value):
-        """Setter for ``srcMemoryType`` of element ``i``.
+        """Set value ``srcMemoryType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemoryType):
             raise TypeError("'value' must be of type 'hipMemoryType'")
         self._ptr[i].srcMemoryType = value.value
     @property
     def srcMemoryType(self):
-        """Getter for ``srcMemoryType``."""
         return self.get_srcMemoryType(0)
     @srcMemoryType.setter
     def srcMemoryType(self, value):
-        """Setter for ``srcMemoryType``."""
         self.set_srcMemoryType(0,value)
     def get_srcPitch(self, i):
-        """Getter for ``srcPitch`` of element ``i``.
+        """Get value ``srcPitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcPitch
     def set_srcPitch(self, i, int value):
-        """Setter for ``srcPitch`` of element ``i``.
+        """Set value ``srcPitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcPitch = value
     @property
     def srcPitch(self):
-        """Getter for ``srcPitch``."""
         return self.get_srcPitch(0)
     @srcPitch.setter
     def srcPitch(self, int value):
-        """Setter for ``srcPitch``."""
         self.set_srcPitch(0,value)
     def get_dstXInBytes(self, i):
-        """Getter for ``dstXInBytes`` of element ``i``.
+        """Get value ``dstXInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstXInBytes
     def set_dstXInBytes(self, i, int value):
-        """Setter for ``dstXInBytes`` of element ``i``.
+        """Set value ``dstXInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstXInBytes = value
     @property
     def dstXInBytes(self):
-        """Getter for ``dstXInBytes``."""
         return self.get_dstXInBytes(0)
     @dstXInBytes.setter
     def dstXInBytes(self, int value):
-        """Setter for ``dstXInBytes``."""
         self.set_dstXInBytes(0,value)
     def get_dstY(self, i):
-        """Getter for ``dstY`` of element ``i``.
+        """Get value ``dstY`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstY
     def set_dstY(self, i, int value):
-        """Setter for ``dstY`` of element ``i``.
+        """Set value ``dstY`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstY = value
     @property
     def dstY(self):
-        """Getter for ``dstY``."""
         return self.get_dstY(0)
     @dstY.setter
     def dstY(self, int value):
-        """Setter for ``dstY``."""
         self.set_dstY(0,value)
     def get_dstMemoryType(self, i):
-        """Getter for ``dstMemoryType`` of element ``i``.
+        """Get value of ``dstMemoryType`` of ``self._ptr[i]``.
         """
         return hipMemoryType(self._ptr[i].dstMemoryType)
     def set_dstMemoryType(self, i, value):
-        """Setter for ``dstMemoryType`` of element ``i``.
+        """Set value ``dstMemoryType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemoryType):
             raise TypeError("'value' must be of type 'hipMemoryType'")
         self._ptr[i].dstMemoryType = value.value
     @property
     def dstMemoryType(self):
-        """Getter for ``dstMemoryType``."""
         return self.get_dstMemoryType(0)
     @dstMemoryType.setter
     def dstMemoryType(self, value):
-        """Setter for ``dstMemoryType``."""
         self.set_dstMemoryType(0,value)
     def get_dstPitch(self, i):
-        """Getter for ``dstPitch`` of element ``i``.
+        """Get value ``dstPitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstPitch
     def set_dstPitch(self, i, int value):
-        """Setter for ``dstPitch`` of element ``i``.
+        """Set value ``dstPitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstPitch = value
     @property
     def dstPitch(self):
-        """Getter for ``dstPitch``."""
         return self.get_dstPitch(0)
     @dstPitch.setter
     def dstPitch(self, int value):
-        """Setter for ``dstPitch``."""
         self.set_dstPitch(0,value)
     def get_WidthInBytes(self, i):
-        """Getter for ``WidthInBytes`` of element ``i``.
+        """Get value ``WidthInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].WidthInBytes
     def set_WidthInBytes(self, i, int value):
-        """Setter for ``WidthInBytes`` of element ``i``.
+        """Set value ``WidthInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].WidthInBytes = value
     @property
     def WidthInBytes(self):
-        """Getter for ``WidthInBytes``."""
         return self.get_WidthInBytes(0)
     @WidthInBytes.setter
     def WidthInBytes(self, int value):
-        """Setter for ``WidthInBytes``."""
         self.set_WidthInBytes(0,value)
     def get_Height(self, i):
-        """Getter for ``Height`` of element ``i``.
+        """Get value ``Height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Height
     def set_Height(self, i, int value):
-        """Setter for ``Height`` of element ``i``.
+        """Set value ``Height`` of ``self._ptr[i]``.
         """
         self._ptr[i].Height = value
     @property
     def Height(self):
-        """Getter for ``Height``."""
         return self.get_Height(0)
     @Height.setter
     def Height(self, int value):
-        """Setter for ``Height``."""
         self.set_Height(0,value)
 
 
@@ -2117,142 +2005,125 @@ cdef class hipMipmappedArray:
         # TODO init values, if present
         return hipMipmappedArray.from_ptr(_ptr, owner=True)
     def get_desc(self, i):
-        """Getter for ``desc`` of element ``i``.
+        """Get value of ``desc`` of ``self._ptr[i]``.
         """
         return hipChannelFormatDesc.from_ptr(&self._ptr[i].desc)
     @property
     def desc(self):
-        """Getter for ``desc``."""
         return self.get_desc(0)
     def get_type(self, i):
-        """Getter for ``type`` of element ``i``.
+        """Get value ``type`` of ``self._ptr[i]``.
         """
         return self._ptr[i].type
     def set_type(self, i, unsigned int value):
-        """Setter for ``type`` of element ``i``.
+        """Set value ``type`` of ``self._ptr[i]``.
         """
         self._ptr[i].type = value
     @property
     def type(self):
-        """Getter for ``type``."""
         return self.get_type(0)
     @type.setter
     def type(self, unsigned int value):
-        """Setter for ``type``."""
         self.set_type(0,value)
     def get_width(self, i):
-        """Getter for ``width`` of element ``i``.
+        """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
     def set_width(self, i, unsigned int value):
-        """Setter for ``width`` of element ``i``.
+        """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
     @property
     def width(self):
-        """Getter for ``width``."""
         return self.get_width(0)
     @width.setter
     def width(self, unsigned int value):
-        """Setter for ``width``."""
         self.set_width(0,value)
     def get_height(self, i):
-        """Getter for ``height`` of element ``i``.
+        """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
     def set_height(self, i, unsigned int value):
-        """Setter for ``height`` of element ``i``.
+        """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
     @property
     def height(self):
-        """Getter for ``height``."""
         return self.get_height(0)
     @height.setter
     def height(self, unsigned int value):
-        """Setter for ``height``."""
         self.set_height(0,value)
     def get_depth(self, i):
-        """Getter for ``depth`` of element ``i``.
+        """Get value ``depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].depth
     def set_depth(self, i, unsigned int value):
-        """Setter for ``depth`` of element ``i``.
+        """Set value ``depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].depth = value
     @property
     def depth(self):
-        """Getter for ``depth``."""
         return self.get_depth(0)
     @depth.setter
     def depth(self, unsigned int value):
-        """Setter for ``depth``."""
         self.set_depth(0,value)
     def get_min_mipmap_level(self, i):
-        """Getter for ``min_mipmap_level`` of element ``i``.
+        """Get value ``min_mipmap_level`` of ``self._ptr[i]``.
         """
         return self._ptr[i].min_mipmap_level
     def set_min_mipmap_level(self, i, unsigned int value):
-        """Setter for ``min_mipmap_level`` of element ``i``.
+        """Set value ``min_mipmap_level`` of ``self._ptr[i]``.
         """
         self._ptr[i].min_mipmap_level = value
     @property
     def min_mipmap_level(self):
-        """Getter for ``min_mipmap_level``."""
         return self.get_min_mipmap_level(0)
     @min_mipmap_level.setter
     def min_mipmap_level(self, unsigned int value):
-        """Setter for ``min_mipmap_level``."""
         self.set_min_mipmap_level(0,value)
     def get_max_mipmap_level(self, i):
-        """Getter for ``max_mipmap_level`` of element ``i``.
+        """Get value ``max_mipmap_level`` of ``self._ptr[i]``.
         """
         return self._ptr[i].max_mipmap_level
     def set_max_mipmap_level(self, i, unsigned int value):
-        """Setter for ``max_mipmap_level`` of element ``i``.
+        """Set value ``max_mipmap_level`` of ``self._ptr[i]``.
         """
         self._ptr[i].max_mipmap_level = value
     @property
     def max_mipmap_level(self):
-        """Getter for ``max_mipmap_level``."""
         return self.get_max_mipmap_level(0)
     @max_mipmap_level.setter
     def max_mipmap_level(self, unsigned int value):
-        """Setter for ``max_mipmap_level``."""
         self.set_max_mipmap_level(0,value)
     def get_flags(self, i):
-        """Getter for ``flags`` of element ``i``.
+        """Get value ``flags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].flags
     def set_flags(self, i, unsigned int value):
-        """Setter for ``flags`` of element ``i``.
+        """Set value ``flags`` of ``self._ptr[i]``.
         """
         self._ptr[i].flags = value
     @property
     def flags(self):
-        """Getter for ``flags``."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
-        """Setter for ``flags``."""
         self.set_flags(0,value)
     def get_format(self, i):
-        """Getter for ``format`` of element ``i``.
+        """Get value of ``format`` of ``self._ptr[i]``.
         """
         return hipArray_Format(self._ptr[i].format)
     def set_format(self, i, value):
-        """Setter for ``format`` of element ``i``.
+        """Set value ``format`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipArray_Format):
             raise TypeError("'value' must be of type 'hipArray_Format'")
         self._ptr[i].format = value.value
     @property
     def format(self):
-        """Getter for ``format``."""
         return self.get_format(0)
     @format.setter
     def format(self, value):
-        """Setter for ``format``."""
         self.set_format(0,value)
 
 
@@ -2320,122 +2191,125 @@ cdef class HIP_TEXTURE_DESC_st:
             raise MemoryError
         # TODO init values, if present
         return HIP_TEXTURE_DESC_st.from_ptr(_ptr, owner=True)
+    # TODO is_enum_constantarray: add
     def get_filterMode(self, i):
-        """Getter for ``filterMode`` of element ``i``.
+        """Get value of ``filterMode`` of ``self._ptr[i]``.
         """
         return HIPfilter_mode_enum(self._ptr[i].filterMode)
     def set_filterMode(self, i, value):
-        """Setter for ``filterMode`` of element ``i``.
+        """Set value ``filterMode`` of ``self._ptr[i]``.
         """
         if not isinstance(value, HIPfilter_mode_enum):
             raise TypeError("'value' must be of type 'HIPfilter_mode_enum'")
         self._ptr[i].filterMode = value.value
     @property
     def filterMode(self):
-        """Getter for ``filterMode``."""
         return self.get_filterMode(0)
     @filterMode.setter
     def filterMode(self, value):
-        """Setter for ``filterMode``."""
         self.set_filterMode(0,value)
     def get_flags(self, i):
-        """Getter for ``flags`` of element ``i``.
+        """Get value ``flags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].flags
     def set_flags(self, i, unsigned int value):
-        """Setter for ``flags`` of element ``i``.
+        """Set value ``flags`` of ``self._ptr[i]``.
         """
         self._ptr[i].flags = value
     @property
     def flags(self):
-        """Getter for ``flags``."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
-        """Setter for ``flags``."""
         self.set_flags(0,value)
     def get_maxAnisotropy(self, i):
-        """Getter for ``maxAnisotropy`` of element ``i``.
+        """Get value ``maxAnisotropy`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxAnisotropy
     def set_maxAnisotropy(self, i, unsigned int value):
-        """Setter for ``maxAnisotropy`` of element ``i``.
+        """Set value ``maxAnisotropy`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxAnisotropy = value
     @property
     def maxAnisotropy(self):
-        """Getter for ``maxAnisotropy``."""
         return self.get_maxAnisotropy(0)
     @maxAnisotropy.setter
     def maxAnisotropy(self, unsigned int value):
-        """Setter for ``maxAnisotropy``."""
         self.set_maxAnisotropy(0,value)
     def get_mipmapFilterMode(self, i):
-        """Getter for ``mipmapFilterMode`` of element ``i``.
+        """Get value of ``mipmapFilterMode`` of ``self._ptr[i]``.
         """
         return HIPfilter_mode_enum(self._ptr[i].mipmapFilterMode)
     def set_mipmapFilterMode(self, i, value):
-        """Setter for ``mipmapFilterMode`` of element ``i``.
+        """Set value ``mipmapFilterMode`` of ``self._ptr[i]``.
         """
         if not isinstance(value, HIPfilter_mode_enum):
             raise TypeError("'value' must be of type 'HIPfilter_mode_enum'")
         self._ptr[i].mipmapFilterMode = value.value
     @property
     def mipmapFilterMode(self):
-        """Getter for ``mipmapFilterMode``."""
         return self.get_mipmapFilterMode(0)
     @mipmapFilterMode.setter
     def mipmapFilterMode(self, value):
-        """Setter for ``mipmapFilterMode``."""
         self.set_mipmapFilterMode(0,value)
     def get_mipmapLevelBias(self, i):
-        """Getter for ``mipmapLevelBias`` of element ``i``.
+        """Get value ``mipmapLevelBias`` of ``self._ptr[i]``.
         """
         return self._ptr[i].mipmapLevelBias
     def set_mipmapLevelBias(self, i, float value):
-        """Setter for ``mipmapLevelBias`` of element ``i``.
+        """Set value ``mipmapLevelBias`` of ``self._ptr[i]``.
         """
         self._ptr[i].mipmapLevelBias = value
     @property
     def mipmapLevelBias(self):
-        """Getter for ``mipmapLevelBias``."""
         return self.get_mipmapLevelBias(0)
     @mipmapLevelBias.setter
     def mipmapLevelBias(self, float value):
-        """Setter for ``mipmapLevelBias``."""
         self.set_mipmapLevelBias(0,value)
     def get_minMipmapLevelClamp(self, i):
-        """Getter for ``minMipmapLevelClamp`` of element ``i``.
+        """Get value ``minMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         return self._ptr[i].minMipmapLevelClamp
     def set_minMipmapLevelClamp(self, i, float value):
-        """Setter for ``minMipmapLevelClamp`` of element ``i``.
+        """Set value ``minMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         self._ptr[i].minMipmapLevelClamp = value
     @property
     def minMipmapLevelClamp(self):
-        """Getter for ``minMipmapLevelClamp``."""
         return self.get_minMipmapLevelClamp(0)
     @minMipmapLevelClamp.setter
     def minMipmapLevelClamp(self, float value):
-        """Setter for ``minMipmapLevelClamp``."""
         self.set_minMipmapLevelClamp(0,value)
     def get_maxMipmapLevelClamp(self, i):
-        """Getter for ``maxMipmapLevelClamp`` of element ``i``.
+        """Get value ``maxMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxMipmapLevelClamp
     def set_maxMipmapLevelClamp(self, i, float value):
-        """Setter for ``maxMipmapLevelClamp`` of element ``i``.
+        """Set value ``maxMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxMipmapLevelClamp = value
     @property
     def maxMipmapLevelClamp(self):
-        """Getter for ``maxMipmapLevelClamp``."""
         return self.get_maxMipmapLevelClamp(0)
     @maxMipmapLevelClamp.setter
     def maxMipmapLevelClamp(self, float value):
-        """Setter for ``maxMipmapLevelClamp``."""
         self.set_maxMipmapLevelClamp(0,value)
+    def get_borderColor(self, i):
+        """Get value of ``borderColor`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].borderColor
+    @property
+    def borderColor(self):
+        return self.get_borderColor(0)
+    # TODO is_basic_type_constantarray: add setters
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 class hipResourceViewFormat(enum.IntEnum):
@@ -2631,28 +2505,25 @@ cdef class hipResourceDesc_union_0_struct_2:
         # TODO init values, if present
         return hipResourceDesc_union_0_struct_2.from_ptr(_ptr, owner=True)
     def get_desc(self, i):
-        """Getter for ``desc`` of element ``i``.
+        """Get value of ``desc`` of ``self._ptr[i]``.
         """
         return hipChannelFormatDesc.from_ptr(&self._ptr[i].desc)
     @property
     def desc(self):
-        """Getter for ``desc``."""
         return self.get_desc(0)
     def get_sizeInBytes(self, i):
-        """Getter for ``sizeInBytes`` of element ``i``.
+        """Get value ``sizeInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sizeInBytes
     def set_sizeInBytes(self, i, int value):
-        """Setter for ``sizeInBytes`` of element ``i``.
+        """Set value ``sizeInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].sizeInBytes = value
     @property
     def sizeInBytes(self):
-        """Getter for ``sizeInBytes``."""
         return self.get_sizeInBytes(0)
     @sizeInBytes.setter
     def sizeInBytes(self, int value):
-        """Setter for ``sizeInBytes``."""
         self.set_sizeInBytes(0,value)
 
 
@@ -2695,60 +2566,53 @@ cdef class hipResourceDesc_union_0_struct_3:
         # TODO init values, if present
         return hipResourceDesc_union_0_struct_3.from_ptr(_ptr, owner=True)
     def get_desc(self, i):
-        """Getter for ``desc`` of element ``i``.
+        """Get value of ``desc`` of ``self._ptr[i]``.
         """
         return hipChannelFormatDesc.from_ptr(&self._ptr[i].desc)
     @property
     def desc(self):
-        """Getter for ``desc``."""
         return self.get_desc(0)
     def get_width(self, i):
-        """Getter for ``width`` of element ``i``.
+        """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
     def set_width(self, i, int value):
-        """Setter for ``width`` of element ``i``.
+        """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
     @property
     def width(self):
-        """Getter for ``width``."""
         return self.get_width(0)
     @width.setter
     def width(self, int value):
-        """Setter for ``width``."""
         self.set_width(0,value)
     def get_height(self, i):
-        """Getter for ``height`` of element ``i``.
+        """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
     def set_height(self, i, int value):
-        """Setter for ``height`` of element ``i``.
+        """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
     @property
     def height(self):
-        """Getter for ``height``."""
         return self.get_height(0)
     @height.setter
     def height(self, int value):
-        """Setter for ``height``."""
         self.set_height(0,value)
     def get_pitchInBytes(self, i):
-        """Getter for ``pitchInBytes`` of element ``i``.
+        """Get value ``pitchInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pitchInBytes
     def set_pitchInBytes(self, i, int value):
-        """Setter for ``pitchInBytes`` of element ``i``.
+        """Set value ``pitchInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].pitchInBytes = value
     @property
     def pitchInBytes(self):
-        """Getter for ``pitchInBytes``."""
         return self.get_pitchInBytes(0)
     @pitchInBytes.setter
     def pitchInBytes(self, int value):
-        """Setter for ``pitchInBytes``."""
         self.set_pitchInBytes(0,value)
 
 
@@ -2791,36 +2655,32 @@ cdef class hipResourceDesc_union_0:
         # TODO init values, if present
         return hipResourceDesc_union_0.from_ptr(_ptr, owner=True)
     def get_array(self, i):
-        """Getter for ``array`` of element ``i``.
+        """Get value of ``array`` of ``self._ptr[i]``.
         """
         return hipResourceDesc_union_0_struct_0.from_ptr(&self._ptr[i].array)
     @property
     def array(self):
-        """Getter for ``array``."""
         return self.get_array(0)
     def get_mipmap(self, i):
-        """Getter for ``mipmap`` of element ``i``.
+        """Get value of ``mipmap`` of ``self._ptr[i]``.
         """
         return hipResourceDesc_union_0_struct_1.from_ptr(&self._ptr[i].mipmap)
     @property
     def mipmap(self):
-        """Getter for ``mipmap``."""
         return self.get_mipmap(0)
     def get_linear(self, i):
-        """Getter for ``linear`` of element ``i``.
+        """Get value of ``linear`` of ``self._ptr[i]``.
         """
         return hipResourceDesc_union_0_struct_2.from_ptr(&self._ptr[i].linear)
     @property
     def linear(self):
-        """Getter for ``linear``."""
         return self.get_linear(0)
     def get_pitch2D(self, i):
-        """Getter for ``pitch2D`` of element ``i``.
+        """Get value of ``pitch2D`` of ``self._ptr[i]``.
         """
         return hipResourceDesc_union_0_struct_3.from_ptr(&self._ptr[i].pitch2D)
     @property
     def pitch2D(self):
-        """Getter for ``pitch2D``."""
         return self.get_pitch2D(0)
 
 
@@ -2863,30 +2723,27 @@ cdef class hipResourceDesc:
         # TODO init values, if present
         return hipResourceDesc.from_ptr(_ptr, owner=True)
     def get_resType(self, i):
-        """Getter for ``resType`` of element ``i``.
+        """Get value of ``resType`` of ``self._ptr[i]``.
         """
         return hipResourceType(self._ptr[i].resType)
     def set_resType(self, i, value):
-        """Setter for ``resType`` of element ``i``.
+        """Set value ``resType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipResourceType):
             raise TypeError("'value' must be of type 'hipResourceType'")
         self._ptr[i].resType = value.value
     @property
     def resType(self):
-        """Getter for ``resType``."""
         return self.get_resType(0)
     @resType.setter
     def resType(self, value):
-        """Setter for ``resType``."""
         self.set_resType(0,value)
     def get_res(self, i):
-        """Getter for ``res`` of element ``i``.
+        """Get value of ``res`` of ``self._ptr[i]``.
         """
         return hipResourceDesc_union_0.from_ptr(&self._ptr[i].res)
     @property
     def res(self):
-        """Getter for ``res``."""
         return self.get_res(0)
 
 
@@ -3009,54 +2866,48 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
         # TODO init values, if present
         return HIP_RESOURCE_DESC_st_union_0_struct_2.from_ptr(_ptr, owner=True)
     def get_format(self, i):
-        """Getter for ``format`` of element ``i``.
+        """Get value of ``format`` of ``self._ptr[i]``.
         """
         return hipArray_Format(self._ptr[i].format)
     def set_format(self, i, value):
-        """Setter for ``format`` of element ``i``.
+        """Set value ``format`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipArray_Format):
             raise TypeError("'value' must be of type 'hipArray_Format'")
         self._ptr[i].format = value.value
     @property
     def format(self):
-        """Getter for ``format``."""
         return self.get_format(0)
     @format.setter
     def format(self, value):
-        """Setter for ``format``."""
         self.set_format(0,value)
     def get_numChannels(self, i):
-        """Getter for ``numChannels`` of element ``i``.
+        """Get value ``numChannels`` of ``self._ptr[i]``.
         """
         return self._ptr[i].numChannels
     def set_numChannels(self, i, unsigned int value):
-        """Setter for ``numChannels`` of element ``i``.
+        """Set value ``numChannels`` of ``self._ptr[i]``.
         """
         self._ptr[i].numChannels = value
     @property
     def numChannels(self):
-        """Getter for ``numChannels``."""
         return self.get_numChannels(0)
     @numChannels.setter
     def numChannels(self, unsigned int value):
-        """Setter for ``numChannels``."""
         self.set_numChannels(0,value)
     def get_sizeInBytes(self, i):
-        """Getter for ``sizeInBytes`` of element ``i``.
+        """Get value ``sizeInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sizeInBytes
     def set_sizeInBytes(self, i, int value):
-        """Setter for ``sizeInBytes`` of element ``i``.
+        """Set value ``sizeInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].sizeInBytes = value
     @property
     def sizeInBytes(self):
-        """Getter for ``sizeInBytes``."""
         return self.get_sizeInBytes(0)
     @sizeInBytes.setter
     def sizeInBytes(self, int value):
-        """Setter for ``sizeInBytes``."""
         self.set_sizeInBytes(0,value)
 
 
@@ -3099,86 +2950,76 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         # TODO init values, if present
         return HIP_RESOURCE_DESC_st_union_0_struct_3.from_ptr(_ptr, owner=True)
     def get_format(self, i):
-        """Getter for ``format`` of element ``i``.
+        """Get value of ``format`` of ``self._ptr[i]``.
         """
         return hipArray_Format(self._ptr[i].format)
     def set_format(self, i, value):
-        """Setter for ``format`` of element ``i``.
+        """Set value ``format`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipArray_Format):
             raise TypeError("'value' must be of type 'hipArray_Format'")
         self._ptr[i].format = value.value
     @property
     def format(self):
-        """Getter for ``format``."""
         return self.get_format(0)
     @format.setter
     def format(self, value):
-        """Setter for ``format``."""
         self.set_format(0,value)
     def get_numChannels(self, i):
-        """Getter for ``numChannels`` of element ``i``.
+        """Get value ``numChannels`` of ``self._ptr[i]``.
         """
         return self._ptr[i].numChannels
     def set_numChannels(self, i, unsigned int value):
-        """Setter for ``numChannels`` of element ``i``.
+        """Set value ``numChannels`` of ``self._ptr[i]``.
         """
         self._ptr[i].numChannels = value
     @property
     def numChannels(self):
-        """Getter for ``numChannels``."""
         return self.get_numChannels(0)
     @numChannels.setter
     def numChannels(self, unsigned int value):
-        """Setter for ``numChannels``."""
         self.set_numChannels(0,value)
     def get_width(self, i):
-        """Getter for ``width`` of element ``i``.
+        """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
     def set_width(self, i, int value):
-        """Setter for ``width`` of element ``i``.
+        """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
     @property
     def width(self):
-        """Getter for ``width``."""
         return self.get_width(0)
     @width.setter
     def width(self, int value):
-        """Setter for ``width``."""
         self.set_width(0,value)
     def get_height(self, i):
-        """Getter for ``height`` of element ``i``.
+        """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
     def set_height(self, i, int value):
-        """Setter for ``height`` of element ``i``.
+        """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
     @property
     def height(self):
-        """Getter for ``height``."""
         return self.get_height(0)
     @height.setter
     def height(self, int value):
-        """Setter for ``height``."""
         self.set_height(0,value)
     def get_pitchInBytes(self, i):
-        """Getter for ``pitchInBytes`` of element ``i``.
+        """Get value ``pitchInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pitchInBytes
     def set_pitchInBytes(self, i, int value):
-        """Setter for ``pitchInBytes`` of element ``i``.
+        """Set value ``pitchInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].pitchInBytes = value
     @property
     def pitchInBytes(self):
-        """Getter for ``pitchInBytes``."""
         return self.get_pitchInBytes(0)
     @pitchInBytes.setter
     def pitchInBytes(self, int value):
-        """Setter for ``pitchInBytes``."""
         self.set_pitchInBytes(0,value)
 
 
@@ -3220,6 +3061,14 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
             raise MemoryError
         # TODO init values, if present
         return HIP_RESOURCE_DESC_st_union_0_struct_4.from_ptr(_ptr, owner=True)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 
@@ -3261,44 +3110,39 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
         # TODO init values, if present
         return HIP_RESOURCE_DESC_st_union_0.from_ptr(_ptr, owner=True)
     def get_array(self, i):
-        """Getter for ``array`` of element ``i``.
+        """Get value of ``array`` of ``self._ptr[i]``.
         """
         return HIP_RESOURCE_DESC_st_union_0_struct_0.from_ptr(&self._ptr[i].array)
     @property
     def array(self):
-        """Getter for ``array``."""
         return self.get_array(0)
     def get_mipmap(self, i):
-        """Getter for ``mipmap`` of element ``i``.
+        """Get value of ``mipmap`` of ``self._ptr[i]``.
         """
         return HIP_RESOURCE_DESC_st_union_0_struct_1.from_ptr(&self._ptr[i].mipmap)
     @property
     def mipmap(self):
-        """Getter for ``mipmap``."""
         return self.get_mipmap(0)
     def get_linear(self, i):
-        """Getter for ``linear`` of element ``i``.
+        """Get value of ``linear`` of ``self._ptr[i]``.
         """
         return HIP_RESOURCE_DESC_st_union_0_struct_2.from_ptr(&self._ptr[i].linear)
     @property
     def linear(self):
-        """Getter for ``linear``."""
         return self.get_linear(0)
     def get_pitch2D(self, i):
-        """Getter for ``pitch2D`` of element ``i``.
+        """Get value of ``pitch2D`` of ``self._ptr[i]``.
         """
         return HIP_RESOURCE_DESC_st_union_0_struct_3.from_ptr(&self._ptr[i].pitch2D)
     @property
     def pitch2D(self):
-        """Getter for ``pitch2D``."""
         return self.get_pitch2D(0)
     def get_reserved(self, i):
-        """Getter for ``reserved`` of element ``i``.
+        """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return HIP_RESOURCE_DESC_st_union_0_struct_4.from_ptr(&self._ptr[i].reserved)
     @property
     def reserved(self):
-        """Getter for ``reserved``."""
         return self.get_reserved(0)
 
 
@@ -3341,46 +3185,41 @@ cdef class HIP_RESOURCE_DESC_st:
         # TODO init values, if present
         return HIP_RESOURCE_DESC_st.from_ptr(_ptr, owner=True)
     def get_resType(self, i):
-        """Getter for ``resType`` of element ``i``.
+        """Get value of ``resType`` of ``self._ptr[i]``.
         """
         return HIPresourcetype_enum(self._ptr[i].resType)
     def set_resType(self, i, value):
-        """Setter for ``resType`` of element ``i``.
+        """Set value ``resType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, HIPresourcetype_enum):
             raise TypeError("'value' must be of type 'HIPresourcetype_enum'")
         self._ptr[i].resType = value.value
     @property
     def resType(self):
-        """Getter for ``resType``."""
         return self.get_resType(0)
     @resType.setter
     def resType(self, value):
-        """Setter for ``resType``."""
         self.set_resType(0,value)
     def get_res(self, i):
-        """Getter for ``res`` of element ``i``.
+        """Get value of ``res`` of ``self._ptr[i]``.
         """
         return HIP_RESOURCE_DESC_st_union_0.from_ptr(&self._ptr[i].res)
     @property
     def res(self):
-        """Getter for ``res``."""
         return self.get_res(0)
     def get_flags(self, i):
-        """Getter for ``flags`` of element ``i``.
+        """Get value ``flags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].flags
     def set_flags(self, i, unsigned int value):
-        """Setter for ``flags`` of element ``i``.
+        """Set value ``flags`` of ``self._ptr[i]``.
         """
         self._ptr[i].flags = value
     @property
     def flags(self):
-        """Getter for ``flags``."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
-        """Setter for ``flags``."""
         self.set_flags(0,value)
 
 
@@ -3423,134 +3262,118 @@ cdef class hipResourceViewDesc:
         # TODO init values, if present
         return hipResourceViewDesc.from_ptr(_ptr, owner=True)
     def get_format(self, i):
-        """Getter for ``format`` of element ``i``.
+        """Get value of ``format`` of ``self._ptr[i]``.
         """
         return hipResourceViewFormat(self._ptr[i].format)
     def set_format(self, i, value):
-        """Setter for ``format`` of element ``i``.
+        """Set value ``format`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipResourceViewFormat):
             raise TypeError("'value' must be of type 'hipResourceViewFormat'")
         self._ptr[i].format = value.value
     @property
     def format(self):
-        """Getter for ``format``."""
         return self.get_format(0)
     @format.setter
     def format(self, value):
-        """Setter for ``format``."""
         self.set_format(0,value)
     def get_width(self, i):
-        """Getter for ``width`` of element ``i``.
+        """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
     def set_width(self, i, int value):
-        """Setter for ``width`` of element ``i``.
+        """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
     @property
     def width(self):
-        """Getter for ``width``."""
         return self.get_width(0)
     @width.setter
     def width(self, int value):
-        """Setter for ``width``."""
         self.set_width(0,value)
     def get_height(self, i):
-        """Getter for ``height`` of element ``i``.
+        """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
     def set_height(self, i, int value):
-        """Setter for ``height`` of element ``i``.
+        """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
     @property
     def height(self):
-        """Getter for ``height``."""
         return self.get_height(0)
     @height.setter
     def height(self, int value):
-        """Setter for ``height``."""
         self.set_height(0,value)
     def get_depth(self, i):
-        """Getter for ``depth`` of element ``i``.
+        """Get value ``depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].depth
     def set_depth(self, i, int value):
-        """Setter for ``depth`` of element ``i``.
+        """Set value ``depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].depth = value
     @property
     def depth(self):
-        """Getter for ``depth``."""
         return self.get_depth(0)
     @depth.setter
     def depth(self, int value):
-        """Setter for ``depth``."""
         self.set_depth(0,value)
     def get_firstMipmapLevel(self, i):
-        """Getter for ``firstMipmapLevel`` of element ``i``.
+        """Get value ``firstMipmapLevel`` of ``self._ptr[i]``.
         """
         return self._ptr[i].firstMipmapLevel
     def set_firstMipmapLevel(self, i, unsigned int value):
-        """Setter for ``firstMipmapLevel`` of element ``i``.
+        """Set value ``firstMipmapLevel`` of ``self._ptr[i]``.
         """
         self._ptr[i].firstMipmapLevel = value
     @property
     def firstMipmapLevel(self):
-        """Getter for ``firstMipmapLevel``."""
         return self.get_firstMipmapLevel(0)
     @firstMipmapLevel.setter
     def firstMipmapLevel(self, unsigned int value):
-        """Setter for ``firstMipmapLevel``."""
         self.set_firstMipmapLevel(0,value)
     def get_lastMipmapLevel(self, i):
-        """Getter for ``lastMipmapLevel`` of element ``i``.
+        """Get value ``lastMipmapLevel`` of ``self._ptr[i]``.
         """
         return self._ptr[i].lastMipmapLevel
     def set_lastMipmapLevel(self, i, unsigned int value):
-        """Setter for ``lastMipmapLevel`` of element ``i``.
+        """Set value ``lastMipmapLevel`` of ``self._ptr[i]``.
         """
         self._ptr[i].lastMipmapLevel = value
     @property
     def lastMipmapLevel(self):
-        """Getter for ``lastMipmapLevel``."""
         return self.get_lastMipmapLevel(0)
     @lastMipmapLevel.setter
     def lastMipmapLevel(self, unsigned int value):
-        """Setter for ``lastMipmapLevel``."""
         self.set_lastMipmapLevel(0,value)
     def get_firstLayer(self, i):
-        """Getter for ``firstLayer`` of element ``i``.
+        """Get value ``firstLayer`` of ``self._ptr[i]``.
         """
         return self._ptr[i].firstLayer
     def set_firstLayer(self, i, unsigned int value):
-        """Setter for ``firstLayer`` of element ``i``.
+        """Set value ``firstLayer`` of ``self._ptr[i]``.
         """
         self._ptr[i].firstLayer = value
     @property
     def firstLayer(self):
-        """Getter for ``firstLayer``."""
         return self.get_firstLayer(0)
     @firstLayer.setter
     def firstLayer(self, unsigned int value):
-        """Setter for ``firstLayer``."""
         self.set_firstLayer(0,value)
     def get_lastLayer(self, i):
-        """Getter for ``lastLayer`` of element ``i``.
+        """Get value ``lastLayer`` of ``self._ptr[i]``.
         """
         return self._ptr[i].lastLayer
     def set_lastLayer(self, i, unsigned int value):
-        """Setter for ``lastLayer`` of element ``i``.
+        """Set value ``lastLayer`` of ``self._ptr[i]``.
         """
         self._ptr[i].lastLayer = value
     @property
     def lastLayer(self):
-        """Getter for ``lastLayer``."""
         return self.get_lastLayer(0)
     @lastLayer.setter
     def lastLayer(self, unsigned int value):
-        """Setter for ``lastLayer``."""
         self.set_lastLayer(0,value)
 
 
@@ -3593,135 +3416,127 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         # TODO init values, if present
         return HIP_RESOURCE_VIEW_DESC_st.from_ptr(_ptr, owner=True)
     def get_format(self, i):
-        """Getter for ``format`` of element ``i``.
+        """Get value of ``format`` of ``self._ptr[i]``.
         """
         return HIPresourceViewFormat_enum(self._ptr[i].format)
     def set_format(self, i, value):
-        """Setter for ``format`` of element ``i``.
+        """Set value ``format`` of ``self._ptr[i]``.
         """
         if not isinstance(value, HIPresourceViewFormat_enum):
             raise TypeError("'value' must be of type 'HIPresourceViewFormat_enum'")
         self._ptr[i].format = value.value
     @property
     def format(self):
-        """Getter for ``format``."""
         return self.get_format(0)
     @format.setter
     def format(self, value):
-        """Setter for ``format``."""
         self.set_format(0,value)
     def get_width(self, i):
-        """Getter for ``width`` of element ``i``.
+        """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
     def set_width(self, i, int value):
-        """Setter for ``width`` of element ``i``.
+        """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
     @property
     def width(self):
-        """Getter for ``width``."""
         return self.get_width(0)
     @width.setter
     def width(self, int value):
-        """Setter for ``width``."""
         self.set_width(0,value)
     def get_height(self, i):
-        """Getter for ``height`` of element ``i``.
+        """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
     def set_height(self, i, int value):
-        """Setter for ``height`` of element ``i``.
+        """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
     @property
     def height(self):
-        """Getter for ``height``."""
         return self.get_height(0)
     @height.setter
     def height(self, int value):
-        """Setter for ``height``."""
         self.set_height(0,value)
     def get_depth(self, i):
-        """Getter for ``depth`` of element ``i``.
+        """Get value ``depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].depth
     def set_depth(self, i, int value):
-        """Setter for ``depth`` of element ``i``.
+        """Set value ``depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].depth = value
     @property
     def depth(self):
-        """Getter for ``depth``."""
         return self.get_depth(0)
     @depth.setter
     def depth(self, int value):
-        """Setter for ``depth``."""
         self.set_depth(0,value)
     def get_firstMipmapLevel(self, i):
-        """Getter for ``firstMipmapLevel`` of element ``i``.
+        """Get value ``firstMipmapLevel`` of ``self._ptr[i]``.
         """
         return self._ptr[i].firstMipmapLevel
     def set_firstMipmapLevel(self, i, unsigned int value):
-        """Setter for ``firstMipmapLevel`` of element ``i``.
+        """Set value ``firstMipmapLevel`` of ``self._ptr[i]``.
         """
         self._ptr[i].firstMipmapLevel = value
     @property
     def firstMipmapLevel(self):
-        """Getter for ``firstMipmapLevel``."""
         return self.get_firstMipmapLevel(0)
     @firstMipmapLevel.setter
     def firstMipmapLevel(self, unsigned int value):
-        """Setter for ``firstMipmapLevel``."""
         self.set_firstMipmapLevel(0,value)
     def get_lastMipmapLevel(self, i):
-        """Getter for ``lastMipmapLevel`` of element ``i``.
+        """Get value ``lastMipmapLevel`` of ``self._ptr[i]``.
         """
         return self._ptr[i].lastMipmapLevel
     def set_lastMipmapLevel(self, i, unsigned int value):
-        """Setter for ``lastMipmapLevel`` of element ``i``.
+        """Set value ``lastMipmapLevel`` of ``self._ptr[i]``.
         """
         self._ptr[i].lastMipmapLevel = value
     @property
     def lastMipmapLevel(self):
-        """Getter for ``lastMipmapLevel``."""
         return self.get_lastMipmapLevel(0)
     @lastMipmapLevel.setter
     def lastMipmapLevel(self, unsigned int value):
-        """Setter for ``lastMipmapLevel``."""
         self.set_lastMipmapLevel(0,value)
     def get_firstLayer(self, i):
-        """Getter for ``firstLayer`` of element ``i``.
+        """Get value ``firstLayer`` of ``self._ptr[i]``.
         """
         return self._ptr[i].firstLayer
     def set_firstLayer(self, i, unsigned int value):
-        """Setter for ``firstLayer`` of element ``i``.
+        """Set value ``firstLayer`` of ``self._ptr[i]``.
         """
         self._ptr[i].firstLayer = value
     @property
     def firstLayer(self):
-        """Getter for ``firstLayer``."""
         return self.get_firstLayer(0)
     @firstLayer.setter
     def firstLayer(self, unsigned int value):
-        """Setter for ``firstLayer``."""
         self.set_firstLayer(0,value)
     def get_lastLayer(self, i):
-        """Getter for ``lastLayer`` of element ``i``.
+        """Get value ``lastLayer`` of ``self._ptr[i]``.
         """
         return self._ptr[i].lastLayer
     def set_lastLayer(self, i, unsigned int value):
-        """Setter for ``lastLayer`` of element ``i``.
+        """Set value ``lastLayer`` of ``self._ptr[i]``.
         """
         self._ptr[i].lastLayer = value
     @property
     def lastLayer(self):
-        """Getter for ``lastLayer``."""
         return self.get_lastLayer(0)
     @lastLayer.setter
     def lastLayer(self, unsigned int value):
-        """Setter for ``lastLayer``."""
         self.set_lastLayer(0,value)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 class hipMemcpyKind(enum.IntEnum):
@@ -3770,52 +3585,46 @@ cdef class hipPitchedPtr:
         # TODO init values, if present
         return hipPitchedPtr.from_ptr(_ptr, owner=True)
     def get_pitch(self, i):
-        """Getter for ``pitch`` of element ``i``.
+        """Get value ``pitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pitch
     def set_pitch(self, i, int value):
-        """Setter for ``pitch`` of element ``i``.
+        """Set value ``pitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].pitch = value
     @property
     def pitch(self):
-        """Getter for ``pitch``."""
         return self.get_pitch(0)
     @pitch.setter
     def pitch(self, int value):
-        """Setter for ``pitch``."""
         self.set_pitch(0,value)
     def get_xsize(self, i):
-        """Getter for ``xsize`` of element ``i``.
+        """Get value ``xsize`` of ``self._ptr[i]``.
         """
         return self._ptr[i].xsize
     def set_xsize(self, i, int value):
-        """Setter for ``xsize`` of element ``i``.
+        """Set value ``xsize`` of ``self._ptr[i]``.
         """
         self._ptr[i].xsize = value
     @property
     def xsize(self):
-        """Getter for ``xsize``."""
         return self.get_xsize(0)
     @xsize.setter
     def xsize(self, int value):
-        """Setter for ``xsize``."""
         self.set_xsize(0,value)
     def get_ysize(self, i):
-        """Getter for ``ysize`` of element ``i``.
+        """Get value ``ysize`` of ``self._ptr[i]``.
         """
         return self._ptr[i].ysize
     def set_ysize(self, i, int value):
-        """Setter for ``ysize`` of element ``i``.
+        """Set value ``ysize`` of ``self._ptr[i]``.
         """
         self._ptr[i].ysize = value
     @property
     def ysize(self):
-        """Getter for ``ysize``."""
         return self.get_ysize(0)
     @ysize.setter
     def ysize(self, int value):
-        """Setter for ``ysize``."""
         self.set_ysize(0,value)
 
 
@@ -3858,52 +3667,46 @@ cdef class hipExtent:
         # TODO init values, if present
         return hipExtent.from_ptr(_ptr, owner=True)
     def get_width(self, i):
-        """Getter for ``width`` of element ``i``.
+        """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
     def set_width(self, i, int value):
-        """Setter for ``width`` of element ``i``.
+        """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
     @property
     def width(self):
-        """Getter for ``width``."""
         return self.get_width(0)
     @width.setter
     def width(self, int value):
-        """Setter for ``width``."""
         self.set_width(0,value)
     def get_height(self, i):
-        """Getter for ``height`` of element ``i``.
+        """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
     def set_height(self, i, int value):
-        """Setter for ``height`` of element ``i``.
+        """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
     @property
     def height(self):
-        """Getter for ``height``."""
         return self.get_height(0)
     @height.setter
     def height(self, int value):
-        """Setter for ``height``."""
         self.set_height(0,value)
     def get_depth(self, i):
-        """Getter for ``depth`` of element ``i``.
+        """Get value ``depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].depth
     def set_depth(self, i, int value):
-        """Setter for ``depth`` of element ``i``.
+        """Set value ``depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].depth = value
     @property
     def depth(self):
-        """Getter for ``depth``."""
         return self.get_depth(0)
     @depth.setter
     def depth(self, int value):
-        """Setter for ``depth``."""
         self.set_depth(0,value)
 
 
@@ -3946,52 +3749,46 @@ cdef class hipPos:
         # TODO init values, if present
         return hipPos.from_ptr(_ptr, owner=True)
     def get_x(self, i):
-        """Getter for ``x`` of element ``i``.
+        """Get value ``x`` of ``self._ptr[i]``.
         """
         return self._ptr[i].x
     def set_x(self, i, int value):
-        """Setter for ``x`` of element ``i``.
+        """Set value ``x`` of ``self._ptr[i]``.
         """
         self._ptr[i].x = value
     @property
     def x(self):
-        """Getter for ``x``."""
         return self.get_x(0)
     @x.setter
     def x(self, int value):
-        """Setter for ``x``."""
         self.set_x(0,value)
     def get_y(self, i):
-        """Getter for ``y`` of element ``i``.
+        """Get value ``y`` of ``self._ptr[i]``.
         """
         return self._ptr[i].y
     def set_y(self, i, int value):
-        """Setter for ``y`` of element ``i``.
+        """Set value ``y`` of ``self._ptr[i]``.
         """
         self._ptr[i].y = value
     @property
     def y(self):
-        """Getter for ``y``."""
         return self.get_y(0)
     @y.setter
     def y(self, int value):
-        """Setter for ``y``."""
         self.set_y(0,value)
     def get_z(self, i):
-        """Getter for ``z`` of element ``i``.
+        """Get value ``z`` of ``self._ptr[i]``.
         """
         return self._ptr[i].z
     def set_z(self, i, int value):
-        """Setter for ``z`` of element ``i``.
+        """Set value ``z`` of ``self._ptr[i]``.
         """
         self._ptr[i].z = value
     @property
     def z(self):
-        """Getter for ``z``."""
         return self.get_z(0)
     @z.setter
     def z(self, int value):
-        """Setter for ``z``."""
         self.set_z(0,value)
 
 
@@ -4034,62 +3831,55 @@ cdef class hipMemcpy3DParms:
         # TODO init values, if present
         return hipMemcpy3DParms.from_ptr(_ptr, owner=True)
     def get_srcPos(self, i):
-        """Getter for ``srcPos`` of element ``i``.
+        """Get value of ``srcPos`` of ``self._ptr[i]``.
         """
         return hipPos.from_ptr(&self._ptr[i].srcPos)
     @property
     def srcPos(self):
-        """Getter for ``srcPos``."""
         return self.get_srcPos(0)
     def get_srcPtr(self, i):
-        """Getter for ``srcPtr`` of element ``i``.
+        """Get value of ``srcPtr`` of ``self._ptr[i]``.
         """
         return hipPitchedPtr.from_ptr(&self._ptr[i].srcPtr)
     @property
     def srcPtr(self):
-        """Getter for ``srcPtr``."""
         return self.get_srcPtr(0)
     def get_dstPos(self, i):
-        """Getter for ``dstPos`` of element ``i``.
+        """Get value of ``dstPos`` of ``self._ptr[i]``.
         """
         return hipPos.from_ptr(&self._ptr[i].dstPos)
     @property
     def dstPos(self):
-        """Getter for ``dstPos``."""
         return self.get_dstPos(0)
     def get_dstPtr(self, i):
-        """Getter for ``dstPtr`` of element ``i``.
+        """Get value of ``dstPtr`` of ``self._ptr[i]``.
         """
         return hipPitchedPtr.from_ptr(&self._ptr[i].dstPtr)
     @property
     def dstPtr(self):
-        """Getter for ``dstPtr``."""
         return self.get_dstPtr(0)
     def get_extent(self, i):
-        """Getter for ``extent`` of element ``i``.
+        """Get value of ``extent`` of ``self._ptr[i]``.
         """
         return hipExtent.from_ptr(&self._ptr[i].extent)
     @property
     def extent(self):
-        """Getter for ``extent``."""
         return self.get_extent(0)
     def get_kind(self, i):
-        """Getter for ``kind`` of element ``i``.
+        """Get value of ``kind`` of ``self._ptr[i]``.
         """
         return hipMemcpyKind(self._ptr[i].kind)
     def set_kind(self, i, value):
-        """Setter for ``kind`` of element ``i``.
+        """Set value ``kind`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemcpyKind):
             raise TypeError("'value' must be of type 'hipMemcpyKind'")
         self._ptr[i].kind = value.value
     @property
     def kind(self):
-        """Getter for ``kind``."""
         return self.get_kind(0)
     @kind.setter
     def kind(self, value):
-        """Setter for ``kind``."""
         self.set_kind(0,value)
 
 
@@ -4132,280 +3922,246 @@ cdef class HIP_MEMCPY3D:
         # TODO init values, if present
         return HIP_MEMCPY3D.from_ptr(_ptr, owner=True)
     def get_srcXInBytes(self, i):
-        """Getter for ``srcXInBytes`` of element ``i``.
+        """Get value ``srcXInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcXInBytes
     def set_srcXInBytes(self, i, unsigned int value):
-        """Setter for ``srcXInBytes`` of element ``i``.
+        """Set value ``srcXInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcXInBytes = value
     @property
     def srcXInBytes(self):
-        """Getter for ``srcXInBytes``."""
         return self.get_srcXInBytes(0)
     @srcXInBytes.setter
     def srcXInBytes(self, unsigned int value):
-        """Setter for ``srcXInBytes``."""
         self.set_srcXInBytes(0,value)
     def get_srcY(self, i):
-        """Getter for ``srcY`` of element ``i``.
+        """Get value ``srcY`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcY
     def set_srcY(self, i, unsigned int value):
-        """Setter for ``srcY`` of element ``i``.
+        """Set value ``srcY`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcY = value
     @property
     def srcY(self):
-        """Getter for ``srcY``."""
         return self.get_srcY(0)
     @srcY.setter
     def srcY(self, unsigned int value):
-        """Setter for ``srcY``."""
         self.set_srcY(0,value)
     def get_srcZ(self, i):
-        """Getter for ``srcZ`` of element ``i``.
+        """Get value ``srcZ`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcZ
     def set_srcZ(self, i, unsigned int value):
-        """Setter for ``srcZ`` of element ``i``.
+        """Set value ``srcZ`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcZ = value
     @property
     def srcZ(self):
-        """Getter for ``srcZ``."""
         return self.get_srcZ(0)
     @srcZ.setter
     def srcZ(self, unsigned int value):
-        """Setter for ``srcZ``."""
         self.set_srcZ(0,value)
     def get_srcLOD(self, i):
-        """Getter for ``srcLOD`` of element ``i``.
+        """Get value ``srcLOD`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcLOD
     def set_srcLOD(self, i, unsigned int value):
-        """Setter for ``srcLOD`` of element ``i``.
+        """Set value ``srcLOD`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcLOD = value
     @property
     def srcLOD(self):
-        """Getter for ``srcLOD``."""
         return self.get_srcLOD(0)
     @srcLOD.setter
     def srcLOD(self, unsigned int value):
-        """Setter for ``srcLOD``."""
         self.set_srcLOD(0,value)
     def get_srcMemoryType(self, i):
-        """Getter for ``srcMemoryType`` of element ``i``.
+        """Get value of ``srcMemoryType`` of ``self._ptr[i]``.
         """
         return hipMemoryType(self._ptr[i].srcMemoryType)
     def set_srcMemoryType(self, i, value):
-        """Setter for ``srcMemoryType`` of element ``i``.
+        """Set value ``srcMemoryType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemoryType):
             raise TypeError("'value' must be of type 'hipMemoryType'")
         self._ptr[i].srcMemoryType = value.value
     @property
     def srcMemoryType(self):
-        """Getter for ``srcMemoryType``."""
         return self.get_srcMemoryType(0)
     @srcMemoryType.setter
     def srcMemoryType(self, value):
-        """Setter for ``srcMemoryType``."""
         self.set_srcMemoryType(0,value)
     def get_srcPitch(self, i):
-        """Getter for ``srcPitch`` of element ``i``.
+        """Get value ``srcPitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcPitch
     def set_srcPitch(self, i, unsigned int value):
-        """Setter for ``srcPitch`` of element ``i``.
+        """Set value ``srcPitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcPitch = value
     @property
     def srcPitch(self):
-        """Getter for ``srcPitch``."""
         return self.get_srcPitch(0)
     @srcPitch.setter
     def srcPitch(self, unsigned int value):
-        """Setter for ``srcPitch``."""
         self.set_srcPitch(0,value)
     def get_srcHeight(self, i):
-        """Getter for ``srcHeight`` of element ``i``.
+        """Get value ``srcHeight`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcHeight
     def set_srcHeight(self, i, unsigned int value):
-        """Setter for ``srcHeight`` of element ``i``.
+        """Set value ``srcHeight`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcHeight = value
     @property
     def srcHeight(self):
-        """Getter for ``srcHeight``."""
         return self.get_srcHeight(0)
     @srcHeight.setter
     def srcHeight(self, unsigned int value):
-        """Setter for ``srcHeight``."""
         self.set_srcHeight(0,value)
     def get_dstXInBytes(self, i):
-        """Getter for ``dstXInBytes`` of element ``i``.
+        """Get value ``dstXInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstXInBytes
     def set_dstXInBytes(self, i, unsigned int value):
-        """Setter for ``dstXInBytes`` of element ``i``.
+        """Set value ``dstXInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstXInBytes = value
     @property
     def dstXInBytes(self):
-        """Getter for ``dstXInBytes``."""
         return self.get_dstXInBytes(0)
     @dstXInBytes.setter
     def dstXInBytes(self, unsigned int value):
-        """Setter for ``dstXInBytes``."""
         self.set_dstXInBytes(0,value)
     def get_dstY(self, i):
-        """Getter for ``dstY`` of element ``i``.
+        """Get value ``dstY`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstY
     def set_dstY(self, i, unsigned int value):
-        """Setter for ``dstY`` of element ``i``.
+        """Set value ``dstY`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstY = value
     @property
     def dstY(self):
-        """Getter for ``dstY``."""
         return self.get_dstY(0)
     @dstY.setter
     def dstY(self, unsigned int value):
-        """Setter for ``dstY``."""
         self.set_dstY(0,value)
     def get_dstZ(self, i):
-        """Getter for ``dstZ`` of element ``i``.
+        """Get value ``dstZ`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstZ
     def set_dstZ(self, i, unsigned int value):
-        """Setter for ``dstZ`` of element ``i``.
+        """Set value ``dstZ`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstZ = value
     @property
     def dstZ(self):
-        """Getter for ``dstZ``."""
         return self.get_dstZ(0)
     @dstZ.setter
     def dstZ(self, unsigned int value):
-        """Setter for ``dstZ``."""
         self.set_dstZ(0,value)
     def get_dstLOD(self, i):
-        """Getter for ``dstLOD`` of element ``i``.
+        """Get value ``dstLOD`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstLOD
     def set_dstLOD(self, i, unsigned int value):
-        """Setter for ``dstLOD`` of element ``i``.
+        """Set value ``dstLOD`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstLOD = value
     @property
     def dstLOD(self):
-        """Getter for ``dstLOD``."""
         return self.get_dstLOD(0)
     @dstLOD.setter
     def dstLOD(self, unsigned int value):
-        """Setter for ``dstLOD``."""
         self.set_dstLOD(0,value)
     def get_dstMemoryType(self, i):
-        """Getter for ``dstMemoryType`` of element ``i``.
+        """Get value of ``dstMemoryType`` of ``self._ptr[i]``.
         """
         return hipMemoryType(self._ptr[i].dstMemoryType)
     def set_dstMemoryType(self, i, value):
-        """Setter for ``dstMemoryType`` of element ``i``.
+        """Set value ``dstMemoryType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemoryType):
             raise TypeError("'value' must be of type 'hipMemoryType'")
         self._ptr[i].dstMemoryType = value.value
     @property
     def dstMemoryType(self):
-        """Getter for ``dstMemoryType``."""
         return self.get_dstMemoryType(0)
     @dstMemoryType.setter
     def dstMemoryType(self, value):
-        """Setter for ``dstMemoryType``."""
         self.set_dstMemoryType(0,value)
     def get_dstPitch(self, i):
-        """Getter for ``dstPitch`` of element ``i``.
+        """Get value ``dstPitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstPitch
     def set_dstPitch(self, i, unsigned int value):
-        """Setter for ``dstPitch`` of element ``i``.
+        """Set value ``dstPitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstPitch = value
     @property
     def dstPitch(self):
-        """Getter for ``dstPitch``."""
         return self.get_dstPitch(0)
     @dstPitch.setter
     def dstPitch(self, unsigned int value):
-        """Setter for ``dstPitch``."""
         self.set_dstPitch(0,value)
     def get_dstHeight(self, i):
-        """Getter for ``dstHeight`` of element ``i``.
+        """Get value ``dstHeight`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstHeight
     def set_dstHeight(self, i, unsigned int value):
-        """Setter for ``dstHeight`` of element ``i``.
+        """Set value ``dstHeight`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstHeight = value
     @property
     def dstHeight(self):
-        """Getter for ``dstHeight``."""
         return self.get_dstHeight(0)
     @dstHeight.setter
     def dstHeight(self, unsigned int value):
-        """Setter for ``dstHeight``."""
         self.set_dstHeight(0,value)
     def get_WidthInBytes(self, i):
-        """Getter for ``WidthInBytes`` of element ``i``.
+        """Get value ``WidthInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].WidthInBytes
     def set_WidthInBytes(self, i, unsigned int value):
-        """Setter for ``WidthInBytes`` of element ``i``.
+        """Set value ``WidthInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].WidthInBytes = value
     @property
     def WidthInBytes(self):
-        """Getter for ``WidthInBytes``."""
         return self.get_WidthInBytes(0)
     @WidthInBytes.setter
     def WidthInBytes(self, unsigned int value):
-        """Setter for ``WidthInBytes``."""
         self.set_WidthInBytes(0,value)
     def get_Height(self, i):
-        """Getter for ``Height`` of element ``i``.
+        """Get value ``Height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Height
     def set_Height(self, i, unsigned int value):
-        """Setter for ``Height`` of element ``i``.
+        """Set value ``Height`` of ``self._ptr[i]``.
         """
         self._ptr[i].Height = value
     @property
     def Height(self):
-        """Getter for ``Height``."""
         return self.get_Height(0)
     @Height.setter
     def Height(self, unsigned int value):
-        """Setter for ``Height``."""
         self.set_Height(0,value)
     def get_Depth(self, i):
-        """Getter for ``Depth`` of element ``i``.
+        """Get value ``Depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Depth
     def set_Depth(self, i, unsigned int value):
-        """Setter for ``Depth`` of element ``i``.
+        """Set value ``Depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].Depth = value
     @property
     def Depth(self):
-        """Getter for ``Depth``."""
         return self.get_Depth(0)
     @Depth.setter
     def Depth(self, unsigned int value):
-        """Setter for ``Depth``."""
         self.set_Depth(0,value)
 
 
@@ -5525,196 +5281,174 @@ cdef class textureReference:
         # TODO init values, if present
         return textureReference.from_ptr(_ptr, owner=True)
     def get_normalized(self, i):
-        """Getter for ``normalized`` of element ``i``.
+        """Get value ``normalized`` of ``self._ptr[i]``.
         """
         return self._ptr[i].normalized
     def set_normalized(self, i, int value):
-        """Setter for ``normalized`` of element ``i``.
+        """Set value ``normalized`` of ``self._ptr[i]``.
         """
         self._ptr[i].normalized = value
     @property
     def normalized(self):
-        """Getter for ``normalized``."""
         return self.get_normalized(0)
     @normalized.setter
     def normalized(self, int value):
-        """Setter for ``normalized``."""
         self.set_normalized(0,value)
     def get_readMode(self, i):
-        """Getter for ``readMode`` of element ``i``.
+        """Get value of ``readMode`` of ``self._ptr[i]``.
         """
         return hipTextureReadMode(self._ptr[i].readMode)
     def set_readMode(self, i, value):
-        """Setter for ``readMode`` of element ``i``.
+        """Set value ``readMode`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipTextureReadMode):
             raise TypeError("'value' must be of type 'hipTextureReadMode'")
         self._ptr[i].readMode = value.value
     @property
     def readMode(self):
-        """Getter for ``readMode``."""
         return self.get_readMode(0)
     @readMode.setter
     def readMode(self, value):
-        """Setter for ``readMode``."""
         self.set_readMode(0,value)
     def get_filterMode(self, i):
-        """Getter for ``filterMode`` of element ``i``.
+        """Get value of ``filterMode`` of ``self._ptr[i]``.
         """
         return hipTextureFilterMode(self._ptr[i].filterMode)
     def set_filterMode(self, i, value):
-        """Setter for ``filterMode`` of element ``i``.
+        """Set value ``filterMode`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipTextureFilterMode):
             raise TypeError("'value' must be of type 'hipTextureFilterMode'")
         self._ptr[i].filterMode = value.value
     @property
     def filterMode(self):
-        """Getter for ``filterMode``."""
         return self.get_filterMode(0)
     @filterMode.setter
     def filterMode(self, value):
-        """Setter for ``filterMode``."""
         self.set_filterMode(0,value)
+    # TODO is_enum_constantarray: add
     def get_channelDesc(self, i):
-        """Getter for ``channelDesc`` of element ``i``.
+        """Get value of ``channelDesc`` of ``self._ptr[i]``.
         """
         return hipChannelFormatDesc.from_ptr(&self._ptr[i].channelDesc)
     @property
     def channelDesc(self):
-        """Getter for ``channelDesc``."""
         return self.get_channelDesc(0)
     def get_sRGB(self, i):
-        """Getter for ``sRGB`` of element ``i``.
+        """Get value ``sRGB`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sRGB
     def set_sRGB(self, i, int value):
-        """Setter for ``sRGB`` of element ``i``.
+        """Set value ``sRGB`` of ``self._ptr[i]``.
         """
         self._ptr[i].sRGB = value
     @property
     def sRGB(self):
-        """Getter for ``sRGB``."""
         return self.get_sRGB(0)
     @sRGB.setter
     def sRGB(self, int value):
-        """Setter for ``sRGB``."""
         self.set_sRGB(0,value)
     def get_maxAnisotropy(self, i):
-        """Getter for ``maxAnisotropy`` of element ``i``.
+        """Get value ``maxAnisotropy`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxAnisotropy
     def set_maxAnisotropy(self, i, unsigned int value):
-        """Setter for ``maxAnisotropy`` of element ``i``.
+        """Set value ``maxAnisotropy`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxAnisotropy = value
     @property
     def maxAnisotropy(self):
-        """Getter for ``maxAnisotropy``."""
         return self.get_maxAnisotropy(0)
     @maxAnisotropy.setter
     def maxAnisotropy(self, unsigned int value):
-        """Setter for ``maxAnisotropy``."""
         self.set_maxAnisotropy(0,value)
     def get_mipmapFilterMode(self, i):
-        """Getter for ``mipmapFilterMode`` of element ``i``.
+        """Get value of ``mipmapFilterMode`` of ``self._ptr[i]``.
         """
         return hipTextureFilterMode(self._ptr[i].mipmapFilterMode)
     def set_mipmapFilterMode(self, i, value):
-        """Setter for ``mipmapFilterMode`` of element ``i``.
+        """Set value ``mipmapFilterMode`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipTextureFilterMode):
             raise TypeError("'value' must be of type 'hipTextureFilterMode'")
         self._ptr[i].mipmapFilterMode = value.value
     @property
     def mipmapFilterMode(self):
-        """Getter for ``mipmapFilterMode``."""
         return self.get_mipmapFilterMode(0)
     @mipmapFilterMode.setter
     def mipmapFilterMode(self, value):
-        """Setter for ``mipmapFilterMode``."""
         self.set_mipmapFilterMode(0,value)
     def get_mipmapLevelBias(self, i):
-        """Getter for ``mipmapLevelBias`` of element ``i``.
+        """Get value ``mipmapLevelBias`` of ``self._ptr[i]``.
         """
         return self._ptr[i].mipmapLevelBias
     def set_mipmapLevelBias(self, i, float value):
-        """Setter for ``mipmapLevelBias`` of element ``i``.
+        """Set value ``mipmapLevelBias`` of ``self._ptr[i]``.
         """
         self._ptr[i].mipmapLevelBias = value
     @property
     def mipmapLevelBias(self):
-        """Getter for ``mipmapLevelBias``."""
         return self.get_mipmapLevelBias(0)
     @mipmapLevelBias.setter
     def mipmapLevelBias(self, float value):
-        """Setter for ``mipmapLevelBias``."""
         self.set_mipmapLevelBias(0,value)
     def get_minMipmapLevelClamp(self, i):
-        """Getter for ``minMipmapLevelClamp`` of element ``i``.
+        """Get value ``minMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         return self._ptr[i].minMipmapLevelClamp
     def set_minMipmapLevelClamp(self, i, float value):
-        """Setter for ``minMipmapLevelClamp`` of element ``i``.
+        """Set value ``minMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         self._ptr[i].minMipmapLevelClamp = value
     @property
     def minMipmapLevelClamp(self):
-        """Getter for ``minMipmapLevelClamp``."""
         return self.get_minMipmapLevelClamp(0)
     @minMipmapLevelClamp.setter
     def minMipmapLevelClamp(self, float value):
-        """Setter for ``minMipmapLevelClamp``."""
         self.set_minMipmapLevelClamp(0,value)
     def get_maxMipmapLevelClamp(self, i):
-        """Getter for ``maxMipmapLevelClamp`` of element ``i``.
+        """Get value ``maxMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxMipmapLevelClamp
     def set_maxMipmapLevelClamp(self, i, float value):
-        """Setter for ``maxMipmapLevelClamp`` of element ``i``.
+        """Set value ``maxMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxMipmapLevelClamp = value
     @property
     def maxMipmapLevelClamp(self):
-        """Getter for ``maxMipmapLevelClamp``."""
         return self.get_maxMipmapLevelClamp(0)
     @maxMipmapLevelClamp.setter
     def maxMipmapLevelClamp(self, float value):
-        """Setter for ``maxMipmapLevelClamp``."""
         self.set_maxMipmapLevelClamp(0,value)
     def get_numChannels(self, i):
-        """Getter for ``numChannels`` of element ``i``.
+        """Get value ``numChannels`` of ``self._ptr[i]``.
         """
         return self._ptr[i].numChannels
     def set_numChannels(self, i, int value):
-        """Setter for ``numChannels`` of element ``i``.
+        """Set value ``numChannels`` of ``self._ptr[i]``.
         """
         self._ptr[i].numChannels = value
     @property
     def numChannels(self):
-        """Getter for ``numChannels``."""
         return self.get_numChannels(0)
     @numChannels.setter
     def numChannels(self, int value):
-        """Setter for ``numChannels``."""
         self.set_numChannels(0,value)
     def get_format(self, i):
-        """Getter for ``format`` of element ``i``.
+        """Get value of ``format`` of ``self._ptr[i]``.
         """
         return hipArray_Format(self._ptr[i].format)
     def set_format(self, i, value):
-        """Setter for ``format`` of element ``i``.
+        """Set value ``format`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipArray_Format):
             raise TypeError("'value' must be of type 'hipArray_Format'")
         self._ptr[i].format = value.value
     @property
     def format(self):
-        """Getter for ``format``."""
         return self.get_format(0)
     @format.setter
     def format(self, value):
-        """Setter for ``format``."""
         self.set_format(0,value)
 
 
@@ -5756,155 +5490,146 @@ cdef class hipTextureDesc:
             raise MemoryError
         # TODO init values, if present
         return hipTextureDesc.from_ptr(_ptr, owner=True)
+    # TODO is_enum_constantarray: add
     def get_filterMode(self, i):
-        """Getter for ``filterMode`` of element ``i``.
+        """Get value of ``filterMode`` of ``self._ptr[i]``.
         """
         return hipTextureFilterMode(self._ptr[i].filterMode)
     def set_filterMode(self, i, value):
-        """Setter for ``filterMode`` of element ``i``.
+        """Set value ``filterMode`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipTextureFilterMode):
             raise TypeError("'value' must be of type 'hipTextureFilterMode'")
         self._ptr[i].filterMode = value.value
     @property
     def filterMode(self):
-        """Getter for ``filterMode``."""
         return self.get_filterMode(0)
     @filterMode.setter
     def filterMode(self, value):
-        """Setter for ``filterMode``."""
         self.set_filterMode(0,value)
     def get_readMode(self, i):
-        """Getter for ``readMode`` of element ``i``.
+        """Get value of ``readMode`` of ``self._ptr[i]``.
         """
         return hipTextureReadMode(self._ptr[i].readMode)
     def set_readMode(self, i, value):
-        """Setter for ``readMode`` of element ``i``.
+        """Set value ``readMode`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipTextureReadMode):
             raise TypeError("'value' must be of type 'hipTextureReadMode'")
         self._ptr[i].readMode = value.value
     @property
     def readMode(self):
-        """Getter for ``readMode``."""
         return self.get_readMode(0)
     @readMode.setter
     def readMode(self, value):
-        """Setter for ``readMode``."""
         self.set_readMode(0,value)
     def get_sRGB(self, i):
-        """Getter for ``sRGB`` of element ``i``.
+        """Get value ``sRGB`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sRGB
     def set_sRGB(self, i, int value):
-        """Setter for ``sRGB`` of element ``i``.
+        """Set value ``sRGB`` of ``self._ptr[i]``.
         """
         self._ptr[i].sRGB = value
     @property
     def sRGB(self):
-        """Getter for ``sRGB``."""
         return self.get_sRGB(0)
     @sRGB.setter
     def sRGB(self, int value):
-        """Setter for ``sRGB``."""
         self.set_sRGB(0,value)
+    def get_borderColor(self, i):
+        """Get value of ``borderColor`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].borderColor
+    @property
+    def borderColor(self):
+        return self.get_borderColor(0)
+    # TODO is_basic_type_constantarray: add setters
     def get_normalizedCoords(self, i):
-        """Getter for ``normalizedCoords`` of element ``i``.
+        """Get value ``normalizedCoords`` of ``self._ptr[i]``.
         """
         return self._ptr[i].normalizedCoords
     def set_normalizedCoords(self, i, int value):
-        """Setter for ``normalizedCoords`` of element ``i``.
+        """Set value ``normalizedCoords`` of ``self._ptr[i]``.
         """
         self._ptr[i].normalizedCoords = value
     @property
     def normalizedCoords(self):
-        """Getter for ``normalizedCoords``."""
         return self.get_normalizedCoords(0)
     @normalizedCoords.setter
     def normalizedCoords(self, int value):
-        """Setter for ``normalizedCoords``."""
         self.set_normalizedCoords(0,value)
     def get_maxAnisotropy(self, i):
-        """Getter for ``maxAnisotropy`` of element ``i``.
+        """Get value ``maxAnisotropy`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxAnisotropy
     def set_maxAnisotropy(self, i, unsigned int value):
-        """Setter for ``maxAnisotropy`` of element ``i``.
+        """Set value ``maxAnisotropy`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxAnisotropy = value
     @property
     def maxAnisotropy(self):
-        """Getter for ``maxAnisotropy``."""
         return self.get_maxAnisotropy(0)
     @maxAnisotropy.setter
     def maxAnisotropy(self, unsigned int value):
-        """Setter for ``maxAnisotropy``."""
         self.set_maxAnisotropy(0,value)
     def get_mipmapFilterMode(self, i):
-        """Getter for ``mipmapFilterMode`` of element ``i``.
+        """Get value of ``mipmapFilterMode`` of ``self._ptr[i]``.
         """
         return hipTextureFilterMode(self._ptr[i].mipmapFilterMode)
     def set_mipmapFilterMode(self, i, value):
-        """Setter for ``mipmapFilterMode`` of element ``i``.
+        """Set value ``mipmapFilterMode`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipTextureFilterMode):
             raise TypeError("'value' must be of type 'hipTextureFilterMode'")
         self._ptr[i].mipmapFilterMode = value.value
     @property
     def mipmapFilterMode(self):
-        """Getter for ``mipmapFilterMode``."""
         return self.get_mipmapFilterMode(0)
     @mipmapFilterMode.setter
     def mipmapFilterMode(self, value):
-        """Setter for ``mipmapFilterMode``."""
         self.set_mipmapFilterMode(0,value)
     def get_mipmapLevelBias(self, i):
-        """Getter for ``mipmapLevelBias`` of element ``i``.
+        """Get value ``mipmapLevelBias`` of ``self._ptr[i]``.
         """
         return self._ptr[i].mipmapLevelBias
     def set_mipmapLevelBias(self, i, float value):
-        """Setter for ``mipmapLevelBias`` of element ``i``.
+        """Set value ``mipmapLevelBias`` of ``self._ptr[i]``.
         """
         self._ptr[i].mipmapLevelBias = value
     @property
     def mipmapLevelBias(self):
-        """Getter for ``mipmapLevelBias``."""
         return self.get_mipmapLevelBias(0)
     @mipmapLevelBias.setter
     def mipmapLevelBias(self, float value):
-        """Setter for ``mipmapLevelBias``."""
         self.set_mipmapLevelBias(0,value)
     def get_minMipmapLevelClamp(self, i):
-        """Getter for ``minMipmapLevelClamp`` of element ``i``.
+        """Get value ``minMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         return self._ptr[i].minMipmapLevelClamp
     def set_minMipmapLevelClamp(self, i, float value):
-        """Setter for ``minMipmapLevelClamp`` of element ``i``.
+        """Set value ``minMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         self._ptr[i].minMipmapLevelClamp = value
     @property
     def minMipmapLevelClamp(self):
-        """Getter for ``minMipmapLevelClamp``."""
         return self.get_minMipmapLevelClamp(0)
     @minMipmapLevelClamp.setter
     def minMipmapLevelClamp(self, float value):
-        """Setter for ``minMipmapLevelClamp``."""
         self.set_minMipmapLevelClamp(0,value)
     def get_maxMipmapLevelClamp(self, i):
-        """Getter for ``maxMipmapLevelClamp`` of element ``i``.
+        """Get value ``maxMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxMipmapLevelClamp
     def set_maxMipmapLevelClamp(self, i, float value):
-        """Setter for ``maxMipmapLevelClamp`` of element ``i``.
+        """Set value ``maxMipmapLevelClamp`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxMipmapLevelClamp = value
     @property
     def maxMipmapLevelClamp(self):
-        """Getter for ``maxMipmapLevelClamp``."""
         return self.get_maxMipmapLevelClamp(0)
     @maxMipmapLevelClamp.setter
     def maxMipmapLevelClamp(self, float value):
-        """Setter for ``maxMipmapLevelClamp``."""
         self.set_maxMipmapLevelClamp(0,value)
 
 
@@ -6066,6 +5791,14 @@ cdef class hipIpcMemHandle_st:
             raise MemoryError
         # TODO init values, if present
         return hipIpcMemHandle_st.from_ptr(_ptr, owner=True)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 
@@ -6106,6 +5839,14 @@ cdef class hipIpcEventHandle_st:
             raise MemoryError
         # TODO init values, if present
         return hipIpcEventHandle_st.from_ptr(_ptr, owner=True)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 
@@ -6216,164 +5957,144 @@ cdef class hipFuncAttributes:
         # TODO init values, if present
         return hipFuncAttributes.from_ptr(_ptr, owner=True)
     def get_binaryVersion(self, i):
-        """Getter for ``binaryVersion`` of element ``i``.
+        """Get value ``binaryVersion`` of ``self._ptr[i]``.
         """
         return self._ptr[i].binaryVersion
     def set_binaryVersion(self, i, int value):
-        """Setter for ``binaryVersion`` of element ``i``.
+        """Set value ``binaryVersion`` of ``self._ptr[i]``.
         """
         self._ptr[i].binaryVersion = value
     @property
     def binaryVersion(self):
-        """Getter for ``binaryVersion``."""
         return self.get_binaryVersion(0)
     @binaryVersion.setter
     def binaryVersion(self, int value):
-        """Setter for ``binaryVersion``."""
         self.set_binaryVersion(0,value)
     def get_cacheModeCA(self, i):
-        """Getter for ``cacheModeCA`` of element ``i``.
+        """Get value ``cacheModeCA`` of ``self._ptr[i]``.
         """
         return self._ptr[i].cacheModeCA
     def set_cacheModeCA(self, i, int value):
-        """Setter for ``cacheModeCA`` of element ``i``.
+        """Set value ``cacheModeCA`` of ``self._ptr[i]``.
         """
         self._ptr[i].cacheModeCA = value
     @property
     def cacheModeCA(self):
-        """Getter for ``cacheModeCA``."""
         return self.get_cacheModeCA(0)
     @cacheModeCA.setter
     def cacheModeCA(self, int value):
-        """Setter for ``cacheModeCA``."""
         self.set_cacheModeCA(0,value)
     def get_constSizeBytes(self, i):
-        """Getter for ``constSizeBytes`` of element ``i``.
+        """Get value ``constSizeBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].constSizeBytes
     def set_constSizeBytes(self, i, int value):
-        """Setter for ``constSizeBytes`` of element ``i``.
+        """Set value ``constSizeBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].constSizeBytes = value
     @property
     def constSizeBytes(self):
-        """Getter for ``constSizeBytes``."""
         return self.get_constSizeBytes(0)
     @constSizeBytes.setter
     def constSizeBytes(self, int value):
-        """Setter for ``constSizeBytes``."""
         self.set_constSizeBytes(0,value)
     def get_localSizeBytes(self, i):
-        """Getter for ``localSizeBytes`` of element ``i``.
+        """Get value ``localSizeBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].localSizeBytes
     def set_localSizeBytes(self, i, int value):
-        """Setter for ``localSizeBytes`` of element ``i``.
+        """Set value ``localSizeBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].localSizeBytes = value
     @property
     def localSizeBytes(self):
-        """Getter for ``localSizeBytes``."""
         return self.get_localSizeBytes(0)
     @localSizeBytes.setter
     def localSizeBytes(self, int value):
-        """Setter for ``localSizeBytes``."""
         self.set_localSizeBytes(0,value)
     def get_maxDynamicSharedSizeBytes(self, i):
-        """Getter for ``maxDynamicSharedSizeBytes`` of element ``i``.
+        """Get value ``maxDynamicSharedSizeBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxDynamicSharedSizeBytes
     def set_maxDynamicSharedSizeBytes(self, i, int value):
-        """Setter for ``maxDynamicSharedSizeBytes`` of element ``i``.
+        """Set value ``maxDynamicSharedSizeBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxDynamicSharedSizeBytes = value
     @property
     def maxDynamicSharedSizeBytes(self):
-        """Getter for ``maxDynamicSharedSizeBytes``."""
         return self.get_maxDynamicSharedSizeBytes(0)
     @maxDynamicSharedSizeBytes.setter
     def maxDynamicSharedSizeBytes(self, int value):
-        """Setter for ``maxDynamicSharedSizeBytes``."""
         self.set_maxDynamicSharedSizeBytes(0,value)
     def get_maxThreadsPerBlock(self, i):
-        """Getter for ``maxThreadsPerBlock`` of element ``i``.
+        """Get value ``maxThreadsPerBlock`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxThreadsPerBlock
     def set_maxThreadsPerBlock(self, i, int value):
-        """Setter for ``maxThreadsPerBlock`` of element ``i``.
+        """Set value ``maxThreadsPerBlock`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxThreadsPerBlock = value
     @property
     def maxThreadsPerBlock(self):
-        """Getter for ``maxThreadsPerBlock``."""
         return self.get_maxThreadsPerBlock(0)
     @maxThreadsPerBlock.setter
     def maxThreadsPerBlock(self, int value):
-        """Setter for ``maxThreadsPerBlock``."""
         self.set_maxThreadsPerBlock(0,value)
     def get_numRegs(self, i):
-        """Getter for ``numRegs`` of element ``i``.
+        """Get value ``numRegs`` of ``self._ptr[i]``.
         """
         return self._ptr[i].numRegs
     def set_numRegs(self, i, int value):
-        """Setter for ``numRegs`` of element ``i``.
+        """Set value ``numRegs`` of ``self._ptr[i]``.
         """
         self._ptr[i].numRegs = value
     @property
     def numRegs(self):
-        """Getter for ``numRegs``."""
         return self.get_numRegs(0)
     @numRegs.setter
     def numRegs(self, int value):
-        """Setter for ``numRegs``."""
         self.set_numRegs(0,value)
     def get_preferredShmemCarveout(self, i):
-        """Getter for ``preferredShmemCarveout`` of element ``i``.
+        """Get value ``preferredShmemCarveout`` of ``self._ptr[i]``.
         """
         return self._ptr[i].preferredShmemCarveout
     def set_preferredShmemCarveout(self, i, int value):
-        """Setter for ``preferredShmemCarveout`` of element ``i``.
+        """Set value ``preferredShmemCarveout`` of ``self._ptr[i]``.
         """
         self._ptr[i].preferredShmemCarveout = value
     @property
     def preferredShmemCarveout(self):
-        """Getter for ``preferredShmemCarveout``."""
         return self.get_preferredShmemCarveout(0)
     @preferredShmemCarveout.setter
     def preferredShmemCarveout(self, int value):
-        """Setter for ``preferredShmemCarveout``."""
         self.set_preferredShmemCarveout(0,value)
     def get_ptxVersion(self, i):
-        """Getter for ``ptxVersion`` of element ``i``.
+        """Get value ``ptxVersion`` of ``self._ptr[i]``.
         """
         return self._ptr[i].ptxVersion
     def set_ptxVersion(self, i, int value):
-        """Setter for ``ptxVersion`` of element ``i``.
+        """Set value ``ptxVersion`` of ``self._ptr[i]``.
         """
         self._ptr[i].ptxVersion = value
     @property
     def ptxVersion(self):
-        """Getter for ``ptxVersion``."""
         return self.get_ptxVersion(0)
     @ptxVersion.setter
     def ptxVersion(self, int value):
-        """Setter for ``ptxVersion``."""
         self.set_ptxVersion(0,value)
     def get_sharedSizeBytes(self, i):
-        """Getter for ``sharedSizeBytes`` of element ``i``.
+        """Get value ``sharedSizeBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sharedSizeBytes
     def set_sharedSizeBytes(self, i, int value):
-        """Setter for ``sharedSizeBytes`` of element ``i``.
+        """Set value ``sharedSizeBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].sharedSizeBytes = value
     @property
     def sharedSizeBytes(self):
-        """Getter for ``sharedSizeBytes``."""
         return self.get_sharedSizeBytes(0)
     @sharedSizeBytes.setter
     def sharedSizeBytes(self, int value):
-        """Setter for ``sharedSizeBytes``."""
         self.set_sharedSizeBytes(0,value)
 
 
@@ -6481,38 +6202,34 @@ cdef class hipMemLocation:
         # TODO init values, if present
         return hipMemLocation.from_ptr(_ptr, owner=True)
     def get_type(self, i):
-        """Getter for ``type`` of element ``i``.
+        """Get value of ``type`` of ``self._ptr[i]``.
         """
         return hipMemLocationType(self._ptr[i].type)
     def set_type(self, i, value):
-        """Setter for ``type`` of element ``i``.
+        """Set value ``type`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemLocationType):
             raise TypeError("'value' must be of type 'hipMemLocationType'")
         self._ptr[i].type = value.value
     @property
     def type(self):
-        """Getter for ``type``."""
         return self.get_type(0)
     @type.setter
     def type(self, value):
-        """Setter for ``type``."""
         self.set_type(0,value)
     def get_id(self, i):
-        """Getter for ``id`` of element ``i``.
+        """Get value ``id`` of ``self._ptr[i]``.
         """
         return self._ptr[i].id
     def set_id(self, i, int value):
-        """Setter for ``id`` of element ``i``.
+        """Set value ``id`` of ``self._ptr[i]``.
         """
         self._ptr[i].id = value
     @property
     def id(self):
-        """Getter for ``id``."""
         return self.get_id(0)
     @id.setter
     def id(self, int value):
-        """Setter for ``id``."""
         self.set_id(0,value)
 
 
@@ -6560,30 +6277,27 @@ cdef class hipMemAccessDesc:
         # TODO init values, if present
         return hipMemAccessDesc.from_ptr(_ptr, owner=True)
     def get_location(self, i):
-        """Getter for ``location`` of element ``i``.
+        """Get value of ``location`` of ``self._ptr[i]``.
         """
         return hipMemLocation.from_ptr(&self._ptr[i].location)
     @property
     def location(self):
-        """Getter for ``location``."""
         return self.get_location(0)
     def get_flags(self, i):
-        """Getter for ``flags`` of element ``i``.
+        """Get value of ``flags`` of ``self._ptr[i]``.
         """
         return hipMemAccessFlags(self._ptr[i].flags)
     def set_flags(self, i, value):
-        """Setter for ``flags`` of element ``i``.
+        """Set value ``flags`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemAccessFlags):
             raise TypeError("'value' must be of type 'hipMemAccessFlags'")
         self._ptr[i].flags = value.value
     @property
     def flags(self):
-        """Getter for ``flags``."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, value):
-        """Setter for ``flags``."""
         self.set_flags(0,value)
 
 
@@ -6637,49 +6351,52 @@ cdef class hipMemPoolProps:
         # TODO init values, if present
         return hipMemPoolProps.from_ptr(_ptr, owner=True)
     def get_allocType(self, i):
-        """Getter for ``allocType`` of element ``i``.
+        """Get value of ``allocType`` of ``self._ptr[i]``.
         """
         return hipMemAllocationType(self._ptr[i].allocType)
     def set_allocType(self, i, value):
-        """Setter for ``allocType`` of element ``i``.
+        """Set value ``allocType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemAllocationType):
             raise TypeError("'value' must be of type 'hipMemAllocationType'")
         self._ptr[i].allocType = value.value
     @property
     def allocType(self):
-        """Getter for ``allocType``."""
         return self.get_allocType(0)
     @allocType.setter
     def allocType(self, value):
-        """Setter for ``allocType``."""
         self.set_allocType(0,value)
     def get_handleTypes(self, i):
-        """Getter for ``handleTypes`` of element ``i``.
+        """Get value of ``handleTypes`` of ``self._ptr[i]``.
         """
         return hipMemAllocationHandleType(self._ptr[i].handleTypes)
     def set_handleTypes(self, i, value):
-        """Setter for ``handleTypes`` of element ``i``.
+        """Set value ``handleTypes`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemAllocationHandleType):
             raise TypeError("'value' must be of type 'hipMemAllocationHandleType'")
         self._ptr[i].handleTypes = value.value
     @property
     def handleTypes(self):
-        """Getter for ``handleTypes``."""
         return self.get_handleTypes(0)
     @handleTypes.setter
     def handleTypes(self, value):
-        """Setter for ``handleTypes``."""
         self.set_handleTypes(0,value)
     def get_location(self, i):
-        """Getter for ``location`` of element ``i``.
+        """Get value of ``location`` of ``self._ptr[i]``.
         """
         return hipMemLocation.from_ptr(&self._ptr[i].location)
     @property
     def location(self):
-        """Getter for ``location``."""
         return self.get_location(0)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 
@@ -6720,6 +6437,14 @@ cdef class hipMemPoolPtrExportData:
             raise MemoryError
         # TODO init values, if present
         return hipMemPoolPtrExportData.from_ptr(_ptr, owner=True)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 class hipJitOption(enum.IntEnum):
@@ -6797,52 +6522,46 @@ cdef class dim3:
         # TODO init values, if present
         return dim3.from_ptr(_ptr, owner=True)
     def get_x(self, i):
-        """Getter for ``x`` of element ``i``.
+        """Get value ``x`` of ``self._ptr[i]``.
         """
         return self._ptr[i].x
     def set_x(self, i, uint32_t value):
-        """Setter for ``x`` of element ``i``.
+        """Set value ``x`` of ``self._ptr[i]``.
         """
         self._ptr[i].x = value
     @property
     def x(self):
-        """Getter for ``x``."""
         return self.get_x(0)
     @x.setter
     def x(self, uint32_t value):
-        """Setter for ``x``."""
         self.set_x(0,value)
     def get_y(self, i):
-        """Getter for ``y`` of element ``i``.
+        """Get value ``y`` of ``self._ptr[i]``.
         """
         return self._ptr[i].y
     def set_y(self, i, uint32_t value):
-        """Setter for ``y`` of element ``i``.
+        """Set value ``y`` of ``self._ptr[i]``.
         """
         self._ptr[i].y = value
     @property
     def y(self):
-        """Getter for ``y``."""
         return self.get_y(0)
     @y.setter
     def y(self, uint32_t value):
-        """Setter for ``y``."""
         self.set_y(0,value)
     def get_z(self, i):
-        """Getter for ``z`` of element ``i``.
+        """Get value ``z`` of ``self._ptr[i]``.
         """
         return self._ptr[i].z
     def set_z(self, i, uint32_t value):
-        """Setter for ``z`` of element ``i``.
+        """Set value ``z`` of ``self._ptr[i]``.
         """
         self._ptr[i].z = value
     @property
     def z(self):
-        """Getter for ``z``."""
         return self.get_z(0)
     @z.setter
     def z(self, uint32_t value):
-        """Setter for ``z``."""
         self.set_z(0,value)
 
 
@@ -6885,36 +6604,32 @@ cdef class hipLaunchParams_t:
         # TODO init values, if present
         return hipLaunchParams_t.from_ptr(_ptr, owner=True)
     def get_gridDim(self, i):
-        """Getter for ``gridDim`` of element ``i``.
+        """Get value of ``gridDim`` of ``self._ptr[i]``.
         """
         return dim3.from_ptr(&self._ptr[i].gridDim)
     @property
     def gridDim(self):
-        """Getter for ``gridDim``."""
         return self.get_gridDim(0)
     def get_blockDim(self, i):
-        """Getter for ``blockDim`` of element ``i``.
+        """Get value of ``blockDim`` of ``self._ptr[i]``.
         """
         return dim3.from_ptr(&self._ptr[i].blockDim)
     @property
     def blockDim(self):
-        """Getter for ``blockDim``."""
         return self.get_blockDim(0)
     def get_sharedMem(self, i):
-        """Getter for ``sharedMem`` of element ``i``.
+        """Get value ``sharedMem`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sharedMem
     def set_sharedMem(self, i, int value):
-        """Setter for ``sharedMem`` of element ``i``.
+        """Set value ``sharedMem`` of ``self._ptr[i]``.
         """
         self._ptr[i].sharedMem = value
     @property
     def sharedMem(self):
-        """Getter for ``sharedMem``."""
         return self.get_sharedMem(0)
     @sharedMem.setter
     def sharedMem(self, int value):
-        """Setter for ``sharedMem``."""
         self.set_sharedMem(0,value)
 
 
@@ -7006,28 +6721,25 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
         # TODO init values, if present
         return hipExternalMemoryHandleDesc_st_union_0.from_ptr(_ptr, owner=True)
     def get_fd(self, i):
-        """Getter for ``fd`` of element ``i``.
+        """Get value ``fd`` of ``self._ptr[i]``.
         """
         return self._ptr[i].fd
     def set_fd(self, i, int value):
-        """Setter for ``fd`` of element ``i``.
+        """Set value ``fd`` of ``self._ptr[i]``.
         """
         self._ptr[i].fd = value
     @property
     def fd(self):
-        """Getter for ``fd``."""
         return self.get_fd(0)
     @fd.setter
     def fd(self, int value):
-        """Setter for ``fd``."""
         self.set_fd(0,value)
     def get_win32(self, i):
-        """Getter for ``win32`` of element ``i``.
+        """Get value of ``win32`` of ``self._ptr[i]``.
         """
         return hipExternalMemoryHandleDesc_st_union_0_struct_0.from_ptr(&self._ptr[i].win32)
     @property
     def win32(self):
-        """Getter for ``win32``."""
         return self.get_win32(0)
 
 
@@ -7070,62 +6782,55 @@ cdef class hipExternalMemoryHandleDesc_st:
         # TODO init values, if present
         return hipExternalMemoryHandleDesc_st.from_ptr(_ptr, owner=True)
     def get_type(self, i):
-        """Getter for ``type`` of element ``i``.
+        """Get value of ``type`` of ``self._ptr[i]``.
         """
         return hipExternalMemoryHandleType_enum(self._ptr[i].type)
     def set_type(self, i, value):
-        """Setter for ``type`` of element ``i``.
+        """Set value ``type`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipExternalMemoryHandleType_enum):
             raise TypeError("'value' must be of type 'hipExternalMemoryHandleType_enum'")
         self._ptr[i].type = value.value
     @property
     def type(self):
-        """Getter for ``type``."""
         return self.get_type(0)
     @type.setter
     def type(self, value):
-        """Setter for ``type``."""
         self.set_type(0,value)
     def get_handle(self, i):
-        """Getter for ``handle`` of element ``i``.
+        """Get value of ``handle`` of ``self._ptr[i]``.
         """
         return hipExternalMemoryHandleDesc_st_union_0.from_ptr(&self._ptr[i].handle)
     @property
     def handle(self):
-        """Getter for ``handle``."""
         return self.get_handle(0)
     def get_size(self, i):
-        """Getter for ``size`` of element ``i``.
+        """Get value ``size`` of ``self._ptr[i]``.
         """
         return self._ptr[i].size
     def set_size(self, i, unsigned long long value):
-        """Setter for ``size`` of element ``i``.
+        """Set value ``size`` of ``self._ptr[i]``.
         """
         self._ptr[i].size = value
     @property
     def size(self):
-        """Getter for ``size``."""
         return self.get_size(0)
     @size.setter
     def size(self, unsigned long long value):
-        """Setter for ``size``."""
         self.set_size(0,value)
     def get_flags(self, i):
-        """Getter for ``flags`` of element ``i``.
+        """Get value ``flags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].flags
     def set_flags(self, i, unsigned int value):
-        """Setter for ``flags`` of element ``i``.
+        """Set value ``flags`` of ``self._ptr[i]``.
         """
         self._ptr[i].flags = value
     @property
     def flags(self):
-        """Getter for ``flags``."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
-        """Setter for ``flags``."""
         self.set_flags(0,value)
 
 
@@ -7168,52 +6873,46 @@ cdef class hipExternalMemoryBufferDesc_st:
         # TODO init values, if present
         return hipExternalMemoryBufferDesc_st.from_ptr(_ptr, owner=True)
     def get_offset(self, i):
-        """Getter for ``offset`` of element ``i``.
+        """Get value ``offset`` of ``self._ptr[i]``.
         """
         return self._ptr[i].offset
     def set_offset(self, i, unsigned long long value):
-        """Setter for ``offset`` of element ``i``.
+        """Set value ``offset`` of ``self._ptr[i]``.
         """
         self._ptr[i].offset = value
     @property
     def offset(self):
-        """Getter for ``offset``."""
         return self.get_offset(0)
     @offset.setter
     def offset(self, unsigned long long value):
-        """Setter for ``offset``."""
         self.set_offset(0,value)
     def get_size(self, i):
-        """Getter for ``size`` of element ``i``.
+        """Get value ``size`` of ``self._ptr[i]``.
         """
         return self._ptr[i].size
     def set_size(self, i, unsigned long long value):
-        """Setter for ``size`` of element ``i``.
+        """Set value ``size`` of ``self._ptr[i]``.
         """
         self._ptr[i].size = value
     @property
     def size(self):
-        """Getter for ``size``."""
         return self.get_size(0)
     @size.setter
     def size(self, unsigned long long value):
-        """Setter for ``size``."""
         self.set_size(0,value)
     def get_flags(self, i):
-        """Getter for ``flags`` of element ``i``.
+        """Get value ``flags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].flags
     def set_flags(self, i, unsigned int value):
-        """Setter for ``flags`` of element ``i``.
+        """Set value ``flags`` of ``self._ptr[i]``.
         """
         self._ptr[i].flags = value
     @property
     def flags(self):
-        """Getter for ``flags``."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
-        """Setter for ``flags``."""
         self.set_flags(0,value)
 
 
@@ -7302,28 +7001,25 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
         # TODO init values, if present
         return hipExternalSemaphoreHandleDesc_st_union_0.from_ptr(_ptr, owner=True)
     def get_fd(self, i):
-        """Getter for ``fd`` of element ``i``.
+        """Get value ``fd`` of ``self._ptr[i]``.
         """
         return self._ptr[i].fd
     def set_fd(self, i, int value):
-        """Setter for ``fd`` of element ``i``.
+        """Set value ``fd`` of ``self._ptr[i]``.
         """
         self._ptr[i].fd = value
     @property
     def fd(self):
-        """Getter for ``fd``."""
         return self.get_fd(0)
     @fd.setter
     def fd(self, int value):
-        """Setter for ``fd``."""
         self.set_fd(0,value)
     def get_win32(self, i):
-        """Getter for ``win32`` of element ``i``.
+        """Get value of ``win32`` of ``self._ptr[i]``.
         """
         return hipExternalSemaphoreHandleDesc_st_union_0_struct_0.from_ptr(&self._ptr[i].win32)
     @property
     def win32(self):
-        """Getter for ``win32``."""
         return self.get_win32(0)
 
 
@@ -7366,46 +7062,41 @@ cdef class hipExternalSemaphoreHandleDesc_st:
         # TODO init values, if present
         return hipExternalSemaphoreHandleDesc_st.from_ptr(_ptr, owner=True)
     def get_type(self, i):
-        """Getter for ``type`` of element ``i``.
+        """Get value of ``type`` of ``self._ptr[i]``.
         """
         return hipExternalSemaphoreHandleType_enum(self._ptr[i].type)
     def set_type(self, i, value):
-        """Setter for ``type`` of element ``i``.
+        """Set value ``type`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipExternalSemaphoreHandleType_enum):
             raise TypeError("'value' must be of type 'hipExternalSemaphoreHandleType_enum'")
         self._ptr[i].type = value.value
     @property
     def type(self):
-        """Getter for ``type``."""
         return self.get_type(0)
     @type.setter
     def type(self, value):
-        """Setter for ``type``."""
         self.set_type(0,value)
     def get_handle(self, i):
-        """Getter for ``handle`` of element ``i``.
+        """Get value of ``handle`` of ``self._ptr[i]``.
         """
         return hipExternalSemaphoreHandleDesc_st_union_0.from_ptr(&self._ptr[i].handle)
     @property
     def handle(self):
-        """Getter for ``handle``."""
         return self.get_handle(0)
     def get_flags(self, i):
-        """Getter for ``flags`` of element ``i``.
+        """Get value ``flags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].flags
     def set_flags(self, i, unsigned int value):
-        """Setter for ``flags`` of element ``i``.
+        """Set value ``flags`` of ``self._ptr[i]``.
         """
         self._ptr[i].flags = value
     @property
     def flags(self):
-        """Getter for ``flags``."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
-        """Setter for ``flags``."""
         self.set_flags(0,value)
 
 
@@ -7448,20 +7139,18 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
         # TODO init values, if present
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_0.from_ptr(_ptr, owner=True)
     def get_value(self, i):
-        """Getter for ``value`` of element ``i``.
+        """Get value ``value`` of ``self._ptr[i]``.
         """
         return self._ptr[i].value
     def set_value(self, i, unsigned long long value):
-        """Setter for ``value`` of element ``i``.
+        """Set value ``value`` of ``self._ptr[i]``.
         """
         self._ptr[i].value = value
     @property
     def value(self):
-        """Getter for ``value``."""
         return self.get_value(0)
     @value.setter
     def value(self, unsigned long long value):
-        """Setter for ``value``."""
         self.set_value(0,value)
 
 
@@ -7504,20 +7193,18 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
         # TODO init values, if present
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_1.from_ptr(_ptr, owner=True)
     def get_key(self, i):
-        """Getter for ``key`` of element ``i``.
+        """Get value ``key`` of ``self._ptr[i]``.
         """
         return self._ptr[i].key
     def set_key(self, i, unsigned long long value):
-        """Setter for ``key`` of element ``i``.
+        """Set value ``key`` of ``self._ptr[i]``.
         """
         self._ptr[i].key = value
     @property
     def key(self):
-        """Getter for ``key``."""
         return self.get_key(0)
     @key.setter
     def key(self, unsigned long long value):
-        """Setter for ``key``."""
         self.set_key(0,value)
 
 
@@ -7560,21 +7247,27 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
         # TODO init values, if present
         return hipExternalSemaphoreSignalParams_st_struct_0.from_ptr(_ptr, owner=True)
     def get_fence(self, i):
-        """Getter for ``fence`` of element ``i``.
+        """Get value of ``fence`` of ``self._ptr[i]``.
         """
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_0.from_ptr(&self._ptr[i].fence)
     @property
     def fence(self):
-        """Getter for ``fence``."""
         return self.get_fence(0)
     def get_keyedMutex(self, i):
-        """Getter for ``keyedMutex`` of element ``i``.
+        """Get value of ``keyedMutex`` of ``self._ptr[i]``.
         """
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_1.from_ptr(&self._ptr[i].keyedMutex)
     @property
     def keyedMutex(self):
-        """Getter for ``keyedMutex``."""
         return self.get_keyedMutex(0)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 
@@ -7616,29 +7309,34 @@ cdef class hipExternalSemaphoreSignalParams_st:
         # TODO init values, if present
         return hipExternalSemaphoreSignalParams_st.from_ptr(_ptr, owner=True)
     def get_params(self, i):
-        """Getter for ``params`` of element ``i``.
+        """Get value of ``params`` of ``self._ptr[i]``.
         """
         return hipExternalSemaphoreSignalParams_st_struct_0.from_ptr(&self._ptr[i].params)
     @property
     def params(self):
-        """Getter for ``params``."""
         return self.get_params(0)
     def get_flags(self, i):
-        """Getter for ``flags`` of element ``i``.
+        """Get value ``flags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].flags
     def set_flags(self, i, unsigned int value):
-        """Setter for ``flags`` of element ``i``.
+        """Set value ``flags`` of ``self._ptr[i]``.
         """
         self._ptr[i].flags = value
     @property
     def flags(self):
-        """Getter for ``flags``."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
-        """Setter for ``flags``."""
         self.set_flags(0,value)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 
@@ -7680,20 +7378,18 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
         # TODO init values, if present
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_0.from_ptr(_ptr, owner=True)
     def get_value(self, i):
-        """Getter for ``value`` of element ``i``.
+        """Get value ``value`` of ``self._ptr[i]``.
         """
         return self._ptr[i].value
     def set_value(self, i, unsigned long long value):
-        """Setter for ``value`` of element ``i``.
+        """Set value ``value`` of ``self._ptr[i]``.
         """
         self._ptr[i].value = value
     @property
     def value(self):
-        """Getter for ``value``."""
         return self.get_value(0)
     @value.setter
     def value(self, unsigned long long value):
-        """Setter for ``value``."""
         self.set_value(0,value)
 
 
@@ -7736,36 +7432,32 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
         # TODO init values, if present
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_1.from_ptr(_ptr, owner=True)
     def get_key(self, i):
-        """Getter for ``key`` of element ``i``.
+        """Get value ``key`` of ``self._ptr[i]``.
         """
         return self._ptr[i].key
     def set_key(self, i, unsigned long long value):
-        """Setter for ``key`` of element ``i``.
+        """Set value ``key`` of ``self._ptr[i]``.
         """
         self._ptr[i].key = value
     @property
     def key(self):
-        """Getter for ``key``."""
         return self.get_key(0)
     @key.setter
     def key(self, unsigned long long value):
-        """Setter for ``key``."""
         self.set_key(0,value)
     def get_timeoutMs(self, i):
-        """Getter for ``timeoutMs`` of element ``i``.
+        """Get value ``timeoutMs`` of ``self._ptr[i]``.
         """
         return self._ptr[i].timeoutMs
     def set_timeoutMs(self, i, unsigned int value):
-        """Setter for ``timeoutMs`` of element ``i``.
+        """Set value ``timeoutMs`` of ``self._ptr[i]``.
         """
         self._ptr[i].timeoutMs = value
     @property
     def timeoutMs(self):
-        """Getter for ``timeoutMs``."""
         return self.get_timeoutMs(0)
     @timeoutMs.setter
     def timeoutMs(self, unsigned int value):
-        """Setter for ``timeoutMs``."""
         self.set_timeoutMs(0,value)
 
 
@@ -7808,21 +7500,27 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
         # TODO init values, if present
         return hipExternalSemaphoreWaitParams_st_struct_0.from_ptr(_ptr, owner=True)
     def get_fence(self, i):
-        """Getter for ``fence`` of element ``i``.
+        """Get value of ``fence`` of ``self._ptr[i]``.
         """
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_0.from_ptr(&self._ptr[i].fence)
     @property
     def fence(self):
-        """Getter for ``fence``."""
         return self.get_fence(0)
     def get_keyedMutex(self, i):
-        """Getter for ``keyedMutex`` of element ``i``.
+        """Get value of ``keyedMutex`` of ``self._ptr[i]``.
         """
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_1.from_ptr(&self._ptr[i].keyedMutex)
     @property
     def keyedMutex(self):
-        """Getter for ``keyedMutex``."""
         return self.get_keyedMutex(0)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 
@@ -7864,29 +7562,34 @@ cdef class hipExternalSemaphoreWaitParams_st:
         # TODO init values, if present
         return hipExternalSemaphoreWaitParams_st.from_ptr(_ptr, owner=True)
     def get_params(self, i):
-        """Getter for ``params`` of element ``i``.
+        """Get value of ``params`` of ``self._ptr[i]``.
         """
         return hipExternalSemaphoreWaitParams_st_struct_0.from_ptr(&self._ptr[i].params)
     @property
     def params(self):
-        """Getter for ``params``."""
         return self.get_params(0)
     def get_flags(self, i):
-        """Getter for ``flags`` of element ``i``.
+        """Get value ``flags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].flags
     def set_flags(self, i, unsigned int value):
-        """Setter for ``flags`` of element ``i``.
+        """Set value ``flags`` of ``self._ptr[i]``.
         """
         self._ptr[i].flags = value
     @property
     def flags(self):
-        """Getter for ``flags``."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
-        """Setter for ``flags``."""
         self.set_flags(0,value)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 class hipGLDeviceList(enum.IntEnum):
@@ -8131,36 +7834,32 @@ cdef class hipKernelNodeParams:
         # TODO init values, if present
         return hipKernelNodeParams.from_ptr(_ptr, owner=True)
     def get_blockDim(self, i):
-        """Getter for ``blockDim`` of element ``i``.
+        """Get value of ``blockDim`` of ``self._ptr[i]``.
         """
         return dim3.from_ptr(&self._ptr[i].blockDim)
     @property
     def blockDim(self):
-        """Getter for ``blockDim``."""
         return self.get_blockDim(0)
     def get_gridDim(self, i):
-        """Getter for ``gridDim`` of element ``i``.
+        """Get value of ``gridDim`` of ``self._ptr[i]``.
         """
         return dim3.from_ptr(&self._ptr[i].gridDim)
     @property
     def gridDim(self):
-        """Getter for ``gridDim``."""
         return self.get_gridDim(0)
     def get_sharedMemBytes(self, i):
-        """Getter for ``sharedMemBytes`` of element ``i``.
+        """Get value ``sharedMemBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sharedMemBytes
     def set_sharedMemBytes(self, i, unsigned int value):
-        """Setter for ``sharedMemBytes`` of element ``i``.
+        """Set value ``sharedMemBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].sharedMemBytes = value
     @property
     def sharedMemBytes(self):
-        """Getter for ``sharedMemBytes``."""
         return self.get_sharedMemBytes(0)
     @sharedMemBytes.setter
     def sharedMemBytes(self, unsigned int value):
-        """Setter for ``sharedMemBytes``."""
         self.set_sharedMemBytes(0,value)
 
 
@@ -8203,84 +7902,74 @@ cdef class hipMemsetParams:
         # TODO init values, if present
         return hipMemsetParams.from_ptr(_ptr, owner=True)
     def get_elementSize(self, i):
-        """Getter for ``elementSize`` of element ``i``.
+        """Get value ``elementSize`` of ``self._ptr[i]``.
         """
         return self._ptr[i].elementSize
     def set_elementSize(self, i, unsigned int value):
-        """Setter for ``elementSize`` of element ``i``.
+        """Set value ``elementSize`` of ``self._ptr[i]``.
         """
         self._ptr[i].elementSize = value
     @property
     def elementSize(self):
-        """Getter for ``elementSize``."""
         return self.get_elementSize(0)
     @elementSize.setter
     def elementSize(self, unsigned int value):
-        """Setter for ``elementSize``."""
         self.set_elementSize(0,value)
     def get_height(self, i):
-        """Getter for ``height`` of element ``i``.
+        """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
     def set_height(self, i, int value):
-        """Setter for ``height`` of element ``i``.
+        """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
     @property
     def height(self):
-        """Getter for ``height``."""
         return self.get_height(0)
     @height.setter
     def height(self, int value):
-        """Setter for ``height``."""
         self.set_height(0,value)
     def get_pitch(self, i):
-        """Getter for ``pitch`` of element ``i``.
+        """Get value ``pitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pitch
     def set_pitch(self, i, int value):
-        """Setter for ``pitch`` of element ``i``.
+        """Set value ``pitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].pitch = value
     @property
     def pitch(self):
-        """Getter for ``pitch``."""
         return self.get_pitch(0)
     @pitch.setter
     def pitch(self, int value):
-        """Setter for ``pitch``."""
         self.set_pitch(0,value)
     def get_value(self, i):
-        """Getter for ``value`` of element ``i``.
+        """Get value ``value`` of ``self._ptr[i]``.
         """
         return self._ptr[i].value
     def set_value(self, i, unsigned int value):
-        """Setter for ``value`` of element ``i``.
+        """Set value ``value`` of ``self._ptr[i]``.
         """
         self._ptr[i].value = value
     @property
     def value(self):
-        """Getter for ``value``."""
         return self.get_value(0)
     @value.setter
     def value(self, unsigned int value):
-        """Setter for ``value``."""
         self.set_value(0,value)
     def get_width(self, i):
-        """Getter for ``width`` of element ``i``.
+        """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
     def set_width(self, i, int value):
-        """Setter for ``width`` of element ``i``.
+        """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
     @property
     def width(self):
-        """Getter for ``width``."""
         return self.get_width(0)
     @width.setter
     def width(self, int value):
-        """Setter for ``width``."""
         self.set_width(0,value)
 
 
@@ -8332,72 +8021,64 @@ cdef class hipAccessPolicyWindow:
         # TODO init values, if present
         return hipAccessPolicyWindow.from_ptr(_ptr, owner=True)
     def get_hitProp(self, i):
-        """Getter for ``hitProp`` of element ``i``.
+        """Get value of ``hitProp`` of ``self._ptr[i]``.
         """
         return hipAccessProperty(self._ptr[i].hitProp)
     def set_hitProp(self, i, value):
-        """Setter for ``hitProp`` of element ``i``.
+        """Set value ``hitProp`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipAccessProperty):
             raise TypeError("'value' must be of type 'hipAccessProperty'")
         self._ptr[i].hitProp = value.value
     @property
     def hitProp(self):
-        """Getter for ``hitProp``."""
         return self.get_hitProp(0)
     @hitProp.setter
     def hitProp(self, value):
-        """Setter for ``hitProp``."""
         self.set_hitProp(0,value)
     def get_hitRatio(self, i):
-        """Getter for ``hitRatio`` of element ``i``.
+        """Get value ``hitRatio`` of ``self._ptr[i]``.
         """
         return self._ptr[i].hitRatio
     def set_hitRatio(self, i, float value):
-        """Setter for ``hitRatio`` of element ``i``.
+        """Set value ``hitRatio`` of ``self._ptr[i]``.
         """
         self._ptr[i].hitRatio = value
     @property
     def hitRatio(self):
-        """Getter for ``hitRatio``."""
         return self.get_hitRatio(0)
     @hitRatio.setter
     def hitRatio(self, float value):
-        """Setter for ``hitRatio``."""
         self.set_hitRatio(0,value)
     def get_missProp(self, i):
-        """Getter for ``missProp`` of element ``i``.
+        """Get value of ``missProp`` of ``self._ptr[i]``.
         """
         return hipAccessProperty(self._ptr[i].missProp)
     def set_missProp(self, i, value):
-        """Setter for ``missProp`` of element ``i``.
+        """Set value ``missProp`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipAccessProperty):
             raise TypeError("'value' must be of type 'hipAccessProperty'")
         self._ptr[i].missProp = value.value
     @property
     def missProp(self):
-        """Getter for ``missProp``."""
         return self.get_missProp(0)
     @missProp.setter
     def missProp(self, value):
-        """Setter for ``missProp``."""
         self.set_missProp(0,value)
     def get_num_bytes(self, i):
-        """Getter for ``num_bytes`` of element ``i``.
+        """Get value ``num_bytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].num_bytes
     def set_num_bytes(self, i, int value):
-        """Setter for ``num_bytes`` of element ``i``.
+        """Set value ``num_bytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].num_bytes = value
     @property
     def num_bytes(self):
-        """Getter for ``num_bytes``."""
         return self.get_num_bytes(0)
     @num_bytes.setter
     def num_bytes(self, int value):
-        """Setter for ``num_bytes``."""
         self.set_num_bytes(0,value)
 
 
@@ -8440,28 +8121,25 @@ cdef class hipKernelNodeAttrValue:
         # TODO init values, if present
         return hipKernelNodeAttrValue.from_ptr(_ptr, owner=True)
     def get_accessPolicyWindow(self, i):
-        """Getter for ``accessPolicyWindow`` of element ``i``.
+        """Get value of ``accessPolicyWindow`` of ``self._ptr[i]``.
         """
         return hipAccessPolicyWindow.from_ptr(&self._ptr[i].accessPolicyWindow)
     @property
     def accessPolicyWindow(self):
-        """Getter for ``accessPolicyWindow``."""
         return self.get_accessPolicyWindow(0)
     def get_cooperative(self, i):
-        """Getter for ``cooperative`` of element ``i``.
+        """Get value ``cooperative`` of ``self._ptr[i]``.
         """
         return self._ptr[i].cooperative
     def set_cooperative(self, i, int value):
-        """Setter for ``cooperative`` of element ``i``.
+        """Set value ``cooperative`` of ``self._ptr[i]``.
         """
         self._ptr[i].cooperative = value
     @property
     def cooperative(self):
-        """Getter for ``cooperative``."""
         return self.get_cooperative(0)
     @cooperative.setter
     def cooperative(self, int value):
-        """Setter for ``cooperative``."""
         self.set_cooperative(0,value)
 
 
@@ -8543,52 +8221,46 @@ cdef class hipMemAllocationProp_struct_0:
         # TODO init values, if present
         return hipMemAllocationProp_struct_0.from_ptr(_ptr, owner=True)
     def get_compressionType(self, i):
-        """Getter for ``compressionType`` of element ``i``.
+        """Get value ``compressionType`` of ``self._ptr[i]``.
         """
         return self._ptr[i].compressionType
     def set_compressionType(self, i, unsigned char value):
-        """Setter for ``compressionType`` of element ``i``.
+        """Set value ``compressionType`` of ``self._ptr[i]``.
         """
         self._ptr[i].compressionType = value
     @property
     def compressionType(self):
-        """Getter for ``compressionType``."""
         return self.get_compressionType(0)
     @compressionType.setter
     def compressionType(self, unsigned char value):
-        """Setter for ``compressionType``."""
         self.set_compressionType(0,value)
     def get_gpuDirectRDMACapable(self, i):
-        """Getter for ``gpuDirectRDMACapable`` of element ``i``.
+        """Get value ``gpuDirectRDMACapable`` of ``self._ptr[i]``.
         """
         return self._ptr[i].gpuDirectRDMACapable
     def set_gpuDirectRDMACapable(self, i, unsigned char value):
-        """Setter for ``gpuDirectRDMACapable`` of element ``i``.
+        """Set value ``gpuDirectRDMACapable`` of ``self._ptr[i]``.
         """
         self._ptr[i].gpuDirectRDMACapable = value
     @property
     def gpuDirectRDMACapable(self):
-        """Getter for ``gpuDirectRDMACapable``."""
         return self.get_gpuDirectRDMACapable(0)
     @gpuDirectRDMACapable.setter
     def gpuDirectRDMACapable(self, unsigned char value):
-        """Setter for ``gpuDirectRDMACapable``."""
         self.set_gpuDirectRDMACapable(0,value)
     def get_usage(self, i):
-        """Getter for ``usage`` of element ``i``.
+        """Get value ``usage`` of ``self._ptr[i]``.
         """
         return self._ptr[i].usage
     def set_usage(self, i, unsigned short value):
-        """Setter for ``usage`` of element ``i``.
+        """Set value ``usage`` of ``self._ptr[i]``.
         """
         self._ptr[i].usage = value
     @property
     def usage(self):
-        """Getter for ``usage``."""
         return self.get_usage(0)
     @usage.setter
     def usage(self, unsigned short value):
-        """Setter for ``usage``."""
         self.set_usage(0,value)
 
 
@@ -8631,56 +8303,50 @@ cdef class hipMemAllocationProp:
         # TODO init values, if present
         return hipMemAllocationProp.from_ptr(_ptr, owner=True)
     def get_type(self, i):
-        """Getter for ``type`` of element ``i``.
+        """Get value of ``type`` of ``self._ptr[i]``.
         """
         return hipMemAllocationType(self._ptr[i].type)
     def set_type(self, i, value):
-        """Setter for ``type`` of element ``i``.
+        """Set value ``type`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemAllocationType):
             raise TypeError("'value' must be of type 'hipMemAllocationType'")
         self._ptr[i].type = value.value
     @property
     def type(self):
-        """Getter for ``type``."""
         return self.get_type(0)
     @type.setter
     def type(self, value):
-        """Setter for ``type``."""
         self.set_type(0,value)
     def get_requestedHandleType(self, i):
-        """Getter for ``requestedHandleType`` of element ``i``.
+        """Get value of ``requestedHandleType`` of ``self._ptr[i]``.
         """
         return hipMemAllocationHandleType(self._ptr[i].requestedHandleType)
     def set_requestedHandleType(self, i, value):
-        """Setter for ``requestedHandleType`` of element ``i``.
+        """Set value ``requestedHandleType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemAllocationHandleType):
             raise TypeError("'value' must be of type 'hipMemAllocationHandleType'")
         self._ptr[i].requestedHandleType = value.value
     @property
     def requestedHandleType(self):
-        """Getter for ``requestedHandleType``."""
         return self.get_requestedHandleType(0)
     @requestedHandleType.setter
     def requestedHandleType(self, value):
-        """Setter for ``requestedHandleType``."""
         self.set_requestedHandleType(0,value)
     def get_location(self, i):
-        """Getter for ``location`` of element ``i``.
+        """Get value of ``location`` of ``self._ptr[i]``.
         """
         return hipMemLocation.from_ptr(&self._ptr[i].location)
     @property
     def location(self):
-        """Getter for ``location``."""
         return self.get_location(0)
     def get_allocFlags(self, i):
-        """Getter for ``allocFlags`` of element ``i``.
+        """Get value of ``allocFlags`` of ``self._ptr[i]``.
         """
         return hipMemAllocationProp_struct_0.from_ptr(&self._ptr[i].allocFlags)
     @property
     def allocFlags(self):
-        """Getter for ``allocFlags``."""
         return self.get_allocFlags(0)
 
 
@@ -8761,12 +8427,11 @@ cdef class hipArrayMapInfo_union_0:
         # TODO init values, if present
         return hipArrayMapInfo_union_0.from_ptr(_ptr, owner=True)
     def get_mipmap(self, i):
-        """Getter for ``mipmap`` of element ``i``.
+        """Get value of ``mipmap`` of ``self._ptr[i]``.
         """
         return hipMipmappedArray.from_ptr(&self._ptr[i].mipmap)
     @property
     def mipmap(self):
-        """Getter for ``mipmap``."""
         return self.get_mipmap(0)
 
 
@@ -8809,132 +8474,116 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         # TODO init values, if present
         return hipArrayMapInfo_union_1_struct_0.from_ptr(_ptr, owner=True)
     def get_level(self, i):
-        """Getter for ``level`` of element ``i``.
+        """Get value ``level`` of ``self._ptr[i]``.
         """
         return self._ptr[i].level
     def set_level(self, i, unsigned int value):
-        """Setter for ``level`` of element ``i``.
+        """Set value ``level`` of ``self._ptr[i]``.
         """
         self._ptr[i].level = value
     @property
     def level(self):
-        """Getter for ``level``."""
         return self.get_level(0)
     @level.setter
     def level(self, unsigned int value):
-        """Setter for ``level``."""
         self.set_level(0,value)
     def get_layer(self, i):
-        """Getter for ``layer`` of element ``i``.
+        """Get value ``layer`` of ``self._ptr[i]``.
         """
         return self._ptr[i].layer
     def set_layer(self, i, unsigned int value):
-        """Setter for ``layer`` of element ``i``.
+        """Set value ``layer`` of ``self._ptr[i]``.
         """
         self._ptr[i].layer = value
     @property
     def layer(self):
-        """Getter for ``layer``."""
         return self.get_layer(0)
     @layer.setter
     def layer(self, unsigned int value):
-        """Setter for ``layer``."""
         self.set_layer(0,value)
     def get_offsetX(self, i):
-        """Getter for ``offsetX`` of element ``i``.
+        """Get value ``offsetX`` of ``self._ptr[i]``.
         """
         return self._ptr[i].offsetX
     def set_offsetX(self, i, unsigned int value):
-        """Setter for ``offsetX`` of element ``i``.
+        """Set value ``offsetX`` of ``self._ptr[i]``.
         """
         self._ptr[i].offsetX = value
     @property
     def offsetX(self):
-        """Getter for ``offsetX``."""
         return self.get_offsetX(0)
     @offsetX.setter
     def offsetX(self, unsigned int value):
-        """Setter for ``offsetX``."""
         self.set_offsetX(0,value)
     def get_offsetY(self, i):
-        """Getter for ``offsetY`` of element ``i``.
+        """Get value ``offsetY`` of ``self._ptr[i]``.
         """
         return self._ptr[i].offsetY
     def set_offsetY(self, i, unsigned int value):
-        """Setter for ``offsetY`` of element ``i``.
+        """Set value ``offsetY`` of ``self._ptr[i]``.
         """
         self._ptr[i].offsetY = value
     @property
     def offsetY(self):
-        """Getter for ``offsetY``."""
         return self.get_offsetY(0)
     @offsetY.setter
     def offsetY(self, unsigned int value):
-        """Setter for ``offsetY``."""
         self.set_offsetY(0,value)
     def get_offsetZ(self, i):
-        """Getter for ``offsetZ`` of element ``i``.
+        """Get value ``offsetZ`` of ``self._ptr[i]``.
         """
         return self._ptr[i].offsetZ
     def set_offsetZ(self, i, unsigned int value):
-        """Setter for ``offsetZ`` of element ``i``.
+        """Set value ``offsetZ`` of ``self._ptr[i]``.
         """
         self._ptr[i].offsetZ = value
     @property
     def offsetZ(self):
-        """Getter for ``offsetZ``."""
         return self.get_offsetZ(0)
     @offsetZ.setter
     def offsetZ(self, unsigned int value):
-        """Setter for ``offsetZ``."""
         self.set_offsetZ(0,value)
     def get_extentWidth(self, i):
-        """Getter for ``extentWidth`` of element ``i``.
+        """Get value ``extentWidth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].extentWidth
     def set_extentWidth(self, i, unsigned int value):
-        """Setter for ``extentWidth`` of element ``i``.
+        """Set value ``extentWidth`` of ``self._ptr[i]``.
         """
         self._ptr[i].extentWidth = value
     @property
     def extentWidth(self):
-        """Getter for ``extentWidth``."""
         return self.get_extentWidth(0)
     @extentWidth.setter
     def extentWidth(self, unsigned int value):
-        """Setter for ``extentWidth``."""
         self.set_extentWidth(0,value)
     def get_extentHeight(self, i):
-        """Getter for ``extentHeight`` of element ``i``.
+        """Get value ``extentHeight`` of ``self._ptr[i]``.
         """
         return self._ptr[i].extentHeight
     def set_extentHeight(self, i, unsigned int value):
-        """Setter for ``extentHeight`` of element ``i``.
+        """Set value ``extentHeight`` of ``self._ptr[i]``.
         """
         self._ptr[i].extentHeight = value
     @property
     def extentHeight(self):
-        """Getter for ``extentHeight``."""
         return self.get_extentHeight(0)
     @extentHeight.setter
     def extentHeight(self, unsigned int value):
-        """Setter for ``extentHeight``."""
         self.set_extentHeight(0,value)
     def get_extentDepth(self, i):
-        """Getter for ``extentDepth`` of element ``i``.
+        """Get value ``extentDepth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].extentDepth
     def set_extentDepth(self, i, unsigned int value):
-        """Setter for ``extentDepth`` of element ``i``.
+        """Set value ``extentDepth`` of ``self._ptr[i]``.
         """
         self._ptr[i].extentDepth = value
     @property
     def extentDepth(self):
-        """Getter for ``extentDepth``."""
         return self.get_extentDepth(0)
     @extentDepth.setter
     def extentDepth(self, unsigned int value):
-        """Setter for ``extentDepth``."""
         self.set_extentDepth(0,value)
 
 
@@ -8977,52 +8626,46 @@ cdef class hipArrayMapInfo_union_1_struct_1:
         # TODO init values, if present
         return hipArrayMapInfo_union_1_struct_1.from_ptr(_ptr, owner=True)
     def get_layer(self, i):
-        """Getter for ``layer`` of element ``i``.
+        """Get value ``layer`` of ``self._ptr[i]``.
         """
         return self._ptr[i].layer
     def set_layer(self, i, unsigned int value):
-        """Setter for ``layer`` of element ``i``.
+        """Set value ``layer`` of ``self._ptr[i]``.
         """
         self._ptr[i].layer = value
     @property
     def layer(self):
-        """Getter for ``layer``."""
         return self.get_layer(0)
     @layer.setter
     def layer(self, unsigned int value):
-        """Setter for ``layer``."""
         self.set_layer(0,value)
     def get_offset(self, i):
-        """Getter for ``offset`` of element ``i``.
+        """Get value ``offset`` of ``self._ptr[i]``.
         """
         return self._ptr[i].offset
     def set_offset(self, i, unsigned long long value):
-        """Setter for ``offset`` of element ``i``.
+        """Set value ``offset`` of ``self._ptr[i]``.
         """
         self._ptr[i].offset = value
     @property
     def offset(self):
-        """Getter for ``offset``."""
         return self.get_offset(0)
     @offset.setter
     def offset(self, unsigned long long value):
-        """Setter for ``offset``."""
         self.set_offset(0,value)
     def get_size(self, i):
-        """Getter for ``size`` of element ``i``.
+        """Get value ``size`` of ``self._ptr[i]``.
         """
         return self._ptr[i].size
     def set_size(self, i, unsigned long long value):
-        """Setter for ``size`` of element ``i``.
+        """Set value ``size`` of ``self._ptr[i]``.
         """
         self._ptr[i].size = value
     @property
     def size(self):
-        """Getter for ``size``."""
         return self.get_size(0)
     @size.setter
     def size(self, unsigned long long value):
-        """Setter for ``size``."""
         self.set_size(0,value)
 
 
@@ -9065,20 +8708,18 @@ cdef class hipArrayMapInfo_union_1:
         # TODO init values, if present
         return hipArrayMapInfo_union_1.from_ptr(_ptr, owner=True)
     def get_sparseLevel(self, i):
-        """Getter for ``sparseLevel`` of element ``i``.
+        """Get value of ``sparseLevel`` of ``self._ptr[i]``.
         """
         return hipArrayMapInfo_union_1_struct_0.from_ptr(&self._ptr[i].sparseLevel)
     @property
     def sparseLevel(self):
-        """Getter for ``sparseLevel``."""
         return self.get_sparseLevel(0)
     def get_miptail(self, i):
-        """Getter for ``miptail`` of element ``i``.
+        """Get value of ``miptail`` of ``self._ptr[i]``.
         """
         return hipArrayMapInfo_union_1_struct_1.from_ptr(&self._ptr[i].miptail)
     @property
     def miptail(self):
-        """Getter for ``miptail``."""
         return self.get_miptail(0)
 
 
@@ -9161,149 +8802,140 @@ cdef class hipArrayMapInfo:
         # TODO init values, if present
         return hipArrayMapInfo.from_ptr(_ptr, owner=True)
     def get_resourceType(self, i):
-        """Getter for ``resourceType`` of element ``i``.
+        """Get value of ``resourceType`` of ``self._ptr[i]``.
         """
         return hipResourceType(self._ptr[i].resourceType)
     def set_resourceType(self, i, value):
-        """Setter for ``resourceType`` of element ``i``.
+        """Set value ``resourceType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipResourceType):
             raise TypeError("'value' must be of type 'hipResourceType'")
         self._ptr[i].resourceType = value.value
     @property
     def resourceType(self):
-        """Getter for ``resourceType``."""
         return self.get_resourceType(0)
     @resourceType.setter
     def resourceType(self, value):
-        """Setter for ``resourceType``."""
         self.set_resourceType(0,value)
     def get_resource(self, i):
-        """Getter for ``resource`` of element ``i``.
+        """Get value of ``resource`` of ``self._ptr[i]``.
         """
         return hipArrayMapInfo_union_0.from_ptr(&self._ptr[i].resource)
     @property
     def resource(self):
-        """Getter for ``resource``."""
         return self.get_resource(0)
     def get_subresourceType(self, i):
-        """Getter for ``subresourceType`` of element ``i``.
+        """Get value of ``subresourceType`` of ``self._ptr[i]``.
         """
         return hipArraySparseSubresourceType(self._ptr[i].subresourceType)
     def set_subresourceType(self, i, value):
-        """Setter for ``subresourceType`` of element ``i``.
+        """Set value ``subresourceType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipArraySparseSubresourceType):
             raise TypeError("'value' must be of type 'hipArraySparseSubresourceType'")
         self._ptr[i].subresourceType = value.value
     @property
     def subresourceType(self):
-        """Getter for ``subresourceType``."""
         return self.get_subresourceType(0)
     @subresourceType.setter
     def subresourceType(self, value):
-        """Setter for ``subresourceType``."""
         self.set_subresourceType(0,value)
     def get_subresource(self, i):
-        """Getter for ``subresource`` of element ``i``.
+        """Get value of ``subresource`` of ``self._ptr[i]``.
         """
         return hipArrayMapInfo_union_1.from_ptr(&self._ptr[i].subresource)
     @property
     def subresource(self):
-        """Getter for ``subresource``."""
         return self.get_subresource(0)
     def get_memOperationType(self, i):
-        """Getter for ``memOperationType`` of element ``i``.
+        """Get value of ``memOperationType`` of ``self._ptr[i]``.
         """
         return hipMemOperationType(self._ptr[i].memOperationType)
     def set_memOperationType(self, i, value):
-        """Setter for ``memOperationType`` of element ``i``.
+        """Set value ``memOperationType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemOperationType):
             raise TypeError("'value' must be of type 'hipMemOperationType'")
         self._ptr[i].memOperationType = value.value
     @property
     def memOperationType(self):
-        """Getter for ``memOperationType``."""
         return self.get_memOperationType(0)
     @memOperationType.setter
     def memOperationType(self, value):
-        """Setter for ``memOperationType``."""
         self.set_memOperationType(0,value)
     def get_memHandleType(self, i):
-        """Getter for ``memHandleType`` of element ``i``.
+        """Get value of ``memHandleType`` of ``self._ptr[i]``.
         """
         return hipMemHandleType(self._ptr[i].memHandleType)
     def set_memHandleType(self, i, value):
-        """Setter for ``memHandleType`` of element ``i``.
+        """Set value ``memHandleType`` of ``self._ptr[i]``.
         """
         if not isinstance(value, hipMemHandleType):
             raise TypeError("'value' must be of type 'hipMemHandleType'")
         self._ptr[i].memHandleType = value.value
     @property
     def memHandleType(self):
-        """Getter for ``memHandleType``."""
         return self.get_memHandleType(0)
     @memHandleType.setter
     def memHandleType(self, value):
-        """Setter for ``memHandleType``."""
         self.set_memHandleType(0,value)
     def get_memHandle(self, i):
-        """Getter for ``memHandle`` of element ``i``.
+        """Get value of ``memHandle`` of ``self._ptr[i]``.
         """
         return hipArrayMapInfo_union_2.from_ptr(&self._ptr[i].memHandle)
     @property
     def memHandle(self):
-        """Getter for ``memHandle``."""
         return self.get_memHandle(0)
     def get_offset(self, i):
-        """Getter for ``offset`` of element ``i``.
+        """Get value ``offset`` of ``self._ptr[i]``.
         """
         return self._ptr[i].offset
     def set_offset(self, i, unsigned long long value):
-        """Setter for ``offset`` of element ``i``.
+        """Set value ``offset`` of ``self._ptr[i]``.
         """
         self._ptr[i].offset = value
     @property
     def offset(self):
-        """Getter for ``offset``."""
         return self.get_offset(0)
     @offset.setter
     def offset(self, unsigned long long value):
-        """Setter for ``offset``."""
         self.set_offset(0,value)
     def get_deviceBitMask(self, i):
-        """Getter for ``deviceBitMask`` of element ``i``.
+        """Get value ``deviceBitMask`` of ``self._ptr[i]``.
         """
         return self._ptr[i].deviceBitMask
     def set_deviceBitMask(self, i, unsigned int value):
-        """Setter for ``deviceBitMask`` of element ``i``.
+        """Set value ``deviceBitMask`` of ``self._ptr[i]``.
         """
         self._ptr[i].deviceBitMask = value
     @property
     def deviceBitMask(self):
-        """Getter for ``deviceBitMask``."""
         return self.get_deviceBitMask(0)
     @deviceBitMask.setter
     def deviceBitMask(self, unsigned int value):
-        """Setter for ``deviceBitMask``."""
         self.set_deviceBitMask(0,value)
     def get_flags(self, i):
-        """Getter for ``flags`` of element ``i``.
+        """Get value ``flags`` of ``self._ptr[i]``.
         """
         return self._ptr[i].flags
     def set_flags(self, i, unsigned int value):
-        """Setter for ``flags`` of element ``i``.
+        """Set value ``flags`` of ``self._ptr[i]``.
         """
         self._ptr[i].flags = value
     @property
     def flags(self):
-        """Getter for ``flags``."""
         return self.get_flags(0)
     @flags.setter
     def flags(self, unsigned int value):
-        """Setter for ``flags``."""
         self.set_flags(0,value)
+    def get_reserved(self, i):
+        """Get value of ``reserved`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].reserved
+    @property
+    def reserved(self):
+        return self.get_reserved(0)
+    # TODO is_basic_type_constantarray: add setters
 
 
 
