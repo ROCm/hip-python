@@ -51,20 +51,18 @@ cdef class hipblasBfloat16:
         # TODO init values, if present
         return hipblasBfloat16.from_ptr(_ptr, owner=True)
     def get_data(self, i):
-        """Getter for ``data`` of element ``i``.
+        """Get value ``data`` of ``self._ptr[i]``.
         """
         return self._ptr[i].data
     def set_data(self, i, uint16_t value):
-        """Setter for ``data`` of element ``i``.
+        """Set value ``data`` of ``self._ptr[i]``.
         """
         self._ptr[i].data = value
     @property
     def data(self):
-        """Getter for ``data``."""
         return self.get_data(0)
     @data.setter
     def data(self, uint16_t value):
-        """Setter for ``data``."""
         self.set_data(0,value)
 
 
@@ -107,36 +105,32 @@ cdef class hipblasComplex:
         # TODO init values, if present
         return hipblasComplex.from_ptr(_ptr, owner=True)
     def get_x(self, i):
-        """Getter for ``x`` of element ``i``.
+        """Get value ``x`` of ``self._ptr[i]``.
         """
         return self._ptr[i].x
     def set_x(self, i, float value):
-        """Setter for ``x`` of element ``i``.
+        """Set value ``x`` of ``self._ptr[i]``.
         """
         self._ptr[i].x = value
     @property
     def x(self):
-        """Getter for ``x``."""
         return self.get_x(0)
     @x.setter
     def x(self, float value):
-        """Setter for ``x``."""
         self.set_x(0,value)
     def get_y(self, i):
-        """Getter for ``y`` of element ``i``.
+        """Get value ``y`` of ``self._ptr[i]``.
         """
         return self._ptr[i].y
     def set_y(self, i, float value):
-        """Setter for ``y`` of element ``i``.
+        """Set value ``y`` of ``self._ptr[i]``.
         """
         self._ptr[i].y = value
     @property
     def y(self):
-        """Getter for ``y``."""
         return self.get_y(0)
     @y.setter
     def y(self, float value):
-        """Setter for ``y``."""
         self.set_y(0,value)
 
 
@@ -179,36 +173,32 @@ cdef class hipblasDoubleComplex:
         # TODO init values, if present
         return hipblasDoubleComplex.from_ptr(_ptr, owner=True)
     def get_x(self, i):
-        """Getter for ``x`` of element ``i``.
+        """Get value ``x`` of ``self._ptr[i]``.
         """
         return self._ptr[i].x
     def set_x(self, i, double value):
-        """Setter for ``x`` of element ``i``.
+        """Set value ``x`` of ``self._ptr[i]``.
         """
         self._ptr[i].x = value
     @property
     def x(self):
-        """Getter for ``x``."""
         return self.get_x(0)
     @x.setter
     def x(self, double value):
-        """Setter for ``x``."""
         self.set_x(0,value)
     def get_y(self, i):
-        """Getter for ``y`` of element ``i``.
+        """Get value ``y`` of ``self._ptr[i]``.
         """
         return self._ptr[i].y
     def set_y(self, i, double value):
-        """Setter for ``y`` of element ``i``.
+        """Set value ``y`` of ``self._ptr[i]``.
         """
         self._ptr[i].y = value
     @property
     def y(self):
-        """Getter for ``y``."""
         return self.get_y(0)
     @y.setter
     def y(self, double value):
-        """Setter for ``y``."""
         self.set_y(0,value)
 
 

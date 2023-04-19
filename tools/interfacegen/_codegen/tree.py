@@ -219,6 +219,7 @@ class MacroDefinition(Node, *__MacroDefinitionMixins):
     def __init__(self, cursor: clang.cindex.Cursor, parent: Node):
         Node.__init__(self, cursor, parent)
 
+
 class Typed:
     def __init__(self, clang_type: clang.cindex.Type, typeref=None):
         self.typeref: Node = typeref
@@ -310,48 +311,92 @@ class Typed:
             consider_const=consider_const,
             subdivide_basic_types=subdivide_basic_types,
         )
-    
+
     @property
     def is_record(self):
-        """If this is a pointer to a struct or enum.
-        """
+        """If this is a pointer to a struct or enum."""
         from clang.cindex import TypeKind
-        return next(self._type_handler.clang_type_layer_kinds(canonical=True)) == TypeKind.RECORD
-    
+
+        return (
+            next(self._type_handler.clang_type_layer_kinds(canonical=True))
+            == TypeKind.RECORD
+        )
+
     @property
     def is_enum(self):
-        """If this is a pointer to a struct or enum.
-        """
+        """If this is a pointer to a struct or enum."""
         from clang.cindex import TypeKind
-        return next(self._type_handler.clang_type_layer_kinds(canonical=True)) == TypeKind.ENUM
+
+        return (
+            next(self._type_handler.clang_type_layer_kinds(canonical=True))
+            == TypeKind.ENUM
+        )
+
+    @property
+    def is_record_constantarray(self):
+        """If this is a pointer to a struct or enum."""
+        # TODO multi-dim arrays
+        from clang.cindex import TypeKind
+
+        return list(self._type_handler.clang_type_layer_kinds(canonical=True)) == [
+            TypeKind.CONSTANTARRAY,
+            TypeKind.RECORD,
+        ]
+
+    @property
+    def is_enum_constantarray(self):
+        """If this is a pointer to a struct or enum."""
+        # TODO multi-dim arrays
+        from clang.cindex import TypeKind
+
+        return list(self._type_handler.clang_type_layer_kinds(canonical=True)) == [
+            TypeKind.CONSTANTARRAY,
+            TypeKind.ENUM,
+        ]
 
     @property
     def is_record_or_enum_pointer(self):
-        """If this is a pointer to a struct or enum.
-        """
+        """If this is a pointer to a struct or enum."""
+        # TODO pointer of pointer of ...
         from clang.cindex import TypeKind
+
         return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
-                [TypeKind.POINTER,TypeKind.RECORD],
-                [TypeKind.POINTER,TypeKind.ENUM],
-               ]
+            [TypeKind.POINTER, TypeKind.RECORD],
+            [TypeKind.POINTER, TypeKind.ENUM],
+        ]
 
     @property
     def is_basic_type(self):
-        """If this is a pointer to a struct or enum.
-        """
+        """If this is a pointer to a struct or enum."""
         TypeCategory = cparser.TypeHandler.TypeCategory
         return list(self._type_handler.categorized_type_layer_kinds()) in [
-                [TypeCategory.BASIC],
-               ]
+            [TypeCategory.BASIC],
+        ]
+
+    @property
+    def is_basic_type_constarray(self):
+        """If this is a pointer to a struct or enum."""
+        # TODO multi-dim arrays
+        from clang.cindex import TypeKind
+
+        TypeCategory = cparser.TypeHandler.TypeCategory
+        kinds = list(self._type_handler.clang_type_layer_kinds(canonical=True))
+        if len(kinds) == 2:
+            categories = list(self._type_handler.categorized_type_layer_kinds())
+            return (
+                kinds[0] == TypeKind.CONSTANTARRAY
+                and categories[1] == TypeCategory.BASIC
+            )
+        return False
 
     @property
     def is_char_pointer(self):
-        """If this is a pointer to a struct or enum.
-        """
+        """If this is a pointer to a struct or enum."""
         from clang.cindex import TypeKind
+
         return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
-                [TypeKind.POINTER,TypeKind.SCHAR],
-               ]
+            [TypeKind.POINTER, TypeKind.CHAR_S],
+        ]
 
 
 class Field(Node, Typed, *__FieldMixins):
@@ -363,6 +408,7 @@ class Field(Node, Typed, *__FieldMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
+
 
 class Type(Node):
     """Indicates that this node represents a type."""
@@ -405,17 +451,15 @@ class Record(Type):
 
     @property
     def fields(self):
-        """Fields specified for this type.
-        """
+        """Fields specified for this type."""
         for child in self.child_nodes:
             if isinstance(child, Field):
                 yield child
 
     @property
     def is_incomplete(self):
-        """If the type does not have any fields.
-        """
-        return next(self.fields,None) == None
+        """If the type does not have any fields."""
+        return next(self.fields, None) == None
 
 
 class Struct(Record, *__StructMixins):
@@ -438,17 +482,18 @@ class Enum(Type, *__EnumMixins):
 
     @property
     def is_incomplete(self):
-        """If the type does not have any fields.
-        """
+        """If the type does not have any fields."""
         for child_cursor in self.cursor.get_children():
             if child_cursor.kind == clang.cindex.CursorKind.ENUM_CONSTANT_DECL:
                 return False
         return True
 
+
 class Nested:
     """A marker for nested struct/union/enum types."""
 
     pass
+
 
 class NestedStruct(Struct, Nested):
     def __init__(
@@ -529,16 +574,16 @@ class Typedef(Type, Typed, *__TypedefMixins):
         Type.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
 
-
     @property
     def is_record_or_enum_pointer(self):
-        """If this is a pointer to a struct or enum.
-        """
+        """If this is a pointer to a struct or enum."""
         from clang.cindex import TypeKind
+
         return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
-                [TypeKind.POINTER,TypeKind.RECORD],
-                [TypeKind.POINTER,TypeKind.ENUM],
-               ]
+            [TypeKind.POINTER, TypeKind.RECORD],
+            [TypeKind.POINTER, TypeKind.ENUM],
+        ]
+
 
 class FunctionPointer(Type):  # TODO handle result type
     def __init__(

@@ -263,10 +263,10 @@ if HIP_PYTHON_SETUP_BUILD:
     cython_module_sources = [
         ("hip.chiprtc", ["./hip/chiprtc.pyx"]),
         ("hip.chip", ["./hip/chip.pyx"]),
-        #("hip.chipblas", ["./hip/chipblas.pyx"]),
+        # ("hip.chipblas", ["./hip/chipblas.pyx"]),
         ("hip.hiprtc", ["./hip/hiprtc.pyx"]),
         ("hip.hip", ["./hip/hip.pyx"]),
-        #("hip.hipblas", ["./hip/hipblas.pyx"]),
+        # ("hip.hipblas", ["./hip/hipblas.pyx"]),
     ]
     if HIP_PYTHON_SETUP_RUNTIME_LINKING:
         cython_module_sources.insert(
