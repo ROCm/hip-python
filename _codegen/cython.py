@@ -9,6 +9,8 @@ import textwrap
 
 import clang.cindex
 
+import Cython.Tempita
+
 from . import cparser
 from . import control
 
@@ -63,13 +65,13 @@ class MacroDefinitionMixin(CythonMixin):
         assert isinstance(self, tree.MacroDefinition)
         return f"cdef {self.macro_type(self)} {self._cython_and_c_name(self.name)}"
 
-    def render_python_interface(self, prefix: str):
+    def render_python_interface(self, cprefix: str):
         """Renders '{self.name} = {prefix}{self.name}'."""
         from . import tree
 
         assert isinstance(self, tree.MacroDefinition)
         name = self.renamer(self.name)
-        return f"{name} = {prefix}{name}"
+        return f"{name} = {cprefix}{name}"
 
 
 class FieldMixin(CythonMixin):
@@ -134,14 +136,56 @@ class RecordMixin(CythonMixin):
             result += f"{indent}pass"
         return result
 
-    def _render_python_interface_head(self) -> str:
+    def _render_python_interface_head(self,cprefix: str) -> str:
         from . import tree
 
         assert isinstance(self, tree.Record)
         name = self.renamer(self.global_name(self.sep))
-        return f"cdef class {name}:\n"
+        cname = cprefix + name
+        result = f'''\
+cdef class {name}:
+    cdef {cname}* _ptr
+    cdef bint ptr_owner
 
-    def render_python_interface(self) -> str:
+    def __cinit__(self):
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef {name} from_ptr({cname} *_ptr, bint owner=False):
+        """Factory function to create {name} objects from
+        given {cname} pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``_ptr``
+        when the wrapper object is deallocated."""
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef {name} wrapper = {name}.__new__({name})
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
+
+    def __dealloc__(self):
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+'''
+        if not self.is_incomplete:
+            result += f'''
+    @staticmethod
+    cdef {name} new():
+        """Factory function to create {name} objects with
+        newly allocated {cname}"""
+        cdef {cname} *_ptr = <{cname} *>stdlib.malloc(sizeof({cname}))
+
+        if _ptr is NULL:
+            raise MemoryError
+        # TODO init values, if present
+        return {name}.from_ptr(_ptr, owner=True)
+'''
+        return result # locals()
+
+    def render_python_interface(self,cprefix: str) -> str:
         """Render Cython binding for this struct/union declaration.
 
         Renders a Cython binding for this struct/union declaration, does
@@ -155,9 +199,9 @@ class RecordMixin(CythonMixin):
         assert isinstance(self, tree.Record)
         global indent
 
-        result = self._render_python_interface_head()
+        result = self._render_python_interface_head(cprefix)
         # fields = list(self.fields)
-        result += f"{indent}pass"
+        #result += f"{indent}pass"
         return result
 
 
@@ -196,21 +240,21 @@ class EnumMixin(CythonMixin):
             "\n".join(self._render_cython_enums()), indent
         )
 
-    def _render_python_enums(self, prefix: str):
+    def _render_python_enums(self, cprefix: str):
         from . import tree
 
         # assert isinstance(self,tree.Enum)
         """Yields the enum constants' names."""
         for child_cursor in self.cursor.get_children():
             name = self.renamer(child_cursor.spelling)
-            yield f"{name} = {prefix}{name}"
+            yield f"{name} = {cprefix}{name}"
 
-    def render_python_interface(self, prefix: str):
+    def render_python_interface(self, cprefix: str):
         """Renders an enum.IntEnum class.
 
         Note:
             Does not create an enum.IntEnum class but only exposes the enum constants
-            from the Cython package corresponding to the prefix if the
+            from the Cython package corresponding to the cprefix if the
             Enum is anonymous.
         """
         from . import tree
@@ -218,11 +262,11 @@ class EnumMixin(CythonMixin):
         assert isinstance(self, tree.Enum)
         global indent
         if self.is_anonymous:
-            return "\n".join(self._render_python_enums(prefix))
+            return "\n".join(self._render_python_enums(cprefix))
         else:
             name = self._cython_and_c_name(self.global_name(self.sep))
             return f"class {name}(enum.IntEnum):\n" + textwrap.indent(
-                "\n".join(self._render_python_enums(prefix)), indent
+                "\n".join(self._render_python_enums(cprefix)), indent
             )
 
 class TypedefMixin(CythonMixin):
@@ -292,7 +336,7 @@ class FunctionMixin(CythonMixin):
         assert isinstance(self, tree.Function)
         return f'"""{"".join(self._raw_comment_stripped()).rstrip()}\n"""'
 
-    def render_c_interface(self, modifiers="nogil"):
+    def render_c_interface(self, modifiers=" nogil",modifiers_front=""):
         from . import tree
 
         assert isinstance(self, tree.Function)
@@ -301,8 +345,11 @@ class FunctionMixin(CythonMixin):
         parm_decls = ",".join([arg.cython_repr() for arg in self.parms])
         return f"""\
 {self._raw_comment_as_python_comment().rstrip()}
-{typename} {name}({parm_decls}) {modifiers}
+{modifiers_front}{typename} {name}({parm_decls}){modifiers}
 """
+
+    def render_cython_lazy_loader_decl(self, modifiers=" nogil"):
+        return self.render_c_interface(modifiers_front="cdef ")
 
     def cython_funptr_name(self):
         from . import tree
@@ -310,18 +357,6 @@ class FunctionMixin(CythonMixin):
         assert isinstance(self, tree.Function)
         name = self.renamer(self.name)
         return funptr_name_template.format(name=name)
-
-    def render_cython_lazy_loader_decl(self, modifiers="nogil"):
-        from . import tree
-
-        assert isinstance(self, tree.Function)
-        parm_decls = ",".join([parm.cython_repr() for parm in self.parms])
-        typename = self.global_typename(self.sep, self.renamer)
-        name = self._cython_and_c_name(self.name)
-        return f"""\
-{self._raw_comment_as_python_comment().rstrip()}
-cdef {typename} {name}({parm_decls}) {modifiers}
-    """
 
     def render_cython_lazy_loader_def(
         self, lib_handle: str = "__lib_handle", modifiers="nogil"
@@ -424,15 +459,33 @@ class CythonBackend:
         Creates the content of a Cython bindings file.
         Contains Cython declarations per C declaration
         plus helper types that have been introduced for nested enum/struct/union types.
+
+        Note:
+            Nested anonymous types for which we have a tree node with
+            autogenerated name must be excluded from the `extern from "<header_name.h>`
+            block as entities listed within the body of the construct,
+            are assumed by Cython to be present in C code whenever
+            the respective header is included.
+
+            Moving those entities out of the `extern from` block
+            ensures that Cython creates a proper C type on its own.
         """
+        from . import tree
+
         global indent
         curr_indent = ""
         result = []
 
         last_was_extern = False
         for node in self._walk_filtered_nodes():
-            if runtime_linking and isinstance(node, FunctionMixin):
-                contrib = node.render_cython_lazy_loader_decl()
+            if  (  runtime_linking and isinstance(node, FunctionMixin)
+                   or (isinstance(node,(tree.NestedEnum,tree.NestedStruct,tree.NestedUnion))
+                       and node.is_cursor_anonymous)
+            ):
+                if isinstance(node,FunctionMixin):
+                    contrib = node.render_cython_lazy_loader_decl()
+                else:
+                    contrib = node.render_c_interface()
                 curr_indent = ""
                 last_was_extern = False
             else:
@@ -467,20 +520,22 @@ cdef void* {lib_handle} = loader.open_library(\"{dll}\")
                 result.append(node.render_cython_lazy_loader_def(lib_handle=lib_handle))
         return result
 
-    def create_python_interfaces(self, c_interface_module):
+    def create_python_interfaces(self, cmodule):
         """Renders Python interfaces in Cython."""
+        from . import tree
         result = []
+        cprefix=f"{cmodule}."
         for node in self._walk_filtered_nodes():
             if isinstance(node, MacroDefinitionMixin):
                 result.append(
-                    node.render_python_interface(prefix=f"{c_interface_module}.")
+                    node.render_python_interface(cprefix=cprefix)
                 )
             elif isinstance(node, EnumMixin):
                 result.append(
-                    node.render_python_interface(prefix=f"{c_interface_module}.")
+                    node.render_python_interface(cprefix=cprefix)
                 )
             elif isinstance(node, (StructMixin, UnionMixin)):
-                result.append(node.render_python_interface())
+                result.append(node.render_python_interface(cprefix=cprefix))
             elif isinstance(node, TypedefMixin):
                 pass  # result.append(node.render_python_interface())
             elif isinstance(node, FunctionMixin):
@@ -567,6 +622,7 @@ from libc.stdint cimport *
 """
         self.python_interface_preamble = """\
 # AMD_COPYRIGHT
+from libc cimport stdlib
 from libc.stdint cimport *
 import enum
 """
