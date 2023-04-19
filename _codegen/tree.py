@@ -310,6 +310,25 @@ class Typed:
             consider_const=consider_const,
             subdivide_basic_types=subdivide_basic_types,
         )
+    
+    @property
+    def is_pointer_to_record_or_enum(self):
+        """If this is a pointer to a struct or enum.
+        """
+        from clang.cindex import TypeKind
+        return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
+                [TypeKind.POINTER,TypeKind.RECORD],
+                [TypeKind.POINTER,TypeKind.ENUM],
+               ]
+
+    @property
+    def is_basic_type(self):
+        """If this is a pointer to a struct or enum.
+        """
+        TypeCategory = cparser.TypeHandler.TypeCategory
+        return list(self._type_handler.categorized_type_layer_kinds()) in [
+                [TypeCategory.BASIC],
+               ]
 
 
 class Field(Node, Typed, *__FieldMixins):
@@ -321,7 +340,6 @@ class Field(Node, Typed, *__FieldMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
-
 
 class Type(Node):
     """Indicates that this node represents a type."""
