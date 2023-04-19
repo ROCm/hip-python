@@ -368,6 +368,13 @@ class TypedefMixin(CythonMixin):
         name = self.renamer(self.global_name(self.sep))
         if self.is_record_or_enum_pointer:
             return f"{name} = {self.renamer(self.typeref.global_name(self.sep))}"
+        elif self.is_void_pointer:
+            template = Cython.Tempita.Template(wrapper_class_base_template)
+            return template.substitute(
+                name=name,
+                cname="void", # hardcode as canonical type is `void *`, template already uses pointer
+                has_new=False,
+            )
         else:
             return None
 

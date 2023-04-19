@@ -13,6 +13,27 @@ hipblasVersionMinor = chipblas.hipblasVersionMinor
 hipblasVersionPatch = chipblas.hipblasVersionPatch
 
 
+cdef class hipblasHandle_t:
+    cdef void* _ptr
+    cdef bint ptr_owner
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef hipblasHandle_t from_ptr(void *_ptr, bint owner=False):
+        """Factory function to create ``hipblasHandle_t`` objects from
+        given ``void`` pointer.
+        """
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef hipblasHandle_t wrapper = hipblasHandle_t.__new__(hipblasHandle_t)
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
+
+
+
 cdef class hipblasBfloat16:
     cdef chipblas.hipblasBfloat16* _ptr
     cdef bint ptr_owner

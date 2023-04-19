@@ -311,6 +311,16 @@ class Typed:
             consider_const=consider_const,
             subdivide_basic_types=subdivide_basic_types,
         )
+    
+    @property
+    def is_void_pointer(self):
+        """If this is a pointer to a struct or enum."""
+        # TODO pointer of pointer of ...
+        from clang.cindex import TypeKind
+
+        return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
+            [TypeKind.POINTER, TypeKind.VOID],
+        ]
 
     @property
     def is_record(self):
@@ -573,16 +583,6 @@ class Typedef(Type, Typed, *__TypedefMixins):
     ):
         Type.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
-
-    @property
-    def is_record_or_enum_pointer(self):
-        """If this is a pointer to a struct or enum."""
-        from clang.cindex import TypeKind
-
-        return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
-            [TypeKind.POINTER, TypeKind.RECORD],
-            [TypeKind.POINTER, TypeKind.ENUM],
-        ]
 
 
 class FunctionPointer(Type):  # TODO handle result type
