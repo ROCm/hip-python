@@ -1263,6 +1263,27 @@ class hipComputeMode(enum.IntEnum):
     hipComputeModeProhibited = chip.hipComputeModeProhibited
     hipComputeModeExclusiveProcess = chip.hipComputeModeExclusiveProcess
 
+
+cdef class hipDeviceptr_t:
+    cdef void* _ptr
+    cdef bint ptr_owner
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef hipDeviceptr_t from_ptr(void *_ptr, bint owner=False):
+        """Factory function to create ``hipDeviceptr_t`` objects from
+        given ``void`` pointer.
+        """
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef hipDeviceptr_t wrapper = hipDeviceptr_t.__new__(hipDeviceptr_t)
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
+
+
 class hipChannelFormatKind(enum.IntEnum):
     hipChannelFormatKindSigned = chip.hipChannelFormatKindSigned
     hipChannelFormatKindUnsigned = chip.hipChannelFormatKindUnsigned
@@ -6916,6 +6937,27 @@ cdef class hipExternalMemoryBufferDesc_st:
         self.set_flags(0,value)
 
 
+
+cdef class hipExternalMemory_t:
+    cdef void* _ptr
+    cdef bint ptr_owner
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef hipExternalMemory_t from_ptr(void *_ptr, bint owner=False):
+        """Factory function to create ``hipExternalMemory_t`` objects from
+        given ``void`` pointer.
+        """
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef hipExternalMemory_t wrapper = hipExternalMemory_t.__new__(hipExternalMemory_t)
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
+
+
 class hipExternalSemaphoreHandleType_enum(enum.IntEnum):
     hipExternalSemaphoreHandleTypeOpaqueFd = chip.hipExternalSemaphoreHandleTypeOpaqueFd
     hipExternalSemaphoreHandleTypeOpaqueWin32 = chip.hipExternalSemaphoreHandleTypeOpaqueWin32
@@ -7098,6 +7140,27 @@ cdef class hipExternalSemaphoreHandleDesc_st:
     @flags.setter
     def flags(self, unsigned int value):
         self.set_flags(0,value)
+
+
+
+cdef class hipExternalSemaphore_t:
+    cdef void* _ptr
+    cdef bint ptr_owner
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef hipExternalSemaphore_t from_ptr(void *_ptr, bint owner=False):
+        """Factory function to create ``hipExternalSemaphore_t`` objects from
+        given ``void`` pointer.
+        """
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef hipExternalSemaphore_t wrapper = hipExternalSemaphore_t.__new__(hipExternalSemaphore_t)
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
 
 
 
