@@ -96,6 +96,51 @@ class FieldMixin(CythonMixin):
     #     result = """"""
     #     """"""
 
+wrapper_class_base_template = """
+cdef class {{name}}:
+    cdef {{cname}}* _ptr
+    cdef bint ptr_owner
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef {{name}} from_ptr({{cname}} *_ptr, bint owner=False):
+        \"""Factory function to create ``{{name}}`` objects from
+        given ``{{cname}}`` pointer.
+{{if has_new}}
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``_ptr``
+        when the wrapper object is deallocated.
+{{endif}}
+        \"""
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef {{name}} wrapper = {{name}}.__new__({{name}})
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
+{{if has_new}}
+    def __dealloc__(self):
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+{{endif}}
+{{if has_new}}
+    @staticmethod
+    cdef {{name}} new():
+        \"""Factory function to create {{name}} objects with
+        newly allocated {{cname}}\"""
+        cdef {{cname}} *_ptr = <{{cname}} *>stdlib.malloc(sizeof({{cname}}))
+
+        if _ptr is NULL:
+            raise MemoryError
+        # TODO init values, if present
+        return {{name}}.from_ptr(_ptr, owner=True)
+{{endif}}
+"""
 
 class RecordMixin(CythonMixin):
     @property
@@ -140,50 +185,14 @@ class RecordMixin(CythonMixin):
         from . import tree
 
         assert isinstance(self, tree.Record)
+        global wrapper_class_base_template
         name = self.renamer(self.global_name(self.sep))
-        cname = cprefix + name
-        result = f'''\
-cdef class {name}:
-    cdef {cname}* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef {name} from_ptr({cname} *_ptr, bint owner=False):
-        """Factory function to create {name} objects from
-        given {cname} pointer.
-
-        Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
-        when the wrapper object is deallocated."""
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef {name} wrapper = {name}.__new__({name})
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-    def __dealloc__(self):
-        # De-allocate if not null and flag is set
-        if self._ptr is not NULL and self.ptr_owner is True:
-            stdlib.free(self._ptr)
-            self._ptr = NULL
-'''
-        if not self.is_incomplete:
-            result += f'''
-    @staticmethod
-    cdef {name} new():
-        """Factory function to create {name} objects with
-        newly allocated {cname}"""
-        cdef {cname} *_ptr = <{cname} *>stdlib.malloc(sizeof({cname}))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return {name}.from_ptr(_ptr, owner=True)
-'''
-        return result # locals()
+        template = Cython.Tempita.Template(wrapper_class_base_template)
+        return template.substitute(
+          name = name,
+          cname = cprefix + name,
+          has_new = not self.is_incomplete,
+        )
 
     def render_python_interface(self,cprefix: str) -> str:
         """Render Cython binding for this struct/union declaration.
@@ -270,17 +279,39 @@ class EnumMixin(CythonMixin):
             )
 
 class TypedefMixin(CythonMixin):
+   
+    def _renamed_underlying_typedef_typename(self):
+        return self.global_typename(self.sep, self.renamer)        
+   
     def render_c_interface(self):
         from . import tree
 
         assert isinstance(self, tree.Typedef)
         """Returns a Cython binding for this Typedef.
         """
-        underlying_type_name = self.global_typename(self.sep, self.renamer)
+        underlying_type_name = self._renamed_underlying_typedef_typename()
         name = self._cython_and_c_name(self.name)
 
         return f"ctypedef {underlying_type_name} {name}"
 
+    def render_python_interface(self,cprefix: str) -> str:
+        from . import tree
+        assert isinstance(self, tree.Typedef)
+        name = self.renamer(self.global_name(self.sep))
+        if self.is_pointer_to_record_or_enum:
+            return f"{name} = {self.renamer(self.typeref.global_name(self.sep))}"
+        else:
+            return None
+        #if 
+        # assert isinstance(self, tree.FunctionPointer)
+        # global wrapper_class_base_template
+        # name = self.renamer(self.global_name(self.sep))
+        # template = Cython.Tempita.Template(wrapper_class_base_template)
+        # return template.substitute(
+        #   name = name,
+        #   cname = cprefix + name,
+        #   has_new = False,
+        # )
 
 class FunctionPointerMixin(CythonMixin):
     def render_c_interface(self):
@@ -294,7 +325,19 @@ class FunctionPointerMixin(CythonMixin):
             self.global_name(self.sep)
         )  # might be AnonymousFunctionPointer
         return f"ctypedef {underlying_type_name} (*{typename}) ({parm_types})"
+    
+    def render_python_interface(self,cprefix: str) -> str:
+        from . import tree
 
+        assert isinstance(self, tree.FunctionPointer)
+        global wrapper_class_base_template
+        name = self.renamer(self.global_name(self.sep))
+        template = Cython.Tempita.Template(wrapper_class_base_template)
+        return template.substitute(
+          name = name,
+          cname = cprefix + name,
+          has_new = False,
+        )
 
 class TypedefedFunctionPointerMixin(FunctionPointerMixin):
     pass
@@ -478,7 +521,8 @@ class CythonBackend:
 
         last_was_extern = False
         for node in self._walk_filtered_nodes():
-            if  (  runtime_linking and isinstance(node, FunctionMixin)
+            if  (  (runtime_linking and isinstance(node, FunctionMixin))
+                   or isinstance(node,AnonymousFunctionPointerMixin)
                    or (isinstance(node,(tree.NestedEnum,tree.NestedStruct,tree.NestedUnion))
                        and node.is_cursor_anonymous)
             ):
@@ -526,21 +570,22 @@ cdef void* {lib_handle} = loader.open_library(\"{dll}\")
         result = []
         cprefix=f"{cmodule}."
         for node in self._walk_filtered_nodes():
-            if isinstance(node, MacroDefinitionMixin):
-                result.append(
-                    node.render_python_interface(cprefix=cprefix)
-                )
-            elif isinstance(node, EnumMixin):
-                result.append(
-                    node.render_python_interface(cprefix=cprefix)
-                )
-            elif isinstance(node, (StructMixin, UnionMixin)):
-                result.append(node.render_python_interface(cprefix=cprefix))
-            elif isinstance(node, TypedefMixin):
-                pass  # result.append(node.render_python_interface())
+            contrib = None
+            if isinstance(node, (
+                MacroDefinitionMixin,
+                EnumMixin,
+                StructMixin,UnionMixin,
+                TypedefedFunctionPointerMixin,
+                AnonymousFunctionPointerMixin,
+                TypedefMixin,
+              )
+            ):
+                contrib = node.render_python_interface(cprefix=cprefix)
             elif isinstance(node, FunctionMixin):
                 pass  # result.append(node.render_python_interface())
             # TODO ignore nested typs on the top-level
+            if contrib != None:
+                result.append(contrib)
         return result
 
     def render_python_interfaces(self, cython_c_bindings_module: str):
