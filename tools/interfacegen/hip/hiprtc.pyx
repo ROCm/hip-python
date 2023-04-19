@@ -60,32 +60,28 @@ class hiprtcJITInputType(enum.IntEnum):
     HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE = chiprtc.HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE
     HIPRTC_JIT_NUM_INPUT_TYPES = chiprtc.HIPRTC_JIT_NUM_INPUT_TYPES
 
+
 cdef class ihiprtcLinkState:
     cdef chiprtc.ihiprtcLinkState* _ptr
     cdef bint ptr_owner
 
     def __cinit__(self):
+        self._ptr = NULL
         self.ptr_owner = False
 
     @staticmethod
     cdef ihiprtcLinkState from_ptr(chiprtc.ihiprtcLinkState *_ptr, bint owner=False):
-        """Factory function to create ihiprtcLinkState objects from
-        given chiprtc.ihiprtcLinkState pointer.
-
-        Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
-        when the wrapper object is deallocated."""
+        """Factory function to create ``ihiprtcLinkState`` objects from
+        given ``chiprtc.ihiprtcLinkState`` pointer.
+        """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ihiprtcLinkState wrapper = ihiprtcLinkState.__new__(ihiprtcLinkState)
         wrapper._ptr = _ptr
         wrapper.ptr_owner = owner
         return wrapper
 
-    def __dealloc__(self):
-        # De-allocate if not null and flag is set
-        if self._ptr is not NULL and self.ptr_owner is True:
-            stdlib.free(self._ptr)
-            self._ptr = NULL
+
+hiprtcLinkState = ihiprtcLinkState
 
 
 cdef class _hiprtcProgram:
@@ -93,24 +89,19 @@ cdef class _hiprtcProgram:
     cdef bint ptr_owner
 
     def __cinit__(self):
+        self._ptr = NULL
         self.ptr_owner = False
 
     @staticmethod
     cdef _hiprtcProgram from_ptr(chiprtc._hiprtcProgram *_ptr, bint owner=False):
-        """Factory function to create _hiprtcProgram objects from
-        given chiprtc._hiprtcProgram pointer.
-
-        Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
-        when the wrapper object is deallocated."""
+        """Factory function to create ``_hiprtcProgram`` objects from
+        given ``chiprtc._hiprtcProgram`` pointer.
+        """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef _hiprtcProgram wrapper = _hiprtcProgram.__new__(_hiprtcProgram)
         wrapper._ptr = _ptr
         wrapper.ptr_owner = owner
         return wrapper
 
-    def __dealloc__(self):
-        # De-allocate if not null and flag is set
-        if self._ptr is not NULL and self.ptr_owner is True:
-            stdlib.free(self._ptr)
-            self._ptr = NULL
+
+hiprtcProgram = _hiprtcProgram

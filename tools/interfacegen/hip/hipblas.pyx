@@ -12,33 +12,34 @@ hipblasVersionMinor = chipblas.hipblasVersionMinor
 
 hipblasVersionPatch = chipblas.hipblasVersionPatch
 
+
 cdef class hipblasBfloat16:
     cdef chipblas.hipblasBfloat16* _ptr
     cdef bint ptr_owner
 
     def __cinit__(self):
+        self._ptr = NULL
         self.ptr_owner = False
 
     @staticmethod
     cdef hipblasBfloat16 from_ptr(chipblas.hipblasBfloat16 *_ptr, bint owner=False):
-        """Factory function to create hipblasBfloat16 objects from
-        given chipblas.hipblasBfloat16 pointer.
+        """Factory function to create ``hipblasBfloat16`` objects from
+        given ``chipblas.hipblasBfloat16`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
         the extension type to ``free`` the structure pointed to by ``_ptr``
-        when the wrapper object is deallocated."""
+        when the wrapper object is deallocated.
+        """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipblasBfloat16 wrapper = hipblasBfloat16.__new__(hipblasBfloat16)
         wrapper._ptr = _ptr
         wrapper.ptr_owner = owner
         return wrapper
-
     def __dealloc__(self):
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
-
     @staticmethod
     cdef hipblasBfloat16 new():
         """Factory function to create hipblasBfloat16 objects with
@@ -51,33 +52,34 @@ cdef class hipblasBfloat16:
         return hipblasBfloat16.from_ptr(_ptr, owner=True)
 
 
+
 cdef class hipblasComplex:
     cdef chipblas.hipblasComplex* _ptr
     cdef bint ptr_owner
 
     def __cinit__(self):
+        self._ptr = NULL
         self.ptr_owner = False
 
     @staticmethod
     cdef hipblasComplex from_ptr(chipblas.hipblasComplex *_ptr, bint owner=False):
-        """Factory function to create hipblasComplex objects from
-        given chipblas.hipblasComplex pointer.
+        """Factory function to create ``hipblasComplex`` objects from
+        given ``chipblas.hipblasComplex`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
         the extension type to ``free`` the structure pointed to by ``_ptr``
-        when the wrapper object is deallocated."""
+        when the wrapper object is deallocated.
+        """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipblasComplex wrapper = hipblasComplex.__new__(hipblasComplex)
         wrapper._ptr = _ptr
         wrapper.ptr_owner = owner
         return wrapper
-
     def __dealloc__(self):
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
-
     @staticmethod
     cdef hipblasComplex new():
         """Factory function to create hipblasComplex objects with
@@ -90,33 +92,34 @@ cdef class hipblasComplex:
         return hipblasComplex.from_ptr(_ptr, owner=True)
 
 
+
 cdef class hipblasDoubleComplex:
     cdef chipblas.hipblasDoubleComplex* _ptr
     cdef bint ptr_owner
 
     def __cinit__(self):
+        self._ptr = NULL
         self.ptr_owner = False
 
     @staticmethod
     cdef hipblasDoubleComplex from_ptr(chipblas.hipblasDoubleComplex *_ptr, bint owner=False):
-        """Factory function to create hipblasDoubleComplex objects from
-        given chipblas.hipblasDoubleComplex pointer.
+        """Factory function to create ``hipblasDoubleComplex`` objects from
+        given ``chipblas.hipblasDoubleComplex`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
         the extension type to ``free`` the structure pointed to by ``_ptr``
-        when the wrapper object is deallocated."""
+        when the wrapper object is deallocated.
+        """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipblasDoubleComplex wrapper = hipblasDoubleComplex.__new__(hipblasDoubleComplex)
         wrapper._ptr = _ptr
         wrapper.ptr_owner = owner
         return wrapper
-
     def __dealloc__(self):
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
-
     @staticmethod
     cdef hipblasDoubleComplex new():
         """Factory function to create hipblasDoubleComplex objects with

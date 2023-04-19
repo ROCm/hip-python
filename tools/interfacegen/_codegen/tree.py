@@ -489,6 +489,16 @@ class Typedef(Type, Typed, *__TypedefMixins):
         Typed.__init__(self, self.cursor.type, typeref)
 
 
+    @property
+    def is_pointer_to_record_or_enum(self):
+        """If this is a pointer to a struct or enum.
+        """
+        from clang.cindex import TypeKind
+        return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
+                [TypeKind.POINTER,TypeKind.RECORD],
+                [TypeKind.POINTER,TypeKind.ENUM],
+               ]
+
 class FunctionPointer(Type):  # TODO handle result type
     def __init__(
         self,
