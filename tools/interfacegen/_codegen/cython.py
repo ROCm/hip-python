@@ -34,6 +34,73 @@ def DEFAULT_RENAMER(name):  # backend-specific
 def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
 
+wrapper_class_base_template = """
+cdef class {{name}}:
+    cdef {{cname}}* _ptr
+    cdef bint ptr_owner
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef {{name}} from_ptr({{cname}} *_ptr, bint owner=False):
+        \"""Factory function to create ``{{name}}`` objects from
+        given ``{{cname}}`` pointer.
+{{if has_new}}
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``_ptr``
+        when the wrapper object is deallocated.
+{{endif}}
+        \"""
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef {{name}} wrapper = {{name}}.__new__({{name}})
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
+{{if has_new}}
+    def __dealloc__(self):
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+{{endif}}
+{{if has_new}}
+    @staticmethod
+    cdef {{name}} new():
+        \"""Factory function to create {{name}} objects with
+        newly allocated {{cname}}\"""
+        cdef {{cname}} *_ptr = <{{cname}} *>stdlib.malloc(sizeof({{cname}}))
+
+        if _ptr is NULL:
+            raise MemoryError
+        # TODO init values, if present
+        return {{name}}.from_ptr(_ptr, owner=True)
+{{endif}}
+"""
+
+wrapper_class_property_template = """\
+{{if is_basic}}
+def get_{{attr}}(self,i):
+    \"""Get ``{{attr}}`` value of element ``i``.
+    \"""
+    return self._ptr[i].{{attr}}
+def set_{{attr}}(self,i,{{typename}} value):
+    \"""Set ``{{attr}}`` value of element ``i``.
+    \"""
+    self._ptr[i].{{attr}} = value
+@property
+def {{attr}}(self):
+    \"""Getter for ``{{attr}}``.\"""
+    return self.get_{{attr}}(0)
+@{{attr}}.setter
+def {{attr}}(self,{{typename}} value):
+    \"""Setter for ``{{attr}}``.\"""
+    self.set_{{attr}}(0,value)
+{{endif}}
+"""
+
 
 # Mixins
 class CythonMixin:
@@ -87,60 +154,17 @@ class FieldMixin(CythonMixin):
         name = self._cython_and_c_name(self.name)
         return f"{typename} {name}"
 
-    # def python_getter_setter(self,prefix: str):
-    #     from . import tree
-    #     assert isinstance(self,tree.Field)
-    #     TypeCategory = cparser.TypeHandler.TypeCategory
-    #     categories = self.categorized_type_kinds()
-    #     if categories == [TypeCategory]
-    #     result = """"""
-    #     """"""
+    def render_python_property(self,cprefix: str):
+        from . import tree
 
-wrapper_class_base_template = """
-cdef class {{name}}:
-    cdef {{cname}}* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef {{name}} from_ptr({{cname}} *_ptr, bint owner=False):
-        \"""Factory function to create ``{{name}}`` objects from
-        given ``{{cname}}`` pointer.
-{{if has_new}}
-
-        Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
-        when the wrapper object is deallocated.
-{{endif}}
-        \"""
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef {{name}} wrapper = {{name}}.__new__({{name}})
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-{{if has_new}}
-    def __dealloc__(self):
-        # De-allocate if not null and flag is set
-        if self._ptr is not NULL and self.ptr_owner is True:
-            stdlib.free(self._ptr)
-            self._ptr = NULL
-{{endif}}
-{{if has_new}}
-    @staticmethod
-    cdef {{name}} new():
-        \"""Factory function to create {{name}} objects with
-        newly allocated {{cname}}\"""
-        cdef {{cname}} *_ptr = <{{cname}} *>stdlib.malloc(sizeof({{cname}}))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return {{name}}.from_ptr(_ptr, owner=True)
-{{endif}}
-"""
+        assert isinstance(self, tree.Field)
+        attr = self.renamer(self.name)
+        template = Cython.Tempita.Template(wrapper_class_property_template)
+        return template.substitute(
+          typename = self.global_typename(self.sep, self.renamer),
+          attr = attr,
+          is_basic = self.is_basic_type,
+        )
 
 class RecordMixin(CythonMixin):
     @property
@@ -209,6 +233,8 @@ class RecordMixin(CythonMixin):
         global indent
 
         result = self._render_python_interface_head(cprefix)
+        for field in self.fields:
+            result += textwrap.indent(field.render_python_property(cprefix),indent)
         # fields = list(self.fields)
         #result += f"{indent}pass"
         return result
@@ -280,16 +306,13 @@ class EnumMixin(CythonMixin):
 
 class TypedefMixin(CythonMixin):
    
-    def _renamed_underlying_typedef_typename(self):
-        return self.global_typename(self.sep, self.renamer)        
-   
     def render_c_interface(self):
         from . import tree
 
         assert isinstance(self, tree.Typedef)
         """Returns a Cython binding for this Typedef.
         """
-        underlying_type_name = self._renamed_underlying_typedef_typename()
+        underlying_type_name = self.global_typename(self.sep, self.renamer)
         name = self._cython_and_c_name(self.name)
 
         return f"ctypedef {underlying_type_name} {name}"
@@ -302,16 +325,6 @@ class TypedefMixin(CythonMixin):
             return f"{name} = {self.renamer(self.typeref.global_name(self.sep))}"
         else:
             return None
-        #if 
-        # assert isinstance(self, tree.FunctionPointer)
-        # global wrapper_class_base_template
-        # name = self.renamer(self.global_name(self.sep))
-        # template = Cython.Tempita.Template(wrapper_class_base_template)
-        # return template.substitute(
-        #   name = name,
-        #   cname = cprefix + name,
-        #   has_new = False,
-        # )
 
 class FunctionPointerMixin(CythonMixin):
     def render_c_interface(self):

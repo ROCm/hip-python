@@ -50,6 +50,22 @@ cdef class hipblasBfloat16:
             raise MemoryError
         # TODO init values, if present
         return hipblasBfloat16.from_ptr(_ptr, owner=True)
+    def get_data(self,i):
+        """Get ``data`` value of element ``i``.
+        """
+        return self._ptr[i].data
+    def set_data(self,i,uint16_t value):
+        """Set ``data`` value of element ``i``.
+        """
+        self._ptr[i].data = value
+    @property
+    def data(self):
+        """Getter for ``data``."""
+        return self.get_data(0)
+    @data.setter
+    def data(self,uint16_t value):
+        """Setter for ``data``."""
+        self.set_data(0,value)
 
 
 
@@ -90,6 +106,38 @@ cdef class hipblasComplex:
             raise MemoryError
         # TODO init values, if present
         return hipblasComplex.from_ptr(_ptr, owner=True)
+    def get_x(self,i):
+        """Get ``x`` value of element ``i``.
+        """
+        return self._ptr[i].x
+    def set_x(self,i,float value):
+        """Set ``x`` value of element ``i``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        """Getter for ``x``."""
+        return self.get_x(0)
+    @x.setter
+    def x(self,float value):
+        """Setter for ``x``."""
+        self.set_x(0,value)
+    def get_y(self,i):
+        """Get ``y`` value of element ``i``.
+        """
+        return self._ptr[i].y
+    def set_y(self,i,float value):
+        """Set ``y`` value of element ``i``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        """Getter for ``y``."""
+        return self.get_y(0)
+    @y.setter
+    def y(self,float value):
+        """Setter for ``y``."""
+        self.set_y(0,value)
 
 
 
@@ -130,6 +178,38 @@ cdef class hipblasDoubleComplex:
             raise MemoryError
         # TODO init values, if present
         return hipblasDoubleComplex.from_ptr(_ptr, owner=True)
+    def get_x(self,i):
+        """Get ``x`` value of element ``i``.
+        """
+        return self._ptr[i].x
+    def set_x(self,i,double value):
+        """Set ``x`` value of element ``i``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        """Getter for ``x``."""
+        return self.get_x(0)
+    @x.setter
+    def x(self,double value):
+        """Setter for ``x``."""
+        self.set_x(0,value)
+    def get_y(self,i):
+        """Get ``y`` value of element ``i``.
+        """
+        return self._ptr[i].y
+    def set_y(self,i,double value):
+        """Set ``y`` value of element ``i``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        """Getter for ``y``."""
+        return self.get_y(0)
+    @y.setter
+    def y(self,double value):
+        """Setter for ``y``."""
+        self.set_y(0,value)
 
 
 class hipblasStatus_t(enum.IntEnum):

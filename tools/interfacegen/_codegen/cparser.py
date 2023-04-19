@@ -441,7 +441,7 @@ class TypeHandler:
         else:
             return result
 
-    def categorized_type_layers(
+    def categorized_type_layer_kinds(
         self, postorder=False, consider_const=False, subdivide_basic_types: bool = False
     ):
         """Yields the Clang type kinds that constitute this type.
@@ -505,12 +505,12 @@ class Analysis:
             ]
         )
         categorized_canonical_type_layer_kinds = ",".join(
-            [str(t) for t in typehandler.categorized_type_layers(postorder=False)]
+            [str(t) for t in typehandler.categorized_type_layer_kinds(postorder=False)]
         )
         categorized_canonical_type_layer_kinds_w_const = ",".join(
             [
                 str(t)
-                for t in typehandler.categorized_type_layers(
+                for t in typehandler.categorized_type_layer_kinds(
                     postorder=False, consider_const=True
                 )
             ]
@@ -518,7 +518,7 @@ class Analysis:
         categorized_canonical_type_layer_kinds_finer_w_const = ",".join(
             [
                 str(t)
-                for t in typehandler.categorized_type_layers(
+                for t in typehandler.categorized_type_layer_kinds(
                     postorder=False, consider_const=True, subdivide_basic_types=True
                 )
             ]
