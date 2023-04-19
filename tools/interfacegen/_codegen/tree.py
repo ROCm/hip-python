@@ -364,9 +364,17 @@ class Record(Type):
 
     @property
     def fields(self):
+        """Fields specified for this type.
+        """
         for child in self.child_nodes:
             if isinstance(child, Field):
                 yield child
+
+    @property
+    def is_incomplete(self):
+        """If the type does not have any fields.
+        """
+        return next(self.fields,None) == None
 
 
 class Struct(Record, *__StructMixins):
@@ -386,6 +394,15 @@ class Enum(Type, *__EnumMixins):
     ):
         Type.__init__(self, cursor, parent)
         self._from_typedef_with_anon_child: bool = from_typedef_with_anon_child
+
+    @property
+    def is_incomplete(self):
+        """If the type does not have any fields.
+        """
+        for child_cursor in self.cursor.get_children():
+            if child_cursor.kind == clang.cindex.CursorKind.ENUM_CONSTANT_DECL:
+                return False
+        return True
 
 class Nested:
     """A marker for nested struct/union/enum types."""
