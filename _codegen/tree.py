@@ -312,7 +312,21 @@ class Typed:
         )
     
     @property
-    def is_pointer_to_record_or_enum(self):
+    def is_record(self):
+        """If this is a pointer to a struct or enum.
+        """
+        from clang.cindex import TypeKind
+        return next(self._type_handler.clang_type_layer_kinds(canonical=True)) == TypeKind.RECORD
+    
+    @property
+    def is_enum(self):
+        """If this is a pointer to a struct or enum.
+        """
+        from clang.cindex import TypeKind
+        return next(self._type_handler.clang_type_layer_kinds(canonical=True)) == TypeKind.ENUM
+
+    @property
+    def is_record_or_enum_pointer(self):
         """If this is a pointer to a struct or enum.
         """
         from clang.cindex import TypeKind
@@ -328,6 +342,15 @@ class Typed:
         TypeCategory = cparser.TypeHandler.TypeCategory
         return list(self._type_handler.categorized_type_layer_kinds()) in [
                 [TypeCategory.BASIC],
+               ]
+
+    @property
+    def is_char_pointer(self):
+        """If this is a pointer to a struct or enum.
+        """
+        from clang.cindex import TypeKind
+        return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
+                [TypeKind.POINTER,TypeKind.SCHAR],
                ]
 
 
@@ -508,7 +531,7 @@ class Typedef(Type, Typed, *__TypedefMixins):
 
 
     @property
-    def is_pointer_to_record_or_enum(self):
+    def is_record_or_enum_pointer(self):
         """If this is a pointer to a struct or enum.
         """
         from clang.cindex import TypeKind

@@ -82,12 +82,12 @@ cdef class {{name}}:
 
 wrapper_class_property_template = """\
 {{if is_basic}}
-def get_{{attr}}(self,i):
-    \"""Get ``{{attr}}`` value of element ``i``.
+def get_{{attr}}(self, i):
+    \"""Getter for ``{{attr}}`` of element ``i``.
     \"""
     return self._ptr[i].{{attr}}
-def set_{{attr}}(self,i,{{typename}} value):
-    \"""Set ``{{attr}}`` value of element ``i``.
+def set_{{attr}}(self, i, {{typename}} value):
+    \"""Setter for ``{{attr}}`` of element ``i``.
     \"""
     self._ptr[i].{{attr}} = value
 @property
@@ -95,9 +95,37 @@ def {{attr}}(self):
     \"""Getter for ``{{attr}}``.\"""
     return self.get_{{attr}}(0)
 @{{attr}}.setter
-def {{attr}}(self,{{typename}} value):
+def {{attr}}(self, {{typename}} value):
     \"""Setter for ``{{attr}}``.\"""
     self.set_{{attr}}(0,value)
+{{elif is_enum}}
+def get_{{attr}}(self, i):
+    \"""Getter for ``{{attr}}`` of element ``i``.
+    \"""
+    return {{typename}}(self._ptr[i].{{attr}})
+def set_{{attr}}(self, i, value):
+    \"""Setter for ``{{attr}}`` of element ``i``.
+    \"""
+    if not isinstance(value, {{typename}}):
+        raise TypeError("'value' must be of type '{{typename}}'")
+    self._ptr[i].{{attr}} = value.value
+@property
+def {{attr}}(self):
+    \"""Getter for ``{{attr}}``.\"""
+    return self.get_{{attr}}(0)
+@{{attr}}.setter
+def {{attr}}(self, value):
+    \"""Setter for ``{{attr}}``.\"""
+    self.set_{{attr}}(0,value)
+{{elif is_record}}
+def get_{{attr}}(self, i):
+    \"""Getter for ``{{attr}}`` of element ``i``.
+    \"""
+    return {{typename}}.from_ptr(&self._ptr[i].{{attr}})
+@property
+def {{attr}}(self):
+    \"""Getter for ``{{attr}}``.\"""
+    return self.get_{{attr}}(0)
 {{endif}}
 """
 
@@ -163,7 +191,9 @@ class FieldMixin(CythonMixin):
         return template.substitute(
           typename = self.global_typename(self.sep, self.renamer),
           attr = attr,
-          is_basic = self.is_basic_type,
+          is_basic = self.is_basic_type or self.is_char_pointer, # TODO user should be consulted if char pointer is a string
+          is_record = self.is_record,
+          is_enum = self.is_enum,
         )
 
 class RecordMixin(CythonMixin):
@@ -321,7 +351,7 @@ class TypedefMixin(CythonMixin):
         from . import tree
         assert isinstance(self, tree.Typedef)
         name = self.renamer(self.global_name(self.sep))
-        if self.is_pointer_to_record_or_enum:
+        if self.is_record_or_enum_pointer:
             return f"{name} = {self.renamer(self.typeref.global_name(self.sep))}"
         else:
             return None
