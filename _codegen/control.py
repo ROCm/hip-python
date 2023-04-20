@@ -15,7 +15,6 @@ class Warnings(enum.IntEnum):
     WARN = 1
     ERROR = 2
 
-
 def DEFAULT_RENAMER(name: str):
     return name
 
@@ -23,28 +22,21 @@ def DEFAULT_RENAMER(name: str):
 def DEFAULT_NODE_FILTER(node: "tree.Node"):
     return True
 
-
-class Intent(enum.IntEnum):
+class PointerParamIntent(enum.IntEnum):
     IN = 0
-    OUT = 1
-    INOUT = 2
-    CREATE = 3  # OUT result that is also created
+    INOUT = 1
+    OUT = 2
 
+def DEFAULT_PTR_PARAM_INTENT(node: "tree.Parm"):
+    if node.is_double_pointer_to_non_const_type:
+        return PointerParamIntent.INOUT
 
-class Rank(enum.IntEnum):
-    SCALAR = 0
-    ARRAY = 1
-    ANY = 2
-
-    @property
-    def might_be_array(self):
-        """Returns if this ``Rank`` would match an array."""
-        return self.value in (Rank.ARRAY.value, Rank.ANY.value)
-
-
-def DEFAULT_PTR_PARM_INTENT(node: "tree.Node"):
-    return Intent.INOUT
-
+RANK_ANY = -1
 
 def DEFAULT_PTR_RANK(node: "tree.Node"):
-    return Rank.ANY
+    from . import tree
+    
+    assert isinstance(node,tree.Typed)
+    if node.is_pointer_to_char():
+        return 0
+    return 1

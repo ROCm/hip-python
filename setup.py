@@ -16,7 +16,7 @@ import textwrap
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 
-from _codegen import CythonPackageGenerator, Node, MacroDefinition, Function
+from _codegen import CythonPackageGenerator, Node, MacroDefinition, Function, Parm, Field, PointerParamIntent
 
 __author__ = "AMD_AUTHOR"
 
@@ -66,7 +66,7 @@ def get_bool_environ_var(env_var, default):
 HIP_PYTHON_SETUP_GENERATE = get_bool_environ_var("HIP_PYTHON_SETUP_GENERATE", "true")
 HIP_PYTHON_SETUP_BUILD = get_bool_environ_var("HIP_PYTHON_SETUP_BUILD", "true")
 HIP_PYTHON_SETUP_RUNTIME_LINKING = get_bool_environ_var(
-    "HIP_PYTHON_SETUP_RUNTIME_LINKING", "true"
+    "HIP_PYTHON_SETUP_RUNTIME_LINKING", "false"
 )
 HIP_PYTHON_SETUP_VERBOSE = get_bool_environ_var("HIP_PYTHON_SETUP_VERBOSE", "true")
 
@@ -192,6 +192,57 @@ if HIP_PYTHON_SETUP_GENERATE:
             if "hip/" in node.file:
                 return True
         return False
+    
+    def hip_ptr_parm_intent(node: Parm):
+        """Flags pointer parameters that are actually return values
+        that are passed as C-style reference, i.e. `<type>* <param>`.
+        
+        Rules
+        -----
+
+        1. We exploit that ``hip/hip_runtime_api.h``` does not 
+        work with typed arrays, so every pointer
+        of basic type is actually a return value
+        that is created internally by the function.
+        Exceptions are ``char*`` parameters, which
+        are C-style strings.
+
+        2. All ``void``, ``struct``, ``union``, ``enum`` double (``**``) pointers are
+        return values that are created internally by the respective function.
+        """
+        func: Function = node.parent
+        if node.is_double_pointer_to_non_const_type:
+            return PointerParamIntent.OUT
+        if node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1):
+            return PointerParamIntent.OUT
+        return PointerParamIntent.IN
+    
+    def hip_ptr_rank(node: Node):
+        """Flags pointer parameters that are actually return values
+        that are passed as C-style reference, i.e. `<type>* <param>`.
+        
+        Rules
+        -----
+
+        1. We exploit that ``hip/hip_runtime_api.h``` does not 
+        work with typed arrays, so every pointer
+        of basic type is actually a return value
+        that is created internally by the function.
+        Exceptions are ``char*`` parameters, which
+        are C-style strings.
+
+        2. All ``void``, ``struct``, ``union``, ``enum`` double (``**``) pointers are
+        return values that are created internally by the respective function.
+        """
+        if isinstance(node,Parm):
+            func: Function = node.parent
+            if node.is_double_pointer_to_non_const_type:
+                return 0
+            if node.is_pointer_to_basic_type(degree=1):
+                return 0
+        elif isinstance(node,Field):
+            pass # nothing to do
+        return 1
 
     CythonPackageGenerator(
         "hip",
@@ -200,6 +251,8 @@ if HIP_PYTHON_SETUP_GENERATE:
         runtime_linking=HIP_PYTHON_SETUP_RUNTIME_LINKING,
         dll="libamdhip64.so",
         node_filter=hip_node_filter,
+        ptr_parm_intent=hip_ptr_parm_intent,
+        ptr_rank=hip_ptr_rank,
         cflags=hip_platform.cflags,
     ).write_package_files(output_dir="hip")
     # for canonical_name, nodes in gen.backend.root.types.items():
