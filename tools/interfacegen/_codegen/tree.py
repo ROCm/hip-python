@@ -298,33 +298,198 @@ class Typed:
             self._type_handler, searched_typename, repl_typename
         )
 
-    def clang_type_kinds(self, postorder=False, canonical=False):
-        return self._type_handler.clang_type_kinds(
+    def clang_type_layer_kinds(self, postorder=False, canonical=False):
+        return self._type_handler.clang_type_layer_kinds(
             postorder=postorder, canonical=canonical
         )
 
-    def categorized_type_kinds(
+    def categorized_type_layer_kinds(
         self, postorder=False, consider_const=False, subdivide_basic_types: bool = False
     ):
-        return self._type_handler.clang_type_kinds(
+        return self._type_handler.categorized_type_layer_kinds(
             postorder=postorder,
             consider_const=consider_const,
             subdivide_basic_types=subdivide_basic_types,
         )
-    
-    @property
-    def is_void_pointer(self):
-        """If this is a pointer to a struct or enum."""
-        # TODO pointer of pointer of ...
+
+    def const_qualifiers(self,postorder=False,canonical=False):
+        """Yields a flag per type layer that constitute this type if 
+        the layer is const qualified.
+
+        Args:
+            postorder (bool, optional): Post-order walk. Defaults to False.
+            canonical (bool, optional): Use the canonical type for the walk.
+
+        Yields:
+            bool: Per type layer, yields a flag indicating if ``const`` is specified for this layer.
+        """
+        return self._type_handler.const_qualifiers(
+            postorder=postorder,canonical=canonical)
+
+    def get_rank(
+        self,
+        constant_array: bool = True,
+        incomplete_array: bool = True,
+        pointer: bool = True,
+    ):
+        """Array rank of the type.
+        
+        Counts layers of the type that can be interpreted as array dimension.
+        By default constant arrays, incomplete arrays or pointers are counted
+        as array dimension. Stops counting as soon as it finds anything else.
+
+        Args:
+            const_array (bool, optional): Consider const arrays. Defaults to True.
+            incomplete_array (bool, optional): Consider incomplete arrays. Defaults to True.
+            pointer (bool, optional): Consider pointers as array dimensions. Defaults to True.
+
+        Returns:
+            int: Rank of the array, with respect to the options.
+        """
         from clang.cindex import TypeKind
 
-        return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
-            [TypeKind.POINTER, TypeKind.VOID],
-        ]
+        TypeCategory = cparser.TypeHandler.TypeCategory
+        rank_counted: int = 0
+        for kind in self._type_handler.clang_type_layer_kinds(canonical=True):
+            if constant_array and kind == TypeKind.CONSTANTARRAY:
+                rank_counted += 1
+            elif incomplete_array and kind == TypeKind.INCOMPLETEARRAY:
+                rank_counted += 1
+            elif pointer and kind == TypeKind.POINTER:
+                rank_counted += 1
+            else:
+                break
+        return rank_counted
+
+    def has_rank(
+        self,
+        rank: int,
+        constant_array: bool = True,
+        incomplete_array: bool = True,
+        pointer: bool = True,
+    ):
+        """If the type has the given rank.
+        
+        See:
+            get_rank
+
+        Returns:
+            bool: If the rank matches the input.
+        """
+        return self.get_rank(constant_array,incomplete_array,pointer) == rank
+            
+    def get_pointer_degree(self) -> int:
+        """Returns number of outer type layers which are of TypeKind.POINTER.
+        """
+        return self.get_rank(constant_array=False,incomplete_array=False,pointer=True)
+
+    def _is_pointer_to_kind(self,
+                            type_kind,
+                            degree: int = 1):
+        """If this is a pointerof the given ``degree`` to the given type kind.
+        Note:
+            Does not check for any const modifiers.
+        """
+        if isinstance(type_kind,tuple):
+            type_kinds = type_kind
+        else:
+            assert isinstance(type_kind,clang.cindex.TypeKind)
+            type_kinds = (type_kind,)
+
+        if list(self._type_handler.clang_type_layer_kinds(canonical=True))[-1] in type_kinds:
+            return self.get_pointer_degree() == degree
+        
+    def _is_pointer_to_category(self,
+                               type_category,
+                               degree: int = 1,
+                               subdivide_categories:bool =False):
+        """If this is a pointerof the given ``degree`` to the given type category.
+        Note:
+            Does not check for any const modifiers.
+        """
+        if isinstance(type_category,tuple):
+            type_categories = type_category
+        else:
+            assert isinstance(type_category,self._type_handler.TypeCategory)
+            type_categories = (type_category,)
+
+        if list(self._type_handler.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))[-1] in type_categories:
+            return self.get_pointer_degree() == degree
+
+    @property
+    def is_void(self):
+        """If this is a void type."""
+        from clang.cindex import TypeKind
+
+        return (
+            next(self._type_handler.clang_type_layer_kinds(canonical=True))
+            == TypeKind.VOID
+        )
+
+    def is_pointer_to_void(self,degree: int = 1):
+        """If this is a record (struct, union) pointer of the given degree.
+        Note:
+            Does not check for any const modifiers.
+        """
+        from clang.cindex import TypeKind
+
+        return self._is_pointer_to_kind(TypeKind.VOID,degree)
+    
+    def is_pointer_to_char(self,degree: int = 1):
+        """If this is a record (struct, union) pointer of the given degree.
+        Note:
+            Does not check for any const modifiers.
+        """
+        from clang.cindex import TypeKind
+
+        return self._is_pointer_to_kind(TypeKind.CHAR_S,degree)
+    
+    def is_pointer_to_basic_type(self,degree: int = 1):
+        """If this is a record (struct, union) pointer of the given degree.
+        Note:
+            Does not check for any const modifiers.
+        """
+        TypeCategory = cparser.TypeHandler.TypeCategory
+
+        return self._is_pointer_to_category(TypeCategory.BASIC,degree)
+    
+    def is_pointer_to_record(self,degree: int = 1):
+        """If this is a void pointer of the given degree.
+        Note:
+            Does not check for any const modifiers.
+        """
+        from clang.cindex import TypeKind
+
+        return self._is_pointer_to_kind(TypeKind.RECORD,degree)
+    
+    def is_pointer_to_enum(self,degree: int = 1):
+        """If this is a enum pointer of the given degree.
+        Note:
+            Does not check for any const modifiers.
+        """
+        from clang.cindex import TypeKind
+
+        return self._is_pointer_to_kind(TypeKind.ENUM,degree)
+
+    @property
+    def is_any_pointer(self):
+        """If this is any form of pointer, i.e. the outer most type layer must be a pointer."""
+        from clang.cindex import TypeKind
+
+        return self.get_rank(constant_array=False,incomplete_array=False,pointer=True) > 0
+
+    @property
+    def is_any_array(self):
+        """If this is any form of array."""
+        TypeCategory = cparser.TypeHandler.TypeCategory
+        return (
+            next(self._type_handler.categorized_type_layer_kinds())
+            == TypeCategory.ARRAY
+        )
 
     @property
     def is_record(self):
-        """If this is a pointer to a struct or enum."""
+        """If this is a record (struct, union)."""
         from clang.cindex import TypeKind
 
         return (
@@ -333,18 +498,8 @@ class Typed:
         )
 
     @property
-    def is_enum(self):
-        """If this is a pointer to a struct or enum."""
-        from clang.cindex import TypeKind
-
-        return (
-            next(self._type_handler.clang_type_layer_kinds(canonical=True))
-            == TypeKind.ENUM
-        )
-
-    @property
     def is_record_constantarray(self):
-        """If this is a pointer to a struct or enum."""
+        """If this is a struct or union array."""
         # TODO multi-dim arrays
         from clang.cindex import TypeKind
 
@@ -354,8 +509,18 @@ class Typed:
         ]
 
     @property
+    def is_enum(self):
+        """If this is an enum."""
+        from clang.cindex import TypeKind
+
+        return (
+            next(self._type_handler.clang_type_layer_kinds(canonical=True))
+            == TypeKind.ENUM
+        )
+
+    @property
     def is_enum_constantarray(self):
-        """If this is a pointer to a struct or enum."""
+        """If this is an enum array."""
         # TODO multi-dim arrays
         from clang.cindex import TypeKind
 
@@ -365,24 +530,13 @@ class Typed:
         ]
 
     @property
-    def is_record_or_enum_pointer(self):
-        """If this is a pointer to a struct or enum."""
-        # TODO pointer of pointer of ...
-        from clang.cindex import TypeKind
-
-        return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
-            [TypeKind.POINTER, TypeKind.RECORD],
-            [TypeKind.POINTER, TypeKind.ENUM],
-        ]
-
-    @property
     def is_basic_type(self):
         """If this is a pointer to a struct or enum."""
         TypeCategory = cparser.TypeHandler.TypeCategory
         return list(self._type_handler.categorized_type_layer_kinds()) in [
             [TypeCategory.BASIC],
         ]
-
+    
     @property
     def is_basic_type_constarray(self):
         """If this is a pointer to a struct or enum."""
@@ -400,13 +554,42 @@ class Typed:
         return False
 
     @property
-    def is_char_pointer(self):
-        """If this is a pointer to a struct or enum."""
+    def is_char_incompletearray(self):
+        """If this is an incomplete array of chars."""
         from clang.cindex import TypeKind
 
         return list(self._type_handler.clang_type_layer_kinds(canonical=True)) in [
-            [TypeKind.POINTER, TypeKind.CHAR_S],
+            [TypeKind.INCOMPLETEARRAY, TypeKind.CHAR_S],
         ]
+
+    @property
+    def is_scalar(self):
+        """If the type is a scalar of basic, record, or enum type.
+
+        Returns:
+            bool: If the type is a scalar of basic, record, or enum type.
+        """
+        return self.is_basic_type or self.is_record or self.is_enum
+
+    @property
+    def is_double_pointer_to_non_const_type(self):
+        """If the type is something like ``void**``, ``char **``, ...
+
+        Returns:
+            bool: If the type is something like ``void**``, ``char **``, ...
+        """
+        TypeCategory = self._type_handler.TypeCategory
+        categories_w_const = list(
+            self.categorized_type_layer_kinds(consider_const=True)
+        )
+        return categories_w_const[0:2] in (
+            [TypeCategory.POINTER, TypeCategory.POINTER],
+        ) and categories_w_const[2] in (
+            TypeCategory.VOID,
+            TypeCategory.BASIC,
+            TypeCategory.RECORD,
+            TypeCategory.ENUM,
+        )
 
 
 class Field(Node, Typed, *__FieldMixins):
