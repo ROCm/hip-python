@@ -133,7 +133,7 @@ def hiprtcAddNameExpression(prog, const char * name_expression):
     """
     pass
 
-def hiprtcCompileProgram(prog, int numOptions, options):
+def hiprtcCompileProgram(prog, int numOptions):
     """@brief Compiles the given runtime compilation program.
     @param [in] prog  runtime compilation program instance.
     @param [in] numOptions  number of compiler options.
@@ -145,7 +145,7 @@ def hiprtcCompileProgram(prog, int numOptions, options):
     """
     pass
 
-def hiprtcCreateProgram(prog, const char * src, const char * name, int numHeaders, headers, includeNames):
+def hiprtcCreateProgram(const char * src, const char * name, int numHeaders):
     """@brief Creates an instance of hiprtcProgram with the given input parameters,
     and sets the output hiprtcProgram prog with it.
     @param [in, out] prog  runtime compilation program instance.
@@ -162,7 +162,7 @@ def hiprtcCreateProgram(prog, const char * src, const char * name, int numHeader
     """
     pass
 
-def hiprtcDestroyProgram(prog):
+def hiprtcDestroyProgram():
     """@brief Destroys an instance of given hiprtcProgram.
     @param [in] prog  runtime compilation program instance.
     @return HIPRTC_SUCCESS
@@ -171,7 +171,7 @@ def hiprtcDestroyProgram(prog):
     """
     pass
 
-def hiprtcGetLoweredName(prog, const char * name_expression, lowered_name):
+def hiprtcGetLoweredName(prog, const char * name_expression):
     """@brief Gets the lowered (mangled) name from an instance of hiprtcProgram with the given input parameters,
     and sets the output lowered_name with it.
     @param [in] prog  runtime compilation program instance.
@@ -239,7 +239,7 @@ def hiprtcGetBitcodeSize(prog, bitcode_size):
     """
     pass
 
-def hiprtcLinkCreate(unsigned int num_options, option_ptr, option_vals_pptr, hip_link_state_ptr):
+def hiprtcLinkCreate(unsigned int num_options, option_ptr):
     """@brief Creates the link instance via hiprtc APIs.
     @param [in] hip_jit_options
     @param [out] hiprtc link state instance
@@ -248,7 +248,7 @@ def hiprtcLinkCreate(unsigned int num_options, option_ptr, option_vals_pptr, hip
     """
     pass
 
-def hiprtcLinkAddFile(hip_link_state, input_type, const char * file_path, unsigned int num_options, options_ptr, option_values):
+def hiprtcLinkAddFile(hip_link_state, input_type, const char * file_path, unsigned int num_options, options_ptr):
     """@brief Adds a file with bit code to be linked with options
     @param [in] hiprtc link state, jit input type, file path,
     option reated parameters.
@@ -260,7 +260,7 @@ def hiprtcLinkAddFile(hip_link_state, input_type, const char * file_path, unsign
     """
     pass
 
-def hiprtcLinkAddData(hip_link_state, input_type, image, int image_size, const char * name, unsigned int num_options, options_ptr, option_values):
+def hiprtcLinkAddData(hip_link_state, input_type, image, int image_size, const char * name, unsigned int num_options, options_ptr):
     """@brief Completes the linking of the given program.
     @param [in] hiprtc link state, jit input type, image_ptr ,
     option reated parameters.
@@ -272,7 +272,7 @@ def hiprtcLinkAddData(hip_link_state, input_type, image, int image_size, const c
     """
     pass
 
-def hiprtcLinkComplete(hip_link_state, bin_out, size_out):
+def hiprtcLinkComplete(hip_link_state, size_out):
     """@brief Completes the linking of the given program.
     @param [in] hiprtc link state instance
     @param [out] linked_binary, linked_binary_size.

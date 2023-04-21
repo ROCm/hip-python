@@ -9874,7 +9874,7 @@ def hipIpcGetMemHandle(handle, devPtr):
     """
     pass
 
-def hipIpcOpenMemHandle(devPtr, handle, unsigned int flags):
+def hipIpcOpenMemHandle(handle, unsigned int flags):
     """@brief Opens an interprocess memory handle exported from another process
     and returns a device pointer usable in the local process.
     Maps memory exported from another process with hipIpcGetMemHandle into
@@ -10025,7 +10025,7 @@ def hipGetErrorString(hipError):
     """
     pass
 
-def hipDrvGetErrorName(hipError, errorString):
+def hipDrvGetErrorName(hipError):
     """@brief Return hip error as text string form.
     @param [in] hipError Error code to convert to string.
     @param [out] const char pointer to the NULL-terminated error string
@@ -10034,7 +10034,7 @@ def hipDrvGetErrorName(hipError, errorString):
     """
     pass
 
-def hipDrvGetErrorString(hipError, errorString):
+def hipDrvGetErrorString(hipError):
     """@brief Return handy text string message to explain the error which occurred
     @param [in] hipError Error code to convert to string.
     @param [out] const char pointer to the NULL-terminated error string
@@ -10500,7 +10500,7 @@ def hipPointerGetAttribute(data, attribute, ptr):
     """
     pass
 
-def hipDrvPointerGetAttributes(unsigned int numAttributes, data, ptr):
+def hipDrvPointerGetAttributes(unsigned int numAttributes, ptr):
     """@brief Returns information about the specified pointer.[BETA]
     @param [in]  numAttributes   number of attributes to query for
     @param [in]  attributes      attributes to query for
@@ -10515,7 +10515,7 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, data, ptr):
     cdef chip.hipPointer_attribute attributes
     pass
 
-def hipImportExternalSemaphore(extSem_out, semHandleDesc):
+def hipImportExternalSemaphore(semHandleDesc):
     """@brief Imports an external semaphore.
     @param[out] extSem_out  External semaphores to be waited on
     @param[in] semHandleDesc Semaphore import handle descriptor
@@ -10524,7 +10524,7 @@ def hipImportExternalSemaphore(extSem_out, semHandleDesc):
     """
     pass
 
-def hipSignalExternalSemaphoresAsync(extSemArray, paramsArray, unsigned int numExtSems, stream):
+def hipSignalExternalSemaphoresAsync(paramsArray, unsigned int numExtSems, stream):
     """@brief Signals a set of external semaphore objects.
     @param[in] extSem_out  External semaphores to be waited on
     @param[in] paramsArray Array of semaphore parameters
@@ -10535,7 +10535,7 @@ def hipSignalExternalSemaphoresAsync(extSemArray, paramsArray, unsigned int numE
     """
     pass
 
-def hipWaitExternalSemaphoresAsync(extSemArray, paramsArray, unsigned int numExtSems, stream):
+def hipWaitExternalSemaphoresAsync(paramsArray, unsigned int numExtSems, stream):
     """@brief Waits on a set of external semaphore objects
     @param[in] extSem_out  External semaphores to be waited on
     @param[in] paramsArray Array of semaphore parameters
@@ -10554,7 +10554,7 @@ def hipDestroyExternalSemaphore(extSem):
     """
     pass
 
-def hipImportExternalMemory(extMem_out, memHandleDesc):
+def hipImportExternalMemory(memHandleDesc):
     """@brief Imports an external memory object.
     @param[out] extMem_out  Returned handle to an external memory object
     @param[in]  memHandleDesc Memory import handle descriptor
@@ -10563,7 +10563,7 @@ def hipImportExternalMemory(extMem_out, memHandleDesc):
     """
     pass
 
-def hipExternalMemoryGetMappedBuffer(devPtr, extMem, bufferDesc):
+def hipExternalMemoryGetMappedBuffer(extMem, bufferDesc):
     """@brief Maps a buffer onto an imported memory object.
     @param[out] devPtr Returned device pointer to buffer
     @param[in]  extMem  Handle to external memory object
@@ -10581,7 +10581,7 @@ def hipDestroyExternalMemory(extMem):
     """
     pass
 
-def hipMalloc(ptr, int size):
+def hipMalloc(int size):
     """@brief Allocate memory on the default accelerator
     @param[out] ptr Pointer to the allocated memory
     @param[in]  size Requested memory size
@@ -10592,7 +10592,7 @@ def hipMalloc(ptr, int size):
     """
     pass
 
-def hipExtMallocWithFlags(ptr, int sizeBytes, unsigned int flags):
+def hipExtMallocWithFlags(int sizeBytes, unsigned int flags):
     """@brief Allocate memory on the default accelerator
     @param[out] ptr Pointer to the allocated memory
     @param[in]  size Requested memory size
@@ -10604,7 +10604,7 @@ def hipExtMallocWithFlags(ptr, int sizeBytes, unsigned int flags):
     """
     pass
 
-def hipMallocHost(ptr, int size):
+def hipMallocHost(int size):
     """@brief Allocate pinned host memory [Deprecated]
     @param[out] ptr Pointer to the allocated host pinned memory
     @param[in]  size Requested memory size
@@ -10614,7 +10614,7 @@ def hipMallocHost(ptr, int size):
     """
     pass
 
-def hipMemAllocHost(ptr, int size):
+def hipMemAllocHost(int size):
     """@brief Allocate pinned host memory [Deprecated]
     @param[out] ptr Pointer to the allocated host pinned memory
     @param[in]  size Requested memory size
@@ -10624,7 +10624,7 @@ def hipMemAllocHost(ptr, int size):
     """
     pass
 
-def hipHostMalloc(ptr, int size, unsigned int flags):
+def hipHostMalloc(int size, unsigned int flags):
     """@brief Allocate device accessible page locked host memory
     @param[out] ptr Pointer to the allocated host pinned memory
     @param[in]  size Requested memory size
@@ -10635,7 +10635,7 @@ def hipHostMalloc(ptr, int size, unsigned int flags):
     """
     pass
 
-def hipMallocManaged(dev_ptr, int size, unsigned int flags):
+def hipMallocManaged(int size, unsigned int flags):
     """-------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
     @addtogroup MemoryM Managed Memory
@@ -10683,7 +10683,7 @@ def hipMemRangeGetAttribute(data, int data_size, attribute, dev_ptr, int count):
     """
     pass
 
-def hipMemRangeGetAttributes(data, int num_attributes, dev_ptr, int count):
+def hipMemRangeGetAttributes(int num_attributes, dev_ptr, int count):
     """@brief Query attributes of a given memory range in HIP.
     @param [in,out] data     a two-dimensional array containing pointers to memory locations
     where the result of each attribute query will be written to
@@ -10711,7 +10711,7 @@ def hipStreamAttachMemAsync(stream, dev_ptr, int length, unsigned int flags):
     """
     pass
 
-def hipMallocAsync(dev_ptr, int size, stream):
+def hipMallocAsync(int size, stream):
     """@brief Allocates memory with stream ordered semantics
     Inserts a memory allocation operation into @p stream.
     A pointer to the allocated memory is returned immediately in *dptr.
@@ -10905,7 +10905,7 @@ def hipMemPoolDestroy(mem_pool):
     """
     pass
 
-def hipMallocFromPoolAsync(dev_ptr, int size, mem_pool, stream):
+def hipMallocFromPoolAsync(int size, mem_pool, stream):
     """@brief Allocates memory from a specified pool with stream ordered semantics.
     Inserts an allocation operation into @p stream.
     A pointer to the allocated memory is returned immediately in @p dev_ptr.
@@ -10982,7 +10982,7 @@ def hipMemPoolExportPointer(export_data, dev_ptr):
     """
     pass
 
-def hipMemPoolImportPointer(dev_ptr, mem_pool, export_data):
+def hipMemPoolImportPointer(mem_pool, export_data):
     """@brief Import a memory pool allocation from another process.
     Returns in @p dev_ptr a pointer to the imported memory.
     The imported memory must not be accessed before the allocation operation completes
@@ -11004,7 +11004,7 @@ def hipMemPoolImportPointer(dev_ptr, mem_pool, export_data):
     """
     pass
 
-def hipHostAlloc(ptr, int size, unsigned int flags):
+def hipHostAlloc(int size, unsigned int flags):
     """@brief Allocate device accessible page locked host memory [Deprecated]
     @param[out] ptr Pointer to the allocated host pinned memory
     @param[in]  size Requested memory size
@@ -11015,7 +11015,7 @@ def hipHostAlloc(ptr, int size, unsigned int flags):
     """
     pass
 
-def hipHostGetDevicePointer(devPtr, hstPtr, unsigned int flags):
+def hipHostGetDevicePointer(hstPtr, unsigned int flags):
     """@brief Get Device pointer from Host Pointer allocated through hipHostMalloc
     @param[out] dstPtr Device Pointer mapped to passed host pointer
     @param[in]  hstPtr Host Pointer allocated through hipHostMalloc
@@ -11072,7 +11072,7 @@ def hipHostUnregister(hostPtr):
     """
     pass
 
-def hipMallocPitch(ptr, int width, int height):
+def hipMallocPitch(int width, int height):
     """Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
     The change in width size due to padding will be returned in *pitch.
@@ -11089,7 +11089,7 @@ def hipMallocPitch(ptr, int width, int height):
     cdef int pitch
     pass
 
-def hipMemAllocPitch(dptr, int widthInBytes, int height, unsigned int elementSizeBytes):
+def hipMemAllocPitch(int widthInBytes, int height, unsigned int elementSizeBytes):
     """Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
     The change in width size due to padding will be returned in *pitch.
@@ -11273,7 +11273,7 @@ def hipMemcpyDtoDAsync(dst, src, int sizeBytes, stream):
     """
     pass
 
-def hipModuleGetGlobal(dptr, hmod, const char * name):
+def hipModuleGetGlobal(hmod, const char * name):
     """@brief Returns a global pointer from a module.
     Returns in *dptr and *bytes the pointer and size of the global of name name located in module hmod.
     If no variable of that name exists, it returns hipErrorNotFound. Both parameters dptr and bytes are optional.
@@ -11287,7 +11287,7 @@ def hipModuleGetGlobal(dptr, hmod, const char * name):
     cdef int bytes
     pass
 
-def hipGetSymbolAddress(devPtr, symbol):
+def hipGetSymbolAddress(symbol):
     """@brief Gets device pointer associated with symbol on the device.
     @param[out]  devPtr  pointer to the device associated the symbole
     @param[in]   symbol  pointer to the symbole of the device
@@ -11901,7 +11901,7 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
     return hipDeviceDisablePeerAccess_____retval
 
 
-def hipMemGetAddressRange(pbase, dptr):
+def hipMemGetAddressRange(dptr):
     """@brief Get information on memory allocations.
     @param [out] pbase - BAse pointer address
     @param [out] psize - Size of allocation
@@ -12282,7 +12282,7 @@ def hipModuleLoadData(image):
     module = ihipModule_t.from_ptr(NULL,owner=True)
     pass
 
-def hipModuleLoadDataEx(image, unsigned int numOptions, optionValues):
+def hipModuleLoadDataEx(image, unsigned int numOptions):
     """@brief builds module from code object which resides in host memory. Image is pointer to that
     location. Options are not used. hipModuleLoadData is called.
     @param [in] image
@@ -12296,7 +12296,7 @@ def hipModuleLoadDataEx(image, unsigned int numOptions, optionValues):
     cdef chip.hipJitOption options
     pass
 
-def hipModuleLaunchKernel(f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, stream, kernelParams, extra):
+def hipModuleLaunchKernel(f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, stream):
     """@brief launches kernel f with launch parameters and shared memory on stream with arguments passed
     to kernelparams or extra
     @param [in] f         Kernel to launch.
@@ -12322,7 +12322,7 @@ def hipModuleLaunchKernel(f, unsigned int gridDimX, unsigned int gridDimY, unsig
     """
     pass
 
-def hipLaunchCooperativeKernel(f, gridDim, blockDimX, kernelParams, unsigned int sharedMemBytes, stream):
+def hipLaunchCooperativeKernel(f, gridDim, blockDimX, unsigned int sharedMemBytes, stream):
     """@brief launches kernel f with launch parameters and shared memory on stream with arguments passed
     to kernelparams or extra, where thread blocks can cooperate and synchronize as they execute
     @param [in] f         Kernel to launch.
@@ -12505,7 +12505,7 @@ def hipLaunchByPtr(func):
     """
     pass
 
-def hipLaunchKernel(function_address, numBlocks, dimBlocks, args, int sharedMemBytes, stream):
+def hipLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemBytes, stream):
     """@brief C compliant kernel launch API
     @param [in] function_address - kernel stub function pointer.
     @param [in] numBlocks - number of blocks
@@ -12538,7 +12538,7 @@ def hipDrvMemcpy2DUnaligned(pCopy):
     """
     pass
 
-def hipExtLaunchKernel(function_address, numBlocks, dimBlocks, args, int sharedMemBytes, stream, startEvent, stopEvent, int flags):
+def hipExtLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemBytes, stream, startEvent, stopEvent, int flags):
     """@brief Launches kernel from the pointer address, with arguments and shared memory on stream.
     @param [in] function_address pointer to the Kernel to launch.
     @param [in] numBlocks number of blocks.
@@ -12727,7 +12727,7 @@ def hipUnbindTexture(tex):
     """
     pass
 
-def hipTexRefGetAddress(dev_ptr, texRef):
+def hipTexRefGetAddress(texRef):
     """
     """
     pass
@@ -12908,7 +12908,7 @@ def hipStreamGetCaptureInfo(stream):
     cdef unsigned long long pId
     pass
 
-def hipStreamGetCaptureInfo_v2(stream, dependencies_out):
+def hipStreamGetCaptureInfo_v2(stream):
     """@brief Get stream's capture state
     @param [in] stream - Stream under capture.
     @param [out] captureStatus_out - returns current status of the capture.
@@ -13808,7 +13808,7 @@ def hipMemAddressFree(devPtr, int size):
     """
     pass
 
-def hipMemAddressReserve(ptr, int size, int alignment, addr, unsigned long long flags):
+def hipMemAddressReserve(int size, int alignment, addr, unsigned long long flags):
     """@brief Reserves an address range
     @param [out] ptr - starting address of the reserved range.
     @param [in] size - size of the reservation.
@@ -14035,7 +14035,7 @@ def hipGraphicsSubResourceGetMappedArray(resource, unsigned int arrayIndex, unsi
     array = hipArray.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphicsResourceGetMappedPointer(devPtr, resource):
+def hipGraphicsResourceGetMappedPointer(resource):
     """
     """
     cdef int size
@@ -14194,12 +14194,12 @@ def hipEventRecord_spt(event, stream):
     """
     pass
 
-def hipLaunchCooperativeKernel_spt(f, gridDim, blockDim, kernelParams, uint32_t sharedMemBytes, hStream):
+def hipLaunchCooperativeKernel_spt(f, gridDim, blockDim, uint32_t sharedMemBytes, hStream):
     """
     """
     pass
 
-def hipLaunchKernel_spt(function_address, numBlocks, dimBlocks, args, int sharedMemBytes, stream):
+def hipLaunchKernel_spt(function_address, numBlocks, dimBlocks, int sharedMemBytes, stream):
     """
     """
     pass
@@ -14233,7 +14233,7 @@ def hipStreamGetCaptureInfo_spt(stream):
     cdef unsigned long long pId
     pass
 
-def hipStreamGetCaptureInfo_v2_spt(stream, dependencies_out):
+def hipStreamGetCaptureInfo_v2_spt(stream):
     """
     """
     cdef chip.hipStreamCaptureStatus captureStatus_out
