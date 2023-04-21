@@ -331,7 +331,7 @@ class Typed:
         return self._type_handler.const_qualifiers(
             postorder=postorder,canonical=canonical)
 
-    def lookup_innermost_type(self):
+    def lookup_innermost_typeref(self):
         from . import tree
 
         curr = self

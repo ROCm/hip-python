@@ -209,12 +209,11 @@ if HIP_PYTHON_SETUP_GENERATE:
         2. All ``void``, ``struct``, ``union``, ``enum`` double (``**``) pointers are
         return values that are created internally by the respective function.
         """
-        func: Function = node.parent
         if (
             node.is_pointer_to_record(degree=2)
+            or node.is_pointer_to_enum(degree=1)
+            or (node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1))
         ):
-            return PointerParamIntent.OUT
-        elif node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1):
             return PointerParamIntent.OUT
         return PointerParamIntent.IN
     
@@ -236,11 +235,11 @@ if HIP_PYTHON_SETUP_GENERATE:
         return values that are created internally by the respective function.
         """
         if isinstance(node,Parm):
-            func: Function = node.parent
             if ( 
                 node.is_pointer_to_basic_type(degree=1)
-                and node.is_pointer_to_record(degree=1)
-                and node.is_pointer_to_record(degree=2)
+                or node.is_pointer_to_enum(degree=1)
+                or node.is_pointer_to_record(degree=1)
+                or node.is_pointer_to_record(degree=2)
             ):
                 return 0
         elif isinstance(node,Field):
