@@ -33,9 +33,6 @@ HIP_PLATFORM = os.environ.get("HIP_PLATFORM", "amd")
 if HIP_PLATFORM not in ("amd", "hcc"):
     raise RuntimeError("Currently only HIP_PLATFORM=amd is supported")
 
-import clang.cindex
-print(f"{clang.cindex.__file__=}")
-
 class HipPlatform(enum.IntEnum):
     AMD = 0
     NVIDIA = 1
