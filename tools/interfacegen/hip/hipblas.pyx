@@ -353,7 +353,7 @@ class hipblasInt8Datatype_t(enum.IntEnum):
     HIPBLAS_INT8_DATATYPE_INT8 = chipblas.HIPBLAS_INT8_DATATYPE_INT8
     HIPBLAS_INT8_DATATYPE_PACK_INT8x4 = chipblas.HIPBLAS_INT8_DATATYPE_PACK_INT8x4
 
-def hipblasCreate(handle):
+def hipblasCreate():
     """! \brief Create hipblas handle. */
     """
     pass
@@ -368,7 +368,7 @@ def hipblasSetStream(handle, streamId):
     """
     pass
 
-def hipblasGetStream(handle, streamId):
+def hipblasGetStream(handle):
     """! \brief Get stream[0] for handle */
     """
     pass

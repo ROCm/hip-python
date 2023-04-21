@@ -567,17 +567,18 @@ cdef void* {funptr_name} = NULL
             parm_name = parm.cython_name
             assert isinstance(parm, tree.Parm)
             if parm.is_autoconverted_by_cython:
-                args.append(parm.cython_repr)
+                args.append(parm.cython_repr) # x
             elif not parm.is_return_value:  # out arg
-                args.append(parm_name)
+                args.append(parm_name) # x
         name = self.renamer(self.name)
         return f"def {name}({', '.join(args)}):\n" + textwrap.indent(
             self._raw_comment_as_docstring(), indent
         )
 
-    def _render_python_interface_head(self,cprefix: str):
+    def _analyze_parms(self,cprefix: str):
         from . import tree
 
+        sig_args = []
         out_args = []
         c_interface_call_args = []
         prolog = []
@@ -587,9 +588,7 @@ cdef void* {funptr_name} = NULL
             parm_name = parm.cython_name
             if parm.is_return_value:  # out arg
                 assert isinstance(parm, tree.Parm)
-                if ( 
-                     parm.is_pointer_to_basic_type(degree=1)
-                   ):
+                if parm.is_pointer_to_basic_type(degree=1):
                     typehandler = parm._type_handler.create_from_layer(
                         1, canonical=True
                     )
@@ -609,15 +608,26 @@ cdef void* {funptr_name} = NULL
                     out_args.append(parm_name)
             elif parm.is_autoconverted_by_cython:
                 c_interface_call_args.append(f"{parm_name}")
-            elif parm.is_pointer_to_record(degree=1):
+                sig_args.append(parm.cython_repr)
+            elif parm.is_indirection:
+                if parm.is_pointer_to_record(degree=1):
+                    sig_args.append(parm_name)
+                    #sig_args.append(parm.cython_repr)
+                    #c_interface_call_args.append(f"{parm_name}._ptr")
+                if parm.is_pointer_to_enum(degree=1):
+                    sig_args.append(parm_name)
+                    #sig_args.append(parm.cython_repr)
+                    #c_interface_call_args.append(f"&{parm_name}.value")
                 #py2c_conversions.append(parm_name)
-                pass
+            else:
+                sig_args.append(parm_name)
         
         fully_specified = len(list(self.parms)) == len(c_interface_call_args)
         setattr(self,"is_python_code_complete",fully_specified)
         
         return (
             fully_specified,
+            sig_args,
             out_args,
             c_interface_call_args,
             prolog,
@@ -661,9 +671,11 @@ cdef void* {funptr_name} = NULL
         Returns:
             str: Rendered Python interface.
         """
-        result = self._render_python_signature().rstrip() + "\n"
-        (fully_specified, out_args, call_args, 
-         prolog, epilog) = self._render_python_interface_head(cprefix)
+        (fully_specified, sig_args, out_args, call_args, prolog, epilog) = self._analyze_parms(cprefix)
+        
+        result = f"def {self.cython_name}({', '.join(sig_args)}):\n" + textwrap.indent(
+            self._raw_comment_as_docstring(), indent
+        ).rstrip() + "\n"
         if len(prolog):
             result += textwrap.indent("\n".join(prolog), indent).rstrip() + "\n"
         if fully_specified:
