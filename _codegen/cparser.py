@@ -39,7 +39,7 @@ class CParser:
     """Parser for C APIs."""
 
     def __init__(
-        self, filename: str, append_cflags: list[str] = [], unsaved_files=None
+        self, filename: str, append_cflags: list = [], unsaved_files=None
     ):
         """Parse the specified file.
 

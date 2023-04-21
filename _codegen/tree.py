@@ -923,7 +923,7 @@ def from_libclang_translation_unit(
     """Create a tree from a libclang translation unit."""
 
     def first_child_cursors_of_kinds_(
-        cursor: clang.cindex.Cursor, kinds: tuple[clang.cindex.CursorKind]
+        cursor: clang.cindex.Cursor, kinds: tuple
     ):
         """Returns the first typeref child or None."""
         return next(
