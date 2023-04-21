@@ -210,9 +210,11 @@ if HIP_PYTHON_SETUP_GENERATE:
         return values that are created internally by the respective function.
         """
         func: Function = node.parent
-        if node.is_double_pointer_to_non_const_type:
+        if (
+            node.is_pointer_to_record(degree=2)
+        ):
             return PointerParamIntent.OUT
-        if node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1):
+        elif node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1):
             return PointerParamIntent.OUT
         return PointerParamIntent.IN
     
@@ -235,9 +237,11 @@ if HIP_PYTHON_SETUP_GENERATE:
         """
         if isinstance(node,Parm):
             func: Function = node.parent
-            if node.is_double_pointer_to_non_const_type:
-                return 0
-            if node.is_pointer_to_basic_type(degree=1):
+            if ( 
+                node.is_pointer_to_basic_type(degree=1)
+                and node.is_pointer_to_record(degree=1)
+                and node.is_pointer_to_record(degree=2)
+            ):
                 return 0
         elif isinstance(node,Field):
             pass # nothing to do

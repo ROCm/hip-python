@@ -9462,7 +9462,7 @@ def hipInit(unsigned int flags):
     return hipInit_____retval
 
 
-def hipDriverGetVersion():
+def hipDriverGetVersion(driverVersion):
     """@brief Returns the approximate HIP driver version.
     @param [out] driverVersion
     @returns #hipSuccess, #hipErrorInvalidValue
@@ -9473,12 +9473,9 @@ def hipDriverGetVersion():
     use arch feature flags to test device capabilities or conditional compilation.
     @see hipRuntimeGetVersion
     """
-    cdef int driverVersion
-    hipDriverGetVersion_____retval = hipError_t(chip.hipDriverGetVersion(&driverVersion))    # fully specified
-    return (hipDriverGetVersion_____retval,driverVersion)
+    pass
 
-
-def hipRuntimeGetVersion():
+def hipRuntimeGetVersion(runtimeVersion):
     """@brief Returns the approximate HIP Runtime version.
     @param [out] runtimeVersion
     @returns #hipSuccess, #hipErrorInvalidValue
@@ -9488,34 +9485,24 @@ def hipRuntimeGetVersion():
     And there is no mapping/correlation between HIP version and CUDA version.
     @see hipDriverGetVersion
     """
-    cdef int runtimeVersion
-    hipRuntimeGetVersion_____retval = hipError_t(chip.hipRuntimeGetVersion(&runtimeVersion))    # fully specified
-    return (hipRuntimeGetVersion_____retval,runtimeVersion)
+    pass
 
-
-def hipDeviceGet(int ordinal):
+def hipDeviceGet(device, int ordinal):
     """@brief Returns a handle to a compute device
     @param [out] device
     @param [in] ordinal
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
-    cdef int device
-    hipDeviceGet_____retval = hipError_t(chip.hipDeviceGet(&device,ordinal))    # fully specified
-    return (hipDeviceGet_____retval,device)
+    pass
 
-
-def hipDeviceComputeCapability(hipDevice_t device):
+def hipDeviceComputeCapability(major, minor, hipDevice_t device):
     """@brief Returns the compute capability of the device
     @param [out] major
     @param [out] minor
     @param [in] device
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
-    cdef int major
-    cdef int minor
-    hipDeviceComputeCapability_____retval = hipError_t(chip.hipDeviceComputeCapability(&major,&minor,device))    # fully specified
-    return (hipDeviceComputeCapability_____retval,major,minor)
-
+    pass
 
 def hipDeviceGetName(char * name, int len, hipDevice_t device):
     """@brief Returns an identifer string for the device.
@@ -9539,7 +9526,7 @@ def hipDeviceGetUuid(uuid, hipDevice_t device):
     """
     pass
 
-def hipDeviceGetP2PAttribute(attr, int srcDevice, int dstDevice):
+def hipDeviceGetP2PAttribute(value, attr, int srcDevice, int dstDevice):
     """@brief Returns a value for attr of link between two devices
     @param [out] value
     @param [in] attr
@@ -9547,7 +9534,6 @@ def hipDeviceGetP2PAttribute(attr, int srcDevice, int dstDevice):
     @param [in] dstDevice
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
-    cdef int value
     pass
 
 def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
@@ -9561,27 +9547,21 @@ def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
     return hipDeviceGetPCIBusId_____retval
 
 
-def hipDeviceGetByPCIBusId(const char * pciBusId):
+def hipDeviceGetByPCIBusId(device, const char * pciBusId):
     """@brief Returns a handle to a compute device.
     @param [out] device handle
     @param [in] PCI Bus ID
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
-    cdef int device
-    hipDeviceGetByPCIBusId_____retval = hipError_t(chip.hipDeviceGetByPCIBusId(&device,pciBusId))    # fully specified
-    return (hipDeviceGetByPCIBusId_____retval,device)
+    pass
 
-
-def hipDeviceTotalMem(hipDevice_t device):
+def hipDeviceTotalMem(bytes, hipDevice_t device):
     """@brief Returns the total amount of memory on the device.
     @param [out] bytes
     @param [in] device
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
-    cdef int bytes
-    hipDeviceTotalMem_____retval = hipError_t(chip.hipDeviceTotalMem(&bytes,device))    # fully specified
-    return (hipDeviceTotalMem_____retval,bytes)
-
+    pass
 
 def hipDeviceSynchronize():
     """@}
@@ -9637,7 +9617,7 @@ def hipSetDevice(int deviceId):
     return hipSetDevice_____retval
 
 
-def hipGetDevice():
+def hipGetDevice(deviceId):
     """@brief Return the default device id for the calling host thread.
     @param [out] device *device is written with the default device
     HIP maintains an default device for each thread using thread-local-storage.
@@ -9646,12 +9626,9 @@ def hipGetDevice():
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     @see hipSetDevice, hipGetDevicesizeBytes
     """
-    cdef int deviceId
-    hipGetDevice_____retval = hipError_t(chip.hipGetDevice(&deviceId))    # fully specified
-    return (hipGetDevice_____retval,deviceId)
+    pass
 
-
-def hipGetDeviceCount():
+def hipGetDeviceCount(count):
     """@brief Return number of compute-capable devices.
     @param [output] count Returns number of compute-capable devices.
     @returns #hipSuccess, #hipErrorNoDevice
@@ -9659,22 +9636,18 @@ def hipGetDeviceCount():
     are no such devices, then @ref hipGetDeviceCount will return #hipErrorNoDevice. If 1 or more
     devices can be found, then hipGetDeviceCount returns #hipSuccess.
     """
-    cdef int count
-    hipGetDeviceCount_____retval = hipError_t(chip.hipGetDeviceCount(&count))    # fully specified
-    return (hipGetDeviceCount_____retval,count)
+    pass
 
-
-def hipDeviceGetAttribute(attr, int deviceId):
+def hipDeviceGetAttribute(pi, attr, int deviceId):
     """@brief Query for a specific device attribute.
     @param [out] pi pointer to value to return
     @param [in] attr attribute to query
     @param [in] deviceId which device to query for information
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
-    cdef int pi
     pass
 
-def hipDeviceGetDefaultMemPool(mem_pool, int device):
+def hipDeviceGetDefaultMemPool(int device):
     """@brief Returns the default memory pool of the specified device
     @param [out] mem_pool Default memory pool to return
     @param [in] device    Device index for query the default memory pool
@@ -9684,7 +9657,10 @@ def hipDeviceGetDefaultMemPool(mem_pool, int device):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
+    hipDeviceGetDefaultMemPool_____retval = hipError_t(chip.hipDeviceGetDefaultMemPool(&mem_pool._ptr,device))    # fully specified
+    return (hipDeviceGetDefaultMemPool_____retval,mem_pool)
+
 
 def hipDeviceSetMemPool(int device, mem_pool):
     """@brief Sets the current memory pool of a device
@@ -9703,7 +9679,7 @@ def hipDeviceSetMemPool(int device, mem_pool):
     """
     pass
 
-def hipDeviceGetMemPool(mem_pool, int device):
+def hipDeviceGetMemPool(int device):
     """@brief Gets the current memory pool for the specified device
     Returns the last pool provided to @p hipDeviceSetMemPool for this device
     or the device's default memory pool if @p hipDeviceSetMemPool has never been called.
@@ -9717,7 +9693,10 @@ def hipDeviceGetMemPool(mem_pool, int device):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
+    hipDeviceGetMemPool_____retval = hipError_t(chip.hipDeviceGetMemPool(&mem_pool._ptr,device))    # fully specified
+    return (hipDeviceGetMemPool_____retval,mem_pool)
+
 
 def hipGetDeviceProperties(prop, int deviceId):
     """@brief Returns device properties.
@@ -9749,14 +9728,13 @@ def hipDeviceGetCacheConfig(cacheConfig):
     """
     pass
 
-def hipDeviceGetLimit(limit):
+def hipDeviceGetLimit(pValue, limit):
     """@brief Get Resource limits of current device
     @param [out] pValue
     @param [in]  limit
     @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
     Note: Currently, only hipLimitMallocHeapSize is available
     """
-    cdef int pValue
     pass
 
 def hipDeviceSetLimit(limit, int value):
@@ -9776,15 +9754,12 @@ def hipDeviceGetSharedMemConfig(pConfig):
     """
     pass
 
-def hipGetDeviceFlags():
+def hipGetDeviceFlags(flags):
     """@brief Gets the flags set for current device
     @param [out] flags
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
-    cdef unsigned int flags
-    hipGetDeviceFlags_____retval = hipError_t(chip.hipGetDeviceFlags(&flags))    # fully specified
-    return (hipGetDeviceFlags_____retval,flags)
-
+    pass
 
 def hipDeviceSetSharedMemConfig(config):
     """@brief The bank width of shared memory on current device is set
@@ -9816,16 +9791,15 @@ def hipSetDeviceFlags(unsigned int flags):
     return hipSetDeviceFlags_____retval
 
 
-def hipChooseDevice(prop):
+def hipChooseDevice(device, prop):
     """@brief Device which matches hipDeviceProp_t is returned
     @param [out] device ID
     @param [in]  device properties pointer
     @returns #hipSuccess, #hipErrorInvalidValue
     """
-    cdef int device
     pass
 
-def hipExtGetLinkTypeAndHopCount(int device1, int device2):
+def hipExtGetLinkTypeAndHopCount(int device1, int device2, linktype, hopcount):
     """@brief Returns the link type and hop count between two devices
     @param [in] device1 Ordinal for device1
     @param [in] device2 Ordinal for device2
@@ -9834,11 +9808,7 @@ def hipExtGetLinkTypeAndHopCount(int device1, int device2):
     Queries and returns the HSA link type and the hop count between the two specified devices.
     @returns #hipSuccess, #hipInvalidDevice, #hipErrorRuntimeOther
     """
-    cdef unsigned int linktype
-    cdef unsigned int hopcount
-    hipExtGetLinkTypeAndHopCount_____retval = hipError_t(chip.hipExtGetLinkTypeAndHopCount(device1,device2,&linktype,&hopcount))    # fully specified
-    return (hipExtGetLinkTypeAndHopCount_____retval,linktype,hopcount)
-
+    pass
 
 def hipIpcGetMemHandle(handle, devPtr):
     """@brief Gets an interprocess memory handle for an existing device memory
@@ -9920,7 +9890,7 @@ def hipIpcGetEventHandle(handle, event):
     """
     pass
 
-def hipIpcOpenEventHandle(event, handle):
+def hipIpcOpenEventHandle(handle):
     """@brief Opens an interprocess event handles.
     Opens an interprocess event handle exported from another process with cudaIpcGetEventHandle. The returned
     hipEvent_t behaves like a locally created event with the hipEventDisableTiming flag specified. This event
@@ -9931,6 +9901,7 @@ def hipIpcOpenEventHandle(event, handle):
     @param[in]   handle The opaque interprocess handle to open
     @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext
     """
+    event = ihipEvent_t.from_ptr(NULL,owner=True)
     pass
 
 def hipFuncSetAttribute(func, attr, int value):
@@ -10030,7 +10001,7 @@ def hipDrvGetErrorString(hipError, errorString):
     """
     pass
 
-def hipStreamCreate(stream):
+def hipStreamCreate():
     """@brief Create an asynchronous stream.
     @param[in, out] stream Valid pointer to hipStream_t.  This function writes the memory with the
     newly created stream.
@@ -10042,9 +10013,12 @@ def hipStreamCreate(stream):
     @return #hipSuccess, #hipErrorInvalidValue
     @see hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
-    pass
+    stream = ihipStream_t.from_ptr(NULL,owner=True)
+    hipStreamCreate_____retval = hipError_t(chip.hipStreamCreate(&stream._ptr))    # fully specified
+    return (hipStreamCreate_____retval,stream)
 
-def hipStreamCreateWithFlags(stream, unsigned int flags):
+
+def hipStreamCreateWithFlags(unsigned int flags):
     """@brief Create an asynchronous stream.
     @param[in, out] stream Pointer to new stream
     @param[in ] flags to control stream creation.
@@ -10056,9 +10030,12 @@ def hipStreamCreateWithFlags(stream, unsigned int flags):
     stream.  See #hipStreamDefault, #hipStreamNonBlocking.
     @see hipStreamCreate, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
-    pass
+    stream = ihipStream_t.from_ptr(NULL,owner=True)
+    hipStreamCreateWithFlags_____retval = hipError_t(chip.hipStreamCreateWithFlags(&stream._ptr,flags))    # fully specified
+    return (hipStreamCreateWithFlags_____retval,stream)
 
-def hipStreamCreateWithPriority(stream, unsigned int flags, int priority):
+
+def hipStreamCreateWithPriority(unsigned int flags, int priority):
     """@brief Create an asynchronous stream with the specified priority.
     @param[in, out] stream Pointer to new stream
     @param[in ] flags to control stream creation.
@@ -10071,9 +10048,12 @@ def hipStreamCreateWithPriority(stream, unsigned int flags, int priority):
     behavior of the stream.  See #hipStreamDefault, #hipStreamNonBlocking.
     @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
-    pass
+    stream = ihipStream_t.from_ptr(NULL,owner=True)
+    hipStreamCreateWithPriority_____retval = hipError_t(chip.hipStreamCreateWithPriority(&stream._ptr,flags,priority))    # fully specified
+    return (hipStreamCreateWithPriority_____retval,stream)
 
-def hipDeviceGetStreamPriorityRange():
+
+def hipDeviceGetStreamPriorityRange(leastPriority, greatestPriority):
     """@brief Returns numerical values that correspond to the least and greatest stream priority.
     @param[in, out] leastPriority pointer in which value corresponding to least priority is returned.
     @param[in, out] greatestPriority pointer in which value corresponding to greatest priority is returned.
@@ -10084,11 +10064,7 @@ def hipDeviceGetStreamPriorityRange():
     that is outside the the meaningful range as specified by this API, the priority is automatically
     clamped to within the valid range.
     """
-    cdef int leastPriority
-    cdef int greatestPriority
-    hipDeviceGetStreamPriorityRange_____retval = hipError_t(chip.hipDeviceGetStreamPriorityRange(&leastPriority,&greatestPriority))    # fully specified
-    return (hipDeviceGetStreamPriorityRange_____retval,leastPriority,greatestPriority)
-
+    pass
 
 def hipStreamDestroy(stream):
     """@brief Destroys the specified stream.
@@ -10148,7 +10124,7 @@ def hipStreamWaitEvent(stream, event, unsigned int flags):
     """
     pass
 
-def hipStreamGetFlags(stream):
+def hipStreamGetFlags(stream, flags):
     """@brief Return flags associated with this stream.
     @param[in] stream stream to be queried
     @param[in,out] flags Pointer to an unsigned integer in which the stream's flags are returned
@@ -10157,10 +10133,9 @@ def hipStreamGetFlags(stream):
     Return flags associated with this stream in *@p flags.
     @see hipStreamCreateWithFlags
     """
-    cdef unsigned int flags
     pass
 
-def hipStreamGetPriority(stream):
+def hipStreamGetPriority(stream, priority):
     """@brief Query the priority of a stream.
     @param[in] stream stream to be queried
     @param[in,out] priority Pointer to an unsigned integer in which the stream's priority is returned
@@ -10169,10 +10144,9 @@ def hipStreamGetPriority(stream):
     Query the priority of a stream. The priority is returned in in priority.
     @see hipStreamCreateWithFlags
     """
-    cdef int priority
     pass
 
-def hipExtStreamCreateWithCUMask(stream, uint32_t cuMaskSize):
+def hipExtStreamCreateWithCUMask(uint32_t cuMaskSize, cuMask):
     """@brief Create an asynchronous stream with the specified CU mask.
     @param[in, out] stream Pointer to new stream
     @param[in ] cuMaskSize Size of CU mask bit array passed in.
@@ -10187,10 +10161,10 @@ def hipExtStreamCreateWithCUMask(stream, uint32_t cuMaskSize):
     To release the memory used by the stream, application must call hipStreamDestroy.
     @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
-    cdef const unsigned int cuMask
+    stream = ihipStream_t.from_ptr(NULL,owner=True)
     pass
 
-def hipExtStreamGetCUMask(stream, uint32_t cuMaskSize):
+def hipExtStreamGetCUMask(stream, uint32_t cuMaskSize, cuMask):
     """@brief Get CU mask associated with an asynchronous stream
     @param[in] stream stream to be queried
     @param[in] cuMaskSize number of the block of memories (uint32_t *) allocated by user
@@ -10200,7 +10174,6 @@ def hipExtStreamGetCUMask(stream, uint32_t cuMaskSize):
     @return #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
     @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
-    cdef unsigned int cuMask
     pass
 
 
@@ -10329,7 +10302,7 @@ def hipStreamWriteValue64(stream, ptr, uint64_t value, unsigned int flags):
     """
     pass
 
-def hipEventCreateWithFlags(event, unsigned int flags):
+def hipEventCreateWithFlags(unsigned int flags):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -10354,9 +10327,12 @@ def hipEventCreateWithFlags(event, unsigned int flags):
      #hipErrorLaunchFailure, #hipErrorOutOfMemory
     @see hipEventCreate, hipEventSynchronize, hipEventDestroy, hipEventElapsedTime
     """
-    pass
+    event = ihipEvent_t.from_ptr(NULL,owner=True)
+    hipEventCreateWithFlags_____retval = hipError_t(chip.hipEventCreateWithFlags(&event._ptr,flags))    # fully specified
+    return (hipEventCreateWithFlags_____retval,event)
 
-def hipEventCreate(event):
+
+def hipEventCreate():
     """Create an event
     @param[in,out] event Returns the newly created event.
     @returns #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
@@ -10364,7 +10340,10 @@ def hipEventCreate(event):
     @see hipEventCreateWithFlags, hipEventRecord, hipEventQuery, hipEventSynchronize,
     hipEventDestroy, hipEventElapsedTime
     """
-    pass
+    event = ihipEvent_t.from_ptr(NULL,owner=True)
+    hipEventCreate_____retval = hipError_t(chip.hipEventCreate(&event._ptr))    # fully specified
+    return (hipEventCreate_____retval,event)
+
 
 def hipEventRecord(event, stream):
     """
@@ -10399,7 +10378,7 @@ def hipEventSynchronize(event):
     """
     pass
 
-def hipEventElapsedTime(start, stop):
+def hipEventElapsedTime(ms, start, stop):
     """@brief Return the elapsed time between two events.
     @param[out] ms : Return time between start and stop in ms.
     @param[in]   start : Start event.
@@ -10421,7 +10400,6 @@ def hipEventElapsedTime(start, stop):
     @see hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
     hipEventSynchronize
     """
-    cdef float ms
     pass
 
 def hipEventQuery(event):
@@ -10651,7 +10629,7 @@ def hipMemRangeGetAttribute(data, int data_size, attribute, dev_ptr, int count):
     """
     pass
 
-def hipMemRangeGetAttributes(data, attributes, int num_attributes, dev_ptr, int count):
+def hipMemRangeGetAttributes(data, data_sizes, attributes, int num_attributes, dev_ptr, int count):
     """@brief Query attributes of a given memory range in HIP.
     @param [in,out] data     a two-dimensional array containing pointers to memory locations
     where the result of each attribute query will be written to
@@ -10663,7 +10641,6 @@ def hipMemRangeGetAttributes(data, attributes, int num_attributes, dev_ptr, int 
     @param [in] count        size of the range to query
     @returns #hipSuccess, #hipErrorInvalidValue
     """
-    cdef int data_sizes
     pass
 
 def hipStreamAttachMemAsync(stream, dev_ptr, int length, unsigned int flags):
@@ -10835,7 +10812,7 @@ def hipMemPoolGetAccess(flags, mem_pool, location):
     """
     pass
 
-def hipMemPoolCreate(mem_pool, pool_props):
+def hipMemPoolCreate(pool_props):
     """@brief Creates a memory pool
     Creates a HIP memory pool and returns the handle in @p mem_pool. The @p pool_props determines
     the properties of the pool such as the backing device and IPC capabilities.
@@ -10849,6 +10826,7 @@ def hipMemPoolCreate(mem_pool, pool_props):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
     pass
 
 def hipMemPoolDestroy(mem_pool):
@@ -10915,7 +10893,7 @@ def hipMemPoolExportToShareableHandle(shared_handle, mem_pool, handle_type, unsi
     """
     pass
 
-def hipMemPoolImportFromShareableHandle(mem_pool, shared_handle, handle_type, unsigned int flags):
+def hipMemPoolImportFromShareableHandle(shared_handle, handle_type, unsigned int flags):
     """@brief Imports a memory pool from a shared handle.
     Specific allocations can be imported from the imported pool with @p hipMemPoolImportPointer.
     @note Imported memory pools do not support creating new allocations.
@@ -10930,6 +10908,7 @@ def hipMemPoolImportFromShareableHandle(mem_pool, shared_handle, handle_type, un
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
     pass
 
 def hipMemPoolExportPointer(export_data, dev_ptr):
@@ -10989,14 +10968,13 @@ def hipHostGetDevicePointer(devPtr, hstPtr, unsigned int flags):
     """
     pass
 
-def hipHostGetFlags(hostPtr):
+def hipHostGetFlags(flagsPtr, hostPtr):
     """@brief Return flags associated with host pointer
     @param[out] flagsPtr Memory location to store flags
     @param[in]  hostPtr Host Pointer allocated through hipHostMalloc
     @return #hipSuccess, #hipErrorInvalidValue
     @see hipHostMalloc
     """
-    cdef unsigned int flagsPtr
     pass
 
 def hipHostRegister(hostPtr, int sizeBytes, unsigned int flags):
@@ -11036,7 +11014,7 @@ def hipHostUnregister(hostPtr):
     """
     pass
 
-def hipMallocPitch(ptr, int width, int height):
+def hipMallocPitch(ptr, pitch, int width, int height):
     """Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
     The change in width size due to padding will be returned in *pitch.
@@ -11050,10 +11028,9 @@ def hipMallocPitch(ptr, int width, int height):
     @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
     hipMalloc3DArray, hipHostMalloc
     """
-    cdef int pitch
     pass
 
-def hipMemAllocPitch(dptr, int widthInBytes, int height, unsigned int elementSizeBytes):
+def hipMemAllocPitch(dptr, pitch, int widthInBytes, int height, unsigned int elementSizeBytes):
     """Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
     The change in width size due to padding will be returned in *pitch.
@@ -11070,7 +11047,6 @@ def hipMemAllocPitch(dptr, int widthInBytes, int height, unsigned int elementSiz
     @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
     hipMalloc3DArray, hipHostMalloc
     """
-    cdef int pitch
     pass
 
 def hipFree(ptr):
@@ -11237,7 +11213,7 @@ def hipMemcpyDtoDAsync(dst, src, int sizeBytes, stream):
     """
     pass
 
-def hipModuleGetGlobal(dptr, hmod, const char * name):
+def hipModuleGetGlobal(dptr, bytes, hmod, const char * name):
     """@brief Returns a global pointer from a module.
     Returns in *dptr and *bytes the pointer and size of the global of name name located in module hmod.
     If no variable of that name exists, it returns hipErrorNotFound. Both parameters dptr and bytes are optional.
@@ -11248,7 +11224,6 @@ def hipModuleGetGlobal(dptr, hmod, const char * name):
     @param[in]   name  Name of global to retrieve
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
     """
-    cdef int bytes
     pass
 
 def hipGetSymbolAddress(devPtr, symbol):
@@ -11259,13 +11234,12 @@ def hipGetSymbolAddress(devPtr, symbol):
     """
     pass
 
-def hipGetSymbolSize(symbol):
+def hipGetSymbolSize(size, symbol):
     """@brief Gets the size of the given symbol on the device.
     @param[in]   symbol  pointer to the device symbole
     @param[out]  size  pointer to the size
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    cdef int size
     pass
 
 def hipMemcpyToSymbol(symbol, src, int sizeBytes, int offset, kind):
@@ -11487,7 +11461,7 @@ def hipMemset3DAsync(pitchedDevPtr, int value, extent, stream):
     """
     pass
 
-def hipMemGetInfo():
+def hipMemGetInfo(free, total):
     """@brief Query memory info.
     Return snapshot of free memory, and total allocatable memory on the device.
     Returns in *free a snapshot of the current free memory.
@@ -11495,19 +11469,14 @@ def hipMemGetInfo():
     @warning On HCC, the free memory only accounts for memory allocated by this process and may be
     optimistic.
     """
-    cdef int free
-    cdef int total
-    hipMemGetInfo_____retval = hipError_t(chip.hipMemGetInfo(&free,&total))    # fully specified
-    return (hipMemGetInfo_____retval,free,total)
-
-
-def hipMemPtrGetInfo(ptr):
-    """
-    """
-    cdef int size
     pass
 
-def hipMallocArray(array, desc, int width, int height, unsigned int flags):
+def hipMemPtrGetInfo(ptr, size):
+    """
+    """
+    pass
+
+def hipMallocArray(desc, int width, int height, unsigned int flags):
     """@brief Allocate an array on the device.
     @param[out]  array  Pointer to allocated array in device memory
     @param[in]   desc   Requested channel format
@@ -11517,11 +11486,13 @@ def hipMallocArray(array, desc, int width, int height, unsigned int flags):
     @return      #hipSuccess, #hipErrorOutOfMemory
     @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
     """
+    array = hipArray.from_ptr(NULL,owner=True)
     pass
 
-def hipArrayCreate(pHandle, pAllocateArray):
+def hipArrayCreate(pAllocateArray):
     """
     """
+    pHandle = hipArray.from_ptr(NULL,owner=True)
     pass
 
 def hipArrayDestroy(array):
@@ -11529,9 +11500,10 @@ def hipArrayDestroy(array):
     """
     pass
 
-def hipArray3DCreate(array, pAllocateArray):
+def hipArray3DCreate(pAllocateArray):
     """
     """
+    array = hipArray.from_ptr(NULL,owner=True)
     pass
 
 def hipMalloc3D(pitchedDevPtr, extent):
@@ -11554,7 +11526,7 @@ def hipFreeMipmappedArray(mipmappedArray):
     """
     pass
 
-def hipMalloc3DArray(array, desc, extent, unsigned int flags):
+def hipMalloc3DArray(desc, extent, unsigned int flags):
     """@brief Allocate an array on the device.
     @param[out]  array  Pointer to allocated array in device memory
     @param[in]   desc   Requested channel format
@@ -11563,9 +11535,10 @@ def hipMalloc3DArray(array, desc, extent, unsigned int flags):
     @return      #hipSuccess, #hipErrorOutOfMemory
     @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
     """
+    array = hipArray.from_ptr(NULL,owner=True)
     pass
 
-def hipMallocMipmappedArray(mipmappedArray, desc, extent, unsigned int numLevels, unsigned int flags):
+def hipMallocMipmappedArray(desc, extent, unsigned int numLevels, unsigned int flags):
     """@brief Allocate a mipmapped array on the device
     @param[out] mipmappedArray  - Pointer to allocated mipmapped array in device memory
     @param[in]  desc            - Requested channel format
@@ -11574,15 +11547,17 @@ def hipMallocMipmappedArray(mipmappedArray, desc, extent, unsigned int numLevels
     @param[in]  flags           - Flags for extensions
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
     """
+    mipmappedArray = hipMipmappedArray.from_ptr(NULL,owner=True)
     pass
 
-def hipGetMipmappedArrayLevel(levelArray, mipmappedArray, unsigned int level):
+def hipGetMipmappedArrayLevel(mipmappedArray, unsigned int level):
     """@brief Gets a mipmap level of a HIP mipmapped array
     @param[out] levelArray     - Returned mipmap level HIP array
     @param[in]  mipmappedArray - HIP mipmapped array
     @param[in]  level          - Mipmap level
     @return #hipSuccess, #hipErrorInvalidValue
     """
+    levelArray = hipArray.from_ptr(NULL,owner=True)
     pass
 
 def hipMemcpy2D(dst, int dpitch, src, int spitch, int width, int height, kind):
@@ -11807,7 +11782,7 @@ def hipDrvMemcpy3DAsync(pCopy, stream):
     """
     pass
 
-def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
+def hipDeviceCanAccessPeer(canAccessPeer, int deviceId, int peerDeviceId):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -11826,10 +11801,7 @@ def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
     @returns #hipSuccess,
     @returns #hipErrorInvalidDevice if deviceId or peerDeviceId are not valid devices
     """
-    cdef int canAccessPeer
-    hipDeviceCanAccessPeer_____retval = hipError_t(chip.hipDeviceCanAccessPeer(&canAccessPeer,deviceId,peerDeviceId))    # fully specified
-    return (hipDeviceCanAccessPeer_____retval,canAccessPeer)
-
+    pass
 
 def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
     """@brief Enable direct access from current device's virtual address space to memory allocations
@@ -11859,7 +11831,7 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
     return hipDeviceDisablePeerAccess_____retval
 
 
-def hipMemGetAddressRange(pbase, dptr):
+def hipMemGetAddressRange(pbase, psize, dptr):
     """@brief Get information on memory allocations.
     @param [out] pbase - BAse pointer address
     @param [out] psize - Size of allocation
@@ -11868,7 +11840,6 @@ def hipMemGetAddressRange(pbase, dptr):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    cdef int psize
     pass
 
 def hipMemcpyPeer(dst, int dstDeviceId, src, int srcDeviceId, int sizeBytes):
@@ -11894,7 +11865,7 @@ def hipMemcpyPeerAsync(dst, int dstDeviceId, src, int srcDevice, int sizeBytes, 
     """
     pass
 
-def hipCtxCreate(ctx, unsigned int flags, hipDevice_t device):
+def hipCtxCreate(unsigned int flags, hipDevice_t device):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -11913,7 +11884,10 @@ def hipCtxCreate(ctx, unsigned int flags, hipDevice_t device):
     @see hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
     hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    pass
+    ctx = ihipCtx_t.from_ptr(NULL,owner=True)
+    hipCtxCreate_____retval = hipError_t(chip.hipCtxCreate(&ctx._ptr,flags,device))    # fully specified
+    return (hipCtxCreate_____retval,ctx)
+
 
 def hipCtxDestroy(ctx):
     """@brief Destroy a HIP context.
@@ -11924,14 +11898,17 @@ def hipCtxDestroy(ctx):
     """
     pass
 
-def hipCtxPopCurrent(ctx):
+def hipCtxPopCurrent():
     """@brief Pop the current/default context and return the popped context.
     @param [out] ctx
     @returns #hipSuccess, #hipErrorInvalidContext
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxSetCurrent, hipCtxGetCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    pass
+    ctx = ihipCtx_t.from_ptr(NULL,owner=True)
+    hipCtxPopCurrent_____retval = hipError_t(chip.hipCtxPopCurrent(&ctx._ptr))    # fully specified
+    return (hipCtxPopCurrent_____retval,ctx)
+
 
 def hipCtxPushCurrent(ctx):
     """@brief Push the context to be set as current/ default context
@@ -11951,28 +11928,28 @@ def hipCtxSetCurrent(ctx):
     """
     pass
 
-def hipCtxGetCurrent(ctx):
+def hipCtxGetCurrent():
     """@brief Get the handle of the current/ default context
     @param [out] ctx
     @returns #hipSuccess, #hipErrorInvalidContext
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    pass
+    ctx = ihipCtx_t.from_ptr(NULL,owner=True)
+    hipCtxGetCurrent_____retval = hipError_t(chip.hipCtxGetCurrent(&ctx._ptr))    # fully specified
+    return (hipCtxGetCurrent_____retval,ctx)
 
-def hipCtxGetDevice():
+
+def hipCtxGetDevice(device):
     """@brief Get the handle of the device associated with current/default context
     @param [out] device
     @returns #hipSuccess, #hipErrorInvalidContext
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
     """
-    cdef int device
-    hipCtxGetDevice_____retval = hipError_t(chip.hipCtxGetDevice(&device))    # fully specified
-    return (hipCtxGetDevice_____retval,device)
+    pass
 
-
-def hipCtxGetApiVersion(ctx):
+def hipCtxGetApiVersion(ctx, apiVersion):
     """@brief Returns the approximate HIP api version.
     @param [in]  ctx Context to check
     @param [out] apiVersion
@@ -11985,7 +11962,6 @@ def hipCtxGetApiVersion(ctx):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    cdef int apiVersion
     pass
 
 def hipCtxGetCacheConfig(cacheConfig):
@@ -12044,17 +12020,14 @@ def hipCtxSynchronize():
     return hipCtxSynchronize_____retval
 
 
-def hipCtxGetFlags():
+def hipCtxGetFlags(flags):
     """@brief Return flags used for creating default context.
     @param [out] flags
     @returns #hipSuccess
     @see hipCtxCreate, hipCtxDestroy, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    cdef unsigned int flags
-    hipCtxGetFlags_____retval = hipError_t(chip.hipCtxGetFlags(&flags))    # fully specified
-    return (hipCtxGetFlags_____retval,flags)
-
+    pass
 
 def hipCtxEnablePeerAccess(peerCtx, unsigned int flags):
     """@brief Enables direct access to memory allocations in a peer context.
@@ -12086,7 +12059,7 @@ def hipCtxDisablePeerAccess(peerCtx):
     """
     pass
 
-def hipDevicePrimaryCtxGetState(hipDevice_t dev):
+def hipDevicePrimaryCtxGetState(hipDevice_t dev, flags, active):
     """@}
     @brief Get the state of the primary context.
     @param [in] Device to get primary context flags for
@@ -12096,11 +12069,7 @@ def hipDevicePrimaryCtxGetState(hipDevice_t dev):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    cdef unsigned int flags
-    cdef int active
-    hipDevicePrimaryCtxGetState_____retval = hipError_t(chip.hipDevicePrimaryCtxGetState(dev,&flags,&active))    # fully specified
-    return (hipDevicePrimaryCtxGetState_____retval,flags,active)
-
+    pass
 
 def hipDevicePrimaryCtxRelease(hipDevice_t dev):
     """@brief Release the primary context on the GPU.
@@ -12115,7 +12084,7 @@ def hipDevicePrimaryCtxRelease(hipDevice_t dev):
     return hipDevicePrimaryCtxRelease_____retval
 
 
-def hipDevicePrimaryCtxRetain(pctx, hipDevice_t dev):
+def hipDevicePrimaryCtxRetain(hipDevice_t dev):
     """@brief Retain the primary context on the GPU.
     @param [out] Returned context handle of the new context
     @param [in] Device which primary context is released
@@ -12123,7 +12092,10 @@ def hipDevicePrimaryCtxRetain(pctx, hipDevice_t dev):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    pass
+    pctx = ihipCtx_t.from_ptr(NULL,owner=True)
+    hipDevicePrimaryCtxRetain_____retval = hipError_t(chip.hipDevicePrimaryCtxRetain(&pctx._ptr,dev))    # fully specified
+    return (hipDevicePrimaryCtxRetain_____retval,pctx)
+
 
 def hipDevicePrimaryCtxReset(hipDevice_t dev):
     """@brief Resets the primary context on the GPU.
@@ -12148,7 +12120,7 @@ def hipDevicePrimaryCtxSetFlags(hipDevice_t dev, unsigned int flags):
     return hipDevicePrimaryCtxSetFlags_____retval
 
 
-def hipModuleLoad(module, const char * fname):
+def hipModuleLoad(const char * fname):
     """@}
     @defgroup Module Module Management
     @{
@@ -12160,7 +12132,10 @@ def hipModuleLoad(module, const char * fname):
     @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorFileNotFound,
     hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
     """
-    pass
+    module = ihipModule_t.from_ptr(NULL,owner=True)
+    hipModuleLoad_____retval = hipError_t(chip.hipModuleLoad(&module._ptr,fname))    # fully specified
+    return (hipModuleLoad_____retval,module)
+
 
 def hipModuleUnload(module):
     """@brief Frees the module
@@ -12170,7 +12145,7 @@ def hipModuleUnload(module):
     """
     pass
 
-def hipModuleGetFunction(function, module, const char * kname):
+def hipModuleGetFunction(module, const char * kname):
     """@brief Function with kname will be extracted if present in module
     @param [in] module
     @param [in] kname
@@ -12178,6 +12153,7 @@ def hipModuleGetFunction(function, module, const char * kname):
     @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorNotInitialized,
     hipErrorNotFound,
     """
+    function = ihipModuleSymbol_t.from_ptr(NULL,owner=True)
     pass
 
 def hipFuncGetAttributes(attr, func):
@@ -12188,35 +12164,36 @@ def hipFuncGetAttributes(attr, func):
     """
     pass
 
-def hipFuncGetAttribute(attrib, hfunc):
+def hipFuncGetAttribute(value, attrib, hfunc):
     """@brief Find out a specific attribute for a given function.
     @param [out] value
     @param [in]  attrib
     @param [in]  hfunc
     @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
     """
-    cdef int value
     pass
 
-def hipModuleGetTexRef(texRef, hmod, const char * name):
+def hipModuleGetTexRef(hmod, const char * name):
     """@brief returns the handle of the texture reference with the name from the module.
     @param [in] hmod
     @param [in] name
     @param [out] texRef
     @returns hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
     """
+    texRef = textureReference.from_ptr(NULL,owner=True)
     pass
 
-def hipModuleLoadData(module, image):
+def hipModuleLoadData(image):
     """@brief builds module from code object which resides in host memory. Image is pointer to that
     location.
     @param [in] image
     @param [out] module
     @returns hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
     """
+    module = ihipModule_t.from_ptr(NULL,owner=True)
     pass
 
-def hipModuleLoadDataEx(module, image, unsigned int numOptions, options, optionValues):
+def hipModuleLoadDataEx(image, unsigned int numOptions, options, optionValues):
     """@brief builds module from code object which resides in host memory. Image is pointer to that
     location. Options are not used. hipModuleLoadData is called.
     @param [in] image
@@ -12226,6 +12203,7 @@ def hipModuleLoadDataEx(module, image, unsigned int numOptions, options, optionV
     @param [in] option values for JIT
     @returns hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
     """
+    module = ihipModule_t.from_ptr(NULL,owner=True)
     pass
 
 def hipModuleLaunchKernel(f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, stream, kernelParams, extra):
@@ -12291,7 +12269,7 @@ def hipExtLaunchMultiKernelMultiDevice(launchParamsList, int numDevices, unsigne
     """
     pass
 
-def hipModuleOccupancyMaxPotentialBlockSize(f, int dynSharedMemPerBlk, int blockSizeLimit):
+def hipModuleOccupancyMaxPotentialBlockSize(gridSize, blockSize, f, int dynSharedMemPerBlk, int blockSizeLimit):
     """@}
     @defgroup Occupancy Occupancy
     @{
@@ -12306,11 +12284,9 @@ def hipModuleOccupancyMaxPotentialBlockSize(f, int dynSharedMemPerBlk, int block
     size gridDim x blockDim >= 2^32.
     @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
     """
-    cdef int gridSize
-    cdef int blockSize
     pass
 
-def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(f, int dynSharedMemPerBlk, int blockSizeLimit, unsigned int flags):
+def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(gridSize, blockSize, f, int dynSharedMemPerBlk, int blockSizeLimit, unsigned int flags):
     """@brief determine the grid and block sizes to achieves maximum occupancy for a kernel
     @param [out] gridSize           minimum grid size for maximum potential occupancy
     @param [out] blockSize          block size for maximum potential occupancy
@@ -12322,21 +12298,18 @@ def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(f, int dynSharedMemPerBlk, 
     size gridDim x blockDim >= 2^32.
     @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
     """
-    cdef int gridSize
-    cdef int blockSize
     pass
 
-def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(f, int blockSize, int dynSharedMemPerBlk):
+def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(numBlocks, f, int blockSize, int dynSharedMemPerBlk):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  func             Kernel function (hipFunction) for which occupancy is calulated
     @param [in]  blockSize        Block size the kernel is intended to be launched with
     @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
     """
-    cdef int numBlocks
     pass
 
-def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
+def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(numBlocks, f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  f                Kernel function(hipFunction_t) for which occupancy is calulated
@@ -12344,20 +12317,18 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(f, int blockSize
     @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
     @param [in]  flags            Extra flags for occupancy calculation (only default supported)
     """
-    cdef int numBlocks
     pass
 
-def hipOccupancyMaxActiveBlocksPerMultiprocessor(f, int blockSize, int dynSharedMemPerBlk):
+def hipOccupancyMaxActiveBlocksPerMultiprocessor(numBlocks, f, int blockSize, int dynSharedMemPerBlk):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  func             Kernel function for which occupancy is calulated
     @param [in]  blockSize        Block size the kernel is intended to be launched with
     @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
     """
-    cdef int numBlocks
     pass
 
-def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
+def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(numBlocks, f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  f                Kernel function for which occupancy is calulated
@@ -12365,10 +12336,9 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(f, int blockSize, int 
     @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
     @param [in]  flags            Extra flags for occupancy calculation (currently ignored)
     """
-    cdef int numBlocks
     pass
 
-def hipOccupancyMaxPotentialBlockSize(f, int dynSharedMemPerBlk, int blockSizeLimit):
+def hipOccupancyMaxPotentialBlockSize(gridSize, blockSize, f, int dynSharedMemPerBlk, int blockSizeLimit):
     """@brief determine the grid and block sizes to achieves maximum occupancy for a kernel
     @param [out] gridSize           minimum grid size for maximum potential occupancy
     @param [out] blockSize          block size for maximum potential occupancy
@@ -12379,8 +12349,6 @@ def hipOccupancyMaxPotentialBlockSize(f, int dynSharedMemPerBlk, int blockSizeLi
     size gridDim x blockDim >= 2^32.
     @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
     """
-    cdef int gridSize
-    cdef int blockSize
     pass
 
 def hipProfilerStart():
@@ -12499,7 +12467,7 @@ def hipBindTextureToMipmappedArray(tex, mipmappedArray, desc):
     """
     pass
 
-def hipCreateTextureObject(pTexObject, pResDesc, pTexDesc, pResViewDesc):
+def hipCreateTextureObject(pResDesc, pTexDesc, pResViewDesc):
     """@brief Creates a texture object.
     @param [out] pTexObject  pointer to the texture object to create
     @param [in] pResDesc  pointer to resource descriptor
@@ -12509,6 +12477,7 @@ def hipCreateTextureObject(pTexObject, pResDesc, pTexDesc, pResViewDesc):
     @note 3D liner filter isn't supported on GFX90A boards, on which the API @p hipCreateTextureObject will
     return hipErrorNotSupported.
     """
+    pTexObject = __hip_texture.from_ptr(NULL,owner=True)
     pass
 
 def hipDestroyTextureObject(textureObject):
@@ -12550,7 +12519,7 @@ def hipGetTextureObjectTextureDesc(pTexDesc, textureObject):
     """
     pass
 
-def hipTexObjectCreate(pTexObject, pResDesc, pTexDesc, pResViewDesc):
+def hipTexObjectCreate(pResDesc, pTexDesc, pResViewDesc):
     """@brief Creates a texture object.
     @param [out] pTexObject  pointer to texture object to create
     @param [in] pResDesc  pointer to resource descriptor
@@ -12558,6 +12527,7 @@ def hipTexObjectCreate(pTexObject, pResDesc, pTexDesc, pResViewDesc):
     @param [in] pResViewDesc  pointer to resource view descriptor
     @returns hipSuccess, hipErrorInvalidValue
     """
+    pTexObject = __hip_texture.from_ptr(NULL,owner=True)
     pass
 
 def hipTexObjectDestroy(texObject):
@@ -12591,7 +12561,7 @@ def hipTexObjectGetTextureDesc(pTexDesc, texObject):
     """
     pass
 
-def hipGetTextureReference(texref, symbol):
+def hipGetTextureReference(symbol):
     """@addtogroup TextureD Texture Management [Deprecated]
     @{
     @ingroup Texture
@@ -12601,6 +12571,7 @@ def hipGetTextureReference(texref, symbol):
     @param [in] symbol  pointer to the symbol related with the texture for the reference
     @returns hipSuccess, hipErrorInvalidValue
     """
+    texref = textureReference.from_ptr(NULL,owner=True)
     pass
 
 def hipTexRefSetAddressMode(texRef, int dim, am):
@@ -12628,16 +12599,14 @@ def hipTexRefSetFormat(texRef, fmt, int NumPackedComponents):
     """
     pass
 
-def hipBindTexture(tex, devPtr, desc, int size):
+def hipBindTexture(offset, tex, devPtr, desc, int size):
     """
     """
-    cdef int offset
     pass
 
-def hipBindTexture2D(tex, devPtr, desc, int width, int height, int pitch):
+def hipBindTexture2D(offset, tex, devPtr, desc, int width, int height, int pitch):
     """
     """
-    cdef int offset
     pass
 
 def hipBindTextureToArray(tex, array, desc):
@@ -12645,10 +12614,9 @@ def hipBindTextureToArray(tex, array, desc):
     """
     pass
 
-def hipGetTextureAlignmentOffset(texref):
+def hipGetTextureAlignmentOffset(offset, texref):
     """
     """
-    cdef int offset
     pass
 
 def hipUnbindTexture(tex):
@@ -12671,22 +12639,19 @@ def hipTexRefGetFilterMode(pfm, texRef):
     """
     pass
 
-def hipTexRefGetFlags(texRef):
+def hipTexRefGetFlags(pFlags, texRef):
     """
     """
-    cdef unsigned int pFlags
     pass
 
-def hipTexRefGetFormat(pFormat, texRef):
+def hipTexRefGetFormat(pFormat, pNumChannels, texRef):
     """
     """
-    cdef int pNumChannels
     pass
 
-def hipTexRefGetMaxAnisotropy(texRef):
+def hipTexRefGetMaxAnisotropy(pmaxAnsio, texRef):
     """
     """
-    cdef int pmaxAnsio
     pass
 
 def hipTexRefGetMipmapFilterMode(pfm, texRef):
@@ -12694,28 +12659,25 @@ def hipTexRefGetMipmapFilterMode(pfm, texRef):
     """
     pass
 
-def hipTexRefGetMipmapLevelBias(texRef):
-    """
-    """
-    cdef float pbias
-    pass
-
-def hipTexRefGetMipmapLevelClamp(texRef):
-    """
-    """
-    cdef float pminMipmapLevelClamp
-    cdef float pmaxMipmapLevelClamp
-    pass
-
-def hipTexRefGetMipMappedArray(pArray, texRef):
+def hipTexRefGetMipmapLevelBias(pbias, texRef):
     """
     """
     pass
 
-def hipTexRefSetAddress(texRef, dptr, int bytes):
+def hipTexRefGetMipmapLevelClamp(pminMipmapLevelClamp, pmaxMipmapLevelClamp, texRef):
     """
     """
-    cdef int ByteOffset
+    pass
+
+def hipTexRefGetMipMappedArray(texRef):
+    """
+    """
+    pArray = hipMipmappedArray.from_ptr(NULL,owner=True)
+    pass
+
+def hipTexRefSetAddress(ByteOffset, texRef, dptr, int bytes):
+    """
+    """
     pass
 
 def hipTexRefSetAddress2D(texRef, desc, dptr, int Pitch):
@@ -12728,10 +12690,9 @@ def hipTexRefSetMaxAnisotropy(texRef, unsigned int maxAniso):
     """
     pass
 
-def hipTexRefSetBorderColor(texRef):
+def hipTexRefSetBorderColor(texRef, pBorderColor):
     """
     """
-    cdef float pBorderColor
     pass
 
 def hipTexRefSetMipmapFilterMode(texRef, fm):
@@ -12754,12 +12715,13 @@ def hipTexRefSetMipmappedArray(texRef, mipmappedArray, unsigned int Flags):
     """
     pass
 
-def hipMipmappedArrayCreate(pHandle, pMipmappedArrayDesc, unsigned int numMipmapLevels):
+def hipMipmappedArrayCreate(pMipmappedArrayDesc, unsigned int numMipmapLevels):
     """@addtogroup TextureU Texture Management [Not supported]
     @{
     @ingroup Texture
     This section describes the texture management functions currently unsupported in HIP runtime.
     """
+    pHandle = hipMipmappedArray.from_ptr(NULL,owner=True)
     pass
 
 def hipMipmappedArrayDestroy(hMipmappedArray):
@@ -12767,9 +12729,10 @@ def hipMipmappedArrayDestroy(hMipmappedArray):
     """
     pass
 
-def hipMipmappedArrayGetLevel(pLevelArray, hMipMappedArray, unsigned int level):
+def hipMipmappedArrayGetLevel(hMipMappedArray, unsigned int level):
     """
     """
+    pLevelArray = hipArray.from_ptr(NULL,owner=True)
     pass
 
 def hipApiName(uint32_t id):
@@ -12806,7 +12769,7 @@ def hipStreamBeginCapture(stream, mode):
     """
     pass
 
-def hipStreamEndCapture(stream, pGraph):
+def hipStreamEndCapture(stream):
     """@brief Ends capture on a stream, returning the captured graph.
     @param [in] stream - Stream to end capture.
     @param [out] pGraph - returns the graph captured.
@@ -12814,9 +12777,10 @@ def hipStreamEndCapture(stream, pGraph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraph = ihipGraph.from_ptr(NULL,owner=True)
     pass
 
-def hipStreamGetCaptureInfo(stream, pCaptureStatus):
+def hipStreamGetCaptureInfo(stream, pCaptureStatus, pId):
     """@brief Get capture status of a stream.
     @param [in] stream - Stream under capture.
     @param [out] pCaptureStatus - returns current status of the capture.
@@ -12825,10 +12789,9 @@ def hipStreamGetCaptureInfo(stream, pCaptureStatus):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    cdef unsigned long long pId
     pass
 
-def hipStreamGetCaptureInfo_v2(stream, captureStatus_out, graph_out, dependencies_out):
+def hipStreamGetCaptureInfo_v2(stream, captureStatus_out, id_out, dependencies_out, numDependencies_out):
     """@brief Get stream's capture state
     @param [in] stream - Stream under capture.
     @param [out] captureStatus_out - returns current status of the capture.
@@ -12840,8 +12803,7 @@ def hipStreamGetCaptureInfo_v2(stream, captureStatus_out, graph_out, dependencie
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    cdef unsigned long long id_out
-    cdef int numDependencies_out
+    graph_out = ihipGraph.from_ptr(NULL,owner=True)
     pass
 
 def hipStreamIsCapturing(stream, pCaptureStatus):
@@ -12854,7 +12816,7 @@ def hipStreamIsCapturing(stream, pCaptureStatus):
     """
     pass
 
-def hipStreamUpdateCaptureDependencies(stream, dependencies, int numDependencies, unsigned int flags):
+def hipStreamUpdateCaptureDependencies(stream, int numDependencies, unsigned int flags):
     """@brief Update the set of dependencies in a capturing stream
     @param [in] stream - Stream under capture.
     @param [in] dependencies - pointer to an array of nodes to Add/Replace.
@@ -12863,6 +12825,7 @@ def hipStreamUpdateCaptureDependencies(stream, dependencies, int numDependencies
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    dependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
 def hipThreadExchangeStreamCaptureMode(mode):
@@ -12874,7 +12837,7 @@ def hipThreadExchangeStreamCaptureMode(mode):
     """
     pass
 
-def hipGraphCreate(pGraph, unsigned int flags):
+def hipGraphCreate(unsigned int flags):
     """@brief Creates a graph
     @param [out] pGraph - pointer to graph to create.
     @param [in] flags - flags for graph creation, must be 0.
@@ -12882,7 +12845,10 @@ def hipGraphCreate(pGraph, unsigned int flags):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    pGraph = ihipGraph.from_ptr(NULL,owner=True)
+    hipGraphCreate_____retval = hipError_t(chip.hipGraphCreate(&pGraph._ptr,flags))    # fully specified
+    return (hipGraphCreate_____retval,pGraph)
+
 
 def hipGraphDestroy(graph):
     """@brief Destroys a graph
@@ -12893,7 +12859,7 @@ def hipGraphDestroy(graph):
     """
     pass
 
-def hipGraphAddDependencies(graph, from_, to, int numDependencies):
+def hipGraphAddDependencies(graph, int numDependencies):
     """@brief Adds dependency edges to a graph.
     @param [in] graph - instance of the graph to add dependencies.
     @param [in] from - pointer to the graph nodes with dependenties to add from.
@@ -12903,9 +12869,11 @@ def hipGraphAddDependencies(graph, from_, to, int numDependencies):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    from_ = hipGraphNode.from_ptr(NULL,owner=True)
+    to = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphRemoveDependencies(graph, from_, to, int numDependencies):
+def hipGraphRemoveDependencies(graph, int numDependencies):
     """@brief Removes dependency edges from a graph.
     @param [in] graph - instance of the graph to remove dependencies.
     @param [in] from - Array of nodes that provide the dependencies.
@@ -12915,9 +12883,11 @@ def hipGraphRemoveDependencies(graph, from_, to, int numDependencies):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    from_ = hipGraphNode.from_ptr(NULL,owner=True)
+    to = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphGetEdges(graph, from_, to):
+def hipGraphGetEdges(graph, numEdges):
     """@brief Returns a graph's dependency edges.
     @param [in] graph - instance of the graph to get the edges from.
     @param [out] from - pointer to the graph nodes to return edge endpoints.
@@ -12931,10 +12901,11 @@ def hipGraphGetEdges(graph, from_, to):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    cdef int numEdges
+    from_ = hipGraphNode.from_ptr(NULL,owner=True)
+    to = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphGetNodes(graph, nodes):
+def hipGraphGetNodes(graph, numNodes):
     """@brief Returns graph nodes.
     @param [in] graph - instance of graph to get the nodes.
     @param [out] nodes - pointer to return the  graph nodes.
@@ -12947,10 +12918,10 @@ def hipGraphGetNodes(graph, nodes):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    cdef int numNodes
+    nodes = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphGetRootNodes(graph, pRootNodes):
+def hipGraphGetRootNodes(graph, pNumRootNodes):
     """@brief Returns graph's root nodes.
     @param [in] graph - instance of the graph to get the nodes.
     @param [out] pRootNodes - pointer to return the graph's root nodes.
@@ -12963,10 +12934,10 @@ def hipGraphGetRootNodes(graph, pRootNodes):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    cdef int pNumRootNodes
+    pRootNodes = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphNodeGetDependencies(node, pDependencies):
+def hipGraphNodeGetDependencies(node, pNumDependencies):
     """@brief Returns a node's dependencies.
     @param [in] node - graph node to get the dependencies from.
     @param [out] pDependencies - pointer to to return the dependencies.
@@ -12979,10 +12950,10 @@ def hipGraphNodeGetDependencies(node, pDependencies):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    cdef int pNumDependencies
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphNodeGetDependentNodes(node, pDependentNodes):
+def hipGraphNodeGetDependentNodes(node, pNumDependentNodes):
     """@brief Returns a node's dependent nodes.
     @param [in] node - graph node to get the Dependent nodes from.
     @param [out] pDependentNodes - pointer to return the graph dependent nodes.
@@ -12996,7 +12967,7 @@ def hipGraphNodeGetDependentNodes(node, pDependentNodes):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    cdef int pNumDependentNodes
+    pDependentNodes = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphNodeGetType(node, pType):
@@ -13018,7 +12989,7 @@ def hipGraphDestroyNode(node):
     """
     pass
 
-def hipGraphClone(pGraphClone, originalGraph):
+def hipGraphClone(originalGraph):
     """@brief Clones a graph.
     @param [out] pGraphClone - Returns newly created cloned graph.
     @param [in] originalGraph - original graph to clone from.
@@ -13026,9 +12997,10 @@ def hipGraphClone(pGraphClone, originalGraph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphClone = ihipGraph.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphNodeFindInClone(pNode, originalNode, clonedGraph):
+def hipGraphNodeFindInClone(originalNode, clonedGraph):
     """@brief Finds a cloned version of a node.
     @param [out] pNode - Returns the cloned node.
     @param [in] originalNode - original node handle.
@@ -13037,9 +13009,10 @@ def hipGraphNodeFindInClone(pNode, originalNode, clonedGraph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pNode = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphInstantiate(pGraphExec, graph, pErrorNode, char * pLogBuffer, int bufferSize):
+def hipGraphInstantiate(graph, char * pLogBuffer, int bufferSize):
     """@brief Creates an executable graph from a graph
     @param [out] pGraphExec - pointer to instantiated executable graph that is created.
     @param [in] graph - instance of graph to instantiate.
@@ -13051,9 +13024,11 @@ def hipGraphInstantiate(pGraphExec, graph, pErrorNode, char * pLogBuffer, int bu
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphExec = hipGraphExec.from_ptr(NULL,owner=True)
+    pErrorNode = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphInstantiateWithFlags(pGraphExec, graph, unsigned long long flags):
+def hipGraphInstantiateWithFlags(graph, unsigned long long flags):
     """@brief Creates an executable graph from a graph.
     @param [out] pGraphExec - pointer to instantiated executable graph that is created.
     @param [in] graph - instance of graph to instantiate.
@@ -13062,6 +13037,7 @@ def hipGraphInstantiateWithFlags(pGraphExec, graph, unsigned long long flags):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphExec = hipGraphExec.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphLaunch(graphExec, stream):
@@ -13093,7 +13069,7 @@ def hipGraphExecDestroy(graphExec):
     """
     pass
 
-def hipGraphExecUpdate(hGraphExec, hGraph, hErrorNode_out, updateResult_out):
+def hipGraphExecUpdate(hGraphExec, hGraph, updateResult_out):
     """@brief Check whether an executable graph can be updated with a graph and perform the update if  *
     possible.
     @param [in] hGraphExec - instance of executable graph to update.
@@ -13104,9 +13080,10 @@ def hipGraphExecUpdate(hGraphExec, hGraph, hErrorNode_out, updateResult_out):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    hErrorNode_out = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphAddKernelNode(pGraphNode, graph, pDependencies, int numDependencies, pNodeParams):
+def hipGraphAddKernelNode(graph, int numDependencies, pNodeParams):
     """@brief Creates a kernel execution node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -13117,6 +13094,8 @@ def hipGraphAddKernelNode(pGraphNode, graph, pDependencies, int numDependencies,
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphKernelNodeGetParams(node, pNodeParams):
@@ -13150,7 +13129,7 @@ def hipGraphExecKernelNodeSetParams(hGraphExec, node, pNodeParams):
     """
     pass
 
-def hipGraphAddMemcpyNode(pGraphNode, graph, pDependencies, int numDependencies, pCopyParams):
+def hipGraphAddMemcpyNode(graph, int numDependencies, pCopyParams):
     """@brief Creates a memcpy node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -13161,6 +13140,8 @@ def hipGraphAddMemcpyNode(pGraphNode, graph, pDependencies, int numDependencies,
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphMemcpyNodeGetParams(node, pNodeParams):
@@ -13216,7 +13197,7 @@ def hipGraphExecMemcpyNodeSetParams(hGraphExec, node, pNodeParams):
     """
     pass
 
-def hipGraphAddMemcpyNode1D(pGraphNode, graph, pDependencies, int numDependencies, dst, src, int count, kind):
+def hipGraphAddMemcpyNode1D(graph, int numDependencies, dst, src, int count, kind):
     """@brief Creates a 1D memcpy node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -13230,6 +13211,8 @@ def hipGraphAddMemcpyNode1D(pGraphNode, graph, pDependencies, int numDependencie
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphMemcpyNodeSetParams1D(node, dst, src, int count, kind):
@@ -13260,7 +13243,7 @@ def hipGraphExecMemcpyNodeSetParams1D(hGraphExec, node, dst, src, int count, kin
     """
     pass
 
-def hipGraphAddMemcpyNodeFromSymbol(pGraphNode, graph, pDependencies, int numDependencies, dst, symbol, int count, int offset, kind):
+def hipGraphAddMemcpyNodeFromSymbol(graph, int numDependencies, dst, symbol, int count, int offset, kind):
     """@brief Creates a memcpy node to copy from a symbol on the device and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -13275,6 +13258,8 @@ def hipGraphAddMemcpyNodeFromSymbol(pGraphNode, graph, pDependencies, int numDep
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphMemcpyNodeSetParamsFromSymbol(node, dst, symbol, int count, int offset, kind):
@@ -13307,7 +13292,7 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(hGraphExec, node, dst, symbol, int
     """
     pass
 
-def hipGraphAddMemcpyNodeToSymbol(pGraphNode, graph, pDependencies, int numDependencies, symbol, src, int count, int offset, kind):
+def hipGraphAddMemcpyNodeToSymbol(graph, int numDependencies, symbol, src, int count, int offset, kind):
     """@brief Creates a memcpy node to copy to a symbol on the device and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -13322,6 +13307,8 @@ def hipGraphAddMemcpyNodeToSymbol(pGraphNode, graph, pDependencies, int numDepen
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphMemcpyNodeSetParamsToSymbol(node, symbol, src, int count, int offset, kind):
@@ -13354,7 +13341,7 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(hGraphExec, node, symbol, src, int c
     """
     pass
 
-def hipGraphAddMemsetNode(pGraphNode, graph, pDependencies, int numDependencies, pMemsetParams):
+def hipGraphAddMemsetNode(graph, int numDependencies, pMemsetParams):
     """@brief Creates a memset node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -13365,6 +13352,8 @@ def hipGraphAddMemsetNode(pGraphNode, graph, pDependencies, int numDependencies,
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphMemsetNodeGetParams(node, pNodeParams):
@@ -13398,7 +13387,7 @@ def hipGraphExecMemsetNodeSetParams(hGraphExec, node, pNodeParams):
     """
     pass
 
-def hipGraphAddHostNode(pGraphNode, graph, pDependencies, int numDependencies, pNodeParams):
+def hipGraphAddHostNode(graph, int numDependencies, pNodeParams):
     """@brief Creates a host execution node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -13409,6 +13398,8 @@ def hipGraphAddHostNode(pGraphNode, graph, pDependencies, int numDependencies, p
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphHostNodeGetParams(node, pNodeParams):
@@ -13442,7 +13433,7 @@ def hipGraphExecHostNodeSetParams(hGraphExec, node, pNodeParams):
     """
     pass
 
-def hipGraphAddChildGraphNode(pGraphNode, graph, pDependencies, int numDependencies, childGraph):
+def hipGraphAddChildGraphNode(graph, int numDependencies, childGraph):
     """@brief Creates a child graph node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -13453,9 +13444,11 @@ def hipGraphAddChildGraphNode(pGraphNode, graph, pDependencies, int numDependenc
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphChildGraphNodeGetGraph(node, pGraph):
+def hipGraphChildGraphNodeGetGraph(node):
     """@brief Gets a handle to the embedded graph of a child graph node.
     @param [in] node - instane of the node to get child graph.
     @param [out] pGraph - pointer to get the graph.
@@ -13463,6 +13456,7 @@ def hipGraphChildGraphNodeGetGraph(node, pGraph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraph = ihipGraph.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphExecChildGraphNodeSetParams(hGraphExec, node, childGraph):
@@ -13476,7 +13470,7 @@ def hipGraphExecChildGraphNodeSetParams(hGraphExec, node, childGraph):
     """
     pass
 
-def hipGraphAddEmptyNode(pGraphNode, graph, pDependencies, int numDependencies):
+def hipGraphAddEmptyNode(graph, int numDependencies):
     """@brief Creates an empty node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node is add to.
@@ -13486,9 +13480,11 @@ def hipGraphAddEmptyNode(pGraphNode, graph, pDependencies, int numDependencies):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphAddEventRecordNode(pGraphNode, graph, pDependencies, int numDependencies, event):
+def hipGraphAddEventRecordNode(graph, int numDependencies, event):
     """@brief Creates an event record node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node to be added.
@@ -13499,9 +13495,11 @@ def hipGraphAddEventRecordNode(pGraphNode, graph, pDependencies, int numDependen
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphEventRecordNodeGetEvent(node, event_out):
+def hipGraphEventRecordNodeGetEvent(node):
     """@brief Returns the event associated with an event record node.
     @param [in] node -  instane of the node to get event from.
     @param [out] event_out - Pointer to return the event.
@@ -13509,6 +13507,7 @@ def hipGraphEventRecordNodeGetEvent(node, event_out):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    event_out = ihipEvent_t.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphEventRecordNodeSetEvent(node, event):
@@ -13532,7 +13531,7 @@ def hipGraphExecEventRecordNodeSetEvent(hGraphExec, hNode, event):
     """
     pass
 
-def hipGraphAddEventWaitNode(pGraphNode, graph, pDependencies, int numDependencies, event):
+def hipGraphAddEventWaitNode(graph, int numDependencies, event):
     """@brief Creates an event wait node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node to be added.
@@ -13543,9 +13542,11 @@ def hipGraphAddEventWaitNode(pGraphNode, graph, pDependencies, int numDependenci
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     pass
 
-def hipGraphEventWaitNodeGetEvent(node, event_out):
+def hipGraphEventWaitNodeGetEvent(node):
     """@brief Returns the event associated with an event wait node.
     @param [in] node -  instane of the node to get event from.
     @param [out] event_out - Pointer to return the event.
@@ -13553,6 +13554,7 @@ def hipGraphEventWaitNodeGetEvent(node, event_out):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    event_out = ihipEvent_t.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphEventWaitNodeSetEvent(node, event):
@@ -13608,7 +13610,7 @@ def hipDeviceGraphMemTrim(int device):
     return hipDeviceGraphMemTrim_____retval
 
 
-def hipUserObjectCreate(object_out, ptr, destroy, unsigned int initialRefcount, unsigned int flags):
+def hipUserObjectCreate(ptr, destroy, unsigned int initialRefcount, unsigned int flags):
     """@brief Create an instance of userObject to manage lifetime of a resource.
     @param [out] object_out - pointer to instace of userobj.
     @param [in] ptr - pointer to pass to destroy function.
@@ -13619,6 +13621,7 @@ def hipUserObjectCreate(object_out, ptr, destroy, unsigned int initialRefcount, 
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    object_out = hipUserObject.from_ptr(NULL,owner=True)
     pass
 
 def hipUserObjectRelease(object, unsigned int count):
@@ -13687,7 +13690,7 @@ def hipMemAddressReserve(ptr, int size, int alignment, addr, unsigned long long 
     """
     pass
 
-def hipMemCreate(handle, int size, prop, unsigned long long flags):
+def hipMemCreate(int size, prop, unsigned long long flags):
     """@brief Creates a memory allocation described by the properties and size
     @param [out] handle - value of the returned handle.
     @param [in] size - size of the allocation.
@@ -13697,6 +13700,7 @@ def hipMemCreate(handle, int size, prop, unsigned long long flags):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
     pass
 
 def hipMemExportToShareableHandle(shareableHandle, handle, handleType, unsigned long long flags):
@@ -13711,7 +13715,7 @@ def hipMemExportToShareableHandle(shareableHandle, handle, handleType, unsigned 
     """
     pass
 
-def hipMemGetAccess(location, ptr):
+def hipMemGetAccess(flags, location, ptr):
     """@brief Get the access flags set for the given location and ptr.
     @param [out] flags - flags for this location.
     @param [in] location - target location.
@@ -13720,10 +13724,9 @@ def hipMemGetAccess(location, ptr):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    cdef unsigned long long flags
     pass
 
-def hipMemGetAllocationGranularity(prop, option):
+def hipMemGetAllocationGranularity(granularity, prop, option):
     """@brief Calculates either the minimal or recommended granularity.
     @param [out] granularity - returned granularity.
     @param [in] prop - location properties.
@@ -13732,7 +13735,6 @@ def hipMemGetAllocationGranularity(prop, option):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    cdef int granularity
     pass
 
 def hipMemGetAllocationPropertiesFromHandle(prop, handle):
@@ -13745,7 +13747,7 @@ def hipMemGetAllocationPropertiesFromHandle(prop, handle):
     """
     pass
 
-def hipMemImportFromShareableHandle(handle, osHandle, shHandleType):
+def hipMemImportFromShareableHandle(osHandle, shHandleType):
     """@brief Imports an allocation from a requested shareable handle type.
     @param [out] handle - returned value.
     @param [in] osHandle - shareable handle representing the memory allocation.
@@ -13754,6 +13756,7 @@ def hipMemImportFromShareableHandle(handle, osHandle, shHandleType):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
     pass
 
 def hipMemMap(ptr, int size, int offset, handle, unsigned long long flags):
@@ -13789,7 +13792,7 @@ def hipMemRelease(handle):
     """
     pass
 
-def hipMemRetainAllocationHandle(handle, addr):
+def hipMemRetainAllocationHandle(addr):
     """@brief Returns the allocation handle of the backing memory allocation given the address.
     @param [out] handle - handle representing addr.
     @param [in] addr - address to look up.
@@ -13797,6 +13800,7 @@ def hipMemRetainAllocationHandle(handle, addr):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
     pass
 
 def hipMemSetAccess(ptr, int size, desc, int count):
@@ -13863,42 +13867,48 @@ cdef class GLenum:
         return wrapper
 
 
-def hipGLGetDevices(unsigned int hipDeviceCount, deviceList):
-    """
-    """
-    cdef unsigned int pHipDeviceCount
-    cdef int pHipDevices
-    pass
-
-def hipGraphicsGLRegisterBuffer(resource, GLuint buffer, unsigned int flags):
+def hipGLGetDevices(pHipDeviceCount, pHipDevices, unsigned int hipDeviceCount, deviceList):
     """
     """
     pass
 
-def hipGraphicsGLRegisterImage(resource, GLuint image, GLenum target, unsigned int flags):
+def hipGraphicsGLRegisterBuffer(GLuint buffer, unsigned int flags):
+    """
+    """
+    resource = _hipGraphicsResource.from_ptr(NULL,owner=True)
+    hipGraphicsGLRegisterBuffer_____retval = hipError_t(chip.hipGraphicsGLRegisterBuffer(&resource._ptr,buffer,flags))    # fully specified
+    return (hipGraphicsGLRegisterBuffer_____retval,resource)
+
+
+def hipGraphicsGLRegisterImage(GLuint image, GLenum target, unsigned int flags):
+    """
+    """
+    resource = _hipGraphicsResource.from_ptr(NULL,owner=True)
+    hipGraphicsGLRegisterImage_____retval = hipError_t(chip.hipGraphicsGLRegisterImage(&resource._ptr,image,target,flags))    # fully specified
+    return (hipGraphicsGLRegisterImage_____retval,resource)
+
+
+def hipGraphicsMapResources(int count, stream):
+    """
+    """
+    resources = _hipGraphicsResource.from_ptr(NULL,owner=True)
+    pass
+
+def hipGraphicsSubResourceGetMappedArray(resource, unsigned int arrayIndex, unsigned int mipLevel):
+    """
+    """
+    array = hipArray.from_ptr(NULL,owner=True)
+    pass
+
+def hipGraphicsResourceGetMappedPointer(devPtr, size, resource):
     """
     """
     pass
 
-def hipGraphicsMapResources(int count, resources, stream):
+def hipGraphicsUnmapResources(int count, stream):
     """
     """
-    pass
-
-def hipGraphicsSubResourceGetMappedArray(array, resource, unsigned int arrayIndex, unsigned int mipLevel):
-    """
-    """
-    pass
-
-def hipGraphicsResourceGetMappedPointer(devPtr, resource):
-    """
-    """
-    cdef int size
-    pass
-
-def hipGraphicsUnmapResources(int count, resources, stream):
-    """
-    """
+    resources = _hipGraphicsResource.from_ptr(NULL,owner=True)
     pass
 
 def hipGraphicsUnregisterResource(resource):
@@ -14021,10 +14031,9 @@ def hipStreamSynchronize_spt(stream):
     """
     pass
 
-def hipStreamGetPriority_spt(stream):
+def hipStreamGetPriority_spt(stream, priority):
     """
     """
-    cdef int priority
     pass
 
 def hipStreamWaitEvent_spt(stream, event, unsigned int flags):
@@ -14032,10 +14041,9 @@ def hipStreamWaitEvent_spt(stream, event, unsigned int flags):
     """
     pass
 
-def hipStreamGetFlags_spt(stream):
+def hipStreamGetFlags_spt(stream, flags):
     """
     """
-    cdef unsigned int flags
     pass
 
 def hipStreamAddCallback_spt(stream, callback, userData, unsigned int flags):
@@ -14068,9 +14076,10 @@ def hipStreamBeginCapture_spt(stream, mode):
     """
     pass
 
-def hipStreamEndCapture_spt(stream, pGraph):
+def hipStreamEndCapture_spt(stream):
     """
     """
+    pGraph = ihipGraph.from_ptr(NULL,owner=True)
     pass
 
 def hipStreamIsCapturing_spt(stream, pCaptureStatus):
@@ -14078,17 +14087,15 @@ def hipStreamIsCapturing_spt(stream, pCaptureStatus):
     """
     pass
 
-def hipStreamGetCaptureInfo_spt(stream, pCaptureStatus):
+def hipStreamGetCaptureInfo_spt(stream, pCaptureStatus, pId):
     """
     """
-    cdef unsigned long long pId
     pass
 
-def hipStreamGetCaptureInfo_v2_spt(stream, captureStatus_out, graph_out, dependencies_out):
+def hipStreamGetCaptureInfo_v2_spt(stream, captureStatus_out, id_out, dependencies_out, numDependencies_out):
     """
     """
-    cdef unsigned long long id_out
-    cdef int numDependencies_out
+    graph_out = ihipGraph.from_ptr(NULL,owner=True)
     pass
 
 def hipLaunchHostFunc_spt(stream, fn, userData):

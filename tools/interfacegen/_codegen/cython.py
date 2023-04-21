@@ -566,10 +566,9 @@ cdef void* {funptr_name} = NULL
     def _render_python_interface_head(self):
         from . import tree
 
-        fully_specified = True
         out_args = []
         c_interface_call_args = []
-        result = []
+        py2c_conversions = []
         for parm in self.parms:
             parm_name = parm.cython_name
             assert isinstance(parm, tree.Parm)
@@ -579,19 +578,28 @@ cdef void* {funptr_name} = NULL
                         1, canonical=True
                     )
                     parm_typename = typehandler.clang_type.spelling
-                    result.append(f"cdef {parm_typename} {parm_name}")
+                    py2c_conversions.append(f"cdef {parm_typename} {parm_name}")
                     out_args.append(parm_name)
                     c_interface_call_args.append(f"&{parm_name}")
+                elif parm.is_pointer_to_record(degree=2):
+                    parm_typename = parm.lookup_innermost_type().cython_name
+                    py2c_conversions.append(f"{parm_name} = {parm_typename}.from_ptr(NULL,owner=True)")
+                    c_interface_call_args.append(f"&{parm_name}._ptr")
+                    out_args.append(parm_name)
             elif parm.is_autoconverted_by_cython:
                 c_interface_call_args.append(f"{parm_name}")
-            else:
-                # TODO temporary
-                fully_specified = False
+            elif parm.is_pointer_to_record(degree=1):
+                #py2c_conversions.append(parm_name)
+                pass
+        
+        fully_specified = len(list(self.parms)) == len(c_interface_call_args)
+        setattr(self,"is_python_code_complete",fully_specified)
+        
         return (
             fully_specified,
             out_args,
             c_interface_call_args,
-            textwrap.indent("\n".join(result), indent) + "\n" if len(result) else "",
+            textwrap.indent("\n".join(py2c_conversions), indent) + "\n" if len(py2c_conversions) else "",
         )
     
     @property

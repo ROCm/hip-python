@@ -242,6 +242,11 @@ class Typed:
             forced_record_enum_name (str): A forced typename for the struct, union, or enum part of the
                                            canonical Clang typename.
         """
+
+        # TODO Revise this method, 
+        # not robust as "name" in "name_" would be regarded das match, 
+        # better do regex search with word boundaries
+
         canonical_type_to_modify = typehandler.clang_type.get_canonical().spelling
         if repl_typename == None:
             return canonical_type_to_modify
@@ -256,11 +261,11 @@ class Typed:
                 layer_canonical_type_spelling = (
                     clang_type_layer.get_canonical().spelling
                 )
-                if layer_canonical_type_spelling.startswith(
-                    searched_canonical_typename
-                ) or layer_canonical_type_spelling.endswith(  # pointer with optional trailing modifiers
-                    searched_canonical_typename
-                ):  # other (canonical!) type with optional preceding modifiers
+                if layer_canonical_type_spelling.startswith( 
+                    searched_canonical_typename # pointer with optional trailing modifiers
+                ) or layer_canonical_type_spelling.endswith(  
+                    searched_canonical_typename  # other (canonical!) type with optional preceding modifiers
+                ): 
                     start_incl = canonical_type_to_modify.index(
                         layer_canonical_type_spelling
                     )
@@ -325,6 +330,14 @@ class Typed:
         """
         return self._type_handler.const_qualifiers(
             postorder=postorder,canonical=canonical)
+
+    def lookup_innermost_type(self):
+        from . import tree
+
+        curr = self
+        while isinstance(curr,Typed) and curr.typeref != None:
+            curr = curr.typeref
+        return curr
 
     def get_rank(
         self,
