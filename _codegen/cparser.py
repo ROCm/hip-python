@@ -505,7 +505,6 @@ class TypeHandler:
         """Returns if the canonical (=fully resolved) type is const qualified."""
         return self.clang_type.get_canonical().is_const_qualified()
 
-
 class Analysis:
     """Collection of routines for analyzing the contents of a C translation unit."""
 
