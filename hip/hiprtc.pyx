@@ -1,4 +1,5 @@
 # AMD_COPYRIGHT
+from libc cimport stdlib
 from libc.stdint cimport *
 import enum
 
@@ -59,8 +60,48 @@ class hiprtcJITInputType(enum.IntEnum):
     HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE = chiprtc.HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE
     HIPRTC_JIT_NUM_INPUT_TYPES = chiprtc.HIPRTC_JIT_NUM_INPUT_TYPES
 
+
 cdef class ihiprtcLinkState:
-    pass
+    cdef chiprtc.ihiprtcLinkState* _ptr
+    cdef bint ptr_owner
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef ihiprtcLinkState from_ptr(chiprtc.ihiprtcLinkState *_ptr, bint owner=False):
+        """Factory function to create ``ihiprtcLinkState`` objects from
+        given ``chiprtc.ihiprtcLinkState`` pointer.
+        """
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef ihiprtcLinkState wrapper = ihiprtcLinkState.__new__(ihiprtcLinkState)
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
+
+
+hiprtcLinkState = ihiprtcLinkState
+
 
 cdef class _hiprtcProgram:
-    pass
+    cdef chiprtc._hiprtcProgram* _ptr
+    cdef bint ptr_owner
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef _hiprtcProgram from_ptr(chiprtc._hiprtcProgram *_ptr, bint owner=False):
+        """Factory function to create ``_hiprtcProgram`` objects from
+        given ``chiprtc._hiprtcProgram`` pointer.
+        """
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef _hiprtcProgram wrapper = _hiprtcProgram.__new__(_hiprtcProgram)
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
+
+
+hiprtcProgram = _hiprtcProgram
