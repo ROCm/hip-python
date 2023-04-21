@@ -468,17 +468,29 @@ class ParmMixin(CythonMixin, Typed):
         return f"{typename} {name}"
 
     @property
-    def is_c_style_reference(self):
+    def is_indirection(self):
+        """If this is not the actual value but an indirection.
+
+        Returns:
+            bool: If this is not the actual value but an indirection.
+        """
         from . import tree
 
         actual_rank = self.ptr_rank(self)
         assert isinstance(self, tree.Parm)
-        return self.get_pointer_degree() == actual_rank + 1
+        return self.get_pointer_degree() > actual_rank
 
     @property
-    def is_created_by_function(self):
+    def is_return_value(self):
+        """If this is an indirection and has
+        been specified as out parameter.
+
+        Note:
+            While it is clear that an indirection of a basic type or enum parameter
+            is an out parameter, it is not clear for struct and union parameters.
+        """
         return (
-            self.is_c_style_reference
+            self.is_indirection
             and self.ptr_create(self) == control.PointerParamIntent.OUT
         )
 
@@ -556,34 +568,43 @@ cdef void* {funptr_name} = NULL
             assert isinstance(parm, tree.Parm)
             if parm.is_autoconverted_by_cython:
                 args.append(parm.cython_repr)
-            elif not parm.is_created_by_function:  # out arg
+            elif not parm.is_return_value:  # out arg
                 args.append(parm_name)
         name = self.renamer(self.name)
         return f"def {name}({', '.join(args)}):\n" + textwrap.indent(
             self._raw_comment_as_docstring(), indent
         )
 
-    def _render_python_interface_head(self):
+    def _render_python_interface_head(self,cprefix: str):
         from . import tree
 
         out_args = []
         c_interface_call_args = []
-        py2c_conversions = []
+        prolog = []
+        epilog = []
         for parm in self.parms:
+            assert isinstance(parm, ParmMixin)
             parm_name = parm.cython_name
-            assert isinstance(parm, tree.Parm)
-            if parm.is_created_by_function:  # out arg
-                if parm.is_pointer_to_basic_type(degree=1):
+            if parm.is_return_value:  # out arg
+                assert isinstance(parm, tree.Parm)
+                if ( 
+                     parm.is_pointer_to_basic_type(degree=1)
+                   ):
                     typehandler = parm._type_handler.create_from_layer(
                         1, canonical=True
                     )
                     parm_typename = typehandler.clang_type.spelling
-                    py2c_conversions.append(f"cdef {parm_typename} {parm_name}")
+                    prolog.append(f"cdef {parm_typename} {parm_name}")
                     out_args.append(parm_name)
                     c_interface_call_args.append(f"&{parm_name}")
+                elif parm.is_pointer_to_enum(degree=1):
+                    parm_typename = parm.lookup_innermost_typeref().cython_name
+                    prolog.append(f"cdef {cprefix}{parm_typename} {parm_name}")
+                    c_interface_call_args.append(f"&{parm_name}")
+                    out_args.append(f"{parm_typename}({parm_name})")
                 elif parm.is_pointer_to_record(degree=2):
-                    parm_typename = parm.lookup_innermost_type().cython_name
-                    py2c_conversions.append(f"{parm_name} = {parm_typename}.from_ptr(NULL,owner=True)")
+                    parm_typename = parm.lookup_innermost_typeref().cython_name
+                    prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL,owner=True)")
                     c_interface_call_args.append(f"&{parm_name}._ptr")
                     out_args.append(parm_name)
             elif parm.is_autoconverted_by_cython:
@@ -599,7 +620,8 @@ cdef void* {funptr_name} = NULL
             fully_specified,
             out_args,
             c_interface_call_args,
-            textwrap.indent("\n".join(py2c_conversions), indent) + "\n" if len(py2c_conversions) else "",
+            prolog,
+            epilog,
         )
     
     @property
@@ -622,7 +644,9 @@ cdef void* {funptr_name} = NULL
             return c_interface_call
         elif self.is_basic_type:
             out_args.insert(0,retvalname)
-            return f"cdef {retvalname} = {c_interface_call}"
+            return f"cdef {typename} {retvalname} = {c_interface_call}"
+        elif self.is_pointer_to_char(degree=1):
+            return f"cdef {typename} {retvalname} = {c_interface_call}"
         elif self.is_enum:
             out_args.insert(0,retvalname)
             return f"{retvalname} = {typename}({c_interface_call})"
@@ -638,8 +662,10 @@ cdef void* {funptr_name} = NULL
             str: Rendered Python interface.
         """
         result = self._render_python_signature().rstrip() + "\n"
-        (fully_specified, out_args, call_args, partial_result) = self._render_python_interface_head()
-        result += partial_result
+        (fully_specified, out_args, call_args, 
+         prolog, epilog) = self._render_python_interface_head(cprefix)
+        if len(prolog):
+            result += textwrap.indent("\n".join(prolog), indent).rstrip() + "\n"
         if fully_specified:
             result += f"{indent}{self._render_python_interface_c_interface_call(cprefix,call_args,out_args)}"
             result += f"{indent}# fully specified\n"
