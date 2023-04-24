@@ -71,15 +71,24 @@ cdef class {{name}}:
 {{endif}}
 {{if has_new}}
     @staticmethod
+    cdef __allocate({{cname}}** ptr):
+        ptr[0] = <{{cname}} *>stdlib.malloc(sizeof({{cname}}))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef {{name}} new():
         \"""Factory function to create {{name}} objects with
         newly allocated {{cname}}\"""
-        cdef {{cname}} *_ptr = <{{cname}} *>stdlib.malloc(sizeof({{cname}}))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return {{name}}.from_ptr(_ptr, owner=True)
+        cdef {{cname}} *ptr;
+        {{name}}.__allocate(&ptr)
+        return {{name}}.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       {{name}}.__allocate(&self._ptr)
+       self.ptr_owner = True
 {{endif}}
 """
 
@@ -557,24 +566,6 @@ cdef void* {funptr_name} = NULL
     return (<{typename} (*)({parm_types}) nogil> {funptr_name})({parm_names})
 """
 
-    def _render_python_signature(self):
-        from . import tree
-
-        assert isinstance(self, tree.Function)
-        global indent
-        args = []
-        for parm in self.parms:
-            parm_name = parm.cython_name
-            assert isinstance(parm, tree.Parm)
-            if parm.is_autoconverted_by_cython:
-                args.append(parm.cython_repr) # x
-            elif not parm.is_return_value:  # out arg
-                args.append(parm_name) # x
-        name = self.renamer(self.name)
-        return f"def {name}({', '.join(args)}):\n" + textwrap.indent(
-            self._raw_comment_as_docstring(), indent
-        )
-
     def _analyze_parms(self,cprefix: str):
         from . import tree
 
@@ -597,27 +588,49 @@ cdef void* {funptr_name} = NULL
                     out_args.append(parm_name)
                     c_interface_call_args.append(f"&{parm_name}")
                 elif parm.is_pointer_to_enum(degree=1):
-                    parm_typename = parm.lookup_innermost_typeref().cython_name
+                    parm_typename = parm.lookup_innermost_type().cython_name
                     prolog.append(f"cdef {cprefix}{parm_typename} {parm_name}")
                     c_interface_call_args.append(f"&{parm_name}")
                     out_args.append(f"{parm_typename}({parm_name})")
-                elif parm.is_pointer_to_record(degree=2):
-                    parm_typename = parm.lookup_innermost_typeref().cython_name
+                elif (
+                    parm.is_pointer_to_record(degree=2)
+                    or parm.is_pointer_to_basic_type(degree=2) and parm.has_typeref
+                    or parm.is_pointer_to_void(degree=2) and parm.has_typeref # typedefed pointer of void/basic type, e.g. hipblasHandle_t == void*
+                ):
+                    parm_typename = parm.lookup_innermost_type().cython_name
                     prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL,owner=True)")
                     c_interface_call_args.append(f"&{parm_name}._ptr")
                     out_args.append(parm_name)
-            elif parm.is_autoconverted_by_cython:
+            elif parm.is_autoconverted_by_cython: # includes char* (!) which is also indirection
                 c_interface_call_args.append(f"{parm_name}")
                 sig_args.append(parm.cython_repr)
+            elif parm.is_enum: # enums are not modelled as cdef class, so we cannot specify them as type
+                parm_typename = parm.lookup_innermost_type().cython_name
+                sig_args.append(f"object {parm_name}")
+                prolog.append(textwrap.dedent(f"""\
+                    if not isinstance({parm_name},{parm_typename}):
+                        raise TypeError("argument '{parm_name}' must be of type '{parm_typename}'")\
+                    """))
+                c_interface_call_args.append(f"{parm_name}.value")
             elif parm.is_indirection:
-                if parm.is_pointer_to_record(degree=1):
-                    sig_args.append(parm_name)
-                    #sig_args.append(parm.cython_repr)
-                    #c_interface_call_args.append(f"{parm_name}._ptr")
-                if parm.is_pointer_to_enum(degree=1):
-                    sig_args.append(parm_name)
-                    #sig_args.append(parm.cython_repr)
-                    #c_interface_call_args.append(f"&{parm_name}.value")
+                assert isinstance(parm, tree.Parm)
+                if ( 
+                  parm.is_pointer_to_record(degree=1)
+                  or parm.is_pointer_to_basic_type(degree=1) and parm.has_typeref
+                  or parm.is_pointer_to_void(degree=1) and parm.has_typeref # typedefed pointer of void/basic type, e.g. hipblasHandle_t == void*
+                ):
+                    parm_typename = parm.lookup_innermost_type().cython_name
+                    sig_args.append(f"{parm_typename} {parm_name}")
+                    c_interface_call_args.append(f"{parm_name}._ptr")
+                elif parm.is_pointer_to_enum(degree=1):
+                    parm_typename = parm.lookup_innermost_type().cython_name
+                    sig_args.append(f"{parm_typename} {parm_name}")
+                    c_interface_call_args.append(f"&{parm_name}.value")
+                elif parm.is_pointer_to_basic_type(degree=1): # is no return value based on user input
+                    pass
+                elif parm.is_pointer_to_void(degree=1):
+                    print(parm.name)
+                    pass
                 #py2c_conversions.append(parm_name)
             else:
                 sig_args.append(parm_name)
@@ -673,7 +686,8 @@ cdef void* {funptr_name} = NULL
         """
         (fully_specified, sig_args, out_args, call_args, prolog, epilog) = self._analyze_parms(cprefix)
         
-        result = f"def {self.cython_name}({', '.join(sig_args)}):\n" + textwrap.indent(
+        result = "@cython.embedsignature(True)\n"
+        result += f"def {self.cython_name}({', '.join(sig_args)}):\n" + textwrap.indent(
             self._raw_comment_as_docstring(), indent
         ).rstrip() + "\n"
         if len(prolog):
@@ -942,6 +956,7 @@ from libc.stdint cimport *
 # AMD_COPYRIGHT
 from libc cimport stdlib
 from libc.stdint cimport *
+import cython
 import enum
 """
 

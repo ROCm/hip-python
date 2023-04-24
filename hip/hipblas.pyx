@@ -1,7 +1,10 @@
 # AMD_COPYRIGHT
 from libc cimport stdlib
 from libc.stdint cimport *
+import cython
 import enum
+#ctypedef int16_t __int16_t
+#ctypedef uint16_t __uint16_t
 
 from . cimport chipblas
 hipblasVersionMajor = chipblas.hipblasVersionMajor
@@ -11,6 +14,48 @@ hipblaseVersionMinor = chipblas.hipblaseVersionMinor
 hipblasVersionMinor = chipblas.hipblasVersionMinor
 
 hipblasVersionPatch = chipblas.hipblasVersionPatch
+
+
+cdef class __int16_t:
+    cdef void* _ptr
+    cdef bint ptr_owner
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef __int16_t from_ptr(void *_ptr, bint owner=False):
+        """Factory function to create ``__int16_t`` objects from
+        given ``void`` pointer.
+        """
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef __int16_t wrapper = __int16_t.__new__(__int16_t)
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
+
+
+
+cdef class __uint16_t:
+    cdef void* _ptr
+    cdef bint ptr_owner
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self.ptr_owner = False
+
+    @staticmethod
+    cdef __uint16_t from_ptr(void *_ptr, bint owner=False):
+        """Factory function to create ``__uint16_t`` objects from
+        given ``void`` pointer.
+        """
+        # Fast call to __new__() that bypasses the __init__() constructor.
+        cdef __uint16_t wrapper = __uint16_t.__new__(__uint16_t)
+        wrapper._ptr = _ptr
+        wrapper.ptr_owner = owner
+        return wrapper
+
 
 
 cdef class hipblasHandle_t:
@@ -125,15 +170,24 @@ cdef class hipblasBfloat16:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chipblas.hipblasBfloat16** ptr):
+        ptr[0] = <chipblas.hipblasBfloat16 *>stdlib.malloc(sizeof(chipblas.hipblasBfloat16))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipblasBfloat16 new():
         """Factory function to create hipblasBfloat16 objects with
         newly allocated chipblas.hipblasBfloat16"""
-        cdef chipblas.hipblasBfloat16 *_ptr = <chipblas.hipblasBfloat16 *>stdlib.malloc(sizeof(chipblas.hipblasBfloat16))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipblasBfloat16.from_ptr(_ptr, owner=True)
+        cdef chipblas.hipblasBfloat16 *ptr;
+        hipblasBfloat16.__allocate(&ptr)
+        return hipblasBfloat16.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipblasBfloat16.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_data(self, i):
         """Get value ``data`` of ``self._ptr[i]``.
         """
@@ -179,15 +233,24 @@ cdef class hipblasComplex:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chipblas.hipblasComplex** ptr):
+        ptr[0] = <chipblas.hipblasComplex *>stdlib.malloc(sizeof(chipblas.hipblasComplex))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipblasComplex new():
         """Factory function to create hipblasComplex objects with
         newly allocated chipblas.hipblasComplex"""
-        cdef chipblas.hipblasComplex *_ptr = <chipblas.hipblasComplex *>stdlib.malloc(sizeof(chipblas.hipblasComplex))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipblasComplex.from_ptr(_ptr, owner=True)
+        cdef chipblas.hipblasComplex *ptr;
+        hipblasComplex.__allocate(&ptr)
+        return hipblasComplex.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipblasComplex.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -247,15 +310,24 @@ cdef class hipblasDoubleComplex:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chipblas.hipblasDoubleComplex** ptr):
+        ptr[0] = <chipblas.hipblasDoubleComplex *>stdlib.malloc(sizeof(chipblas.hipblasDoubleComplex))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipblasDoubleComplex new():
         """Factory function to create hipblasDoubleComplex objects with
         newly allocated chipblas.hipblasDoubleComplex"""
-        cdef chipblas.hipblasDoubleComplex *_ptr = <chipblas.hipblasDoubleComplex *>stdlib.malloc(sizeof(chipblas.hipblasDoubleComplex))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipblasDoubleComplex.from_ptr(_ptr, owner=True)
+        cdef chipblas.hipblasDoubleComplex *ptr;
+        hipblasDoubleComplex.__allocate(&ptr)
+        return hipblasDoubleComplex.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipblasDoubleComplex.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -353,46 +425,68 @@ class hipblasInt8Datatype_t(enum.IntEnum):
     HIPBLAS_INT8_DATATYPE_INT8 = chipblas.HIPBLAS_INT8_DATATYPE_INT8
     HIPBLAS_INT8_DATATYPE_PACK_INT8x4 = chipblas.HIPBLAS_INT8_DATATYPE_PACK_INT8x4
 
+@cython.embedsignature(True)
 def hipblasCreate():
     """! \brief Create hipblas handle. */
     """
-    pass
+    handle = hipblasHandle_t.from_ptr(NULL,owner=True)
+    hipblasCreate_____retval = hipblasStatus_t(chipblas.hipblasCreate(&handle._ptr))    # fully specified
+    return (hipblasCreate_____retval,handle)
 
-def hipblasDestroy(handle):
+
+@cython.embedsignature(True)
+def hipblasDestroy(hipblasHandle_t handle):
     """! \brief Destroys the library context created using hipblasCreate() */
     """
-    pass
+    hipblasDestroy_____retval = hipblasStatus_t(chipblas.hipblasDestroy(handle._ptr))    # fully specified
+    return hipblasDestroy_____retval
 
-def hipblasSetStream(handle, streamId):
+
+@cython.embedsignature(True)
+def hipblasSetStream(hipblasHandle_t handle, streamId):
     """! \brief Set stream for handle */
     """
     pass
 
-def hipblasGetStream(handle):
+@cython.embedsignature(True)
+def hipblasGetStream(hipblasHandle_t handle):
     """! \brief Get stream[0] for handle */
     """
     pass
 
-def hipblasSetPointerMode(handle, mode):
+@cython.embedsignature(True)
+def hipblasSetPointerMode(hipblasHandle_t handle, object mode):
     """! \brief Set hipblas pointer mode */
     """
-    pass
+    if not isinstance(mode,hipblasPointerMode_t):
+        raise TypeError("argument 'mode' must be of type 'hipblasPointerMode_t'")
+    hipblasSetPointerMode_____retval = hipblasStatus_t(chipblas.hipblasSetPointerMode(handle._ptr,mode.value))    # fully specified
+    return hipblasSetPointerMode_____retval
 
-def hipblasGetPointerMode(handle, mode):
+
+@cython.embedsignature(True)
+def hipblasGetPointerMode(hipblasHandle_t handle, mode):
     """! \brief Get hipblas pointer mode */
     """
     pass
 
-def hipblasSetInt8Datatype(handle, int8Type):
+@cython.embedsignature(True)
+def hipblasSetInt8Datatype(hipblasHandle_t handle, object int8Type):
     """! \brief Set hipblas int8 Datatype */
     """
-    pass
+    if not isinstance(int8Type,hipblasInt8Datatype_t):
+        raise TypeError("argument 'int8Type' must be of type 'hipblasInt8Datatype_t'")
+    hipblasSetInt8Datatype_____retval = hipblasStatus_t(chipblas.hipblasSetInt8Datatype(handle._ptr,int8Type.value))    # fully specified
+    return hipblasSetInt8Datatype_____retval
 
-def hipblasGetInt8Datatype(handle, int8Type):
+
+@cython.embedsignature(True)
+def hipblasGetInt8Datatype(hipblasHandle_t handle, int8Type):
     """! \brief Get hipblas int8 Datatype*/
     """
     pass
 
+@cython.embedsignature(True)
 def hipblasSetVector(int n, int elemSize, x, int incx, y, int incy):
     """! \brief copy vector from host to device
         @param[in]
@@ -414,6 +508,7 @@ def hipblasSetVector(int n, int elemSize, x, int incx, y, int incy):
     """
     pass
 
+@cython.embedsignature(True)
 def hipblasGetVector(int n, int elemSize, x, int incx, y, int incy):
     """! \brief copy vector from device to host
         @param[in]
@@ -435,6 +530,7 @@ def hipblasGetVector(int n, int elemSize, x, int incx, y, int incy):
     """
     pass
 
+@cython.embedsignature(True)
 def hipblasSetMatrix(int rows, int cols, int elemSize, AP, int lda, BP, int ldb):
     """! \brief copy matrix from host to device
         @param[in]
@@ -459,6 +555,7 @@ def hipblasSetMatrix(int rows, int cols, int elemSize, AP, int lda, BP, int ldb)
     """
     pass
 
+@cython.embedsignature(True)
 def hipblasGetMatrix(int rows, int cols, int elemSize, AP, int lda, BP, int ldb):
     """! \brief copy matrix from device to host
         @param[in]
@@ -483,6 +580,7 @@ def hipblasGetMatrix(int rows, int cols, int elemSize, AP, int lda, BP, int ldb)
     """
     pass
 
+@cython.embedsignature(True)
 def hipblasSetVectorAsync(int n, int elemSize, x, int incx, y, int incy, stream):
     """! \brief asynchronously copy vector from host to device
         \details
@@ -509,6 +607,7 @@ def hipblasSetVectorAsync(int n, int elemSize, x, int incx, y, int incy, stream)
     """
     pass
 
+@cython.embedsignature(True)
 def hipblasGetVectorAsync(int n, int elemSize, x, int incx, y, int incy, stream):
     """! \brief asynchronously copy vector from device to host
         \details
@@ -535,6 +634,7 @@ def hipblasGetVectorAsync(int n, int elemSize, x, int incx, y, int incy, stream)
     """
     pass
 
+@cython.embedsignature(True)
 def hipblasSetMatrixAsync(int rows, int cols, int elemSize, AP, int lda, BP, int ldb, stream):
     """! \brief asynchronously copy matrix from host to device
         \details
@@ -564,6 +664,7 @@ def hipblasSetMatrixAsync(int rows, int cols, int elemSize, AP, int lda, BP, int
     """
     pass
 
+@cython.embedsignature(True)
 def hipblasGetMatrixAsync(int rows, int cols, int elemSize, AP, int lda, BP, int ldb, stream):
     """! \brief asynchronously copy matrix from device to host
         \details
@@ -593,17 +694,24 @@ def hipblasGetMatrixAsync(int rows, int cols, int elemSize, AP, int lda, BP, int
     """
     pass
 
-def hipblasSetAtomicsMode(handle, atomics_mode):
+@cython.embedsignature(True)
+def hipblasSetAtomicsMode(hipblasHandle_t handle, object atomics_mode):
     """! \brief Set hipblasSetAtomicsMode*/
     """
-    pass
+    if not isinstance(atomics_mode,hipblasAtomicsMode_t):
+        raise TypeError("argument 'atomics_mode' must be of type 'hipblasAtomicsMode_t'")
+    hipblasSetAtomicsMode_____retval = hipblasStatus_t(chipblas.hipblasSetAtomicsMode(handle._ptr,atomics_mode.value))    # fully specified
+    return hipblasSetAtomicsMode_____retval
 
-def hipblasGetAtomicsMode(handle, atomics_mode):
+
+@cython.embedsignature(True)
+def hipblasGetAtomicsMode(hipblasHandle_t handle, atomics_mode):
     """! \brief Get hipblasSetAtomicsMode*/
     """
     pass
 
-def hipblasIsamax(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasIsamax(hipblasHandle_t handle, int n, x, int incx, result):
     """! @{
         \brief BLAS Level 1 API
 
@@ -631,22 +739,26 @@ def hipblasIsamax(handle, int n, x, int incx, result):
     """
     pass
 
-def hipblasIdamax(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasIdamax(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasIcamax(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasIcamax(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasIzamax(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasIzamax(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasIsamin(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasIsamin(hipblasHandle_t handle, int n, x, int incx, result):
     """! @{
         \brief BLAS Level 1 API
 
@@ -674,22 +786,26 @@ def hipblasIsamin(handle, int n, x, int incx, result):
     """
     pass
 
-def hipblasIdamin(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasIdamin(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasIcamin(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasIcamin(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasIzamin(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasIzamin(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasSasum(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasSasum(hipblasHandle_t handle, int n, x, int incx, result):
     """! @{
         \brief BLAS Level 1 API
 
@@ -718,22 +834,26 @@ def hipblasSasum(handle, int n, x, int incx, result):
     """
     pass
 
-def hipblasDasum(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasDasum(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasScasum(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasScasum(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasDzasum(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasDzasum(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasHaxpy(handle, int n, alpha, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasHaxpy(hipblasHandle_t handle, int n, __uint16_t alpha, x, int incx, y, int incy):
     """! @{
         \brief BLAS Level 1 API
 
@@ -766,27 +886,32 @@ def hipblasHaxpy(handle, int n, alpha, x, int incx, y, int incy):
     """
     pass
 
-def hipblasSaxpy(handle, int n, alpha, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasSaxpy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
     """
     """
     pass
 
-def hipblasDaxpy(handle, int n, alpha, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasDaxpy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
     """
     """
     pass
 
-def hipblasCaxpy(handle, int n, alpha, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasCaxpy(hipblasHandle_t handle, int n, hipblasComplex alpha, x, int incx, y, int incy):
     """
     """
     pass
 
-def hipblasZaxpy(handle, int n, alpha, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasZaxpy(hipblasHandle_t handle, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy):
     """
     """
     pass
 
-def hipblasScopy(handle, int n, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasScopy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
     """! @{
         \brief BLAS Level 1 API
 
@@ -817,22 +942,26 @@ def hipblasScopy(handle, int n, x, int incx, y, int incy):
     """
     pass
 
-def hipblasDcopy(handle, int n, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasDcopy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
     """
     """
     pass
 
-def hipblasCcopy(handle, int n, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasCcopy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
     """
     """
     pass
 
-def hipblasZcopy(handle, int n, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasZcopy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
     """
     """
     pass
 
-def hipblasHdot(handle, int n, x, int incx, y, int incy, result):
+@cython.embedsignature(True)
+def hipblasHdot(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
     """! @{
         \brief BLAS Level 1 API
 
@@ -871,42 +1000,50 @@ def hipblasHdot(handle, int n, x, int incx, y, int incy, result):
     """
     pass
 
-def hipblasBfdot(handle, int n, x, int incx, y, int incy, result):
+@cython.embedsignature(True)
+def hipblasBfdot(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
     """
     """
     pass
 
-def hipblasSdot(handle, int n, x, int incx, y, int incy, result):
+@cython.embedsignature(True)
+def hipblasSdot(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
     """
     """
     pass
 
-def hipblasDdot(handle, int n, x, int incx, y, int incy, result):
+@cython.embedsignature(True)
+def hipblasDdot(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
     """
     """
     pass
 
-def hipblasCdotc(handle, int n, x, int incx, y, int incy, result):
+@cython.embedsignature(True)
+def hipblasCdotc(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
     """
     """
     pass
 
-def hipblasCdotu(handle, int n, x, int incx, y, int incy, result):
+@cython.embedsignature(True)
+def hipblasCdotu(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
     """
     """
     pass
 
-def hipblasZdotc(handle, int n, x, int incx, y, int incy, result):
+@cython.embedsignature(True)
+def hipblasZdotc(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
     """
     """
     pass
 
-def hipblasZdotu(handle, int n, x, int incx, y, int incy, result):
+@cython.embedsignature(True)
+def hipblasZdotu(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
     """
     """
     pass
 
-def hipblasSnrm2(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasSnrm2(hipblasHandle_t handle, int n, x, int incx, result):
     """! @{
         \brief BLAS Level 1 API
 
@@ -937,22 +1074,26 @@ def hipblasSnrm2(handle, int n, x, int incx, result):
     """
     pass
 
-def hipblasDnrm2(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasDnrm2(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasScnrm2(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasScnrm2(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasDznrm2(handle, int n, x, int incx, result):
+@cython.embedsignature(True)
+def hipblasDznrm2(hipblasHandle_t handle, int n, x, int incx, result):
     """
     """
     pass
 
-def hipblasSrot(handle, int n, x, int incx, y, int incy, c, s):
+@cython.embedsignature(True)
+def hipblasSrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
     """! @{
         \brief BLAS Level 1 API
 
@@ -986,32 +1127,38 @@ def hipblasSrot(handle, int n, x, int incx, y, int incy, c, s):
     """
     pass
 
-def hipblasDrot(handle, int n, x, int incx, y, int incy, c, s):
+@cython.embedsignature(True)
+def hipblasDrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
     """
     """
     pass
 
-def hipblasCrot(handle, int n, x, int incx, y, int incy, c, s):
+@cython.embedsignature(True)
+def hipblasCrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
     """
     """
     pass
 
-def hipblasCsrot(handle, int n, x, int incx, y, int incy, c, s):
+@cython.embedsignature(True)
+def hipblasCsrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
     """
     """
     pass
 
-def hipblasZrot(handle, int n, x, int incx, y, int incy, c, s):
+@cython.embedsignature(True)
+def hipblasZrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
     """
     """
     pass
 
-def hipblasZdrot(handle, int n, x, int incx, y, int incy, c, s):
+@cython.embedsignature(True)
+def hipblasZdrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
     """
     """
     pass
 
-def hipblasSrotg(handle, a, b, c, s):
+@cython.embedsignature(True)
+def hipblasSrotg(hipblasHandle_t handle, a, b, c, s):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1038,22 +1185,26 @@ def hipblasSrotg(handle, a, b, c, s):
     """
     pass
 
-def hipblasDrotg(handle, a, b, c, s):
+@cython.embedsignature(True)
+def hipblasDrotg(hipblasHandle_t handle, a, b, c, s):
     """
     """
     pass
 
-def hipblasCrotg(handle, a, b, c, s):
+@cython.embedsignature(True)
+def hipblasCrotg(hipblasHandle_t handle, a, b, c, s):
     """
     """
     pass
 
-def hipblasZrotg(handle, a, b, c, s):
+@cython.embedsignature(True)
+def hipblasZrotg(hipblasHandle_t handle, a, b, c, s):
     """
     """
     pass
 
-def hipblasSrotm(handle, int n, x, int incx, y, int incy, param):
+@cython.embedsignature(True)
+def hipblasSrotm(hipblasHandle_t handle, int n, x, int incx, y, int incy, param):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1095,12 +1246,14 @@ def hipblasSrotm(handle, int n, x, int incx, y, int incy, param):
     """
     pass
 
-def hipblasDrotm(handle, int n, x, int incx, y, int incy, param):
+@cython.embedsignature(True)
+def hipblasDrotm(hipblasHandle_t handle, int n, x, int incx, y, int incy, param):
     """
     """
     pass
 
-def hipblasSrotmg(handle, d1, d2, x1, y1, param):
+@cython.embedsignature(True)
+def hipblasSrotmg(hipblasHandle_t handle, d1, d2, x1, y1, param):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1140,12 +1293,14 @@ def hipblasSrotmg(handle, d1, d2, x1, y1, param):
     """
     pass
 
-def hipblasDrotmg(handle, d1, d2, x1, y1, param):
+@cython.embedsignature(True)
+def hipblasDrotmg(hipblasHandle_t handle, d1, d2, x1, y1, param):
     """
     """
     pass
 
-def hipblasSscal(handle, int n, alpha, x, int incx):
+@cython.embedsignature(True)
+def hipblasSscal(hipblasHandle_t handle, int n, x, int incx):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1173,32 +1328,38 @@ def hipblasSscal(handle, int n, alpha, x, int incx):
     """
     pass
 
-def hipblasDscal(handle, int n, alpha, x, int incx):
+@cython.embedsignature(True)
+def hipblasDscal(hipblasHandle_t handle, int n, x, int incx):
     """
     """
     pass
 
-def hipblasCscal(handle, int n, alpha, x, int incx):
+@cython.embedsignature(True)
+def hipblasCscal(hipblasHandle_t handle, int n, hipblasComplex alpha, x, int incx):
     """
     """
     pass
 
-def hipblasCsscal(handle, int n, alpha, x, int incx):
+@cython.embedsignature(True)
+def hipblasCsscal(hipblasHandle_t handle, int n, x, int incx):
     """
     """
     pass
 
-def hipblasZscal(handle, int n, alpha, x, int incx):
+@cython.embedsignature(True)
+def hipblasZscal(hipblasHandle_t handle, int n, hipblasDoubleComplex alpha, x, int incx):
     """
     """
     pass
 
-def hipblasZdscal(handle, int n, alpha, x, int incx):
+@cython.embedsignature(True)
+def hipblasZdscal(hipblasHandle_t handle, int n, x, int incx):
     """
     """
     pass
 
-def hipblasSswap(handle, int n, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasSswap(hipblasHandle_t handle, int n, x, int incx, y, int incy):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1229,22 +1390,26 @@ def hipblasSswap(handle, int n, x, int incx, y, int incy):
     """
     pass
 
-def hipblasDswap(handle, int n, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasDswap(hipblasHandle_t handle, int n, x, int incx, y, int incy):
     """
     """
     pass
 
-def hipblasCswap(handle, int n, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasCswap(hipblasHandle_t handle, int n, x, int incx, y, int incy):
     """
     """
     pass
 
-def hipblasZswap(handle, int n, x, int incx, y, int incy):
+@cython.embedsignature(True)
+def hipblasZswap(hipblasHandle_t handle, int n, x, int incx, y, int incy):
     """
     """
     pass
 
-def hipblasSgbmv(handle, trans, int m, int n, int kl, int ku, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasSgbmv(hipblasHandle_t handle, object trans, int m, int n, int kl, int ku, AP, int lda, x, int incx, y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1314,24 +1479,36 @@ def hipblasSgbmv(handle, trans, int m, int n, int kl, int ku, alpha, AP, int lda
         incy      [int]
                   specifies the increment for the elements of y.
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasDgbmv(handle, trans, int m, int n, int kl, int ku, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasDgbmv(hipblasHandle_t handle, object trans, int m, int n, int kl, int ku, AP, int lda, x, int incx, y, int incy):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCgbmv(handle, trans, int m, int n, int kl, int ku, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasCgbmv(hipblasHandle_t handle, object trans, int m, int n, int kl, int ku, hipblasComplex alpha, AP, int lda, x, int incx, hipblasComplex beta, y, int incy):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZgbmv(handle, trans, int m, int n, int kl, int ku, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasZgbmv(hipblasHandle_t handle, object trans, int m, int n, int kl, int ku, hipblasDoubleComplex alpha, AP, int lda, x, int incx, hipblasDoubleComplex beta, y, int incy):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasSgemv(handle, trans, int m, int n, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasSgemv(hipblasHandle_t handle, object trans, int m, int n, AP, int lda, x, int incx, y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1380,24 +1557,36 @@ def hipblasSgemv(handle, trans, int m, int n, alpha, AP, int lda, x, int incx, b
         incy      [int]
                   specifies the increment for the elements of y.
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasDgemv(handle, trans, int m, int n, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasDgemv(hipblasHandle_t handle, object trans, int m, int n, AP, int lda, x, int incx, y, int incy):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCgemv(handle, trans, int m, int n, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasCgemv(hipblasHandle_t handle, object trans, int m, int n, hipblasComplex alpha, AP, int lda, x, int incx, hipblasComplex beta, y, int incy):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZgemv(handle, trans, int m, int n, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasZgemv(hipblasHandle_t handle, object trans, int m, int n, hipblasDoubleComplex alpha, AP, int lda, x, int incx, hipblasDoubleComplex beta, y, int incy):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasSger(handle, int m, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasSger(hipblasHandle_t handle, int m, int n, x, int incx, y, int incy, AP, int lda):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1443,32 +1632,38 @@ def hipblasSger(handle, int m, int n, alpha, x, int incx, y, int incy, AP, int l
     """
     pass
 
-def hipblasDger(handle, int m, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasDger(hipblasHandle_t handle, int m, int n, x, int incx, y, int incy, AP, int lda):
     """
     """
     pass
 
-def hipblasCgeru(handle, int m, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasCgeru(hipblasHandle_t handle, int m, int n, hipblasComplex alpha, x, int incx, y, int incy, AP, int lda):
     """
     """
     pass
 
-def hipblasCgerc(handle, int m, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasCgerc(hipblasHandle_t handle, int m, int n, hipblasComplex alpha, x, int incx, y, int incy, AP, int lda):
     """
     """
     pass
 
-def hipblasZgeru(handle, int m, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasZgeru(hipblasHandle_t handle, int m, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy, AP, int lda):
     """
     """
     pass
 
-def hipblasZgerc(handle, int m, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasZgerc(hipblasHandle_t handle, int m, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy, AP, int lda):
     """
     """
     pass
 
-def hipblasChbmv(handle, uplo, int n, int k, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasChbmv(hipblasHandle_t handle, object uplo, int n, int k, hipblasComplex alpha, AP, int lda, x, int incx, hipblasComplex beta, y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1544,14 +1739,20 @@ def hipblasChbmv(handle, uplo, int n, int k, alpha, AP, int lda, x, int incx, be
         incy      [int]
                   specifies the increment for the elements of y.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZhbmv(handle, uplo, int n, int k, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasZhbmv(hipblasHandle_t handle, object uplo, int n, int k, hipblasDoubleComplex alpha, AP, int lda, x, int incx, hipblasDoubleComplex beta, y, int incy):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasChemv(handle, uplo, int n, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasChemv(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, AP, int lda, x, int incx, hipblasComplex beta, y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1606,14 +1807,20 @@ def hipblasChemv(handle, uplo, int n, alpha, AP, int lda, x, int incx, beta, y, 
         incy      [int]
                   specifies the increment for the elements of y.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZhemv(handle, uplo, int n, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasZhemv(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, AP, int lda, x, int incx, hipblasDoubleComplex beta, y, int incy):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasCher(handle, uplo, int n, alpha, x, int incx, AP, int lda):
+@cython.embedsignature(True)
+def hipblasCher(hipblasHandle_t handle, object uplo, int n, x, int incx, AP, int lda):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1662,14 +1869,20 @@ def hipblasCher(handle, uplo, int n, alpha, x, int incx, AP, int lda):
         lda       [int]
                   specifies the leading dimension of A. Must be at least max(1, n).
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZher(handle, uplo, int n, alpha, x, int incx, AP, int lda):
+@cython.embedsignature(True)
+def hipblasZher(hipblasHandle_t handle, object uplo, int n, x, int incx, AP, int lda):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasCher2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasCher2(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, x, int incx, y, int incy, AP, int lda):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1723,14 +1936,20 @@ def hipblasCher2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP, int l
         lda       [int]
                   specifies the leading dimension of A. Must be at least max(lda, 1).
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZher2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasZher2(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy, AP, int lda):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasChpmv(handle, uplo, int n, alpha, AP, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasChpmv(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, AP, x, int incx, hipblasComplex beta, y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1797,14 +2016,20 @@ def hipblasChpmv(handle, uplo, int n, alpha, AP, x, int incx, beta, y, int incy)
         incy      [int]
                   specifies the increment for the elements of y.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZhpmv(handle, uplo, int n, alpha, AP, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasZhpmv(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, AP, x, int incx, hipblasDoubleComplex beta, y, int incy):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasChpr(handle, uplo, int n, alpha, x, int incx, AP):
+@cython.embedsignature(True)
+def hipblasChpr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1866,14 +2091,20 @@ def hipblasChpr(handle, uplo, int n, alpha, x, int incx, AP):
                 Note that the imaginary part of the diagonal elements are not accessed and are assumed
                 to be 0.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZhpr(handle, uplo, int n, alpha, x, int incx, AP):
+@cython.embedsignature(True)
+def hipblasZhpr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasChpr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP):
+@cython.embedsignature(True)
+def hipblasChpr2(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, x, int incx, y, int incy, AP):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1940,14 +2171,20 @@ def hipblasChpr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP):
                 Note that the imaginary part of the diagonal elements are not accessed and are assumed
                 to be 0.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZhpr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP):
+@cython.embedsignature(True)
+def hipblasZhpr2(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy, AP):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasSsbmv(handle, uplo, int n, int k, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasSsbmv(hipblasHandle_t handle, object uplo, int n, int k, AP, int lda, x, int incx, y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1996,14 +2233,20 @@ def hipblasSsbmv(handle, uplo, int n, int k, alpha, AP, int lda, x, int incx, be
         incy      [int]
                   specifies the increment for the elements of y
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasDsbmv(handle, uplo, int n, int k, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasDsbmv(hipblasHandle_t handle, object uplo, int n, int k, AP, int lda, x, int incx, y, int incy):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasSspmv(handle, uplo, int n, alpha, AP, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasSspmv(hipblasHandle_t handle, object uplo, int n, AP, x, int incx, y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2046,14 +2289,20 @@ def hipblasSspmv(handle, uplo, int n, alpha, AP, x, int incx, beta, y, int incy)
         incy      [int]
                   specifies the increment for the elements of y
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasDspmv(handle, uplo, int n, alpha, AP, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasDspmv(hipblasHandle_t handle, object uplo, int n, AP, x, int incx, y, int incy):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasSspr(handle, uplo, int n, alpha, x, int incx, AP):
+@cython.embedsignature(True)
+def hipblasSspr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2115,24 +2364,36 @@ def hipblasSspr(handle, uplo, int n, alpha, x, int incx, AP):
                             3 6 8 9
                             4 7 9 0
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasDspr(handle, uplo, int n, alpha, x, int incx, AP):
+@cython.embedsignature(True)
+def hipblasDspr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasCspr(handle, uplo, int n, alpha, x, int incx, AP):
+@cython.embedsignature(True)
+def hipblasCspr(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, x, int incx, AP):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZspr(handle, uplo, int n, alpha, x, int incx, AP):
+@cython.embedsignature(True)
+def hipblasZspr(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, x, int incx, AP):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasSspr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP):
+@cython.embedsignature(True)
+def hipblasSspr2(hipblasHandle_t handle, object uplo, int n, x, int incx, y, int incy, AP):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2199,14 +2460,20 @@ def hipblasSspr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP):
                             3 6 8 9
                             4 7 9 0
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasDspr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP):
+@cython.embedsignature(True)
+def hipblasDspr2(hipblasHandle_t handle, object uplo, int n, x, int incx, y, int incy, AP):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasSsymv(handle, uplo, int n, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasSsymv(hipblasHandle_t handle, object uplo, int n, AP, int lda, x, int incx, y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2252,24 +2519,36 @@ def hipblasSsymv(handle, uplo, int n, alpha, AP, int lda, x, int incx, beta, y, 
         incy      [int]
                   specifies the increment for the elements of y
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasDsymv(handle, uplo, int n, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasDsymv(hipblasHandle_t handle, object uplo, int n, AP, int lda, x, int incx, y, int incy):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasCsymv(handle, uplo, int n, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasCsymv(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, AP, int lda, x, int incx, hipblasComplex beta, y, int incy):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZsymv(handle, uplo, int n, alpha, AP, int lda, x, int incx, beta, y, int incy):
+@cython.embedsignature(True)
+def hipblasZsymv(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, AP, int lda, x, int incx, hipblasDoubleComplex beta, y, int incy):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasSsyr(handle, uplo, int n, alpha, x, int incx, AP, int lda):
+@cython.embedsignature(True)
+def hipblasSsyr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP, int lda):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2310,24 +2589,36 @@ def hipblasSsyr(handle, uplo, int n, alpha, x, int incx, AP, int lda):
         lda       [int]
                   specifies the leading dimension of A.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasDsyr(handle, uplo, int n, alpha, x, int incx, AP, int lda):
+@cython.embedsignature(True)
+def hipblasDsyr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP, int lda):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasCsyr(handle, uplo, int n, alpha, x, int incx, AP, int lda):
+@cython.embedsignature(True)
+def hipblasCsyr(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, x, int incx, AP, int lda):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZsyr(handle, uplo, int n, alpha, x, int incx, AP, int lda):
+@cython.embedsignature(True)
+def hipblasZsyr(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, x, int incx, AP, int lda):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasSsyr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasSsyr2(hipblasHandle_t handle, object uplo, int n, x, int incx, y, int incy, AP, int lda):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2373,24 +2664,36 @@ def hipblasSsyr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP, int l
         lda       [int]
                   specifies the leading dimension of A.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasDsyr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasDsyr2(hipblasHandle_t handle, object uplo, int n, x, int incx, y, int incy, AP, int lda):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasCsyr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasCsyr2(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, x, int incx, y, int incy, AP, int lda):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZsyr2(handle, uplo, int n, alpha, x, int incx, y, int incy, AP, int lda):
+@cython.embedsignature(True)
+def hipblasZsyr2(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy, AP, int lda):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasStbmv(handle, uplo, transA, diag, int m, int k, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasStbmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, int k, AP, int lda, x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2467,24 +2770,52 @@ def hipblasStbmv(handle, uplo, transA, diag, int m, int k, AP, int lda, x, int i
         incx      [int]
                   specifies the increment for the elements of x.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasDtbmv(handle, uplo, transA, diag, int m, int k, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasDtbmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, int k, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasCtbmv(handle, uplo, transA, diag, int m, int k, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasCtbmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, int k, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasZtbmv(handle, uplo, transA, diag, int m, int k, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasZtbmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, int k, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasStbsv(handle, uplo, transA, diag, int n, int k, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasStbsv(hipblasHandle_t handle, object uplo, object transA, object diag, int n, int k, AP, int lda, x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2545,24 +2876,52 @@ def hipblasStbsv(handle, uplo, transA, diag, int n, int k, AP, int lda, x, int i
         incx      [int]
                   specifies the increment for the elements of x.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasDtbsv(handle, uplo, transA, diag, int n, int k, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasDtbsv(hipblasHandle_t handle, object uplo, object transA, object diag, int n, int k, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasCtbsv(handle, uplo, transA, diag, int n, int k, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasCtbsv(hipblasHandle_t handle, object uplo, object transA, object diag, int n, int k, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasZtbsv(handle, uplo, transA, diag, int n, int k, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasZtbsv(hipblasHandle_t handle, object uplo, object transA, object diag, int n, int k, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasStpmv(handle, uplo, transA, diag, int m, AP, x, int incx):
+@cython.embedsignature(True)
+def hipblasStpmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2620,24 +2979,52 @@ def hipblasStpmv(handle, uplo, transA, diag, int m, AP, x, int incx):
         incx    [int]
                 specifies the increment for the elements of x. incx must not be zero.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasDtpmv(handle, uplo, transA, diag, int m, AP, x, int incx):
+@cython.embedsignature(True)
+def hipblasDtpmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasCtpmv(handle, uplo, transA, diag, int m, AP, x, int incx):
+@cython.embedsignature(True)
+def hipblasCtpmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasZtpmv(handle, uplo, transA, diag, int m, AP, x, int incx):
+@cython.embedsignature(True)
+def hipblasZtpmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasStpsv(handle, uplo, transA, diag, int m, AP, x, int incx):
+@cython.embedsignature(True)
+def hipblasStpsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2689,24 +3076,52 @@ def hipblasStpsv(handle, uplo, transA, diag, int m, AP, x, int incx):
         incx      [int]
                   specifies the increment for the elements of x.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasDtpsv(handle, uplo, transA, diag, int m, AP, x, int incx):
+@cython.embedsignature(True)
+def hipblasDtpsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasCtpsv(handle, uplo, transA, diag, int m, AP, x, int incx):
+@cython.embedsignature(True)
+def hipblasCtpsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasZtpsv(handle, uplo, transA, diag, int m, AP, x, int incx):
+@cython.embedsignature(True)
+def hipblasZtpsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasStrmv(handle, uplo, transA, diag, int m, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasStrmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2759,24 +3174,52 @@ def hipblasStrmv(handle, uplo, transA, diag, int m, AP, int lda, x, int incx):
         incx      [int]
                   specifies the increment for the elements of x.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasDtrmv(handle, uplo, transA, diag, int m, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasDtrmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasCtrmv(handle, uplo, transA, diag, int m, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasCtrmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasZtrmv(handle, uplo, transA, diag, int m, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasZtrmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasStrsv(handle, uplo, transA, diag, int m, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasStrsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2829,24 +3272,52 @@ def hipblasStrsv(handle, uplo, transA, diag, int m, AP, int lda, x, int incx):
         incx      [int]
                   specifies the increment for the elements of x.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasDtrsv(handle, uplo, transA, diag, int m, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasDtrsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasCtrsv(handle, uplo, transA, diag, int m, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasCtrsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasZtrsv(handle, uplo, transA, diag, int m, AP, int lda, x, int incx):
+@cython.embedsignature(True)
+def hipblasZtrsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasHgemm(handle, transA, transB, int m, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasHgemm(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, __uint16_t alpha, AP, int lda, BP, int ldb, __uint16_t beta, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -2906,29 +3377,54 @@ def hipblasHgemm(handle, transA, transB, int m, int n, int k, alpha, AP, int lda
         ldc       [int]
                   specifies the leading dimension of C.
     """
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(transB,hipblasOperation_t):
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasSgemm(handle, transA, transB, int m, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasSgemm(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
     """
     """
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(transB,hipblasOperation_t):
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasDgemm(handle, transA, transB, int m, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasDgemm(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
     """
     """
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(transB,hipblasOperation_t):
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCgemm(handle, transA, transB, int m, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasCgemm(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, hipblasComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(transB,hipblasOperation_t):
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZgemm(handle, transA, transB, int m, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZgemm(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, hipblasDoubleComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(transB,hipblasOperation_t):
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCherk(handle, uplo, transA, int n, int k, alpha, AP, int lda, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasCherk(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -2999,14 +3495,24 @@ def hipblasCherk(handle, uplo, transA, int n, int k, alpha, AP, int lda, beta, C
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZherk(handle, uplo, transA, int n, int k, alpha, AP, int lda, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZherk(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCherkx(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasCherkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3088,14 +3594,24 @@ def hipblasCherkx(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, in
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZherkx(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZherkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCher2k(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasCher2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3175,14 +3691,24 @@ def hipblasCher2k(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, in
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZher2k(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZher2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasSsymm(handle, side, uplo, int m, int n, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasSsymm(hipblasHandle_t handle, object side, object uplo, int m, int n, AP, int lda, BP, int ldb, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3259,24 +3785,44 @@ def hipblasSsymm(handle, side, uplo, int m, int n, alpha, AP, int lda, BP, int l
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, m )
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasDsymm(handle, side, uplo, int m, int n, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasDsymm(hipblasHandle_t handle, object side, object uplo, int m, int n, AP, int lda, BP, int ldb, CP, int ldc):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasCsymm(handle, side, uplo, int m, int n, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasCsymm(hipblasHandle_t handle, object side, object uplo, int m, int n, hipblasComplex alpha, AP, int lda, BP, int ldb, hipblasComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZsymm(handle, side, uplo, int m, int n, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZsymm(hipblasHandle_t handle, object side, object uplo, int m, int n, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, hipblasDoubleComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasSsyrk(handle, uplo, transA, int n, int k, alpha, AP, int lda, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasSsyrk(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3350,24 +3896,44 @@ def hipblasSsyrk(handle, uplo, transA, int n, int k, alpha, AP, int lda, beta, C
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasDsyrk(handle, uplo, transA, int n, int k, alpha, AP, int lda, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasDsyrk(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCsyrk(handle, uplo, transA, int n, int k, alpha, AP, int lda, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasCsyrk(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasComplex alpha, AP, int lda, hipblasComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZsyrk(handle, uplo, transA, int n, int k, alpha, AP, int lda, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZsyrk(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasDoubleComplex alpha, AP, int lda, hipblasDoubleComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasSsyr2k(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasSsyr2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3446,24 +4012,44 @@ def hipblasSsyr2k(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, in
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasDsyr2k(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasDsyr2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCsyr2k(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasCsyr2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, hipblasComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZsyr2k(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZsyr2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, hipblasDoubleComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasSsyrkx(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasSsyrkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3545,24 +4131,44 @@ def hipblasSsyrkx(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, in
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasDsyrkx(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasDsyrkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCsyrkx(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasCsyrkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, hipblasComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZsyrkx(handle, uplo, transA, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZsyrkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, hipblasDoubleComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasSgeam(handle, transA, transB, int m, int n, alpha, AP, int lda, beta, BP, int ldb, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasSgeam(hipblasHandle_t handle, object transA, object transB, int m, int n, AP, int lda, BP, int ldb, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3618,24 +4224,44 @@ def hipblasSgeam(handle, transA, transB, int m, int n, alpha, AP, int lda, beta,
         ldc       [int]
                   specifies the leading dimension of C.
     """
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(transB,hipblasOperation_t):
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasDgeam(handle, transA, transB, int m, int n, alpha, AP, int lda, beta, BP, int ldb, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasDgeam(hipblasHandle_t handle, object transA, object transB, int m, int n, AP, int lda, BP, int ldb, CP, int ldc):
     """
     """
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(transB,hipblasOperation_t):
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCgeam(handle, transA, transB, int m, int n, alpha, AP, int lda, beta, BP, int ldb, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasCgeam(hipblasHandle_t handle, object transA, object transB, int m, int n, hipblasComplex alpha, AP, int lda, hipblasComplex beta, BP, int ldb, CP, int ldc):
     """
     """
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(transB,hipblasOperation_t):
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZgeam(handle, transA, transB, int m, int n, alpha, AP, int lda, beta, BP, int ldb, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZgeam(hipblasHandle_t handle, object transA, object transB, int m, int n, hipblasDoubleComplex alpha, AP, int lda, hipblasDoubleComplex beta, BP, int ldb, CP, int ldc):
     """
     """
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(transB,hipblasOperation_t):
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasChemm(handle, side, uplo, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasChemm(hipblasHandle_t handle, object side, object uplo, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, hipblasComplex beta, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3713,14 +4339,24 @@ def hipblasChemm(handle, side, uplo, int n, int k, alpha, AP, int lda, BP, int l
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, m )
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasZhemm(handle, side, uplo, int n, int k, alpha, AP, int lda, BP, int ldb, beta, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZhemm(hipblasHandle_t handle, object side, object uplo, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, hipblasDoubleComplex beta, CP, int ldc):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     pass
 
-def hipblasStrmm(handle, side, uplo, transA, diag, int m, int n, alpha, AP, int lda, BP, int ldb):
+@cython.embedsignature(True)
+def hipblasStrmm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, AP, int lda, BP, int ldb):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3817,24 +4453,60 @@ def hipblasStrmm(handle, side, uplo, transA, diag, int m, int n, alpha, AP, int 
         ldb    [int]
                ldb specifies the first dimension of B. ldb >= max( 1, m ).
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasDtrmm(handle, side, uplo, transA, diag, int m, int n, alpha, AP, int lda, BP, int ldb):
+@cython.embedsignature(True)
+def hipblasDtrmm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, AP, int lda, BP, int ldb):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasCtrmm(handle, side, uplo, transA, diag, int m, int n, alpha, AP, int lda, BP, int ldb):
+@cython.embedsignature(True)
+def hipblasCtrmm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, hipblasComplex alpha, AP, int lda, BP, int ldb):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasZtrmm(handle, side, uplo, transA, diag, int m, int n, alpha, AP, int lda, BP, int ldb):
+@cython.embedsignature(True)
+def hipblasZtrmm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasStrsm(handle, side, uplo, transA, diag, int m, int n, alpha, AP, int lda, BP, int ldb):
+@cython.embedsignature(True)
+def hipblasStrsm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, AP, int lda, BP, int ldb):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3924,24 +4596,60 @@ def hipblasStrsm(handle, side, uplo, transA, diag, int m, int n, alpha, AP, int 
         ldb    [int]
                ldb specifies the first dimension of B. ldb >= max( 1, m ).
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasDtrsm(handle, side, uplo, transA, diag, int m, int n, alpha, AP, int lda, BP, int ldb):
+@cython.embedsignature(True)
+def hipblasDtrsm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, AP, int lda, BP, int ldb):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasCtrsm(handle, side, uplo, transA, diag, int m, int n, alpha, AP, int lda, BP, int ldb):
+@cython.embedsignature(True)
+def hipblasCtrsm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, hipblasComplex alpha, AP, int lda, BP, int ldb):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasZtrsm(handle, side, uplo, transA, diag, int m, int n, alpha, AP, int lda, BP, int ldb):
+@cython.embedsignature(True)
+def hipblasZtrsm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasStrtri(handle, uplo, diag, int n, AP, int lda, invA, int ldinvA):
+@cython.embedsignature(True)
+def hipblasStrtri(hipblasHandle_t handle, object uplo, object diag, int n, AP, int lda, invA, int ldinvA):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3979,24 +4687,44 @@ def hipblasStrtri(handle, uplo, diag, int n, AP, int lda, invA, int ldinvA):
         ldinvA    [int]
                   specifies the leading dimension of invA.
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasDtrtri(handle, uplo, diag, int n, AP, int lda, invA, int ldinvA):
+@cython.embedsignature(True)
+def hipblasDtrtri(hipblasHandle_t handle, object uplo, object diag, int n, AP, int lda, invA, int ldinvA):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasCtrtri(handle, uplo, diag, int n, AP, int lda, invA, int ldinvA):
+@cython.embedsignature(True)
+def hipblasCtrtri(hipblasHandle_t handle, object uplo, object diag, int n, AP, int lda, invA, int ldinvA):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasZtrtri(handle, uplo, diag, int n, AP, int lda, invA, int ldinvA):
+@cython.embedsignature(True)
+def hipblasZtrtri(hipblasHandle_t handle, object uplo, object diag, int n, AP, int lda, invA, int ldinvA):
     """
     """
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     pass
 
-def hipblasSdgmm(handle, side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasSdgmm(hipblasHandle_t handle, object side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -4041,24 +4769,36 @@ def hipblasSdgmm(handle, side, int m, int n, AP, int lda, x, int incx, CP, int l
         ldc       [int]
                   specifies the leading dimension of C.
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
     pass
 
-def hipblasDdgmm(handle, side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasDdgmm(hipblasHandle_t handle, object side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
     pass
 
-def hipblasCdgmm(handle, side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasCdgmm(hipblasHandle_t handle, object side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
     pass
 
-def hipblasZdgmm(handle, side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
+@cython.embedsignature(True)
+def hipblasZdgmm(hipblasHandle_t handle, object side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
     """
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
     pass
 
-def hipblasSgetrf(handle, const int n, A, const int lda, ipiv, info):
+@cython.embedsignature(True)
+def hipblasSgetrf(hipblasHandle_t handle, const int n, A, const int lda, ipiv, info):
     """! @{
         \brief SOLVER API
 
@@ -4113,22 +4853,26 @@ def hipblasSgetrf(handle, const int n, A, const int lda, ipiv, info):
     """
     pass
 
-def hipblasDgetrf(handle, const int n, A, const int lda, ipiv, info):
+@cython.embedsignature(True)
+def hipblasDgetrf(hipblasHandle_t handle, const int n, A, const int lda, ipiv, info):
     """
     """
     pass
 
-def hipblasCgetrf(handle, const int n, A, const int lda, ipiv, info):
+@cython.embedsignature(True)
+def hipblasCgetrf(hipblasHandle_t handle, const int n, A, const int lda, ipiv, info):
     """
     """
     pass
 
-def hipblasZgetrf(handle, const int n, A, const int lda, ipiv, info):
+@cython.embedsignature(True)
+def hipblasZgetrf(hipblasHandle_t handle, const int n, A, const int lda, ipiv, info):
     """
     """
     pass
 
-def hipblasSgetrs(handle, trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
+@cython.embedsignature(True)
+def hipblasSgetrs(hipblasHandle_t handle, object trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
     """! @{
         \brief SOLVER API
 
@@ -4184,24 +4928,36 @@ def hipblasSgetrs(handle, trans, const int n, const int nrhs, A, const int lda, 
                   If info = 0, successful exit.
                   If info = j < 0, the j-th argument is invalid.
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasDgetrs(handle, trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
+@cython.embedsignature(True)
+def hipblasDgetrs(hipblasHandle_t handle, object trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCgetrs(handle, trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
+@cython.embedsignature(True)
+def hipblasCgetrs(hipblasHandle_t handle, object trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZgetrs(handle, trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
+@cython.embedsignature(True)
+def hipblasZgetrs(hipblasHandle_t handle, object trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasSgels(handle, trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
+@cython.embedsignature(True)
+def hipblasSgels(hipblasHandle_t handle, object trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
     """! @{
         \brief GELS solves an overdetermined (or underdetermined) linear system defined by an m-by-n
         matrix A, and a corresponding matrix B, using the QR factorization computed by \ref hipblasSgeqrf "GEQRF" (or the LQ
@@ -4270,24 +5026,36 @@ def hipblasSgels(handle, trans, const int m, const int n, const int nrhs, A, con
                     If info = i > 0, the solution could not be computed because input matrix A is
                     rank deficient; the i-th diagonal element of its triangular factor is zero.
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasDgels(handle, trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
+@cython.embedsignature(True)
+def hipblasDgels(hipblasHandle_t handle, object trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasCgels(handle, trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
+@cython.embedsignature(True)
+def hipblasCgels(hipblasHandle_t handle, object trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasZgels(handle, trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
+@cython.embedsignature(True)
+def hipblasZgels(hipblasHandle_t handle, object trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
     """
     """
+    if not isinstance(trans,hipblasOperation_t):
+        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     pass
 
-def hipblasSgeqrf(handle, const int m, const int n, A, const int lda, ipiv, info):
+@cython.embedsignature(True)
+def hipblasSgeqrf(hipblasHandle_t handle, const int m, const int n, A, const int lda, ipiv, info):
     """! @{
         \brief SOLVER API
 
@@ -4348,22 +5116,26 @@ def hipblasSgeqrf(handle, const int m, const int n, A, const int lda, ipiv, info
     """
     pass
 
-def hipblasDgeqrf(handle, const int m, const int n, A, const int lda, ipiv, info):
+@cython.embedsignature(True)
+def hipblasDgeqrf(hipblasHandle_t handle, const int m, const int n, A, const int lda, ipiv, info):
     """
     """
     pass
 
-def hipblasCgeqrf(handle, const int m, const int n, A, const int lda, ipiv, info):
+@cython.embedsignature(True)
+def hipblasCgeqrf(hipblasHandle_t handle, const int m, const int n, A, const int lda, ipiv, info):
     """
     """
     pass
 
-def hipblasZgeqrf(handle, const int m, const int n, A, const int lda, ipiv, info):
+@cython.embedsignature(True)
+def hipblasZgeqrf(hipblasHandle_t handle, const int m, const int n, A, const int lda, ipiv, info):
     """
     """
     pass
 
-def hipblasGemmEx(handle, transA, transB, int m, int n, int k, alpha, A, aType, int lda, B, bType, int ldb, beta, C, cType, int ldc, computeType, algo):
+@cython.embedsignature(True)
+def hipblasGemmEx(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, A, object aType, int lda, B, object bType, int ldb, C, object cType, int ldc, object computeType, object algo):
     """! \brief BLAS EX API
 
         \details
@@ -4445,9 +5217,24 @@ def hipblasGemmEx(handle, transA, transB, int m, int n, int k, alpha, A, aType, 
         algo      [hipblasGemmAlgo_t]
                   enumerant specifying the algorithm type.
     """
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(transB,hipblasOperation_t):
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(aType,hipblasDatatype_t):
+        raise TypeError("argument 'aType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(bType,hipblasDatatype_t):
+        raise TypeError("argument 'bType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(cType,hipblasDatatype_t):
+        raise TypeError("argument 'cType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(computeType,hipblasDatatype_t):
+        raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(algo,hipblasGemmAlgo_t):
+        raise TypeError("argument 'algo' must be of type 'hipblasGemmAlgo_t'")
     pass
 
-def hipblasTrsmEx(handle, side, uplo, transA, diag, int m, int n, alpha, A, int lda, B, int ldb, invA, int invAsize, computeType):
+@cython.embedsignature(True)
+def hipblasTrsmEx(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, A, int lda, B, int ldb, invA, int invAsize, object computeType):
     """! BLAS EX API
 
         \details
@@ -4568,9 +5355,20 @@ def hipblasTrsmEx(handle, side, uplo, transA, diag, int m, int n, alpha, A, int 
         computeType [hipblasDatatype_t]
                 specifies the datatype of computation
     """
+    if not isinstance(side,hipblasSideMode_t):
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+    if not isinstance(uplo,hipblasFillMode_t):
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+    if not isinstance(transA,hipblasOperation_t):
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+    if not isinstance(diag,hipblasDiagType_t):
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")                    
+    if not isinstance(computeType,hipblasDatatype_t):
+        raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")
     pass
 
-def hipblasAxpyEx(handle, int n, alpha, alphaType, x, xType, int incx, y, yType, int incy, executionType):
+@cython.embedsignature(True)
+def hipblasAxpyEx(hipblasHandle_t handle, int n, object alphaType, x, object xType, int incx, y, object yType, int incy, object executionType):
     """! \brief BLAS EX API
 
         \details
@@ -4611,9 +5409,18 @@ def hipblasAxpyEx(handle, int n, alpha, alphaType, x, xType, int incx, y, yType,
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
+    if not isinstance(alphaType,hipblasDatatype_t):
+        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(xType,hipblasDatatype_t):
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(yType,hipblasDatatype_t):
+        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(executionType,hipblasDatatype_t):
+        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     pass
 
-def hipblasDotEx(handle, int n, x, xType, int incx, y, yType, int incy, result, resultType, executionType):
+@cython.embedsignature(True)
+def hipblasDotEx(hipblasHandle_t handle, int n, x, object xType, int incx, y, object yType, int incy, result, object resultType, object executionType):
     """! @{
         \brief BLAS EX API
 
@@ -4661,14 +5468,32 @@ def hipblasDotEx(handle, int n, x, xType, int incx, y, yType, int incy, result, 
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
+    if not isinstance(xType,hipblasDatatype_t):
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(yType,hipblasDatatype_t):
+        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(resultType,hipblasDatatype_t):
+        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(executionType,hipblasDatatype_t):
+        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     pass
 
-def hipblasDotcEx(handle, int n, x, xType, int incx, y, yType, int incy, result, resultType, executionType):
+@cython.embedsignature(True)
+def hipblasDotcEx(hipblasHandle_t handle, int n, x, object xType, int incx, y, object yType, int incy, result, object resultType, object executionType):
     """
     """
+    if not isinstance(xType,hipblasDatatype_t):
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(yType,hipblasDatatype_t):
+        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(resultType,hipblasDatatype_t):
+        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(executionType,hipblasDatatype_t):
+        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     pass
 
-def hipblasNrm2Ex(handle, int n, x, xType, int incx, result, resultType, executionType):
+@cython.embedsignature(True)
+def hipblasNrm2Ex(hipblasHandle_t handle, int n, x, object xType, int incx, result, object resultType, object executionType):
     """! \brief BLAS_EX API
 
         \details
@@ -4705,9 +5530,16 @@ def hipblasNrm2Ex(handle, int n, x, xType, int incx, result, resultType, executi
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
+    if not isinstance(xType,hipblasDatatype_t):
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(resultType,hipblasDatatype_t):
+        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(executionType,hipblasDatatype_t):
+        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     pass
 
-def hipblasRotEx(handle, int n, x, xType, int incx, y, yType, int incy, c, s, csType, executionType):
+@cython.embedsignature(True)
+def hipblasRotEx(hipblasHandle_t handle, int n, x, object xType, int incx, y, object yType, int incy, c, s, object csType, object executionType):
     """! \brief BLAS EX API
 
         \details
@@ -4757,9 +5589,18 @@ def hipblasRotEx(handle, int n, x, xType, int incx, y, yType, int incy, c, s, cs
         executionType [hipblasDatatype_t]
                        specifies the datatype of computation.
     """
+    if not isinstance(xType,hipblasDatatype_t):
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(yType,hipblasDatatype_t):
+        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(csType,hipblasDatatype_t):
+        raise TypeError("argument 'csType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(executionType,hipblasDatatype_t):
+        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     pass
 
-def hipblasScalEx(handle, int n, alpha, alphaType, x, xType, int incx, executionType):
+@cython.embedsignature(True)
+def hipblasScalEx(hipblasHandle_t handle, int n, object alphaType, x, object xType, int incx, object executionType):
     """! \brief BLAS EX API
 
         \details
@@ -4792,9 +5633,16 @@ def hipblasScalEx(handle, int n, alpha, alphaType, x, xType, int incx, execution
         executionType [hipblasDatatype_t]
                        specifies the datatype of computation.
     """
+    if not isinstance(alphaType,hipblasDatatype_t):
+        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(xType,hipblasDatatype_t):
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+    if not isinstance(executionType,hipblasDatatype_t):
+        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     pass
 
-def hipblasStatusToString(status):
+@cython.embedsignature(True)
+def hipblasStatusToString(object status):
     """! HIPBLAS Auxiliary API
 
         \details
@@ -4806,4 +5654,6 @@ def hipblasStatusToString(status):
         status  [hipblasStatus_t]
                 hipBLAS status to convert to string
     """
-    pass
+    if not isinstance(status,hipblasStatus_t):
+        raise TypeError("argument 'status' must be of type 'hipblasStatus_t'")
+    cdef const char * hipblasStatusToString_____retval = chipblas.hipblasStatusToString(status.value)    # fully specified

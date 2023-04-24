@@ -331,11 +331,20 @@ class Typed:
         return self._type_handler.const_qualifiers(
             postorder=postorder,canonical=canonical)
 
-    def lookup_innermost_typeref(self):
+    @property
+    def has_typeref(self):
+        """If this type is referencing any other typedef, record, or enum.
+
+        Returns:
+            bool: If this type is referencing any other typedef, record, or enum.
+        """
+        return self.typeref != None
+
+    def lookup_innermost_type(self):
         from . import tree
 
         curr = self
-        while isinstance(curr,Typed) and curr.typeref != None:
+        while isinstance(curr,Typed) and curr.has_typeref:
             curr = curr.typeref
         return curr
 

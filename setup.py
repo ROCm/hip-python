@@ -16,7 +16,15 @@ import textwrap
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 
-from _codegen import CythonPackageGenerator, Node, MacroDefinition, Function, Parm, Field, PointerParamIntent
+from _codegen import (
+    CythonPackageGenerator,
+    Node,
+    MacroDefinition,
+    Function,
+    Parm,
+    Field,
+    PointerParamIntent,
+)
 
 __author__ = "AMD_AUTHOR"
 
@@ -32,6 +40,7 @@ CFLAGS = os.environ.get("CFLAGS", None)
 HIP_PLATFORM = os.environ.get("HIP_PLATFORM", "amd")
 if HIP_PLATFORM not in ("amd", "hcc"):
     raise RuntimeError("Currently only HIP_PLATFORM=amd is supported")
+
 
 class HipPlatform(enum.IntEnum):
     AMD = 0
@@ -65,7 +74,7 @@ def get_bool_environ_var(env_var, default):
 HIP_PYTHON_SETUP_GENERATE = get_bool_environ_var("HIP_PYTHON_SETUP_GENERATE", "true")
 HIP_PYTHON_SETUP_BUILD = get_bool_environ_var("HIP_PYTHON_SETUP_BUILD", "true")
 HIP_PYTHON_SETUP_RUNTIME_LINKING = get_bool_environ_var(
-    "HIP_PYTHON_SETUP_RUNTIME_LINKING", "false"
+    "HIP_PYTHON_SETUP_RUNTIME_LINKING", "true"
 )
 HIP_PYTHON_SETUP_VERBOSE = get_bool_environ_var("HIP_PYTHON_SETUP_VERBOSE", "true")
 
@@ -191,15 +200,15 @@ if HIP_PYTHON_SETUP_GENERATE:
             if "hip/" in node.file:
                 return True
         return False
-    
+
     def hip_ptr_parm_intent(node: Parm):
         """Flags pointer parameters that are actually return values
         that are passed as C-style reference, i.e. `<type>* <param>`.
-        
+
         Rules
         -----
 
-        1. We exploit that ``hip/hip_runtime_api.h``` does not 
+        1. We exploit that ``hip/hip_runtime_api.h``` does not
         work with typed arrays, so every pointer
         of basic type is actually a return value
         that is created internally by the function.
@@ -212,38 +221,26 @@ if HIP_PYTHON_SETUP_GENERATE:
         if (
             node.is_pointer_to_record(degree=2)
             or node.is_pointer_to_enum(degree=1)
-            or (node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1))
+            or (
+                node.is_pointer_to_basic_type(degree=1)
+                and not node.is_pointer_to_char(degree=1)
+            )
         ):
             return PointerParamIntent.OUT
         return PointerParamIntent.IN
-    
+
     def hip_ptr_rank(node: Node):
-        """Flags pointer parameters that are actually return values
-        that are passed as C-style reference, i.e. `<type>* <param>`.
-        
-        Rules
-        -----
-
-        1. We exploit that ``hip/hip_runtime_api.h``` does not 
-        work with typed arrays, so every pointer
-        of basic type is actually a return value
-        that is created internally by the function.
-        Exceptions are ``char*`` parameters, which
-        are C-style strings.
-
-        2. All ``void``, ``struct``, ``union``, ``enum`` double (``**``) pointers are
-        return values that are created internally by the respective function.
-        """
-        if isinstance(node,Parm):
-            if ( 
+        """Actual rank of the variables underlying pointer indirections."""
+        if isinstance(node, Parm):
+            if (
                 node.is_pointer_to_basic_type(degree=1)
                 or node.is_pointer_to_enum(degree=1)
                 or node.is_pointer_to_record(degree=1)
                 or node.is_pointer_to_record(degree=2)
             ):
                 return 0
-        elif isinstance(node,Field):
-            pass # nothing to do
+        elif isinstance(node, Field):
+            pass  # nothing to do
         return 1
 
     CythonPackageGenerator(
@@ -262,6 +259,8 @@ if HIP_PYTHON_SETUP_GENERATE:
 
     # hipblas
     def hipblas_node_filter(node: Node):
+        if node.name in ("__int16_t","__uint16_t"):
+            return True
         if not isinstance(node, MacroDefinition):
             if node.name[0:7] in ("hipblas,HIPBLAS"):
                 if "Batched" in node.name:
@@ -277,6 +276,57 @@ if HIP_PYTHON_SETUP_GENERATE:
             return True
         return False
 
+    def hipblas_ptr_parm_intent(node: Parm):
+        """Flags pointer parameters that are actually return values
+        that are passed as C-style reference, i.e. `<type>* <param>`.
+        """
+        if node.is_pointer_to_void(degree=2) and node.name == "handle":
+            return PointerParamIntent.OUT
+        return PointerParamIntent.IN
+
+    def hipblas_ptr_rank(node: Node):
+        """Actual rank of the variables underlying pointer indirections.
+        
+        Most of the parameter names follow LAPACK convention.
+        """
+        if isinstance(node, Parm):
+            if node.name == "handle":
+                return 0
+            elif node.name in (
+                "alpha",
+                "beta",
+                "gamma",
+                "delta",
+                "epsilon",
+                "zeta",
+                "eta",
+                "theta",
+                "iota",
+                "kappa",
+                "lambda",
+                "mu",
+                "nu",
+                "xi",
+                "omicron",
+                "pi",
+                "rho",
+                "sigma",
+                "tau",
+                "upsilon",
+                "phi",
+                "chi",
+                "psi",
+                "omega",
+            ):
+                return 0
+            elif len(node.name) == 1 and node.name.lower() in "abcdefghijklmnopqrstuvwxyz":
+                return 1
+            elif len(node.name) == 1 and node.name in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+                return 2
+        elif isinstance(node, Field):
+            pass  # nothing to do
+        return 1
+
     generator = CythonPackageGenerator(
         "hipblas",
         rocm_inc,
@@ -284,10 +334,16 @@ if HIP_PYTHON_SETUP_GENERATE:
         runtime_linking=HIP_PYTHON_SETUP_RUNTIME_LINKING,
         dll="libhipblas.so",
         node_filter=hipblas_node_filter,
+        ptr_parm_intent=hipblas_ptr_parm_intent,
+        ptr_rank=hipblas_ptr_rank,
         cflags=hip_platform.cflags,
     )
     generator.c_interface_preamble += """\
 from .chip cimport hipStream_t
+"""
+    generator.python_interface_preamble += """\
+#ctypedef int16_t __int16_t
+#ctypedef uint16_t __uint16_t
 """
     generator.write_package_files(output_dir="hip")
 
@@ -329,7 +385,7 @@ if HIP_PYTHON_SETUP_BUILD:
         )
 
     ext_modules = []
-    for (name, sources) in cython_module_sources:
+    for name, sources in cython_module_sources:
         extension = create_extension(name, sources)
         ext_modules += cythonize(
             [extension],
