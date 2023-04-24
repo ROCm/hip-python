@@ -1,6 +1,7 @@
 # AMD_COPYRIGHT
 from libc cimport stdlib
 from libc.stdint cimport *
+import cython
 import enum
 
 from . cimport chip
@@ -199,15 +200,24 @@ cdef class hipUUID_t:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipUUID_t** ptr):
+        ptr[0] = <chip.hipUUID_t *>stdlib.malloc(sizeof(chip.hipUUID_t))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipUUID_t new():
         """Factory function to create hipUUID_t objects with
         newly allocated chip.hipUUID_t"""
-        cdef chip.hipUUID_t *_ptr = <chip.hipUUID_t *>stdlib.malloc(sizeof(chip.hipUUID_t))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipUUID_t.from_ptr(_ptr, owner=True)
+        cdef chip.hipUUID_t *ptr;
+        hipUUID_t.__allocate(&ptr)
+        return hipUUID_t.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipUUID_t.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_bytes(self, i):
         """Get value of ``bytes`` of ``self._ptr[i]``.
         """
@@ -268,15 +278,24 @@ cdef class hipDeviceProp_t:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipDeviceProp_t** ptr):
+        ptr[0] = <chip.hipDeviceProp_t *>stdlib.malloc(sizeof(chip.hipDeviceProp_t))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipDeviceProp_t new():
         """Factory function to create hipDeviceProp_t objects with
         newly allocated chip.hipDeviceProp_t"""
-        cdef chip.hipDeviceProp_t *_ptr = <chip.hipDeviceProp_t *>stdlib.malloc(sizeof(chip.hipDeviceProp_t))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipDeviceProp_t.from_ptr(_ptr, owner=True)
+        cdef chip.hipDeviceProp_t *ptr;
+        hipDeviceProp_t.__allocate(&ptr)
+        return hipDeviceProp_t.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipDeviceProp_t.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_name(self, i):
         """Get value of ``name`` of ``self._ptr[i]``.
         """
@@ -1014,15 +1033,24 @@ cdef class hipPointerAttribute_t:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipPointerAttribute_t** ptr):
+        ptr[0] = <chip.hipPointerAttribute_t *>stdlib.malloc(sizeof(chip.hipPointerAttribute_t))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipPointerAttribute_t new():
         """Factory function to create hipPointerAttribute_t objects with
         newly allocated chip.hipPointerAttribute_t"""
-        cdef chip.hipPointerAttribute_t *_ptr = <chip.hipPointerAttribute_t *>stdlib.malloc(sizeof(chip.hipPointerAttribute_t))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipPointerAttribute_t.from_ptr(_ptr, owner=True)
+        cdef chip.hipPointerAttribute_t *ptr;
+        hipPointerAttribute_t.__allocate(&ptr)
+        return hipPointerAttribute_t.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipPointerAttribute_t.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_memoryType(self, i):
         """Get value of ``memoryType`` of ``self._ptr[i]``.
         """
@@ -1340,15 +1368,24 @@ cdef class hipChannelFormatDesc:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipChannelFormatDesc** ptr):
+        ptr[0] = <chip.hipChannelFormatDesc *>stdlib.malloc(sizeof(chip.hipChannelFormatDesc))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipChannelFormatDesc new():
         """Factory function to create hipChannelFormatDesc objects with
         newly allocated chip.hipChannelFormatDesc"""
-        cdef chip.hipChannelFormatDesc *_ptr = <chip.hipChannelFormatDesc *>stdlib.malloc(sizeof(chip.hipChannelFormatDesc))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipChannelFormatDesc.from_ptr(_ptr, owner=True)
+        cdef chip.hipChannelFormatDesc *ptr;
+        hipChannelFormatDesc.__allocate(&ptr)
+        return hipChannelFormatDesc.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipChannelFormatDesc.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -1462,15 +1499,24 @@ cdef class HIP_ARRAY_DESCRIPTOR:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_ARRAY_DESCRIPTOR** ptr):
+        ptr[0] = <chip.HIP_ARRAY_DESCRIPTOR *>stdlib.malloc(sizeof(chip.HIP_ARRAY_DESCRIPTOR))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_ARRAY_DESCRIPTOR new():
         """Factory function to create HIP_ARRAY_DESCRIPTOR objects with
         newly allocated chip.HIP_ARRAY_DESCRIPTOR"""
-        cdef chip.HIP_ARRAY_DESCRIPTOR *_ptr = <chip.HIP_ARRAY_DESCRIPTOR *>stdlib.malloc(sizeof(chip.HIP_ARRAY_DESCRIPTOR))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_ARRAY_DESCRIPTOR.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_ARRAY_DESCRIPTOR *ptr;
+        HIP_ARRAY_DESCRIPTOR.__allocate(&ptr)
+        return HIP_ARRAY_DESCRIPTOR.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_ARRAY_DESCRIPTOR.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_Width(self, i):
         """Get value ``Width`` of ``self._ptr[i]``.
         """
@@ -1560,15 +1606,24 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_ARRAY3D_DESCRIPTOR** ptr):
+        ptr[0] = <chip.HIP_ARRAY3D_DESCRIPTOR *>stdlib.malloc(sizeof(chip.HIP_ARRAY3D_DESCRIPTOR))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_ARRAY3D_DESCRIPTOR new():
         """Factory function to create HIP_ARRAY3D_DESCRIPTOR objects with
         newly allocated chip.HIP_ARRAY3D_DESCRIPTOR"""
-        cdef chip.HIP_ARRAY3D_DESCRIPTOR *_ptr = <chip.HIP_ARRAY3D_DESCRIPTOR *>stdlib.malloc(sizeof(chip.HIP_ARRAY3D_DESCRIPTOR))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_ARRAY3D_DESCRIPTOR.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_ARRAY3D_DESCRIPTOR *ptr;
+        HIP_ARRAY3D_DESCRIPTOR.__allocate(&ptr)
+        return HIP_ARRAY3D_DESCRIPTOR.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_ARRAY3D_DESCRIPTOR.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_Width(self, i):
         """Get value ``Width`` of ``self._ptr[i]``.
         """
@@ -1686,15 +1741,24 @@ cdef class hipArray:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipArray** ptr):
+        ptr[0] = <chip.hipArray *>stdlib.malloc(sizeof(chip.hipArray))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipArray new():
         """Factory function to create hipArray objects with
         newly allocated chip.hipArray"""
-        cdef chip.hipArray *_ptr = <chip.hipArray *>stdlib.malloc(sizeof(chip.hipArray))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipArray.from_ptr(_ptr, owner=True)
+        cdef chip.hipArray *ptr;
+        hipArray.__allocate(&ptr)
+        return hipArray.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipArray.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -1847,15 +1911,24 @@ cdef class hip_Memcpy2D:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hip_Memcpy2D** ptr):
+        ptr[0] = <chip.hip_Memcpy2D *>stdlib.malloc(sizeof(chip.hip_Memcpy2D))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hip_Memcpy2D new():
         """Factory function to create hip_Memcpy2D objects with
         newly allocated chip.hip_Memcpy2D"""
-        cdef chip.hip_Memcpy2D *_ptr = <chip.hip_Memcpy2D *>stdlib.malloc(sizeof(chip.hip_Memcpy2D))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hip_Memcpy2D.from_ptr(_ptr, owner=True)
+        cdef chip.hip_Memcpy2D *ptr;
+        hip_Memcpy2D.__allocate(&ptr)
+        return hip_Memcpy2D.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hip_Memcpy2D.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_srcXInBytes(self, i):
         """Get value ``srcXInBytes`` of ``self._ptr[i]``.
         """
@@ -2037,15 +2110,24 @@ cdef class hipMipmappedArray:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipMipmappedArray** ptr):
+        ptr[0] = <chip.hipMipmappedArray *>stdlib.malloc(sizeof(chip.hipMipmappedArray))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipMipmappedArray new():
         """Factory function to create hipMipmappedArray objects with
         newly allocated chip.hipMipmappedArray"""
-        cdef chip.hipMipmappedArray *_ptr = <chip.hipMipmappedArray *>stdlib.malloc(sizeof(chip.hipMipmappedArray))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipMipmappedArray.from_ptr(_ptr, owner=True)
+        cdef chip.hipMipmappedArray *ptr;
+        hipMipmappedArray.__allocate(&ptr)
+        return hipMipmappedArray.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipMipmappedArray.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -2308,15 +2390,24 @@ cdef class HIP_TEXTURE_DESC_st:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_TEXTURE_DESC_st** ptr):
+        ptr[0] = <chip.HIP_TEXTURE_DESC_st *>stdlib.malloc(sizeof(chip.HIP_TEXTURE_DESC_st))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_TEXTURE_DESC_st new():
         """Factory function to create HIP_TEXTURE_DESC_st objects with
         newly allocated chip.HIP_TEXTURE_DESC_st"""
-        cdef chip.HIP_TEXTURE_DESC_st *_ptr = <chip.HIP_TEXTURE_DESC_st *>stdlib.malloc(sizeof(chip.HIP_TEXTURE_DESC_st))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_TEXTURE_DESC_st.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_TEXTURE_DESC_st *ptr;
+        HIP_TEXTURE_DESC_st.__allocate(&ptr)
+        return HIP_TEXTURE_DESC_st.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_TEXTURE_DESC_st.__allocate(&self._ptr)
+       self.ptr_owner = True
     # TODO is_enum_constantarray: add
     def get_filterMode(self, i):
         """Get value of ``filterMode`` of ``self._ptr[i]``.
@@ -2583,15 +2674,24 @@ cdef class hipResourceDesc_union_0_struct_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipResourceDesc_union_0_struct_0** ptr):
+        ptr[0] = <chip.hipResourceDesc_union_0_struct_0 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipResourceDesc_union_0_struct_0 new():
         """Factory function to create hipResourceDesc_union_0_struct_0 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_0"""
-        cdef chip.hipResourceDesc_union_0_struct_0 *_ptr = <chip.hipResourceDesc_union_0_struct_0 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipResourceDesc_union_0_struct_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipResourceDesc_union_0_struct_0 *ptr;
+        hipResourceDesc_union_0_struct_0.__allocate(&ptr)
+        return hipResourceDesc_union_0_struct_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipResourceDesc_union_0_struct_0.__allocate(&self._ptr)
+       self.ptr_owner = True
 
 
 
@@ -2623,15 +2723,24 @@ cdef class hipResourceDesc_union_0_struct_1:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipResourceDesc_union_0_struct_1** ptr):
+        ptr[0] = <chip.hipResourceDesc_union_0_struct_1 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipResourceDesc_union_0_struct_1 new():
         """Factory function to create hipResourceDesc_union_0_struct_1 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_1"""
-        cdef chip.hipResourceDesc_union_0_struct_1 *_ptr = <chip.hipResourceDesc_union_0_struct_1 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_1))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipResourceDesc_union_0_struct_1.from_ptr(_ptr, owner=True)
+        cdef chip.hipResourceDesc_union_0_struct_1 *ptr;
+        hipResourceDesc_union_0_struct_1.__allocate(&ptr)
+        return hipResourceDesc_union_0_struct_1.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipResourceDesc_union_0_struct_1.__allocate(&self._ptr)
+       self.ptr_owner = True
 
 
 
@@ -2663,15 +2772,24 @@ cdef class hipResourceDesc_union_0_struct_2:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipResourceDesc_union_0_struct_2** ptr):
+        ptr[0] = <chip.hipResourceDesc_union_0_struct_2 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipResourceDesc_union_0_struct_2 new():
         """Factory function to create hipResourceDesc_union_0_struct_2 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_2"""
-        cdef chip.hipResourceDesc_union_0_struct_2 *_ptr = <chip.hipResourceDesc_union_0_struct_2 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_2))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipResourceDesc_union_0_struct_2.from_ptr(_ptr, owner=True)
+        cdef chip.hipResourceDesc_union_0_struct_2 *ptr;
+        hipResourceDesc_union_0_struct_2.__allocate(&ptr)
+        return hipResourceDesc_union_0_struct_2.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipResourceDesc_union_0_struct_2.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -2724,15 +2842,24 @@ cdef class hipResourceDesc_union_0_struct_3:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipResourceDesc_union_0_struct_3** ptr):
+        ptr[0] = <chip.hipResourceDesc_union_0_struct_3 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipResourceDesc_union_0_struct_3 new():
         """Factory function to create hipResourceDesc_union_0_struct_3 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_3"""
-        cdef chip.hipResourceDesc_union_0_struct_3 *_ptr = <chip.hipResourceDesc_union_0_struct_3 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_3))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipResourceDesc_union_0_struct_3.from_ptr(_ptr, owner=True)
+        cdef chip.hipResourceDesc_union_0_struct_3 *ptr;
+        hipResourceDesc_union_0_struct_3.__allocate(&ptr)
+        return hipResourceDesc_union_0_struct_3.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipResourceDesc_union_0_struct_3.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -2813,15 +2940,24 @@ cdef class hipResourceDesc_union_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipResourceDesc_union_0** ptr):
+        ptr[0] = <chip.hipResourceDesc_union_0 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipResourceDesc_union_0 new():
         """Factory function to create hipResourceDesc_union_0 objects with
         newly allocated chip.hipResourceDesc_union_0"""
-        cdef chip.hipResourceDesc_union_0 *_ptr = <chip.hipResourceDesc_union_0 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipResourceDesc_union_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipResourceDesc_union_0 *ptr;
+        hipResourceDesc_union_0.__allocate(&ptr)
+        return hipResourceDesc_union_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipResourceDesc_union_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_array(self, i):
         """Get value of ``array`` of ``self._ptr[i]``.
         """
@@ -2881,15 +3017,24 @@ cdef class hipResourceDesc:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipResourceDesc** ptr):
+        ptr[0] = <chip.hipResourceDesc *>stdlib.malloc(sizeof(chip.hipResourceDesc))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipResourceDesc new():
         """Factory function to create hipResourceDesc objects with
         newly allocated chip.hipResourceDesc"""
-        cdef chip.hipResourceDesc *_ptr = <chip.hipResourceDesc *>stdlib.malloc(sizeof(chip.hipResourceDesc))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipResourceDesc.from_ptr(_ptr, owner=True)
+        cdef chip.hipResourceDesc *ptr;
+        hipResourceDesc.__allocate(&ptr)
+        return hipResourceDesc.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipResourceDesc.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_resType(self, i):
         """Get value of ``resType`` of ``self._ptr[i]``.
         """
@@ -2944,15 +3089,24 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_0** ptr):
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_0 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_0 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_0"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_0 *_ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_RESOURCE_DESC_st_union_0_struct_0.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_0 *ptr;
+        HIP_RESOURCE_DESC_st_union_0_struct_0.__allocate(&ptr)
+        return HIP_RESOURCE_DESC_st_union_0_struct_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_RESOURCE_DESC_st_union_0_struct_0.__allocate(&self._ptr)
+       self.ptr_owner = True
 
 
 
@@ -2984,15 +3138,24 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_1** ptr):
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_1 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_1 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_1"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_1 *_ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_1))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_RESOURCE_DESC_st_union_0_struct_1.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_1 *ptr;
+        HIP_RESOURCE_DESC_st_union_0_struct_1.__allocate(&ptr)
+        return HIP_RESOURCE_DESC_st_union_0_struct_1.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_RESOURCE_DESC_st_union_0_struct_1.__allocate(&self._ptr)
+       self.ptr_owner = True
 
 
 
@@ -3024,15 +3187,24 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_2** ptr):
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_2 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_2 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_2"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_2 *_ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_2))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_RESOURCE_DESC_st_union_0_struct_2.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_2 *ptr;
+        HIP_RESOURCE_DESC_st_union_0_struct_2.__allocate(&ptr)
+        return HIP_RESOURCE_DESC_st_union_0_struct_2.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_RESOURCE_DESC_st_union_0_struct_2.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -3108,15 +3280,24 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_3** ptr):
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_3 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_3 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_3"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_3 *_ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_3))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_RESOURCE_DESC_st_union_0_struct_3.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_3 *ptr;
+        HIP_RESOURCE_DESC_st_union_0_struct_3.__allocate(&ptr)
+        return HIP_RESOURCE_DESC_st_union_0_struct_3.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_RESOURCE_DESC_st_union_0_struct_3.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -3220,15 +3401,24 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_4** ptr):
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0_struct_4 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_4 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_4"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_4 *_ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_4))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_RESOURCE_DESC_st_union_0_struct_4.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_4 *ptr;
+        HIP_RESOURCE_DESC_st_union_0_struct_4.__allocate(&ptr)
+        return HIP_RESOURCE_DESC_st_union_0_struct_4.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_RESOURCE_DESC_st_union_0_struct_4.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -3268,15 +3458,24 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0** ptr):
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_RESOURCE_DESC_st_union_0 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0 *_ptr = <chip.HIP_RESOURCE_DESC_st_union_0 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_RESOURCE_DESC_st_union_0.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_RESOURCE_DESC_st_union_0 *ptr;
+        HIP_RESOURCE_DESC_st_union_0.__allocate(&ptr)
+        return HIP_RESOURCE_DESC_st_union_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_RESOURCE_DESC_st_union_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_array(self, i):
         """Get value of ``array`` of ``self._ptr[i]``.
         """
@@ -3343,15 +3542,24 @@ cdef class HIP_RESOURCE_DESC_st:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_RESOURCE_DESC_st** ptr):
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_RESOURCE_DESC_st new():
         """Factory function to create HIP_RESOURCE_DESC_st objects with
         newly allocated chip.HIP_RESOURCE_DESC_st"""
-        cdef chip.HIP_RESOURCE_DESC_st *_ptr = <chip.HIP_RESOURCE_DESC_st *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_RESOURCE_DESC_st.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_RESOURCE_DESC_st *ptr;
+        HIP_RESOURCE_DESC_st.__allocate(&ptr)
+        return HIP_RESOURCE_DESC_st.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_RESOURCE_DESC_st.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_resType(self, i):
         """Get value of ``resType`` of ``self._ptr[i]``.
         """
@@ -3441,15 +3649,24 @@ cdef class hipResourceViewDesc:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipResourceViewDesc** ptr):
+        ptr[0] = <chip.hipResourceViewDesc *>stdlib.malloc(sizeof(chip.hipResourceViewDesc))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipResourceViewDesc new():
         """Factory function to create hipResourceViewDesc objects with
         newly allocated chip.hipResourceViewDesc"""
-        cdef chip.hipResourceViewDesc *_ptr = <chip.hipResourceViewDesc *>stdlib.malloc(sizeof(chip.hipResourceViewDesc))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipResourceViewDesc.from_ptr(_ptr, owner=True)
+        cdef chip.hipResourceViewDesc *ptr;
+        hipResourceViewDesc.__allocate(&ptr)
+        return hipResourceViewDesc.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipResourceViewDesc.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -3595,15 +3812,24 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_RESOURCE_VIEW_DESC_st** ptr):
+        ptr[0] = <chip.HIP_RESOURCE_VIEW_DESC_st *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_VIEW_DESC_st))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_RESOURCE_VIEW_DESC_st new():
         """Factory function to create HIP_RESOURCE_VIEW_DESC_st objects with
         newly allocated chip.HIP_RESOURCE_VIEW_DESC_st"""
-        cdef chip.HIP_RESOURCE_VIEW_DESC_st *_ptr = <chip.HIP_RESOURCE_VIEW_DESC_st *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_VIEW_DESC_st))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_RESOURCE_VIEW_DESC_st.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_RESOURCE_VIEW_DESC_st *ptr;
+        HIP_RESOURCE_VIEW_DESC_st.__allocate(&ptr)
+        return HIP_RESOURCE_VIEW_DESC_st.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_RESOURCE_VIEW_DESC_st.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -3785,15 +4011,24 @@ cdef class hipPitchedPtr:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipPitchedPtr** ptr):
+        ptr[0] = <chip.hipPitchedPtr *>stdlib.malloc(sizeof(chip.hipPitchedPtr))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipPitchedPtr new():
         """Factory function to create hipPitchedPtr objects with
         newly allocated chip.hipPitchedPtr"""
-        cdef chip.hipPitchedPtr *_ptr = <chip.hipPitchedPtr *>stdlib.malloc(sizeof(chip.hipPitchedPtr))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipPitchedPtr.from_ptr(_ptr, owner=True)
+        cdef chip.hipPitchedPtr *ptr;
+        hipPitchedPtr.__allocate(&ptr)
+        return hipPitchedPtr.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipPitchedPtr.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_pitch(self, i):
         """Get value ``pitch`` of ``self._ptr[i]``.
         """
@@ -3867,15 +4102,24 @@ cdef class hipExtent:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExtent** ptr):
+        ptr[0] = <chip.hipExtent *>stdlib.malloc(sizeof(chip.hipExtent))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExtent new():
         """Factory function to create hipExtent objects with
         newly allocated chip.hipExtent"""
-        cdef chip.hipExtent *_ptr = <chip.hipExtent *>stdlib.malloc(sizeof(chip.hipExtent))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExtent.from_ptr(_ptr, owner=True)
+        cdef chip.hipExtent *ptr;
+        hipExtent.__allocate(&ptr)
+        return hipExtent.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExtent.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_width(self, i):
         """Get value ``width`` of ``self._ptr[i]``.
         """
@@ -3949,15 +4193,24 @@ cdef class hipPos:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipPos** ptr):
+        ptr[0] = <chip.hipPos *>stdlib.malloc(sizeof(chip.hipPos))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipPos new():
         """Factory function to create hipPos objects with
         newly allocated chip.hipPos"""
-        cdef chip.hipPos *_ptr = <chip.hipPos *>stdlib.malloc(sizeof(chip.hipPos))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipPos.from_ptr(_ptr, owner=True)
+        cdef chip.hipPos *ptr;
+        hipPos.__allocate(&ptr)
+        return hipPos.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipPos.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -4031,15 +4284,24 @@ cdef class hipMemcpy3DParms:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipMemcpy3DParms** ptr):
+        ptr[0] = <chip.hipMemcpy3DParms *>stdlib.malloc(sizeof(chip.hipMemcpy3DParms))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipMemcpy3DParms new():
         """Factory function to create hipMemcpy3DParms objects with
         newly allocated chip.hipMemcpy3DParms"""
-        cdef chip.hipMemcpy3DParms *_ptr = <chip.hipMemcpy3DParms *>stdlib.malloc(sizeof(chip.hipMemcpy3DParms))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipMemcpy3DParms.from_ptr(_ptr, owner=True)
+        cdef chip.hipMemcpy3DParms *ptr;
+        hipMemcpy3DParms.__allocate(&ptr)
+        return hipMemcpy3DParms.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipMemcpy3DParms.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_srcPos(self, i):
         """Get value of ``srcPos`` of ``self._ptr[i]``.
         """
@@ -4122,15 +4384,24 @@ cdef class HIP_MEMCPY3D:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.HIP_MEMCPY3D** ptr):
+        ptr[0] = <chip.HIP_MEMCPY3D *>stdlib.malloc(sizeof(chip.HIP_MEMCPY3D))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef HIP_MEMCPY3D new():
         """Factory function to create HIP_MEMCPY3D objects with
         newly allocated chip.HIP_MEMCPY3D"""
-        cdef chip.HIP_MEMCPY3D *_ptr = <chip.HIP_MEMCPY3D *>stdlib.malloc(sizeof(chip.HIP_MEMCPY3D))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return HIP_MEMCPY3D.from_ptr(_ptr, owner=True)
+        cdef chip.HIP_MEMCPY3D *ptr;
+        HIP_MEMCPY3D.__allocate(&ptr)
+        return HIP_MEMCPY3D.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       HIP_MEMCPY3D.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_srcXInBytes(self, i):
         """Get value ``srcXInBytes`` of ``self._ptr[i]``.
         """
@@ -5415,10 +5686,14 @@ cdef class double4:
         return wrapper
 
 
-def hipCreateChannelDesc(int x, int y, int z, int w, f):
+@cython.embedsignature(True)
+def hipCreateChannelDesc(int x, int y, int z, int w, object f):
     """
     """
-    pass
+    if not isinstance(f,hipChannelFormatKind):
+        raise TypeError("argument 'f' must be of type 'hipChannelFormatKind'")
+        # fully specified
+
 
 
 cdef class __hip_texture:
@@ -5486,15 +5761,24 @@ cdef class textureReference:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.textureReference** ptr):
+        ptr[0] = <chip.textureReference *>stdlib.malloc(sizeof(chip.textureReference))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef textureReference new():
         """Factory function to create textureReference objects with
         newly allocated chip.textureReference"""
-        cdef chip.textureReference *_ptr = <chip.textureReference *>stdlib.malloc(sizeof(chip.textureReference))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return textureReference.from_ptr(_ptr, owner=True)
+        cdef chip.textureReference *ptr;
+        textureReference.__allocate(&ptr)
+        return textureReference.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       textureReference.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_normalized(self, i):
         """Get value ``normalized`` of ``self._ptr[i]``.
         """
@@ -5696,15 +5980,24 @@ cdef class hipTextureDesc:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipTextureDesc** ptr):
+        ptr[0] = <chip.hipTextureDesc *>stdlib.malloc(sizeof(chip.hipTextureDesc))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipTextureDesc new():
         """Factory function to create hipTextureDesc objects with
         newly allocated chip.hipTextureDesc"""
-        cdef chip.hipTextureDesc *_ptr = <chip.hipTextureDesc *>stdlib.malloc(sizeof(chip.hipTextureDesc))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipTextureDesc.from_ptr(_ptr, owner=True)
+        cdef chip.hipTextureDesc *ptr;
+        hipTextureDesc.__allocate(&ptr)
+        return hipTextureDesc.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipTextureDesc.__allocate(&self._ptr)
+       self.ptr_owner = True
     # TODO is_enum_constantarray: add
     def get_filterMode(self, i):
         """Get value of ``filterMode`` of ``self._ptr[i]``.
@@ -5900,15 +6193,24 @@ cdef class surfaceReference:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.surfaceReference** ptr):
+        ptr[0] = <chip.surfaceReference *>stdlib.malloc(sizeof(chip.surfaceReference))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef surfaceReference new():
         """Factory function to create surfaceReference objects with
         newly allocated chip.surfaceReference"""
-        cdef chip.surfaceReference *_ptr = <chip.surfaceReference *>stdlib.malloc(sizeof(chip.surfaceReference))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return surfaceReference.from_ptr(_ptr, owner=True)
+        cdef chip.surfaceReference *ptr;
+        surfaceReference.__allocate(&ptr)
+        return surfaceReference.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       surfaceReference.__allocate(&self._ptr)
+       self.ptr_owner = True
 
 
 class hipSurfaceBoundaryMode(enum.IntEnum):
@@ -6018,15 +6320,24 @@ cdef class hipIpcMemHandle_st:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipIpcMemHandle_st** ptr):
+        ptr[0] = <chip.hipIpcMemHandle_st *>stdlib.malloc(sizeof(chip.hipIpcMemHandle_st))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipIpcMemHandle_st new():
         """Factory function to create hipIpcMemHandle_st objects with
         newly allocated chip.hipIpcMemHandle_st"""
-        cdef chip.hipIpcMemHandle_st *_ptr = <chip.hipIpcMemHandle_st *>stdlib.malloc(sizeof(chip.hipIpcMemHandle_st))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipIpcMemHandle_st.from_ptr(_ptr, owner=True)
+        cdef chip.hipIpcMemHandle_st *ptr;
+        hipIpcMemHandle_st.__allocate(&ptr)
+        return hipIpcMemHandle_st.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipIpcMemHandle_st.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -6087,15 +6398,24 @@ cdef class hipIpcEventHandle_st:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipIpcEventHandle_st** ptr):
+        ptr[0] = <chip.hipIpcEventHandle_st *>stdlib.malloc(sizeof(chip.hipIpcEventHandle_st))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipIpcEventHandle_st new():
         """Factory function to create hipIpcEventHandle_st objects with
         newly allocated chip.hipIpcEventHandle_st"""
-        cdef chip.hipIpcEventHandle_st *_ptr = <chip.hipIpcEventHandle_st *>stdlib.malloc(sizeof(chip.hipIpcEventHandle_st))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipIpcEventHandle_st.from_ptr(_ptr, owner=True)
+        cdef chip.hipIpcEventHandle_st *ptr;
+        hipIpcEventHandle_st.__allocate(&ptr)
+        return hipIpcEventHandle_st.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipIpcEventHandle_st.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -6225,15 +6545,24 @@ cdef class hipFuncAttributes:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipFuncAttributes** ptr):
+        ptr[0] = <chip.hipFuncAttributes *>stdlib.malloc(sizeof(chip.hipFuncAttributes))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipFuncAttributes new():
         """Factory function to create hipFuncAttributes objects with
         newly allocated chip.hipFuncAttributes"""
-        cdef chip.hipFuncAttributes *_ptr = <chip.hipFuncAttributes *>stdlib.malloc(sizeof(chip.hipFuncAttributes))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipFuncAttributes.from_ptr(_ptr, owner=True)
+        cdef chip.hipFuncAttributes *ptr;
+        hipFuncAttributes.__allocate(&ptr)
+        return hipFuncAttributes.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipFuncAttributes.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_binaryVersion(self, i):
         """Get value ``binaryVersion`` of ``self._ptr[i]``.
         """
@@ -6470,15 +6799,24 @@ cdef class hipMemLocation:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipMemLocation** ptr):
+        ptr[0] = <chip.hipMemLocation *>stdlib.malloc(sizeof(chip.hipMemLocation))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipMemLocation new():
         """Factory function to create hipMemLocation objects with
         newly allocated chip.hipMemLocation"""
-        cdef chip.hipMemLocation *_ptr = <chip.hipMemLocation *>stdlib.malloc(sizeof(chip.hipMemLocation))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipMemLocation.from_ptr(_ptr, owner=True)
+        cdef chip.hipMemLocation *ptr;
+        hipMemLocation.__allocate(&ptr)
+        return hipMemLocation.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipMemLocation.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -6545,15 +6883,24 @@ cdef class hipMemAccessDesc:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipMemAccessDesc** ptr):
+        ptr[0] = <chip.hipMemAccessDesc *>stdlib.malloc(sizeof(chip.hipMemAccessDesc))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipMemAccessDesc new():
         """Factory function to create hipMemAccessDesc objects with
         newly allocated chip.hipMemAccessDesc"""
-        cdef chip.hipMemAccessDesc *_ptr = <chip.hipMemAccessDesc *>stdlib.malloc(sizeof(chip.hipMemAccessDesc))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipMemAccessDesc.from_ptr(_ptr, owner=True)
+        cdef chip.hipMemAccessDesc *ptr;
+        hipMemAccessDesc.__allocate(&ptr)
+        return hipMemAccessDesc.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipMemAccessDesc.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_location(self, i):
         """Get value of ``location`` of ``self._ptr[i]``.
         """
@@ -6619,15 +6966,24 @@ cdef class hipMemPoolProps:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipMemPoolProps** ptr):
+        ptr[0] = <chip.hipMemPoolProps *>stdlib.malloc(sizeof(chip.hipMemPoolProps))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipMemPoolProps new():
         """Factory function to create hipMemPoolProps objects with
         newly allocated chip.hipMemPoolProps"""
-        cdef chip.hipMemPoolProps *_ptr = <chip.hipMemPoolProps *>stdlib.malloc(sizeof(chip.hipMemPoolProps))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipMemPoolProps.from_ptr(_ptr, owner=True)
+        cdef chip.hipMemPoolProps *ptr;
+        hipMemPoolProps.__allocate(&ptr)
+        return hipMemPoolProps.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipMemPoolProps.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_allocType(self, i):
         """Get value of ``allocType`` of ``self._ptr[i]``.
         """
@@ -6706,15 +7062,24 @@ cdef class hipMemPoolPtrExportData:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipMemPoolPtrExportData** ptr):
+        ptr[0] = <chip.hipMemPoolPtrExportData *>stdlib.malloc(sizeof(chip.hipMemPoolPtrExportData))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipMemPoolPtrExportData new():
         """Factory function to create hipMemPoolPtrExportData objects with
         newly allocated chip.hipMemPoolPtrExportData"""
-        cdef chip.hipMemPoolPtrExportData *_ptr = <chip.hipMemPoolPtrExportData *>stdlib.malloc(sizeof(chip.hipMemPoolPtrExportData))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipMemPoolPtrExportData.from_ptr(_ptr, owner=True)
+        cdef chip.hipMemPoolPtrExportData *ptr;
+        hipMemPoolPtrExportData.__allocate(&ptr)
+        return hipMemPoolPtrExportData.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipMemPoolPtrExportData.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -6790,15 +7155,24 @@ cdef class dim3:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.dim3** ptr):
+        ptr[0] = <chip.dim3 *>stdlib.malloc(sizeof(chip.dim3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef dim3 new():
         """Factory function to create dim3 objects with
         newly allocated chip.dim3"""
-        cdef chip.dim3 *_ptr = <chip.dim3 *>stdlib.malloc(sizeof(chip.dim3))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return dim3.from_ptr(_ptr, owner=True)
+        cdef chip.dim3 *ptr;
+        dim3.__allocate(&ptr)
+        return dim3.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       dim3.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -6872,15 +7246,24 @@ cdef class hipLaunchParams_t:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipLaunchParams_t** ptr):
+        ptr[0] = <chip.hipLaunchParams_t *>stdlib.malloc(sizeof(chip.hipLaunchParams_t))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipLaunchParams_t new():
         """Factory function to create hipLaunchParams_t objects with
         newly allocated chip.hipLaunchParams_t"""
-        cdef chip.hipLaunchParams_t *_ptr = <chip.hipLaunchParams_t *>stdlib.malloc(sizeof(chip.hipLaunchParams_t))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipLaunchParams_t.from_ptr(_ptr, owner=True)
+        cdef chip.hipLaunchParams_t *ptr;
+        hipLaunchParams_t.__allocate(&ptr)
+        return hipLaunchParams_t.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipLaunchParams_t.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_gridDim(self, i):
         """Get value of ``gridDim`` of ``self._ptr[i]``.
         """
@@ -6991,15 +7374,24 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0** ptr):
+        ptr[0] = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 new():
         """Factory function to create hipExternalMemoryHandleDesc_st_union_0_struct_0 objects with
         newly allocated chip.hipExternalMemoryHandleDesc_st_union_0_struct_0"""
-        cdef chip.hipExternalMemoryHandleDesc_st_union_0_struct_0 *_ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalMemoryHandleDesc_st_union_0_struct_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalMemoryHandleDesc_st_union_0_struct_0 *ptr;
+        hipExternalMemoryHandleDesc_st_union_0_struct_0.__allocate(&ptr)
+        return hipExternalMemoryHandleDesc_st_union_0_struct_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalMemoryHandleDesc_st_union_0_struct_0.__allocate(&self._ptr)
+       self.ptr_owner = True
 
 
 
@@ -7031,15 +7423,24 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalMemoryHandleDesc_st_union_0** ptr):
+        ptr[0] = <chip.hipExternalMemoryHandleDesc_st_union_0 *>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st_union_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalMemoryHandleDesc_st_union_0 new():
         """Factory function to create hipExternalMemoryHandleDesc_st_union_0 objects with
         newly allocated chip.hipExternalMemoryHandleDesc_st_union_0"""
-        cdef chip.hipExternalMemoryHandleDesc_st_union_0 *_ptr = <chip.hipExternalMemoryHandleDesc_st_union_0 *>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st_union_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalMemoryHandleDesc_st_union_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalMemoryHandleDesc_st_union_0 *ptr;
+        hipExternalMemoryHandleDesc_st_union_0.__allocate(&ptr)
+        return hipExternalMemoryHandleDesc_st_union_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalMemoryHandleDesc_st_union_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_fd(self, i):
         """Get value ``fd`` of ``self._ptr[i]``.
         """
@@ -7092,15 +7493,24 @@ cdef class hipExternalMemoryHandleDesc_st:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalMemoryHandleDesc_st** ptr):
+        ptr[0] = <chip.hipExternalMemoryHandleDesc_st *>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalMemoryHandleDesc_st new():
         """Factory function to create hipExternalMemoryHandleDesc_st objects with
         newly allocated chip.hipExternalMemoryHandleDesc_st"""
-        cdef chip.hipExternalMemoryHandleDesc_st *_ptr = <chip.hipExternalMemoryHandleDesc_st *>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalMemoryHandleDesc_st.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalMemoryHandleDesc_st *ptr;
+        hipExternalMemoryHandleDesc_st.__allocate(&ptr)
+        return hipExternalMemoryHandleDesc_st.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalMemoryHandleDesc_st.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -7204,15 +7614,24 @@ cdef class hipExternalMemoryBufferDesc_st:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalMemoryBufferDesc_st** ptr):
+        ptr[0] = <chip.hipExternalMemoryBufferDesc_st *>stdlib.malloc(sizeof(chip.hipExternalMemoryBufferDesc_st))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalMemoryBufferDesc_st new():
         """Factory function to create hipExternalMemoryBufferDesc_st objects with
         newly allocated chip.hipExternalMemoryBufferDesc_st"""
-        cdef chip.hipExternalMemoryBufferDesc_st *_ptr = <chip.hipExternalMemoryBufferDesc_st *>stdlib.malloc(sizeof(chip.hipExternalMemoryBufferDesc_st))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalMemoryBufferDesc_st.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalMemoryBufferDesc_st *ptr;
+        hipExternalMemoryBufferDesc_st.__allocate(&ptr)
+        return hipExternalMemoryBufferDesc_st.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalMemoryBufferDesc_st.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_offset(self, i):
         """Get value ``offset`` of ``self._ptr[i]``.
         """
@@ -7355,15 +7774,24 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 new():
         """Factory function to create hipExternalSemaphoreHandleDesc_st_union_0_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0"""
-        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0 *_ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreHandleDesc_st_union_0_struct_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0 *ptr;
+        hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__allocate(&ptr)
+        return hipExternalSemaphoreHandleDesc_st_union_0_struct_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__allocate(&self._ptr)
+       self.ptr_owner = True
 
 
 
@@ -7395,15 +7823,24 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st_union_0** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st_union_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreHandleDesc_st_union_0 new():
         """Factory function to create hipExternalSemaphoreHandleDesc_st_union_0 objects with
         newly allocated chip.hipExternalSemaphoreHandleDesc_st_union_0"""
-        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0 *_ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreHandleDesc_st_union_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0 *ptr;
+        hipExternalSemaphoreHandleDesc_st_union_0.__allocate(&ptr)
+        return hipExternalSemaphoreHandleDesc_st_union_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreHandleDesc_st_union_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_fd(self, i):
         """Get value ``fd`` of ``self._ptr[i]``.
         """
@@ -7456,15 +7893,24 @@ cdef class hipExternalSemaphoreHandleDesc_st:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreHandleDesc_st new():
         """Factory function to create hipExternalSemaphoreHandleDesc_st objects with
         newly allocated chip.hipExternalSemaphoreHandleDesc_st"""
-        cdef chip.hipExternalSemaphoreHandleDesc_st *_ptr = <chip.hipExternalSemaphoreHandleDesc_st *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreHandleDesc_st.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreHandleDesc_st *ptr;
+        hipExternalSemaphoreHandleDesc_st.__allocate(&ptr)
+        return hipExternalSemaphoreHandleDesc_st.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreHandleDesc_st.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -7575,15 +8021,24 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 new():
         """Factory function to create hipExternalSemaphoreSignalParams_st_struct_0_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0"""
-        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0 *_ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreSignalParams_st_struct_0_struct_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0 *ptr;
+        hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__allocate(&ptr)
+        return hipExternalSemaphoreSignalParams_st_struct_0_struct_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_value(self, i):
         """Get value ``value`` of ``self._ptr[i]``.
         """
@@ -7629,15 +8084,24 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 new():
         """Factory function to create hipExternalSemaphoreSignalParams_st_struct_0_struct_1 objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1"""
-        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1 *_ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreSignalParams_st_struct_0_struct_1.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1 *ptr;
+        hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__allocate(&ptr)
+        return hipExternalSemaphoreSignalParams_st_struct_0_struct_1.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_key(self, i):
         """Get value ``key`` of ``self._ptr[i]``.
         """
@@ -7683,15 +8147,24 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreSignalParams_st_struct_0 new():
         """Factory function to create hipExternalSemaphoreSignalParams_st_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st_struct_0"""
-        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0 *_ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreSignalParams_st_struct_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0 *ptr;
+        hipExternalSemaphoreSignalParams_st_struct_0.__allocate(&ptr)
+        return hipExternalSemaphoreSignalParams_st_struct_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreSignalParams_st_struct_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_fence(self, i):
         """Get value of ``fence`` of ``self._ptr[i]``.
         """
@@ -7745,15 +8218,24 @@ cdef class hipExternalSemaphoreSignalParams_st:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreSignalParams_st** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreSignalParams_st new():
         """Factory function to create hipExternalSemaphoreSignalParams_st objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st"""
-        cdef chip.hipExternalSemaphoreSignalParams_st *_ptr = <chip.hipExternalSemaphoreSignalParams_st *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreSignalParams_st.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreSignalParams_st *ptr;
+        hipExternalSemaphoreSignalParams_st.__allocate(&ptr)
+        return hipExternalSemaphoreSignalParams_st.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreSignalParams_st.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_params(self, i):
         """Get value of ``params`` of ``self._ptr[i]``.
         """
@@ -7835,15 +8317,24 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 new():
         """Factory function to create hipExternalSemaphoreWaitParams_st_struct_0_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0"""
-        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0 *_ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreWaitParams_st_struct_0_struct_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0 *ptr;
+        hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__allocate(&ptr)
+        return hipExternalSemaphoreWaitParams_st_struct_0_struct_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_value(self, i):
         """Get value ``value`` of ``self._ptr[i]``.
         """
@@ -7889,15 +8380,24 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 new():
         """Factory function to create hipExternalSemaphoreWaitParams_st_struct_0_struct_1 objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1"""
-        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1 *_ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreWaitParams_st_struct_0_struct_1.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1 *ptr;
+        hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__allocate(&ptr)
+        return hipExternalSemaphoreWaitParams_st_struct_0_struct_1.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_key(self, i):
         """Get value ``key`` of ``self._ptr[i]``.
         """
@@ -7957,15 +8457,24 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreWaitParams_st_struct_0 new():
         """Factory function to create hipExternalSemaphoreWaitParams_st_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st_struct_0"""
-        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0 *_ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreWaitParams_st_struct_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0 *ptr;
+        hipExternalSemaphoreWaitParams_st_struct_0.__allocate(&ptr)
+        return hipExternalSemaphoreWaitParams_st_struct_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreWaitParams_st_struct_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_fence(self, i):
         """Get value of ``fence`` of ``self._ptr[i]``.
         """
@@ -8019,15 +8528,24 @@ cdef class hipExternalSemaphoreWaitParams_st:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipExternalSemaphoreWaitParams_st** ptr):
+        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipExternalSemaphoreWaitParams_st new():
         """Factory function to create hipExternalSemaphoreWaitParams_st objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st"""
-        cdef chip.hipExternalSemaphoreWaitParams_st *_ptr = <chip.hipExternalSemaphoreWaitParams_st *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipExternalSemaphoreWaitParams_st.from_ptr(_ptr, owner=True)
+        cdef chip.hipExternalSemaphoreWaitParams_st *ptr;
+        hipExternalSemaphoreWaitParams_st.__allocate(&ptr)
+        return hipExternalSemaphoreWaitParams_st.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipExternalSemaphoreWaitParams_st.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_params(self, i):
         """Get value of ``params`` of ``self._ptr[i]``.
         """
@@ -8293,15 +8811,24 @@ cdef class hipHostNodeParams:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipHostNodeParams** ptr):
+        ptr[0] = <chip.hipHostNodeParams *>stdlib.malloc(sizeof(chip.hipHostNodeParams))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipHostNodeParams new():
         """Factory function to create hipHostNodeParams objects with
         newly allocated chip.hipHostNodeParams"""
-        cdef chip.hipHostNodeParams *_ptr = <chip.hipHostNodeParams *>stdlib.malloc(sizeof(chip.hipHostNodeParams))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipHostNodeParams.from_ptr(_ptr, owner=True)
+        cdef chip.hipHostNodeParams *ptr;
+        hipHostNodeParams.__allocate(&ptr)
+        return hipHostNodeParams.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipHostNodeParams.__allocate(&self._ptr)
+       self.ptr_owner = True
 
 
 
@@ -8333,15 +8860,24 @@ cdef class hipKernelNodeParams:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipKernelNodeParams** ptr):
+        ptr[0] = <chip.hipKernelNodeParams *>stdlib.malloc(sizeof(chip.hipKernelNodeParams))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipKernelNodeParams new():
         """Factory function to create hipKernelNodeParams objects with
         newly allocated chip.hipKernelNodeParams"""
-        cdef chip.hipKernelNodeParams *_ptr = <chip.hipKernelNodeParams *>stdlib.malloc(sizeof(chip.hipKernelNodeParams))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipKernelNodeParams.from_ptr(_ptr, owner=True)
+        cdef chip.hipKernelNodeParams *ptr;
+        hipKernelNodeParams.__allocate(&ptr)
+        return hipKernelNodeParams.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipKernelNodeParams.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_blockDim(self, i):
         """Get value of ``blockDim`` of ``self._ptr[i]``.
         """
@@ -8401,15 +8937,24 @@ cdef class hipMemsetParams:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipMemsetParams** ptr):
+        ptr[0] = <chip.hipMemsetParams *>stdlib.malloc(sizeof(chip.hipMemsetParams))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipMemsetParams new():
         """Factory function to create hipMemsetParams objects with
         newly allocated chip.hipMemsetParams"""
-        cdef chip.hipMemsetParams *_ptr = <chip.hipMemsetParams *>stdlib.malloc(sizeof(chip.hipMemsetParams))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipMemsetParams.from_ptr(_ptr, owner=True)
+        cdef chip.hipMemsetParams *ptr;
+        hipMemsetParams.__allocate(&ptr)
+        return hipMemsetParams.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipMemsetParams.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_elementSize(self, i):
         """Get value ``elementSize`` of ``self._ptr[i]``.
         """
@@ -8520,15 +9065,24 @@ cdef class hipAccessPolicyWindow:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipAccessPolicyWindow** ptr):
+        ptr[0] = <chip.hipAccessPolicyWindow *>stdlib.malloc(sizeof(chip.hipAccessPolicyWindow))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipAccessPolicyWindow new():
         """Factory function to create hipAccessPolicyWindow objects with
         newly allocated chip.hipAccessPolicyWindow"""
-        cdef chip.hipAccessPolicyWindow *_ptr = <chip.hipAccessPolicyWindow *>stdlib.malloc(sizeof(chip.hipAccessPolicyWindow))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipAccessPolicyWindow.from_ptr(_ptr, owner=True)
+        cdef chip.hipAccessPolicyWindow *ptr;
+        hipAccessPolicyWindow.__allocate(&ptr)
+        return hipAccessPolicyWindow.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipAccessPolicyWindow.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_hitProp(self, i):
         """Get value of ``hitProp`` of ``self._ptr[i]``.
         """
@@ -8620,15 +9174,24 @@ cdef class hipKernelNodeAttrValue:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipKernelNodeAttrValue** ptr):
+        ptr[0] = <chip.hipKernelNodeAttrValue *>stdlib.malloc(sizeof(chip.hipKernelNodeAttrValue))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipKernelNodeAttrValue new():
         """Factory function to create hipKernelNodeAttrValue objects with
         newly allocated chip.hipKernelNodeAttrValue"""
-        cdef chip.hipKernelNodeAttrValue *_ptr = <chip.hipKernelNodeAttrValue *>stdlib.malloc(sizeof(chip.hipKernelNodeAttrValue))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipKernelNodeAttrValue.from_ptr(_ptr, owner=True)
+        cdef chip.hipKernelNodeAttrValue *ptr;
+        hipKernelNodeAttrValue.__allocate(&ptr)
+        return hipKernelNodeAttrValue.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipKernelNodeAttrValue.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_accessPolicyWindow(self, i):
         """Get value of ``accessPolicyWindow`` of ``self._ptr[i]``.
         """
@@ -8720,15 +9283,24 @@ cdef class hipMemAllocationProp_struct_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipMemAllocationProp_struct_0** ptr):
+        ptr[0] = <chip.hipMemAllocationProp_struct_0 *>stdlib.malloc(sizeof(chip.hipMemAllocationProp_struct_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipMemAllocationProp_struct_0 new():
         """Factory function to create hipMemAllocationProp_struct_0 objects with
         newly allocated chip.hipMemAllocationProp_struct_0"""
-        cdef chip.hipMemAllocationProp_struct_0 *_ptr = <chip.hipMemAllocationProp_struct_0 *>stdlib.malloc(sizeof(chip.hipMemAllocationProp_struct_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipMemAllocationProp_struct_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipMemAllocationProp_struct_0 *ptr;
+        hipMemAllocationProp_struct_0.__allocate(&ptr)
+        return hipMemAllocationProp_struct_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipMemAllocationProp_struct_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_compressionType(self, i):
         """Get value ``compressionType`` of ``self._ptr[i]``.
         """
@@ -8802,15 +9374,24 @@ cdef class hipMemAllocationProp:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipMemAllocationProp** ptr):
+        ptr[0] = <chip.hipMemAllocationProp *>stdlib.malloc(sizeof(chip.hipMemAllocationProp))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipMemAllocationProp new():
         """Factory function to create hipMemAllocationProp objects with
         newly allocated chip.hipMemAllocationProp"""
-        cdef chip.hipMemAllocationProp *_ptr = <chip.hipMemAllocationProp *>stdlib.malloc(sizeof(chip.hipMemAllocationProp))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipMemAllocationProp.from_ptr(_ptr, owner=True)
+        cdef chip.hipMemAllocationProp *ptr;
+        hipMemAllocationProp.__allocate(&ptr)
+        return hipMemAllocationProp.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipMemAllocationProp.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -8926,15 +9507,24 @@ cdef class hipArrayMapInfo_union_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipArrayMapInfo_union_0** ptr):
+        ptr[0] = <chip.hipArrayMapInfo_union_0 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipArrayMapInfo_union_0 new():
         """Factory function to create hipArrayMapInfo_union_0 objects with
         newly allocated chip.hipArrayMapInfo_union_0"""
-        cdef chip.hipArrayMapInfo_union_0 *_ptr = <chip.hipArrayMapInfo_union_0 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipArrayMapInfo_union_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipArrayMapInfo_union_0 *ptr;
+        hipArrayMapInfo_union_0.__allocate(&ptr)
+        return hipArrayMapInfo_union_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipArrayMapInfo_union_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_mipmap(self, i):
         """Get value of ``mipmap`` of ``self._ptr[i]``.
         """
@@ -8973,15 +9563,24 @@ cdef class hipArrayMapInfo_union_1_struct_0:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipArrayMapInfo_union_1_struct_0** ptr):
+        ptr[0] = <chip.hipArrayMapInfo_union_1_struct_0 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1_struct_0))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipArrayMapInfo_union_1_struct_0 new():
         """Factory function to create hipArrayMapInfo_union_1_struct_0 objects with
         newly allocated chip.hipArrayMapInfo_union_1_struct_0"""
-        cdef chip.hipArrayMapInfo_union_1_struct_0 *_ptr = <chip.hipArrayMapInfo_union_1_struct_0 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1_struct_0))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipArrayMapInfo_union_1_struct_0.from_ptr(_ptr, owner=True)
+        cdef chip.hipArrayMapInfo_union_1_struct_0 *ptr;
+        hipArrayMapInfo_union_1_struct_0.__allocate(&ptr)
+        return hipArrayMapInfo_union_1_struct_0.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipArrayMapInfo_union_1_struct_0.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_level(self, i):
         """Get value ``level`` of ``self._ptr[i]``.
         """
@@ -9125,15 +9724,24 @@ cdef class hipArrayMapInfo_union_1_struct_1:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipArrayMapInfo_union_1_struct_1** ptr):
+        ptr[0] = <chip.hipArrayMapInfo_union_1_struct_1 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1_struct_1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipArrayMapInfo_union_1_struct_1 new():
         """Factory function to create hipArrayMapInfo_union_1_struct_1 objects with
         newly allocated chip.hipArrayMapInfo_union_1_struct_1"""
-        cdef chip.hipArrayMapInfo_union_1_struct_1 *_ptr = <chip.hipArrayMapInfo_union_1_struct_1 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1_struct_1))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipArrayMapInfo_union_1_struct_1.from_ptr(_ptr, owner=True)
+        cdef chip.hipArrayMapInfo_union_1_struct_1 *ptr;
+        hipArrayMapInfo_union_1_struct_1.__allocate(&ptr)
+        return hipArrayMapInfo_union_1_struct_1.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipArrayMapInfo_union_1_struct_1.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_layer(self, i):
         """Get value ``layer`` of ``self._ptr[i]``.
         """
@@ -9207,15 +9815,24 @@ cdef class hipArrayMapInfo_union_1:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipArrayMapInfo_union_1** ptr):
+        ptr[0] = <chip.hipArrayMapInfo_union_1 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipArrayMapInfo_union_1 new():
         """Factory function to create hipArrayMapInfo_union_1 objects with
         newly allocated chip.hipArrayMapInfo_union_1"""
-        cdef chip.hipArrayMapInfo_union_1 *_ptr = <chip.hipArrayMapInfo_union_1 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipArrayMapInfo_union_1.from_ptr(_ptr, owner=True)
+        cdef chip.hipArrayMapInfo_union_1 *ptr;
+        hipArrayMapInfo_union_1.__allocate(&ptr)
+        return hipArrayMapInfo_union_1.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipArrayMapInfo_union_1.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_sparseLevel(self, i):
         """Get value of ``sparseLevel`` of ``self._ptr[i]``.
         """
@@ -9261,15 +9878,24 @@ cdef class hipArrayMapInfo_union_2:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipArrayMapInfo_union_2** ptr):
+        ptr[0] = <chip.hipArrayMapInfo_union_2 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipArrayMapInfo_union_2 new():
         """Factory function to create hipArrayMapInfo_union_2 objects with
         newly allocated chip.hipArrayMapInfo_union_2"""
-        cdef chip.hipArrayMapInfo_union_2 *_ptr = <chip.hipArrayMapInfo_union_2 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_2))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipArrayMapInfo_union_2.from_ptr(_ptr, owner=True)
+        cdef chip.hipArrayMapInfo_union_2 *ptr;
+        hipArrayMapInfo_union_2.__allocate(&ptr)
+        return hipArrayMapInfo_union_2.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipArrayMapInfo_union_2.__allocate(&self._ptr)
+       self.ptr_owner = True
 
 
 
@@ -9301,15 +9927,24 @@ cdef class hipArrayMapInfo:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
+    cdef __allocate(chip.hipArrayMapInfo** ptr):
+        ptr[0] = <chip.hipArrayMapInfo *>stdlib.malloc(sizeof(chip.hipArrayMapInfo))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
     cdef hipArrayMapInfo new():
         """Factory function to create hipArrayMapInfo objects with
         newly allocated chip.hipArrayMapInfo"""
-        cdef chip.hipArrayMapInfo *_ptr = <chip.hipArrayMapInfo *>stdlib.malloc(sizeof(chip.hipArrayMapInfo))
-
-        if _ptr is NULL:
-            raise MemoryError
-        # TODO init values, if present
-        return hipArrayMapInfo.from_ptr(_ptr, owner=True)
+        cdef chip.hipArrayMapInfo *ptr;
+        hipArrayMapInfo.__allocate(&ptr)
+        return hipArrayMapInfo.from_ptr(ptr, owner=True)
+    
+    def __init__(self):
+       hipArrayMapInfo.__allocate(&self._ptr)
+       self.ptr_owner = True
     def get_resourceType(self, i):
         """Get value of ``resourceType`` of ``self._ptr[i]``.
         """
@@ -9447,6 +10082,7 @@ cdef class hipArrayMapInfo:
     # TODO is_basic_type_constantarray: add setters
 
 
+@cython.embedsignature(True)
 def hipInit(unsigned int flags):
     """@defgroup API HIP API
     @{
@@ -9462,6 +10098,7 @@ def hipInit(unsigned int flags):
     return hipInit_____retval
 
 
+@cython.embedsignature(True)
 def hipDriverGetVersion():
     """@brief Returns the approximate HIP driver version.
     @param [out] driverVersion
@@ -9478,6 +10115,7 @@ def hipDriverGetVersion():
     return (hipDriverGetVersion_____retval,driverVersion)
 
 
+@cython.embedsignature(True)
 def hipRuntimeGetVersion():
     """@brief Returns the approximate HIP Runtime version.
     @param [out] runtimeVersion
@@ -9493,6 +10131,7 @@ def hipRuntimeGetVersion():
     return (hipRuntimeGetVersion_____retval,runtimeVersion)
 
 
+@cython.embedsignature(True)
 def hipDeviceGet(int ordinal):
     """@brief Returns a handle to a compute device
     @param [out] device
@@ -9504,6 +10143,7 @@ def hipDeviceGet(int ordinal):
     return (hipDeviceGet_____retval,device)
 
 
+@cython.embedsignature(True)
 def hipDeviceComputeCapability(hipDevice_t device):
     """@brief Returns the compute capability of the device
     @param [out] major
@@ -9517,6 +10157,7 @@ def hipDeviceComputeCapability(hipDevice_t device):
     return (hipDeviceComputeCapability_____retval,major,minor)
 
 
+@cython.embedsignature(True)
 def hipDeviceGetName(char * name, int len, hipDevice_t device):
     """@brief Returns an identifer string for the device.
     @param [out] name
@@ -9528,7 +10169,8 @@ def hipDeviceGetName(char * name, int len, hipDevice_t device):
     return hipDeviceGetName_____retval
 
 
-def hipDeviceGetUuid(uuid, hipDevice_t device):
+@cython.embedsignature(True)
+def hipDeviceGetUuid(hipUUID_t uuid, hipDevice_t device):
     """@brief Returns an UUID for the device.[BETA]
     @param [out] uuid
     @param [in] device
@@ -9537,9 +10179,12 @@ def hipDeviceGetUuid(uuid, hipDevice_t device):
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotInitialized,
     #hipErrorDeinitialized
     """
-    pass
+    hipDeviceGetUuid_____retval = hipError_t(chip.hipDeviceGetUuid(uuid._ptr,device))    # fully specified
+    return hipDeviceGetUuid_____retval
 
-def hipDeviceGetP2PAttribute(attr, int srcDevice, int dstDevice):
+
+@cython.embedsignature(True)
+def hipDeviceGetP2PAttribute(object attr, int srcDevice, int dstDevice):
     """@brief Returns a value for attr of link between two devices
     @param [out] value
     @param [in] attr
@@ -9548,8 +10193,13 @@ def hipDeviceGetP2PAttribute(attr, int srcDevice, int dstDevice):
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
     cdef int value
-    pass
+    if not isinstance(attr,hipDeviceP2PAttr):
+        raise TypeError("argument 'attr' must be of type 'hipDeviceP2PAttr'")
+    hipDeviceGetP2PAttribute_____retval = hipError_t(chip.hipDeviceGetP2PAttribute(&value,attr.value,srcDevice,dstDevice))    # fully specified
+    return (hipDeviceGetP2PAttribute_____retval,value)
 
+
+@cython.embedsignature(True)
 def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
     """@brief Returns a PCI Bus Id string for the device, overloaded to take int device ID.
     @param [out] pciBusId
@@ -9561,6 +10211,7 @@ def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
     return hipDeviceGetPCIBusId_____retval
 
 
+@cython.embedsignature(True)
 def hipDeviceGetByPCIBusId(const char * pciBusId):
     """@brief Returns a handle to a compute device.
     @param [out] device handle
@@ -9572,6 +10223,7 @@ def hipDeviceGetByPCIBusId(const char * pciBusId):
     return (hipDeviceGetByPCIBusId_____retval,device)
 
 
+@cython.embedsignature(True)
 def hipDeviceTotalMem(hipDevice_t device):
     """@brief Returns the total amount of memory on the device.
     @param [out] bytes
@@ -9583,6 +10235,7 @@ def hipDeviceTotalMem(hipDevice_t device):
     return (hipDeviceTotalMem_____retval,bytes)
 
 
+@cython.embedsignature(True)
 def hipDeviceSynchronize():
     """@}
     @defgroup Device Device Management
@@ -9598,6 +10251,7 @@ def hipDeviceSynchronize():
     return hipDeviceSynchronize_____retval
 
 
+@cython.embedsignature(True)
 def hipDeviceReset():
     """@brief The state of current device is discarded and updated to a fresh state.
     Calling this function deletes all streams created, memory allocated, kernels running, events
@@ -9610,6 +10264,7 @@ def hipDeviceReset():
     return hipDeviceReset_____retval
 
 
+@cython.embedsignature(True)
 def hipSetDevice(int deviceId):
     """@brief Set default device to be used for subsequent hip API calls from this thread.
     @param[in] deviceId Valid device in range 0...hipGetDeviceCount().
@@ -9637,6 +10292,7 @@ def hipSetDevice(int deviceId):
     return hipSetDevice_____retval
 
 
+@cython.embedsignature(True)
 def hipGetDevice():
     """@brief Return the default device id for the calling host thread.
     @param [out] device *device is written with the default device
@@ -9651,6 +10307,7 @@ def hipGetDevice():
     return (hipGetDevice_____retval,deviceId)
 
 
+@cython.embedsignature(True)
 def hipGetDeviceCount():
     """@brief Return number of compute-capable devices.
     @param [output] count Returns number of compute-capable devices.
@@ -9664,7 +10321,8 @@ def hipGetDeviceCount():
     return (hipGetDeviceCount_____retval,count)
 
 
-def hipDeviceGetAttribute(attr, int deviceId):
+@cython.embedsignature(True)
+def hipDeviceGetAttribute(object attr, int deviceId):
     """@brief Query for a specific device attribute.
     @param [out] pi pointer to value to return
     @param [in] attr attribute to query
@@ -9672,8 +10330,13 @@ def hipDeviceGetAttribute(attr, int deviceId):
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     cdef int pi
-    pass
+    if not isinstance(attr,hipDeviceAttribute_t):
+        raise TypeError("argument 'attr' must be of type 'hipDeviceAttribute_t'")
+    hipDeviceGetAttribute_____retval = hipError_t(chip.hipDeviceGetAttribute(&pi,attr.value,deviceId))    # fully specified
+    return (hipDeviceGetAttribute_____retval,pi)
 
+
+@cython.embedsignature(True)
 def hipDeviceGetDefaultMemPool(int device):
     """@brief Returns the default memory pool of the specified device
     @param [out] mem_pool Default memory pool to return
@@ -9689,7 +10352,8 @@ def hipDeviceGetDefaultMemPool(int device):
     return (hipDeviceGetDefaultMemPool_____retval,mem_pool)
 
 
-def hipDeviceSetMemPool(int device, mem_pool):
+@cython.embedsignature(True)
+def hipDeviceSetMemPool(int device, ihipMemPoolHandle_t mem_pool):
     """@brief Sets the current memory pool of a device
     The memory pool must be local to the specified device.
     @p hipMallocAsync allocates from the current mempool of the provided stream's device.
@@ -9704,8 +10368,11 @@ def hipDeviceSetMemPool(int device, mem_pool):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipDeviceSetMemPool_____retval = hipError_t(chip.hipDeviceSetMemPool(device,mem_pool._ptr))    # fully specified
+    return hipDeviceSetMemPool_____retval
 
+
+@cython.embedsignature(True)
 def hipDeviceGetMemPool(int device):
     """@brief Gets the current memory pool for the specified device
     Returns the last pool provided to @p hipDeviceSetMemPool for this device
@@ -9725,7 +10392,8 @@ def hipDeviceGetMemPool(int device):
     return (hipDeviceGetMemPool_____retval,mem_pool)
 
 
-def hipGetDeviceProperties(prop, int deviceId):
+@cython.embedsignature(True)
+def hipGetDeviceProperties(hipDeviceProp_t prop, int deviceId):
     """@brief Returns device properties.
     @param [out] prop written with device properties
     @param [in]  deviceId which device to query for information
@@ -9735,17 +10403,25 @@ def hipGetDeviceProperties(prop, int deviceId):
     @bug HCC always returns 0 for l2CacheSize
     Populates hipGetDeviceProperties with information for the specified device.
     """
-    pass
+    hipGetDeviceProperties_____retval = hipError_t(chip.hipGetDeviceProperties(prop._ptr,deviceId))    # fully specified
+    return hipGetDeviceProperties_____retval
 
-def hipDeviceSetCacheConfig(cacheConfig):
+
+@cython.embedsignature(True)
+def hipDeviceSetCacheConfig(object cacheConfig):
     """@brief Set L1/Shared cache partition.
     @param [in] cacheConfig
     @returns #hipSuccess, #hipErrorNotInitialized
     Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
     on those architectures.
     """
-    pass
+    if not isinstance(cacheConfig,hipFuncCache_t):
+        raise TypeError("argument 'cacheConfig' must be of type 'hipFuncCache_t'")
+    hipDeviceSetCacheConfig_____retval = hipError_t(chip.hipDeviceSetCacheConfig(cacheConfig.value))    # fully specified
+    return hipDeviceSetCacheConfig_____retval
 
+
+@cython.embedsignature(True)
 def hipDeviceGetCacheConfig():
     """@brief Get Cache configuration for a specific Device
     @param [out] cacheConfig
@@ -9758,7 +10434,8 @@ def hipDeviceGetCacheConfig():
     return (hipDeviceGetCacheConfig_____retval,hipFuncCache_t(cacheConfig))
 
 
-def hipDeviceGetLimit(limit):
+@cython.embedsignature(True)
+def hipDeviceGetLimit(object limit):
     """@brief Get Resource limits of current device
     @param [out] pValue
     @param [in]  limit
@@ -9766,16 +10443,26 @@ def hipDeviceGetLimit(limit):
     Note: Currently, only hipLimitMallocHeapSize is available
     """
     cdef int pValue
-    pass
+    if not isinstance(limit,hipLimit_t):
+        raise TypeError("argument 'limit' must be of type 'hipLimit_t'")
+    hipDeviceGetLimit_____retval = hipError_t(chip.hipDeviceGetLimit(&pValue,limit.value))    # fully specified
+    return (hipDeviceGetLimit_____retval,pValue)
 
-def hipDeviceSetLimit(limit, int value):
+
+@cython.embedsignature(True)
+def hipDeviceSetLimit(object limit, int value):
     """@brief Set Resource limits of current device
     @param [in] limit
     @param [in] value
     @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
     """
-    pass
+    if not isinstance(limit,hipLimit_t):
+        raise TypeError("argument 'limit' must be of type 'hipLimit_t'")
+    hipDeviceSetLimit_____retval = hipError_t(chip.hipDeviceSetLimit(limit.value,value))    # fully specified
+    return hipDeviceSetLimit_____retval
 
+
+@cython.embedsignature(True)
 def hipDeviceGetSharedMemConfig():
     """@brief Returns bank width of shared memory for current device
     @param [out] pConfig
@@ -9788,6 +10475,7 @@ def hipDeviceGetSharedMemConfig():
     return (hipDeviceGetSharedMemConfig_____retval,hipSharedMemConfig(pConfig))
 
 
+@cython.embedsignature(True)
 def hipGetDeviceFlags():
     """@brief Gets the flags set for current device
     @param [out] flags
@@ -9798,15 +10486,21 @@ def hipGetDeviceFlags():
     return (hipGetDeviceFlags_____retval,flags)
 
 
-def hipDeviceSetSharedMemConfig(config):
+@cython.embedsignature(True)
+def hipDeviceSetSharedMemConfig(object config):
     """@brief The bank width of shared memory on current device is set
     @param [in] config
     @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
     ignored on those architectures.
     """
-    pass
+    if not isinstance(config,hipSharedMemConfig):
+        raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
+    hipDeviceSetSharedMemConfig_____retval = hipError_t(chip.hipDeviceSetSharedMemConfig(config.value))    # fully specified
+    return hipDeviceSetSharedMemConfig_____retval
 
+
+@cython.embedsignature(True)
 def hipSetDeviceFlags(unsigned int flags):
     """@brief The current device behavior is changed according the flags passed.
     @param [in] flags
@@ -9828,15 +10522,19 @@ def hipSetDeviceFlags(unsigned int flags):
     return hipSetDeviceFlags_____retval
 
 
-def hipChooseDevice(prop):
+@cython.embedsignature(True)
+def hipChooseDevice(hipDeviceProp_t prop):
     """@brief Device which matches hipDeviceProp_t is returned
     @param [out] device ID
     @param [in]  device properties pointer
     @returns #hipSuccess, #hipErrorInvalidValue
     """
     cdef int device
-    pass
+    hipChooseDevice_____retval = hipError_t(chip.hipChooseDevice(&device,prop._ptr))    # fully specified
+    return (hipChooseDevice_____retval,device)
 
+
+@cython.embedsignature(True)
 def hipExtGetLinkTypeAndHopCount(int device1, int device2):
     """@brief Returns the link type and hop count between two devices
     @param [in] device1 Ordinal for device1
@@ -9852,7 +10550,8 @@ def hipExtGetLinkTypeAndHopCount(int device1, int device2):
     return (hipExtGetLinkTypeAndHopCount_____retval,linktype,hopcount)
 
 
-def hipIpcGetMemHandle(handle, devPtr):
+@cython.embedsignature(True)
+def hipIpcGetMemHandle(hipIpcMemHandle_st handle, devPtr):
     """@brief Gets an interprocess memory handle for an existing device memory
     allocation
     Takes a pointer to the base of an existing device memory allocation created
@@ -9874,6 +10573,7 @@ def hipIpcGetMemHandle(handle, devPtr):
     """
     pass
 
+@cython.embedsignature(True)
 def hipIpcOpenMemHandle(handle, unsigned int flags):
     """@brief Opens an interprocess memory handle exported from another process
     and returns a device pointer usable in the local process.
@@ -9905,6 +10605,7 @@ def hipIpcOpenMemHandle(handle, unsigned int flags):
     """
     pass
 
+@cython.embedsignature(True)
 def hipIpcCloseMemHandle(devPtr):
     """@brief Close memory mapped with hipIpcOpenMemHandle
     Unmaps memory returnd by hipIpcOpenMemHandle. The original allocation
@@ -9920,7 +10621,8 @@ def hipIpcCloseMemHandle(devPtr):
     """
     pass
 
-def hipIpcGetEventHandle(handle, event):
+@cython.embedsignature(True)
+def hipIpcGetEventHandle(hipIpcEventHandle_st handle, ihipEvent_t event):
     """@brief Gets an opaque interprocess handle for an event.
     This opaque handle may be copied into other processes and opened with hipIpcOpenEventHandle.
     Then hipEventRecord, hipEventSynchronize, hipStreamWaitEvent and hipEventQuery may be used in
@@ -9930,8 +10632,11 @@ def hipIpcGetEventHandle(handle, event):
     @param[in]   event  Event allocated with hipEventInterprocess and hipEventDisableTiming flags
     @returns #hipSuccess, #hipErrorInvalidConfiguration, #hipErrorInvalidValue
     """
-    pass
+    hipIpcGetEventHandle_____retval = hipError_t(chip.hipIpcGetEventHandle(handle._ptr,event._ptr))    # fully specified
+    return hipIpcGetEventHandle_____retval
 
+
+@cython.embedsignature(True)
 def hipIpcOpenEventHandle(handle):
     """@brief Opens an interprocess event handles.
     Opens an interprocess event handle exported from another process with cudaIpcGetEventHandle. The returned
@@ -9946,7 +10651,8 @@ def hipIpcOpenEventHandle(handle):
     event = ihipEvent_t.from_ptr(NULL,owner=True)
     pass
 
-def hipFuncSetAttribute(func, attr, int value):
+@cython.embedsignature(True)
+def hipFuncSetAttribute(func, object attr, int value):
     """@}
     @defgroup Execution Execution Control
     @{
@@ -9959,18 +10665,24 @@ def hipFuncSetAttribute(func, attr, int value):
     Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
     ignored on those architectures.
     """
+    if not isinstance(attr,hipFuncAttribute):
+        raise TypeError("argument 'attr' must be of type 'hipFuncAttribute'")
     pass
 
-def hipFuncSetCacheConfig(func, config):
+@cython.embedsignature(True)
+def hipFuncSetCacheConfig(func, object config):
     """@brief Set Cache configuration for a specific function
     @param [in] config;
     @returns #hipSuccess, #hipErrorNotInitialized
     Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
     on those architectures.
     """
+    if not isinstance(config,hipFuncCache_t):
+        raise TypeError("argument 'config' must be of type 'hipFuncCache_t'")
     pass
 
-def hipFuncSetSharedMemConfig(func, config):
+@cython.embedsignature(True)
+def hipFuncSetSharedMemConfig(func, object config):
     """@brief Set shared memory configuation for a specific function
     @param [in] func
     @param [in] config
@@ -9978,8 +10690,11 @@ def hipFuncSetSharedMemConfig(func, config):
     Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
     ignored on those architectures.
     """
+    if not isinstance(config,hipSharedMemConfig):
+        raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
     pass
 
+@cython.embedsignature(True)
 def hipGetLastError():
     """@}
     -------------------------------------------------------------------------------------------------
@@ -9998,6 +10713,7 @@ def hipGetLastError():
     return hipGetLastError_____retval
 
 
+@cython.embedsignature(True)
 def hipPeekAtLastError():
     """@brief Return last error returned by any HIP runtime API call.
     @return #hipSuccess
@@ -10009,40 +10725,55 @@ def hipPeekAtLastError():
     return hipPeekAtLastError_____retval
 
 
-def hipGetErrorName(hip_error):
+@cython.embedsignature(True)
+def hipGetErrorName(object hip_error):
     """@brief Return hip error as text string form.
     @param hip_error Error code to convert to name.
     @return const char pointer to the NULL-terminated error name
     @see hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
     """
-    pass
+    if not isinstance(hip_error,hipError_t):
+        raise TypeError("argument 'hip_error' must be of type 'hipError_t'")
+    cdef const char * hipGetErrorName_____retval = chip.hipGetErrorName(hip_error.value)    # fully specified
 
-def hipGetErrorString(hipError):
+
+@cython.embedsignature(True)
+def hipGetErrorString(object hipError):
     """@brief Return handy text string message to explain the error which occurred
     @param hipError Error code to convert to string.
     @return const char pointer to the NULL-terminated error string
     @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
     """
-    pass
+    if not isinstance(hipError,hipError_t):
+        raise TypeError("argument 'hipError' must be of type 'hipError_t'")
+    cdef const char * hipGetErrorString_____retval = chip.hipGetErrorString(hipError.value)    # fully specified
 
-def hipDrvGetErrorName(hipError):
+
+@cython.embedsignature(True)
+def hipDrvGetErrorName(object hipError):
     """@brief Return hip error as text string form.
     @param [in] hipError Error code to convert to string.
     @param [out] const char pointer to the NULL-terminated error string
     @return #hipSuccess, #hipErrorInvalidValue
     @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
     """
+    if not isinstance(hipError,hipError_t):
+        raise TypeError("argument 'hipError' must be of type 'hipError_t'")
     pass
 
-def hipDrvGetErrorString(hipError):
+@cython.embedsignature(True)
+def hipDrvGetErrorString(object hipError):
     """@brief Return handy text string message to explain the error which occurred
     @param [in] hipError Error code to convert to string.
     @param [out] const char pointer to the NULL-terminated error string
     @return #hipSuccess, #hipErrorInvalidValue
     @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
     """
+    if not isinstance(hipError,hipError_t):
+        raise TypeError("argument 'hipError' must be of type 'hipError_t'")
     pass
 
+@cython.embedsignature(True)
 def hipStreamCreate():
     """@brief Create an asynchronous stream.
     @param[in, out] stream Valid pointer to hipStream_t.  This function writes the memory with the
@@ -10060,6 +10791,7 @@ def hipStreamCreate():
     return (hipStreamCreate_____retval,stream)
 
 
+@cython.embedsignature(True)
 def hipStreamCreateWithFlags(unsigned int flags):
     """@brief Create an asynchronous stream.
     @param[in, out] stream Pointer to new stream
@@ -10077,6 +10809,7 @@ def hipStreamCreateWithFlags(unsigned int flags):
     return (hipStreamCreateWithFlags_____retval,stream)
 
 
+@cython.embedsignature(True)
 def hipStreamCreateWithPriority(unsigned int flags, int priority):
     """@brief Create an asynchronous stream with the specified priority.
     @param[in, out] stream Pointer to new stream
@@ -10095,6 +10828,7 @@ def hipStreamCreateWithPriority(unsigned int flags, int priority):
     return (hipStreamCreateWithPriority_____retval,stream)
 
 
+@cython.embedsignature(True)
 def hipDeviceGetStreamPriorityRange():
     """@brief Returns numerical values that correspond to the least and greatest stream priority.
     @param[in, out] leastPriority pointer in which value corresponding to least priority is returned.
@@ -10112,7 +10846,8 @@ def hipDeviceGetStreamPriorityRange():
     return (hipDeviceGetStreamPriorityRange_____retval,leastPriority,greatestPriority)
 
 
-def hipStreamDestroy(stream):
+@cython.embedsignature(True)
+def hipStreamDestroy(ihipStream_t stream):
     """@brief Destroys the specified stream.
     @param[in, out] stream Valid pointer to hipStream_t.  This function writes the memory with the
     newly created stream.
@@ -10125,9 +10860,12 @@ def hipStreamDestroy(stream):
     @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamQuery, hipStreamWaitEvent,
     hipStreamSynchronize
     """
-    pass
+    hipStreamDestroy_____retval = hipError_t(chip.hipStreamDestroy(stream._ptr))    # fully specified
+    return hipStreamDestroy_____retval
 
-def hipStreamQuery(stream):
+
+@cython.embedsignature(True)
+def hipStreamQuery(ihipStream_t stream):
     """@brief Return #hipSuccess if all of the operations in the specified @p stream have completed, or
     #hipErrorNotReady if not.
     @param[in] stream stream to query
@@ -10138,9 +10876,12 @@ def hipStreamQuery(stream):
     @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamSynchronize,
     hipStreamDestroy
     """
-    pass
+    hipStreamQuery_____retval = hipError_t(chip.hipStreamQuery(stream._ptr))    # fully specified
+    return hipStreamQuery_____retval
 
-def hipStreamSynchronize(stream):
+
+@cython.embedsignature(True)
+def hipStreamSynchronize(ihipStream_t stream):
     """@brief Wait for all commands in stream to complete.
     @param[in] stream stream identifier.
     @return #hipSuccess, #hipErrorInvalidHandle
@@ -10152,9 +10893,12 @@ def hipStreamSynchronize(stream):
     or blocking.
     @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamDestroy
     """
-    pass
+    hipStreamSynchronize_____retval = hipError_t(chip.hipStreamSynchronize(stream._ptr))    # fully specified
+    return hipStreamSynchronize_____retval
 
-def hipStreamWaitEvent(stream, event, unsigned int flags):
+
+@cython.embedsignature(True)
+def hipStreamWaitEvent(ihipStream_t stream, ihipEvent_t event, unsigned int flags):
     """@brief Make the specified compute stream wait for an event
     @param[in] stream stream to make wait.
     @param[in] event event to wait on
@@ -10168,9 +10912,12 @@ def hipStreamWaitEvent(stream, event, unsigned int flags):
     stream is created with hipStreamNonBlocking = 0.
     @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamDestroy
     """
-    pass
+    hipStreamWaitEvent_____retval = hipError_t(chip.hipStreamWaitEvent(stream._ptr,event._ptr,flags))    # fully specified
+    return hipStreamWaitEvent_____retval
 
-def hipStreamGetFlags(stream):
+
+@cython.embedsignature(True)
+def hipStreamGetFlags(ihipStream_t stream):
     """@brief Return flags associated with this stream.
     @param[in] stream stream to be queried
     @param[in,out] flags Pointer to an unsigned integer in which the stream's flags are returned
@@ -10180,9 +10927,12 @@ def hipStreamGetFlags(stream):
     @see hipStreamCreateWithFlags
     """
     cdef unsigned int flags
-    pass
+    hipStreamGetFlags_____retval = hipError_t(chip.hipStreamGetFlags(stream._ptr,&flags))    # fully specified
+    return (hipStreamGetFlags_____retval,flags)
 
-def hipStreamGetPriority(stream):
+
+@cython.embedsignature(True)
+def hipStreamGetPriority(ihipStream_t stream):
     """@brief Query the priority of a stream.
     @param[in] stream stream to be queried
     @param[in,out] priority Pointer to an unsigned integer in which the stream's priority is returned
@@ -10192,8 +10942,11 @@ def hipStreamGetPriority(stream):
     @see hipStreamCreateWithFlags
     """
     cdef int priority
-    pass
+    hipStreamGetPriority_____retval = hipError_t(chip.hipStreamGetPriority(stream._ptr,&priority))    # fully specified
+    return (hipStreamGetPriority_____retval,priority)
 
+
+@cython.embedsignature(True)
 def hipExtStreamCreateWithCUMask(uint32_t cuMaskSize):
     """@brief Create an asynchronous stream with the specified CU mask.
     @param[in, out] stream Pointer to new stream
@@ -10215,7 +10968,8 @@ def hipExtStreamCreateWithCUMask(uint32_t cuMaskSize):
     return (hipExtStreamCreateWithCUMask_____retval,stream,cuMask)
 
 
-def hipExtStreamGetCUMask(stream, uint32_t cuMaskSize):
+@cython.embedsignature(True)
+def hipExtStreamGetCUMask(ihipStream_t stream, uint32_t cuMaskSize):
     """@brief Get CU mask associated with an asynchronous stream
     @param[in] stream stream to be queried
     @param[in] cuMaskSize number of the block of memories (uint32_t *) allocated by user
@@ -10226,7 +10980,9 @@ def hipExtStreamGetCUMask(stream, uint32_t cuMaskSize):
     @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
     cdef unsigned int cuMask
-    pass
+    hipExtStreamGetCUMask_____retval = hipError_t(chip.hipExtStreamGetCUMask(stream._ptr,cuMaskSize,&cuMask))    # fully specified
+    return (hipExtStreamGetCUMask_____retval,cuMask)
+
 
 
 cdef class hipStreamCallback_t:
@@ -10249,7 +11005,8 @@ cdef class hipStreamCallback_t:
         return wrapper
 
 
-def hipStreamAddCallback(stream, callback, userData, unsigned int flags):
+@cython.embedsignature(True)
+def hipStreamAddCallback(ihipStream_t stream, callback, userData, unsigned int flags):
     """@brief Adds a callback to be called on the host after all currently enqueued
     items in the stream have completed.  For each
     hipStreamAddCallback call, a callback will be executed exactly once.
@@ -10264,7 +11021,8 @@ def hipStreamAddCallback(stream, callback, userData, unsigned int flags):
     """
     pass
 
-def hipStreamWaitValue32(stream, ptr, uint32_t value, unsigned int flags, uint32_t mask):
+@cython.embedsignature(True)
+def hipStreamWaitValue32(ihipStream_t stream, ptr, uint32_t value, unsigned int flags, uint32_t mask):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -10296,7 +11054,8 @@ def hipStreamWaitValue32(stream, ptr, uint32_t value, unsigned int flags, uint32
     """
     pass
 
-def hipStreamWaitValue64(stream, ptr, uint64_t value, unsigned int flags, uint64_t mask):
+@cython.embedsignature(True)
+def hipStreamWaitValue64(ihipStream_t stream, ptr, uint64_t value, unsigned int flags, uint64_t mask):
     """@brief Enqueues a wait command to the stream.[BETA]
     @param [in] stream - Stream identifier
     @param [in] ptr    - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
@@ -10322,7 +11081,8 @@ def hipStreamWaitValue64(stream, ptr, uint64_t value, unsigned int flags, uint64
     """
     pass
 
-def hipStreamWriteValue32(stream, ptr, uint32_t value, unsigned int flags):
+@cython.embedsignature(True)
+def hipStreamWriteValue32(ihipStream_t stream, ptr, uint32_t value, unsigned int flags):
     """@brief Enqueues a write command to the stream.[BETA]
     @param [in] stream - Stream identifier
     @param [in] ptr    - Pointer to a GPU accessible memory object
@@ -10338,7 +11098,8 @@ def hipStreamWriteValue32(stream, ptr, uint32_t value, unsigned int flags):
     """
     pass
 
-def hipStreamWriteValue64(stream, ptr, uint64_t value, unsigned int flags):
+@cython.embedsignature(True)
+def hipStreamWriteValue64(ihipStream_t stream, ptr, uint64_t value, unsigned int flags):
     """@brief Enqueues a write command to the stream.[BETA]
     @param [in] stream - Stream identifier
     @param [in] ptr    - Pointer to a GPU accessible memory object
@@ -10354,6 +11115,7 @@ def hipStreamWriteValue64(stream, ptr, uint64_t value, unsigned int flags):
     """
     pass
 
+@cython.embedsignature(True)
 def hipEventCreateWithFlags(unsigned int flags):
     """@}
     -------------------------------------------------------------------------------------------------
@@ -10384,6 +11146,7 @@ def hipEventCreateWithFlags(unsigned int flags):
     return (hipEventCreateWithFlags_____retval,event)
 
 
+@cython.embedsignature(True)
 def hipEventCreate():
     """Create an event
     @param[in,out] event Returns the newly created event.
@@ -10397,12 +11160,16 @@ def hipEventCreate():
     return (hipEventCreate_____retval,event)
 
 
-def hipEventRecord(event, stream):
+@cython.embedsignature(True)
+def hipEventRecord(ihipEvent_t event, ihipStream_t stream):
     """
     """
-    pass
+    hipEventRecord_____retval = hipError_t(chip.hipEventRecord(event._ptr,stream._ptr))    # fully specified
+    return hipEventRecord_____retval
 
-def hipEventDestroy(event):
+
+@cython.embedsignature(True)
+def hipEventDestroy(ihipEvent_t event):
     """@brief Destroy the specified event.
     @param[in] event Event to destroy.
     @returns #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
@@ -10414,9 +11181,12 @@ def hipEventDestroy(event):
     hipEventElapsedTime
     @returns #hipSuccess
     """
-    pass
+    hipEventDestroy_____retval = hipError_t(chip.hipEventDestroy(event._ptr))    # fully specified
+    return hipEventDestroy_____retval
 
-def hipEventSynchronize(event):
+
+@cython.embedsignature(True)
+def hipEventSynchronize(ihipEvent_t event):
     """@brief Wait for an event to complete.
     This function will block until the event is ready, waiting for all previous work in the stream
     specified when event was recorded with hipEventRecord().
@@ -10428,9 +11198,12 @@ def hipEventSynchronize(event):
     @see hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
     hipEventElapsedTime
     """
-    pass
+    hipEventSynchronize_____retval = hipError_t(chip.hipEventSynchronize(event._ptr))    # fully specified
+    return hipEventSynchronize_____retval
 
-def hipEventElapsedTime(start, stop):
+
+@cython.embedsignature(True)
+def hipEventElapsedTime(ihipEvent_t start, ihipEvent_t stop):
     """@brief Return the elapsed time between two events.
     @param[out] ms : Return time between start and stop in ms.
     @param[in]   start : Start event.
@@ -10453,9 +11226,12 @@ def hipEventElapsedTime(start, stop):
     hipEventSynchronize
     """
     cdef float ms
-    pass
+    hipEventElapsedTime_____retval = hipError_t(chip.hipEventElapsedTime(&ms,start._ptr,stop._ptr))    # fully specified
+    return (hipEventElapsedTime_____retval,ms)
 
-def hipEventQuery(event):
+
+@cython.embedsignature(True)
+def hipEventQuery(ihipEvent_t event):
     """@brief Query event status
     @param[in] event Event to query.
     @returns #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle, #hipErrorInvalidValue,
@@ -10467,9 +11243,12 @@ def hipEventQuery(event):
     @see hipEventCreate, hipEventCreateWithFlags, hipEventRecord, hipEventDestroy,
     hipEventSynchronize, hipEventElapsedTime
     """
-    pass
+    hipEventQuery_____retval = hipError_t(chip.hipEventQuery(event._ptr))    # fully specified
+    return hipEventQuery_____retval
 
-def hipPointerGetAttributes(attributes, ptr):
+
+@cython.embedsignature(True)
+def hipPointerGetAttributes(hipPointerAttribute_t attributes, ptr):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -10488,7 +11267,8 @@ def hipPointerGetAttributes(attributes, ptr):
     """
     pass
 
-def hipPointerGetAttribute(data, attribute, ptr):
+@cython.embedsignature(True)
+def hipPointerGetAttribute(data, object attribute, ptr):
     """@brief Returns information about the specified pointer.[BETA]
     @param [in, out] data     returned pointer attribute value
     @param [in]      atribute attribute to query for
@@ -10498,8 +11278,11 @@ def hipPointerGetAttribute(data, attribute, ptr):
     it is still open to changes and may have outstanding issues.
     @see hipPointerGetAttributes
     """
+    if not isinstance(attribute,hipPointer_attribute):
+        raise TypeError("argument 'attribute' must be of type 'hipPointer_attribute'")
     pass
 
+@cython.embedsignature(True)
 def hipDrvPointerGetAttributes(unsigned int numAttributes, ptr):
     """@brief Returns information about the specified pointer.[BETA]
     @param [in]  numAttributes   number of attributes to query for
@@ -10515,7 +11298,8 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, ptr):
     cdef chip.hipPointer_attribute attributes
     pass
 
-def hipImportExternalSemaphore(semHandleDesc):
+@cython.embedsignature(True)
+def hipImportExternalSemaphore(hipExternalSemaphoreHandleDesc_st semHandleDesc):
     """@brief Imports an external semaphore.
     @param[out] extSem_out  External semaphores to be waited on
     @param[in] semHandleDesc Semaphore import handle descriptor
@@ -10524,7 +11308,8 @@ def hipImportExternalSemaphore(semHandleDesc):
     """
     pass
 
-def hipSignalExternalSemaphoresAsync(paramsArray, unsigned int numExtSems, stream):
+@cython.embedsignature(True)
+def hipSignalExternalSemaphoresAsync(hipExternalSemaphoreSignalParams_st paramsArray, unsigned int numExtSems, ihipStream_t stream):
     """@brief Signals a set of external semaphore objects.
     @param[in] extSem_out  External semaphores to be waited on
     @param[in] paramsArray Array of semaphore parameters
@@ -10535,7 +11320,8 @@ def hipSignalExternalSemaphoresAsync(paramsArray, unsigned int numExtSems, strea
     """
     pass
 
-def hipWaitExternalSemaphoresAsync(paramsArray, unsigned int numExtSems, stream):
+@cython.embedsignature(True)
+def hipWaitExternalSemaphoresAsync(hipExternalSemaphoreWaitParams_st paramsArray, unsigned int numExtSems, ihipStream_t stream):
     """@brief Waits on a set of external semaphore objects
     @param[in] extSem_out  External semaphores to be waited on
     @param[in] paramsArray Array of semaphore parameters
@@ -10546,6 +11332,7 @@ def hipWaitExternalSemaphoresAsync(paramsArray, unsigned int numExtSems, stream)
     """
     pass
 
+@cython.embedsignature(True)
 def hipDestroyExternalSemaphore(extSem):
     """@brief Destroys an external semaphore object and releases any references to the underlying resource. Any outstanding signals or waits must have completed before the semaphore is destroyed.
     @param[in] extSem handle to an external memory object
@@ -10554,7 +11341,8 @@ def hipDestroyExternalSemaphore(extSem):
     """
     pass
 
-def hipImportExternalMemory(memHandleDesc):
+@cython.embedsignature(True)
+def hipImportExternalMemory(hipExternalMemoryHandleDesc_st memHandleDesc):
     """@brief Imports an external memory object.
     @param[out] extMem_out  Returned handle to an external memory object
     @param[in]  memHandleDesc Memory import handle descriptor
@@ -10563,7 +11351,8 @@ def hipImportExternalMemory(memHandleDesc):
     """
     pass
 
-def hipExternalMemoryGetMappedBuffer(extMem, bufferDesc):
+@cython.embedsignature(True)
+def hipExternalMemoryGetMappedBuffer(extMem, hipExternalMemoryBufferDesc_st bufferDesc):
     """@brief Maps a buffer onto an imported memory object.
     @param[out] devPtr Returned device pointer to buffer
     @param[in]  extMem  Handle to external memory object
@@ -10573,6 +11362,7 @@ def hipExternalMemoryGetMappedBuffer(extMem, bufferDesc):
     """
     pass
 
+@cython.embedsignature(True)
 def hipDestroyExternalMemory(extMem):
     """@brief Destroys an external memory object.
     @param[in] extMem  External memory object to be destroyed
@@ -10581,6 +11371,7 @@ def hipDestroyExternalMemory(extMem):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMalloc(int size):
     """@brief Allocate memory on the default accelerator
     @param[out] ptr Pointer to the allocated memory
@@ -10592,6 +11383,7 @@ def hipMalloc(int size):
     """
     pass
 
+@cython.embedsignature(True)
 def hipExtMallocWithFlags(int sizeBytes, unsigned int flags):
     """@brief Allocate memory on the default accelerator
     @param[out] ptr Pointer to the allocated memory
@@ -10604,6 +11396,7 @@ def hipExtMallocWithFlags(int sizeBytes, unsigned int flags):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMallocHost(int size):
     """@brief Allocate pinned host memory [Deprecated]
     @param[out] ptr Pointer to the allocated host pinned memory
@@ -10614,6 +11407,7 @@ def hipMallocHost(int size):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemAllocHost(int size):
     """@brief Allocate pinned host memory [Deprecated]
     @param[out] ptr Pointer to the allocated host pinned memory
@@ -10624,6 +11418,7 @@ def hipMemAllocHost(int size):
     """
     pass
 
+@cython.embedsignature(True)
 def hipHostMalloc(int size, unsigned int flags):
     """@brief Allocate device accessible page locked host memory
     @param[out] ptr Pointer to the allocated host pinned memory
@@ -10635,6 +11430,7 @@ def hipHostMalloc(int size, unsigned int flags):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMallocManaged(int size, unsigned int flags):
     """-------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -10651,7 +11447,8 @@ def hipMallocManaged(int size, unsigned int flags):
     """
     pass
 
-def hipMemPrefetchAsync(dev_ptr, int count, int device, stream):
+@cython.embedsignature(True)
+def hipMemPrefetchAsync(dev_ptr, int count, int device, ihipStream_t stream):
     """@brief Prefetches memory to the specified destination device using HIP.
     @param [in] dev_ptr  pointer to be prefetched
     @param [in] count    size in bytes for prefetching
@@ -10661,7 +11458,8 @@ def hipMemPrefetchAsync(dev_ptr, int count, int device, stream):
     """
     pass
 
-def hipMemAdvise(dev_ptr, int count, advice, int device):
+@cython.embedsignature(True)
+def hipMemAdvise(dev_ptr, int count, object advice, int device):
     """@brief Advise about the usage of a given memory range to HIP.
     @param [in] dev_ptr  pointer to memory to set the advice for
     @param [in] count    size in bytes of the memory range
@@ -10669,9 +11467,12 @@ def hipMemAdvise(dev_ptr, int count, advice, int device):
     @param [in] device   device to apply the advice for
     @returns #hipSuccess, #hipErrorInvalidValue
     """
+    if not isinstance(advice,hipMemoryAdvise):
+        raise TypeError("argument 'advice' must be of type 'hipMemoryAdvise'")
     pass
 
-def hipMemRangeGetAttribute(data, int data_size, attribute, dev_ptr, int count):
+@cython.embedsignature(True)
+def hipMemRangeGetAttribute(data, int data_size, object attribute, dev_ptr, int count):
     """@brief Query an attribute of a given memory range in HIP.
     @param [in,out] data   a pointer to a memory location where the result of each
     attribute query will be written to
@@ -10681,8 +11482,11 @@ def hipMemRangeGetAttribute(data, int data_size, attribute, dev_ptr, int count):
     @param [in] count      size of the range to query
     @returns #hipSuccess, #hipErrorInvalidValue
     """
+    if not isinstance(attribute,hipMemRangeAttribute):
+        raise TypeError("argument 'attribute' must be of type 'hipMemRangeAttribute'")
     pass
 
+@cython.embedsignature(True)
 def hipMemRangeGetAttributes(int num_attributes, dev_ptr, int count):
     """@brief Query attributes of a given memory range in HIP.
     @param [in,out] data     a two-dimensional array containing pointers to memory locations
@@ -10699,7 +11503,8 @@ def hipMemRangeGetAttributes(int num_attributes, dev_ptr, int count):
     cdef chip.hipMemRangeAttribute attributes
     pass
 
-def hipStreamAttachMemAsync(stream, dev_ptr, int length, unsigned int flags):
+@cython.embedsignature(True)
+def hipStreamAttachMemAsync(ihipStream_t stream, dev_ptr, int length, unsigned int flags):
     """@brief Attach memory to a stream asynchronously in HIP.
     @param [in] stream     - stream in which to enqueue the attach operation
     @param [in] dev_ptr    - pointer to memory (must be a pointer to managed memory or
@@ -10711,7 +11516,8 @@ def hipStreamAttachMemAsync(stream, dev_ptr, int length, unsigned int flags):
     """
     pass
 
-def hipMallocAsync(int size, stream):
+@cython.embedsignature(True)
+def hipMallocAsync(int size, ihipStream_t stream):
     """@brief Allocates memory with stream ordered semantics
     Inserts a memory allocation operation into @p stream.
     A pointer to the allocated memory is returned immediately in *dptr.
@@ -10736,7 +11542,8 @@ def hipMallocAsync(int size, stream):
     """
     pass
 
-def hipFreeAsync(dev_ptr, stream):
+@cython.embedsignature(True)
+def hipFreeAsync(dev_ptr, ihipStream_t stream):
     """@brief Frees memory with stream ordered semantics
     Inserts a free operation into @p stream.
     The allocation must not be used after stream execution reaches the free.
@@ -10754,7 +11561,8 @@ def hipFreeAsync(dev_ptr, stream):
     """
     pass
 
-def hipMemPoolTrimTo(mem_pool, int min_bytes_to_hold):
+@cython.embedsignature(True)
+def hipMemPoolTrimTo(ihipMemPoolHandle_t mem_pool, int min_bytes_to_hold):
     """@brief Releases freed memory back to the OS
     Releases memory back to the OS until the pool contains fewer than @p min_bytes_to_keep
     reserved bytes, or there is no more memory that the allocator can safely release.
@@ -10773,9 +11581,12 @@ def hipMemPoolTrimTo(mem_pool, int min_bytes_to_hold):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipMemPoolTrimTo_____retval = hipError_t(chip.hipMemPoolTrimTo(mem_pool._ptr,min_bytes_to_hold))    # fully specified
+    return hipMemPoolTrimTo_____retval
 
-def hipMemPoolSetAttribute(mem_pool, attr, value):
+
+@cython.embedsignature(True)
+def hipMemPoolSetAttribute(ihipMemPoolHandle_t mem_pool, object attr, value):
     """@brief Sets attributes of a memory pool
     Supported attributes are:
     - @p hipMemPoolAttrReleaseThreshold: (value type = cuuint64_t)
@@ -10806,9 +11617,12 @@ def hipMemPoolSetAttribute(mem_pool, attr, value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(attr,hipMemPoolAttr):
+        raise TypeError("argument 'attr' must be of type 'hipMemPoolAttr'")
     pass
 
-def hipMemPoolGetAttribute(mem_pool, attr, value):
+@cython.embedsignature(True)
+def hipMemPoolGetAttribute(ihipMemPoolHandle_t mem_pool, object attr, value):
     """@brief Gets attributes of a memory pool
     Supported attributes are:
     - @p hipMemPoolAttrReleaseThreshold: (value type = cuuint64_t)
@@ -10839,9 +11653,12 @@ def hipMemPoolGetAttribute(mem_pool, attr, value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(attr,hipMemPoolAttr):
+        raise TypeError("argument 'attr' must be of type 'hipMemPoolAttr'")
     pass
 
-def hipMemPoolSetAccess(mem_pool, desc_list, int count):
+@cython.embedsignature(True)
+def hipMemPoolSetAccess(ihipMemPoolHandle_t mem_pool, hipMemAccessDesc desc_list, int count):
     """@brief Controls visibility of the specified pool between devices
     @param [in] mem_pool   Memory pool for acccess change
     @param [in] desc_list  Array of access descriptors. Each descriptor instructs the access to enable for a single gpu
@@ -10852,9 +11669,12 @@ def hipMemPoolSetAccess(mem_pool, desc_list, int count):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipMemPoolSetAccess_____retval = hipError_t(chip.hipMemPoolSetAccess(mem_pool._ptr,desc_list._ptr,count))    # fully specified
+    return hipMemPoolSetAccess_____retval
 
-def hipMemPoolGetAccess(mem_pool, location):
+
+@cython.embedsignature(True)
+def hipMemPoolGetAccess(ihipMemPoolHandle_t mem_pool, hipMemLocation location):
     """@brief Returns the accessibility of a pool from a device
     Returns the accessibility of the pool's memory from the specified location.
     @param [out] flags    Accessibility of the memory pool from the specified location/device
@@ -10867,9 +11687,12 @@ def hipMemPoolGetAccess(mem_pool, location):
     it is still open to changes and may have outstanding issues.
     """
     cdef chip.hipMemAccessFlags flags
-    pass
+    hipMemPoolGetAccess_____retval = hipError_t(chip.hipMemPoolGetAccess(&flags,mem_pool._ptr,location._ptr))    # fully specified
+    return (hipMemPoolGetAccess_____retval,hipMemAccessFlags(flags))
 
-def hipMemPoolCreate(pool_props):
+
+@cython.embedsignature(True)
+def hipMemPoolCreate(hipMemPoolProps pool_props):
     """@brief Creates a memory pool
     Creates a HIP memory pool and returns the handle in @p mem_pool. The @p pool_props determines
     the properties of the pool such as the backing device and IPC capabilities.
@@ -10884,9 +11707,12 @@ def hipMemPoolCreate(pool_props):
     it is still open to changes and may have outstanding issues.
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
-    pass
+    hipMemPoolCreate_____retval = hipError_t(chip.hipMemPoolCreate(&mem_pool._ptr,pool_props._ptr))    # fully specified
+    return (hipMemPoolCreate_____retval,mem_pool)
 
-def hipMemPoolDestroy(mem_pool):
+
+@cython.embedsignature(True)
+def hipMemPoolDestroy(ihipMemPoolHandle_t mem_pool):
     """@brief Destroys the specified memory pool
     If any pointers obtained from this pool haven't been freed or
     the pool has free operations that haven't completed
@@ -10903,9 +11729,12 @@ def hipMemPoolDestroy(mem_pool):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipMemPoolDestroy_____retval = hipError_t(chip.hipMemPoolDestroy(mem_pool._ptr))    # fully specified
+    return hipMemPoolDestroy_____retval
 
-def hipMallocFromPoolAsync(int size, mem_pool, stream):
+
+@cython.embedsignature(True)
+def hipMallocFromPoolAsync(int size, ihipMemPoolHandle_t mem_pool, ihipStream_t stream):
     """@brief Allocates memory from a specified pool with stream ordered semantics.
     Inserts an allocation operation into @p stream.
     A pointer to the allocated memory is returned immediately in @p dev_ptr.
@@ -10930,7 +11759,8 @@ def hipMallocFromPoolAsync(int size, mem_pool, stream):
     """
     pass
 
-def hipMemPoolExportToShareableHandle(shared_handle, mem_pool, handle_type, unsigned int flags):
+@cython.embedsignature(True)
+def hipMemPoolExportToShareableHandle(shared_handle, ihipMemPoolHandle_t mem_pool, object handle_type, unsigned int flags):
     """@brief Exports a memory pool to the requested handle type.
     Given an IPC capable mempool, create an OS handle to share the pool with another process.
     A recipient process can convert the shareable handle into a mempool with @p hipMemPoolImportFromShareableHandle.
@@ -10948,9 +11778,12 @@ def hipMemPoolExportToShareableHandle(shared_handle, mem_pool, handle_type, unsi
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(handle_type,hipMemAllocationHandleType):
+        raise TypeError("argument 'handle_type' must be of type 'hipMemAllocationHandleType'")
     pass
 
-def hipMemPoolImportFromShareableHandle(shared_handle, handle_type, unsigned int flags):
+@cython.embedsignature(True)
+def hipMemPoolImportFromShareableHandle(shared_handle, object handle_type, unsigned int flags):
     """@brief Imports a memory pool from a shared handle.
     Specific allocations can be imported from the imported pool with @p hipMemPoolImportPointer.
     @note Imported memory pools do not support creating new allocations.
@@ -10966,9 +11799,12 @@ def hipMemPoolImportFromShareableHandle(shared_handle, handle_type, unsigned int
     it is still open to changes and may have outstanding issues.
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
+    if not isinstance(handle_type,hipMemAllocationHandleType):
+        raise TypeError("argument 'handle_type' must be of type 'hipMemAllocationHandleType'")
     pass
 
-def hipMemPoolExportPointer(export_data, dev_ptr):
+@cython.embedsignature(True)
+def hipMemPoolExportPointer(hipMemPoolPtrExportData export_data, dev_ptr):
     """@brief Export data to share a memory pool allocation between processes.
     Constructs @p export_data for sharing a specific allocation from an already shared memory pool.
     The recipient process can import the allocation with the @p hipMemPoolImportPointer api.
@@ -10982,7 +11818,8 @@ def hipMemPoolExportPointer(export_data, dev_ptr):
     """
     pass
 
-def hipMemPoolImportPointer(mem_pool, export_data):
+@cython.embedsignature(True)
+def hipMemPoolImportPointer(ihipMemPoolHandle_t mem_pool, hipMemPoolPtrExportData export_data):
     """@brief Import a memory pool allocation from another process.
     Returns in @p dev_ptr a pointer to the imported memory.
     The imported memory must not be accessed before the allocation operation completes
@@ -11004,6 +11841,7 @@ def hipMemPoolImportPointer(mem_pool, export_data):
     """
     pass
 
+@cython.embedsignature(True)
 def hipHostAlloc(int size, unsigned int flags):
     """@brief Allocate device accessible page locked host memory [Deprecated]
     @param[out] ptr Pointer to the allocated host pinned memory
@@ -11015,6 +11853,7 @@ def hipHostAlloc(int size, unsigned int flags):
     """
     pass
 
+@cython.embedsignature(True)
 def hipHostGetDevicePointer(hstPtr, unsigned int flags):
     """@brief Get Device pointer from Host Pointer allocated through hipHostMalloc
     @param[out] dstPtr Device Pointer mapped to passed host pointer
@@ -11025,6 +11864,7 @@ def hipHostGetDevicePointer(hstPtr, unsigned int flags):
     """
     pass
 
+@cython.embedsignature(True)
 def hipHostGetFlags(hostPtr):
     """@brief Return flags associated with host pointer
     @param[out] flagsPtr Memory location to store flags
@@ -11035,6 +11875,7 @@ def hipHostGetFlags(hostPtr):
     cdef unsigned int flagsPtr
     pass
 
+@cython.embedsignature(True)
 def hipHostRegister(hostPtr, int sizeBytes, unsigned int flags):
     """@brief Register host memory so it can be accessed from the current device.
     @param[out] hostPtr Pointer to host memory to be registered.
@@ -11064,6 +11905,7 @@ def hipHostRegister(hostPtr, int sizeBytes, unsigned int flags):
     """
     pass
 
+@cython.embedsignature(True)
 def hipHostUnregister(hostPtr):
     """@brief Un-register host pointer
     @param[in] hostPtr Host pointer previously registered with #hipHostRegister
@@ -11072,6 +11914,7 @@ def hipHostUnregister(hostPtr):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMallocPitch(int width, int height):
     """Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
@@ -11089,6 +11932,7 @@ def hipMallocPitch(int width, int height):
     cdef int pitch
     pass
 
+@cython.embedsignature(True)
 def hipMemAllocPitch(int widthInBytes, int height, unsigned int elementSizeBytes):
     """Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
@@ -11109,6 +11953,7 @@ def hipMemAllocPitch(int widthInBytes, int height, unsigned int elementSizeBytes
     cdef int pitch
     pass
 
+@cython.embedsignature(True)
 def hipFree(ptr):
     """@brief Free memory allocated by the hcc hip memory allocation API.
     This API performs an implicit hipDeviceSynchronize() call.
@@ -11122,6 +11967,7 @@ def hipFree(ptr):
     """
     pass
 
+@cython.embedsignature(True)
 def hipFreeHost(ptr):
     """@brief Free memory allocated by the hcc hip host memory allocation API.  [Deprecated]
     @param[in] ptr Pointer to memory to be freed
@@ -11132,6 +11978,7 @@ def hipFreeHost(ptr):
     """
     pass
 
+@cython.embedsignature(True)
 def hipHostFree(ptr):
     """@brief Free memory allocated by the hcc hip host memory allocation API
     This API performs an implicit hipDeviceSynchronize() call.
@@ -11145,7 +11992,8 @@ def hipHostFree(ptr):
     """
     pass
 
-def hipMemcpy(dst, src, int sizeBytes, kind):
+@cython.embedsignature(True)
+def hipMemcpy(dst, src, int sizeBytes, object kind):
     """@brief Copy data from src to dst.
     It supports memory from host to device,
     device to host, device to device and host to host
@@ -11170,13 +12018,19 @@ def hipMemcpy(dst, src, int sizeBytes, kind):
     hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyWithStream(dst, src, int sizeBytes, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpyWithStream(dst, src, int sizeBytes, object kind, ihipStream_t stream):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
+@cython.embedsignature(True)
 def hipMemcpyHtoD(dst, src, int sizeBytes):
     """@brief Copy data from Host to Device
     @param[out]  dst Data being copy to
@@ -11193,6 +12047,7 @@ def hipMemcpyHtoD(dst, src, int sizeBytes):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemcpyDtoH(dst, src, int sizeBytes):
     """@brief Copy data from Device to Host
     @param[out]  dst Data being copy to
@@ -11209,6 +12064,7 @@ def hipMemcpyDtoH(dst, src, int sizeBytes):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemcpyDtoD(dst, src, int sizeBytes):
     """@brief Copy data from Device to Device
     @param[out]  dst Data being copy to
@@ -11225,7 +12081,8 @@ def hipMemcpyDtoD(dst, src, int sizeBytes):
     """
     pass
 
-def hipMemcpyHtoDAsync(dst, src, int sizeBytes, stream):
+@cython.embedsignature(True)
+def hipMemcpyHtoDAsync(dst, src, int sizeBytes, ihipStream_t stream):
     """@brief Copy data from Host to Device asynchronously
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -11241,7 +12098,8 @@ def hipMemcpyHtoDAsync(dst, src, int sizeBytes, stream):
     """
     pass
 
-def hipMemcpyDtoHAsync(dst, src, int sizeBytes, stream):
+@cython.embedsignature(True)
+def hipMemcpyDtoHAsync(dst, src, int sizeBytes, ihipStream_t stream):
     """@brief Copy data from Device to Host asynchronously
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -11257,7 +12115,8 @@ def hipMemcpyDtoHAsync(dst, src, int sizeBytes, stream):
     """
     pass
 
-def hipMemcpyDtoDAsync(dst, src, int sizeBytes, stream):
+@cython.embedsignature(True)
+def hipMemcpyDtoDAsync(dst, src, int sizeBytes, ihipStream_t stream):
     """@brief Copy data from Device to Device asynchronously
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -11273,7 +12132,8 @@ def hipMemcpyDtoDAsync(dst, src, int sizeBytes, stream):
     """
     pass
 
-def hipModuleGetGlobal(hmod, const char * name):
+@cython.embedsignature(True)
+def hipModuleGetGlobal(ihipModule_t hmod, const char * name):
     """@brief Returns a global pointer from a module.
     Returns in *dptr and *bytes the pointer and size of the global of name name located in module hmod.
     If no variable of that name exists, it returns hipErrorNotFound. Both parameters dptr and bytes are optional.
@@ -11287,6 +12147,7 @@ def hipModuleGetGlobal(hmod, const char * name):
     cdef int bytes
     pass
 
+@cython.embedsignature(True)
 def hipGetSymbolAddress(symbol):
     """@brief Gets device pointer associated with symbol on the device.
     @param[out]  devPtr  pointer to the device associated the symbole
@@ -11295,6 +12156,7 @@ def hipGetSymbolAddress(symbol):
     """
     pass
 
+@cython.embedsignature(True)
 def hipGetSymbolSize(symbol):
     """@brief Gets the size of the given symbol on the device.
     @param[in]   symbol  pointer to the device symbole
@@ -11304,7 +12166,8 @@ def hipGetSymbolSize(symbol):
     cdef int size
     pass
 
-def hipMemcpyToSymbol(symbol, src, int sizeBytes, int offset, kind):
+@cython.embedsignature(True)
+def hipMemcpyToSymbol(symbol, src, int sizeBytes, int offset, object kind):
     """@brief Copies data to the given symbol on the device.
     Symbol HIP APIs allow a kernel to define a device-side data symbol which can be accessed on
     the host side. The symbol can be in __constant or device space.
@@ -11319,9 +12182,12 @@ def hipMemcpyToSymbol(symbol, src, int sizeBytes, int offset, kind):
     @param[in]   kind  type of memory transfer
     @return #hipSuccess, #hipErrorInvalidValue
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyToSymbolAsync(symbol, src, int sizeBytes, int offset, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpyToSymbolAsync(symbol, src, int sizeBytes, int offset, object kind, ihipStream_t stream):
     """@brief Copies data to the given symbol on the device asynchronously.
     @param[out]  symbol  pointer to the device symbole
     @param[in]   src  pointer to the source address
@@ -11331,9 +12197,12 @@ def hipMemcpyToSymbolAsync(symbol, src, int sizeBytes, int offset, kind, stream)
     @param[in]   stream  stream identifier
     @return #hipSuccess, #hipErrorInvalidValue
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyFromSymbol(dst, symbol, int sizeBytes, int offset, kind):
+@cython.embedsignature(True)
+def hipMemcpyFromSymbol(dst, symbol, int sizeBytes, int offset, object kind):
     """@brief Copies data from the given symbol on the device.
     @param[out]  dptr  Returns pointer to destinition memory address
     @param[in]   symbol  pointer to the symbole address on the device
@@ -11342,9 +12211,12 @@ def hipMemcpyFromSymbol(dst, symbol, int sizeBytes, int offset, kind):
     @param[in]   kind  type of memory transfer
     @return #hipSuccess, #hipErrorInvalidValue
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyFromSymbolAsync(dst, symbol, int sizeBytes, int offset, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpyFromSymbolAsync(dst, symbol, int sizeBytes, int offset, object kind, ihipStream_t stream):
     """@brief Copies data from the given symbol on the device asynchronously.
     @param[out]  dptr  Returns pointer to destinition memory address
     @param[in]   symbol  pointer to the symbole address on the device
@@ -11354,9 +12226,12 @@ def hipMemcpyFromSymbolAsync(dst, symbol, int sizeBytes, int offset, kind, strea
     @param[in]   stream  stream identifier
     @return #hipSuccess, #hipErrorInvalidValue
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyAsync(dst, src, int sizeBytes, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpyAsync(dst, src, int sizeBytes, object kind, ihipStream_t stream):
     """@brief Copy data from src to dst asynchronously.
     @warning If host or dest are not pinned, the memory copy will be performed synchronously.  For
     best performance, use hipHostMalloc to allocate host memory that is transferred asynchronously.
@@ -11379,8 +12254,11 @@ def hipMemcpyAsync(dst, src, int sizeBytes, kind, stream):
     hipMemcpyFromArrayAsync, hipMemcpy2DFromArrayAsync, hipMemcpyToSymbolAsync,
     hipMemcpyFromSymbolAsync
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
+@cython.embedsignature(True)
 def hipMemset(dst, int value, int sizeBytes):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     byte value value.
@@ -11391,6 +12269,7 @@ def hipMemset(dst, int value, int sizeBytes):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemsetD8(dest, unsigned char value, int count):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     byte value value.
@@ -11401,7 +12280,8 @@ def hipMemsetD8(dest, unsigned char value, int count):
     """
     pass
 
-def hipMemsetD8Async(dest, unsigned char value, int count, stream):
+@cython.embedsignature(True)
+def hipMemsetD8Async(dest, unsigned char value, int count, ihipStream_t stream):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     byte value value.
     hipMemsetD8Async() is asynchronous with respect to the host, so the call may return before the
@@ -11416,6 +12296,7 @@ def hipMemsetD8Async(dest, unsigned char value, int count, stream):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemsetD16(dest, unsigned short value, int count):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     short value value.
@@ -11426,7 +12307,8 @@ def hipMemsetD16(dest, unsigned short value, int count):
     """
     pass
 
-def hipMemsetD16Async(dest, unsigned short value, int count, stream):
+@cython.embedsignature(True)
+def hipMemsetD16Async(dest, unsigned short value, int count, ihipStream_t stream):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     short value value.
     hipMemsetD16Async() is asynchronous with respect to the host, so the call may return before the
@@ -11441,6 +12323,7 @@ def hipMemsetD16Async(dest, unsigned short value, int count, stream):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemsetD32(dest, int value, int count):
     """@brief Fills the memory area pointed to by dest with the constant integer
     value for specified number of times.
@@ -11451,7 +12334,8 @@ def hipMemsetD32(dest, int value, int count):
     """
     pass
 
-def hipMemsetAsync(dst, int value, int sizeBytes, stream):
+@cython.embedsignature(True)
+def hipMemsetAsync(dst, int value, int sizeBytes, ihipStream_t stream):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dev with the constant
     byte value value.
     hipMemsetAsync() is asynchronous with respect to the host, so the call may return before the
@@ -11466,7 +12350,8 @@ def hipMemsetAsync(dst, int value, int sizeBytes, stream):
     """
     pass
 
-def hipMemsetD32Async(dst, int value, int count, stream):
+@cython.embedsignature(True)
+def hipMemsetD32Async(dst, int value, int count, ihipStream_t stream):
     """@brief Fills the memory area pointed to by dev with the constant integer
     value for specified number of times.
     hipMemsetD32Async() is asynchronous with respect to the host, so the call may return before the
@@ -11481,6 +12366,7 @@ def hipMemsetD32Async(dst, int value, int count, stream):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemset2D(dst, int pitch, int value, int width, int height):
     """@brief Fills the memory area pointed to by dst with the constant value.
     @param[out] dst Pointer to device memory
@@ -11492,7 +12378,8 @@ def hipMemset2D(dst, int pitch, int value, int width, int height):
     """
     pass
 
-def hipMemset2DAsync(dst, int pitch, int value, int width, int height, stream):
+@cython.embedsignature(True)
+def hipMemset2DAsync(dst, int pitch, int value, int width, int height, ihipStream_t stream):
     """@brief Fills asynchronously the memory area pointed to by dst with the constant value.
     @param[in]  dst Pointer to device memory
     @param[in]  pitch - data size in bytes
@@ -11504,6 +12391,7 @@ def hipMemset2DAsync(dst, int pitch, int value, int width, int height, stream):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemset3D(pitchedDevPtr, int value, extent):
     """@brief Fills synchronously the memory area pointed to by pitchedDevPtr with the constant value.
     @param[in] pitchedDevPtr
@@ -11513,7 +12401,8 @@ def hipMemset3D(pitchedDevPtr, int value, extent):
     """
     pass
 
-def hipMemset3DAsync(pitchedDevPtr, int value, extent, stream):
+@cython.embedsignature(True)
+def hipMemset3DAsync(pitchedDevPtr, int value, extent, ihipStream_t stream):
     """@brief Fills asynchronously the memory area pointed to by pitchedDevPtr with the constant value.
     @param[in] pitchedDevPtr
     @param[in]  value - constant value to be set
@@ -11523,6 +12412,7 @@ def hipMemset3DAsync(pitchedDevPtr, int value, extent, stream):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemGetInfo():
     """@brief Query memory info.
     Return snapshot of free memory, and total allocatable memory on the device.
@@ -11537,13 +12427,15 @@ def hipMemGetInfo():
     return (hipMemGetInfo_____retval,free,total)
 
 
+@cython.embedsignature(True)
 def hipMemPtrGetInfo(ptr):
     """
     """
     cdef int size
     pass
 
-def hipMallocArray(desc, int width, int height, unsigned int flags):
+@cython.embedsignature(True)
+def hipMallocArray(hipChannelFormatDesc desc, int width, int height, unsigned int flags):
     """@brief Allocate an array on the device.
     @param[out]  array  Pointer to allocated array in device memory
     @param[in]   desc   Requested channel format
@@ -11554,46 +12446,65 @@ def hipMallocArray(desc, int width, int height, unsigned int flags):
     @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
     """
     array = hipArray.from_ptr(NULL,owner=True)
-    pass
+    hipMallocArray_____retval = hipError_t(chip.hipMallocArray(&array._ptr,desc._ptr,width,height,flags))    # fully specified
+    return (hipMallocArray_____retval,array)
 
-def hipArrayCreate(pAllocateArray):
+
+@cython.embedsignature(True)
+def hipArrayCreate(HIP_ARRAY_DESCRIPTOR pAllocateArray):
     """
     """
     pHandle = hipArray.from_ptr(NULL,owner=True)
-    pass
+    hipArrayCreate_____retval = hipError_t(chip.hipArrayCreate(&pHandle._ptr,pAllocateArray._ptr))    # fully specified
+    return (hipArrayCreate_____retval,pHandle)
 
-def hipArrayDestroy(array):
+
+@cython.embedsignature(True)
+def hipArrayDestroy(hipArray array):
     """
     """
-    pass
+    hipArrayDestroy_____retval = hipError_t(chip.hipArrayDestroy(array._ptr))    # fully specified
+    return hipArrayDestroy_____retval
 
-def hipArray3DCreate(pAllocateArray):
+
+@cython.embedsignature(True)
+def hipArray3DCreate(HIP_ARRAY3D_DESCRIPTOR pAllocateArray):
     """
     """
     array = hipArray.from_ptr(NULL,owner=True)
-    pass
+    hipArray3DCreate_____retval = hipError_t(chip.hipArray3DCreate(&array._ptr,pAllocateArray._ptr))    # fully specified
+    return (hipArray3DCreate_____retval,array)
 
-def hipMalloc3D(pitchedDevPtr, extent):
+
+@cython.embedsignature(True)
+def hipMalloc3D(hipPitchedPtr pitchedDevPtr, extent):
     """
     """
     pass
 
-def hipFreeArray(array):
+@cython.embedsignature(True)
+def hipFreeArray(hipArray array):
     """@brief Frees an array on the device.
     @param[in]  array  Pointer to array to free
     @return     #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     @see hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipHostMalloc, hipHostFree
     """
-    pass
+    hipFreeArray_____retval = hipError_t(chip.hipFreeArray(array._ptr))    # fully specified
+    return hipFreeArray_____retval
 
-def hipFreeMipmappedArray(mipmappedArray):
+
+@cython.embedsignature(True)
+def hipFreeMipmappedArray(hipMipmappedArray mipmappedArray):
     """@brief Frees a mipmapped array on the device
     @param[in] mipmappedArray - Pointer to mipmapped array to free
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    pass
+    hipFreeMipmappedArray_____retval = hipError_t(chip.hipFreeMipmappedArray(mipmappedArray._ptr))    # fully specified
+    return hipFreeMipmappedArray_____retval
 
-def hipMalloc3DArray(desc, extent, unsigned int flags):
+
+@cython.embedsignature(True)
+def hipMalloc3DArray(hipChannelFormatDesc desc, extent, unsigned int flags):
     """@brief Allocate an array on the device.
     @param[out]  array  Pointer to allocated array in device memory
     @param[in]   desc   Requested channel format
@@ -11605,7 +12516,8 @@ def hipMalloc3DArray(desc, extent, unsigned int flags):
     array = hipArray.from_ptr(NULL,owner=True)
     pass
 
-def hipMallocMipmappedArray(desc, extent, unsigned int numLevels, unsigned int flags):
+@cython.embedsignature(True)
+def hipMallocMipmappedArray(hipChannelFormatDesc desc, extent, unsigned int numLevels, unsigned int flags):
     """@brief Allocate a mipmapped array on the device
     @param[out] mipmappedArray  - Pointer to allocated mipmapped array in device memory
     @param[in]  desc            - Requested channel format
@@ -11617,7 +12529,8 @@ def hipMallocMipmappedArray(desc, extent, unsigned int numLevels, unsigned int f
     mipmappedArray = hipMipmappedArray.from_ptr(NULL,owner=True)
     pass
 
-def hipGetMipmappedArrayLevel(mipmappedArray, unsigned int level):
+@cython.embedsignature(True)
+def hipGetMipmappedArrayLevel(hipMipmappedArray mipmappedArray, unsigned int level):
     """@brief Gets a mipmap level of a HIP mipmapped array
     @param[out] levelArray     - Returned mipmap level HIP array
     @param[in]  mipmappedArray - HIP mipmapped array
@@ -11625,9 +12538,12 @@ def hipGetMipmappedArrayLevel(mipmappedArray, unsigned int level):
     @return #hipSuccess, #hipErrorInvalidValue
     """
     levelArray = hipArray.from_ptr(NULL,owner=True)
-    pass
+    hipGetMipmappedArrayLevel_____retval = hipError_t(chip.hipGetMipmappedArrayLevel(&levelArray._ptr,mipmappedArray._ptr,level))    # fully specified
+    return (hipGetMipmappedArrayLevel_____retval,levelArray)
 
-def hipMemcpy2D(dst, int dpitch, src, int spitch, int width, int height, kind):
+
+@cython.embedsignature(True)
+def hipMemcpy2D(dst, int dpitch, src, int spitch, int width, int height, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst    Destination memory address
     @param[in]   dpitch Pitch of destination memory
@@ -11641,9 +12557,12 @@ def hipMemcpy2D(dst, int dpitch, src, int spitch, int width, int height, kind):
     @see hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyParam2D(pCopy):
+@cython.embedsignature(True)
+def hipMemcpyParam2D(hip_Memcpy2D pCopy):
     """@brief Copies memory for 2D arrays.
     @param[in]   pCopy Parameters for the memory copy
     @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
@@ -11651,9 +12570,12 @@ def hipMemcpyParam2D(pCopy):
     @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
     hipMemcpyToSymbol, hipMemcpyAsync
     """
-    pass
+    hipMemcpyParam2D_____retval = hipError_t(chip.hipMemcpyParam2D(pCopy._ptr))    # fully specified
+    return hipMemcpyParam2D_____retval
 
-def hipMemcpyParam2DAsync(pCopy, stream):
+
+@cython.embedsignature(True)
+def hipMemcpyParam2DAsync(hip_Memcpy2D pCopy, ihipStream_t stream):
     """@brief Copies memory for 2D arrays.
     @param[in]   pCopy Parameters for the memory copy
     @param[in]   stream Stream to use
@@ -11662,9 +12584,12 @@ def hipMemcpyParam2DAsync(pCopy, stream):
     @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
     hipMemcpyToSymbol, hipMemcpyAsync
     """
-    pass
+    hipMemcpyParam2DAsync_____retval = hipError_t(chip.hipMemcpyParam2DAsync(pCopy._ptr,stream._ptr))    # fully specified
+    return hipMemcpyParam2DAsync_____retval
 
-def hipMemcpy2DAsync(dst, int dpitch, src, int spitch, int width, int height, kind, stream):
+
+@cython.embedsignature(True)
+def hipMemcpy2DAsync(dst, int dpitch, src, int spitch, int width, int height, object kind, ihipStream_t stream):
     """@brief Copies data between host and device.
     @param[in]   dst    Destination memory address
     @param[in]   dpitch Pitch of destination memory
@@ -11679,9 +12604,12 @@ def hipMemcpy2DAsync(dst, int dpitch, src, int spitch, int width, int height, ki
     @see hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy2DToArray(dst, int wOffset, int hOffset, src, int spitch, int width, int height, kind):
+@cython.embedsignature(True)
+def hipMemcpy2DToArray(hipArray dst, int wOffset, int hOffset, src, int spitch, int width, int height, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst     Destination memory address
     @param[in]   wOffset Destination starting X offset
@@ -11696,9 +12624,12 @@ def hipMemcpy2DToArray(dst, int wOffset, int hOffset, src, int spitch, int width
     @see hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy2DToArrayAsync(dst, int wOffset, int hOffset, src, int spitch, int width, int height, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpy2DToArrayAsync(hipArray dst, int wOffset, int hOffset, src, int spitch, int width, int height, object kind, ihipStream_t stream):
     """@brief Copies data between host and device.
     @param[in]   dst     Destination memory address
     @param[in]   wOffset Destination starting X offset
@@ -11714,9 +12645,12 @@ def hipMemcpy2DToArrayAsync(dst, int wOffset, int hOffset, src, int spitch, int 
     @see hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyToArray(dst, int wOffset, int hOffset, src, int count, kind):
+@cython.embedsignature(True)
+def hipMemcpyToArray(hipArray dst, int wOffset, int hOffset, src, int count, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst     Destination memory address
     @param[in]   wOffset Destination starting X offset
@@ -11729,9 +12663,12 @@ def hipMemcpyToArray(dst, int wOffset, int hOffset, src, int count, kind):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyFromArray(dst, srcArray, int wOffset, int hOffset, int count, kind):
+@cython.embedsignature(True)
+def hipMemcpyFromArray(dst, hipArray srcArray, int wOffset, int hOffset, int count, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst       Destination memory address
     @param[in]   srcArray  Source memory address
@@ -11744,9 +12681,12 @@ def hipMemcpyFromArray(dst, srcArray, int wOffset, int hOffset, int count, kind)
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy2DFromArray(dst, int dpitch, src, int wOffset, int hOffset, int width, int height, kind):
+@cython.embedsignature(True)
+def hipMemcpy2DFromArray(dst, int dpitch, hipArray src, int wOffset, int hOffset, int width, int height, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst       Destination memory address
     @param[in]   dpitch    Pitch of destination memory
@@ -11761,9 +12701,12 @@ def hipMemcpy2DFromArray(dst, int dpitch, src, int wOffset, int hOffset, int wid
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy2DFromArrayAsync(dst, int dpitch, src, int wOffset, int hOffset, int width, int height, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpy2DFromArrayAsync(dst, int dpitch, hipArray src, int wOffset, int hOffset, int width, int height, object kind, ihipStream_t stream):
     """@brief Copies data between host and device asynchronously.
     @param[in]   dst       Destination memory address
     @param[in]   dpitch    Pitch of destination memory
@@ -11779,9 +12722,12 @@ def hipMemcpy2DFromArrayAsync(dst, int dpitch, src, int wOffset, int hOffset, in
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyAtoH(dst, srcArray, int srcOffset, int count):
+@cython.embedsignature(True)
+def hipMemcpyAtoH(dst, hipArray srcArray, int srcOffset, int count):
     """@brief Copies data between host and device.
     @param[in]   dst       Destination memory address
     @param[in]   srcArray  Source array
@@ -11794,7 +12740,8 @@ def hipMemcpyAtoH(dst, srcArray, int srcOffset, int count):
     """
     pass
 
-def hipMemcpyHtoA(dstArray, int dstOffset, srcHost, int count):
+@cython.embedsignature(True)
+def hipMemcpyHtoA(hipArray dstArray, int dstOffset, srcHost, int count):
     """@brief Copies data between host and device.
     @param[in]   dstArray   Destination memory address
     @param[in]   dstOffset  Offset in bytes of destination array
@@ -11807,7 +12754,8 @@ def hipMemcpyHtoA(dstArray, int dstOffset, srcHost, int count):
     """
     pass
 
-def hipMemcpy3D(p):
+@cython.embedsignature(True)
+def hipMemcpy3D(hipMemcpy3DParms p):
     """@brief Copies data between host and device.
     @param[in]   p   3D memory copy parameters
     @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
@@ -11815,9 +12763,12 @@ def hipMemcpy3D(p):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    pass
+    hipMemcpy3D_____retval = hipError_t(chip.hipMemcpy3D(p._ptr))    # fully specified
+    return hipMemcpy3D_____retval
 
-def hipMemcpy3DAsync(p, stream):
+
+@cython.embedsignature(True)
+def hipMemcpy3DAsync(hipMemcpy3DParms p, ihipStream_t stream):
     """@brief Copies data between host and device asynchronously.
     @param[in]   p        3D memory copy parameters
     @param[in]   stream   Stream to use
@@ -11826,9 +12777,12 @@ def hipMemcpy3DAsync(p, stream):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    pass
+    hipMemcpy3DAsync_____retval = hipError_t(chip.hipMemcpy3DAsync(p._ptr,stream._ptr))    # fully specified
+    return hipMemcpy3DAsync_____retval
 
-def hipDrvMemcpy3D(pCopy):
+
+@cython.embedsignature(True)
+def hipDrvMemcpy3D(HIP_MEMCPY3D pCopy):
     """@brief Copies data between host and device.
     @param[in]   pCopy   3D memory copy parameters
     @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
@@ -11836,9 +12790,12 @@ def hipDrvMemcpy3D(pCopy):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    pass
+    hipDrvMemcpy3D_____retval = hipError_t(chip.hipDrvMemcpy3D(pCopy._ptr))    # fully specified
+    return hipDrvMemcpy3D_____retval
 
-def hipDrvMemcpy3DAsync(pCopy, stream):
+
+@cython.embedsignature(True)
+def hipDrvMemcpy3DAsync(HIP_MEMCPY3D pCopy, ihipStream_t stream):
     """@brief Copies data between host and device asynchronously.
     @param[in]   pCopy    3D memory copy parameters
     @param[in]   stream   Stream to use
@@ -11847,8 +12804,11 @@ def hipDrvMemcpy3DAsync(pCopy, stream):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    pass
+    hipDrvMemcpy3DAsync_____retval = hipError_t(chip.hipDrvMemcpy3DAsync(pCopy._ptr,stream._ptr))    # fully specified
+    return hipDrvMemcpy3DAsync_____retval
 
+
+@cython.embedsignature(True)
 def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
     """@}
     -------------------------------------------------------------------------------------------------
@@ -11873,6 +12833,7 @@ def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
     return (hipDeviceCanAccessPeer_____retval,canAccessPeer)
 
 
+@cython.embedsignature(True)
 def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
     """@brief Enable direct access from current device's virtual address space to memory allocations
     physically located on a peer device.
@@ -11889,6 +12850,7 @@ def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
     return hipDeviceEnablePeerAccess_____retval
 
 
+@cython.embedsignature(True)
 def hipDeviceDisablePeerAccess(int peerDeviceId):
     """@brief Disable direct access from current device's virtual address space to memory allocations
     physically located on a peer device.
@@ -11901,6 +12863,7 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
     return hipDeviceDisablePeerAccess_____retval
 
 
+@cython.embedsignature(True)
 def hipMemGetAddressRange(dptr):
     """@brief Get information on memory allocations.
     @param [out] pbase - BAse pointer address
@@ -11913,6 +12876,7 @@ def hipMemGetAddressRange(dptr):
     cdef int psize
     pass
 
+@cython.embedsignature(True)
 def hipMemcpyPeer(dst, int dstDeviceId, src, int srcDeviceId, int sizeBytes):
     """@brief Copies memory from one device to memory on another device.
     @param [out] dst - Destination device pointer.
@@ -11924,7 +12888,8 @@ def hipMemcpyPeer(dst, int dstDeviceId, src, int srcDeviceId, int sizeBytes):
     """
     pass
 
-def hipMemcpyPeerAsync(dst, int dstDeviceId, src, int srcDevice, int sizeBytes, stream):
+@cython.embedsignature(True)
+def hipMemcpyPeerAsync(dst, int dstDeviceId, src, int srcDevice, int sizeBytes, ihipStream_t stream):
     """@brief Copies memory from one device to memory on another device.
     @param [out] dst - Destination device pointer.
     @param [in] dstDevice - Destination device
@@ -11936,6 +12901,7 @@ def hipMemcpyPeerAsync(dst, int dstDeviceId, src, int srcDevice, int sizeBytes, 
     """
     pass
 
+@cython.embedsignature(True)
 def hipCtxCreate(unsigned int flags, hipDevice_t device):
     """@}
     -------------------------------------------------------------------------------------------------
@@ -11960,15 +12926,19 @@ def hipCtxCreate(unsigned int flags, hipDevice_t device):
     return (hipCtxCreate_____retval,ctx)
 
 
-def hipCtxDestroy(ctx):
+@cython.embedsignature(True)
+def hipCtxDestroy(ihipCtx_t ctx):
     """@brief Destroy a HIP context.
     @param [in] ctx Context to destroy
     @returns #hipSuccess, #hipErrorInvalidValue
     @see hipCtxCreate, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,hipCtxSetCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
     """
-    pass
+    hipCtxDestroy_____retval = hipError_t(chip.hipCtxDestroy(ctx._ptr))    # fully specified
+    return hipCtxDestroy_____retval
 
+
+@cython.embedsignature(True)
 def hipCtxPopCurrent():
     """@brief Pop the current/default context and return the popped context.
     @param [out] ctx
@@ -11981,24 +12951,31 @@ def hipCtxPopCurrent():
     return (hipCtxPopCurrent_____retval,ctx)
 
 
-def hipCtxPushCurrent(ctx):
+@cython.embedsignature(True)
+def hipCtxPushCurrent(ihipCtx_t ctx):
     """@brief Push the context to be set as current/ default context
     @param [in] ctx
     @returns #hipSuccess, #hipErrorInvalidContext
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
     """
-    pass
+    hipCtxPushCurrent_____retval = hipError_t(chip.hipCtxPushCurrent(ctx._ptr))    # fully specified
+    return hipCtxPushCurrent_____retval
 
-def hipCtxSetCurrent(ctx):
+
+@cython.embedsignature(True)
+def hipCtxSetCurrent(ihipCtx_t ctx):
     """@brief Set the passed context as current/default
     @param [in] ctx
     @returns #hipSuccess, #hipErrorInvalidContext
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
     """
-    pass
+    hipCtxSetCurrent_____retval = hipError_t(chip.hipCtxSetCurrent(ctx._ptr))    # fully specified
+    return hipCtxSetCurrent_____retval
 
+
+@cython.embedsignature(True)
 def hipCtxGetCurrent():
     """@brief Get the handle of the current/ default context
     @param [out] ctx
@@ -12011,6 +12988,7 @@ def hipCtxGetCurrent():
     return (hipCtxGetCurrent_____retval,ctx)
 
 
+@cython.embedsignature(True)
 def hipCtxGetDevice():
     """@brief Get the handle of the device associated with current/default context
     @param [out] device
@@ -12023,7 +13001,8 @@ def hipCtxGetDevice():
     return (hipCtxGetDevice_____retval,device)
 
 
-def hipCtxGetApiVersion(ctx):
+@cython.embedsignature(True)
+def hipCtxGetApiVersion(ihipCtx_t ctx):
     """@brief Returns the approximate HIP api version.
     @param [in]  ctx Context to check
     @param [out] apiVersion
@@ -12037,8 +13016,11 @@ def hipCtxGetApiVersion(ctx):
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     cdef int apiVersion
-    pass
+    hipCtxGetApiVersion_____retval = hipError_t(chip.hipCtxGetApiVersion(ctx._ptr,&apiVersion))    # fully specified
+    return (hipCtxGetApiVersion_____retval,apiVersion)
 
+
+@cython.embedsignature(True)
 def hipCtxGetCacheConfig():
     """@brief Set Cache configuration for a specific function
     @param [out] cacheConfiguration
@@ -12053,7 +13035,8 @@ def hipCtxGetCacheConfig():
     return (hipCtxGetCacheConfig_____retval,hipFuncCache_t(cacheConfig))
 
 
-def hipCtxSetCacheConfig(cacheConfig):
+@cython.embedsignature(True)
+def hipCtxSetCacheConfig(object cacheConfig):
     """@brief Set L1/Shared cache partition.
     @param [in] cacheConfiguration
     @return #hipSuccess
@@ -12062,9 +13045,14 @@ def hipCtxSetCacheConfig(cacheConfig):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    pass
+    if not isinstance(cacheConfig,hipFuncCache_t):
+        raise TypeError("argument 'cacheConfig' must be of type 'hipFuncCache_t'")
+    hipCtxSetCacheConfig_____retval = hipError_t(chip.hipCtxSetCacheConfig(cacheConfig.value))    # fully specified
+    return hipCtxSetCacheConfig_____retval
 
-def hipCtxSetSharedMemConfig(config):
+
+@cython.embedsignature(True)
+def hipCtxSetSharedMemConfig(object config):
     """@brief Set Shared memory bank configuration.
     @param [in] sharedMemoryConfiguration
     @return #hipSuccess
@@ -12073,8 +13061,13 @@ def hipCtxSetSharedMemConfig(config):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    pass
+    if not isinstance(config,hipSharedMemConfig):
+        raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
+    hipCtxSetSharedMemConfig_____retval = hipError_t(chip.hipCtxSetSharedMemConfig(config.value))    # fully specified
+    return hipCtxSetSharedMemConfig_____retval
 
+
+@cython.embedsignature(True)
 def hipCtxGetSharedMemConfig():
     """@brief Get Shared memory bank configuration.
     @param [out] sharedMemoryConfiguration
@@ -12089,6 +13082,7 @@ def hipCtxGetSharedMemConfig():
     return (hipCtxGetSharedMemConfig_____retval,hipSharedMemConfig(pConfig))
 
 
+@cython.embedsignature(True)
 def hipCtxSynchronize():
     """@brief Blocks until the default context has completed all preceding requested tasks.
     @return #hipSuccess
@@ -12101,6 +13095,7 @@ def hipCtxSynchronize():
     return hipCtxSynchronize_____retval
 
 
+@cython.embedsignature(True)
 def hipCtxGetFlags():
     """@brief Return flags used for creating default context.
     @param [out] flags
@@ -12113,7 +13108,8 @@ def hipCtxGetFlags():
     return (hipCtxGetFlags_____retval,flags)
 
 
-def hipCtxEnablePeerAccess(peerCtx, unsigned int flags):
+@cython.embedsignature(True)
+def hipCtxEnablePeerAccess(ihipCtx_t peerCtx, unsigned int flags):
     """@brief Enables direct access to memory allocations in a peer context.
     Memory which already allocated on peer device will be mapped into the address space of the
     current device.  In addition, all future memory allocations on peerDeviceId will be mapped into
@@ -12127,9 +13123,12 @@ def hipCtxEnablePeerAccess(peerCtx, unsigned int flags):
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     @warning PeerToPeer support is experimental.
     """
-    pass
+    hipCtxEnablePeerAccess_____retval = hipError_t(chip.hipCtxEnablePeerAccess(peerCtx._ptr,flags))    # fully specified
+    return hipCtxEnablePeerAccess_____retval
 
-def hipCtxDisablePeerAccess(peerCtx):
+
+@cython.embedsignature(True)
+def hipCtxDisablePeerAccess(ihipCtx_t peerCtx):
     """@brief Disable direct access from current context's virtual address space to memory allocations
     physically located on a peer context.Disables direct access to memory allocations in a peer
     context and unregisters any registered allocations.
@@ -12141,8 +13140,11 @@ def hipCtxDisablePeerAccess(peerCtx):
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     @warning PeerToPeer support is experimental.
     """
-    pass
+    hipCtxDisablePeerAccess_____retval = hipError_t(chip.hipCtxDisablePeerAccess(peerCtx._ptr))    # fully specified
+    return hipCtxDisablePeerAccess_____retval
 
+
+@cython.embedsignature(True)
 def hipDevicePrimaryCtxGetState(hipDevice_t dev):
     """@}
     @brief Get the state of the primary context.
@@ -12159,6 +13161,7 @@ def hipDevicePrimaryCtxGetState(hipDevice_t dev):
     return (hipDevicePrimaryCtxGetState_____retval,flags,active)
 
 
+@cython.embedsignature(True)
 def hipDevicePrimaryCtxRelease(hipDevice_t dev):
     """@brief Release the primary context on the GPU.
     @param [in] Device which primary context is released
@@ -12172,6 +13175,7 @@ def hipDevicePrimaryCtxRelease(hipDevice_t dev):
     return hipDevicePrimaryCtxRelease_____retval
 
 
+@cython.embedsignature(True)
 def hipDevicePrimaryCtxRetain(hipDevice_t dev):
     """@brief Retain the primary context on the GPU.
     @param [out] Returned context handle of the new context
@@ -12185,6 +13189,7 @@ def hipDevicePrimaryCtxRetain(hipDevice_t dev):
     return (hipDevicePrimaryCtxRetain_____retval,pctx)
 
 
+@cython.embedsignature(True)
 def hipDevicePrimaryCtxReset(hipDevice_t dev):
     """@brief Resets the primary context on the GPU.
     @param [in] Device which primary context is reset
@@ -12196,6 +13201,7 @@ def hipDevicePrimaryCtxReset(hipDevice_t dev):
     return hipDevicePrimaryCtxReset_____retval
 
 
+@cython.embedsignature(True)
 def hipDevicePrimaryCtxSetFlags(hipDevice_t dev, unsigned int flags):
     """@brief Set flags for the primary context.
     @param [in] Device for which the primary context flags are set
@@ -12208,6 +13214,7 @@ def hipDevicePrimaryCtxSetFlags(hipDevice_t dev, unsigned int flags):
     return hipDevicePrimaryCtxSetFlags_____retval
 
 
+@cython.embedsignature(True)
 def hipModuleLoad(const char * fname):
     """@}
     @defgroup Module Module Management
@@ -12225,15 +13232,19 @@ def hipModuleLoad(const char * fname):
     return (hipModuleLoad_____retval,module)
 
 
-def hipModuleUnload(module):
+@cython.embedsignature(True)
+def hipModuleUnload(ihipModule_t module):
     """@brief Frees the module
     @param [in] module
     @returns hipSuccess, hipInvalidValue
     module is freed and the code objects associated with it are destroyed
     """
-    pass
+    hipModuleUnload_____retval = hipError_t(chip.hipModuleUnload(module._ptr))    # fully specified
+    return hipModuleUnload_____retval
 
-def hipModuleGetFunction(module, const char * kname):
+
+@cython.embedsignature(True)
+def hipModuleGetFunction(ihipModule_t module, const char * kname):
     """@brief Function with kname will be extracted if present in module
     @param [in] module
     @param [in] kname
@@ -12242,9 +13253,12 @@ def hipModuleGetFunction(module, const char * kname):
     hipErrorNotFound,
     """
     function = ihipModuleSymbol_t.from_ptr(NULL,owner=True)
-    pass
+    hipModuleGetFunction_____retval = hipError_t(chip.hipModuleGetFunction(&function._ptr,module._ptr,kname))    # fully specified
+    return (hipModuleGetFunction_____retval,function)
 
-def hipFuncGetAttributes(attr, func):
+
+@cython.embedsignature(True)
+def hipFuncGetAttributes(hipFuncAttributes attr, func):
     """@brief Find out attributes for a given function.
     @param [out] attr
     @param [in] func
@@ -12252,7 +13266,8 @@ def hipFuncGetAttributes(attr, func):
     """
     pass
 
-def hipFuncGetAttribute(attrib, hfunc):
+@cython.embedsignature(True)
+def hipFuncGetAttribute(object attrib, ihipModuleSymbol_t hfunc):
     """@brief Find out a specific attribute for a given function.
     @param [out] value
     @param [in]  attrib
@@ -12260,9 +13275,14 @@ def hipFuncGetAttribute(attrib, hfunc):
     @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
     """
     cdef int value
-    pass
+    if not isinstance(attrib,hipFunction_attribute):
+        raise TypeError("argument 'attrib' must be of type 'hipFunction_attribute'")
+    hipFuncGetAttribute_____retval = hipError_t(chip.hipFuncGetAttribute(&value,attrib.value,hfunc._ptr))    # fully specified
+    return (hipFuncGetAttribute_____retval,value)
 
-def hipModuleGetTexRef(hmod, const char * name):
+
+@cython.embedsignature(True)
+def hipModuleGetTexRef(ihipModule_t hmod, const char * name):
     """@brief returns the handle of the texture reference with the name from the module.
     @param [in] hmod
     @param [in] name
@@ -12270,8 +13290,11 @@ def hipModuleGetTexRef(hmod, const char * name):
     @returns hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
     """
     texRef = textureReference.from_ptr(NULL,owner=True)
-    pass
+    hipModuleGetTexRef_____retval = hipError_t(chip.hipModuleGetTexRef(&texRef._ptr,hmod._ptr,name))    # fully specified
+    return (hipModuleGetTexRef_____retval,texRef)
 
+
+@cython.embedsignature(True)
 def hipModuleLoadData(image):
     """@brief builds module from code object which resides in host memory. Image is pointer to that
     location.
@@ -12282,6 +13305,7 @@ def hipModuleLoadData(image):
     module = ihipModule_t.from_ptr(NULL,owner=True)
     pass
 
+@cython.embedsignature(True)
 def hipModuleLoadDataEx(image, unsigned int numOptions):
     """@brief builds module from code object which resides in host memory. Image is pointer to that
     location. Options are not used. hipModuleLoadData is called.
@@ -12296,7 +13320,8 @@ def hipModuleLoadDataEx(image, unsigned int numOptions):
     cdef chip.hipJitOption options
     pass
 
-def hipModuleLaunchKernel(f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, stream):
+@cython.embedsignature(True)
+def hipModuleLaunchKernel(ihipModuleSymbol_t f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, ihipStream_t stream):
     """@brief launches kernel f with launch parameters and shared memory on stream with arguments passed
     to kernelparams or extra
     @param [in] f         Kernel to launch.
@@ -12322,7 +13347,8 @@ def hipModuleLaunchKernel(f, unsigned int gridDimX, unsigned int gridDimY, unsig
     """
     pass
 
-def hipLaunchCooperativeKernel(f, gridDim, blockDimX, unsigned int sharedMemBytes, stream):
+@cython.embedsignature(True)
+def hipLaunchCooperativeKernel(f, gridDim, blockDimX, unsigned int sharedMemBytes, ihipStream_t stream):
     """@brief launches kernel f with launch parameters and shared memory on stream with arguments passed
     to kernelparams or extra, where thread blocks can cooperate and synchronize as they execute
     @param [in] f         Kernel to launch.
@@ -12339,7 +13365,8 @@ def hipLaunchCooperativeKernel(f, gridDim, blockDimX, unsigned int sharedMemByte
     """
     pass
 
-def hipLaunchCooperativeKernelMultiDevice(launchParamsList, int numDevices, unsigned int flags):
+@cython.embedsignature(True)
+def hipLaunchCooperativeKernelMultiDevice(hipLaunchParams_t launchParamsList, int numDevices, unsigned int flags):
     """@brief Launches kernels on multiple devices where thread blocks can cooperate and
     synchronize as they execute.
     @param [in] launchParamsList         List of launch parameters, one per device.
@@ -12347,9 +13374,12 @@ def hipLaunchCooperativeKernelMultiDevice(launchParamsList, int numDevices, unsi
     @param [in] flags                    Flags to control launch behavior.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
     """
-    pass
+    hipLaunchCooperativeKernelMultiDevice_____retval = hipError_t(chip.hipLaunchCooperativeKernelMultiDevice(launchParamsList._ptr,numDevices,flags))    # fully specified
+    return hipLaunchCooperativeKernelMultiDevice_____retval
 
-def hipExtLaunchMultiKernelMultiDevice(launchParamsList, int numDevices, unsigned int flags):
+
+@cython.embedsignature(True)
+def hipExtLaunchMultiKernelMultiDevice(hipLaunchParams_t launchParamsList, int numDevices, unsigned int flags):
     """@brief Launches kernels on multiple devices and guarantees all specified kernels are dispatched
     on respective streams before enqueuing any other work on the specified streams from any other threads
     @param [in] hipLaunchParams          List of launch parameters, one per device.
@@ -12357,9 +13387,12 @@ def hipExtLaunchMultiKernelMultiDevice(launchParamsList, int numDevices, unsigne
     @param [in] flags                    Flags to control launch behavior.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
-    pass
+    hipExtLaunchMultiKernelMultiDevice_____retval = hipError_t(chip.hipExtLaunchMultiKernelMultiDevice(launchParamsList._ptr,numDevices,flags))    # fully specified
+    return hipExtLaunchMultiKernelMultiDevice_____retval
 
-def hipModuleOccupancyMaxPotentialBlockSize(f, int dynSharedMemPerBlk, int blockSizeLimit):
+
+@cython.embedsignature(True)
+def hipModuleOccupancyMaxPotentialBlockSize(ihipModuleSymbol_t f, int dynSharedMemPerBlk, int blockSizeLimit):
     """@}
     @defgroup Occupancy Occupancy
     @{
@@ -12376,9 +13409,12 @@ def hipModuleOccupancyMaxPotentialBlockSize(f, int dynSharedMemPerBlk, int block
     """
     cdef int gridSize
     cdef int blockSize
-    pass
+    hipModuleOccupancyMaxPotentialBlockSize_____retval = hipError_t(chip.hipModuleOccupancyMaxPotentialBlockSize(&gridSize,&blockSize,f._ptr,dynSharedMemPerBlk,blockSizeLimit))    # fully specified
+    return (hipModuleOccupancyMaxPotentialBlockSize_____retval,gridSize,blockSize)
 
-def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(f, int dynSharedMemPerBlk, int blockSizeLimit, unsigned int flags):
+
+@cython.embedsignature(True)
+def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(ihipModuleSymbol_t f, int dynSharedMemPerBlk, int blockSizeLimit, unsigned int flags):
     """@brief determine the grid and block sizes to achieves maximum occupancy for a kernel
     @param [out] gridSize           minimum grid size for maximum potential occupancy
     @param [out] blockSize          block size for maximum potential occupancy
@@ -12392,9 +13428,12 @@ def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(f, int dynSharedMemPerBlk, 
     """
     cdef int gridSize
     cdef int blockSize
-    pass
+    hipModuleOccupancyMaxPotentialBlockSizeWithFlags_____retval = hipError_t(chip.hipModuleOccupancyMaxPotentialBlockSizeWithFlags(&gridSize,&blockSize,f._ptr,dynSharedMemPerBlk,blockSizeLimit,flags))    # fully specified
+    return (hipModuleOccupancyMaxPotentialBlockSizeWithFlags_____retval,gridSize,blockSize)
 
-def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(f, int blockSize, int dynSharedMemPerBlk):
+
+@cython.embedsignature(True)
+def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(ihipModuleSymbol_t f, int blockSize, int dynSharedMemPerBlk):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  func             Kernel function (hipFunction) for which occupancy is calulated
@@ -12402,9 +13441,12 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(f, int blockSize, int dyn
     @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
     """
     cdef int numBlocks
-    pass
+    hipModuleOccupancyMaxActiveBlocksPerMultiprocessor_____retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,f._ptr,blockSize,dynSharedMemPerBlk))    # fully specified
+    return (hipModuleOccupancyMaxActiveBlocksPerMultiprocessor_____retval,numBlocks)
 
-def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
+
+@cython.embedsignature(True)
+def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(ihipModuleSymbol_t f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  f                Kernel function(hipFunction_t) for which occupancy is calulated
@@ -12413,8 +13455,11 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(f, int blockSize
     @param [in]  flags            Extra flags for occupancy calculation (only default supported)
     """
     cdef int numBlocks
-    pass
+    hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags_____retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,f._ptr,blockSize,dynSharedMemPerBlk,flags))    # fully specified
+    return (hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags_____retval,numBlocks)
 
+
+@cython.embedsignature(True)
 def hipOccupancyMaxActiveBlocksPerMultiprocessor(f, int blockSize, int dynSharedMemPerBlk):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
@@ -12425,6 +13470,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(f, int blockSize, int dynShared
     cdef int numBlocks
     pass
 
+@cython.embedsignature(True)
 def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
@@ -12436,6 +13482,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(f, int blockSize, int 
     cdef int numBlocks
     pass
 
+@cython.embedsignature(True)
 def hipOccupancyMaxPotentialBlockSize(f, int dynSharedMemPerBlk, int blockSizeLimit):
     """@brief determine the grid and block sizes to achieves maximum occupancy for a kernel
     @param [out] gridSize           minimum grid size for maximum potential occupancy
@@ -12451,6 +13498,7 @@ def hipOccupancyMaxPotentialBlockSize(f, int dynSharedMemPerBlk, int blockSizeLi
     cdef int blockSize
     pass
 
+@cython.embedsignature(True)
 def hipProfilerStart():
     """@brief Start recording of profiling information
     When using this API, start the profiler with profiling disabled.  (--startdisabled)
@@ -12460,6 +13508,7 @@ def hipProfilerStart():
     return hipProfilerStart_____retval
 
 
+@cython.embedsignature(True)
 def hipProfilerStop():
     """@brief Stop recording of profiling information.
     When using this API, start the profiler with profiling disabled.  (--startdisabled)
@@ -12469,7 +13518,8 @@ def hipProfilerStop():
     return hipProfilerStop_____retval
 
 
-def hipConfigureCall(gridDim, blockDim, int sharedMem, stream):
+@cython.embedsignature(True)
+def hipConfigureCall(gridDim, blockDim, int sharedMem, ihipStream_t stream):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -12489,6 +13539,7 @@ def hipConfigureCall(gridDim, blockDim, int sharedMem, stream):
     """
     pass
 
+@cython.embedsignature(True)
 def hipSetupArgument(arg, int size, int offset):
     """@brief Set a kernel argument.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
@@ -12498,6 +13549,7 @@ def hipSetupArgument(arg, int size, int offset):
     """
     pass
 
+@cython.embedsignature(True)
 def hipLaunchByPtr(func):
     """@brief Launch a kernel.
     @param [in] func Kernel to launch.
@@ -12505,7 +13557,8 @@ def hipLaunchByPtr(func):
     """
     pass
 
-def hipLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemBytes, stream):
+@cython.embedsignature(True)
+def hipLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemBytes, ihipStream_t stream):
     """@brief C compliant kernel launch API
     @param [in] function_address - kernel stub function pointer.
     @param [in] numBlocks - number of blocks
@@ -12519,7 +13572,8 @@ def hipLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemBytes, 
     """
     pass
 
-def hipLaunchHostFunc(stream, fn, userData):
+@cython.embedsignature(True)
+def hipLaunchHostFunc(ihipStream_t stream, fn, userData):
     """@brief Enqueues a host function call in a stream.
     @param [in] stream - stream to enqueue work to.
     @param [in] fn - function to call once operations enqueued preceeding are complete.
@@ -12531,14 +13585,18 @@ def hipLaunchHostFunc(stream, fn, userData):
     """
     pass
 
-def hipDrvMemcpy2DUnaligned(pCopy):
+@cython.embedsignature(True)
+def hipDrvMemcpy2DUnaligned(hip_Memcpy2D pCopy):
     """Copies memory for 2D arrays.
     @param pCopy           - Parameters for the memory copy
     @returns #hipSuccess, #hipErrorInvalidValue
     """
-    pass
+    hipDrvMemcpy2DUnaligned_____retval = hipError_t(chip.hipDrvMemcpy2DUnaligned(pCopy._ptr))    # fully specified
+    return hipDrvMemcpy2DUnaligned_____retval
 
-def hipExtLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemBytes, stream, startEvent, stopEvent, int flags):
+
+@cython.embedsignature(True)
+def hipExtLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemBytes, ihipStream_t stream, ihipEvent_t startEvent, ihipEvent_t stopEvent, int flags):
     """@brief Launches kernel from the pointer address, with arguments and shared memory on stream.
     @param [in] function_address pointer to the Kernel to launch.
     @param [in] numBlocks number of blocks.
@@ -12558,16 +13616,20 @@ def hipExtLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemByte
     """
     pass
 
-def hipBindTextureToMipmappedArray(tex, mipmappedArray, desc):
+@cython.embedsignature(True)
+def hipBindTextureToMipmappedArray(textureReference tex, hipMipmappedArray mipmappedArray, hipChannelFormatDesc desc):
     """@brief  Binds a mipmapped array to a texture.
     @param [in] tex  pointer to the texture reference to bind
     @param [in] mipmappedArray  memory mipmapped array on the device
     @param [in] desc  opointer to the channel format
     @returns hipSuccess, hipErrorInvalidValue
     """
-    pass
+    hipBindTextureToMipmappedArray_____retval = hipError_t(chip.hipBindTextureToMipmappedArray(tex._ptr,mipmappedArray._ptr,desc._ptr))    # fully specified
+    return hipBindTextureToMipmappedArray_____retval
 
-def hipCreateTextureObject(pResDesc, pTexDesc, pResViewDesc):
+
+@cython.embedsignature(True)
+def hipCreateTextureObject(hipResourceDesc pResDesc, hipTextureDesc pTexDesc, hipResourceViewDesc pResViewDesc):
     """@brief Creates a texture object.
     @param [out] pTexObject  pointer to the texture object to create
     @param [in] pResDesc  pointer to resource descriptor
@@ -12578,48 +13640,66 @@ def hipCreateTextureObject(pResDesc, pTexDesc, pResViewDesc):
     return hipErrorNotSupported.
     """
     pTexObject = __hip_texture.from_ptr(NULL,owner=True)
-    pass
+    hipCreateTextureObject_____retval = hipError_t(chip.hipCreateTextureObject(&pTexObject._ptr,pResDesc._ptr,pTexDesc._ptr,pResViewDesc._ptr))    # fully specified
+    return (hipCreateTextureObject_____retval,pTexObject)
 
-def hipDestroyTextureObject(textureObject):
+
+@cython.embedsignature(True)
+def hipDestroyTextureObject(__hip_texture textureObject):
     """@brief Destroys a texture object.
     @param [in] textureObject  texture object to destroy
     @returns hipSuccess, hipErrorInvalidValue
     """
-    pass
+    hipDestroyTextureObject_____retval = hipError_t(chip.hipDestroyTextureObject(textureObject._ptr))    # fully specified
+    return hipDestroyTextureObject_____retval
 
-def hipGetChannelDesc(desc, array):
+
+@cython.embedsignature(True)
+def hipGetChannelDesc(hipChannelFormatDesc desc, hipArray array):
     """@brief Gets the channel descriptor in an array.
     @param [in] desc  pointer to channel format descriptor
     @param [out] array  memory array on the device
     @returns hipSuccess, hipErrorInvalidValue
     """
-    pass
+    hipGetChannelDesc_____retval = hipError_t(chip.hipGetChannelDesc(desc._ptr,array._ptr))    # fully specified
+    return hipGetChannelDesc_____retval
 
-def hipGetTextureObjectResourceDesc(pResDesc, textureObject):
+
+@cython.embedsignature(True)
+def hipGetTextureObjectResourceDesc(hipResourceDesc pResDesc, __hip_texture textureObject):
     """@brief Gets resource descriptor for the texture object.
     @param [out] pResDesc  pointer to resource descriptor
     @param [in] textureObject  texture object
     @returns hipSuccess, hipErrorInvalidValue
     """
-    pass
+    hipGetTextureObjectResourceDesc_____retval = hipError_t(chip.hipGetTextureObjectResourceDesc(pResDesc._ptr,textureObject._ptr))    # fully specified
+    return hipGetTextureObjectResourceDesc_____retval
 
-def hipGetTextureObjectResourceViewDesc(pResViewDesc, textureObject):
+
+@cython.embedsignature(True)
+def hipGetTextureObjectResourceViewDesc(hipResourceViewDesc pResViewDesc, __hip_texture textureObject):
     """@brief Gets resource view descriptor for the texture object.
     @param [out] pResViewDesc  pointer to resource view descriptor
     @param [in] textureObject  texture object
     @returns hipSuccess, hipErrorInvalidValue
     """
-    pass
+    hipGetTextureObjectResourceViewDesc_____retval = hipError_t(chip.hipGetTextureObjectResourceViewDesc(pResViewDesc._ptr,textureObject._ptr))    # fully specified
+    return hipGetTextureObjectResourceViewDesc_____retval
 
-def hipGetTextureObjectTextureDesc(pTexDesc, textureObject):
+
+@cython.embedsignature(True)
+def hipGetTextureObjectTextureDesc(hipTextureDesc pTexDesc, __hip_texture textureObject):
     """@brief Gets texture descriptor for the texture object.
     @param [out] pTexDesc  pointer to texture descriptor
     @param [in] textureObject  texture object
     @returns hipSuccess, hipErrorInvalidValue
     """
-    pass
+    hipGetTextureObjectTextureDesc_____retval = hipError_t(chip.hipGetTextureObjectTextureDesc(pTexDesc._ptr,textureObject._ptr))    # fully specified
+    return hipGetTextureObjectTextureDesc_____retval
 
-def hipTexObjectCreate(pResDesc, pTexDesc, pResViewDesc):
+
+@cython.embedsignature(True)
+def hipTexObjectCreate(HIP_RESOURCE_DESC_st pResDesc, HIP_TEXTURE_DESC_st pTexDesc, HIP_RESOURCE_VIEW_DESC_st pResViewDesc):
     """@brief Creates a texture object.
     @param [out] pTexObject  pointer to texture object to create
     @param [in] pResDesc  pointer to resource descriptor
@@ -12628,39 +13708,54 @@ def hipTexObjectCreate(pResDesc, pTexDesc, pResViewDesc):
     @returns hipSuccess, hipErrorInvalidValue
     """
     pTexObject = __hip_texture.from_ptr(NULL,owner=True)
-    pass
+    hipTexObjectCreate_____retval = hipError_t(chip.hipTexObjectCreate(&pTexObject._ptr,pResDesc._ptr,pTexDesc._ptr,pResViewDesc._ptr))    # fully specified
+    return (hipTexObjectCreate_____retval,pTexObject)
 
-def hipTexObjectDestroy(texObject):
+
+@cython.embedsignature(True)
+def hipTexObjectDestroy(__hip_texture texObject):
     """@brief Destroys a texture object.
     @param [in] texObject  texture object to destroy
     @returns hipSuccess, hipErrorInvalidValue
     """
-    pass
+    hipTexObjectDestroy_____retval = hipError_t(chip.hipTexObjectDestroy(texObject._ptr))    # fully specified
+    return hipTexObjectDestroy_____retval
 
-def hipTexObjectGetResourceDesc(pResDesc, texObject):
+
+@cython.embedsignature(True)
+def hipTexObjectGetResourceDesc(HIP_RESOURCE_DESC_st pResDesc, __hip_texture texObject):
     """@brief Gets resource descriptor of a texture object.
     @param [out] pResDesc  pointer to resource descriptor
     @param [in] texObject  texture object
     @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
-    pass
+    hipTexObjectGetResourceDesc_____retval = hipError_t(chip.hipTexObjectGetResourceDesc(pResDesc._ptr,texObject._ptr))    # fully specified
+    return hipTexObjectGetResourceDesc_____retval
 
-def hipTexObjectGetResourceViewDesc(pResViewDesc, texObject):
+
+@cython.embedsignature(True)
+def hipTexObjectGetResourceViewDesc(HIP_RESOURCE_VIEW_DESC_st pResViewDesc, __hip_texture texObject):
     """@brief Gets resource view descriptor of a texture object.
     @param [out] pResViewDesc  pointer to resource view descriptor
     @param [in] texObject  texture object
     @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
-    pass
+    hipTexObjectGetResourceViewDesc_____retval = hipError_t(chip.hipTexObjectGetResourceViewDesc(pResViewDesc._ptr,texObject._ptr))    # fully specified
+    return hipTexObjectGetResourceViewDesc_____retval
 
-def hipTexObjectGetTextureDesc(pTexDesc, texObject):
+
+@cython.embedsignature(True)
+def hipTexObjectGetTextureDesc(HIP_TEXTURE_DESC_st pTexDesc, __hip_texture texObject):
     """@brief Gets texture descriptor of a texture object.
     @param [out] pTexDesc  pointer to texture descriptor
     @param [in] texObject  texture object
     @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
-    pass
+    hipTexObjectGetTextureDesc_____retval = hipError_t(chip.hipTexObjectGetTextureDesc(pTexDesc._ptr,texObject._ptr))    # fully specified
+    return hipTexObjectGetTextureDesc_____retval
 
+
+@cython.embedsignature(True)
 def hipGetTextureReference(symbol):
     """@addtogroup TextureD Texture Management [Deprecated]
     @{
@@ -12674,182 +13769,274 @@ def hipGetTextureReference(symbol):
     texref = textureReference.from_ptr(NULL,owner=True)
     pass
 
-def hipTexRefSetAddressMode(texRef, int dim, am):
+@cython.embedsignature(True)
+def hipTexRefSetAddressMode(textureReference texRef, int dim, object am):
     """
     """
-    pass
+    if not isinstance(am,hipTextureAddressMode):
+        raise TypeError("argument 'am' must be of type 'hipTextureAddressMode'")
+    hipTexRefSetAddressMode_____retval = hipError_t(chip.hipTexRefSetAddressMode(texRef._ptr,dim,am.value))    # fully specified
+    return hipTexRefSetAddressMode_____retval
 
-def hipTexRefSetArray(tex, array, unsigned int flags):
-    """
-    """
-    pass
 
-def hipTexRefSetFilterMode(texRef, fm):
+@cython.embedsignature(True)
+def hipTexRefSetArray(textureReference tex, hipArray array, unsigned int flags):
     """
     """
-    pass
+    hipTexRefSetArray_____retval = hipError_t(chip.hipTexRefSetArray(tex._ptr,array._ptr,flags))    # fully specified
+    return hipTexRefSetArray_____retval
 
-def hipTexRefSetFlags(texRef, unsigned int Flags):
-    """
-    """
-    pass
 
-def hipTexRefSetFormat(texRef, fmt, int NumPackedComponents):
+@cython.embedsignature(True)
+def hipTexRefSetFilterMode(textureReference texRef, object fm):
     """
     """
-    pass
+    if not isinstance(fm,hipTextureFilterMode):
+        raise TypeError("argument 'fm' must be of type 'hipTextureFilterMode'")
+    hipTexRefSetFilterMode_____retval = hipError_t(chip.hipTexRefSetFilterMode(texRef._ptr,fm.value))    # fully specified
+    return hipTexRefSetFilterMode_____retval
 
-def hipBindTexture(tex, devPtr, desc, int size):
+
+@cython.embedsignature(True)
+def hipTexRefSetFlags(textureReference texRef, unsigned int Flags):
+    """
+    """
+    hipTexRefSetFlags_____retval = hipError_t(chip.hipTexRefSetFlags(texRef._ptr,Flags))    # fully specified
+    return hipTexRefSetFlags_____retval
+
+
+@cython.embedsignature(True)
+def hipTexRefSetFormat(textureReference texRef, object fmt, int NumPackedComponents):
+    """
+    """
+    if not isinstance(fmt,hipArray_Format):
+        raise TypeError("argument 'fmt' must be of type 'hipArray_Format'")
+    hipTexRefSetFormat_____retval = hipError_t(chip.hipTexRefSetFormat(texRef._ptr,fmt.value,NumPackedComponents))    # fully specified
+    return hipTexRefSetFormat_____retval
+
+
+@cython.embedsignature(True)
+def hipBindTexture(textureReference tex, devPtr, hipChannelFormatDesc desc, int size):
     """
     """
     cdef int offset
     pass
 
-def hipBindTexture2D(tex, devPtr, desc, int width, int height, int pitch):
+@cython.embedsignature(True)
+def hipBindTexture2D(textureReference tex, devPtr, hipChannelFormatDesc desc, int width, int height, int pitch):
     """
     """
     cdef int offset
     pass
 
-def hipBindTextureToArray(tex, array, desc):
+@cython.embedsignature(True)
+def hipBindTextureToArray(textureReference tex, hipArray array, hipChannelFormatDesc desc):
     """
     """
-    pass
+    hipBindTextureToArray_____retval = hipError_t(chip.hipBindTextureToArray(tex._ptr,array._ptr,desc._ptr))    # fully specified
+    return hipBindTextureToArray_____retval
 
-def hipGetTextureAlignmentOffset(texref):
+
+@cython.embedsignature(True)
+def hipGetTextureAlignmentOffset(textureReference texref):
     """
     """
     cdef int offset
+    hipGetTextureAlignmentOffset_____retval = hipError_t(chip.hipGetTextureAlignmentOffset(&offset,texref._ptr))    # fully specified
+    return (hipGetTextureAlignmentOffset_____retval,offset)
+
+
+@cython.embedsignature(True)
+def hipUnbindTexture(textureReference tex):
+    """
+    """
+    hipUnbindTexture_____retval = hipError_t(chip.hipUnbindTexture(tex._ptr))    # fully specified
+    return hipUnbindTexture_____retval
+
+
+@cython.embedsignature(True)
+def hipTexRefGetAddress(textureReference texRef):
+    """
+    """
     pass
 
-def hipUnbindTexture(tex):
-    """
-    """
-    pass
-
-def hipTexRefGetAddress(texRef):
-    """
-    """
-    pass
-
-def hipTexRefGetAddressMode(texRef, int dim):
+@cython.embedsignature(True)
+def hipTexRefGetAddressMode(textureReference texRef, int dim):
     """
     """
     cdef chip.hipTextureAddressMode pam
-    pass
+    hipTexRefGetAddressMode_____retval = hipError_t(chip.hipTexRefGetAddressMode(&pam,texRef._ptr,dim))    # fully specified
+    return (hipTexRefGetAddressMode_____retval,hipTextureAddressMode(pam))
 
-def hipTexRefGetFilterMode(texRef):
+
+@cython.embedsignature(True)
+def hipTexRefGetFilterMode(textureReference texRef):
     """
     """
     cdef chip.hipTextureFilterMode pfm
-    pass
+    hipTexRefGetFilterMode_____retval = hipError_t(chip.hipTexRefGetFilterMode(&pfm,texRef._ptr))    # fully specified
+    return (hipTexRefGetFilterMode_____retval,hipTextureFilterMode(pfm))
 
-def hipTexRefGetFlags(texRef):
+
+@cython.embedsignature(True)
+def hipTexRefGetFlags(textureReference texRef):
     """
     """
     cdef unsigned int pFlags
-    pass
+    hipTexRefGetFlags_____retval = hipError_t(chip.hipTexRefGetFlags(&pFlags,texRef._ptr))    # fully specified
+    return (hipTexRefGetFlags_____retval,pFlags)
 
-def hipTexRefGetFormat(texRef):
+
+@cython.embedsignature(True)
+def hipTexRefGetFormat(textureReference texRef):
     """
     """
     cdef chip.hipArray_Format pFormat
     cdef int pNumChannels
-    pass
+    hipTexRefGetFormat_____retval = hipError_t(chip.hipTexRefGetFormat(&pFormat,&pNumChannels,texRef._ptr))    # fully specified
+    return (hipTexRefGetFormat_____retval,hipArray_Format(pFormat),pNumChannels)
 
-def hipTexRefGetMaxAnisotropy(texRef):
+
+@cython.embedsignature(True)
+def hipTexRefGetMaxAnisotropy(textureReference texRef):
     """
     """
     cdef int pmaxAnsio
-    pass
+    hipTexRefGetMaxAnisotropy_____retval = hipError_t(chip.hipTexRefGetMaxAnisotropy(&pmaxAnsio,texRef._ptr))    # fully specified
+    return (hipTexRefGetMaxAnisotropy_____retval,pmaxAnsio)
 
-def hipTexRefGetMipmapFilterMode(texRef):
+
+@cython.embedsignature(True)
+def hipTexRefGetMipmapFilterMode(textureReference texRef):
     """
     """
     cdef chip.hipTextureFilterMode pfm
-    pass
+    hipTexRefGetMipmapFilterMode_____retval = hipError_t(chip.hipTexRefGetMipmapFilterMode(&pfm,texRef._ptr))    # fully specified
+    return (hipTexRefGetMipmapFilterMode_____retval,hipTextureFilterMode(pfm))
 
-def hipTexRefGetMipmapLevelBias(texRef):
+
+@cython.embedsignature(True)
+def hipTexRefGetMipmapLevelBias(textureReference texRef):
     """
     """
     cdef float pbias
-    pass
+    hipTexRefGetMipmapLevelBias_____retval = hipError_t(chip.hipTexRefGetMipmapLevelBias(&pbias,texRef._ptr))    # fully specified
+    return (hipTexRefGetMipmapLevelBias_____retval,pbias)
 
-def hipTexRefGetMipmapLevelClamp(texRef):
+
+@cython.embedsignature(True)
+def hipTexRefGetMipmapLevelClamp(textureReference texRef):
     """
     """
     cdef float pminMipmapLevelClamp
     cdef float pmaxMipmapLevelClamp
-    pass
+    hipTexRefGetMipmapLevelClamp_____retval = hipError_t(chip.hipTexRefGetMipmapLevelClamp(&pminMipmapLevelClamp,&pmaxMipmapLevelClamp,texRef._ptr))    # fully specified
+    return (hipTexRefGetMipmapLevelClamp_____retval,pminMipmapLevelClamp,pmaxMipmapLevelClamp)
 
-def hipTexRefGetMipMappedArray(texRef):
+
+@cython.embedsignature(True)
+def hipTexRefGetMipMappedArray(textureReference texRef):
     """
     """
     pArray = hipMipmappedArray.from_ptr(NULL,owner=True)
-    pass
+    hipTexRefGetMipMappedArray_____retval = hipError_t(chip.hipTexRefGetMipMappedArray(&pArray._ptr,texRef._ptr))    # fully specified
+    return (hipTexRefGetMipMappedArray_____retval,pArray)
 
-def hipTexRefSetAddress(texRef, dptr, int bytes):
+
+@cython.embedsignature(True)
+def hipTexRefSetAddress(textureReference texRef, dptr, int bytes):
     """
     """
     cdef int ByteOffset
     pass
 
-def hipTexRefSetAddress2D(texRef, desc, dptr, int Pitch):
+@cython.embedsignature(True)
+def hipTexRefSetAddress2D(textureReference texRef, HIP_ARRAY_DESCRIPTOR desc, dptr, int Pitch):
     """
     """
     pass
 
-def hipTexRefSetMaxAnisotropy(texRef, unsigned int maxAniso):
+@cython.embedsignature(True)
+def hipTexRefSetMaxAnisotropy(textureReference texRef, unsigned int maxAniso):
     """
     """
-    pass
+    hipTexRefSetMaxAnisotropy_____retval = hipError_t(chip.hipTexRefSetMaxAnisotropy(texRef._ptr,maxAniso))    # fully specified
+    return hipTexRefSetMaxAnisotropy_____retval
 
-def hipTexRefSetBorderColor(texRef):
+
+@cython.embedsignature(True)
+def hipTexRefSetBorderColor(textureReference texRef):
     """
     """
     cdef float pBorderColor
-    pass
+    hipTexRefSetBorderColor_____retval = hipError_t(chip.hipTexRefSetBorderColor(texRef._ptr,&pBorderColor))    # fully specified
+    return (hipTexRefSetBorderColor_____retval,pBorderColor)
 
-def hipTexRefSetMipmapFilterMode(texRef, fm):
-    """
-    """
-    pass
 
-def hipTexRefSetMipmapLevelBias(texRef, float bias):
+@cython.embedsignature(True)
+def hipTexRefSetMipmapFilterMode(textureReference texRef, object fm):
     """
     """
-    pass
+    if not isinstance(fm,hipTextureFilterMode):
+        raise TypeError("argument 'fm' must be of type 'hipTextureFilterMode'")
+    hipTexRefSetMipmapFilterMode_____retval = hipError_t(chip.hipTexRefSetMipmapFilterMode(texRef._ptr,fm.value))    # fully specified
+    return hipTexRefSetMipmapFilterMode_____retval
 
-def hipTexRefSetMipmapLevelClamp(texRef, float minMipMapLevelClamp, float maxMipMapLevelClamp):
-    """
-    """
-    pass
 
-def hipTexRefSetMipmappedArray(texRef, mipmappedArray, unsigned int Flags):
+@cython.embedsignature(True)
+def hipTexRefSetMipmapLevelBias(textureReference texRef, float bias):
     """
     """
-    pass
+    hipTexRefSetMipmapLevelBias_____retval = hipError_t(chip.hipTexRefSetMipmapLevelBias(texRef._ptr,bias))    # fully specified
+    return hipTexRefSetMipmapLevelBias_____retval
 
-def hipMipmappedArrayCreate(pMipmappedArrayDesc, unsigned int numMipmapLevels):
+
+@cython.embedsignature(True)
+def hipTexRefSetMipmapLevelClamp(textureReference texRef, float minMipMapLevelClamp, float maxMipMapLevelClamp):
+    """
+    """
+    hipTexRefSetMipmapLevelClamp_____retval = hipError_t(chip.hipTexRefSetMipmapLevelClamp(texRef._ptr,minMipMapLevelClamp,maxMipMapLevelClamp))    # fully specified
+    return hipTexRefSetMipmapLevelClamp_____retval
+
+
+@cython.embedsignature(True)
+def hipTexRefSetMipmappedArray(textureReference texRef, hipMipmappedArray mipmappedArray, unsigned int Flags):
+    """
+    """
+    hipTexRefSetMipmappedArray_____retval = hipError_t(chip.hipTexRefSetMipmappedArray(texRef._ptr,mipmappedArray._ptr,Flags))    # fully specified
+    return hipTexRefSetMipmappedArray_____retval
+
+
+@cython.embedsignature(True)
+def hipMipmappedArrayCreate(HIP_ARRAY3D_DESCRIPTOR pMipmappedArrayDesc, unsigned int numMipmapLevels):
     """@addtogroup TextureU Texture Management [Not supported]
     @{
     @ingroup Texture
     This section describes the texture management functions currently unsupported in HIP runtime.
     """
     pHandle = hipMipmappedArray.from_ptr(NULL,owner=True)
-    pass
+    hipMipmappedArrayCreate_____retval = hipError_t(chip.hipMipmappedArrayCreate(&pHandle._ptr,pMipmappedArrayDesc._ptr,numMipmapLevels))    # fully specified
+    return (hipMipmappedArrayCreate_____retval,pHandle)
 
-def hipMipmappedArrayDestroy(hMipmappedArray):
+
+@cython.embedsignature(True)
+def hipMipmappedArrayDestroy(hipMipmappedArray hMipmappedArray):
     """
     """
-    pass
+    hipMipmappedArrayDestroy_____retval = hipError_t(chip.hipMipmappedArrayDestroy(hMipmappedArray._ptr))    # fully specified
+    return hipMipmappedArrayDestroy_____retval
 
-def hipMipmappedArrayGetLevel(hMipMappedArray, unsigned int level):
+
+@cython.embedsignature(True)
+def hipMipmappedArrayGetLevel(hipMipmappedArray hMipMappedArray, unsigned int level):
     """
     """
     pLevelArray = hipArray.from_ptr(NULL,owner=True)
-    pass
+    hipMipmappedArrayGetLevel_____retval = hipError_t(chip.hipMipmappedArrayGetLevel(&pLevelArray._ptr,hMipMappedArray._ptr,level))    # fully specified
+    return (hipMipmappedArrayGetLevel_____retval,pLevelArray)
 
+
+@cython.embedsignature(True)
 def hipApiName(uint32_t id):
     """@defgroup Callback Callback Activity APIs
     @{
@@ -12858,22 +14045,29 @@ def hipApiName(uint32_t id):
     cdef const char * hipApiName_____retval = chip.hipApiName(id)    # fully specified
 
 
-def hipKernelNameRef(f):
+@cython.embedsignature(True)
+def hipKernelNameRef(ihipModuleSymbol_t f):
+    """
+    """
+    cdef const char * hipKernelNameRef_____retval = chip.hipKernelNameRef(f._ptr)    # fully specified
+
+
+@cython.embedsignature(True)
+def hipKernelNameRefByPtr(hostFunction, ihipStream_t stream):
     """
     """
     pass
 
-def hipKernelNameRefByPtr(hostFunction, stream):
+@cython.embedsignature(True)
+def hipGetStreamDeviceId(ihipStream_t stream):
     """
     """
-    pass
+    cdef int hipGetStreamDeviceId_____retval = chip.hipGetStreamDeviceId(stream._ptr)    # fully specified
+    return hipGetStreamDeviceId_____retval
 
-def hipGetStreamDeviceId(stream):
-    """
-    """
-    pass
 
-def hipStreamBeginCapture(stream, mode):
+@cython.embedsignature(True)
+def hipStreamBeginCapture(ihipStream_t stream, object mode):
     """@brief Begins graph capture on a stream.
     @param [in] stream - Stream to initiate capture.
     @param [in] mode - Controls the interaction of this capture sequence with other API calls that
@@ -12882,9 +14076,14 @@ def hipStreamBeginCapture(stream, mode):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    if not isinstance(mode,hipStreamCaptureMode):
+        raise TypeError("argument 'mode' must be of type 'hipStreamCaptureMode'")
+    hipStreamBeginCapture_____retval = hipError_t(chip.hipStreamBeginCapture(stream._ptr,mode.value))    # fully specified
+    return hipStreamBeginCapture_____retval
 
-def hipStreamEndCapture(stream):
+
+@cython.embedsignature(True)
+def hipStreamEndCapture(ihipStream_t stream):
     """@brief Ends capture on a stream, returning the captured graph.
     @param [in] stream - Stream to end capture.
     @param [out] pGraph - returns the graph captured.
@@ -12893,9 +14092,12 @@ def hipStreamEndCapture(stream):
     it is still open to changes and may have outstanding issues.
     """
     pGraph = ihipGraph.from_ptr(NULL,owner=True)
-    pass
+    hipStreamEndCapture_____retval = hipError_t(chip.hipStreamEndCapture(stream._ptr,&pGraph._ptr))    # fully specified
+    return (hipStreamEndCapture_____retval,pGraph)
 
-def hipStreamGetCaptureInfo(stream):
+
+@cython.embedsignature(True)
+def hipStreamGetCaptureInfo(ihipStream_t stream):
     """@brief Get capture status of a stream.
     @param [in] stream - Stream under capture.
     @param [out] pCaptureStatus - returns current status of the capture.
@@ -12906,9 +14108,12 @@ def hipStreamGetCaptureInfo(stream):
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     cdef unsigned long long pId
-    pass
+    hipStreamGetCaptureInfo_____retval = hipError_t(chip.hipStreamGetCaptureInfo(stream._ptr,&pCaptureStatus,&pId))    # fully specified
+    return (hipStreamGetCaptureInfo_____retval,hipStreamCaptureStatus(pCaptureStatus),pId)
 
-def hipStreamGetCaptureInfo_v2(stream):
+
+@cython.embedsignature(True)
+def hipStreamGetCaptureInfo_v2(ihipStream_t stream):
     """@brief Get stream's capture state
     @param [in] stream - Stream under capture.
     @param [out] captureStatus_out - returns current status of the capture.
@@ -12926,7 +14131,8 @@ def hipStreamGetCaptureInfo_v2(stream):
     cdef int numDependencies_out
     pass
 
-def hipStreamIsCapturing(stream):
+@cython.embedsignature(True)
+def hipStreamIsCapturing(ihipStream_t stream):
     """@brief Get stream's capture state
     @param [in] stream - Stream under capture.
     @param [out] pCaptureStatus - returns current status of the capture.
@@ -12935,9 +14141,12 @@ def hipStreamIsCapturing(stream):
     it is still open to changes and may have outstanding issues.
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
-    pass
+    hipStreamIsCapturing_____retval = hipError_t(chip.hipStreamIsCapturing(stream._ptr,&pCaptureStatus))    # fully specified
+    return (hipStreamIsCapturing_____retval,hipStreamCaptureStatus(pCaptureStatus))
 
-def hipStreamUpdateCaptureDependencies(stream, int numDependencies, unsigned int flags):
+
+@cython.embedsignature(True)
+def hipStreamUpdateCaptureDependencies(ihipStream_t stream, int numDependencies, unsigned int flags):
     """@brief Update the set of dependencies in a capturing stream
     @param [in] stream - Stream under capture.
     @param [in] dependencies - pointer to an array of nodes to Add/Replace.
@@ -12947,8 +14156,11 @@ def hipStreamUpdateCaptureDependencies(stream, int numDependencies, unsigned int
     it is still open to changes and may have outstanding issues.
     """
     dependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipStreamUpdateCaptureDependencies_____retval = hipError_t(chip.hipStreamUpdateCaptureDependencies(stream._ptr,&dependencies._ptr,numDependencies,flags))    # fully specified
+    return (hipStreamUpdateCaptureDependencies_____retval,dependencies)
 
+
+@cython.embedsignature(True)
 def hipThreadExchangeStreamCaptureMode():
     """@brief Swaps the stream capture mode of a thread.
     @param [in] mode - Pointer to mode value to swap with the current mode
@@ -12961,6 +14173,7 @@ def hipThreadExchangeStreamCaptureMode():
     return (hipThreadExchangeStreamCaptureMode_____retval,hipStreamCaptureMode(mode))
 
 
+@cython.embedsignature(True)
 def hipGraphCreate(unsigned int flags):
     """@brief Creates a graph
     @param [out] pGraph - pointer to graph to create.
@@ -12974,16 +14187,20 @@ def hipGraphCreate(unsigned int flags):
     return (hipGraphCreate_____retval,pGraph)
 
 
-def hipGraphDestroy(graph):
+@cython.embedsignature(True)
+def hipGraphDestroy(ihipGraph graph):
     """@brief Destroys a graph
     @param [in] graph - instance of graph to destroy.
     @returns #hipSuccess, #hipErrorInvalidValue
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphDestroy_____retval = hipError_t(chip.hipGraphDestroy(graph._ptr))    # fully specified
+    return hipGraphDestroy_____retval
 
-def hipGraphAddDependencies(graph, int numDependencies):
+
+@cython.embedsignature(True)
+def hipGraphAddDependencies(ihipGraph graph, int numDependencies):
     """@brief Adds dependency edges to a graph.
     @param [in] graph - instance of the graph to add dependencies.
     @param [in] from - pointer to the graph nodes with dependenties to add from.
@@ -12995,9 +14212,12 @@ def hipGraphAddDependencies(graph, int numDependencies):
     """
     from_ = hipGraphNode.from_ptr(NULL,owner=True)
     to = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphAddDependencies_____retval = hipError_t(chip.hipGraphAddDependencies(graph._ptr,&from_._ptr,&to._ptr,numDependencies))    # fully specified
+    return (hipGraphAddDependencies_____retval,from_,to)
 
-def hipGraphRemoveDependencies(graph, int numDependencies):
+
+@cython.embedsignature(True)
+def hipGraphRemoveDependencies(ihipGraph graph, int numDependencies):
     """@brief Removes dependency edges from a graph.
     @param [in] graph - instance of the graph to remove dependencies.
     @param [in] from - Array of nodes that provide the dependencies.
@@ -13009,9 +14229,12 @@ def hipGraphRemoveDependencies(graph, int numDependencies):
     """
     from_ = hipGraphNode.from_ptr(NULL,owner=True)
     to = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphRemoveDependencies_____retval = hipError_t(chip.hipGraphRemoveDependencies(graph._ptr,&from_._ptr,&to._ptr,numDependencies))    # fully specified
+    return (hipGraphRemoveDependencies_____retval,from_,to)
 
-def hipGraphGetEdges(graph):
+
+@cython.embedsignature(True)
+def hipGraphGetEdges(ihipGraph graph):
     """@brief Returns a graph's dependency edges.
     @param [in] graph - instance of the graph to get the edges from.
     @param [out] from - pointer to the graph nodes to return edge endpoints.
@@ -13028,9 +14251,12 @@ def hipGraphGetEdges(graph):
     from_ = hipGraphNode.from_ptr(NULL,owner=True)
     to = hipGraphNode.from_ptr(NULL,owner=True)
     cdef int numEdges
-    pass
+    hipGraphGetEdges_____retval = hipError_t(chip.hipGraphGetEdges(graph._ptr,&from_._ptr,&to._ptr,&numEdges))    # fully specified
+    return (hipGraphGetEdges_____retval,from_,to,numEdges)
 
-def hipGraphGetNodes(graph):
+
+@cython.embedsignature(True)
+def hipGraphGetNodes(ihipGraph graph):
     """@brief Returns graph nodes.
     @param [in] graph - instance of graph to get the nodes.
     @param [out] nodes - pointer to return the  graph nodes.
@@ -13045,9 +14271,12 @@ def hipGraphGetNodes(graph):
     """
     nodes = hipGraphNode.from_ptr(NULL,owner=True)
     cdef int numNodes
-    pass
+    hipGraphGetNodes_____retval = hipError_t(chip.hipGraphGetNodes(graph._ptr,&nodes._ptr,&numNodes))    # fully specified
+    return (hipGraphGetNodes_____retval,nodes,numNodes)
 
-def hipGraphGetRootNodes(graph):
+
+@cython.embedsignature(True)
+def hipGraphGetRootNodes(ihipGraph graph):
     """@brief Returns graph's root nodes.
     @param [in] graph - instance of the graph to get the nodes.
     @param [out] pRootNodes - pointer to return the graph's root nodes.
@@ -13062,9 +14291,12 @@ def hipGraphGetRootNodes(graph):
     """
     pRootNodes = hipGraphNode.from_ptr(NULL,owner=True)
     cdef int pNumRootNodes
-    pass
+    hipGraphGetRootNodes_____retval = hipError_t(chip.hipGraphGetRootNodes(graph._ptr,&pRootNodes._ptr,&pNumRootNodes))    # fully specified
+    return (hipGraphGetRootNodes_____retval,pRootNodes,pNumRootNodes)
 
-def hipGraphNodeGetDependencies(node):
+
+@cython.embedsignature(True)
+def hipGraphNodeGetDependencies(hipGraphNode node):
     """@brief Returns a node's dependencies.
     @param [in] node - graph node to get the dependencies from.
     @param [out] pDependencies - pointer to to return the dependencies.
@@ -13079,9 +14311,12 @@ def hipGraphNodeGetDependencies(node):
     """
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     cdef int pNumDependencies
-    pass
+    hipGraphNodeGetDependencies_____retval = hipError_t(chip.hipGraphNodeGetDependencies(node._ptr,&pDependencies._ptr,&pNumDependencies))    # fully specified
+    return (hipGraphNodeGetDependencies_____retval,pDependencies,pNumDependencies)
 
-def hipGraphNodeGetDependentNodes(node):
+
+@cython.embedsignature(True)
+def hipGraphNodeGetDependentNodes(hipGraphNode node):
     """@brief Returns a node's dependent nodes.
     @param [in] node - graph node to get the Dependent nodes from.
     @param [out] pDependentNodes - pointer to return the graph dependent nodes.
@@ -13097,9 +14332,12 @@ def hipGraphNodeGetDependentNodes(node):
     """
     pDependentNodes = hipGraphNode.from_ptr(NULL,owner=True)
     cdef int pNumDependentNodes
-    pass
+    hipGraphNodeGetDependentNodes_____retval = hipError_t(chip.hipGraphNodeGetDependentNodes(node._ptr,&pDependentNodes._ptr,&pNumDependentNodes))    # fully specified
+    return (hipGraphNodeGetDependentNodes_____retval,pDependentNodes,pNumDependentNodes)
 
-def hipGraphNodeGetType(node):
+
+@cython.embedsignature(True)
+def hipGraphNodeGetType(hipGraphNode node):
     """@brief Returns a node's type.
     @param [in] node - instance of the graph to add dependencies.
     @param [out] pType - pointer to the return the type
@@ -13108,18 +14346,24 @@ def hipGraphNodeGetType(node):
     it is still open to changes and may have outstanding issues.
     """
     cdef chip.hipGraphNodeType pType
-    pass
+    hipGraphNodeGetType_____retval = hipError_t(chip.hipGraphNodeGetType(node._ptr,&pType))    # fully specified
+    return (hipGraphNodeGetType_____retval,hipGraphNodeType(pType))
 
-def hipGraphDestroyNode(node):
+
+@cython.embedsignature(True)
+def hipGraphDestroyNode(hipGraphNode node):
     """@brief Remove a node from the graph.
     @param [in] node - graph node to remove
     @returns #hipSuccess, #hipErrorInvalidValue
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphDestroyNode_____retval = hipError_t(chip.hipGraphDestroyNode(node._ptr))    # fully specified
+    return hipGraphDestroyNode_____retval
 
-def hipGraphClone(originalGraph):
+
+@cython.embedsignature(True)
+def hipGraphClone(ihipGraph originalGraph):
     """@brief Clones a graph.
     @param [out] pGraphClone - Returns newly created cloned graph.
     @param [in] originalGraph - original graph to clone from.
@@ -13128,9 +14372,12 @@ def hipGraphClone(originalGraph):
     it is still open to changes and may have outstanding issues.
     """
     pGraphClone = ihipGraph.from_ptr(NULL,owner=True)
-    pass
+    hipGraphClone_____retval = hipError_t(chip.hipGraphClone(&pGraphClone._ptr,originalGraph._ptr))    # fully specified
+    return (hipGraphClone_____retval,pGraphClone)
 
-def hipGraphNodeFindInClone(originalNode, clonedGraph):
+
+@cython.embedsignature(True)
+def hipGraphNodeFindInClone(hipGraphNode originalNode, ihipGraph clonedGraph):
     """@brief Finds a cloned version of a node.
     @param [out] pNode - Returns the cloned node.
     @param [in] originalNode - original node handle.
@@ -13140,9 +14387,12 @@ def hipGraphNodeFindInClone(originalNode, clonedGraph):
     it is still open to changes and may have outstanding issues.
     """
     pNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphNodeFindInClone_____retval = hipError_t(chip.hipGraphNodeFindInClone(&pNode._ptr,originalNode._ptr,clonedGraph._ptr))    # fully specified
+    return (hipGraphNodeFindInClone_____retval,pNode)
 
-def hipGraphInstantiate(graph, char * pLogBuffer, int bufferSize):
+
+@cython.embedsignature(True)
+def hipGraphInstantiate(ihipGraph graph, char * pLogBuffer, int bufferSize):
     """@brief Creates an executable graph from a graph
     @param [out] pGraphExec - pointer to instantiated executable graph that is created.
     @param [in] graph - instance of graph to instantiate.
@@ -13156,9 +14406,12 @@ def hipGraphInstantiate(graph, char * pLogBuffer, int bufferSize):
     """
     pGraphExec = hipGraphExec.from_ptr(NULL,owner=True)
     pErrorNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphInstantiate_____retval = hipError_t(chip.hipGraphInstantiate(&pGraphExec._ptr,graph._ptr,&pErrorNode._ptr,pLogBuffer,bufferSize))    # fully specified
+    return (hipGraphInstantiate_____retval,pGraphExec,pErrorNode)
 
-def hipGraphInstantiateWithFlags(graph, unsigned long long flags):
+
+@cython.embedsignature(True)
+def hipGraphInstantiateWithFlags(ihipGraph graph, unsigned long long flags):
     """@brief Creates an executable graph from a graph.
     @param [out] pGraphExec - pointer to instantiated executable graph that is created.
     @param [in] graph - instance of graph to instantiate.
@@ -13168,9 +14421,12 @@ def hipGraphInstantiateWithFlags(graph, unsigned long long flags):
     it is still open to changes and may have outstanding issues.
     """
     pGraphExec = hipGraphExec.from_ptr(NULL,owner=True)
-    pass
+    hipGraphInstantiateWithFlags_____retval = hipError_t(chip.hipGraphInstantiateWithFlags(&pGraphExec._ptr,graph._ptr,flags))    # fully specified
+    return (hipGraphInstantiateWithFlags_____retval,pGraphExec)
 
-def hipGraphLaunch(graphExec, stream):
+
+@cython.embedsignature(True)
+def hipGraphLaunch(hipGraphExec graphExec, ihipStream_t stream):
     """@brief launches an executable graph in a stream
     @param [in] graphExec - instance of executable graph to launch.
     @param [in] stream - instance of stream in which to launch executable graph.
@@ -13178,9 +14434,12 @@ def hipGraphLaunch(graphExec, stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphLaunch_____retval = hipError_t(chip.hipGraphLaunch(graphExec._ptr,stream._ptr))    # fully specified
+    return hipGraphLaunch_____retval
 
-def hipGraphUpload(graphExec, stream):
+
+@cython.embedsignature(True)
+def hipGraphUpload(hipGraphExec graphExec, ihipStream_t stream):
     """@brief uploads an executable graph in a stream
     @param [in] graphExec - instance of executable graph to launch.
     @param [in] stream - instance of stream in which to launch executable graph.
@@ -13188,18 +14447,24 @@ def hipGraphUpload(graphExec, stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphUpload_____retval = hipError_t(chip.hipGraphUpload(graphExec._ptr,stream._ptr))    # fully specified
+    return hipGraphUpload_____retval
 
-def hipGraphExecDestroy(graphExec):
+
+@cython.embedsignature(True)
+def hipGraphExecDestroy(hipGraphExec graphExec):
     """@brief Destroys an executable graph
     @param [in] pGraphExec - instance of executable graph to destry.
     @returns #hipSuccess.
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphExecDestroy_____retval = hipError_t(chip.hipGraphExecDestroy(graphExec._ptr))    # fully specified
+    return hipGraphExecDestroy_____retval
 
-def hipGraphExecUpdate(hGraphExec, hGraph):
+
+@cython.embedsignature(True)
+def hipGraphExecUpdate(hipGraphExec hGraphExec, ihipGraph hGraph):
     """@brief Check whether an executable graph can be updated with a graph and perform the update if  *
     possible.
     @param [in] hGraphExec - instance of executable graph to update.
@@ -13212,9 +14477,12 @@ def hipGraphExecUpdate(hGraphExec, hGraph):
     """
     hErrorNode_out = hipGraphNode.from_ptr(NULL,owner=True)
     cdef chip.hipGraphExecUpdateResult updateResult_out
-    pass
+    hipGraphExecUpdate_____retval = hipError_t(chip.hipGraphExecUpdate(hGraphExec._ptr,hGraph._ptr,&hErrorNode_out._ptr,&updateResult_out))    # fully specified
+    return (hipGraphExecUpdate_____retval,hErrorNode_out,hipGraphExecUpdateResult(updateResult_out))
 
-def hipGraphAddKernelNode(graph, int numDependencies, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphAddKernelNode(ihipGraph graph, int numDependencies, hipKernelNodeParams pNodeParams):
     """@brief Creates a kernel execution node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -13227,9 +14495,12 @@ def hipGraphAddKernelNode(graph, int numDependencies, pNodeParams):
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphAddKernelNode_____retval = hipError_t(chip.hipGraphAddKernelNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,pNodeParams._ptr))    # fully specified
+    return (hipGraphAddKernelNode_____retval,pGraphNode,pDependencies)
 
-def hipGraphKernelNodeGetParams(node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphKernelNodeGetParams(hipGraphNode node, hipKernelNodeParams pNodeParams):
     """@brief Gets kernel node's parameters.
     @param [in] node - instance of the node to get parameters from.
     @param [out] pNodeParams - pointer to the parameters
@@ -13237,9 +14508,12 @@ def hipGraphKernelNodeGetParams(node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphKernelNodeGetParams_____retval = hipError_t(chip.hipGraphKernelNodeGetParams(node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphKernelNodeGetParams_____retval
 
-def hipGraphKernelNodeSetParams(node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphKernelNodeSetParams(hipGraphNode node, hipKernelNodeParams pNodeParams):
     """@brief Sets a kernel node's parameters.
     @param [in] node - instance of the node to set parameters to.
     @param [in] pNodeParams - const pointer to the parameters.
@@ -13247,9 +14521,12 @@ def hipGraphKernelNodeSetParams(node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphKernelNodeSetParams_____retval = hipError_t(chip.hipGraphKernelNodeSetParams(node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphKernelNodeSetParams_____retval
 
-def hipGraphExecKernelNodeSetParams(hGraphExec, node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphExecKernelNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, hipKernelNodeParams pNodeParams):
     """@brief Sets the parameters for a kernel node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] node - instance of the node to set parameters to.
@@ -13258,9 +14535,12 @@ def hipGraphExecKernelNodeSetParams(hGraphExec, node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphExecKernelNodeSetParams_____retval = hipError_t(chip.hipGraphExecKernelNodeSetParams(hGraphExec._ptr,node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphExecKernelNodeSetParams_____retval
 
-def hipGraphAddMemcpyNode(graph, int numDependencies, pCopyParams):
+
+@cython.embedsignature(True)
+def hipGraphAddMemcpyNode(ihipGraph graph, int numDependencies, hipMemcpy3DParms pCopyParams):
     """@brief Creates a memcpy node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -13273,9 +14553,12 @@ def hipGraphAddMemcpyNode(graph, int numDependencies, pCopyParams):
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphAddMemcpyNode_____retval = hipError_t(chip.hipGraphAddMemcpyNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,pCopyParams._ptr))    # fully specified
+    return (hipGraphAddMemcpyNode_____retval,pGraphNode,pDependencies)
 
-def hipGraphMemcpyNodeGetParams(node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphMemcpyNodeGetParams(hipGraphNode node, hipMemcpy3DParms pNodeParams):
     """@brief Gets a memcpy node's parameters.
     @param [in] node - instance of the node to get parameters from.
     @param [out] pNodeParams - pointer to the parameters.
@@ -13283,9 +14566,12 @@ def hipGraphMemcpyNodeGetParams(node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphMemcpyNodeGetParams_____retval = hipError_t(chip.hipGraphMemcpyNodeGetParams(node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphMemcpyNodeGetParams_____retval
 
-def hipGraphMemcpyNodeSetParams(node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphMemcpyNodeSetParams(hipGraphNode node, hipMemcpy3DParms pNodeParams):
     """@brief Sets a memcpy node's parameters.
     @param [in] node - instance of the node to set parameters to.
     @param [in] pNodeParams - const pointer to the parameters.
@@ -13293,9 +14579,12 @@ def hipGraphMemcpyNodeSetParams(node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphMemcpyNodeSetParams_____retval = hipError_t(chip.hipGraphMemcpyNodeSetParams(node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphMemcpyNodeSetParams_____retval
 
-def hipGraphKernelNodeSetAttribute(hNode, attr, value):
+
+@cython.embedsignature(True)
+def hipGraphKernelNodeSetAttribute(hipGraphNode hNode, object attr, hipKernelNodeAttrValue value):
     """@brief Sets a node attribute.
     @param [in] hNode - instance of the node to set parameters to.
     @param [in] attr - the attribute node is set to.
@@ -13304,9 +14593,14 @@ def hipGraphKernelNodeSetAttribute(hNode, attr, value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    if not isinstance(attr,hipKernelNodeAttrID):
+        raise TypeError("argument 'attr' must be of type 'hipKernelNodeAttrID'")
+    hipGraphKernelNodeSetAttribute_____retval = hipError_t(chip.hipGraphKernelNodeSetAttribute(hNode._ptr,attr.value,value._ptr))    # fully specified
+    return hipGraphKernelNodeSetAttribute_____retval
 
-def hipGraphKernelNodeGetAttribute(hNode, attr, value):
+
+@cython.embedsignature(True)
+def hipGraphKernelNodeGetAttribute(hipGraphNode hNode, object attr, hipKernelNodeAttrValue value):
     """@brief Gets a node attribute.
     @param [in] hNode - instance of the node to set parameters to.
     @param [in] attr - the attribute node is set to.
@@ -13315,9 +14609,14 @@ def hipGraphKernelNodeGetAttribute(hNode, attr, value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    if not isinstance(attr,hipKernelNodeAttrID):
+        raise TypeError("argument 'attr' must be of type 'hipKernelNodeAttrID'")
+    hipGraphKernelNodeGetAttribute_____retval = hipError_t(chip.hipGraphKernelNodeGetAttribute(hNode._ptr,attr.value,value._ptr))    # fully specified
+    return hipGraphKernelNodeGetAttribute_____retval
 
-def hipGraphExecMemcpyNodeSetParams(hGraphExec, node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphExecMemcpyNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, hipMemcpy3DParms pNodeParams):
     """@brief Sets the parameters for a memcpy node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] node - instance of the node to set parameters to.
@@ -13326,9 +14625,12 @@ def hipGraphExecMemcpyNodeSetParams(hGraphExec, node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphExecMemcpyNodeSetParams_____retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParams(hGraphExec._ptr,node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphExecMemcpyNodeSetParams_____retval
 
-def hipGraphAddMemcpyNode1D(graph, int numDependencies, dst, src, int count, kind):
+
+@cython.embedsignature(True)
+def hipGraphAddMemcpyNode1D(ihipGraph graph, int numDependencies, dst, src, int count, object kind):
     """@brief Creates a 1D memcpy node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -13344,9 +14646,12 @@ def hipGraphAddMemcpyNode1D(graph, int numDependencies, dst, src, int count, kin
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipGraphMemcpyNodeSetParams1D(node, dst, src, int count, kind):
+@cython.embedsignature(True)
+def hipGraphMemcpyNodeSetParams1D(hipGraphNode node, dst, src, int count, object kind):
     """@brief Sets a memcpy node's parameters to perform a 1-dimensional copy.
     @param [in] node - instance of the node to set parameters to.
     @param [in] dst - pointer to memory address to the destination.
@@ -13357,9 +14662,12 @@ def hipGraphMemcpyNodeSetParams1D(node, dst, src, int count, kind):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipGraphExecMemcpyNodeSetParams1D(hGraphExec, node, dst, src, int count, kind):
+@cython.embedsignature(True)
+def hipGraphExecMemcpyNodeSetParams1D(hipGraphExec hGraphExec, hipGraphNode node, dst, src, int count, object kind):
     """@brief Sets the parameters for a memcpy node in the given graphExec to perform a 1-dimensional
     copy.
     @param [in] hGraphExec - instance of the executable graph with the node.
@@ -13372,9 +14680,12 @@ def hipGraphExecMemcpyNodeSetParams1D(hGraphExec, node, dst, src, int count, kin
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipGraphAddMemcpyNodeFromSymbol(graph, int numDependencies, dst, symbol, int count, int offset, kind):
+@cython.embedsignature(True)
+def hipGraphAddMemcpyNodeFromSymbol(ihipGraph graph, int numDependencies, dst, symbol, int count, int offset, object kind):
     """@brief Creates a memcpy node to copy from a symbol on the device and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -13391,9 +14702,12 @@ def hipGraphAddMemcpyNodeFromSymbol(graph, int numDependencies, dst, symbol, int
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipGraphMemcpyNodeSetParamsFromSymbol(node, dst, symbol, int count, int offset, kind):
+@cython.embedsignature(True)
+def hipGraphMemcpyNodeSetParamsFromSymbol(hipGraphNode node, dst, symbol, int count, int offset, object kind):
     """@brief Sets a memcpy node's parameters to copy from a symbol on the device.
     @param [in] node - instance of the node to set parameters to.
     @param [in] dst - pointer to memory address to the destination.
@@ -13405,9 +14719,12 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(node, dst, symbol, int count, int offs
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipGraphExecMemcpyNodeSetParamsFromSymbol(hGraphExec, node, dst, symbol, int count, int offset, kind):
+@cython.embedsignature(True)
+def hipGraphExecMemcpyNodeSetParamsFromSymbol(hipGraphExec hGraphExec, hipGraphNode node, dst, symbol, int count, int offset, object kind):
     """@brief Sets the parameters for a memcpy node in the given graphExec to copy from a symbol on the
     device.
     @param [in] hGraphExec - instance of the executable graph with the node.
@@ -13421,9 +14738,12 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(hGraphExec, node, dst, symbol, int
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipGraphAddMemcpyNodeToSymbol(graph, int numDependencies, symbol, src, int count, int offset, kind):
+@cython.embedsignature(True)
+def hipGraphAddMemcpyNodeToSymbol(ihipGraph graph, int numDependencies, symbol, src, int count, int offset, object kind):
     """@brief Creates a memcpy node to copy to a symbol on the device and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -13440,9 +14760,12 @@ def hipGraphAddMemcpyNodeToSymbol(graph, int numDependencies, symbol, src, int c
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipGraphMemcpyNodeSetParamsToSymbol(node, symbol, src, int count, int offset, kind):
+@cython.embedsignature(True)
+def hipGraphMemcpyNodeSetParamsToSymbol(hipGraphNode node, symbol, src, int count, int offset, object kind):
     """@brief Sets a memcpy node's parameters to copy to a symbol on the device.
     @param [in] node - instance of the node to set parameters to.
     @param [in] symbol - Device symbol address.
@@ -13454,9 +14777,12 @@ def hipGraphMemcpyNodeSetParamsToSymbol(node, symbol, src, int count, int offset
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipGraphExecMemcpyNodeSetParamsToSymbol(hGraphExec, node, symbol, src, int count, int offset, kind):
+@cython.embedsignature(True)
+def hipGraphExecMemcpyNodeSetParamsToSymbol(hipGraphExec hGraphExec, hipGraphNode node, symbol, src, int count, int offset, object kind):
     """@brief Sets the parameters for a memcpy node in the given graphExec to copy to a symbol on the
     device.
     @param [in] hGraphExec - instance of the executable graph with the node.
@@ -13470,9 +14796,12 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(hGraphExec, node, symbol, src, int c
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipGraphAddMemsetNode(graph, int numDependencies, pMemsetParams):
+@cython.embedsignature(True)
+def hipGraphAddMemsetNode(ihipGraph graph, int numDependencies, hipMemsetParams pMemsetParams):
     """@brief Creates a memset node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -13485,9 +14814,12 @@ def hipGraphAddMemsetNode(graph, int numDependencies, pMemsetParams):
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphAddMemsetNode_____retval = hipError_t(chip.hipGraphAddMemsetNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,pMemsetParams._ptr))    # fully specified
+    return (hipGraphAddMemsetNode_____retval,pGraphNode,pDependencies)
 
-def hipGraphMemsetNodeGetParams(node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphMemsetNodeGetParams(hipGraphNode node, hipMemsetParams pNodeParams):
     """@brief Gets a memset node's parameters.
     @param [in] node - instane of the node to get parameters from.
     @param [out] pNodeParams - pointer to the parameters.
@@ -13495,9 +14827,12 @@ def hipGraphMemsetNodeGetParams(node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphMemsetNodeGetParams_____retval = hipError_t(chip.hipGraphMemsetNodeGetParams(node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphMemsetNodeGetParams_____retval
 
-def hipGraphMemsetNodeSetParams(node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphMemsetNodeSetParams(hipGraphNode node, hipMemsetParams pNodeParams):
     """@brief Sets a memset node's parameters.
     @param [in] node - instance of the node to set parameters to.
     @param [in] pNodeParams - pointer to the parameters.
@@ -13505,9 +14840,12 @@ def hipGraphMemsetNodeSetParams(node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphMemsetNodeSetParams_____retval = hipError_t(chip.hipGraphMemsetNodeSetParams(node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphMemsetNodeSetParams_____retval
 
-def hipGraphExecMemsetNodeSetParams(hGraphExec, node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphExecMemsetNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, hipMemsetParams pNodeParams):
     """@brief Sets the parameters for a memset node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] node - instance of the node to set parameters to.
@@ -13516,9 +14854,12 @@ def hipGraphExecMemsetNodeSetParams(hGraphExec, node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphExecMemsetNodeSetParams_____retval = hipError_t(chip.hipGraphExecMemsetNodeSetParams(hGraphExec._ptr,node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphExecMemsetNodeSetParams_____retval
 
-def hipGraphAddHostNode(graph, int numDependencies, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphAddHostNode(ihipGraph graph, int numDependencies, hipHostNodeParams pNodeParams):
     """@brief Creates a host execution node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -13531,9 +14872,12 @@ def hipGraphAddHostNode(graph, int numDependencies, pNodeParams):
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphAddHostNode_____retval = hipError_t(chip.hipGraphAddHostNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,pNodeParams._ptr))    # fully specified
+    return (hipGraphAddHostNode_____retval,pGraphNode,pDependencies)
 
-def hipGraphHostNodeGetParams(node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphHostNodeGetParams(hipGraphNode node, hipHostNodeParams pNodeParams):
     """@brief Returns a host node's parameters.
     @param [in] node - instane of the node to get parameters from.
     @param [out] pNodeParams - pointer to the parameters.
@@ -13541,9 +14885,12 @@ def hipGraphHostNodeGetParams(node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphHostNodeGetParams_____retval = hipError_t(chip.hipGraphHostNodeGetParams(node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphHostNodeGetParams_____retval
 
-def hipGraphHostNodeSetParams(node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphHostNodeSetParams(hipGraphNode node, hipHostNodeParams pNodeParams):
     """@brief Sets a host node's parameters.
     @param [in] node - instance of the node to set parameters to.
     @param [in] pNodeParams - pointer to the parameters.
@@ -13551,9 +14898,12 @@ def hipGraphHostNodeSetParams(node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphHostNodeSetParams_____retval = hipError_t(chip.hipGraphHostNodeSetParams(node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphHostNodeSetParams_____retval
 
-def hipGraphExecHostNodeSetParams(hGraphExec, node, pNodeParams):
+
+@cython.embedsignature(True)
+def hipGraphExecHostNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, hipHostNodeParams pNodeParams):
     """@brief Sets the parameters for a host node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] node - instance of the node to set parameters to.
@@ -13562,9 +14912,12 @@ def hipGraphExecHostNodeSetParams(hGraphExec, node, pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphExecHostNodeSetParams_____retval = hipError_t(chip.hipGraphExecHostNodeSetParams(hGraphExec._ptr,node._ptr,pNodeParams._ptr))    # fully specified
+    return hipGraphExecHostNodeSetParams_____retval
 
-def hipGraphAddChildGraphNode(graph, int numDependencies, childGraph):
+
+@cython.embedsignature(True)
+def hipGraphAddChildGraphNode(ihipGraph graph, int numDependencies, ihipGraph childGraph):
     """@brief Creates a child graph node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -13577,9 +14930,12 @@ def hipGraphAddChildGraphNode(graph, int numDependencies, childGraph):
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphAddChildGraphNode_____retval = hipError_t(chip.hipGraphAddChildGraphNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,childGraph._ptr))    # fully specified
+    return (hipGraphAddChildGraphNode_____retval,pGraphNode,pDependencies)
 
-def hipGraphChildGraphNodeGetGraph(node):
+
+@cython.embedsignature(True)
+def hipGraphChildGraphNodeGetGraph(hipGraphNode node):
     """@brief Gets a handle to the embedded graph of a child graph node.
     @param [in] node - instane of the node to get child graph.
     @param [out] pGraph - pointer to get the graph.
@@ -13588,9 +14944,12 @@ def hipGraphChildGraphNodeGetGraph(node):
     it is still open to changes and may have outstanding issues.
     """
     pGraph = ihipGraph.from_ptr(NULL,owner=True)
-    pass
+    hipGraphChildGraphNodeGetGraph_____retval = hipError_t(chip.hipGraphChildGraphNodeGetGraph(node._ptr,&pGraph._ptr))    # fully specified
+    return (hipGraphChildGraphNodeGetGraph_____retval,pGraph)
 
-def hipGraphExecChildGraphNodeSetParams(hGraphExec, node, childGraph):
+
+@cython.embedsignature(True)
+def hipGraphExecChildGraphNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, ihipGraph childGraph):
     """@brief Updates node parameters in the child graph node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] node - node from the graph which was used to instantiate graphExec.
@@ -13599,9 +14958,12 @@ def hipGraphExecChildGraphNodeSetParams(hGraphExec, node, childGraph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphExecChildGraphNodeSetParams_____retval = hipError_t(chip.hipGraphExecChildGraphNodeSetParams(hGraphExec._ptr,node._ptr,childGraph._ptr))    # fully specified
+    return hipGraphExecChildGraphNodeSetParams_____retval
 
-def hipGraphAddEmptyNode(graph, int numDependencies):
+
+@cython.embedsignature(True)
+def hipGraphAddEmptyNode(ihipGraph graph, int numDependencies):
     """@brief Creates an empty node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node is add to.
@@ -13613,9 +14975,12 @@ def hipGraphAddEmptyNode(graph, int numDependencies):
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphAddEmptyNode_____retval = hipError_t(chip.hipGraphAddEmptyNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies))    # fully specified
+    return (hipGraphAddEmptyNode_____retval,pGraphNode,pDependencies)
 
-def hipGraphAddEventRecordNode(graph, int numDependencies, event):
+
+@cython.embedsignature(True)
+def hipGraphAddEventRecordNode(ihipGraph graph, int numDependencies, ihipEvent_t event):
     """@brief Creates an event record node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node to be added.
@@ -13628,9 +14993,12 @@ def hipGraphAddEventRecordNode(graph, int numDependencies, event):
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphAddEventRecordNode_____retval = hipError_t(chip.hipGraphAddEventRecordNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,event._ptr))    # fully specified
+    return (hipGraphAddEventRecordNode_____retval,pGraphNode,pDependencies)
 
-def hipGraphEventRecordNodeGetEvent(node):
+
+@cython.embedsignature(True)
+def hipGraphEventRecordNodeGetEvent(hipGraphNode node):
     """@brief Returns the event associated with an event record node.
     @param [in] node -  instane of the node to get event from.
     @param [out] event_out - Pointer to return the event.
@@ -13639,9 +15007,12 @@ def hipGraphEventRecordNodeGetEvent(node):
     it is still open to changes and may have outstanding issues.
     """
     event_out = ihipEvent_t.from_ptr(NULL,owner=True)
-    pass
+    hipGraphEventRecordNodeGetEvent_____retval = hipError_t(chip.hipGraphEventRecordNodeGetEvent(node._ptr,&event_out._ptr))    # fully specified
+    return (hipGraphEventRecordNodeGetEvent_____retval,event_out)
 
-def hipGraphEventRecordNodeSetEvent(node, event):
+
+@cython.embedsignature(True)
+def hipGraphEventRecordNodeSetEvent(hipGraphNode node, ihipEvent_t event):
     """@brief Sets an event record node's event.
     @param [in] node - instane of the node to set event to.
     @param [in] event - pointer to the event.
@@ -13649,9 +15020,12 @@ def hipGraphEventRecordNodeSetEvent(node, event):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphEventRecordNodeSetEvent_____retval = hipError_t(chip.hipGraphEventRecordNodeSetEvent(node._ptr,event._ptr))    # fully specified
+    return hipGraphEventRecordNodeSetEvent_____retval
 
-def hipGraphExecEventRecordNodeSetEvent(hGraphExec, hNode, event):
+
+@cython.embedsignature(True)
+def hipGraphExecEventRecordNodeSetEvent(hipGraphExec hGraphExec, hipGraphNode hNode, ihipEvent_t event):
     """@brief Sets the event for an event record node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] hNode - node from the graph which was used to instantiate graphExec.
@@ -13660,9 +15034,12 @@ def hipGraphExecEventRecordNodeSetEvent(hGraphExec, hNode, event):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphExecEventRecordNodeSetEvent_____retval = hipError_t(chip.hipGraphExecEventRecordNodeSetEvent(hGraphExec._ptr,hNode._ptr,event._ptr))    # fully specified
+    return hipGraphExecEventRecordNodeSetEvent_____retval
 
-def hipGraphAddEventWaitNode(graph, int numDependencies, event):
+
+@cython.embedsignature(True)
+def hipGraphAddEventWaitNode(ihipGraph graph, int numDependencies, ihipEvent_t event):
     """@brief Creates an event wait node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node to be added.
@@ -13675,9 +15052,12 @@ def hipGraphAddEventWaitNode(graph, int numDependencies, event):
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    pass
+    hipGraphAddEventWaitNode_____retval = hipError_t(chip.hipGraphAddEventWaitNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,event._ptr))    # fully specified
+    return (hipGraphAddEventWaitNode_____retval,pGraphNode,pDependencies)
 
-def hipGraphEventWaitNodeGetEvent(node):
+
+@cython.embedsignature(True)
+def hipGraphEventWaitNodeGetEvent(hipGraphNode node):
     """@brief Returns the event associated with an event wait node.
     @param [in] node -  instane of the node to get event from.
     @param [out] event_out - Pointer to return the event.
@@ -13686,9 +15066,12 @@ def hipGraphEventWaitNodeGetEvent(node):
     it is still open to changes and may have outstanding issues.
     """
     event_out = ihipEvent_t.from_ptr(NULL,owner=True)
-    pass
+    hipGraphEventWaitNodeGetEvent_____retval = hipError_t(chip.hipGraphEventWaitNodeGetEvent(node._ptr,&event_out._ptr))    # fully specified
+    return (hipGraphEventWaitNodeGetEvent_____retval,event_out)
 
-def hipGraphEventWaitNodeSetEvent(node, event):
+
+@cython.embedsignature(True)
+def hipGraphEventWaitNodeSetEvent(hipGraphNode node, ihipEvent_t event):
     """@brief Sets an event wait node's event.
     @param [in] node - instane of the node to set event to.
     @param [in] event - pointer to the event.
@@ -13696,9 +15079,12 @@ def hipGraphEventWaitNodeSetEvent(node, event):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphEventWaitNodeSetEvent_____retval = hipError_t(chip.hipGraphEventWaitNodeSetEvent(node._ptr,event._ptr))    # fully specified
+    return hipGraphEventWaitNodeSetEvent_____retval
 
-def hipGraphExecEventWaitNodeSetEvent(hGraphExec, hNode, event):
+
+@cython.embedsignature(True)
+def hipGraphExecEventWaitNodeSetEvent(hipGraphExec hGraphExec, hipGraphNode hNode, ihipEvent_t event):
     """@brief Sets the event for an event record node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] hNode - node from the graph which was used to instantiate graphExec.
@@ -13707,9 +15093,12 @@ def hipGraphExecEventWaitNodeSetEvent(hGraphExec, hNode, event):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphExecEventWaitNodeSetEvent_____retval = hipError_t(chip.hipGraphExecEventWaitNodeSetEvent(hGraphExec._ptr,hNode._ptr,event._ptr))    # fully specified
+    return hipGraphExecEventWaitNodeSetEvent_____retval
 
-def hipDeviceGetGraphMemAttribute(int device, attr, value):
+
+@cython.embedsignature(True)
+def hipDeviceGetGraphMemAttribute(int device, object attr, value):
     """@brief Get the mem attribute for graphs.
     @param [in] device - device the attr is get for.
     @param [in] attr - attr to get.
@@ -13718,9 +15107,12 @@ def hipDeviceGetGraphMemAttribute(int device, attr, value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(attr,hipGraphMemAttributeType):
+        raise TypeError("argument 'attr' must be of type 'hipGraphMemAttributeType'")
     pass
 
-def hipDeviceSetGraphMemAttribute(int device, attr, value):
+@cython.embedsignature(True)
+def hipDeviceSetGraphMemAttribute(int device, object attr, value):
     """@brief Set the mem attribute for graphs.
     @param [in] device - device the attr is set for.
     @param [in] attr - attr to set.
@@ -13729,8 +15121,11 @@ def hipDeviceSetGraphMemAttribute(int device, attr, value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(attr,hipGraphMemAttributeType):
+        raise TypeError("argument 'attr' must be of type 'hipGraphMemAttributeType'")
     pass
 
+@cython.embedsignature(True)
 def hipDeviceGraphMemTrim(int device):
     """@brief Free unused memory on specific device used for graph back to OS.
     @param [in] device - device the memory is used for graphs
@@ -13741,6 +15136,7 @@ def hipDeviceGraphMemTrim(int device):
     return hipDeviceGraphMemTrim_____retval
 
 
+@cython.embedsignature(True)
 def hipUserObjectCreate(ptr, destroy, unsigned int initialRefcount, unsigned int flags):
     """@brief Create an instance of userObject to manage lifetime of a resource.
     @param [out] object_out - pointer to instace of userobj.
@@ -13755,7 +15151,8 @@ def hipUserObjectCreate(ptr, destroy, unsigned int initialRefcount, unsigned int
     object_out = hipUserObject.from_ptr(NULL,owner=True)
     pass
 
-def hipUserObjectRelease(object, unsigned int count):
+@cython.embedsignature(True)
+def hipUserObjectRelease(hipUserObject object, unsigned int count):
     """@brief Release number of references to resource.
     @param [in] object - pointer to instace of userobj.
     @param [in] count - reference to resource to be retained.
@@ -13763,9 +15160,12 @@ def hipUserObjectRelease(object, unsigned int count):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipUserObjectRelease_____retval = hipError_t(chip.hipUserObjectRelease(object._ptr,count))    # fully specified
+    return hipUserObjectRelease_____retval
 
-def hipUserObjectRetain(object, unsigned int count):
+
+@cython.embedsignature(True)
+def hipUserObjectRetain(hipUserObject object, unsigned int count):
     """@brief Retain number of references to resource.
     @param [in] object - pointer to instace of userobj.
     @param [in] count - reference to resource to be retained.
@@ -13773,9 +15173,12 @@ def hipUserObjectRetain(object, unsigned int count):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipUserObjectRetain_____retval = hipError_t(chip.hipUserObjectRetain(object._ptr,count))    # fully specified
+    return hipUserObjectRetain_____retval
 
-def hipGraphRetainUserObject(graph, object, unsigned int count, unsigned int flags):
+
+@cython.embedsignature(True)
+def hipGraphRetainUserObject(ihipGraph graph, hipUserObject object, unsigned int count, unsigned int flags):
     """@brief Retain user object for graphs.
     @param [in] graph - pointer to graph to retain the user object for.
     @param [in] object - pointer to instace of userobj.
@@ -13785,9 +15188,12 @@ def hipGraphRetainUserObject(graph, object, unsigned int count, unsigned int fla
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphRetainUserObject_____retval = hipError_t(chip.hipGraphRetainUserObject(graph._ptr,object._ptr,count,flags))    # fully specified
+    return hipGraphRetainUserObject_____retval
 
-def hipGraphReleaseUserObject(graph, object, unsigned int count):
+
+@cython.embedsignature(True)
+def hipGraphReleaseUserObject(ihipGraph graph, hipUserObject object, unsigned int count):
     """@brief Release user object from graphs.
     @param [in] graph - pointer to graph to retain the user object for.
     @param [in] object - pointer to instace of userobj.
@@ -13796,8 +15202,11 @@ def hipGraphReleaseUserObject(graph, object, unsigned int count):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipGraphReleaseUserObject_____retval = hipError_t(chip.hipGraphReleaseUserObject(graph._ptr,object._ptr,count))    # fully specified
+    return hipGraphReleaseUserObject_____retval
 
+
+@cython.embedsignature(True)
 def hipMemAddressFree(devPtr, int size):
     """@brief Frees an address range reservation made via hipMemAddressReserve
     @param [in] devPtr - starting address of the range.
@@ -13808,6 +15217,7 @@ def hipMemAddressFree(devPtr, int size):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemAddressReserve(int size, int alignment, addr, unsigned long long flags):
     """@brief Reserves an address range
     @param [out] ptr - starting address of the reserved range.
@@ -13821,7 +15231,8 @@ def hipMemAddressReserve(int size, int alignment, addr, unsigned long long flags
     """
     pass
 
-def hipMemCreate(int size, prop, unsigned long long flags):
+@cython.embedsignature(True)
+def hipMemCreate(int size, hipMemAllocationProp prop, unsigned long long flags):
     """@brief Creates a memory allocation described by the properties and size
     @param [out] handle - value of the returned handle.
     @param [in] size - size of the allocation.
@@ -13832,9 +15243,12 @@ def hipMemCreate(int size, prop, unsigned long long flags):
     it is still open to changes and may have outstanding issues.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
-    pass
+    hipMemCreate_____retval = hipError_t(chip.hipMemCreate(&handle._ptr,size,prop._ptr,flags))    # fully specified
+    return (hipMemCreate_____retval,handle)
 
-def hipMemExportToShareableHandle(shareableHandle, handle, handleType, unsigned long long flags):
+
+@cython.embedsignature(True)
+def hipMemExportToShareableHandle(shareableHandle, ihipMemGenericAllocationHandle handle, object handleType, unsigned long long flags):
     """@brief Exports an allocation to a requested shareable handle type.
     @param [out] shareableHandle - value of the returned handle.
     @param [in] handle - handle to share.
@@ -13844,9 +15258,12 @@ def hipMemExportToShareableHandle(shareableHandle, handle, handleType, unsigned 
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
+    if not isinstance(handleType,hipMemAllocationHandleType):
+        raise TypeError("argument 'handleType' must be of type 'hipMemAllocationHandleType'")
     pass
 
-def hipMemGetAccess(location, ptr):
+@cython.embedsignature(True)
+def hipMemGetAccess(hipMemLocation location, ptr):
     """@brief Get the access flags set for the given location and ptr.
     @param [out] flags - flags for this location.
     @param [in] location - target location.
@@ -13858,7 +15275,8 @@ def hipMemGetAccess(location, ptr):
     cdef unsigned long long flags
     pass
 
-def hipMemGetAllocationGranularity(prop, option):
+@cython.embedsignature(True)
+def hipMemGetAllocationGranularity(hipMemAllocationProp prop, object option):
     """@brief Calculates either the minimal or recommended granularity.
     @param [out] granularity - returned granularity.
     @param [in] prop - location properties.
@@ -13868,9 +15286,14 @@ def hipMemGetAllocationGranularity(prop, option):
     it is still open to changes and may have outstanding issues.
     """
     cdef int granularity
-    pass
+    if not isinstance(option,hipMemAllocationGranularity_flags):
+        raise TypeError("argument 'option' must be of type 'hipMemAllocationGranularity_flags'")
+    hipMemGetAllocationGranularity_____retval = hipError_t(chip.hipMemGetAllocationGranularity(&granularity,prop._ptr,option.value))    # fully specified
+    return (hipMemGetAllocationGranularity_____retval,granularity)
 
-def hipMemGetAllocationPropertiesFromHandle(prop, handle):
+
+@cython.embedsignature(True)
+def hipMemGetAllocationPropertiesFromHandle(hipMemAllocationProp prop, ihipMemGenericAllocationHandle handle):
     """@brief Retrieve the property structure of the given handle.
     @param [out] prop - properties of the given handle.
     @param [in] handle - handle to perform the query on.
@@ -13878,9 +15301,12 @@ def hipMemGetAllocationPropertiesFromHandle(prop, handle):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipMemGetAllocationPropertiesFromHandle_____retval = hipError_t(chip.hipMemGetAllocationPropertiesFromHandle(prop._ptr,handle._ptr))    # fully specified
+    return hipMemGetAllocationPropertiesFromHandle_____retval
 
-def hipMemImportFromShareableHandle(osHandle, shHandleType):
+
+@cython.embedsignature(True)
+def hipMemImportFromShareableHandle(osHandle, object shHandleType):
     """@brief Imports an allocation from a requested shareable handle type.
     @param [out] handle - returned value.
     @param [in] osHandle - shareable handle representing the memory allocation.
@@ -13890,9 +15316,12 @@ def hipMemImportFromShareableHandle(osHandle, shHandleType):
     it is still open to changes and may have outstanding issues.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
+    if not isinstance(shHandleType,hipMemAllocationHandleType):
+        raise TypeError("argument 'shHandleType' must be of type 'hipMemAllocationHandleType'")
     pass
 
-def hipMemMap(ptr, int size, int offset, handle, unsigned long long flags):
+@cython.embedsignature(True)
+def hipMemMap(ptr, int size, int offset, ihipMemGenericAllocationHandle handle, unsigned long long flags):
     """@brief Maps an allocation handle to a reserved virtual address range.
     @param [in] ptr - address where the memory will be mapped.
     @param [in] size - size of the mapping.
@@ -13905,7 +15334,8 @@ def hipMemMap(ptr, int size, int offset, handle, unsigned long long flags):
     """
     pass
 
-def hipMemMapArrayAsync(mapInfoList, unsigned int count, stream):
+@cython.embedsignature(True)
+def hipMemMapArrayAsync(hipArrayMapInfo mapInfoList, unsigned int count, ihipStream_t stream):
     """@brief Maps or unmaps subregions of sparse HIP arrays and sparse HIP mipmapped arrays.
     @param [in] mapInfoList - list of hipArrayMapInfo.
     @param [in] count - number of hipArrayMapInfo in mapInfoList.
@@ -13914,17 +15344,23 @@ def hipMemMapArrayAsync(mapInfoList, unsigned int count, stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipMemMapArrayAsync_____retval = hipError_t(chip.hipMemMapArrayAsync(mapInfoList._ptr,count,stream._ptr))    # fully specified
+    return hipMemMapArrayAsync_____retval
 
-def hipMemRelease(handle):
+
+@cython.embedsignature(True)
+def hipMemRelease(ihipMemGenericAllocationHandle handle):
     """@brief Release a memory handle representing a memory allocation which was previously allocated through hipMemCreate.
     @param [in] handle - handle of the memory allocation.
     @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    hipMemRelease_____retval = hipError_t(chip.hipMemRelease(handle._ptr))    # fully specified
+    return hipMemRelease_____retval
 
+
+@cython.embedsignature(True)
 def hipMemRetainAllocationHandle(addr):
     """@brief Returns the allocation handle of the backing memory allocation given the address.
     @param [out] handle - handle representing addr.
@@ -13936,7 +15372,8 @@ def hipMemRetainAllocationHandle(addr):
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
     pass
 
-def hipMemSetAccess(ptr, int size, desc, int count):
+@cython.embedsignature(True)
+def hipMemSetAccess(ptr, int size, hipMemAccessDesc desc, int count):
     """@brief Set the access flags for each location specified in desc for the given virtual address range.
     @param [in] ptr - starting address of the virtual address range.
     @param [in] size - size of the range.
@@ -13948,6 +15385,7 @@ def hipMemSetAccess(ptr, int size, desc, int count):
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemUnmap(ptr, int size):
     """@brief Unmap memory allocation of a given address range.
     @param [in] ptr - starting address of the range to unmap.
@@ -14000,13 +15438,19 @@ cdef class GLenum:
         return wrapper
 
 
-def hipGLGetDevices(unsigned int hipDeviceCount, deviceList):
+@cython.embedsignature(True)
+def hipGLGetDevices(unsigned int hipDeviceCount, object deviceList):
     """
     """
     cdef unsigned int pHipDeviceCount
     cdef int pHipDevices
-    pass
+    if not isinstance(deviceList,hipGLDeviceList):
+        raise TypeError("argument 'deviceList' must be of type 'hipGLDeviceList'")
+    hipGLGetDevices_____retval = hipError_t(chip.hipGLGetDevices(&pHipDeviceCount,&pHipDevices,hipDeviceCount,deviceList.value))    # fully specified
+    return (hipGLGetDevices_____retval,pHipDeviceCount,pHipDevices)
 
+
+@cython.embedsignature(True)
 def hipGraphicsGLRegisterBuffer(GLuint buffer, unsigned int flags):
     """
     """
@@ -14015,6 +15459,7 @@ def hipGraphicsGLRegisterBuffer(GLuint buffer, unsigned int flags):
     return (hipGraphicsGLRegisterBuffer_____retval,resource)
 
 
+@cython.embedsignature(True)
 def hipGraphicsGLRegisterImage(GLuint image, GLenum target, unsigned int flags):
     """
     """
@@ -14023,217 +15468,320 @@ def hipGraphicsGLRegisterImage(GLuint image, GLenum target, unsigned int flags):
     return (hipGraphicsGLRegisterImage_____retval,resource)
 
 
-def hipGraphicsMapResources(int count, stream):
+@cython.embedsignature(True)
+def hipGraphicsMapResources(int count, ihipStream_t stream):
     """
     """
     resources = _hipGraphicsResource.from_ptr(NULL,owner=True)
-    pass
+    hipGraphicsMapResources_____retval = hipError_t(chip.hipGraphicsMapResources(count,&resources._ptr,stream._ptr))    # fully specified
+    return (hipGraphicsMapResources_____retval,resources)
 
-def hipGraphicsSubResourceGetMappedArray(resource, unsigned int arrayIndex, unsigned int mipLevel):
+
+@cython.embedsignature(True)
+def hipGraphicsSubResourceGetMappedArray(_hipGraphicsResource resource, unsigned int arrayIndex, unsigned int mipLevel):
     """
     """
     array = hipArray.from_ptr(NULL,owner=True)
-    pass
+    hipGraphicsSubResourceGetMappedArray_____retval = hipError_t(chip.hipGraphicsSubResourceGetMappedArray(&array._ptr,resource._ptr,arrayIndex,mipLevel))    # fully specified
+    return (hipGraphicsSubResourceGetMappedArray_____retval,array)
 
-def hipGraphicsResourceGetMappedPointer(resource):
+
+@cython.embedsignature(True)
+def hipGraphicsResourceGetMappedPointer(_hipGraphicsResource resource):
     """
     """
     cdef int size
     pass
 
-def hipGraphicsUnmapResources(int count, stream):
+@cython.embedsignature(True)
+def hipGraphicsUnmapResources(int count, ihipStream_t stream):
     """
     """
     resources = _hipGraphicsResource.from_ptr(NULL,owner=True)
+    hipGraphicsUnmapResources_____retval = hipError_t(chip.hipGraphicsUnmapResources(count,&resources._ptr,stream._ptr))    # fully specified
+    return (hipGraphicsUnmapResources_____retval,resources)
+
+
+@cython.embedsignature(True)
+def hipGraphicsUnregisterResource(_hipGraphicsResource resource):
+    """
+    """
+    hipGraphicsUnregisterResource_____retval = hipError_t(chip.hipGraphicsUnregisterResource(resource._ptr))    # fully specified
+    return hipGraphicsUnregisterResource_____retval
+
+
+@cython.embedsignature(True)
+def hipMemcpy_spt(dst, src, int sizeBytes, object kind):
+    """
+    """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipGraphicsUnregisterResource(resource):
+@cython.embedsignature(True)
+def hipMemcpyToSymbol_spt(symbol, src, int sizeBytes, int offset, object kind):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy_spt(dst, src, int sizeBytes, kind):
+@cython.embedsignature(True)
+def hipMemcpyFromSymbol_spt(dst, symbol, int sizeBytes, int offset, object kind):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyToSymbol_spt(symbol, src, int sizeBytes, int offset, kind):
+@cython.embedsignature(True)
+def hipMemcpy2D_spt(dst, int dpitch, src, int spitch, int width, int height, object kind):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyFromSymbol_spt(dst, symbol, int sizeBytes, int offset, kind):
+@cython.embedsignature(True)
+def hipMemcpy2DFromArray_spt(dst, int dpitch, hipArray src, int wOffset, int hOffset, int width, int height, object kind):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy2D_spt(dst, int dpitch, src, int spitch, int width, int height, kind):
+@cython.embedsignature(True)
+def hipMemcpy3D_spt(hipMemcpy3DParms p):
     """
     """
-    pass
+    hipMemcpy3D_spt_____retval = hipError_t(chip.hipMemcpy3D_spt(p._ptr))    # fully specified
+    return hipMemcpy3D_spt_____retval
 
-def hipMemcpy2DFromArray_spt(dst, int dpitch, src, int wOffset, int hOffset, int width, int height, kind):
-    """
-    """
-    pass
 
-def hipMemcpy3D_spt(p):
-    """
-    """
-    pass
-
+@cython.embedsignature(True)
 def hipMemset_spt(dst, int value, int sizeBytes):
     """
     """
     pass
 
-def hipMemsetAsync_spt(dst, int value, int sizeBytes, stream):
+@cython.embedsignature(True)
+def hipMemsetAsync_spt(dst, int value, int sizeBytes, ihipStream_t stream):
     """
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemset2D_spt(dst, int pitch, int value, int width, int height):
     """
     """
     pass
 
-def hipMemset2DAsync_spt(dst, int pitch, int value, int width, int height, stream):
+@cython.embedsignature(True)
+def hipMemset2DAsync_spt(dst, int pitch, int value, int width, int height, ihipStream_t stream):
     """
     """
     pass
 
-def hipMemset3DAsync_spt(pitchedDevPtr, int value, extent, stream):
+@cython.embedsignature(True)
+def hipMemset3DAsync_spt(pitchedDevPtr, int value, extent, ihipStream_t stream):
     """
     """
     pass
 
+@cython.embedsignature(True)
 def hipMemset3D_spt(pitchedDevPtr, int value, extent):
     """
     """
     pass
 
-def hipMemcpyAsync_spt(dst, src, int sizeBytes, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpyAsync_spt(dst, src, int sizeBytes, object kind, ihipStream_t stream):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy3DAsync_spt(p, stream):
+@cython.embedsignature(True)
+def hipMemcpy3DAsync_spt(hipMemcpy3DParms p, ihipStream_t stream):
     """
     """
+    hipMemcpy3DAsync_spt_____retval = hipError_t(chip.hipMemcpy3DAsync_spt(p._ptr,stream._ptr))    # fully specified
+    return hipMemcpy3DAsync_spt_____retval
+
+
+@cython.embedsignature(True)
+def hipMemcpy2DAsync_spt(dst, int dpitch, src, int spitch, int width, int height, object kind, ihipStream_t stream):
+    """
+    """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy2DAsync_spt(dst, int dpitch, src, int spitch, int width, int height, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpyFromSymbolAsync_spt(dst, symbol, int sizeBytes, int offset, object kind, ihipStream_t stream):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyFromSymbolAsync_spt(dst, symbol, int sizeBytes, int offset, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpyToSymbolAsync_spt(symbol, src, int sizeBytes, int offset, object kind, ihipStream_t stream):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyToSymbolAsync_spt(symbol, src, int sizeBytes, int offset, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpyFromArray_spt(dst, hipArray src, int wOffsetSrc, int hOffset, int count, object kind):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpyFromArray_spt(dst, src, int wOffsetSrc, int hOffset, int count, kind):
+@cython.embedsignature(True)
+def hipMemcpy2DToArray_spt(hipArray dst, int wOffset, int hOffset, src, int spitch, int width, int height, object kind):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy2DToArray_spt(dst, int wOffset, int hOffset, src, int spitch, int width, int height, kind):
+@cython.embedsignature(True)
+def hipMemcpy2DFromArrayAsync_spt(dst, int dpitch, hipArray src, int wOffsetSrc, int hOffsetSrc, int width, int height, object kind, ihipStream_t stream):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy2DFromArrayAsync_spt(dst, int dpitch, src, int wOffsetSrc, int hOffsetSrc, int width, int height, kind, stream):
+@cython.embedsignature(True)
+def hipMemcpy2DToArrayAsync_spt(hipArray dst, int wOffset, int hOffset, src, int spitch, int width, int height, object kind, ihipStream_t stream):
     """
     """
+    if not isinstance(kind,hipMemcpyKind):
+        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     pass
 
-def hipMemcpy2DToArrayAsync_spt(dst, int wOffset, int hOffset, src, int spitch, int width, int height, kind, stream):
+@cython.embedsignature(True)
+def hipStreamQuery_spt(ihipStream_t stream):
     """
     """
-    pass
+    hipStreamQuery_spt_____retval = hipError_t(chip.hipStreamQuery_spt(stream._ptr))    # fully specified
+    return hipStreamQuery_spt_____retval
 
-def hipStreamQuery_spt(stream):
-    """
-    """
-    pass
 
-def hipStreamSynchronize_spt(stream):
+@cython.embedsignature(True)
+def hipStreamSynchronize_spt(ihipStream_t stream):
     """
     """
-    pass
+    hipStreamSynchronize_spt_____retval = hipError_t(chip.hipStreamSynchronize_spt(stream._ptr))    # fully specified
+    return hipStreamSynchronize_spt_____retval
 
-def hipStreamGetPriority_spt(stream):
+
+@cython.embedsignature(True)
+def hipStreamGetPriority_spt(ihipStream_t stream):
     """
     """
     cdef int priority
-    pass
+    hipStreamGetPriority_spt_____retval = hipError_t(chip.hipStreamGetPriority_spt(stream._ptr,&priority))    # fully specified
+    return (hipStreamGetPriority_spt_____retval,priority)
 
-def hipStreamWaitEvent_spt(stream, event, unsigned int flags):
+
+@cython.embedsignature(True)
+def hipStreamWaitEvent_spt(ihipStream_t stream, ihipEvent_t event, unsigned int flags):
     """
     """
-    pass
+    hipStreamWaitEvent_spt_____retval = hipError_t(chip.hipStreamWaitEvent_spt(stream._ptr,event._ptr,flags))    # fully specified
+    return hipStreamWaitEvent_spt_____retval
 
-def hipStreamGetFlags_spt(stream):
+
+@cython.embedsignature(True)
+def hipStreamGetFlags_spt(ihipStream_t stream):
     """
     """
     cdef unsigned int flags
-    pass
+    hipStreamGetFlags_spt_____retval = hipError_t(chip.hipStreamGetFlags_spt(stream._ptr,&flags))    # fully specified
+    return (hipStreamGetFlags_spt_____retval,flags)
 
-def hipStreamAddCallback_spt(stream, callback, userData, unsigned int flags):
-    """
-    """
-    pass
 
-def hipEventRecord_spt(event, stream):
-    """
-    """
-    pass
-
-def hipLaunchCooperativeKernel_spt(f, gridDim, blockDim, uint32_t sharedMemBytes, hStream):
+@cython.embedsignature(True)
+def hipStreamAddCallback_spt(ihipStream_t stream, callback, userData, unsigned int flags):
     """
     """
     pass
 
-def hipLaunchKernel_spt(function_address, numBlocks, dimBlocks, int sharedMemBytes, stream):
+@cython.embedsignature(True)
+def hipEventRecord_spt(ihipEvent_t event, ihipStream_t stream):
+    """
+    """
+    hipEventRecord_spt_____retval = hipError_t(chip.hipEventRecord_spt(event._ptr,stream._ptr))    # fully specified
+    return hipEventRecord_spt_____retval
+
+
+@cython.embedsignature(True)
+def hipLaunchCooperativeKernel_spt(f, gridDim, blockDim, uint32_t sharedMemBytes, ihipStream_t hStream):
     """
     """
     pass
 
-def hipGraphLaunch_spt(graphExec, stream):
+@cython.embedsignature(True)
+def hipLaunchKernel_spt(function_address, numBlocks, dimBlocks, int sharedMemBytes, ihipStream_t stream):
     """
     """
     pass
 
-def hipStreamBeginCapture_spt(stream, mode):
+@cython.embedsignature(True)
+def hipGraphLaunch_spt(hipGraphExec graphExec, ihipStream_t stream):
     """
     """
-    pass
+    hipGraphLaunch_spt_____retval = hipError_t(chip.hipGraphLaunch_spt(graphExec._ptr,stream._ptr))    # fully specified
+    return hipGraphLaunch_spt_____retval
 
-def hipStreamEndCapture_spt(stream):
+
+@cython.embedsignature(True)
+def hipStreamBeginCapture_spt(ihipStream_t stream, object mode):
+    """
+    """
+    if not isinstance(mode,hipStreamCaptureMode):
+        raise TypeError("argument 'mode' must be of type 'hipStreamCaptureMode'")
+    hipStreamBeginCapture_spt_____retval = hipError_t(chip.hipStreamBeginCapture_spt(stream._ptr,mode.value))    # fully specified
+    return hipStreamBeginCapture_spt_____retval
+
+
+@cython.embedsignature(True)
+def hipStreamEndCapture_spt(ihipStream_t stream):
     """
     """
     pGraph = ihipGraph.from_ptr(NULL,owner=True)
-    pass
+    hipStreamEndCapture_spt_____retval = hipError_t(chip.hipStreamEndCapture_spt(stream._ptr,&pGraph._ptr))    # fully specified
+    return (hipStreamEndCapture_spt_____retval,pGraph)
 
-def hipStreamIsCapturing_spt(stream):
+
+@cython.embedsignature(True)
+def hipStreamIsCapturing_spt(ihipStream_t stream):
     """
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
-    pass
+    hipStreamIsCapturing_spt_____retval = hipError_t(chip.hipStreamIsCapturing_spt(stream._ptr,&pCaptureStatus))    # fully specified
+    return (hipStreamIsCapturing_spt_____retval,hipStreamCaptureStatus(pCaptureStatus))
 
-def hipStreamGetCaptureInfo_spt(stream):
+
+@cython.embedsignature(True)
+def hipStreamGetCaptureInfo_spt(ihipStream_t stream):
     """
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     cdef unsigned long long pId
-    pass
+    hipStreamGetCaptureInfo_spt_____retval = hipError_t(chip.hipStreamGetCaptureInfo_spt(stream._ptr,&pCaptureStatus,&pId))    # fully specified
+    return (hipStreamGetCaptureInfo_spt_____retval,hipStreamCaptureStatus(pCaptureStatus),pId)
 
-def hipStreamGetCaptureInfo_v2_spt(stream):
+
+@cython.embedsignature(True)
+def hipStreamGetCaptureInfo_v2_spt(ihipStream_t stream):
     """
     """
     cdef chip.hipStreamCaptureStatus captureStatus_out
@@ -14242,7 +15790,8 @@ def hipStreamGetCaptureInfo_v2_spt(stream):
     cdef int numDependencies_out
     pass
 
-def hipLaunchHostFunc_spt(stream, fn, userData):
+@cython.embedsignature(True)
+def hipLaunchHostFunc_spt(ihipStream_t stream, fn, userData):
     """
     """
     pass
