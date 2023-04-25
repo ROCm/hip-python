@@ -109,6 +109,11 @@ if HIP_PYTHON_SETUP_GENERATE:
     ).write_package_files(output_dir="hip")
 
     # hip
+    hip_str_macros = (
+        "HIP_VERSION_GITHASH",
+        "HIP_VERSION_BUILD_NAME",
+    )
+
     hip_int_macros = (
         #  from hip/hip_version.h
         "HIP_VERSION_MAJOR",
@@ -196,10 +201,19 @@ if HIP_PYTHON_SETUP_GENERATE:
                 return False
         if node.name in hip_int_macros:
             return True
+        if node.name in hip_str_macros:
+            return True
         if not isinstance(node, MacroDefinition):
             if "hip/" in node.file:
                 return True
         return False
+
+    def hip_macro_type(node: MacroDefinition):
+        if node.name in hip_int_macros:
+            return "int"
+        if node.name in hip_str_macros:
+            return "char*"
+        assert False, "Not implemented!"
 
     def hip_ptr_parm_intent(parm: Parm):
         """Flags pointer parameters that are actually return values
@@ -246,7 +260,7 @@ if HIP_PYTHON_SETUP_GENERATE:
             pass  # nothing to do
         return 1
 
-    CythonPackageGenerator(
+    generator = CythonPackageGenerator(
         "hip",
         rocm_inc,
         "hip/hip_runtime_api.h",
@@ -255,10 +269,41 @@ if HIP_PYTHON_SETUP_GENERATE:
         node_filter=hip_node_filter,
         ptr_parm_intent=hip_ptr_parm_intent,
         ptr_rank=hip_ptr_rank,
+        macro_type=hip_macro_type,
         cflags=hip_platform.cflags,
-    ).write_package_files(output_dir="hip")
-    # for canonical_name, nodes in gen.backend.root.types.items():
-    #    print(canonical_name)
+    )
+    generator.write_package_files
+    HIP_VERSION_MAJOR = 0
+    HIP_VERSION_MINOR = 0
+    HIP_VERSION_PATCH = 0
+    HIP_VERSION_GITHASH = ""
+    for node in generator.backend.root.walk():
+        if isinstance(node,MacroDefinition):
+            last_token = list(node.cursor.get_tokens())[-1].spelling
+            if node.name == "HIP_VERSION_MAJOR":
+                HIP_VERSION_MAJOR = int(last_token)
+            elif node.name == "HIP_VERSION_MINOR":
+                HIP_VERSION_MINOR = int(last_token)
+            elif node.name == "HIP_VERSION_PATCH":
+                HIP_VERSION_PATCH = int(last_token)
+            elif node.name == "HIP_VERSION_GITHASH":
+                HIP_VERSION_GITHASH = last_token.strip('"')
+    HIP_VERSION_NAME = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}-{HIP_VERSION_GITHASH}"
+    HIP_VERSION= (HIP_VERSION_MAJOR * 10000000 + HIP_VERSION_MINOR * 100000 + HIP_VERSION_PATCH)
+
+    with open("hip/__init__.py","w") as f:
+        f.write(textwrap.dedent(f"""\
+            from ._version import *
+            HIP_VERSION = {HIP_VERSION}
+            HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
+            HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
+
+            from . import _util
+            from . import hip
+            from . import hiprtc
+            from . import hipblas""")
+        )
+
 
     # hipblas
     def hipblas_node_filter(node: Node):
@@ -274,7 +319,7 @@ if HIP_PYTHON_SETUP_GENERATE:
             "hipblaseVersionMinor",
             "hipblasVersionMinor",
             "hipblasVersionPatch",
-            # "hipblasVersionTweak", # double
+            # "hipblasVersionTweak", # double?
         ):
             return True
         return False
@@ -400,4 +445,10 @@ if HIP_PYTHON_SETUP_BUILD:
             ),
         )
 
-    setup(ext_modules=ext_modules)
+    setup(
+        ext_modules=ext_modules,
+        use_scm_version = {
+          "write_to": "hip/_version.py",
+          "local_scheme": lambda v: f"+{HIP_VERSION_NAME.replace('-','.')}"
+        }
+    )

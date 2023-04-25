@@ -17,7 +17,11 @@ HIP_VERSION_MINOR = chip.HIP_VERSION_MINOR
 
 HIP_VERSION_PATCH = chip.HIP_VERSION_PATCH
 
+HIP_VERSION_GITHASH = chip.HIP_VERSION_GITHASH
+
 HIP_VERSION_BUILD_ID = chip.HIP_VERSION_BUILD_ID
+
+HIP_VERSION_BUILD_NAME = chip.HIP_VERSION_BUILD_NAME
 
 HIP_VERSION = chip.HIP_VERSION
 
@@ -17378,7 +17382,7 @@ def hipDeviceGetDefaultMemPool(int device):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
+    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipDeviceGetDefaultMemPool__retval = hipError_t(chip.hipDeviceGetDefaultMemPool(&mem_pool._ptr,device))    # fully specified
     return (_hipDeviceGetDefaultMemPool__retval,mem_pool)
 
@@ -17419,7 +17423,7 @@ def hipDeviceGetMemPool(int device):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
+    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipDeviceGetMemPool__retval = hipError_t(chip.hipDeviceGetMemPool(&mem_pool._ptr,device))    # fully specified
     return (_hipDeviceGetMemPool__retval,mem_pool)
 
@@ -17692,7 +17696,7 @@ def hipIpcOpenEventHandle():
     @param[in]   handle The opaque interprocess handle to open
     @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext
     """
-    event = ihipEvent_t.from_ptr(NULL,owner=True)
+    event = ihipEvent_t.from_ptr(NULL)
     pass
 
 @cython.embedsignature(True)
@@ -17845,7 +17849,7 @@ def hipStreamCreate():
     @return #hipSuccess, #hipErrorInvalidValue
     @see hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
-    stream = ihipStream_t.from_ptr(NULL,owner=True)
+    stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreate__retval = hipError_t(chip.hipStreamCreate(&stream._ptr))    # fully specified
     return (_hipStreamCreate__retval,stream)
 
@@ -17863,7 +17867,7 @@ def hipStreamCreateWithFlags(unsigned int flags):
     stream.  See #hipStreamDefault, #hipStreamNonBlocking.
     @see hipStreamCreate, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
-    stream = ihipStream_t.from_ptr(NULL,owner=True)
+    stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreateWithFlags__retval = hipError_t(chip.hipStreamCreateWithFlags(&stream._ptr,flags))    # fully specified
     return (_hipStreamCreateWithFlags__retval,stream)
 
@@ -17882,7 +17886,7 @@ def hipStreamCreateWithPriority(unsigned int flags, int priority):
     behavior of the stream.  See #hipStreamDefault, #hipStreamNonBlocking.
     @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
-    stream = ihipStream_t.from_ptr(NULL,owner=True)
+    stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreateWithPriority__retval = hipError_t(chip.hipStreamCreateWithPriority(&stream._ptr,flags,priority))    # fully specified
     return (_hipStreamCreateWithPriority__retval,stream)
 
@@ -18028,7 +18032,7 @@ def hipExtStreamCreateWithCUMask(uint32_t cuMaskSize):
     To release the memory used by the stream, application must call hipStreamDestroy.
     @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
-    stream = ihipStream_t.from_ptr(NULL,owner=True)
+    stream = ihipStream_t.from_ptr(NULL)
     cdef const unsigned int cuMask
     _hipExtStreamCreateWithCUMask__retval = hipError_t(chip.hipExtStreamCreateWithCUMask(&stream._ptr,cuMaskSize,&cuMask))    # fully specified
     return (_hipExtStreamCreateWithCUMask__retval,stream,cuMask)
@@ -18279,7 +18283,7 @@ def hipEventCreateWithFlags(unsigned int flags):
      #hipErrorLaunchFailure, #hipErrorOutOfMemory
     @see hipEventCreate, hipEventSynchronize, hipEventDestroy, hipEventElapsedTime
     """
-    event = ihipEvent_t.from_ptr(NULL,owner=True)
+    event = ihipEvent_t.from_ptr(NULL)
     _hipEventCreateWithFlags__retval = hipError_t(chip.hipEventCreateWithFlags(&event._ptr,flags))    # fully specified
     return (_hipEventCreateWithFlags__retval,event)
 
@@ -18293,7 +18297,7 @@ def hipEventCreate():
     @see hipEventCreateWithFlags, hipEventRecord, hipEventQuery, hipEventSynchronize,
     hipEventDestroy, hipEventElapsedTime
     """
-    event = ihipEvent_t.from_ptr(NULL,owner=True)
+    event = ihipEvent_t.from_ptr(NULL)
     _hipEventCreate__retval = hipError_t(chip.hipEventCreate(&event._ptr))    # fully specified
     return (_hipEventCreate__retval,event)
 
@@ -18960,7 +18964,7 @@ def hipMemPoolCreate(object pool_props):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
+    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipMemPoolCreate__retval = hipError_t(chip.hipMemPoolCreate(&mem_pool._ptr,
         hipMemPoolProps.from_pyobj(pool_props)._ptr))    # fully specified
     return (_hipMemPoolCreate__retval,mem_pool)
@@ -19064,7 +19068,7 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
+    mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     if not isinstance(handle_type,hipMemAllocationHandleType):
         raise TypeError("argument 'handle_type' must be of type 'hipMemAllocationHandleType'")
     _hipMemPoolImportFromShareableHandle__retval = hipError_t(chip.hipMemPoolImportFromShareableHandle(&mem_pool._ptr,
@@ -19867,7 +19871,7 @@ def hipMallocArray(object desc, int width, int height, unsigned int flags):
     @return      #hipSuccess, #hipErrorOutOfMemory
     @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
     """
-    array = hipArray.from_ptr(NULL,owner=True)
+    array = hipArray.from_ptr(NULL)
     _hipMallocArray__retval = hipError_t(chip.hipMallocArray(&array._ptr,
         hipChannelFormatDesc.from_pyobj(desc)._ptr,width,height,flags))    # fully specified
     return (_hipMallocArray__retval,array)
@@ -19877,7 +19881,7 @@ def hipMallocArray(object desc, int width, int height, unsigned int flags):
 def hipArrayCreate(object pAllocateArray):
     """
     """
-    pHandle = hipArray.from_ptr(NULL,owner=True)
+    pHandle = hipArray.from_ptr(NULL)
     _hipArrayCreate__retval = hipError_t(chip.hipArrayCreate(&pHandle._ptr,
         HIP_ARRAY_DESCRIPTOR.from_pyobj(pAllocateArray)._ptr))    # fully specified
     return (_hipArrayCreate__retval,pHandle)
@@ -19896,7 +19900,7 @@ def hipArrayDestroy(object array):
 def hipArray3DCreate(object pAllocateArray):
     """
     """
-    array = hipArray.from_ptr(NULL,owner=True)
+    array = hipArray.from_ptr(NULL)
     _hipArray3DCreate__retval = hipError_t(chip.hipArray3DCreate(&array._ptr,
         HIP_ARRAY3D_DESCRIPTOR.from_pyobj(pAllocateArray)._ptr))    # fully specified
     return (_hipArray3DCreate__retval,array)
@@ -19941,7 +19945,7 @@ def hipMalloc3DArray(object desc, unsigned int flags):
     @return      #hipSuccess, #hipErrorOutOfMemory
     @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
     """
-    array = hipArray.from_ptr(NULL,owner=True)
+    array = hipArray.from_ptr(NULL)
     pass
 
 @cython.embedsignature(True)
@@ -19954,7 +19958,7 @@ def hipMallocMipmappedArray(object desc, unsigned int numLevels, unsigned int fl
     @param[in]  flags           - Flags for extensions
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
     """
-    mipmappedArray = hipMipmappedArray.from_ptr(NULL,owner=True)
+    mipmappedArray = hipMipmappedArray.from_ptr(NULL)
     pass
 
 @cython.embedsignature(True)
@@ -19965,7 +19969,7 @@ def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
     @param[in]  level          - Mipmap level
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    levelArray = hipArray.from_ptr(NULL,owner=True)
+    levelArray = hipArray.from_ptr(NULL)
     _hipGetMipmappedArrayLevel__retval = hipError_t(chip.hipGetMipmappedArrayLevel(&levelArray._ptr,
         hipMipmappedArray.from_pyobj(mipmappedArray)._ptr,level))    # fully specified
     return (_hipGetMipmappedArrayLevel__retval,levelArray)
@@ -20415,7 +20419,7 @@ def hipCtxCreate(unsigned int flags, hipDevice_t device):
     @see hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
     hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    ctx = ihipCtx_t.from_ptr(NULL,owner=True)
+    ctx = ihipCtx_t.from_ptr(NULL)
     _hipCtxCreate__retval = hipError_t(chip.hipCtxCreate(&ctx._ptr,flags,device))    # fully specified
     return (_hipCtxCreate__retval,ctx)
 
@@ -20441,7 +20445,7 @@ def hipCtxPopCurrent():
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxSetCurrent, hipCtxGetCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    ctx = ihipCtx_t.from_ptr(NULL,owner=True)
+    ctx = ihipCtx_t.from_ptr(NULL)
     _hipCtxPopCurrent__retval = hipError_t(chip.hipCtxPopCurrent(&ctx._ptr))    # fully specified
     return (_hipCtxPopCurrent__retval,ctx)
 
@@ -20480,7 +20484,7 @@ def hipCtxGetCurrent():
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    ctx = ihipCtx_t.from_ptr(NULL,owner=True)
+    ctx = ihipCtx_t.from_ptr(NULL)
     _hipCtxGetCurrent__retval = hipError_t(chip.hipCtxGetCurrent(&ctx._ptr))    # fully specified
     return (_hipCtxGetCurrent__retval,ctx)
 
@@ -20684,7 +20688,7 @@ def hipDevicePrimaryCtxRetain(hipDevice_t dev):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    pctx = ihipCtx_t.from_ptr(NULL,owner=True)
+    pctx = ihipCtx_t.from_ptr(NULL)
     _hipDevicePrimaryCtxRetain__retval = hipError_t(chip.hipDevicePrimaryCtxRetain(&pctx._ptr,dev))    # fully specified
     return (_hipDevicePrimaryCtxRetain__retval,pctx)
 
@@ -20727,7 +20731,7 @@ def hipModuleLoad(const char * fname):
     @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorFileNotFound,
     hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
     """
-    module = ihipModule_t.from_ptr(NULL,owner=True)
+    module = ihipModule_t.from_ptr(NULL)
     _hipModuleLoad__retval = hipError_t(chip.hipModuleLoad(&module._ptr,fname))    # fully specified
     return (_hipModuleLoad__retval,module)
 
@@ -20753,7 +20757,7 @@ def hipModuleGetFunction(object module, const char * kname):
     @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorNotInitialized,
     hipErrorNotFound,
     """
-    function = ihipModuleSymbol_t.from_ptr(NULL,owner=True)
+    function = ihipModuleSymbol_t.from_ptr(NULL)
     _hipModuleGetFunction__retval = hipError_t(chip.hipModuleGetFunction(&function._ptr,
         ihipModule_t.from_pyobj(module)._ptr,kname))    # fully specified
     return (_hipModuleGetFunction__retval,function)
@@ -20796,7 +20800,7 @@ def hipModuleGetTexRef(object hmod, const char * name):
     @param [out] texRef
     @returns hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
     """
-    texRef = textureReference.from_ptr(NULL,owner=True)
+    texRef = textureReference.from_ptr(NULL)
     _hipModuleGetTexRef__retval = hipError_t(chip.hipModuleGetTexRef(&texRef._ptr,
         ihipModule_t.from_pyobj(hmod)._ptr,name))    # fully specified
     return (_hipModuleGetTexRef__retval,texRef)
@@ -20810,7 +20814,7 @@ def hipModuleLoadData(object image):
     @param [out] module
     @returns hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
     """
-    module = ihipModule_t.from_ptr(NULL,owner=True)
+    module = ihipModule_t.from_ptr(NULL)
     _hipModuleLoadData__retval = hipError_t(chip.hipModuleLoadData(&module._ptr,
         <const void *>DataHandle.from_pyobj(image)._ptr))    # fully specified
     return (_hipModuleLoadData__retval,module)
@@ -20827,7 +20831,7 @@ def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValu
     @param [in] option values for JIT
     @returns hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
     """
-    module = ihipModule_t.from_ptr(NULL,owner=True)
+    module = ihipModule_t.from_ptr(NULL)
     cdef chip.hipJitOption options
     _hipModuleLoadDataEx__retval = hipError_t(chip.hipModuleLoadDataEx(&module._ptr,
         <const void *>DataHandle.from_pyobj(image)._ptr,numOptions,&options,
@@ -21185,7 +21189,7 @@ def hipCreateTextureObject(object pResDesc, object pTexDesc, object pResViewDesc
     @note 3D liner filter isn't supported on GFX90A boards, on which the API @p hipCreateTextureObject will
     return hipErrorNotSupported.
     """
-    pTexObject = __hip_texture.from_ptr(NULL,owner=True)
+    pTexObject = __hip_texture.from_ptr(NULL)
     _hipCreateTextureObject__retval = hipError_t(chip.hipCreateTextureObject(&pTexObject._ptr,
         hipResourceDesc.from_pyobj(pResDesc)._ptr,
         hipTextureDesc.from_pyobj(pTexDesc)._ptr,
@@ -21265,7 +21269,7 @@ def hipTexObjectCreate(object pResDesc, object pTexDesc, object pResViewDesc):
     @param [in] pResViewDesc  pointer to resource view descriptor
     @returns hipSuccess, hipErrorInvalidValue
     """
-    pTexObject = __hip_texture.from_ptr(NULL,owner=True)
+    pTexObject = __hip_texture.from_ptr(NULL)
     _hipTexObjectCreate__retval = hipError_t(chip.hipTexObjectCreate(&pTexObject._ptr,
         HIP_RESOURCE_DESC_st.from_pyobj(pResDesc)._ptr,
         HIP_TEXTURE_DESC_st.from_pyobj(pTexDesc)._ptr,
@@ -21334,7 +21338,7 @@ def hipGetTextureReference(object symbol):
     @param [in] symbol  pointer to the symbol related with the texture for the reference
     @returns hipSuccess, hipErrorInvalidValue
     """
-    texref = textureReference.from_ptr(NULL,owner=True)
+    texref = textureReference.from_ptr(NULL)
     _hipGetTextureReference__retval = hipError_t(chip.hipGetTextureReference(&texref._ptr,
         <const void *>DataHandle.from_pyobj(symbol)._ptr))    # fully specified
     return (_hipGetTextureReference__retval,texref)
@@ -21543,7 +21547,7 @@ def hipTexRefGetMipmapLevelClamp(object texRef):
 def hipTexRefGetMipMappedArray(object texRef):
     """
     """
-    pArray = hipMipmappedArray.from_ptr(NULL,owner=True)
+    pArray = hipMipmappedArray.from_ptr(NULL)
     _hipTexRefGetMipMappedArray__retval = hipError_t(chip.hipTexRefGetMipMappedArray(&pArray._ptr,
         textureReference.from_pyobj(texRef)._ptr))    # fully specified
     return (_hipTexRefGetMipMappedArray__retval,pArray)
@@ -21636,7 +21640,7 @@ def hipMipmappedArrayCreate(object pMipmappedArrayDesc, unsigned int numMipmapLe
     @ingroup Texture
     This section describes the texture management functions currently unsupported in HIP runtime.
     """
-    pHandle = hipMipmappedArray.from_ptr(NULL,owner=True)
+    pHandle = hipMipmappedArray.from_ptr(NULL)
     _hipMipmappedArrayCreate__retval = hipError_t(chip.hipMipmappedArrayCreate(&pHandle._ptr,
         HIP_ARRAY3D_DESCRIPTOR.from_pyobj(pMipmappedArrayDesc)._ptr,numMipmapLevels))    # fully specified
     return (_hipMipmappedArrayCreate__retval,pHandle)
@@ -21655,7 +21659,7 @@ def hipMipmappedArrayDestroy(object hMipmappedArray):
 def hipMipmappedArrayGetLevel(object hMipMappedArray, unsigned int level):
     """
     """
-    pLevelArray = hipArray.from_ptr(NULL,owner=True)
+    pLevelArray = hipArray.from_ptr(NULL)
     _hipMipmappedArrayGetLevel__retval = hipError_t(chip.hipMipmappedArrayGetLevel(&pLevelArray._ptr,
         hipMipmappedArray.from_pyobj(hMipMappedArray)._ptr,level))    # fully specified
     return (_hipMipmappedArrayGetLevel__retval,pLevelArray)
@@ -21722,7 +21726,7 @@ def hipStreamEndCapture(object stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraph = ihipGraph.from_ptr(NULL,owner=True)
+    pGraph = ihipGraph.from_ptr(NULL)
     _hipStreamEndCapture__retval = hipError_t(chip.hipStreamEndCapture(
         ihipStream_t.from_pyobj(stream)._ptr,&pGraph._ptr))    # fully specified
     return (_hipStreamEndCapture__retval,pGraph)
@@ -21760,7 +21764,7 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
     """
     cdef chip.hipStreamCaptureStatus captureStatus_out
     cdef unsigned long long id_out
-    graph_out = ihipGraph.from_ptr(NULL,owner=True)
+    graph_out = ihipGraph.from_ptr(NULL)
     cdef int numDependencies_out
     _hipStreamGetCaptureInfo_v2__retval = hipError_t(chip.hipStreamGetCaptureInfo_v2(
         ihipStream_t.from_pyobj(stream)._ptr,&captureStatus_out,&id_out,&graph_out._ptr,
@@ -21793,7 +21797,7 @@ def hipStreamUpdateCaptureDependencies(object stream, int numDependencies, unsig
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    dependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    dependencies = hipGraphNode.from_ptr(NULL)
     _hipStreamUpdateCaptureDependencies__retval = hipError_t(chip.hipStreamUpdateCaptureDependencies(
         ihipStream_t.from_pyobj(stream)._ptr,&dependencies._ptr,numDependencies,flags))    # fully specified
     return (_hipStreamUpdateCaptureDependencies__retval,dependencies)
@@ -21821,7 +21825,7 @@ def hipGraphCreate(unsigned int flags):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraph = ihipGraph.from_ptr(NULL,owner=True)
+    pGraph = ihipGraph.from_ptr(NULL)
     _hipGraphCreate__retval = hipError_t(chip.hipGraphCreate(&pGraph._ptr,flags))    # fully specified
     return (_hipGraphCreate__retval,pGraph)
 
@@ -21850,8 +21854,8 @@ def hipGraphAddDependencies(object graph, int numDependencies):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    from_ = hipGraphNode.from_ptr(NULL,owner=True)
-    to = hipGraphNode.from_ptr(NULL,owner=True)
+    from_ = hipGraphNode.from_ptr(NULL)
+    to = hipGraphNode.from_ptr(NULL)
     _hipGraphAddDependencies__retval = hipError_t(chip.hipGraphAddDependencies(
         ihipGraph.from_pyobj(graph)._ptr,&from_._ptr,&to._ptr,numDependencies))    # fully specified
     return (_hipGraphAddDependencies__retval,from_,to)
@@ -21868,8 +21872,8 @@ def hipGraphRemoveDependencies(object graph, int numDependencies):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    from_ = hipGraphNode.from_ptr(NULL,owner=True)
-    to = hipGraphNode.from_ptr(NULL,owner=True)
+    from_ = hipGraphNode.from_ptr(NULL)
+    to = hipGraphNode.from_ptr(NULL)
     _hipGraphRemoveDependencies__retval = hipError_t(chip.hipGraphRemoveDependencies(
         ihipGraph.from_pyobj(graph)._ptr,&from_._ptr,&to._ptr,numDependencies))    # fully specified
     return (_hipGraphRemoveDependencies__retval,from_,to)
@@ -21890,8 +21894,8 @@ def hipGraphGetEdges(object graph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    from_ = hipGraphNode.from_ptr(NULL,owner=True)
-    to = hipGraphNode.from_ptr(NULL,owner=True)
+    from_ = hipGraphNode.from_ptr(NULL)
+    to = hipGraphNode.from_ptr(NULL)
     cdef int numEdges
     _hipGraphGetEdges__retval = hipError_t(chip.hipGraphGetEdges(
         ihipGraph.from_pyobj(graph)._ptr,&from_._ptr,&to._ptr,&numEdges))    # fully specified
@@ -21912,7 +21916,7 @@ def hipGraphGetNodes(object graph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    nodes = hipGraphNode.from_ptr(NULL,owner=True)
+    nodes = hipGraphNode.from_ptr(NULL)
     cdef int numNodes
     _hipGraphGetNodes__retval = hipError_t(chip.hipGraphGetNodes(
         ihipGraph.from_pyobj(graph)._ptr,&nodes._ptr,&numNodes))    # fully specified
@@ -21933,7 +21937,7 @@ def hipGraphGetRootNodes(object graph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pRootNodes = hipGraphNode.from_ptr(NULL,owner=True)
+    pRootNodes = hipGraphNode.from_ptr(NULL)
     cdef int pNumRootNodes
     _hipGraphGetRootNodes__retval = hipError_t(chip.hipGraphGetRootNodes(
         ihipGraph.from_pyobj(graph)._ptr,&pRootNodes._ptr,&pNumRootNodes))    # fully specified
@@ -21954,7 +21958,7 @@ def hipGraphNodeGetDependencies(object node):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     cdef int pNumDependencies
     _hipGraphNodeGetDependencies__retval = hipError_t(chip.hipGraphNodeGetDependencies(
         hipGraphNode.from_pyobj(node)._ptr,&pDependencies._ptr,&pNumDependencies))    # fully specified
@@ -21976,7 +21980,7 @@ def hipGraphNodeGetDependentNodes(object node):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pDependentNodes = hipGraphNode.from_ptr(NULL,owner=True)
+    pDependentNodes = hipGraphNode.from_ptr(NULL)
     cdef int pNumDependentNodes
     _hipGraphNodeGetDependentNodes__retval = hipError_t(chip.hipGraphNodeGetDependentNodes(
         hipGraphNode.from_pyobj(node)._ptr,&pDependentNodes._ptr,&pNumDependentNodes))    # fully specified
@@ -22020,7 +22024,7 @@ def hipGraphClone(object originalGraph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphClone = ihipGraph.from_ptr(NULL,owner=True)
+    pGraphClone = ihipGraph.from_ptr(NULL)
     _hipGraphClone__retval = hipError_t(chip.hipGraphClone(&pGraphClone._ptr,
         ihipGraph.from_pyobj(originalGraph)._ptr))    # fully specified
     return (_hipGraphClone__retval,pGraphClone)
@@ -22036,7 +22040,7 @@ def hipGraphNodeFindInClone(object originalNode, object clonedGraph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pNode = hipGraphNode.from_ptr(NULL)
     _hipGraphNodeFindInClone__retval = hipError_t(chip.hipGraphNodeFindInClone(&pNode._ptr,
         hipGraphNode.from_pyobj(originalNode)._ptr,
         ihipGraph.from_pyobj(clonedGraph)._ptr))    # fully specified
@@ -22056,8 +22060,8 @@ def hipGraphInstantiate(object graph, char * pLogBuffer, int bufferSize):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphExec = hipGraphExec.from_ptr(NULL,owner=True)
-    pErrorNode = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphExec = hipGraphExec.from_ptr(NULL)
+    pErrorNode = hipGraphNode.from_ptr(NULL)
     _hipGraphInstantiate__retval = hipError_t(chip.hipGraphInstantiate(&pGraphExec._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pErrorNode._ptr,pLogBuffer,bufferSize))    # fully specified
     return (_hipGraphInstantiate__retval,pGraphExec,pErrorNode)
@@ -22073,7 +22077,7 @@ def hipGraphInstantiateWithFlags(object graph, unsigned long long flags):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphExec = hipGraphExec.from_ptr(NULL,owner=True)
+    pGraphExec = hipGraphExec.from_ptr(NULL)
     _hipGraphInstantiateWithFlags__retval = hipError_t(chip.hipGraphInstantiateWithFlags(&pGraphExec._ptr,
         ihipGraph.from_pyobj(graph)._ptr,flags))    # fully specified
     return (_hipGraphInstantiateWithFlags__retval,pGraphExec)
@@ -22134,7 +22138,7 @@ def hipGraphExecUpdate(object hGraphExec, object hGraph):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hErrorNode_out = hipGraphNode.from_ptr(NULL,owner=True)
+    hErrorNode_out = hipGraphNode.from_ptr(NULL)
     cdef chip.hipGraphExecUpdateResult updateResult_out
     _hipGraphExecUpdate__retval = hipError_t(chip.hipGraphExecUpdate(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -22154,8 +22158,8 @@ def hipGraphAddKernelNode(object graph, int numDependencies, object pNodeParams)
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     _hipGraphAddKernelNode__retval = hipError_t(chip.hipGraphAddKernelNode(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
         hipKernelNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
@@ -22221,8 +22225,8 @@ def hipGraphAddMemcpyNode(object graph, int numDependencies, object pCopyParams)
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     _hipGraphAddMemcpyNode__retval = hipError_t(chip.hipGraphAddMemcpyNode(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
         hipMemcpy3DParms.from_pyobj(pCopyParams)._ptr))    # fully specified
@@ -22327,8 +22331,8 @@ def hipGraphAddMemcpyNode1D(object graph, int numDependencies, object dst, objec
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipGraphAddMemcpyNode1D__retval = hipError_t(chip.hipGraphAddMemcpyNode1D(&pGraphNode._ptr,
@@ -22399,8 +22403,8 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, int numDependencies, object ds
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipGraphAddMemcpyNodeFromSymbol__retval = hipError_t(chip.hipGraphAddMemcpyNodeFromSymbol(&pGraphNode._ptr,
@@ -22473,8 +22477,8 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, int numDependencies, object symb
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipGraphAddMemcpyNodeToSymbol__retval = hipError_t(chip.hipGraphAddMemcpyNodeToSymbol(&pGraphNode._ptr,
@@ -22543,8 +22547,8 @@ def hipGraphAddMemsetNode(object graph, int numDependencies, object pMemsetParam
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     _hipGraphAddMemsetNode__retval = hipError_t(chip.hipGraphAddMemsetNode(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
         hipMemsetParams.from_pyobj(pMemsetParams)._ptr))    # fully specified
@@ -22610,8 +22614,8 @@ def hipGraphAddHostNode(object graph, int numDependencies, object pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     _hipGraphAddHostNode__retval = hipError_t(chip.hipGraphAddHostNode(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
         hipHostNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
@@ -22677,8 +22681,8 @@ def hipGraphAddChildGraphNode(object graph, int numDependencies, object childGra
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     _hipGraphAddChildGraphNode__retval = hipError_t(chip.hipGraphAddChildGraphNode(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
         ihipGraph.from_pyobj(childGraph)._ptr))    # fully specified
@@ -22694,7 +22698,7 @@ def hipGraphChildGraphNodeGetGraph(object node):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraph = ihipGraph.from_ptr(NULL,owner=True)
+    pGraph = ihipGraph.from_ptr(NULL)
     _hipGraphChildGraphNodeGetGraph__retval = hipError_t(chip.hipGraphChildGraphNodeGetGraph(
         hipGraphNode.from_pyobj(node)._ptr,&pGraph._ptr))    # fully specified
     return (_hipGraphChildGraphNodeGetGraph__retval,pGraph)
@@ -22728,8 +22732,8 @@ def hipGraphAddEmptyNode(object graph, int numDependencies):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     _hipGraphAddEmptyNode__retval = hipError_t(chip.hipGraphAddEmptyNode(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies))    # fully specified
     return (_hipGraphAddEmptyNode__retval,pGraphNode,pDependencies)
@@ -22747,8 +22751,8 @@ def hipGraphAddEventRecordNode(object graph, int numDependencies, object event):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     _hipGraphAddEventRecordNode__retval = hipError_t(chip.hipGraphAddEventRecordNode(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
@@ -22764,7 +22768,7 @@ def hipGraphEventRecordNodeGetEvent(object node):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    event_out = ihipEvent_t.from_ptr(NULL,owner=True)
+    event_out = ihipEvent_t.from_ptr(NULL)
     _hipGraphEventRecordNodeGetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeGetEvent(
         hipGraphNode.from_pyobj(node)._ptr,&event_out._ptr))    # fully specified
     return (_hipGraphEventRecordNodeGetEvent__retval,event_out)
@@ -22814,8 +22818,8 @@ def hipGraphAddEventWaitNode(object graph, int numDependencies, object event):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
-    pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
+    pGraphNode = hipGraphNode.from_ptr(NULL)
+    pDependencies = hipGraphNode.from_ptr(NULL)
     _hipGraphAddEventWaitNode__retval = hipError_t(chip.hipGraphAddEventWaitNode(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
@@ -22831,7 +22835,7 @@ def hipGraphEventWaitNodeGetEvent(object node):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    event_out = ihipEvent_t.from_ptr(NULL,owner=True)
+    event_out = ihipEvent_t.from_ptr(NULL)
     _hipGraphEventWaitNodeGetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeGetEvent(
         hipGraphNode.from_pyobj(node)._ptr,&event_out._ptr))    # fully specified
     return (_hipGraphEventWaitNodeGetEvent__retval,event_out)
@@ -22926,7 +22930,7 @@ def hipUserObjectCreate(object ptr, unsigned int initialRefcount, unsigned int f
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    object_out = hipUserObject.from_ptr(NULL,owner=True)
+    object_out = hipUserObject.from_ptr(NULL)
     pass
 
 @cython.embedsignature(True)
@@ -23034,7 +23038,7 @@ def hipMemCreate(int size, object prop, unsigned long long flags):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
+    handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemCreate__retval = hipError_t(chip.hipMemCreate(&handle._ptr,size,
         hipMemAllocationProp.from_pyobj(prop)._ptr,flags))    # fully specified
     return (_hipMemCreate__retval,handle)
@@ -23119,7 +23123,7 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
+    handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     if not isinstance(shHandleType,hipMemAllocationHandleType):
         raise TypeError("argument 'shHandleType' must be of type 'hipMemAllocationHandleType'")
     _hipMemImportFromShareableHandle__retval = hipError_t(chip.hipMemImportFromShareableHandle(&handle._ptr,
@@ -23183,7 +23187,7 @@ def hipMemRetainAllocationHandle(object addr):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
+    handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemRetainAllocationHandle__retval = hipError_t(chip.hipMemRetainAllocationHandle(&handle._ptr,
         <void *>DataHandle.from_pyobj(addr)._ptr))    # fully specified
     return (_hipMemRetainAllocationHandle__retval,handle)
@@ -23236,7 +23240,7 @@ def hipGLGetDevices(unsigned int hipDeviceCount, object deviceList):
 def hipGraphicsGLRegisterBuffer(GLuint buffer, unsigned int flags):
     """
     """
-    resource = _hipGraphicsResource.from_ptr(NULL,owner=True)
+    resource = _hipGraphicsResource.from_ptr(NULL)
     _hipGraphicsGLRegisterBuffer__retval = hipError_t(chip.hipGraphicsGLRegisterBuffer(&resource._ptr,buffer,flags))    # fully specified
     return (_hipGraphicsGLRegisterBuffer__retval,resource)
 
@@ -23245,7 +23249,7 @@ def hipGraphicsGLRegisterBuffer(GLuint buffer, unsigned int flags):
 def hipGraphicsGLRegisterImage(GLuint image, GLenum target, unsigned int flags):
     """
     """
-    resource = _hipGraphicsResource.from_ptr(NULL,owner=True)
+    resource = _hipGraphicsResource.from_ptr(NULL)
     _hipGraphicsGLRegisterImage__retval = hipError_t(chip.hipGraphicsGLRegisterImage(&resource._ptr,image,target,flags))    # fully specified
     return (_hipGraphicsGLRegisterImage__retval,resource)
 
@@ -23254,7 +23258,7 @@ def hipGraphicsGLRegisterImage(GLuint image, GLenum target, unsigned int flags):
 def hipGraphicsMapResources(int count, object stream):
     """
     """
-    resources = _hipGraphicsResource.from_ptr(NULL,owner=True)
+    resources = _hipGraphicsResource.from_ptr(NULL)
     _hipGraphicsMapResources__retval = hipError_t(chip.hipGraphicsMapResources(count,&resources._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipGraphicsMapResources__retval,resources)
@@ -23264,7 +23268,7 @@ def hipGraphicsMapResources(int count, object stream):
 def hipGraphicsSubResourceGetMappedArray(object resource, unsigned int arrayIndex, unsigned int mipLevel):
     """
     """
-    array = hipArray.from_ptr(NULL,owner=True)
+    array = hipArray.from_ptr(NULL)
     _hipGraphicsSubResourceGetMappedArray__retval = hipError_t(chip.hipGraphicsSubResourceGetMappedArray(&array._ptr,
         _hipGraphicsResource.from_pyobj(resource)._ptr,arrayIndex,mipLevel))    # fully specified
     return (_hipGraphicsSubResourceGetMappedArray__retval,array)
@@ -23286,7 +23290,7 @@ def hipGraphicsResourceGetMappedPointer(object resource):
 def hipGraphicsUnmapResources(int count, object stream):
     """
     """
-    resources = _hipGraphicsResource.from_ptr(NULL,owner=True)
+    resources = _hipGraphicsResource.from_ptr(NULL)
     _hipGraphicsUnmapResources__retval = hipError_t(chip.hipGraphicsUnmapResources(count,&resources._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipGraphicsUnmapResources__retval,resources)
@@ -23633,7 +23637,7 @@ def hipStreamBeginCapture_spt(object stream, object mode):
 def hipStreamEndCapture_spt(object stream):
     """
     """
-    pGraph = ihipGraph.from_ptr(NULL,owner=True)
+    pGraph = ihipGraph.from_ptr(NULL)
     _hipStreamEndCapture_spt__retval = hipError_t(chip.hipStreamEndCapture_spt(
         ihipStream_t.from_pyobj(stream)._ptr,&pGraph._ptr))    # fully specified
     return (_hipStreamEndCapture_spt__retval,pGraph)
@@ -23666,7 +23670,7 @@ def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
     """
     cdef chip.hipStreamCaptureStatus captureStatus_out
     cdef unsigned long long id_out
-    graph_out = ihipGraph.from_ptr(NULL,owner=True)
+    graph_out = ihipGraph.from_ptr(NULL)
     cdef int numDependencies_out
     _hipStreamGetCaptureInfo_v2_spt__retval = hipError_t(chip.hipStreamGetCaptureInfo_v2_spt(
         ihipStream_t.from_pyobj(stream)._ptr,&captureStatus_out,&id_out,&graph_out._ptr,
