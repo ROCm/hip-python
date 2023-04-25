@@ -6,9 +6,12 @@ HIP Python Low-level Bindings
 > * Commit used for evaluation : 9a5505be427b95ead61a45c0f6e89c1ba2edc0ef
 > * Date: 04/21/2023
 
-Python >= 3.7 is required.
+Python >= 3.7 is required plus Python development files (e.g. via ``apt install python3-dev`` on Ubuntu).
 
-The following pip packages are required for running setup.py 
+To build ``pip`` packages (``.whl``) you need to install the ``pip`` package ``build``.
+You further need to have `venv` installed (e.g. via ``apt install python3-venv`` on Ubuntu).
+
+The following ``pip`` packages are required for running ``setup.py``
 
 * ``cython``
 * ``setuptools`` >= 10.0.1
