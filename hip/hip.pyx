@@ -1,8 +1,14 @@
 # AMD_COPYRIGHT
+# c imports
 from libc cimport stdlib
 from libc.stdint cimport *
+cimport cpython.long
+cimport cpython.buffer
+# python imports
 import cython
+import ctypes
 import enum
+from hip._util.datahandle cimport DataHandle
 
 from . cimport chip
 HIP_VERSION_MAJOR = chip.HIP_VERSION_MAJOR
@@ -150,58 +156,154 @@ HIP_ERROR_INVALID_VALUE = chip.HIP_ERROR_INVALID_VALUE
 HIP_ERROR_NOT_INITIALIZED = chip.HIP_ERROR_NOT_INITIALIZED
 HIP_ERROR_LAUNCH_OUT_OF_RESOURCES = chip.HIP_ERROR_LAUNCH_OUT_OF_RESOURCES
 
-
 cdef class hipDeviceArch_t:
-    cdef chip.hipDeviceArch_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipDeviceArch_t from_ptr(chip.hipDeviceArch_t *_ptr, bint owner=False):
+    cdef hipDeviceArch_t from_ptr(chip.hipDeviceArch_t* ptr, bint owner=False):
         """Factory function to create ``hipDeviceArch_t`` objects from
         given ``chip.hipDeviceArch_t`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipDeviceArch_t wrapper = hipDeviceArch_t.__new__(hipDeviceArch_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef hipDeviceArch_t from_pyobj(object pyobj):
+        """Derives a hipDeviceArch_t from a Python object.
+
+        Derives a hipDeviceArch_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipDeviceArch_t`` reference, this method
+        returns it directly. No new ``hipDeviceArch_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipDeviceArch_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipDeviceArch_t!
+        """
+        cdef hipDeviceArch_t wrapper = hipDeviceArch_t.__new__(hipDeviceArch_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipDeviceArch_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipDeviceArch_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipDeviceArch_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipDeviceArch_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipDeviceArch_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class hipUUID_t:
-    cdef chip.hipUUID_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipUUID_t from_ptr(chip.hipUUID_t *_ptr, bint owner=False):
+    cdef hipUUID_t from_ptr(chip.hipUUID_t* ptr, bint owner=False):
         """Factory function to create ``hipUUID_t`` objects from
         given ``chip.hipUUID_t`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipUUID_t wrapper = hipUUID_t.__new__(hipUUID_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipUUID_t from_pyobj(object pyobj):
+        """Derives a hipUUID_t from a Python object.
+
+        Derives a hipUUID_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipUUID_t`` reference, this method
+        returns it directly. No new ``hipUUID_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipUUID_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipUUID_t!
+        """
+        cdef hipUUID_t wrapper = hipUUID_t.__new__(hipUUID_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipUUID_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipUUID_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipUUID_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipUUID_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipUUID_t** ptr):
-        ptr[0] = <chip.hipUUID_t *>stdlib.malloc(sizeof(chip.hipUUID_t))
+        ptr[0] = <chip.hipUUID_t*>stdlib.malloc(sizeof(chip.hipUUID_t))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -211,13 +313,26 @@ cdef class hipUUID_t:
     cdef hipUUID_t new():
         """Factory function to create hipUUID_t objects with
         newly allocated chip.hipUUID_t"""
-        cdef chip.hipUUID_t *ptr;
+        cdef chip.hipUUID_t* ptr;
         hipUUID_t.__allocate(&ptr)
         return hipUUID_t.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipUUID_t.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipUUID_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_bytes(self, i):
         """Get value of ``bytes`` of ``self._ptr[i]``.
         """
@@ -228,58 +343,78 @@ cdef class hipUUID_t:
     # TODO is_basic_type_constantarray: add setters
 
 
-
-cdef class hipUUID:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipUUID from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipUUID`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipUUID wrapper = hipUUID.__new__(hipUUID)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipDeviceProp_t:
-    cdef chip.hipDeviceProp_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipDeviceProp_t from_ptr(chip.hipDeviceProp_t *_ptr, bint owner=False):
+    cdef hipDeviceProp_t from_ptr(chip.hipDeviceProp_t* ptr, bint owner=False):
         """Factory function to create ``hipDeviceProp_t`` objects from
         given ``chip.hipDeviceProp_t`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipDeviceProp_t wrapper = hipDeviceProp_t.__new__(hipDeviceProp_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipDeviceProp_t from_pyobj(object pyobj):
+        """Derives a hipDeviceProp_t from a Python object.
+
+        Derives a hipDeviceProp_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipDeviceProp_t`` reference, this method
+        returns it directly. No new ``hipDeviceProp_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipDeviceProp_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipDeviceProp_t!
+        """
+        cdef hipDeviceProp_t wrapper = hipDeviceProp_t.__new__(hipDeviceProp_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipDeviceProp_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipDeviceProp_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipDeviceProp_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipDeviceProp_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipDeviceProp_t** ptr):
-        ptr[0] = <chip.hipDeviceProp_t *>stdlib.malloc(sizeof(chip.hipDeviceProp_t))
+        ptr[0] = <chip.hipDeviceProp_t*>stdlib.malloc(sizeof(chip.hipDeviceProp_t))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -289,13 +424,26 @@ cdef class hipDeviceProp_t:
     cdef hipDeviceProp_t new():
         """Factory function to create hipDeviceProp_t objects with
         newly allocated chip.hipDeviceProp_t"""
-        cdef chip.hipDeviceProp_t *ptr;
+        cdef chip.hipDeviceProp_t* ptr;
         hipDeviceProp_t.__allocate(&ptr)
         return hipDeviceProp_t.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipDeviceProp_t.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipDeviceProp_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_name(self, i):
         """Get value of ``name`` of ``self._ptr[i]``.
         """
@@ -1004,37 +1152,78 @@ class hipMemoryType(enum.IntEnum):
     hipMemoryTypeUnified = chip.hipMemoryTypeUnified
     hipMemoryTypeManaged = chip.hipMemoryTypeManaged
 
-
 cdef class hipPointerAttribute_t:
-    cdef chip.hipPointerAttribute_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipPointerAttribute_t from_ptr(chip.hipPointerAttribute_t *_ptr, bint owner=False):
+    cdef hipPointerAttribute_t from_ptr(chip.hipPointerAttribute_t* ptr, bint owner=False):
         """Factory function to create ``hipPointerAttribute_t`` objects from
         given ``chip.hipPointerAttribute_t`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipPointerAttribute_t wrapper = hipPointerAttribute_t.__new__(hipPointerAttribute_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipPointerAttribute_t from_pyobj(object pyobj):
+        """Derives a hipPointerAttribute_t from a Python object.
+
+        Derives a hipPointerAttribute_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipPointerAttribute_t`` reference, this method
+        returns it directly. No new ``hipPointerAttribute_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipPointerAttribute_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipPointerAttribute_t!
+        """
+        cdef hipPointerAttribute_t wrapper = hipPointerAttribute_t.__new__(hipPointerAttribute_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipPointerAttribute_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipPointerAttribute_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipPointerAttribute_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipPointerAttribute_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipPointerAttribute_t** ptr):
-        ptr[0] = <chip.hipPointerAttribute_t *>stdlib.malloc(sizeof(chip.hipPointerAttribute_t))
+        ptr[0] = <chip.hipPointerAttribute_t*>stdlib.malloc(sizeof(chip.hipPointerAttribute_t))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -1044,13 +1233,26 @@ cdef class hipPointerAttribute_t:
     cdef hipPointerAttribute_t new():
         """Factory function to create hipPointerAttribute_t objects with
         newly allocated chip.hipPointerAttribute_t"""
-        cdef chip.hipPointerAttribute_t *ptr;
+        cdef chip.hipPointerAttribute_t* ptr;
         hipPointerAttribute_t.__allocate(&ptr)
         return hipPointerAttribute_t.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipPointerAttribute_t.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipPointerAttribute_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_memoryType(self, i):
         """Get value of ``memoryType`` of ``self._ptr[i]``.
         """
@@ -1312,25 +1514,80 @@ class hipComputeMode(enum.IntEnum):
     hipComputeModeProhibited = chip.hipComputeModeProhibited
     hipComputeModeExclusiveProcess = chip.hipComputeModeExclusiveProcess
 
-
 cdef class hipDeviceptr_t:
-    cdef void* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipDeviceptr_t from_ptr(void *_ptr, bint owner=False):
+    cdef hipDeviceptr_t from_ptr(void * ptr, bint owner=False):
         """Factory function to create ``hipDeviceptr_t`` objects from
         given ``void`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipDeviceptr_t wrapper = hipDeviceptr_t.__new__(hipDeviceptr_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipDeviceptr_t from_pyobj(object pyobj):
+        """Derives a hipDeviceptr_t from a Python object.
+
+        Derives a hipDeviceptr_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipDeviceptr_t`` reference, this method
+        returns it directly. No new ``hipDeviceptr_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipDeviceptr_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipDeviceptr_t!
+        """
+        cdef hipDeviceptr_t wrapper = hipDeviceptr_t.__new__(hipDeviceptr_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipDeviceptr_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <void *>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipDeviceptr_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 class hipChannelFormatKind(enum.IntEnum):
@@ -1339,37 +1596,78 @@ class hipChannelFormatKind(enum.IntEnum):
     hipChannelFormatKindFloat = chip.hipChannelFormatKindFloat
     hipChannelFormatKindNone = chip.hipChannelFormatKindNone
 
-
 cdef class hipChannelFormatDesc:
-    cdef chip.hipChannelFormatDesc* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipChannelFormatDesc from_ptr(chip.hipChannelFormatDesc *_ptr, bint owner=False):
+    cdef hipChannelFormatDesc from_ptr(chip.hipChannelFormatDesc* ptr, bint owner=False):
         """Factory function to create ``hipChannelFormatDesc`` objects from
         given ``chip.hipChannelFormatDesc`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipChannelFormatDesc wrapper = hipChannelFormatDesc.__new__(hipChannelFormatDesc)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipChannelFormatDesc from_pyobj(object pyobj):
+        """Derives a hipChannelFormatDesc from a Python object.
+
+        Derives a hipChannelFormatDesc from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipChannelFormatDesc`` reference, this method
+        returns it directly. No new ``hipChannelFormatDesc`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipChannelFormatDesc``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipChannelFormatDesc!
+        """
+        cdef hipChannelFormatDesc wrapper = hipChannelFormatDesc.__new__(hipChannelFormatDesc)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipChannelFormatDesc):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipChannelFormatDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipChannelFormatDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipChannelFormatDesc*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipChannelFormatDesc** ptr):
-        ptr[0] = <chip.hipChannelFormatDesc *>stdlib.malloc(sizeof(chip.hipChannelFormatDesc))
+        ptr[0] = <chip.hipChannelFormatDesc*>stdlib.malloc(sizeof(chip.hipChannelFormatDesc))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -1379,13 +1677,26 @@ cdef class hipChannelFormatDesc:
     cdef hipChannelFormatDesc new():
         """Factory function to create hipChannelFormatDesc objects with
         newly allocated chip.hipChannelFormatDesc"""
-        cdef chip.hipChannelFormatDesc *ptr;
+        cdef chip.hipChannelFormatDesc* ptr;
         hipChannelFormatDesc.__allocate(&ptr)
         return hipChannelFormatDesc.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipChannelFormatDesc.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipChannelFormatDesc object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -1470,37 +1781,78 @@ class hipArray_Format(enum.IntEnum):
     HIP_AD_FORMAT_HALF = chip.HIP_AD_FORMAT_HALF
     HIP_AD_FORMAT_FLOAT = chip.HIP_AD_FORMAT_FLOAT
 
-
 cdef class HIP_ARRAY_DESCRIPTOR:
-    cdef chip.HIP_ARRAY_DESCRIPTOR* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_ARRAY_DESCRIPTOR from_ptr(chip.HIP_ARRAY_DESCRIPTOR *_ptr, bint owner=False):
+    cdef HIP_ARRAY_DESCRIPTOR from_ptr(chip.HIP_ARRAY_DESCRIPTOR* ptr, bint owner=False):
         """Factory function to create ``HIP_ARRAY_DESCRIPTOR`` objects from
         given ``chip.HIP_ARRAY_DESCRIPTOR`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_ARRAY_DESCRIPTOR wrapper = HIP_ARRAY_DESCRIPTOR.__new__(HIP_ARRAY_DESCRIPTOR)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_ARRAY_DESCRIPTOR from_pyobj(object pyobj):
+        """Derives a HIP_ARRAY_DESCRIPTOR from a Python object.
+
+        Derives a HIP_ARRAY_DESCRIPTOR from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_ARRAY_DESCRIPTOR`` reference, this method
+        returns it directly. No new ``HIP_ARRAY_DESCRIPTOR`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_ARRAY_DESCRIPTOR``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_ARRAY_DESCRIPTOR!
+        """
+        cdef HIP_ARRAY_DESCRIPTOR wrapper = HIP_ARRAY_DESCRIPTOR.__new__(HIP_ARRAY_DESCRIPTOR)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_ARRAY_DESCRIPTOR):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_ARRAY_DESCRIPTOR** ptr):
-        ptr[0] = <chip.HIP_ARRAY_DESCRIPTOR *>stdlib.malloc(sizeof(chip.HIP_ARRAY_DESCRIPTOR))
+        ptr[0] = <chip.HIP_ARRAY_DESCRIPTOR*>stdlib.malloc(sizeof(chip.HIP_ARRAY_DESCRIPTOR))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -1510,13 +1862,26 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     cdef HIP_ARRAY_DESCRIPTOR new():
         """Factory function to create HIP_ARRAY_DESCRIPTOR objects with
         newly allocated chip.HIP_ARRAY_DESCRIPTOR"""
-        cdef chip.HIP_ARRAY_DESCRIPTOR *ptr;
+        cdef chip.HIP_ARRAY_DESCRIPTOR* ptr;
         HIP_ARRAY_DESCRIPTOR.__allocate(&ptr)
         return HIP_ARRAY_DESCRIPTOR.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_ARRAY_DESCRIPTOR.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_ARRAY_DESCRIPTOR object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_Width(self, i):
         """Get value ``Width`` of ``self._ptr[i]``.
         """
@@ -1577,37 +1942,78 @@ cdef class HIP_ARRAY_DESCRIPTOR:
         self.set_NumChannels(0,value)
 
 
-
 cdef class HIP_ARRAY3D_DESCRIPTOR:
-    cdef chip.HIP_ARRAY3D_DESCRIPTOR* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_ARRAY3D_DESCRIPTOR from_ptr(chip.HIP_ARRAY3D_DESCRIPTOR *_ptr, bint owner=False):
+    cdef HIP_ARRAY3D_DESCRIPTOR from_ptr(chip.HIP_ARRAY3D_DESCRIPTOR* ptr, bint owner=False):
         """Factory function to create ``HIP_ARRAY3D_DESCRIPTOR`` objects from
         given ``chip.HIP_ARRAY3D_DESCRIPTOR`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_ARRAY3D_DESCRIPTOR wrapper = HIP_ARRAY3D_DESCRIPTOR.__new__(HIP_ARRAY3D_DESCRIPTOR)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_ARRAY3D_DESCRIPTOR from_pyobj(object pyobj):
+        """Derives a HIP_ARRAY3D_DESCRIPTOR from a Python object.
+
+        Derives a HIP_ARRAY3D_DESCRIPTOR from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_ARRAY3D_DESCRIPTOR`` reference, this method
+        returns it directly. No new ``HIP_ARRAY3D_DESCRIPTOR`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_ARRAY3D_DESCRIPTOR``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_ARRAY3D_DESCRIPTOR!
+        """
+        cdef HIP_ARRAY3D_DESCRIPTOR wrapper = HIP_ARRAY3D_DESCRIPTOR.__new__(HIP_ARRAY3D_DESCRIPTOR)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_ARRAY3D_DESCRIPTOR):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_ARRAY3D_DESCRIPTOR** ptr):
-        ptr[0] = <chip.HIP_ARRAY3D_DESCRIPTOR *>stdlib.malloc(sizeof(chip.HIP_ARRAY3D_DESCRIPTOR))
+        ptr[0] = <chip.HIP_ARRAY3D_DESCRIPTOR*>stdlib.malloc(sizeof(chip.HIP_ARRAY3D_DESCRIPTOR))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -1617,13 +2023,26 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     cdef HIP_ARRAY3D_DESCRIPTOR new():
         """Factory function to create HIP_ARRAY3D_DESCRIPTOR objects with
         newly allocated chip.HIP_ARRAY3D_DESCRIPTOR"""
-        cdef chip.HIP_ARRAY3D_DESCRIPTOR *ptr;
+        cdef chip.HIP_ARRAY3D_DESCRIPTOR* ptr;
         HIP_ARRAY3D_DESCRIPTOR.__allocate(&ptr)
         return HIP_ARRAY3D_DESCRIPTOR.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_ARRAY3D_DESCRIPTOR.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_ARRAY3D_DESCRIPTOR object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_Width(self, i):
         """Get value ``Width`` of ``self._ptr[i]``.
         """
@@ -1712,37 +2131,78 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         self.set_Flags(0,value)
 
 
-
 cdef class hipArray:
-    cdef chip.hipArray* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipArray from_ptr(chip.hipArray *_ptr, bint owner=False):
+    cdef hipArray from_ptr(chip.hipArray* ptr, bint owner=False):
         """Factory function to create ``hipArray`` objects from
         given ``chip.hipArray`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipArray wrapper = hipArray.__new__(hipArray)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipArray from_pyobj(object pyobj):
+        """Derives a hipArray from a Python object.
+
+        Derives a hipArray from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipArray`` reference, this method
+        returns it directly. No new ``hipArray`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipArray``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipArray!
+        """
+        cdef hipArray wrapper = hipArray.__new__(hipArray)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipArray):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipArray*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipArray*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipArray*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipArray** ptr):
-        ptr[0] = <chip.hipArray *>stdlib.malloc(sizeof(chip.hipArray))
+        ptr[0] = <chip.hipArray*>stdlib.malloc(sizeof(chip.hipArray))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -1752,13 +2212,26 @@ cdef class hipArray:
     cdef hipArray new():
         """Factory function to create hipArray objects with
         newly allocated chip.hipArray"""
-        cdef chip.hipArray *ptr;
+        cdef chip.hipArray* ptr;
         hipArray.__allocate(&ptr)
         return hipArray.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipArray.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipArray object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -1882,37 +2355,78 @@ cdef class hipArray:
         self.set_textureType(0,value)
 
 
-
 cdef class hip_Memcpy2D:
-    cdef chip.hip_Memcpy2D* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hip_Memcpy2D from_ptr(chip.hip_Memcpy2D *_ptr, bint owner=False):
+    cdef hip_Memcpy2D from_ptr(chip.hip_Memcpy2D* ptr, bint owner=False):
         """Factory function to create ``hip_Memcpy2D`` objects from
         given ``chip.hip_Memcpy2D`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hip_Memcpy2D wrapper = hip_Memcpy2D.__new__(hip_Memcpy2D)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hip_Memcpy2D from_pyobj(object pyobj):
+        """Derives a hip_Memcpy2D from a Python object.
+
+        Derives a hip_Memcpy2D from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hip_Memcpy2D`` reference, this method
+        returns it directly. No new ``hip_Memcpy2D`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hip_Memcpy2D``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hip_Memcpy2D!
+        """
+        cdef hip_Memcpy2D wrapper = hip_Memcpy2D.__new__(hip_Memcpy2D)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hip_Memcpy2D):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hip_Memcpy2D*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hip_Memcpy2D*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hip_Memcpy2D*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hip_Memcpy2D** ptr):
-        ptr[0] = <chip.hip_Memcpy2D *>stdlib.malloc(sizeof(chip.hip_Memcpy2D))
+        ptr[0] = <chip.hip_Memcpy2D*>stdlib.malloc(sizeof(chip.hip_Memcpy2D))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -1922,13 +2436,26 @@ cdef class hip_Memcpy2D:
     cdef hip_Memcpy2D new():
         """Factory function to create hip_Memcpy2D objects with
         newly allocated chip.hip_Memcpy2D"""
-        cdef chip.hip_Memcpy2D *ptr;
+        cdef chip.hip_Memcpy2D* ptr;
         hip_Memcpy2D.__allocate(&ptr)
         return hip_Memcpy2D.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hip_Memcpy2D.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hip_Memcpy2D object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_srcXInBytes(self, i):
         """Get value ``srcXInBytes`` of ``self._ptr[i]``.
         """
@@ -2081,37 +2608,78 @@ hiparray = hipArray_t
 
 hipArray_const_t = hipArray
 
-
 cdef class hipMipmappedArray:
-    cdef chip.hipMipmappedArray* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipMipmappedArray from_ptr(chip.hipMipmappedArray *_ptr, bint owner=False):
+    cdef hipMipmappedArray from_ptr(chip.hipMipmappedArray* ptr, bint owner=False):
         """Factory function to create ``hipMipmappedArray`` objects from
         given ``chip.hipMipmappedArray`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipMipmappedArray wrapper = hipMipmappedArray.__new__(hipMipmappedArray)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipMipmappedArray from_pyobj(object pyobj):
+        """Derives a hipMipmappedArray from a Python object.
+
+        Derives a hipMipmappedArray from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipMipmappedArray`` reference, this method
+        returns it directly. No new ``hipMipmappedArray`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipMipmappedArray``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipMipmappedArray!
+        """
+        cdef hipMipmappedArray wrapper = hipMipmappedArray.__new__(hipMipmappedArray)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipMipmappedArray):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipMipmappedArray*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipMipmappedArray*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipMipmappedArray*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipMipmappedArray** ptr):
-        ptr[0] = <chip.hipMipmappedArray *>stdlib.malloc(sizeof(chip.hipMipmappedArray))
+        ptr[0] = <chip.hipMipmappedArray*>stdlib.malloc(sizeof(chip.hipMipmappedArray))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -2121,13 +2689,26 @@ cdef class hipMipmappedArray:
     cdef hipMipmappedArray new():
         """Factory function to create hipMipmappedArray objects with
         newly allocated chip.hipMipmappedArray"""
-        cdef chip.hipMipmappedArray *ptr;
+        cdef chip.hipMipmappedArray* ptr;
         hipMipmappedArray.__allocate(&ptr)
         return hipMipmappedArray.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipMipmappedArray.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipMipmappedArray object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -2267,131 +2848,88 @@ class HIPresourcetype_enum(enum.IntEnum):
     HIP_RESOURCE_TYPE_LINEAR = chip.HIP_RESOURCE_TYPE_LINEAR
     HIP_RESOURCE_TYPE_PITCH2D = chip.HIP_RESOURCE_TYPE_PITCH2D
 
-
-cdef class HIPresourcetype:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef HIPresourcetype from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``HIPresourcetype`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef HIPresourcetype wrapper = HIPresourcetype.__new__(HIPresourcetype)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
-cdef class hipResourcetype:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipResourcetype from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipResourcetype`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipResourcetype wrapper = hipResourcetype.__new__(hipResourcetype)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
 class HIPaddress_mode_enum(enum.IntEnum):
     HIP_TR_ADDRESS_MODE_WRAP = chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_CLAMP = chip.HIP_TR_ADDRESS_MODE_CLAMP
     HIP_TR_ADDRESS_MODE_MIRROR = chip.HIP_TR_ADDRESS_MODE_MIRROR
     HIP_TR_ADDRESS_MODE_BORDER = chip.HIP_TR_ADDRESS_MODE_BORDER
 
-
-cdef class HIPaddress_mode:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef HIPaddress_mode from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``HIPaddress_mode`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef HIPaddress_mode wrapper = HIPaddress_mode.__new__(HIPaddress_mode)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
 class HIPfilter_mode_enum(enum.IntEnum):
     HIP_TR_FILTER_MODE_POINT = chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = chip.HIP_TR_FILTER_MODE_LINEAR
 
-
-cdef class HIPfilter_mode:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef HIPfilter_mode from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``HIPfilter_mode`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef HIPfilter_mode wrapper = HIPfilter_mode.__new__(HIPfilter_mode)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class HIP_TEXTURE_DESC_st:
-    cdef chip.HIP_TEXTURE_DESC_st* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_TEXTURE_DESC_st from_ptr(chip.HIP_TEXTURE_DESC_st *_ptr, bint owner=False):
+    cdef HIP_TEXTURE_DESC_st from_ptr(chip.HIP_TEXTURE_DESC_st* ptr, bint owner=False):
         """Factory function to create ``HIP_TEXTURE_DESC_st`` objects from
         given ``chip.HIP_TEXTURE_DESC_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_TEXTURE_DESC_st wrapper = HIP_TEXTURE_DESC_st.__new__(HIP_TEXTURE_DESC_st)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_TEXTURE_DESC_st from_pyobj(object pyobj):
+        """Derives a HIP_TEXTURE_DESC_st from a Python object.
+
+        Derives a HIP_TEXTURE_DESC_st from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_TEXTURE_DESC_st`` reference, this method
+        returns it directly. No new ``HIP_TEXTURE_DESC_st`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_TEXTURE_DESC_st``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_TEXTURE_DESC_st!
+        """
+        cdef HIP_TEXTURE_DESC_st wrapper = HIP_TEXTURE_DESC_st.__new__(HIP_TEXTURE_DESC_st)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_TEXTURE_DESC_st):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_TEXTURE_DESC_st** ptr):
-        ptr[0] = <chip.HIP_TEXTURE_DESC_st *>stdlib.malloc(sizeof(chip.HIP_TEXTURE_DESC_st))
+        ptr[0] = <chip.HIP_TEXTURE_DESC_st*>stdlib.malloc(sizeof(chip.HIP_TEXTURE_DESC_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -2401,13 +2939,26 @@ cdef class HIP_TEXTURE_DESC_st:
     cdef HIP_TEXTURE_DESC_st new():
         """Factory function to create HIP_TEXTURE_DESC_st objects with
         newly allocated chip.HIP_TEXTURE_DESC_st"""
-        cdef chip.HIP_TEXTURE_DESC_st *ptr;
+        cdef chip.HIP_TEXTURE_DESC_st* ptr;
         HIP_TEXTURE_DESC_st.__allocate(&ptr)
         return HIP_TEXTURE_DESC_st.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_TEXTURE_DESC_st.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_TEXTURE_DESC_st object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     # TODO is_enum_constantarray: add
     def get_filterMode(self, i):
         """Get value of ``filterMode`` of ``self._ptr[i]``.
@@ -2529,27 +3080,6 @@ cdef class HIP_TEXTURE_DESC_st:
     # TODO is_basic_type_constantarray: add setters
 
 
-
-cdef class HIP_TEXTURE_DESC:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef HIP_TEXTURE_DESC from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``HIP_TEXTURE_DESC`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef HIP_TEXTURE_DESC wrapper = HIP_TEXTURE_DESC.__new__(HIP_TEXTURE_DESC)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
 class hipResourceViewFormat(enum.IntEnum):
     hipResViewFormatNone = chip.hipResViewFormatNone
     hipResViewFormatUnsignedChar1 = chip.hipResViewFormatUnsignedChar1
@@ -2624,58 +3154,78 @@ class HIPresourceViewFormat_enum(enum.IntEnum):
     HIP_RES_VIEW_FORMAT_SIGNED_BC6H = chip.HIP_RES_VIEW_FORMAT_SIGNED_BC6H
     HIP_RES_VIEW_FORMAT_UNSIGNED_BC7 = chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
 
-
-cdef class HIPresourceViewFormat:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef HIPresourceViewFormat from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``HIPresourceViewFormat`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef HIPresourceViewFormat wrapper = HIPresourceViewFormat.__new__(HIPresourceViewFormat)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipResourceDesc_union_0_struct_0:
-    cdef chip.hipResourceDesc_union_0_struct_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipResourceDesc_union_0_struct_0 from_ptr(chip.hipResourceDesc_union_0_struct_0 *_ptr, bint owner=False):
+    cdef hipResourceDesc_union_0_struct_0 from_ptr(chip.hipResourceDesc_union_0_struct_0* ptr, bint owner=False):
         """Factory function to create ``hipResourceDesc_union_0_struct_0`` objects from
         given ``chip.hipResourceDesc_union_0_struct_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipResourceDesc_union_0_struct_0 wrapper = hipResourceDesc_union_0_struct_0.__new__(hipResourceDesc_union_0_struct_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipResourceDesc_union_0_struct_0 from_pyobj(object pyobj):
+        """Derives a hipResourceDesc_union_0_struct_0 from a Python object.
+
+        Derives a hipResourceDesc_union_0_struct_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipResourceDesc_union_0_struct_0`` reference, this method
+        returns it directly. No new ``hipResourceDesc_union_0_struct_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipResourceDesc_union_0_struct_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipResourceDesc_union_0_struct_0!
+        """
+        cdef hipResourceDesc_union_0_struct_0 wrapper = hipResourceDesc_union_0_struct_0.__new__(hipResourceDesc_union_0_struct_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipResourceDesc_union_0_struct_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipResourceDesc_union_0_struct_0** ptr):
-        ptr[0] = <chip.hipResourceDesc_union_0_struct_0 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_0))
+        ptr[0] = <chip.hipResourceDesc_union_0_struct_0*>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -2685,46 +3235,100 @@ cdef class hipResourceDesc_union_0_struct_0:
     cdef hipResourceDesc_union_0_struct_0 new():
         """Factory function to create hipResourceDesc_union_0_struct_0 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_0"""
-        cdef chip.hipResourceDesc_union_0_struct_0 *ptr;
+        cdef chip.hipResourceDesc_union_0_struct_0* ptr;
         hipResourceDesc_union_0_struct_0.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipResourceDesc_union_0_struct_0.__allocate(&self._ptr)
        self.ptr_owner = True
-
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipResourceDesc_union_0_struct_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class hipResourceDesc_union_0_struct_1:
-    cdef chip.hipResourceDesc_union_0_struct_1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipResourceDesc_union_0_struct_1 from_ptr(chip.hipResourceDesc_union_0_struct_1 *_ptr, bint owner=False):
+    cdef hipResourceDesc_union_0_struct_1 from_ptr(chip.hipResourceDesc_union_0_struct_1* ptr, bint owner=False):
         """Factory function to create ``hipResourceDesc_union_0_struct_1`` objects from
         given ``chip.hipResourceDesc_union_0_struct_1`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipResourceDesc_union_0_struct_1 wrapper = hipResourceDesc_union_0_struct_1.__new__(hipResourceDesc_union_0_struct_1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipResourceDesc_union_0_struct_1 from_pyobj(object pyobj):
+        """Derives a hipResourceDesc_union_0_struct_1 from a Python object.
+
+        Derives a hipResourceDesc_union_0_struct_1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipResourceDesc_union_0_struct_1`` reference, this method
+        returns it directly. No new ``hipResourceDesc_union_0_struct_1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipResourceDesc_union_0_struct_1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipResourceDesc_union_0_struct_1!
+        """
+        cdef hipResourceDesc_union_0_struct_1 wrapper = hipResourceDesc_union_0_struct_1.__new__(hipResourceDesc_union_0_struct_1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipResourceDesc_union_0_struct_1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipResourceDesc_union_0_struct_1** ptr):
-        ptr[0] = <chip.hipResourceDesc_union_0_struct_1 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_1))
+        ptr[0] = <chip.hipResourceDesc_union_0_struct_1*>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -2734,46 +3338,100 @@ cdef class hipResourceDesc_union_0_struct_1:
     cdef hipResourceDesc_union_0_struct_1 new():
         """Factory function to create hipResourceDesc_union_0_struct_1 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_1"""
-        cdef chip.hipResourceDesc_union_0_struct_1 *ptr;
+        cdef chip.hipResourceDesc_union_0_struct_1* ptr;
         hipResourceDesc_union_0_struct_1.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_1.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipResourceDesc_union_0_struct_1.__allocate(&self._ptr)
        self.ptr_owner = True
-
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipResourceDesc_union_0_struct_1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class hipResourceDesc_union_0_struct_2:
-    cdef chip.hipResourceDesc_union_0_struct_2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipResourceDesc_union_0_struct_2 from_ptr(chip.hipResourceDesc_union_0_struct_2 *_ptr, bint owner=False):
+    cdef hipResourceDesc_union_0_struct_2 from_ptr(chip.hipResourceDesc_union_0_struct_2* ptr, bint owner=False):
         """Factory function to create ``hipResourceDesc_union_0_struct_2`` objects from
         given ``chip.hipResourceDesc_union_0_struct_2`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipResourceDesc_union_0_struct_2 wrapper = hipResourceDesc_union_0_struct_2.__new__(hipResourceDesc_union_0_struct_2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipResourceDesc_union_0_struct_2 from_pyobj(object pyobj):
+        """Derives a hipResourceDesc_union_0_struct_2 from a Python object.
+
+        Derives a hipResourceDesc_union_0_struct_2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipResourceDesc_union_0_struct_2`` reference, this method
+        returns it directly. No new ``hipResourceDesc_union_0_struct_2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipResourceDesc_union_0_struct_2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipResourceDesc_union_0_struct_2!
+        """
+        cdef hipResourceDesc_union_0_struct_2 wrapper = hipResourceDesc_union_0_struct_2.__new__(hipResourceDesc_union_0_struct_2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipResourceDesc_union_0_struct_2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipResourceDesc_union_0_struct_2** ptr):
-        ptr[0] = <chip.hipResourceDesc_union_0_struct_2 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_2))
+        ptr[0] = <chip.hipResourceDesc_union_0_struct_2*>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -2783,13 +3441,26 @@ cdef class hipResourceDesc_union_0_struct_2:
     cdef hipResourceDesc_union_0_struct_2 new():
         """Factory function to create hipResourceDesc_union_0_struct_2 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_2"""
-        cdef chip.hipResourceDesc_union_0_struct_2 *ptr;
+        cdef chip.hipResourceDesc_union_0_struct_2* ptr;
         hipResourceDesc_union_0_struct_2.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_2.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipResourceDesc_union_0_struct_2.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipResourceDesc_union_0_struct_2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -2813,37 +3484,78 @@ cdef class hipResourceDesc_union_0_struct_2:
         self.set_sizeInBytes(0,value)
 
 
-
 cdef class hipResourceDesc_union_0_struct_3:
-    cdef chip.hipResourceDesc_union_0_struct_3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipResourceDesc_union_0_struct_3 from_ptr(chip.hipResourceDesc_union_0_struct_3 *_ptr, bint owner=False):
+    cdef hipResourceDesc_union_0_struct_3 from_ptr(chip.hipResourceDesc_union_0_struct_3* ptr, bint owner=False):
         """Factory function to create ``hipResourceDesc_union_0_struct_3`` objects from
         given ``chip.hipResourceDesc_union_0_struct_3`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipResourceDesc_union_0_struct_3 wrapper = hipResourceDesc_union_0_struct_3.__new__(hipResourceDesc_union_0_struct_3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipResourceDesc_union_0_struct_3 from_pyobj(object pyobj):
+        """Derives a hipResourceDesc_union_0_struct_3 from a Python object.
+
+        Derives a hipResourceDesc_union_0_struct_3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipResourceDesc_union_0_struct_3`` reference, this method
+        returns it directly. No new ``hipResourceDesc_union_0_struct_3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipResourceDesc_union_0_struct_3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipResourceDesc_union_0_struct_3!
+        """
+        cdef hipResourceDesc_union_0_struct_3 wrapper = hipResourceDesc_union_0_struct_3.__new__(hipResourceDesc_union_0_struct_3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipResourceDesc_union_0_struct_3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipResourceDesc_union_0_struct_3** ptr):
-        ptr[0] = <chip.hipResourceDesc_union_0_struct_3 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_3))
+        ptr[0] = <chip.hipResourceDesc_union_0_struct_3*>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0_struct_3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -2853,13 +3565,26 @@ cdef class hipResourceDesc_union_0_struct_3:
     cdef hipResourceDesc_union_0_struct_3 new():
         """Factory function to create hipResourceDesc_union_0_struct_3 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_3"""
-        cdef chip.hipResourceDesc_union_0_struct_3 *ptr;
+        cdef chip.hipResourceDesc_union_0_struct_3* ptr;
         hipResourceDesc_union_0_struct_3.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_3.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipResourceDesc_union_0_struct_3.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipResourceDesc_union_0_struct_3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -2911,37 +3636,78 @@ cdef class hipResourceDesc_union_0_struct_3:
         self.set_pitchInBytes(0,value)
 
 
-
 cdef class hipResourceDesc_union_0:
-    cdef chip.hipResourceDesc_union_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipResourceDesc_union_0 from_ptr(chip.hipResourceDesc_union_0 *_ptr, bint owner=False):
+    cdef hipResourceDesc_union_0 from_ptr(chip.hipResourceDesc_union_0* ptr, bint owner=False):
         """Factory function to create ``hipResourceDesc_union_0`` objects from
         given ``chip.hipResourceDesc_union_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipResourceDesc_union_0 wrapper = hipResourceDesc_union_0.__new__(hipResourceDesc_union_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipResourceDesc_union_0 from_pyobj(object pyobj):
+        """Derives a hipResourceDesc_union_0 from a Python object.
+
+        Derives a hipResourceDesc_union_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipResourceDesc_union_0`` reference, this method
+        returns it directly. No new ``hipResourceDesc_union_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipResourceDesc_union_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipResourceDesc_union_0!
+        """
+        cdef hipResourceDesc_union_0 wrapper = hipResourceDesc_union_0.__new__(hipResourceDesc_union_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipResourceDesc_union_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipResourceDesc_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipResourceDesc_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipResourceDesc_union_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipResourceDesc_union_0** ptr):
-        ptr[0] = <chip.hipResourceDesc_union_0 *>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0))
+        ptr[0] = <chip.hipResourceDesc_union_0*>stdlib.malloc(sizeof(chip.hipResourceDesc_union_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -2951,13 +3717,26 @@ cdef class hipResourceDesc_union_0:
     cdef hipResourceDesc_union_0 new():
         """Factory function to create hipResourceDesc_union_0 objects with
         newly allocated chip.hipResourceDesc_union_0"""
-        cdef chip.hipResourceDesc_union_0 *ptr;
+        cdef chip.hipResourceDesc_union_0* ptr;
         hipResourceDesc_union_0.__allocate(&ptr)
         return hipResourceDesc_union_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipResourceDesc_union_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipResourceDesc_union_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_array(self, i):
         """Get value of ``array`` of ``self._ptr[i]``.
         """
@@ -2988,37 +3767,78 @@ cdef class hipResourceDesc_union_0:
         return self.get_pitch2D(0)
 
 
-
 cdef class hipResourceDesc:
-    cdef chip.hipResourceDesc* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipResourceDesc from_ptr(chip.hipResourceDesc *_ptr, bint owner=False):
+    cdef hipResourceDesc from_ptr(chip.hipResourceDesc* ptr, bint owner=False):
         """Factory function to create ``hipResourceDesc`` objects from
         given ``chip.hipResourceDesc`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipResourceDesc wrapper = hipResourceDesc.__new__(hipResourceDesc)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipResourceDesc from_pyobj(object pyobj):
+        """Derives a hipResourceDesc from a Python object.
+
+        Derives a hipResourceDesc from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipResourceDesc`` reference, this method
+        returns it directly. No new ``hipResourceDesc`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipResourceDesc``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipResourceDesc!
+        """
+        cdef hipResourceDesc wrapper = hipResourceDesc.__new__(hipResourceDesc)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipResourceDesc):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipResourceDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipResourceDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipResourceDesc*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipResourceDesc** ptr):
-        ptr[0] = <chip.hipResourceDesc *>stdlib.malloc(sizeof(chip.hipResourceDesc))
+        ptr[0] = <chip.hipResourceDesc*>stdlib.malloc(sizeof(chip.hipResourceDesc))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3028,13 +3848,26 @@ cdef class hipResourceDesc:
     cdef hipResourceDesc new():
         """Factory function to create hipResourceDesc objects with
         newly allocated chip.hipResourceDesc"""
-        cdef chip.hipResourceDesc *ptr;
+        cdef chip.hipResourceDesc* ptr;
         hipResourceDesc.__allocate(&ptr)
         return hipResourceDesc.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipResourceDesc.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipResourceDesc object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_resType(self, i):
         """Get value of ``resType`` of ``self._ptr[i]``.
         """
@@ -3060,37 +3893,78 @@ cdef class hipResourceDesc:
         return self.get_res(0)
 
 
-
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
-    cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_RESOURCE_DESC_st_union_0_struct_0 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0_struct_0 *_ptr, bint owner=False):
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_0 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0_struct_0* ptr, bint owner=False):
         """Factory function to create ``HIP_RESOURCE_DESC_st_union_0_struct_0`` objects from
         given ``chip.HIP_RESOURCE_DESC_st_union_0_struct_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_RESOURCE_DESC_st_union_0_struct_0 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_0.__new__(HIP_RESOURCE_DESC_st_union_0_struct_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_0 from_pyobj(object pyobj):
+        """Derives a HIP_RESOURCE_DESC_st_union_0_struct_0 from a Python object.
+
+        Derives a HIP_RESOURCE_DESC_st_union_0_struct_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_RESOURCE_DESC_st_union_0_struct_0`` reference, this method
+        returns it directly. No new ``HIP_RESOURCE_DESC_st_union_0_struct_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_RESOURCE_DESC_st_union_0_struct_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0_struct_0!
+        """
+        cdef HIP_RESOURCE_DESC_st_union_0_struct_0 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_0.__new__(HIP_RESOURCE_DESC_st_union_0_struct_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0_struct_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_0** ptr):
-        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_0))
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3100,46 +3974,100 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
     cdef HIP_RESOURCE_DESC_st_union_0_struct_0 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_0 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_0"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_0 *ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_0* ptr;
         HIP_RESOURCE_DESC_st_union_0_struct_0.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_RESOURCE_DESC_st_union_0_struct_0.__allocate(&self._ptr)
        self.ptr_owner = True
-
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_RESOURCE_DESC_st_union_0_struct_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
-    cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_RESOURCE_DESC_st_union_0_struct_1 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0_struct_1 *_ptr, bint owner=False):
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_1 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0_struct_1* ptr, bint owner=False):
         """Factory function to create ``HIP_RESOURCE_DESC_st_union_0_struct_1`` objects from
         given ``chip.HIP_RESOURCE_DESC_st_union_0_struct_1`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_RESOURCE_DESC_st_union_0_struct_1 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_1.__new__(HIP_RESOURCE_DESC_st_union_0_struct_1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_1 from_pyobj(object pyobj):
+        """Derives a HIP_RESOURCE_DESC_st_union_0_struct_1 from a Python object.
+
+        Derives a HIP_RESOURCE_DESC_st_union_0_struct_1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_RESOURCE_DESC_st_union_0_struct_1`` reference, this method
+        returns it directly. No new ``HIP_RESOURCE_DESC_st_union_0_struct_1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_RESOURCE_DESC_st_union_0_struct_1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0_struct_1!
+        """
+        cdef HIP_RESOURCE_DESC_st_union_0_struct_1 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_1.__new__(HIP_RESOURCE_DESC_st_union_0_struct_1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0_struct_1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_1** ptr):
-        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_1))
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3149,46 +4077,100 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
     cdef HIP_RESOURCE_DESC_st_union_0_struct_1 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_1 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_1"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_1 *ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_1* ptr;
         HIP_RESOURCE_DESC_st_union_0_struct_1.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_1.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_RESOURCE_DESC_st_union_0_struct_1.__allocate(&self._ptr)
        self.ptr_owner = True
-
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_RESOURCE_DESC_st_union_0_struct_1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
-    cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_RESOURCE_DESC_st_union_0_struct_2 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0_struct_2 *_ptr, bint owner=False):
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_2 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0_struct_2* ptr, bint owner=False):
         """Factory function to create ``HIP_RESOURCE_DESC_st_union_0_struct_2`` objects from
         given ``chip.HIP_RESOURCE_DESC_st_union_0_struct_2`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_RESOURCE_DESC_st_union_0_struct_2 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_2.__new__(HIP_RESOURCE_DESC_st_union_0_struct_2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_2 from_pyobj(object pyobj):
+        """Derives a HIP_RESOURCE_DESC_st_union_0_struct_2 from a Python object.
+
+        Derives a HIP_RESOURCE_DESC_st_union_0_struct_2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_RESOURCE_DESC_st_union_0_struct_2`` reference, this method
+        returns it directly. No new ``HIP_RESOURCE_DESC_st_union_0_struct_2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_RESOURCE_DESC_st_union_0_struct_2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0_struct_2!
+        """
+        cdef HIP_RESOURCE_DESC_st_union_0_struct_2 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_2.__new__(HIP_RESOURCE_DESC_st_union_0_struct_2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0_struct_2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_2** ptr):
-        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_2))
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3198,13 +4180,26 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     cdef HIP_RESOURCE_DESC_st_union_0_struct_2 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_2 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_2"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_2 *ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_2* ptr;
         HIP_RESOURCE_DESC_st_union_0_struct_2.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_2.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_RESOURCE_DESC_st_union_0_struct_2.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_RESOURCE_DESC_st_union_0_struct_2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -3251,37 +4246,78 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
         self.set_sizeInBytes(0,value)
 
 
-
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
-    cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_RESOURCE_DESC_st_union_0_struct_3 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0_struct_3 *_ptr, bint owner=False):
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_3 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0_struct_3* ptr, bint owner=False):
         """Factory function to create ``HIP_RESOURCE_DESC_st_union_0_struct_3`` objects from
         given ``chip.HIP_RESOURCE_DESC_st_union_0_struct_3`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_RESOURCE_DESC_st_union_0_struct_3 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_3.__new__(HIP_RESOURCE_DESC_st_union_0_struct_3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_3 from_pyobj(object pyobj):
+        """Derives a HIP_RESOURCE_DESC_st_union_0_struct_3 from a Python object.
+
+        Derives a HIP_RESOURCE_DESC_st_union_0_struct_3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_RESOURCE_DESC_st_union_0_struct_3`` reference, this method
+        returns it directly. No new ``HIP_RESOURCE_DESC_st_union_0_struct_3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_RESOURCE_DESC_st_union_0_struct_3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0_struct_3!
+        """
+        cdef HIP_RESOURCE_DESC_st_union_0_struct_3 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_3.__new__(HIP_RESOURCE_DESC_st_union_0_struct_3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0_struct_3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_3** ptr):
-        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_3))
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3291,13 +4327,26 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     cdef HIP_RESOURCE_DESC_st_union_0_struct_3 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_3 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_3"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_3 *ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_3* ptr;
         HIP_RESOURCE_DESC_st_union_0_struct_3.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_3.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_RESOURCE_DESC_st_union_0_struct_3.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_RESOURCE_DESC_st_union_0_struct_3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -3372,37 +4421,78 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         self.set_pitchInBytes(0,value)
 
 
-
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
-    cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_RESOURCE_DESC_st_union_0_struct_4 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0_struct_4 *_ptr, bint owner=False):
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_4 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0_struct_4* ptr, bint owner=False):
         """Factory function to create ``HIP_RESOURCE_DESC_st_union_0_struct_4`` objects from
         given ``chip.HIP_RESOURCE_DESC_st_union_0_struct_4`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_RESOURCE_DESC_st_union_0_struct_4 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_4.__new__(HIP_RESOURCE_DESC_st_union_0_struct_4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0_struct_4 from_pyobj(object pyobj):
+        """Derives a HIP_RESOURCE_DESC_st_union_0_struct_4 from a Python object.
+
+        Derives a HIP_RESOURCE_DESC_st_union_0_struct_4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_RESOURCE_DESC_st_union_0_struct_4`` reference, this method
+        returns it directly. No new ``HIP_RESOURCE_DESC_st_union_0_struct_4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_RESOURCE_DESC_st_union_0_struct_4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0_struct_4!
+        """
+        cdef HIP_RESOURCE_DESC_st_union_0_struct_4 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_4.__new__(HIP_RESOURCE_DESC_st_union_0_struct_4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0_struct_4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0_struct_4** ptr):
-        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_4))
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0_struct_4))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3412,13 +4502,26 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
     cdef HIP_RESOURCE_DESC_st_union_0_struct_4 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_4 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_4"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_4 *ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_4* ptr;
         HIP_RESOURCE_DESC_st_union_0_struct_4.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_4.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_RESOURCE_DESC_st_union_0_struct_4.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_RESOURCE_DESC_st_union_0_struct_4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -3429,37 +4532,78 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
     # TODO is_basic_type_constantarray: add setters
 
 
-
 cdef class HIP_RESOURCE_DESC_st_union_0:
-    cdef chip.HIP_RESOURCE_DESC_st_union_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_RESOURCE_DESC_st_union_0 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0 *_ptr, bint owner=False):
+    cdef HIP_RESOURCE_DESC_st_union_0 from_ptr(chip.HIP_RESOURCE_DESC_st_union_0* ptr, bint owner=False):
         """Factory function to create ``HIP_RESOURCE_DESC_st_union_0`` objects from
         given ``chip.HIP_RESOURCE_DESC_st_union_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_RESOURCE_DESC_st_union_0 wrapper = HIP_RESOURCE_DESC_st_union_0.__new__(HIP_RESOURCE_DESC_st_union_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st_union_0 from_pyobj(object pyobj):
+        """Derives a HIP_RESOURCE_DESC_st_union_0 from a Python object.
+
+        Derives a HIP_RESOURCE_DESC_st_union_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_RESOURCE_DESC_st_union_0`` reference, this method
+        returns it directly. No new ``HIP_RESOURCE_DESC_st_union_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_RESOURCE_DESC_st_union_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0!
+        """
+        cdef HIP_RESOURCE_DESC_st_union_0 wrapper = HIP_RESOURCE_DESC_st_union_0.__new__(HIP_RESOURCE_DESC_st_union_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st_union_0** ptr):
-        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0 *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0))
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st_union_0*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st_union_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3469,13 +4613,26 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
     cdef HIP_RESOURCE_DESC_st_union_0 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0 *ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0* ptr;
         HIP_RESOURCE_DESC_st_union_0.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_RESOURCE_DESC_st_union_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_RESOURCE_DESC_st_union_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_array(self, i):
         """Get value of ``array`` of ``self._ptr[i]``.
         """
@@ -3513,37 +4670,78 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
         return self.get_reserved(0)
 
 
-
 cdef class HIP_RESOURCE_DESC_st:
-    cdef chip.HIP_RESOURCE_DESC_st* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_RESOURCE_DESC_st from_ptr(chip.HIP_RESOURCE_DESC_st *_ptr, bint owner=False):
+    cdef HIP_RESOURCE_DESC_st from_ptr(chip.HIP_RESOURCE_DESC_st* ptr, bint owner=False):
         """Factory function to create ``HIP_RESOURCE_DESC_st`` objects from
         given ``chip.HIP_RESOURCE_DESC_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_RESOURCE_DESC_st wrapper = HIP_RESOURCE_DESC_st.__new__(HIP_RESOURCE_DESC_st)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_RESOURCE_DESC_st from_pyobj(object pyobj):
+        """Derives a HIP_RESOURCE_DESC_st from a Python object.
+
+        Derives a HIP_RESOURCE_DESC_st from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_RESOURCE_DESC_st`` reference, this method
+        returns it directly. No new ``HIP_RESOURCE_DESC_st`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_RESOURCE_DESC_st``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st!
+        """
+        cdef HIP_RESOURCE_DESC_st wrapper = HIP_RESOURCE_DESC_st.__new__(HIP_RESOURCE_DESC_st)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_RESOURCE_DESC_st):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_DESC_st** ptr):
-        ptr[0] = <chip.HIP_RESOURCE_DESC_st *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st))
+        ptr[0] = <chip.HIP_RESOURCE_DESC_st*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_DESC_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3553,13 +4751,26 @@ cdef class HIP_RESOURCE_DESC_st:
     cdef HIP_RESOURCE_DESC_st new():
         """Factory function to create HIP_RESOURCE_DESC_st objects with
         newly allocated chip.HIP_RESOURCE_DESC_st"""
-        cdef chip.HIP_RESOURCE_DESC_st *ptr;
+        cdef chip.HIP_RESOURCE_DESC_st* ptr;
         HIP_RESOURCE_DESC_st.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_RESOURCE_DESC_st.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_RESOURCE_DESC_st object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_resType(self, i):
         """Get value of ``resType`` of ``self._ptr[i]``.
         """
@@ -3599,58 +4810,78 @@ cdef class HIP_RESOURCE_DESC_st:
         self.set_flags(0,value)
 
 
-
-cdef class HIP_RESOURCE_DESC:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef HIP_RESOURCE_DESC from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``HIP_RESOURCE_DESC`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef HIP_RESOURCE_DESC wrapper = HIP_RESOURCE_DESC.__new__(HIP_RESOURCE_DESC)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipResourceViewDesc:
-    cdef chip.hipResourceViewDesc* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipResourceViewDesc from_ptr(chip.hipResourceViewDesc *_ptr, bint owner=False):
+    cdef hipResourceViewDesc from_ptr(chip.hipResourceViewDesc* ptr, bint owner=False):
         """Factory function to create ``hipResourceViewDesc`` objects from
         given ``chip.hipResourceViewDesc`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipResourceViewDesc wrapper = hipResourceViewDesc.__new__(hipResourceViewDesc)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipResourceViewDesc from_pyobj(object pyobj):
+        """Derives a hipResourceViewDesc from a Python object.
+
+        Derives a hipResourceViewDesc from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipResourceViewDesc`` reference, this method
+        returns it directly. No new ``hipResourceViewDesc`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipResourceViewDesc``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipResourceViewDesc!
+        """
+        cdef hipResourceViewDesc wrapper = hipResourceViewDesc.__new__(hipResourceViewDesc)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipResourceViewDesc):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipResourceViewDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipResourceViewDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipResourceViewDesc*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipResourceViewDesc** ptr):
-        ptr[0] = <chip.hipResourceViewDesc *>stdlib.malloc(sizeof(chip.hipResourceViewDesc))
+        ptr[0] = <chip.hipResourceViewDesc*>stdlib.malloc(sizeof(chip.hipResourceViewDesc))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3660,13 +4891,26 @@ cdef class hipResourceViewDesc:
     cdef hipResourceViewDesc new():
         """Factory function to create hipResourceViewDesc objects with
         newly allocated chip.hipResourceViewDesc"""
-        cdef chip.hipResourceViewDesc *ptr;
+        cdef chip.hipResourceViewDesc* ptr;
         hipResourceViewDesc.__allocate(&ptr)
         return hipResourceViewDesc.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipResourceViewDesc.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipResourceViewDesc object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -3783,37 +5027,78 @@ cdef class hipResourceViewDesc:
         self.set_lastLayer(0,value)
 
 
-
 cdef class HIP_RESOURCE_VIEW_DESC_st:
-    cdef chip.HIP_RESOURCE_VIEW_DESC_st* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_RESOURCE_VIEW_DESC_st from_ptr(chip.HIP_RESOURCE_VIEW_DESC_st *_ptr, bint owner=False):
+    cdef HIP_RESOURCE_VIEW_DESC_st from_ptr(chip.HIP_RESOURCE_VIEW_DESC_st* ptr, bint owner=False):
         """Factory function to create ``HIP_RESOURCE_VIEW_DESC_st`` objects from
         given ``chip.HIP_RESOURCE_VIEW_DESC_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_RESOURCE_VIEW_DESC_st wrapper = HIP_RESOURCE_VIEW_DESC_st.__new__(HIP_RESOURCE_VIEW_DESC_st)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_RESOURCE_VIEW_DESC_st from_pyobj(object pyobj):
+        """Derives a HIP_RESOURCE_VIEW_DESC_st from a Python object.
+
+        Derives a HIP_RESOURCE_VIEW_DESC_st from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_RESOURCE_VIEW_DESC_st`` reference, this method
+        returns it directly. No new ``HIP_RESOURCE_VIEW_DESC_st`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_RESOURCE_VIEW_DESC_st``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_RESOURCE_VIEW_DESC_st!
+        """
+        cdef HIP_RESOURCE_VIEW_DESC_st wrapper = HIP_RESOURCE_VIEW_DESC_st.__new__(HIP_RESOURCE_VIEW_DESC_st)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_RESOURCE_VIEW_DESC_st):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_RESOURCE_VIEW_DESC_st** ptr):
-        ptr[0] = <chip.HIP_RESOURCE_VIEW_DESC_st *>stdlib.malloc(sizeof(chip.HIP_RESOURCE_VIEW_DESC_st))
+        ptr[0] = <chip.HIP_RESOURCE_VIEW_DESC_st*>stdlib.malloc(sizeof(chip.HIP_RESOURCE_VIEW_DESC_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -3823,13 +5108,26 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     cdef HIP_RESOURCE_VIEW_DESC_st new():
         """Factory function to create HIP_RESOURCE_VIEW_DESC_st objects with
         newly allocated chip.HIP_RESOURCE_VIEW_DESC_st"""
-        cdef chip.HIP_RESOURCE_VIEW_DESC_st *ptr;
+        cdef chip.HIP_RESOURCE_VIEW_DESC_st* ptr;
         HIP_RESOURCE_VIEW_DESC_st.__allocate(&ptr)
         return HIP_RESOURCE_VIEW_DESC_st.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_RESOURCE_VIEW_DESC_st.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_RESOURCE_VIEW_DESC_st object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -3954,27 +5252,6 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     # TODO is_basic_type_constantarray: add setters
 
 
-
-cdef class HIP_RESOURCE_VIEW_DESC:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef HIP_RESOURCE_VIEW_DESC from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``HIP_RESOURCE_VIEW_DESC`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef HIP_RESOURCE_VIEW_DESC wrapper = HIP_RESOURCE_VIEW_DESC.__new__(HIP_RESOURCE_VIEW_DESC)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
 class hipMemcpyKind(enum.IntEnum):
     hipMemcpyHostToHost = chip.hipMemcpyHostToHost
     hipMemcpyHostToDevice = chip.hipMemcpyHostToDevice
@@ -3982,37 +5259,78 @@ class hipMemcpyKind(enum.IntEnum):
     hipMemcpyDeviceToDevice = chip.hipMemcpyDeviceToDevice
     hipMemcpyDefault = chip.hipMemcpyDefault
 
-
 cdef class hipPitchedPtr:
-    cdef chip.hipPitchedPtr* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipPitchedPtr from_ptr(chip.hipPitchedPtr *_ptr, bint owner=False):
+    cdef hipPitchedPtr from_ptr(chip.hipPitchedPtr* ptr, bint owner=False):
         """Factory function to create ``hipPitchedPtr`` objects from
         given ``chip.hipPitchedPtr`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipPitchedPtr wrapper = hipPitchedPtr.__new__(hipPitchedPtr)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipPitchedPtr from_pyobj(object pyobj):
+        """Derives a hipPitchedPtr from a Python object.
+
+        Derives a hipPitchedPtr from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipPitchedPtr`` reference, this method
+        returns it directly. No new ``hipPitchedPtr`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipPitchedPtr``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipPitchedPtr!
+        """
+        cdef hipPitchedPtr wrapper = hipPitchedPtr.__new__(hipPitchedPtr)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipPitchedPtr):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipPitchedPtr*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipPitchedPtr*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipPitchedPtr*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipPitchedPtr** ptr):
-        ptr[0] = <chip.hipPitchedPtr *>stdlib.malloc(sizeof(chip.hipPitchedPtr))
+        ptr[0] = <chip.hipPitchedPtr*>stdlib.malloc(sizeof(chip.hipPitchedPtr))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -4022,13 +5340,26 @@ cdef class hipPitchedPtr:
     cdef hipPitchedPtr new():
         """Factory function to create hipPitchedPtr objects with
         newly allocated chip.hipPitchedPtr"""
-        cdef chip.hipPitchedPtr *ptr;
+        cdef chip.hipPitchedPtr* ptr;
         hipPitchedPtr.__allocate(&ptr)
         return hipPitchedPtr.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipPitchedPtr.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipPitchedPtr object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_pitch(self, i):
         """Get value ``pitch`` of ``self._ptr[i]``.
         """
@@ -4073,37 +5404,78 @@ cdef class hipPitchedPtr:
         self.set_ysize(0,value)
 
 
-
 cdef class hipExtent:
-    cdef chip.hipExtent* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExtent from_ptr(chip.hipExtent *_ptr, bint owner=False):
+    cdef hipExtent from_ptr(chip.hipExtent* ptr, bint owner=False):
         """Factory function to create ``hipExtent`` objects from
         given ``chip.hipExtent`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExtent wrapper = hipExtent.__new__(hipExtent)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExtent from_pyobj(object pyobj):
+        """Derives a hipExtent from a Python object.
+
+        Derives a hipExtent from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExtent`` reference, this method
+        returns it directly. No new ``hipExtent`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExtent``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExtent!
+        """
+        cdef hipExtent wrapper = hipExtent.__new__(hipExtent)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExtent):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExtent*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExtent*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExtent*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExtent** ptr):
-        ptr[0] = <chip.hipExtent *>stdlib.malloc(sizeof(chip.hipExtent))
+        ptr[0] = <chip.hipExtent*>stdlib.malloc(sizeof(chip.hipExtent))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -4113,13 +5485,26 @@ cdef class hipExtent:
     cdef hipExtent new():
         """Factory function to create hipExtent objects with
         newly allocated chip.hipExtent"""
-        cdef chip.hipExtent *ptr;
+        cdef chip.hipExtent* ptr;
         hipExtent.__allocate(&ptr)
         return hipExtent.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExtent.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExtent object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_width(self, i):
         """Get value ``width`` of ``self._ptr[i]``.
         """
@@ -4164,37 +5549,78 @@ cdef class hipExtent:
         self.set_depth(0,value)
 
 
-
 cdef class hipPos:
-    cdef chip.hipPos* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipPos from_ptr(chip.hipPos *_ptr, bint owner=False):
+    cdef hipPos from_ptr(chip.hipPos* ptr, bint owner=False):
         """Factory function to create ``hipPos`` objects from
         given ``chip.hipPos`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipPos wrapper = hipPos.__new__(hipPos)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipPos from_pyobj(object pyobj):
+        """Derives a hipPos from a Python object.
+
+        Derives a hipPos from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipPos`` reference, this method
+        returns it directly. No new ``hipPos`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipPos``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipPos!
+        """
+        cdef hipPos wrapper = hipPos.__new__(hipPos)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipPos):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipPos*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipPos*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipPos*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipPos** ptr):
-        ptr[0] = <chip.hipPos *>stdlib.malloc(sizeof(chip.hipPos))
+        ptr[0] = <chip.hipPos*>stdlib.malloc(sizeof(chip.hipPos))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -4204,13 +5630,26 @@ cdef class hipPos:
     cdef hipPos new():
         """Factory function to create hipPos objects with
         newly allocated chip.hipPos"""
-        cdef chip.hipPos *ptr;
+        cdef chip.hipPos* ptr;
         hipPos.__allocate(&ptr)
         return hipPos.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipPos.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipPos object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -4255,37 +5694,78 @@ cdef class hipPos:
         self.set_z(0,value)
 
 
-
 cdef class hipMemcpy3DParms:
-    cdef chip.hipMemcpy3DParms* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipMemcpy3DParms from_ptr(chip.hipMemcpy3DParms *_ptr, bint owner=False):
+    cdef hipMemcpy3DParms from_ptr(chip.hipMemcpy3DParms* ptr, bint owner=False):
         """Factory function to create ``hipMemcpy3DParms`` objects from
         given ``chip.hipMemcpy3DParms`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipMemcpy3DParms wrapper = hipMemcpy3DParms.__new__(hipMemcpy3DParms)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipMemcpy3DParms from_pyobj(object pyobj):
+        """Derives a hipMemcpy3DParms from a Python object.
+
+        Derives a hipMemcpy3DParms from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipMemcpy3DParms`` reference, this method
+        returns it directly. No new ``hipMemcpy3DParms`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipMemcpy3DParms``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipMemcpy3DParms!
+        """
+        cdef hipMemcpy3DParms wrapper = hipMemcpy3DParms.__new__(hipMemcpy3DParms)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipMemcpy3DParms):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipMemcpy3DParms*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipMemcpy3DParms*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipMemcpy3DParms*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipMemcpy3DParms** ptr):
-        ptr[0] = <chip.hipMemcpy3DParms *>stdlib.malloc(sizeof(chip.hipMemcpy3DParms))
+        ptr[0] = <chip.hipMemcpy3DParms*>stdlib.malloc(sizeof(chip.hipMemcpy3DParms))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -4295,13 +5775,26 @@ cdef class hipMemcpy3DParms:
     cdef hipMemcpy3DParms new():
         """Factory function to create hipMemcpy3DParms objects with
         newly allocated chip.hipMemcpy3DParms"""
-        cdef chip.hipMemcpy3DParms *ptr;
+        cdef chip.hipMemcpy3DParms* ptr;
         hipMemcpy3DParms.__allocate(&ptr)
         return hipMemcpy3DParms.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipMemcpy3DParms.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipMemcpy3DParms object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_srcPos(self, i):
         """Get value of ``srcPos`` of ``self._ptr[i]``.
         """
@@ -4355,37 +5848,78 @@ cdef class hipMemcpy3DParms:
         self.set_kind(0,value)
 
 
-
 cdef class HIP_MEMCPY3D:
-    cdef chip.HIP_MEMCPY3D* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef HIP_MEMCPY3D from_ptr(chip.HIP_MEMCPY3D *_ptr, bint owner=False):
+    cdef HIP_MEMCPY3D from_ptr(chip.HIP_MEMCPY3D* ptr, bint owner=False):
         """Factory function to create ``HIP_MEMCPY3D`` objects from
         given ``chip.HIP_MEMCPY3D`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef HIP_MEMCPY3D wrapper = HIP_MEMCPY3D.__new__(HIP_MEMCPY3D)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef HIP_MEMCPY3D from_pyobj(object pyobj):
+        """Derives a HIP_MEMCPY3D from a Python object.
+
+        Derives a HIP_MEMCPY3D from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``HIP_MEMCPY3D`` reference, this method
+        returns it directly. No new ``HIP_MEMCPY3D`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``HIP_MEMCPY3D``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of HIP_MEMCPY3D!
+        """
+        cdef HIP_MEMCPY3D wrapper = HIP_MEMCPY3D.__new__(HIP_MEMCPY3D)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,HIP_MEMCPY3D):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.HIP_MEMCPY3D*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.HIP_MEMCPY3D*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.HIP_MEMCPY3D*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.HIP_MEMCPY3D** ptr):
-        ptr[0] = <chip.HIP_MEMCPY3D *>stdlib.malloc(sizeof(chip.HIP_MEMCPY3D))
+        ptr[0] = <chip.HIP_MEMCPY3D*>stdlib.malloc(sizeof(chip.HIP_MEMCPY3D))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -4395,13 +5929,26 @@ cdef class HIP_MEMCPY3D:
     cdef HIP_MEMCPY3D new():
         """Factory function to create HIP_MEMCPY3D objects with
         newly allocated chip.HIP_MEMCPY3D"""
-        cdef chip.HIP_MEMCPY3D *ptr;
+        cdef chip.HIP_MEMCPY3D* ptr;
         HIP_MEMCPY3D.__allocate(&ptr)
         return HIP_MEMCPY3D.from_ptr(ptr, owner=True)
     
     def __init__(self):
        HIP_MEMCPY3D.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<HIP_MEMCPY3D object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_srcXInBytes(self, i):
         """Get value ``srcXInBytes`` of ``self._ptr[i]``.
         """
@@ -4678,1012 +6225,3652 @@ class hipPointer_attribute(enum.IntEnum):
     HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS = chip.HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS
     HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
 
-
 cdef class uchar1:
-    cdef chip.uchar1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef uchar1 from_ptr(chip.uchar1 *_ptr, bint owner=False):
+    cdef uchar1 from_ptr(chip.uchar1* ptr, bint owner=False):
         """Factory function to create ``uchar1`` objects from
         given ``chip.uchar1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uchar1 wrapper = uchar1.__new__(uchar1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef uchar1 from_pyobj(object pyobj):
+        """Derives a uchar1 from a Python object.
+
+        Derives a uchar1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``uchar1`` reference, this method
+        returns it directly. No new ``uchar1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``uchar1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of uchar1!
+        """
+        cdef uchar1 wrapper = uchar1.__new__(uchar1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,uchar1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.uchar1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.uchar1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.uchar1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<uchar1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class uchar2:
-    cdef chip.uchar2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef uchar2 from_ptr(chip.uchar2 *_ptr, bint owner=False):
+    cdef uchar2 from_ptr(chip.uchar2* ptr, bint owner=False):
         """Factory function to create ``uchar2`` objects from
         given ``chip.uchar2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uchar2 wrapper = uchar2.__new__(uchar2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef uchar2 from_pyobj(object pyobj):
+        """Derives a uchar2 from a Python object.
+
+        Derives a uchar2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``uchar2`` reference, this method
+        returns it directly. No new ``uchar2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``uchar2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of uchar2!
+        """
+        cdef uchar2 wrapper = uchar2.__new__(uchar2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,uchar2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.uchar2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.uchar2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.uchar2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<uchar2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class uchar3:
-    cdef chip.uchar3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef uchar3 from_ptr(chip.uchar3 *_ptr, bint owner=False):
+    cdef uchar3 from_ptr(chip.uchar3* ptr, bint owner=False):
         """Factory function to create ``uchar3`` objects from
         given ``chip.uchar3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uchar3 wrapper = uchar3.__new__(uchar3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef uchar3 from_pyobj(object pyobj):
+        """Derives a uchar3 from a Python object.
+
+        Derives a uchar3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``uchar3`` reference, this method
+        returns it directly. No new ``uchar3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``uchar3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of uchar3!
+        """
+        cdef uchar3 wrapper = uchar3.__new__(uchar3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,uchar3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.uchar3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.uchar3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.uchar3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<uchar3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class uchar4:
-    cdef chip.uchar4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef uchar4 from_ptr(chip.uchar4 *_ptr, bint owner=False):
+    cdef uchar4 from_ptr(chip.uchar4* ptr, bint owner=False):
         """Factory function to create ``uchar4`` objects from
         given ``chip.uchar4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uchar4 wrapper = uchar4.__new__(uchar4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef uchar4 from_pyobj(object pyobj):
+        """Derives a uchar4 from a Python object.
+
+        Derives a uchar4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``uchar4`` reference, this method
+        returns it directly. No new ``uchar4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``uchar4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of uchar4!
+        """
+        cdef uchar4 wrapper = uchar4.__new__(uchar4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,uchar4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.uchar4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.uchar4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.uchar4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<uchar4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class char1:
-    cdef chip.char1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef char1 from_ptr(chip.char1 *_ptr, bint owner=False):
+    cdef char1 from_ptr(chip.char1* ptr, bint owner=False):
         """Factory function to create ``char1`` objects from
         given ``chip.char1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef char1 wrapper = char1.__new__(char1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef char1 from_pyobj(object pyobj):
+        """Derives a char1 from a Python object.
+
+        Derives a char1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``char1`` reference, this method
+        returns it directly. No new ``char1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``char1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of char1!
+        """
+        cdef char1 wrapper = char1.__new__(char1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,char1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.char1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.char1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.char1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<char1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class char2:
-    cdef chip.char2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef char2 from_ptr(chip.char2 *_ptr, bint owner=False):
+    cdef char2 from_ptr(chip.char2* ptr, bint owner=False):
         """Factory function to create ``char2`` objects from
         given ``chip.char2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef char2 wrapper = char2.__new__(char2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef char2 from_pyobj(object pyobj):
+        """Derives a char2 from a Python object.
+
+        Derives a char2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``char2`` reference, this method
+        returns it directly. No new ``char2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``char2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of char2!
+        """
+        cdef char2 wrapper = char2.__new__(char2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,char2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.char2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.char2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.char2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<char2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class char3:
-    cdef chip.char3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef char3 from_ptr(chip.char3 *_ptr, bint owner=False):
+    cdef char3 from_ptr(chip.char3* ptr, bint owner=False):
         """Factory function to create ``char3`` objects from
         given ``chip.char3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef char3 wrapper = char3.__new__(char3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef char3 from_pyobj(object pyobj):
+        """Derives a char3 from a Python object.
+
+        Derives a char3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``char3`` reference, this method
+        returns it directly. No new ``char3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``char3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of char3!
+        """
+        cdef char3 wrapper = char3.__new__(char3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,char3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.char3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.char3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.char3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<char3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class char4:
-    cdef chip.char4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef char4 from_ptr(chip.char4 *_ptr, bint owner=False):
+    cdef char4 from_ptr(chip.char4* ptr, bint owner=False):
         """Factory function to create ``char4`` objects from
         given ``chip.char4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef char4 wrapper = char4.__new__(char4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef char4 from_pyobj(object pyobj):
+        """Derives a char4 from a Python object.
+
+        Derives a char4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``char4`` reference, this method
+        returns it directly. No new ``char4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``char4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of char4!
+        """
+        cdef char4 wrapper = char4.__new__(char4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,char4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.char4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.char4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.char4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<char4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ushort1:
-    cdef chip.ushort1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ushort1 from_ptr(chip.ushort1 *_ptr, bint owner=False):
+    cdef ushort1 from_ptr(chip.ushort1* ptr, bint owner=False):
         """Factory function to create ``ushort1`` objects from
         given ``chip.ushort1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ushort1 wrapper = ushort1.__new__(ushort1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ushort1 from_pyobj(object pyobj):
+        """Derives a ushort1 from a Python object.
+
+        Derives a ushort1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ushort1`` reference, this method
+        returns it directly. No new ``ushort1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ushort1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ushort1!
+        """
+        cdef ushort1 wrapper = ushort1.__new__(ushort1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ushort1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ushort1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ushort1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ushort1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ushort1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ushort2:
-    cdef chip.ushort2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ushort2 from_ptr(chip.ushort2 *_ptr, bint owner=False):
+    cdef ushort2 from_ptr(chip.ushort2* ptr, bint owner=False):
         """Factory function to create ``ushort2`` objects from
         given ``chip.ushort2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ushort2 wrapper = ushort2.__new__(ushort2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ushort2 from_pyobj(object pyobj):
+        """Derives a ushort2 from a Python object.
+
+        Derives a ushort2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ushort2`` reference, this method
+        returns it directly. No new ``ushort2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ushort2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ushort2!
+        """
+        cdef ushort2 wrapper = ushort2.__new__(ushort2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ushort2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ushort2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ushort2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ushort2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ushort2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ushort3:
-    cdef chip.ushort3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ushort3 from_ptr(chip.ushort3 *_ptr, bint owner=False):
+    cdef ushort3 from_ptr(chip.ushort3* ptr, bint owner=False):
         """Factory function to create ``ushort3`` objects from
         given ``chip.ushort3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ushort3 wrapper = ushort3.__new__(ushort3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ushort3 from_pyobj(object pyobj):
+        """Derives a ushort3 from a Python object.
+
+        Derives a ushort3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ushort3`` reference, this method
+        returns it directly. No new ``ushort3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ushort3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ushort3!
+        """
+        cdef ushort3 wrapper = ushort3.__new__(ushort3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ushort3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ushort3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ushort3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ushort3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ushort3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ushort4:
-    cdef chip.ushort4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ushort4 from_ptr(chip.ushort4 *_ptr, bint owner=False):
+    cdef ushort4 from_ptr(chip.ushort4* ptr, bint owner=False):
         """Factory function to create ``ushort4`` objects from
         given ``chip.ushort4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ushort4 wrapper = ushort4.__new__(ushort4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ushort4 from_pyobj(object pyobj):
+        """Derives a ushort4 from a Python object.
+
+        Derives a ushort4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ushort4`` reference, this method
+        returns it directly. No new ``ushort4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ushort4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ushort4!
+        """
+        cdef ushort4 wrapper = ushort4.__new__(ushort4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ushort4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ushort4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ushort4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ushort4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ushort4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class short1:
-    cdef chip.short1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef short1 from_ptr(chip.short1 *_ptr, bint owner=False):
+    cdef short1 from_ptr(chip.short1* ptr, bint owner=False):
         """Factory function to create ``short1`` objects from
         given ``chip.short1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef short1 wrapper = short1.__new__(short1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef short1 from_pyobj(object pyobj):
+        """Derives a short1 from a Python object.
+
+        Derives a short1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``short1`` reference, this method
+        returns it directly. No new ``short1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``short1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of short1!
+        """
+        cdef short1 wrapper = short1.__new__(short1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,short1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.short1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.short1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.short1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<short1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class short2:
-    cdef chip.short2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef short2 from_ptr(chip.short2 *_ptr, bint owner=False):
+    cdef short2 from_ptr(chip.short2* ptr, bint owner=False):
         """Factory function to create ``short2`` objects from
         given ``chip.short2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef short2 wrapper = short2.__new__(short2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef short2 from_pyobj(object pyobj):
+        """Derives a short2 from a Python object.
+
+        Derives a short2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``short2`` reference, this method
+        returns it directly. No new ``short2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``short2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of short2!
+        """
+        cdef short2 wrapper = short2.__new__(short2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,short2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.short2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.short2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.short2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<short2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class short3:
-    cdef chip.short3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef short3 from_ptr(chip.short3 *_ptr, bint owner=False):
+    cdef short3 from_ptr(chip.short3* ptr, bint owner=False):
         """Factory function to create ``short3`` objects from
         given ``chip.short3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef short3 wrapper = short3.__new__(short3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef short3 from_pyobj(object pyobj):
+        """Derives a short3 from a Python object.
+
+        Derives a short3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``short3`` reference, this method
+        returns it directly. No new ``short3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``short3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of short3!
+        """
+        cdef short3 wrapper = short3.__new__(short3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,short3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.short3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.short3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.short3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<short3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class short4:
-    cdef chip.short4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef short4 from_ptr(chip.short4 *_ptr, bint owner=False):
+    cdef short4 from_ptr(chip.short4* ptr, bint owner=False):
         """Factory function to create ``short4`` objects from
         given ``chip.short4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef short4 wrapper = short4.__new__(short4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef short4 from_pyobj(object pyobj):
+        """Derives a short4 from a Python object.
+
+        Derives a short4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``short4`` reference, this method
+        returns it directly. No new ``short4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``short4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of short4!
+        """
+        cdef short4 wrapper = short4.__new__(short4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,short4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.short4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.short4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.short4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<short4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class uint1:
-    cdef chip.uint1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef uint1 from_ptr(chip.uint1 *_ptr, bint owner=False):
+    cdef uint1 from_ptr(chip.uint1* ptr, bint owner=False):
         """Factory function to create ``uint1`` objects from
         given ``chip.uint1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uint1 wrapper = uint1.__new__(uint1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef uint1 from_pyobj(object pyobj):
+        """Derives a uint1 from a Python object.
+
+        Derives a uint1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``uint1`` reference, this method
+        returns it directly. No new ``uint1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``uint1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of uint1!
+        """
+        cdef uint1 wrapper = uint1.__new__(uint1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,uint1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.uint1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.uint1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.uint1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<uint1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class uint2:
-    cdef chip.uint2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef uint2 from_ptr(chip.uint2 *_ptr, bint owner=False):
+    cdef uint2 from_ptr(chip.uint2* ptr, bint owner=False):
         """Factory function to create ``uint2`` objects from
         given ``chip.uint2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uint2 wrapper = uint2.__new__(uint2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef uint2 from_pyobj(object pyobj):
+        """Derives a uint2 from a Python object.
+
+        Derives a uint2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``uint2`` reference, this method
+        returns it directly. No new ``uint2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``uint2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of uint2!
+        """
+        cdef uint2 wrapper = uint2.__new__(uint2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,uint2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.uint2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.uint2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.uint2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<uint2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class uint3:
-    cdef chip.uint3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef uint3 from_ptr(chip.uint3 *_ptr, bint owner=False):
+    cdef uint3 from_ptr(chip.uint3* ptr, bint owner=False):
         """Factory function to create ``uint3`` objects from
         given ``chip.uint3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uint3 wrapper = uint3.__new__(uint3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef uint3 from_pyobj(object pyobj):
+        """Derives a uint3 from a Python object.
+
+        Derives a uint3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``uint3`` reference, this method
+        returns it directly. No new ``uint3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``uint3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of uint3!
+        """
+        cdef uint3 wrapper = uint3.__new__(uint3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,uint3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.uint3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.uint3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.uint3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<uint3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class uint4:
-    cdef chip.uint4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef uint4 from_ptr(chip.uint4 *_ptr, bint owner=False):
+    cdef uint4 from_ptr(chip.uint4* ptr, bint owner=False):
         """Factory function to create ``uint4`` objects from
         given ``chip.uint4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uint4 wrapper = uint4.__new__(uint4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef uint4 from_pyobj(object pyobj):
+        """Derives a uint4 from a Python object.
+
+        Derives a uint4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``uint4`` reference, this method
+        returns it directly. No new ``uint4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``uint4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of uint4!
+        """
+        cdef uint4 wrapper = uint4.__new__(uint4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,uint4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.uint4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.uint4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.uint4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<uint4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class int1:
-    cdef chip.int1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef int1 from_ptr(chip.int1 *_ptr, bint owner=False):
+    cdef int1 from_ptr(chip.int1* ptr, bint owner=False):
         """Factory function to create ``int1`` objects from
         given ``chip.int1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef int1 wrapper = int1.__new__(int1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef int1 from_pyobj(object pyobj):
+        """Derives a int1 from a Python object.
+
+        Derives a int1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``int1`` reference, this method
+        returns it directly. No new ``int1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``int1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of int1!
+        """
+        cdef int1 wrapper = int1.__new__(int1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,int1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.int1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.int1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.int1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<int1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class int2:
-    cdef chip.int2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef int2 from_ptr(chip.int2 *_ptr, bint owner=False):
+    cdef int2 from_ptr(chip.int2* ptr, bint owner=False):
         """Factory function to create ``int2`` objects from
         given ``chip.int2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef int2 wrapper = int2.__new__(int2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef int2 from_pyobj(object pyobj):
+        """Derives a int2 from a Python object.
+
+        Derives a int2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``int2`` reference, this method
+        returns it directly. No new ``int2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``int2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of int2!
+        """
+        cdef int2 wrapper = int2.__new__(int2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,int2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.int2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.int2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.int2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<int2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class int3:
-    cdef chip.int3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef int3 from_ptr(chip.int3 *_ptr, bint owner=False):
+    cdef int3 from_ptr(chip.int3* ptr, bint owner=False):
         """Factory function to create ``int3`` objects from
         given ``chip.int3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef int3 wrapper = int3.__new__(int3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef int3 from_pyobj(object pyobj):
+        """Derives a int3 from a Python object.
+
+        Derives a int3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``int3`` reference, this method
+        returns it directly. No new ``int3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``int3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of int3!
+        """
+        cdef int3 wrapper = int3.__new__(int3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,int3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.int3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.int3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.int3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<int3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class int4:
-    cdef chip.int4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef int4 from_ptr(chip.int4 *_ptr, bint owner=False):
+    cdef int4 from_ptr(chip.int4* ptr, bint owner=False):
         """Factory function to create ``int4`` objects from
         given ``chip.int4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef int4 wrapper = int4.__new__(int4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef int4 from_pyobj(object pyobj):
+        """Derives a int4 from a Python object.
+
+        Derives a int4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``int4`` reference, this method
+        returns it directly. No new ``int4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``int4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of int4!
+        """
+        cdef int4 wrapper = int4.__new__(int4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,int4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.int4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.int4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.int4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<int4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ulong1:
-    cdef chip.ulong1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ulong1 from_ptr(chip.ulong1 *_ptr, bint owner=False):
+    cdef ulong1 from_ptr(chip.ulong1* ptr, bint owner=False):
         """Factory function to create ``ulong1`` objects from
         given ``chip.ulong1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulong1 wrapper = ulong1.__new__(ulong1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ulong1 from_pyobj(object pyobj):
+        """Derives a ulong1 from a Python object.
+
+        Derives a ulong1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ulong1`` reference, this method
+        returns it directly. No new ``ulong1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ulong1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ulong1!
+        """
+        cdef ulong1 wrapper = ulong1.__new__(ulong1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ulong1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ulong1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ulong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ulong1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ulong1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ulong2:
-    cdef chip.ulong2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ulong2 from_ptr(chip.ulong2 *_ptr, bint owner=False):
+    cdef ulong2 from_ptr(chip.ulong2* ptr, bint owner=False):
         """Factory function to create ``ulong2`` objects from
         given ``chip.ulong2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulong2 wrapper = ulong2.__new__(ulong2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ulong2 from_pyobj(object pyobj):
+        """Derives a ulong2 from a Python object.
+
+        Derives a ulong2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ulong2`` reference, this method
+        returns it directly. No new ``ulong2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ulong2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ulong2!
+        """
+        cdef ulong2 wrapper = ulong2.__new__(ulong2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ulong2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ulong2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ulong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ulong2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ulong2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ulong3:
-    cdef chip.ulong3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ulong3 from_ptr(chip.ulong3 *_ptr, bint owner=False):
+    cdef ulong3 from_ptr(chip.ulong3* ptr, bint owner=False):
         """Factory function to create ``ulong3`` objects from
         given ``chip.ulong3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulong3 wrapper = ulong3.__new__(ulong3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ulong3 from_pyobj(object pyobj):
+        """Derives a ulong3 from a Python object.
+
+        Derives a ulong3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ulong3`` reference, this method
+        returns it directly. No new ``ulong3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ulong3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ulong3!
+        """
+        cdef ulong3 wrapper = ulong3.__new__(ulong3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ulong3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ulong3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ulong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ulong3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ulong3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ulong4:
-    cdef chip.ulong4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ulong4 from_ptr(chip.ulong4 *_ptr, bint owner=False):
+    cdef ulong4 from_ptr(chip.ulong4* ptr, bint owner=False):
         """Factory function to create ``ulong4`` objects from
         given ``chip.ulong4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulong4 wrapper = ulong4.__new__(ulong4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ulong4 from_pyobj(object pyobj):
+        """Derives a ulong4 from a Python object.
+
+        Derives a ulong4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ulong4`` reference, this method
+        returns it directly. No new ``ulong4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ulong4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ulong4!
+        """
+        cdef ulong4 wrapper = ulong4.__new__(ulong4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ulong4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ulong4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ulong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ulong4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ulong4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class long1:
-    cdef chip.long1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef long1 from_ptr(chip.long1 *_ptr, bint owner=False):
+    cdef long1 from_ptr(chip.long1* ptr, bint owner=False):
         """Factory function to create ``long1`` objects from
         given ``chip.long1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef long1 wrapper = long1.__new__(long1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef long1 from_pyobj(object pyobj):
+        """Derives a long1 from a Python object.
+
+        Derives a long1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``long1`` reference, this method
+        returns it directly. No new ``long1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``long1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of long1!
+        """
+        cdef long1 wrapper = long1.__new__(long1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,long1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.long1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.long1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.long1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<long1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class long2:
-    cdef chip.long2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef long2 from_ptr(chip.long2 *_ptr, bint owner=False):
+    cdef long2 from_ptr(chip.long2* ptr, bint owner=False):
         """Factory function to create ``long2`` objects from
         given ``chip.long2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef long2 wrapper = long2.__new__(long2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef long2 from_pyobj(object pyobj):
+        """Derives a long2 from a Python object.
+
+        Derives a long2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``long2`` reference, this method
+        returns it directly. No new ``long2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``long2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of long2!
+        """
+        cdef long2 wrapper = long2.__new__(long2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,long2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.long2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.long2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.long2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<long2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class long3:
-    cdef chip.long3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef long3 from_ptr(chip.long3 *_ptr, bint owner=False):
+    cdef long3 from_ptr(chip.long3* ptr, bint owner=False):
         """Factory function to create ``long3`` objects from
         given ``chip.long3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef long3 wrapper = long3.__new__(long3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef long3 from_pyobj(object pyobj):
+        """Derives a long3 from a Python object.
+
+        Derives a long3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``long3`` reference, this method
+        returns it directly. No new ``long3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``long3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of long3!
+        """
+        cdef long3 wrapper = long3.__new__(long3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,long3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.long3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.long3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.long3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<long3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class long4:
-    cdef chip.long4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef long4 from_ptr(chip.long4 *_ptr, bint owner=False):
+    cdef long4 from_ptr(chip.long4* ptr, bint owner=False):
         """Factory function to create ``long4`` objects from
         given ``chip.long4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef long4 wrapper = long4.__new__(long4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef long4 from_pyobj(object pyobj):
+        """Derives a long4 from a Python object.
+
+        Derives a long4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``long4`` reference, this method
+        returns it directly. No new ``long4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``long4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of long4!
+        """
+        cdef long4 wrapper = long4.__new__(long4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,long4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.long4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.long4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.long4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<long4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ulonglong1:
-    cdef chip.ulonglong1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ulonglong1 from_ptr(chip.ulonglong1 *_ptr, bint owner=False):
+    cdef ulonglong1 from_ptr(chip.ulonglong1* ptr, bint owner=False):
         """Factory function to create ``ulonglong1`` objects from
         given ``chip.ulonglong1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulonglong1 wrapper = ulonglong1.__new__(ulonglong1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ulonglong1 from_pyobj(object pyobj):
+        """Derives a ulonglong1 from a Python object.
+
+        Derives a ulonglong1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ulonglong1`` reference, this method
+        returns it directly. No new ``ulonglong1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ulonglong1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ulonglong1!
+        """
+        cdef ulonglong1 wrapper = ulonglong1.__new__(ulonglong1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ulonglong1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ulonglong1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ulonglong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ulonglong1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ulonglong1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ulonglong2:
-    cdef chip.ulonglong2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ulonglong2 from_ptr(chip.ulonglong2 *_ptr, bint owner=False):
+    cdef ulonglong2 from_ptr(chip.ulonglong2* ptr, bint owner=False):
         """Factory function to create ``ulonglong2`` objects from
         given ``chip.ulonglong2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulonglong2 wrapper = ulonglong2.__new__(ulonglong2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ulonglong2 from_pyobj(object pyobj):
+        """Derives a ulonglong2 from a Python object.
+
+        Derives a ulonglong2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ulonglong2`` reference, this method
+        returns it directly. No new ``ulonglong2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ulonglong2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ulonglong2!
+        """
+        cdef ulonglong2 wrapper = ulonglong2.__new__(ulonglong2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ulonglong2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ulonglong2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ulonglong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ulonglong2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ulonglong2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ulonglong3:
-    cdef chip.ulonglong3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ulonglong3 from_ptr(chip.ulonglong3 *_ptr, bint owner=False):
+    cdef ulonglong3 from_ptr(chip.ulonglong3* ptr, bint owner=False):
         """Factory function to create ``ulonglong3`` objects from
         given ``chip.ulonglong3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulonglong3 wrapper = ulonglong3.__new__(ulonglong3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ulonglong3 from_pyobj(object pyobj):
+        """Derives a ulonglong3 from a Python object.
+
+        Derives a ulonglong3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ulonglong3`` reference, this method
+        returns it directly. No new ``ulonglong3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ulonglong3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ulonglong3!
+        """
+        cdef ulonglong3 wrapper = ulonglong3.__new__(ulonglong3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ulonglong3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ulonglong3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ulonglong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ulonglong3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ulonglong3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class ulonglong4:
-    cdef chip.ulonglong4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ulonglong4 from_ptr(chip.ulonglong4 *_ptr, bint owner=False):
+    cdef ulonglong4 from_ptr(chip.ulonglong4* ptr, bint owner=False):
         """Factory function to create ``ulonglong4`` objects from
         given ``chip.ulonglong4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulonglong4 wrapper = ulonglong4.__new__(ulonglong4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef ulonglong4 from_pyobj(object pyobj):
+        """Derives a ulonglong4 from a Python object.
+
+        Derives a ulonglong4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ulonglong4`` reference, this method
+        returns it directly. No new ``ulonglong4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ulonglong4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ulonglong4!
+        """
+        cdef ulonglong4 wrapper = ulonglong4.__new__(ulonglong4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ulonglong4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ulonglong4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ulonglong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ulonglong4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ulonglong4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class longlong1:
-    cdef chip.longlong1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef longlong1 from_ptr(chip.longlong1 *_ptr, bint owner=False):
+    cdef longlong1 from_ptr(chip.longlong1* ptr, bint owner=False):
         """Factory function to create ``longlong1`` objects from
         given ``chip.longlong1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef longlong1 wrapper = longlong1.__new__(longlong1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef longlong1 from_pyobj(object pyobj):
+        """Derives a longlong1 from a Python object.
+
+        Derives a longlong1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``longlong1`` reference, this method
+        returns it directly. No new ``longlong1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``longlong1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of longlong1!
+        """
+        cdef longlong1 wrapper = longlong1.__new__(longlong1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,longlong1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.longlong1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.longlong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.longlong1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<longlong1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class longlong2:
-    cdef chip.longlong2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef longlong2 from_ptr(chip.longlong2 *_ptr, bint owner=False):
+    cdef longlong2 from_ptr(chip.longlong2* ptr, bint owner=False):
         """Factory function to create ``longlong2`` objects from
         given ``chip.longlong2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef longlong2 wrapper = longlong2.__new__(longlong2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef longlong2 from_pyobj(object pyobj):
+        """Derives a longlong2 from a Python object.
+
+        Derives a longlong2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``longlong2`` reference, this method
+        returns it directly. No new ``longlong2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``longlong2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of longlong2!
+        """
+        cdef longlong2 wrapper = longlong2.__new__(longlong2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,longlong2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.longlong2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.longlong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.longlong2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<longlong2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class longlong3:
-    cdef chip.longlong3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef longlong3 from_ptr(chip.longlong3 *_ptr, bint owner=False):
+    cdef longlong3 from_ptr(chip.longlong3* ptr, bint owner=False):
         """Factory function to create ``longlong3`` objects from
         given ``chip.longlong3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef longlong3 wrapper = longlong3.__new__(longlong3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef longlong3 from_pyobj(object pyobj):
+        """Derives a longlong3 from a Python object.
+
+        Derives a longlong3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``longlong3`` reference, this method
+        returns it directly. No new ``longlong3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``longlong3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of longlong3!
+        """
+        cdef longlong3 wrapper = longlong3.__new__(longlong3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,longlong3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.longlong3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.longlong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.longlong3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<longlong3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class longlong4:
-    cdef chip.longlong4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef longlong4 from_ptr(chip.longlong4 *_ptr, bint owner=False):
+    cdef longlong4 from_ptr(chip.longlong4* ptr, bint owner=False):
         """Factory function to create ``longlong4`` objects from
         given ``chip.longlong4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef longlong4 wrapper = longlong4.__new__(longlong4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef longlong4 from_pyobj(object pyobj):
+        """Derives a longlong4 from a Python object.
+
+        Derives a longlong4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``longlong4`` reference, this method
+        returns it directly. No new ``longlong4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``longlong4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of longlong4!
+        """
+        cdef longlong4 wrapper = longlong4.__new__(longlong4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,longlong4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.longlong4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.longlong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.longlong4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<longlong4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class float1:
-    cdef chip.float1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef float1 from_ptr(chip.float1 *_ptr, bint owner=False):
+    cdef float1 from_ptr(chip.float1* ptr, bint owner=False):
         """Factory function to create ``float1`` objects from
         given ``chip.float1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef float1 wrapper = float1.__new__(float1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef float1 from_pyobj(object pyobj):
+        """Derives a float1 from a Python object.
+
+        Derives a float1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``float1`` reference, this method
+        returns it directly. No new ``float1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``float1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of float1!
+        """
+        cdef float1 wrapper = float1.__new__(float1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,float1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.float1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.float1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.float1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<float1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class float2:
-    cdef chip.float2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef float2 from_ptr(chip.float2 *_ptr, bint owner=False):
+    cdef float2 from_ptr(chip.float2* ptr, bint owner=False):
         """Factory function to create ``float2`` objects from
         given ``chip.float2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef float2 wrapper = float2.__new__(float2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef float2 from_pyobj(object pyobj):
+        """Derives a float2 from a Python object.
+
+        Derives a float2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``float2`` reference, this method
+        returns it directly. No new ``float2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``float2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of float2!
+        """
+        cdef float2 wrapper = float2.__new__(float2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,float2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.float2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.float2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.float2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<float2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class float3:
-    cdef chip.float3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef float3 from_ptr(chip.float3 *_ptr, bint owner=False):
+    cdef float3 from_ptr(chip.float3* ptr, bint owner=False):
         """Factory function to create ``float3`` objects from
         given ``chip.float3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef float3 wrapper = float3.__new__(float3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef float3 from_pyobj(object pyobj):
+        """Derives a float3 from a Python object.
+
+        Derives a float3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``float3`` reference, this method
+        returns it directly. No new ``float3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``float3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of float3!
+        """
+        cdef float3 wrapper = float3.__new__(float3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,float3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.float3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.float3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.float3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<float3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class float4:
-    cdef chip.float4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef float4 from_ptr(chip.float4 *_ptr, bint owner=False):
+    cdef float4 from_ptr(chip.float4* ptr, bint owner=False):
         """Factory function to create ``float4`` objects from
         given ``chip.float4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef float4 wrapper = float4.__new__(float4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef float4 from_pyobj(object pyobj):
+        """Derives a float4 from a Python object.
+
+        Derives a float4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``float4`` reference, this method
+        returns it directly. No new ``float4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``float4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of float4!
+        """
+        cdef float4 wrapper = float4.__new__(float4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,float4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.float4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.float4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.float4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<float4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class double1:
-    cdef chip.double1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef double1 from_ptr(chip.double1 *_ptr, bint owner=False):
+    cdef double1 from_ptr(chip.double1* ptr, bint owner=False):
         """Factory function to create ``double1`` objects from
         given ``chip.double1`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef double1 wrapper = double1.__new__(double1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef double1 from_pyobj(object pyobj):
+        """Derives a double1 from a Python object.
+
+        Derives a double1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``double1`` reference, this method
+        returns it directly. No new ``double1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``double1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of double1!
+        """
+        cdef double1 wrapper = double1.__new__(double1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,double1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.double1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.double1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.double1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<double1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class double2:
-    cdef chip.double2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef double2 from_ptr(chip.double2 *_ptr, bint owner=False):
+    cdef double2 from_ptr(chip.double2* ptr, bint owner=False):
         """Factory function to create ``double2`` objects from
         given ``chip.double2`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef double2 wrapper = double2.__new__(double2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef double2 from_pyobj(object pyobj):
+        """Derives a double2 from a Python object.
+
+        Derives a double2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``double2`` reference, this method
+        returns it directly. No new ``double2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``double2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of double2!
+        """
+        cdef double2 wrapper = double2.__new__(double2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,double2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.double2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.double2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.double2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<double2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class double3:
-    cdef chip.double3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef double3 from_ptr(chip.double3 *_ptr, bint owner=False):
+    cdef double3 from_ptr(chip.double3* ptr, bint owner=False):
         """Factory function to create ``double3`` objects from
         given ``chip.double3`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef double3 wrapper = double3.__new__(double3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef double3 from_pyobj(object pyobj):
+        """Derives a double3 from a Python object.
+
+        Derives a double3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``double3`` reference, this method
+        returns it directly. No new ``double3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``double3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of double3!
+        """
+        cdef double3 wrapper = double3.__new__(double3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,double3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.double3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.double3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.double3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<double3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class double4:
-    cdef chip.double4* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef double4 from_ptr(chip.double4 *_ptr, bint owner=False):
+    cdef double4 from_ptr(chip.double4* ptr, bint owner=False):
         """Factory function to create ``double4`` objects from
         given ``chip.double4`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef double4 wrapper = double4.__new__(double4)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef double4 from_pyobj(object pyobj):
+        """Derives a double4 from a Python object.
+
+        Derives a double4 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``double4`` reference, this method
+        returns it directly. No new ``double4`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``double4``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of double4!
+        """
+        cdef double4 wrapper = double4.__new__(double4)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,double4):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.double4*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.double4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.double4*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<double4 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 @cython.embedsignature(True)
@@ -5695,25 +9882,80 @@ def hipCreateChannelDesc(int x, int y, int z, int w, object f):
         # fully specified
 
 
-
 cdef class __hip_texture:
-    cdef chip.__hip_texture* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef __hip_texture from_ptr(chip.__hip_texture *_ptr, bint owner=False):
+    cdef __hip_texture from_ptr(chip.__hip_texture* ptr, bint owner=False):
         """Factory function to create ``__hip_texture`` objects from
         given ``chip.__hip_texture`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef __hip_texture wrapper = __hip_texture.__new__(__hip_texture)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef __hip_texture from_pyobj(object pyobj):
+        """Derives a __hip_texture from a Python object.
+
+        Derives a __hip_texture from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``__hip_texture`` reference, this method
+        returns it directly. No new ``__hip_texture`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``__hip_texture``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of __hip_texture!
+        """
+        cdef __hip_texture wrapper = __hip_texture.__new__(__hip_texture)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,__hip_texture):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.__hip_texture*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.__hip_texture*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.__hip_texture*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<__hip_texture object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipTextureObject_t = __hip_texture
@@ -5732,37 +9974,78 @@ class hipTextureReadMode(enum.IntEnum):
     hipReadModeElementType = chip.hipReadModeElementType
     hipReadModeNormalizedFloat = chip.hipReadModeNormalizedFloat
 
-
 cdef class textureReference:
-    cdef chip.textureReference* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef textureReference from_ptr(chip.textureReference *_ptr, bint owner=False):
+    cdef textureReference from_ptr(chip.textureReference* ptr, bint owner=False):
         """Factory function to create ``textureReference`` objects from
         given ``chip.textureReference`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef textureReference wrapper = textureReference.__new__(textureReference)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef textureReference from_pyobj(object pyobj):
+        """Derives a textureReference from a Python object.
+
+        Derives a textureReference from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``textureReference`` reference, this method
+        returns it directly. No new ``textureReference`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``textureReference``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of textureReference!
+        """
+        cdef textureReference wrapper = textureReference.__new__(textureReference)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,textureReference):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.textureReference*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.textureReference*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.textureReference*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.textureReference** ptr):
-        ptr[0] = <chip.textureReference *>stdlib.malloc(sizeof(chip.textureReference))
+        ptr[0] = <chip.textureReference*>stdlib.malloc(sizeof(chip.textureReference))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -5772,13 +10055,26 @@ cdef class textureReference:
     cdef textureReference new():
         """Factory function to create textureReference objects with
         newly allocated chip.textureReference"""
-        cdef chip.textureReference *ptr;
+        cdef chip.textureReference* ptr;
         textureReference.__allocate(&ptr)
         return textureReference.from_ptr(ptr, owner=True)
     
     def __init__(self):
        textureReference.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<textureReference object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_normalized(self, i):
         """Get value ``normalized`` of ``self._ptr[i]``.
         """
@@ -5951,37 +10247,78 @@ cdef class textureReference:
         self.set_format(0,value)
 
 
-
 cdef class hipTextureDesc:
-    cdef chip.hipTextureDesc* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipTextureDesc from_ptr(chip.hipTextureDesc *_ptr, bint owner=False):
+    cdef hipTextureDesc from_ptr(chip.hipTextureDesc* ptr, bint owner=False):
         """Factory function to create ``hipTextureDesc`` objects from
         given ``chip.hipTextureDesc`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipTextureDesc wrapper = hipTextureDesc.__new__(hipTextureDesc)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipTextureDesc from_pyobj(object pyobj):
+        """Derives a hipTextureDesc from a Python object.
+
+        Derives a hipTextureDesc from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipTextureDesc`` reference, this method
+        returns it directly. No new ``hipTextureDesc`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipTextureDesc``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipTextureDesc!
+        """
+        cdef hipTextureDesc wrapper = hipTextureDesc.__new__(hipTextureDesc)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipTextureDesc):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipTextureDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipTextureDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipTextureDesc*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipTextureDesc** ptr):
-        ptr[0] = <chip.hipTextureDesc *>stdlib.malloc(sizeof(chip.hipTextureDesc))
+        ptr[0] = <chip.hipTextureDesc*>stdlib.malloc(sizeof(chip.hipTextureDesc))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -5991,13 +10328,26 @@ cdef class hipTextureDesc:
     cdef hipTextureDesc new():
         """Factory function to create hipTextureDesc objects with
         newly allocated chip.hipTextureDesc"""
-        cdef chip.hipTextureDesc *ptr;
+        cdef chip.hipTextureDesc* ptr;
         hipTextureDesc.__allocate(&ptr)
         return hipTextureDesc.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipTextureDesc.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipTextureDesc object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     # TODO is_enum_constantarray: add
     def get_filterMode(self, i):
         """Get value of ``filterMode`` of ``self._ptr[i]``.
@@ -6141,60 +10491,156 @@ cdef class hipTextureDesc:
         self.set_maxMipmapLevelClamp(0,value)
 
 
-
 cdef class __hip_surface:
-    cdef chip.__hip_surface* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef __hip_surface from_ptr(chip.__hip_surface *_ptr, bint owner=False):
+    cdef __hip_surface from_ptr(chip.__hip_surface* ptr, bint owner=False):
         """Factory function to create ``__hip_surface`` objects from
         given ``chip.__hip_surface`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef __hip_surface wrapper = __hip_surface.__new__(__hip_surface)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef __hip_surface from_pyobj(object pyobj):
+        """Derives a __hip_surface from a Python object.
+
+        Derives a __hip_surface from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``__hip_surface`` reference, this method
+        returns it directly. No new ``__hip_surface`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``__hip_surface``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of __hip_surface!
+        """
+        cdef __hip_surface wrapper = __hip_surface.__new__(__hip_surface)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,__hip_surface):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.__hip_surface*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.__hip_surface*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.__hip_surface*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<__hip_surface object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipSurfaceObject_t = __hip_surface
 
-
 cdef class surfaceReference:
-    cdef chip.surfaceReference* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef surfaceReference from_ptr(chip.surfaceReference *_ptr, bint owner=False):
+    cdef surfaceReference from_ptr(chip.surfaceReference* ptr, bint owner=False):
         """Factory function to create ``surfaceReference`` objects from
         given ``chip.surfaceReference`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef surfaceReference wrapper = surfaceReference.__new__(surfaceReference)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef surfaceReference from_pyobj(object pyobj):
+        """Derives a surfaceReference from a Python object.
+
+        Derives a surfaceReference from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``surfaceReference`` reference, this method
+        returns it directly. No new ``surfaceReference`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``surfaceReference``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of surfaceReference!
+        """
+        cdef surfaceReference wrapper = surfaceReference.__new__(surfaceReference)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,surfaceReference):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.surfaceReference*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.surfaceReference*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.surfaceReference*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.surfaceReference** ptr):
-        ptr[0] = <chip.surfaceReference *>stdlib.malloc(sizeof(chip.surfaceReference))
+        ptr[0] = <chip.surfaceReference*>stdlib.malloc(sizeof(chip.surfaceReference))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -6204,13 +10650,26 @@ cdef class surfaceReference:
     cdef surfaceReference new():
         """Factory function to create surfaceReference objects with
         newly allocated chip.surfaceReference"""
-        cdef chip.surfaceReference *ptr;
+        cdef chip.surfaceReference* ptr;
         surfaceReference.__allocate(&ptr)
         return surfaceReference.from_ptr(ptr, owner=True)
     
     def __init__(self):
        surfaceReference.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<surfaceReference object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 class hipSurfaceBoundaryMode(enum.IntEnum):
@@ -6218,49 +10677,83 @@ class hipSurfaceBoundaryMode(enum.IntEnum):
     hipBoundaryModeTrap = chip.hipBoundaryModeTrap
     hipBoundaryModeClamp = chip.hipBoundaryModeClamp
 
-
 cdef class ihipCtx_t:
-    cdef chip.ihipCtx_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ihipCtx_t from_ptr(chip.ihipCtx_t *_ptr, bint owner=False):
+    cdef ihipCtx_t from_ptr(chip.ihipCtx_t* ptr, bint owner=False):
         """Factory function to create ``ihipCtx_t`` objects from
         given ``chip.ihipCtx_t`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ihipCtx_t wrapper = ihipCtx_t.__new__(ihipCtx_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef ihipCtx_t from_pyobj(object pyobj):
+        """Derives a ihipCtx_t from a Python object.
+
+        Derives a ihipCtx_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ihipCtx_t`` reference, this method
+        returns it directly. No new ``ihipCtx_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ihipCtx_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ihipCtx_t!
+        """
+        cdef ihipCtx_t wrapper = ihipCtx_t.__new__(ihipCtx_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ihipCtx_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ihipCtx_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ihipCtx_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ihipCtx_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ihipCtx_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipCtx_t = ihipCtx_t
-
-
-cdef class hipDevice_t:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipDevice_t from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipDevice_t`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipDevice_t wrapper = hipDevice_t.__new__(hipDevice_t)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
 
 class hipDeviceP2PAttr(enum.IntEnum):
     hipDevP2PAttrPerformanceRank = chip.hipDevP2PAttrPerformanceRank
@@ -6268,60 +10761,156 @@ class hipDeviceP2PAttr(enum.IntEnum):
     hipDevP2PAttrNativeAtomicSupported = chip.hipDevP2PAttrNativeAtomicSupported
     hipDevP2PAttrHipArrayAccessSupported = chip.hipDevP2PAttrHipArrayAccessSupported
 
-
 cdef class ihipStream_t:
-    cdef chip.ihipStream_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ihipStream_t from_ptr(chip.ihipStream_t *_ptr, bint owner=False):
+    cdef ihipStream_t from_ptr(chip.ihipStream_t* ptr, bint owner=False):
         """Factory function to create ``ihipStream_t`` objects from
         given ``chip.ihipStream_t`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ihipStream_t wrapper = ihipStream_t.__new__(ihipStream_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef ihipStream_t from_pyobj(object pyobj):
+        """Derives a ihipStream_t from a Python object.
+
+        Derives a ihipStream_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ihipStream_t`` reference, this method
+        returns it directly. No new ``ihipStream_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ihipStream_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ihipStream_t!
+        """
+        cdef ihipStream_t wrapper = ihipStream_t.__new__(ihipStream_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ihipStream_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ihipStream_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ihipStream_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ihipStream_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ihipStream_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipStream_t = ihipStream_t
 
-
 cdef class hipIpcMemHandle_st:
-    cdef chip.hipIpcMemHandle_st* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipIpcMemHandle_st from_ptr(chip.hipIpcMemHandle_st *_ptr, bint owner=False):
+    cdef hipIpcMemHandle_st from_ptr(chip.hipIpcMemHandle_st* ptr, bint owner=False):
         """Factory function to create ``hipIpcMemHandle_st`` objects from
         given ``chip.hipIpcMemHandle_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipIpcMemHandle_st wrapper = hipIpcMemHandle_st.__new__(hipIpcMemHandle_st)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipIpcMemHandle_st from_pyobj(object pyobj):
+        """Derives a hipIpcMemHandle_st from a Python object.
+
+        Derives a hipIpcMemHandle_st from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipIpcMemHandle_st`` reference, this method
+        returns it directly. No new ``hipIpcMemHandle_st`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipIpcMemHandle_st``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipIpcMemHandle_st!
+        """
+        cdef hipIpcMemHandle_st wrapper = hipIpcMemHandle_st.__new__(hipIpcMemHandle_st)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipIpcMemHandle_st):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipIpcMemHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipIpcMemHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipIpcMemHandle_st*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipIpcMemHandle_st** ptr):
-        ptr[0] = <chip.hipIpcMemHandle_st *>stdlib.malloc(sizeof(chip.hipIpcMemHandle_st))
+        ptr[0] = <chip.hipIpcMemHandle_st*>stdlib.malloc(sizeof(chip.hipIpcMemHandle_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -6331,13 +10920,26 @@ cdef class hipIpcMemHandle_st:
     cdef hipIpcMemHandle_st new():
         """Factory function to create hipIpcMemHandle_st objects with
         newly allocated chip.hipIpcMemHandle_st"""
-        cdef chip.hipIpcMemHandle_st *ptr;
+        cdef chip.hipIpcMemHandle_st* ptr;
         hipIpcMemHandle_st.__allocate(&ptr)
         return hipIpcMemHandle_st.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipIpcMemHandle_st.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipIpcMemHandle_st object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -6348,58 +10950,78 @@ cdef class hipIpcMemHandle_st:
     # TODO is_basic_type_constantarray: add setters
 
 
-
-cdef class hipIpcMemHandle_t:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipIpcMemHandle_t from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipIpcMemHandle_t`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipIpcMemHandle_t wrapper = hipIpcMemHandle_t.__new__(hipIpcMemHandle_t)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipIpcEventHandle_st:
-    cdef chip.hipIpcEventHandle_st* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipIpcEventHandle_st from_ptr(chip.hipIpcEventHandle_st *_ptr, bint owner=False):
+    cdef hipIpcEventHandle_st from_ptr(chip.hipIpcEventHandle_st* ptr, bint owner=False):
         """Factory function to create ``hipIpcEventHandle_st`` objects from
         given ``chip.hipIpcEventHandle_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipIpcEventHandle_st wrapper = hipIpcEventHandle_st.__new__(hipIpcEventHandle_st)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipIpcEventHandle_st from_pyobj(object pyobj):
+        """Derives a hipIpcEventHandle_st from a Python object.
+
+        Derives a hipIpcEventHandle_st from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipIpcEventHandle_st`` reference, this method
+        returns it directly. No new ``hipIpcEventHandle_st`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipIpcEventHandle_st``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipIpcEventHandle_st!
+        """
+        cdef hipIpcEventHandle_st wrapper = hipIpcEventHandle_st.__new__(hipIpcEventHandle_st)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipIpcEventHandle_st):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipIpcEventHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipIpcEventHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipIpcEventHandle_st*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipIpcEventHandle_st** ptr):
-        ptr[0] = <chip.hipIpcEventHandle_st *>stdlib.malloc(sizeof(chip.hipIpcEventHandle_st))
+        ptr[0] = <chip.hipIpcEventHandle_st*>stdlib.malloc(sizeof(chip.hipIpcEventHandle_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -6409,13 +11031,26 @@ cdef class hipIpcEventHandle_st:
     cdef hipIpcEventHandle_st new():
         """Factory function to create hipIpcEventHandle_st objects with
         newly allocated chip.hipIpcEventHandle_st"""
-        cdef chip.hipIpcEventHandle_st *ptr;
+        cdef chip.hipIpcEventHandle_st* ptr;
         hipIpcEventHandle_st.__allocate(&ptr)
         return hipIpcEventHandle_st.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipIpcEventHandle_st.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipIpcEventHandle_st object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -6426,127 +11061,312 @@ cdef class hipIpcEventHandle_st:
     # TODO is_basic_type_constantarray: add setters
 
 
-
-cdef class hipIpcEventHandle_t:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipIpcEventHandle_t from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipIpcEventHandle_t`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipIpcEventHandle_t wrapper = hipIpcEventHandle_t.__new__(hipIpcEventHandle_t)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class ihipModule_t:
-    cdef chip.ihipModule_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ihipModule_t from_ptr(chip.ihipModule_t *_ptr, bint owner=False):
+    cdef ihipModule_t from_ptr(chip.ihipModule_t* ptr, bint owner=False):
         """Factory function to create ``ihipModule_t`` objects from
         given ``chip.ihipModule_t`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ihipModule_t wrapper = ihipModule_t.__new__(ihipModule_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef ihipModule_t from_pyobj(object pyobj):
+        """Derives a ihipModule_t from a Python object.
+
+        Derives a ihipModule_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ihipModule_t`` reference, this method
+        returns it directly. No new ``ihipModule_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ihipModule_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ihipModule_t!
+        """
+        cdef ihipModule_t wrapper = ihipModule_t.__new__(ihipModule_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ihipModule_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ihipModule_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ihipModule_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ihipModule_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ihipModule_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipModule_t = ihipModule_t
 
-
 cdef class ihipModuleSymbol_t:
-    cdef chip.ihipModuleSymbol_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ihipModuleSymbol_t from_ptr(chip.ihipModuleSymbol_t *_ptr, bint owner=False):
+    cdef ihipModuleSymbol_t from_ptr(chip.ihipModuleSymbol_t* ptr, bint owner=False):
         """Factory function to create ``ihipModuleSymbol_t`` objects from
         given ``chip.ihipModuleSymbol_t`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ihipModuleSymbol_t wrapper = ihipModuleSymbol_t.__new__(ihipModuleSymbol_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef ihipModuleSymbol_t from_pyobj(object pyobj):
+        """Derives a ihipModuleSymbol_t from a Python object.
+
+        Derives a ihipModuleSymbol_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ihipModuleSymbol_t`` reference, this method
+        returns it directly. No new ``ihipModuleSymbol_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ihipModuleSymbol_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ihipModuleSymbol_t!
+        """
+        cdef ihipModuleSymbol_t wrapper = ihipModuleSymbol_t.__new__(ihipModuleSymbol_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ihipModuleSymbol_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ihipModuleSymbol_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ihipModuleSymbol_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ihipModuleSymbol_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ihipModuleSymbol_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipFunction_t = ihipModuleSymbol_t
 
-
 cdef class ihipMemPoolHandle_t:
-    cdef chip.ihipMemPoolHandle_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ihipMemPoolHandle_t from_ptr(chip.ihipMemPoolHandle_t *_ptr, bint owner=False):
+    cdef ihipMemPoolHandle_t from_ptr(chip.ihipMemPoolHandle_t* ptr, bint owner=False):
         """Factory function to create ``ihipMemPoolHandle_t`` objects from
         given ``chip.ihipMemPoolHandle_t`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ihipMemPoolHandle_t wrapper = ihipMemPoolHandle_t.__new__(ihipMemPoolHandle_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef ihipMemPoolHandle_t from_pyobj(object pyobj):
+        """Derives a ihipMemPoolHandle_t from a Python object.
+
+        Derives a ihipMemPoolHandle_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ihipMemPoolHandle_t`` reference, this method
+        returns it directly. No new ``ihipMemPoolHandle_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ihipMemPoolHandle_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ihipMemPoolHandle_t!
+        """
+        cdef ihipMemPoolHandle_t wrapper = ihipMemPoolHandle_t.__new__(ihipMemPoolHandle_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ihipMemPoolHandle_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ihipMemPoolHandle_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ihipMemPoolHandle_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ihipMemPoolHandle_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ihipMemPoolHandle_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipMemPool_t = ihipMemPoolHandle_t
 
-
 cdef class hipFuncAttributes:
-    cdef chip.hipFuncAttributes* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipFuncAttributes from_ptr(chip.hipFuncAttributes *_ptr, bint owner=False):
+    cdef hipFuncAttributes from_ptr(chip.hipFuncAttributes* ptr, bint owner=False):
         """Factory function to create ``hipFuncAttributes`` objects from
         given ``chip.hipFuncAttributes`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipFuncAttributes wrapper = hipFuncAttributes.__new__(hipFuncAttributes)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipFuncAttributes from_pyobj(object pyobj):
+        """Derives a hipFuncAttributes from a Python object.
+
+        Derives a hipFuncAttributes from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipFuncAttributes`` reference, this method
+        returns it directly. No new ``hipFuncAttributes`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipFuncAttributes``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipFuncAttributes!
+        """
+        cdef hipFuncAttributes wrapper = hipFuncAttributes.__new__(hipFuncAttributes)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipFuncAttributes):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipFuncAttributes*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipFuncAttributes*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipFuncAttributes*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipFuncAttributes** ptr):
-        ptr[0] = <chip.hipFuncAttributes *>stdlib.malloc(sizeof(chip.hipFuncAttributes))
+        ptr[0] = <chip.hipFuncAttributes*>stdlib.malloc(sizeof(chip.hipFuncAttributes))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -6556,13 +11376,26 @@ cdef class hipFuncAttributes:
     cdef hipFuncAttributes new():
         """Factory function to create hipFuncAttributes objects with
         newly allocated chip.hipFuncAttributes"""
-        cdef chip.hipFuncAttributes *ptr;
+        cdef chip.hipFuncAttributes* ptr;
         hipFuncAttributes.__allocate(&ptr)
         return hipFuncAttributes.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipFuncAttributes.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipFuncAttributes object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_binaryVersion(self, i):
         """Get value ``binaryVersion`` of ``self._ptr[i]``.
         """
@@ -6705,25 +11538,80 @@ cdef class hipFuncAttributes:
         self.set_sharedSizeBytes(0,value)
 
 
-
 cdef class ihipEvent_t:
-    cdef chip.ihipEvent_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ihipEvent_t from_ptr(chip.ihipEvent_t *_ptr, bint owner=False):
+    cdef ihipEvent_t from_ptr(chip.ihipEvent_t* ptr, bint owner=False):
         """Factory function to create ``ihipEvent_t`` objects from
         given ``chip.ihipEvent_t`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ihipEvent_t wrapper = ihipEvent_t.__new__(ihipEvent_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef ihipEvent_t from_pyobj(object pyobj):
+        """Derives a ihipEvent_t from a Python object.
+
+        Derives a ihipEvent_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ihipEvent_t`` reference, this method
+        returns it directly. No new ``ihipEvent_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ihipEvent_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ihipEvent_t!
+        """
+        cdef ihipEvent_t wrapper = ihipEvent_t.__new__(ihipEvent_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ihipEvent_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ihipEvent_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ihipEvent_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ihipEvent_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ihipEvent_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipEvent_t = ihipEvent_t
@@ -6770,37 +11658,78 @@ class hipMemLocationType(enum.IntEnum):
     hipMemLocationTypeInvalid = chip.hipMemLocationTypeInvalid
     hipMemLocationTypeDevice = chip.hipMemLocationTypeDevice
 
-
 cdef class hipMemLocation:
-    cdef chip.hipMemLocation* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipMemLocation from_ptr(chip.hipMemLocation *_ptr, bint owner=False):
+    cdef hipMemLocation from_ptr(chip.hipMemLocation* ptr, bint owner=False):
         """Factory function to create ``hipMemLocation`` objects from
         given ``chip.hipMemLocation`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipMemLocation wrapper = hipMemLocation.__new__(hipMemLocation)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipMemLocation from_pyobj(object pyobj):
+        """Derives a hipMemLocation from a Python object.
+
+        Derives a hipMemLocation from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipMemLocation`` reference, this method
+        returns it directly. No new ``hipMemLocation`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipMemLocation``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipMemLocation!
+        """
+        cdef hipMemLocation wrapper = hipMemLocation.__new__(hipMemLocation)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipMemLocation):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipMemLocation*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipMemLocation*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipMemLocation*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipMemLocation** ptr):
-        ptr[0] = <chip.hipMemLocation *>stdlib.malloc(sizeof(chip.hipMemLocation))
+        ptr[0] = <chip.hipMemLocation*>stdlib.malloc(sizeof(chip.hipMemLocation))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -6810,13 +11739,26 @@ cdef class hipMemLocation:
     cdef hipMemLocation new():
         """Factory function to create hipMemLocation objects with
         newly allocated chip.hipMemLocation"""
-        cdef chip.hipMemLocation *ptr;
+        cdef chip.hipMemLocation* ptr;
         hipMemLocation.__allocate(&ptr)
         return hipMemLocation.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipMemLocation.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipMemLocation object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -6854,37 +11796,78 @@ class hipMemAccessFlags(enum.IntEnum):
     hipMemAccessFlagsProtRead = chip.hipMemAccessFlagsProtRead
     hipMemAccessFlagsProtReadWrite = chip.hipMemAccessFlagsProtReadWrite
 
-
 cdef class hipMemAccessDesc:
-    cdef chip.hipMemAccessDesc* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipMemAccessDesc from_ptr(chip.hipMemAccessDesc *_ptr, bint owner=False):
+    cdef hipMemAccessDesc from_ptr(chip.hipMemAccessDesc* ptr, bint owner=False):
         """Factory function to create ``hipMemAccessDesc`` objects from
         given ``chip.hipMemAccessDesc`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipMemAccessDesc wrapper = hipMemAccessDesc.__new__(hipMemAccessDesc)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipMemAccessDesc from_pyobj(object pyobj):
+        """Derives a hipMemAccessDesc from a Python object.
+
+        Derives a hipMemAccessDesc from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipMemAccessDesc`` reference, this method
+        returns it directly. No new ``hipMemAccessDesc`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipMemAccessDesc``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipMemAccessDesc!
+        """
+        cdef hipMemAccessDesc wrapper = hipMemAccessDesc.__new__(hipMemAccessDesc)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipMemAccessDesc):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipMemAccessDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipMemAccessDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipMemAccessDesc*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipMemAccessDesc** ptr):
-        ptr[0] = <chip.hipMemAccessDesc *>stdlib.malloc(sizeof(chip.hipMemAccessDesc))
+        ptr[0] = <chip.hipMemAccessDesc*>stdlib.malloc(sizeof(chip.hipMemAccessDesc))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -6894,13 +11877,26 @@ cdef class hipMemAccessDesc:
     cdef hipMemAccessDesc new():
         """Factory function to create hipMemAccessDesc objects with
         newly allocated chip.hipMemAccessDesc"""
-        cdef chip.hipMemAccessDesc *ptr;
+        cdef chip.hipMemAccessDesc* ptr;
         hipMemAccessDesc.__allocate(&ptr)
         return hipMemAccessDesc.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipMemAccessDesc.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipMemAccessDesc object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_location(self, i):
         """Get value of ``location`` of ``self._ptr[i]``.
         """
@@ -6937,37 +11933,78 @@ class hipMemAllocationHandleType(enum.IntEnum):
     hipMemHandleTypeWin32 = chip.hipMemHandleTypeWin32
     hipMemHandleTypeWin32Kmt = chip.hipMemHandleTypeWin32Kmt
 
-
 cdef class hipMemPoolProps:
-    cdef chip.hipMemPoolProps* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipMemPoolProps from_ptr(chip.hipMemPoolProps *_ptr, bint owner=False):
+    cdef hipMemPoolProps from_ptr(chip.hipMemPoolProps* ptr, bint owner=False):
         """Factory function to create ``hipMemPoolProps`` objects from
         given ``chip.hipMemPoolProps`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipMemPoolProps wrapper = hipMemPoolProps.__new__(hipMemPoolProps)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipMemPoolProps from_pyobj(object pyobj):
+        """Derives a hipMemPoolProps from a Python object.
+
+        Derives a hipMemPoolProps from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipMemPoolProps`` reference, this method
+        returns it directly. No new ``hipMemPoolProps`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipMemPoolProps``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipMemPoolProps!
+        """
+        cdef hipMemPoolProps wrapper = hipMemPoolProps.__new__(hipMemPoolProps)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipMemPoolProps):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipMemPoolProps*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipMemPoolProps*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipMemPoolProps*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipMemPoolProps** ptr):
-        ptr[0] = <chip.hipMemPoolProps *>stdlib.malloc(sizeof(chip.hipMemPoolProps))
+        ptr[0] = <chip.hipMemPoolProps*>stdlib.malloc(sizeof(chip.hipMemPoolProps))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -6977,13 +12014,26 @@ cdef class hipMemPoolProps:
     cdef hipMemPoolProps new():
         """Factory function to create hipMemPoolProps objects with
         newly allocated chip.hipMemPoolProps"""
-        cdef chip.hipMemPoolProps *ptr;
+        cdef chip.hipMemPoolProps* ptr;
         hipMemPoolProps.__allocate(&ptr)
         return hipMemPoolProps.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipMemPoolProps.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipMemPoolProps object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_allocType(self, i):
         """Get value of ``allocType`` of ``self._ptr[i]``.
         """
@@ -7033,37 +12083,78 @@ cdef class hipMemPoolProps:
     # TODO is_basic_type_constantarray: add setters
 
 
-
 cdef class hipMemPoolPtrExportData:
-    cdef chip.hipMemPoolPtrExportData* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipMemPoolPtrExportData from_ptr(chip.hipMemPoolPtrExportData *_ptr, bint owner=False):
+    cdef hipMemPoolPtrExportData from_ptr(chip.hipMemPoolPtrExportData* ptr, bint owner=False):
         """Factory function to create ``hipMemPoolPtrExportData`` objects from
         given ``chip.hipMemPoolPtrExportData`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipMemPoolPtrExportData wrapper = hipMemPoolPtrExportData.__new__(hipMemPoolPtrExportData)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipMemPoolPtrExportData from_pyobj(object pyobj):
+        """Derives a hipMemPoolPtrExportData from a Python object.
+
+        Derives a hipMemPoolPtrExportData from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipMemPoolPtrExportData`` reference, this method
+        returns it directly. No new ``hipMemPoolPtrExportData`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipMemPoolPtrExportData``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipMemPoolPtrExportData!
+        """
+        cdef hipMemPoolPtrExportData wrapper = hipMemPoolPtrExportData.__new__(hipMemPoolPtrExportData)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipMemPoolPtrExportData):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipMemPoolPtrExportData*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipMemPoolPtrExportData*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipMemPoolPtrExportData*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipMemPoolPtrExportData** ptr):
-        ptr[0] = <chip.hipMemPoolPtrExportData *>stdlib.malloc(sizeof(chip.hipMemPoolPtrExportData))
+        ptr[0] = <chip.hipMemPoolPtrExportData*>stdlib.malloc(sizeof(chip.hipMemPoolPtrExportData))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7073,13 +12164,26 @@ cdef class hipMemPoolPtrExportData:
     cdef hipMemPoolPtrExportData new():
         """Factory function to create hipMemPoolPtrExportData objects with
         newly allocated chip.hipMemPoolPtrExportData"""
-        cdef chip.hipMemPoolPtrExportData *ptr;
+        cdef chip.hipMemPoolPtrExportData* ptr;
         hipMemPoolPtrExportData.__allocate(&ptr)
         return hipMemPoolPtrExportData.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipMemPoolPtrExportData.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipMemPoolPtrExportData object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -7126,37 +12230,78 @@ class hipSharedMemConfig(enum.IntEnum):
     hipSharedMemBankSizeFourByte = chip.hipSharedMemBankSizeFourByte
     hipSharedMemBankSizeEightByte = chip.hipSharedMemBankSizeEightByte
 
-
 cdef class dim3:
-    cdef chip.dim3* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef dim3 from_ptr(chip.dim3 *_ptr, bint owner=False):
+    cdef dim3 from_ptr(chip.dim3* ptr, bint owner=False):
         """Factory function to create ``dim3`` objects from
         given ``chip.dim3`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef dim3 wrapper = dim3.__new__(dim3)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef dim3 from_pyobj(object pyobj):
+        """Derives a dim3 from a Python object.
+
+        Derives a dim3 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``dim3`` reference, this method
+        returns it directly. No new ``dim3`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``dim3``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of dim3!
+        """
+        cdef dim3 wrapper = dim3.__new__(dim3)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,dim3):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.dim3*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.dim3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.dim3*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.dim3** ptr):
-        ptr[0] = <chip.dim3 *>stdlib.malloc(sizeof(chip.dim3))
+        ptr[0] = <chip.dim3*>stdlib.malloc(sizeof(chip.dim3))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7166,13 +12311,26 @@ cdef class dim3:
     cdef dim3 new():
         """Factory function to create dim3 objects with
         newly allocated chip.dim3"""
-        cdef chip.dim3 *ptr;
+        cdef chip.dim3* ptr;
         dim3.__allocate(&ptr)
         return dim3.from_ptr(ptr, owner=True)
     
     def __init__(self):
        dim3.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<dim3 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -7217,37 +12375,78 @@ cdef class dim3:
         self.set_z(0,value)
 
 
-
 cdef class hipLaunchParams_t:
-    cdef chip.hipLaunchParams_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipLaunchParams_t from_ptr(chip.hipLaunchParams_t *_ptr, bint owner=False):
+    cdef hipLaunchParams_t from_ptr(chip.hipLaunchParams_t* ptr, bint owner=False):
         """Factory function to create ``hipLaunchParams_t`` objects from
         given ``chip.hipLaunchParams_t`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipLaunchParams_t wrapper = hipLaunchParams_t.__new__(hipLaunchParams_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipLaunchParams_t from_pyobj(object pyobj):
+        """Derives a hipLaunchParams_t from a Python object.
+
+        Derives a hipLaunchParams_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipLaunchParams_t`` reference, this method
+        returns it directly. No new ``hipLaunchParams_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipLaunchParams_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipLaunchParams_t!
+        """
+        cdef hipLaunchParams_t wrapper = hipLaunchParams_t.__new__(hipLaunchParams_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipLaunchParams_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipLaunchParams_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipLaunchParams_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipLaunchParams_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipLaunchParams_t** ptr):
-        ptr[0] = <chip.hipLaunchParams_t *>stdlib.malloc(sizeof(chip.hipLaunchParams_t))
+        ptr[0] = <chip.hipLaunchParams_t*>stdlib.malloc(sizeof(chip.hipLaunchParams_t))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7257,13 +12456,26 @@ cdef class hipLaunchParams_t:
     cdef hipLaunchParams_t new():
         """Factory function to create hipLaunchParams_t objects with
         newly allocated chip.hipLaunchParams_t"""
-        cdef chip.hipLaunchParams_t *ptr;
+        cdef chip.hipLaunchParams_t* ptr;
         hipLaunchParams_t.__allocate(&ptr)
         return hipLaunchParams_t.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipLaunchParams_t.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipLaunchParams_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_gridDim(self, i):
         """Get value of ``gridDim`` of ``self._ptr[i]``.
         """
@@ -7294,27 +12506,6 @@ cdef class hipLaunchParams_t:
         self.set_sharedMem(0,value)
 
 
-
-cdef class hipLaunchParams:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipLaunchParams from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipLaunchParams`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipLaunchParams wrapper = hipLaunchParams.__new__(hipLaunchParams)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
 class hipExternalMemoryHandleType_enum(enum.IntEnum):
     hipExternalMemoryHandleTypeOpaqueFd = chip.hipExternalMemoryHandleTypeOpaqueFd
     hipExternalMemoryHandleTypeOpaqueWin32 = chip.hipExternalMemoryHandleTypeOpaqueWin32
@@ -7324,58 +12515,78 @@ class hipExternalMemoryHandleType_enum(enum.IntEnum):
     hipExternalMemoryHandleTypeD3D11Resource = chip.hipExternalMemoryHandleTypeD3D11Resource
     hipExternalMemoryHandleTypeD3D11ResourceKmt = chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
 
-
-cdef class hipExternalMemoryHandleType:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipExternalMemoryHandleType from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipExternalMemoryHandleType`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipExternalMemoryHandleType wrapper = hipExternalMemoryHandleType.__new__(hipExternalMemoryHandleType)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
-    cdef chip.hipExternalMemoryHandleDesc_st_union_0_struct_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 from_ptr(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0 *_ptr, bint owner=False):
+    cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 from_ptr(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0* ptr, bint owner=False):
         """Factory function to create ``hipExternalMemoryHandleDesc_st_union_0_struct_0`` objects from
         given ``chip.hipExternalMemoryHandleDesc_st_union_0_struct_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 wrapper = hipExternalMemoryHandleDesc_st_union_0_struct_0.__new__(hipExternalMemoryHandleDesc_st_union_0_struct_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 from_pyobj(object pyobj):
+        """Derives a hipExternalMemoryHandleDesc_st_union_0_struct_0 from a Python object.
+
+        Derives a hipExternalMemoryHandleDesc_st_union_0_struct_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalMemoryHandleDesc_st_union_0_struct_0`` reference, this method
+        returns it directly. No new ``hipExternalMemoryHandleDesc_st_union_0_struct_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalMemoryHandleDesc_st_union_0_struct_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalMemoryHandleDesc_st_union_0_struct_0!
+        """
+        cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 wrapper = hipExternalMemoryHandleDesc_st_union_0_struct_0.__new__(hipExternalMemoryHandleDesc_st_union_0_struct_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalMemoryHandleDesc_st_union_0_struct_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0** ptr):
-        ptr[0] = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0))
+        ptr[0] = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st_union_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7385,46 +12596,100 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 new():
         """Factory function to create hipExternalMemoryHandleDesc_st_union_0_struct_0 objects with
         newly allocated chip.hipExternalMemoryHandleDesc_st_union_0_struct_0"""
-        cdef chip.hipExternalMemoryHandleDesc_st_union_0_struct_0 *ptr;
+        cdef chip.hipExternalMemoryHandleDesc_st_union_0_struct_0* ptr;
         hipExternalMemoryHandleDesc_st_union_0_struct_0.__allocate(&ptr)
         return hipExternalMemoryHandleDesc_st_union_0_struct_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalMemoryHandleDesc_st_union_0_struct_0.__allocate(&self._ptr)
        self.ptr_owner = True
-
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalMemoryHandleDesc_st_union_0_struct_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class hipExternalMemoryHandleDesc_st_union_0:
-    cdef chip.hipExternalMemoryHandleDesc_st_union_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalMemoryHandleDesc_st_union_0 from_ptr(chip.hipExternalMemoryHandleDesc_st_union_0 *_ptr, bint owner=False):
+    cdef hipExternalMemoryHandleDesc_st_union_0 from_ptr(chip.hipExternalMemoryHandleDesc_st_union_0* ptr, bint owner=False):
         """Factory function to create ``hipExternalMemoryHandleDesc_st_union_0`` objects from
         given ``chip.hipExternalMemoryHandleDesc_st_union_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalMemoryHandleDesc_st_union_0 wrapper = hipExternalMemoryHandleDesc_st_union_0.__new__(hipExternalMemoryHandleDesc_st_union_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalMemoryHandleDesc_st_union_0 from_pyobj(object pyobj):
+        """Derives a hipExternalMemoryHandleDesc_st_union_0 from a Python object.
+
+        Derives a hipExternalMemoryHandleDesc_st_union_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalMemoryHandleDesc_st_union_0`` reference, this method
+        returns it directly. No new ``hipExternalMemoryHandleDesc_st_union_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalMemoryHandleDesc_st_union_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalMemoryHandleDesc_st_union_0!
+        """
+        cdef hipExternalMemoryHandleDesc_st_union_0 wrapper = hipExternalMemoryHandleDesc_st_union_0.__new__(hipExternalMemoryHandleDesc_st_union_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalMemoryHandleDesc_st_union_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalMemoryHandleDesc_st_union_0** ptr):
-        ptr[0] = <chip.hipExternalMemoryHandleDesc_st_union_0 *>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st_union_0))
+        ptr[0] = <chip.hipExternalMemoryHandleDesc_st_union_0*>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st_union_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7434,13 +12699,26 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
     cdef hipExternalMemoryHandleDesc_st_union_0 new():
         """Factory function to create hipExternalMemoryHandleDesc_st_union_0 objects with
         newly allocated chip.hipExternalMemoryHandleDesc_st_union_0"""
-        cdef chip.hipExternalMemoryHandleDesc_st_union_0 *ptr;
+        cdef chip.hipExternalMemoryHandleDesc_st_union_0* ptr;
         hipExternalMemoryHandleDesc_st_union_0.__allocate(&ptr)
         return hipExternalMemoryHandleDesc_st_union_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalMemoryHandleDesc_st_union_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalMemoryHandleDesc_st_union_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_fd(self, i):
         """Get value ``fd`` of ``self._ptr[i]``.
         """
@@ -7464,37 +12742,78 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
         return self.get_win32(0)
 
 
-
 cdef class hipExternalMemoryHandleDesc_st:
-    cdef chip.hipExternalMemoryHandleDesc_st* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalMemoryHandleDesc_st from_ptr(chip.hipExternalMemoryHandleDesc_st *_ptr, bint owner=False):
+    cdef hipExternalMemoryHandleDesc_st from_ptr(chip.hipExternalMemoryHandleDesc_st* ptr, bint owner=False):
         """Factory function to create ``hipExternalMemoryHandleDesc_st`` objects from
         given ``chip.hipExternalMemoryHandleDesc_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalMemoryHandleDesc_st wrapper = hipExternalMemoryHandleDesc_st.__new__(hipExternalMemoryHandleDesc_st)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalMemoryHandleDesc_st from_pyobj(object pyobj):
+        """Derives a hipExternalMemoryHandleDesc_st from a Python object.
+
+        Derives a hipExternalMemoryHandleDesc_st from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalMemoryHandleDesc_st`` reference, this method
+        returns it directly. No new ``hipExternalMemoryHandleDesc_st`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalMemoryHandleDesc_st``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalMemoryHandleDesc_st!
+        """
+        cdef hipExternalMemoryHandleDesc_st wrapper = hipExternalMemoryHandleDesc_st.__new__(hipExternalMemoryHandleDesc_st)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalMemoryHandleDesc_st):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalMemoryHandleDesc_st** ptr):
-        ptr[0] = <chip.hipExternalMemoryHandleDesc_st *>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st))
+        ptr[0] = <chip.hipExternalMemoryHandleDesc_st*>stdlib.malloc(sizeof(chip.hipExternalMemoryHandleDesc_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7504,13 +12823,26 @@ cdef class hipExternalMemoryHandleDesc_st:
     cdef hipExternalMemoryHandleDesc_st new():
         """Factory function to create hipExternalMemoryHandleDesc_st objects with
         newly allocated chip.hipExternalMemoryHandleDesc_st"""
-        cdef chip.hipExternalMemoryHandleDesc_st *ptr;
+        cdef chip.hipExternalMemoryHandleDesc_st* ptr;
         hipExternalMemoryHandleDesc_st.__allocate(&ptr)
         return hipExternalMemoryHandleDesc_st.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalMemoryHandleDesc_st.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalMemoryHandleDesc_st object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -7564,58 +12896,78 @@ cdef class hipExternalMemoryHandleDesc_st:
         self.set_flags(0,value)
 
 
-
-cdef class hipExternalMemoryHandleDesc:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipExternalMemoryHandleDesc from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipExternalMemoryHandleDesc`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipExternalMemoryHandleDesc wrapper = hipExternalMemoryHandleDesc.__new__(hipExternalMemoryHandleDesc)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipExternalMemoryBufferDesc_st:
-    cdef chip.hipExternalMemoryBufferDesc_st* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalMemoryBufferDesc_st from_ptr(chip.hipExternalMemoryBufferDesc_st *_ptr, bint owner=False):
+    cdef hipExternalMemoryBufferDesc_st from_ptr(chip.hipExternalMemoryBufferDesc_st* ptr, bint owner=False):
         """Factory function to create ``hipExternalMemoryBufferDesc_st`` objects from
         given ``chip.hipExternalMemoryBufferDesc_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalMemoryBufferDesc_st wrapper = hipExternalMemoryBufferDesc_st.__new__(hipExternalMemoryBufferDesc_st)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalMemoryBufferDesc_st from_pyobj(object pyobj):
+        """Derives a hipExternalMemoryBufferDesc_st from a Python object.
+
+        Derives a hipExternalMemoryBufferDesc_st from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalMemoryBufferDesc_st`` reference, this method
+        returns it directly. No new ``hipExternalMemoryBufferDesc_st`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalMemoryBufferDesc_st``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalMemoryBufferDesc_st!
+        """
+        cdef hipExternalMemoryBufferDesc_st wrapper = hipExternalMemoryBufferDesc_st.__new__(hipExternalMemoryBufferDesc_st)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalMemoryBufferDesc_st):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalMemoryBufferDesc_st** ptr):
-        ptr[0] = <chip.hipExternalMemoryBufferDesc_st *>stdlib.malloc(sizeof(chip.hipExternalMemoryBufferDesc_st))
+        ptr[0] = <chip.hipExternalMemoryBufferDesc_st*>stdlib.malloc(sizeof(chip.hipExternalMemoryBufferDesc_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7625,13 +12977,26 @@ cdef class hipExternalMemoryBufferDesc_st:
     cdef hipExternalMemoryBufferDesc_st new():
         """Factory function to create hipExternalMemoryBufferDesc_st objects with
         newly allocated chip.hipExternalMemoryBufferDesc_st"""
-        cdef chip.hipExternalMemoryBufferDesc_st *ptr;
+        cdef chip.hipExternalMemoryBufferDesc_st* ptr;
         hipExternalMemoryBufferDesc_st.__allocate(&ptr)
         return hipExternalMemoryBufferDesc_st.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalMemoryBufferDesc_st.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalMemoryBufferDesc_st object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_offset(self, i):
         """Get value ``offset`` of ``self._ptr[i]``.
         """
@@ -7676,46 +13041,80 @@ cdef class hipExternalMemoryBufferDesc_st:
         self.set_flags(0,value)
 
 
-
-cdef class hipExternalMemoryBufferDesc:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipExternalMemoryBufferDesc from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipExternalMemoryBufferDesc`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipExternalMemoryBufferDesc wrapper = hipExternalMemoryBufferDesc.__new__(hipExternalMemoryBufferDesc)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipExternalMemory_t:
-    cdef void* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalMemory_t from_ptr(void *_ptr, bint owner=False):
+    cdef hipExternalMemory_t from_ptr(void * ptr, bint owner=False):
         """Factory function to create ``hipExternalMemory_t`` objects from
         given ``void`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalMemory_t wrapper = hipExternalMemory_t.__new__(hipExternalMemory_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalMemory_t from_pyobj(object pyobj):
+        """Derives a hipExternalMemory_t from a Python object.
+
+        Derives a hipExternalMemory_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalMemory_t`` reference, this method
+        returns it directly. No new ``hipExternalMemory_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalMemory_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalMemory_t!
+        """
+        cdef hipExternalMemory_t wrapper = hipExternalMemory_t.__new__(hipExternalMemory_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalMemory_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <void *>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalMemory_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 class hipExternalSemaphoreHandleType_enum(enum.IntEnum):
@@ -7724,58 +13123,78 @@ class hipExternalSemaphoreHandleType_enum(enum.IntEnum):
     hipExternalSemaphoreHandleTypeOpaqueWin32Kmt = chip.hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
     hipExternalSemaphoreHandleTypeD3D12Fence = chip.hipExternalSemaphoreHandleTypeD3D12Fence
 
-
-cdef class hipExternalSemaphoreHandleType:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipExternalSemaphoreHandleType from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipExternalSemaphoreHandleType`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipExternalSemaphoreHandleType wrapper = hipExternalSemaphoreHandleType.__new__(hipExternalSemaphoreHandleType)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
-    cdef chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 from_ptr(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0 *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 from_ptr(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreHandleDesc_st_union_0_struct_0`` objects from
         given ``chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 wrapper = hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__new__(hipExternalSemaphoreHandleDesc_st_union_0_struct_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreHandleDesc_st_union_0_struct_0 from a Python object.
+
+        Derives a hipExternalSemaphoreHandleDesc_st_union_0_struct_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreHandleDesc_st_union_0_struct_0`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreHandleDesc_st_union_0_struct_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreHandleDesc_st_union_0_struct_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreHandleDesc_st_union_0_struct_0!
+        """
+        cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 wrapper = hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__new__(hipExternalSemaphoreHandleDesc_st_union_0_struct_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreHandleDesc_st_union_0_struct_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0))
+        ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7785,46 +13204,100 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 new():
         """Factory function to create hipExternalSemaphoreHandleDesc_st_union_0_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0"""
-        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0 *ptr;
+        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0* ptr;
         hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreHandleDesc_st_union_0_struct_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__allocate(&self._ptr)
        self.ptr_owner = True
-
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreHandleDesc_st_union_0_struct_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class hipExternalSemaphoreHandleDesc_st_union_0:
-    cdef chip.hipExternalSemaphoreHandleDesc_st_union_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreHandleDesc_st_union_0 from_ptr(chip.hipExternalSemaphoreHandleDesc_st_union_0 *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreHandleDesc_st_union_0 from_ptr(chip.hipExternalSemaphoreHandleDesc_st_union_0* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreHandleDesc_st_union_0`` objects from
         given ``chip.hipExternalSemaphoreHandleDesc_st_union_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreHandleDesc_st_union_0 wrapper = hipExternalSemaphoreHandleDesc_st_union_0.__new__(hipExternalSemaphoreHandleDesc_st_union_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreHandleDesc_st_union_0 from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreHandleDesc_st_union_0 from a Python object.
+
+        Derives a hipExternalSemaphoreHandleDesc_st_union_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreHandleDesc_st_union_0`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreHandleDesc_st_union_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreHandleDesc_st_union_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreHandleDesc_st_union_0!
+        """
+        cdef hipExternalSemaphoreHandleDesc_st_union_0 wrapper = hipExternalSemaphoreHandleDesc_st_union_0.__new__(hipExternalSemaphoreHandleDesc_st_union_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreHandleDesc_st_union_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st_union_0** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st_union_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0))
+        ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st_union_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7834,13 +13307,26 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
     cdef hipExternalSemaphoreHandleDesc_st_union_0 new():
         """Factory function to create hipExternalSemaphoreHandleDesc_st_union_0 objects with
         newly allocated chip.hipExternalSemaphoreHandleDesc_st_union_0"""
-        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0 *ptr;
+        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0* ptr;
         hipExternalSemaphoreHandleDesc_st_union_0.__allocate(&ptr)
         return hipExternalSemaphoreHandleDesc_st_union_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreHandleDesc_st_union_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreHandleDesc_st_union_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_fd(self, i):
         """Get value ``fd`` of ``self._ptr[i]``.
         """
@@ -7864,37 +13350,78 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
         return self.get_win32(0)
 
 
-
 cdef class hipExternalSemaphoreHandleDesc_st:
-    cdef chip.hipExternalSemaphoreHandleDesc_st* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreHandleDesc_st from_ptr(chip.hipExternalSemaphoreHandleDesc_st *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreHandleDesc_st from_ptr(chip.hipExternalSemaphoreHandleDesc_st* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreHandleDesc_st`` objects from
         given ``chip.hipExternalSemaphoreHandleDesc_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreHandleDesc_st wrapper = hipExternalSemaphoreHandleDesc_st.__new__(hipExternalSemaphoreHandleDesc_st)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreHandleDesc_st from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreHandleDesc_st from a Python object.
+
+        Derives a hipExternalSemaphoreHandleDesc_st from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreHandleDesc_st`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreHandleDesc_st`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreHandleDesc_st``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreHandleDesc_st!
+        """
+        cdef hipExternalSemaphoreHandleDesc_st wrapper = hipExternalSemaphoreHandleDesc_st.__new__(hipExternalSemaphoreHandleDesc_st)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreHandleDesc_st):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st))
+        ptr[0] = <chip.hipExternalSemaphoreHandleDesc_st*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreHandleDesc_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -7904,13 +13431,26 @@ cdef class hipExternalSemaphoreHandleDesc_st:
     cdef hipExternalSemaphoreHandleDesc_st new():
         """Factory function to create hipExternalSemaphoreHandleDesc_st objects with
         newly allocated chip.hipExternalSemaphoreHandleDesc_st"""
-        cdef chip.hipExternalSemaphoreHandleDesc_st *ptr;
+        cdef chip.hipExternalSemaphoreHandleDesc_st* ptr;
         hipExternalSemaphoreHandleDesc_st.__allocate(&ptr)
         return hipExternalSemaphoreHandleDesc_st.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreHandleDesc_st.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreHandleDesc_st object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -7950,79 +13490,154 @@ cdef class hipExternalSemaphoreHandleDesc_st:
         self.set_flags(0,value)
 
 
-
-cdef class hipExternalSemaphoreHandleDesc:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipExternalSemaphoreHandleDesc from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipExternalSemaphoreHandleDesc`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipExternalSemaphoreHandleDesc wrapper = hipExternalSemaphoreHandleDesc.__new__(hipExternalSemaphoreHandleDesc)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipExternalSemaphore_t:
-    cdef void* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphore_t from_ptr(void *_ptr, bint owner=False):
+    cdef hipExternalSemaphore_t from_ptr(void * ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphore_t`` objects from
         given ``void`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphore_t wrapper = hipExternalSemaphore_t.__new__(hipExternalSemaphore_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef hipExternalSemaphore_t from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphore_t from a Python object.
+
+        Derives a hipExternalSemaphore_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphore_t`` reference, this method
+        returns it directly. No new ``hipExternalSemaphore_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphore_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphore_t!
+        """
+        cdef hipExternalSemaphore_t wrapper = hipExternalSemaphore_t.__new__(hipExternalSemaphore_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphore_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <void *>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphore_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
-    cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 from_ptr(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0 *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 from_ptr(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreSignalParams_st_struct_0_struct_0`` objects from
         given ``chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 wrapper = hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__new__(hipExternalSemaphoreSignalParams_st_struct_0_struct_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreSignalParams_st_struct_0_struct_0 from a Python object.
+
+        Derives a hipExternalSemaphoreSignalParams_st_struct_0_struct_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreSignalParams_st_struct_0_struct_0`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreSignalParams_st_struct_0_struct_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreSignalParams_st_struct_0_struct_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreSignalParams_st_struct_0_struct_0!
+        """
+        cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 wrapper = hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__new__(hipExternalSemaphoreSignalParams_st_struct_0_struct_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreSignalParams_st_struct_0_struct_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0))
+        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8032,13 +13647,26 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
     cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 new():
         """Factory function to create hipExternalSemaphoreSignalParams_st_struct_0_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0"""
-        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0 *ptr;
+        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0* ptr;
         hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreSignalParams_st_struct_0_struct_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_value(self, i):
         """Get value ``value`` of ``self._ptr[i]``.
         """
@@ -8055,37 +13683,78 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
         self.set_value(0,value)
 
 
-
 cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
-    cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 from_ptr(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1 *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 from_ptr(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreSignalParams_st_struct_0_struct_1`` objects from
         given ``chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 wrapper = hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__new__(hipExternalSemaphoreSignalParams_st_struct_0_struct_1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreSignalParams_st_struct_0_struct_1 from a Python object.
+
+        Derives a hipExternalSemaphoreSignalParams_st_struct_0_struct_1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreSignalParams_st_struct_0_struct_1`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreSignalParams_st_struct_0_struct_1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreSignalParams_st_struct_0_struct_1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreSignalParams_st_struct_0_struct_1!
+        """
+        cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 wrapper = hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__new__(hipExternalSemaphoreSignalParams_st_struct_0_struct_1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreSignalParams_st_struct_0_struct_1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1))
+        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8095,13 +13764,26 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
     cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 new():
         """Factory function to create hipExternalSemaphoreSignalParams_st_struct_0_struct_1 objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1"""
-        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1 *ptr;
+        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1* ptr;
         hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_1.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreSignalParams_st_struct_0_struct_1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_key(self, i):
         """Get value ``key`` of ``self._ptr[i]``.
         """
@@ -8118,37 +13800,78 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
         self.set_key(0,value)
 
 
-
 cdef class hipExternalSemaphoreSignalParams_st_struct_0:
-    cdef chip.hipExternalSemaphoreSignalParams_st_struct_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreSignalParams_st_struct_0 from_ptr(chip.hipExternalSemaphoreSignalParams_st_struct_0 *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreSignalParams_st_struct_0 from_ptr(chip.hipExternalSemaphoreSignalParams_st_struct_0* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreSignalParams_st_struct_0`` objects from
         given ``chip.hipExternalSemaphoreSignalParams_st_struct_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreSignalParams_st_struct_0 wrapper = hipExternalSemaphoreSignalParams_st_struct_0.__new__(hipExternalSemaphoreSignalParams_st_struct_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreSignalParams_st_struct_0 from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreSignalParams_st_struct_0 from a Python object.
+
+        Derives a hipExternalSemaphoreSignalParams_st_struct_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreSignalParams_st_struct_0`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreSignalParams_st_struct_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreSignalParams_st_struct_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreSignalParams_st_struct_0!
+        """
+        cdef hipExternalSemaphoreSignalParams_st_struct_0 wrapper = hipExternalSemaphoreSignalParams_st_struct_0.__new__(hipExternalSemaphoreSignalParams_st_struct_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreSignalParams_st_struct_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st_struct_0** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0))
+        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8158,13 +13881,26 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
     cdef hipExternalSemaphoreSignalParams_st_struct_0 new():
         """Factory function to create hipExternalSemaphoreSignalParams_st_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st_struct_0"""
-        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0 *ptr;
+        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0* ptr;
         hipExternalSemaphoreSignalParams_st_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st_struct_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreSignalParams_st_struct_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreSignalParams_st_struct_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_fence(self, i):
         """Get value of ``fence`` of ``self._ptr[i]``.
         """
@@ -8189,37 +13925,78 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
     # TODO is_basic_type_constantarray: add setters
 
 
-
 cdef class hipExternalSemaphoreSignalParams_st:
-    cdef chip.hipExternalSemaphoreSignalParams_st* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreSignalParams_st from_ptr(chip.hipExternalSemaphoreSignalParams_st *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreSignalParams_st from_ptr(chip.hipExternalSemaphoreSignalParams_st* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreSignalParams_st`` objects from
         given ``chip.hipExternalSemaphoreSignalParams_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreSignalParams_st wrapper = hipExternalSemaphoreSignalParams_st.__new__(hipExternalSemaphoreSignalParams_st)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreSignalParams_st from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreSignalParams_st from a Python object.
+
+        Derives a hipExternalSemaphoreSignalParams_st from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreSignalParams_st`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreSignalParams_st`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreSignalParams_st``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreSignalParams_st!
+        """
+        cdef hipExternalSemaphoreSignalParams_st wrapper = hipExternalSemaphoreSignalParams_st.__new__(hipExternalSemaphoreSignalParams_st)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreSignalParams_st):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreSignalParams_st** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st))
+        ptr[0] = <chip.hipExternalSemaphoreSignalParams_st*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreSignalParams_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8229,13 +14006,26 @@ cdef class hipExternalSemaphoreSignalParams_st:
     cdef hipExternalSemaphoreSignalParams_st new():
         """Factory function to create hipExternalSemaphoreSignalParams_st objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st"""
-        cdef chip.hipExternalSemaphoreSignalParams_st *ptr;
+        cdef chip.hipExternalSemaphoreSignalParams_st* ptr;
         hipExternalSemaphoreSignalParams_st.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreSignalParams_st.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreSignalParams_st object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_params(self, i):
         """Get value of ``params`` of ``self._ptr[i]``.
         """
@@ -8267,58 +14057,78 @@ cdef class hipExternalSemaphoreSignalParams_st:
     # TODO is_basic_type_constantarray: add setters
 
 
-
-cdef class hipExternalSemaphoreSignalParams:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipExternalSemaphoreSignalParams from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipExternalSemaphoreSignalParams`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipExternalSemaphoreSignalParams wrapper = hipExternalSemaphoreSignalParams.__new__(hipExternalSemaphoreSignalParams)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
-    cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 from_ptr(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0 *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 from_ptr(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreWaitParams_st_struct_0_struct_0`` objects from
         given ``chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 wrapper = hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__new__(hipExternalSemaphoreWaitParams_st_struct_0_struct_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreWaitParams_st_struct_0_struct_0 from a Python object.
+
+        Derives a hipExternalSemaphoreWaitParams_st_struct_0_struct_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreWaitParams_st_struct_0_struct_0`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreWaitParams_st_struct_0_struct_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreWaitParams_st_struct_0_struct_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreWaitParams_st_struct_0_struct_0!
+        """
+        cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 wrapper = hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__new__(hipExternalSemaphoreWaitParams_st_struct_0_struct_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreWaitParams_st_struct_0_struct_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0))
+        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8328,13 +14138,26 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
     cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 new():
         """Factory function to create hipExternalSemaphoreWaitParams_st_struct_0_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0"""
-        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0 *ptr;
+        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0* ptr;
         hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreWaitParams_st_struct_0_struct_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_value(self, i):
         """Get value ``value`` of ``self._ptr[i]``.
         """
@@ -8351,37 +14174,78 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
         self.set_value(0,value)
 
 
-
 cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
-    cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 from_ptr(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1 *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 from_ptr(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreWaitParams_st_struct_0_struct_1`` objects from
         given ``chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 wrapper = hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__new__(hipExternalSemaphoreWaitParams_st_struct_0_struct_1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreWaitParams_st_struct_0_struct_1 from a Python object.
+
+        Derives a hipExternalSemaphoreWaitParams_st_struct_0_struct_1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreWaitParams_st_struct_0_struct_1`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreWaitParams_st_struct_0_struct_1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreWaitParams_st_struct_0_struct_1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreWaitParams_st_struct_0_struct_1!
+        """
+        cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 wrapper = hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__new__(hipExternalSemaphoreWaitParams_st_struct_0_struct_1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreWaitParams_st_struct_0_struct_1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1))
+        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8391,13 +14255,26 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
     cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 new():
         """Factory function to create hipExternalSemaphoreWaitParams_st_struct_0_struct_1 objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1"""
-        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1 *ptr;
+        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1* ptr;
         hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_1.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreWaitParams_st_struct_0_struct_1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_key(self, i):
         """Get value ``key`` of ``self._ptr[i]``.
         """
@@ -8428,37 +14305,78 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
         self.set_timeoutMs(0,value)
 
 
-
 cdef class hipExternalSemaphoreWaitParams_st_struct_0:
-    cdef chip.hipExternalSemaphoreWaitParams_st_struct_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreWaitParams_st_struct_0 from_ptr(chip.hipExternalSemaphoreWaitParams_st_struct_0 *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreWaitParams_st_struct_0 from_ptr(chip.hipExternalSemaphoreWaitParams_st_struct_0* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreWaitParams_st_struct_0`` objects from
         given ``chip.hipExternalSemaphoreWaitParams_st_struct_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreWaitParams_st_struct_0 wrapper = hipExternalSemaphoreWaitParams_st_struct_0.__new__(hipExternalSemaphoreWaitParams_st_struct_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreWaitParams_st_struct_0 from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreWaitParams_st_struct_0 from a Python object.
+
+        Derives a hipExternalSemaphoreWaitParams_st_struct_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreWaitParams_st_struct_0`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreWaitParams_st_struct_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreWaitParams_st_struct_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreWaitParams_st_struct_0!
+        """
+        cdef hipExternalSemaphoreWaitParams_st_struct_0 wrapper = hipExternalSemaphoreWaitParams_st_struct_0.__new__(hipExternalSemaphoreWaitParams_st_struct_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreWaitParams_st_struct_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st_struct_0** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0 *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0))
+        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8468,13 +14386,26 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
     cdef hipExternalSemaphoreWaitParams_st_struct_0 new():
         """Factory function to create hipExternalSemaphoreWaitParams_st_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st_struct_0"""
-        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0 *ptr;
+        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0* ptr;
         hipExternalSemaphoreWaitParams_st_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st_struct_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreWaitParams_st_struct_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreWaitParams_st_struct_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_fence(self, i):
         """Get value of ``fence`` of ``self._ptr[i]``.
         """
@@ -8499,37 +14430,78 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
     # TODO is_basic_type_constantarray: add setters
 
 
-
 cdef class hipExternalSemaphoreWaitParams_st:
-    cdef chip.hipExternalSemaphoreWaitParams_st* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipExternalSemaphoreWaitParams_st from_ptr(chip.hipExternalSemaphoreWaitParams_st *_ptr, bint owner=False):
+    cdef hipExternalSemaphoreWaitParams_st from_ptr(chip.hipExternalSemaphoreWaitParams_st* ptr, bint owner=False):
         """Factory function to create ``hipExternalSemaphoreWaitParams_st`` objects from
         given ``chip.hipExternalSemaphoreWaitParams_st`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipExternalSemaphoreWaitParams_st wrapper = hipExternalSemaphoreWaitParams_st.__new__(hipExternalSemaphoreWaitParams_st)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipExternalSemaphoreWaitParams_st from_pyobj(object pyobj):
+        """Derives a hipExternalSemaphoreWaitParams_st from a Python object.
+
+        Derives a hipExternalSemaphoreWaitParams_st from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipExternalSemaphoreWaitParams_st`` reference, this method
+        returns it directly. No new ``hipExternalSemaphoreWaitParams_st`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipExternalSemaphoreWaitParams_st``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipExternalSemaphoreWaitParams_st!
+        """
+        cdef hipExternalSemaphoreWaitParams_st wrapper = hipExternalSemaphoreWaitParams_st.__new__(hipExternalSemaphoreWaitParams_st)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipExternalSemaphoreWaitParams_st):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipExternalSemaphoreWaitParams_st** ptr):
-        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st *>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st))
+        ptr[0] = <chip.hipExternalSemaphoreWaitParams_st*>stdlib.malloc(sizeof(chip.hipExternalSemaphoreWaitParams_st))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8539,13 +14511,26 @@ cdef class hipExternalSemaphoreWaitParams_st:
     cdef hipExternalSemaphoreWaitParams_st new():
         """Factory function to create hipExternalSemaphoreWaitParams_st objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st"""
-        cdef chip.hipExternalSemaphoreWaitParams_st *ptr;
+        cdef chip.hipExternalSemaphoreWaitParams_st* ptr;
         hipExternalSemaphoreWaitParams_st.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipExternalSemaphoreWaitParams_st.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipExternalSemaphoreWaitParams_st object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_params(self, i):
         """Get value of ``params`` of ``self._ptr[i]``.
         """
@@ -8577,27 +14562,6 @@ cdef class hipExternalSemaphoreWaitParams_st:
     # TODO is_basic_type_constantarray: add setters
 
 
-
-cdef class hipExternalSemaphoreWaitParams:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipExternalSemaphoreWaitParams from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipExternalSemaphoreWaitParams`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipExternalSemaphoreWaitParams wrapper = hipExternalSemaphoreWaitParams.__new__(hipExternalSemaphoreWaitParams)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
 class hipGLDeviceList(enum.IntEnum):
     hipGLDeviceListAll = chip.hipGLDeviceListAll
     hipGLDeviceListCurrentFrame = chip.hipGLDeviceListCurrentFrame
@@ -8610,138 +14574,392 @@ class hipGraphicsRegisterFlags(enum.IntEnum):
     hipGraphicsRegisterFlagsSurfaceLoadStore = chip.hipGraphicsRegisterFlagsSurfaceLoadStore
     hipGraphicsRegisterFlagsTextureGather = chip.hipGraphicsRegisterFlagsTextureGather
 
-
 cdef class _hipGraphicsResource:
-    cdef chip._hipGraphicsResource* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef _hipGraphicsResource from_ptr(chip._hipGraphicsResource *_ptr, bint owner=False):
+    cdef _hipGraphicsResource from_ptr(chip._hipGraphicsResource* ptr, bint owner=False):
         """Factory function to create ``_hipGraphicsResource`` objects from
         given ``chip._hipGraphicsResource`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef _hipGraphicsResource wrapper = _hipGraphicsResource.__new__(_hipGraphicsResource)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
-
-
-
-cdef class hipGraphicsResource:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
 
     @staticmethod
-    cdef hipGraphicsResource from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipGraphicsResource`` objects from
-        given ``void`` pointer.
+    cdef _hipGraphicsResource from_pyobj(object pyobj):
+        """Derives a _hipGraphicsResource from a Python object.
+
+        Derives a _hipGraphicsResource from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``_hipGraphicsResource`` reference, this method
+        returns it directly. No new ``_hipGraphicsResource`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``_hipGraphicsResource``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of _hipGraphicsResource!
         """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipGraphicsResource wrapper = hipGraphicsResource.__new__(hipGraphicsResource)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
+        cdef _hipGraphicsResource wrapper = _hipGraphicsResource.__new__(_hipGraphicsResource)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,_hipGraphicsResource):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip._hipGraphicsResource*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip._hipGraphicsResource*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip._hipGraphicsResource*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<_hipGraphicsResource object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipGraphicsResource_t = _hipGraphicsResource
 
-
 cdef class ihipGraph:
-    cdef chip.ihipGraph* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ihipGraph from_ptr(chip.ihipGraph *_ptr, bint owner=False):
+    cdef ihipGraph from_ptr(chip.ihipGraph* ptr, bint owner=False):
         """Factory function to create ``ihipGraph`` objects from
         given ``chip.ihipGraph`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ihipGraph wrapper = ihipGraph.__new__(ihipGraph)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef ihipGraph from_pyobj(object pyobj):
+        """Derives a ihipGraph from a Python object.
+
+        Derives a ihipGraph from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ihipGraph`` reference, this method
+        returns it directly. No new ``ihipGraph`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ihipGraph``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ihipGraph!
+        """
+        cdef ihipGraph wrapper = ihipGraph.__new__(ihipGraph)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ihipGraph):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ihipGraph*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ihipGraph*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ihipGraph*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ihipGraph object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipGraph_t = ihipGraph
 
-
 cdef class hipGraphNode:
-    cdef chip.hipGraphNode* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipGraphNode from_ptr(chip.hipGraphNode *_ptr, bint owner=False):
+    cdef hipGraphNode from_ptr(chip.hipGraphNode* ptr, bint owner=False):
         """Factory function to create ``hipGraphNode`` objects from
         given ``chip.hipGraphNode`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipGraphNode wrapper = hipGraphNode.__new__(hipGraphNode)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipGraphNode from_pyobj(object pyobj):
+        """Derives a hipGraphNode from a Python object.
+
+        Derives a hipGraphNode from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipGraphNode`` reference, this method
+        returns it directly. No new ``hipGraphNode`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipGraphNode``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipGraphNode!
+        """
+        cdef hipGraphNode wrapper = hipGraphNode.__new__(hipGraphNode)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipGraphNode):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipGraphNode*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipGraphNode*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipGraphNode*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipGraphNode object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipGraphNode_t = hipGraphNode
 
-
 cdef class hipGraphExec:
-    cdef chip.hipGraphExec* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipGraphExec from_ptr(chip.hipGraphExec *_ptr, bint owner=False):
+    cdef hipGraphExec from_ptr(chip.hipGraphExec* ptr, bint owner=False):
         """Factory function to create ``hipGraphExec`` objects from
         given ``chip.hipGraphExec`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipGraphExec wrapper = hipGraphExec.__new__(hipGraphExec)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipGraphExec from_pyobj(object pyobj):
+        """Derives a hipGraphExec from a Python object.
+
+        Derives a hipGraphExec from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipGraphExec`` reference, this method
+        returns it directly. No new ``hipGraphExec`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipGraphExec``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipGraphExec!
+        """
+        cdef hipGraphExec wrapper = hipGraphExec.__new__(hipGraphExec)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipGraphExec):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipGraphExec*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipGraphExec*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipGraphExec*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipGraphExec object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipGraphExec_t = hipGraphExec
 
-
 cdef class hipUserObject:
-    cdef chip.hipUserObject* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipUserObject from_ptr(chip.hipUserObject *_ptr, bint owner=False):
+    cdef hipUserObject from_ptr(chip.hipUserObject* ptr, bint owner=False):
         """Factory function to create ``hipUserObject`` objects from
         given ``chip.hipUserObject`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipUserObject wrapper = hipUserObject.__new__(hipUserObject)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipUserObject from_pyobj(object pyobj):
+        """Derives a hipUserObject from a Python object.
+
+        Derives a hipUserObject from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipUserObject`` reference, this method
+        returns it directly. No new ``hipUserObject`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipUserObject``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipUserObject!
+        """
+        cdef hipUserObject wrapper = hipUserObject.__new__(hipUserObject)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipUserObject):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipUserObject*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipUserObject*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipUserObject*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipUserObject object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipUserObject_t = hipUserObject
@@ -8761,58 +14979,154 @@ class hipGraphNodeType(enum.IntEnum):
     hipGraphNodeTypeMemcpyToSymbol = chip.hipGraphNodeTypeMemcpyToSymbol
     hipGraphNodeTypeCount = chip.hipGraphNodeTypeCount
 
-
 cdef class hipHostFn_t:
-    cdef chip.hipHostFn_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipHostFn_t from_ptr(chip.hipHostFn_t *_ptr, bint owner=False):
+    cdef hipHostFn_t from_ptr(chip.hipHostFn_t* ptr, bint owner=False):
         """Factory function to create ``hipHostFn_t`` objects from
         given ``chip.hipHostFn_t`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipHostFn_t wrapper = hipHostFn_t.__new__(hipHostFn_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef hipHostFn_t from_pyobj(object pyobj):
+        """Derives a hipHostFn_t from a Python object.
+
+        Derives a hipHostFn_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipHostFn_t`` reference, this method
+        returns it directly. No new ``hipHostFn_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipHostFn_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipHostFn_t!
+        """
+        cdef hipHostFn_t wrapper = hipHostFn_t.__new__(hipHostFn_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipHostFn_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipHostFn_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipHostFn_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipHostFn_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipHostFn_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class hipHostNodeParams:
-    cdef chip.hipHostNodeParams* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipHostNodeParams from_ptr(chip.hipHostNodeParams *_ptr, bint owner=False):
+    cdef hipHostNodeParams from_ptr(chip.hipHostNodeParams* ptr, bint owner=False):
         """Factory function to create ``hipHostNodeParams`` objects from
         given ``chip.hipHostNodeParams`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipHostNodeParams wrapper = hipHostNodeParams.__new__(hipHostNodeParams)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipHostNodeParams from_pyobj(object pyobj):
+        """Derives a hipHostNodeParams from a Python object.
+
+        Derives a hipHostNodeParams from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipHostNodeParams`` reference, this method
+        returns it directly. No new ``hipHostNodeParams`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipHostNodeParams``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipHostNodeParams!
+        """
+        cdef hipHostNodeParams wrapper = hipHostNodeParams.__new__(hipHostNodeParams)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipHostNodeParams):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipHostNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipHostNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipHostNodeParams*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipHostNodeParams** ptr):
-        ptr[0] = <chip.hipHostNodeParams *>stdlib.malloc(sizeof(chip.hipHostNodeParams))
+        ptr[0] = <chip.hipHostNodeParams*>stdlib.malloc(sizeof(chip.hipHostNodeParams))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8822,46 +15136,100 @@ cdef class hipHostNodeParams:
     cdef hipHostNodeParams new():
         """Factory function to create hipHostNodeParams objects with
         newly allocated chip.hipHostNodeParams"""
-        cdef chip.hipHostNodeParams *ptr;
+        cdef chip.hipHostNodeParams* ptr;
         hipHostNodeParams.__allocate(&ptr)
         return hipHostNodeParams.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipHostNodeParams.__allocate(&self._ptr)
        self.ptr_owner = True
-
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipHostNodeParams object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class hipKernelNodeParams:
-    cdef chip.hipKernelNodeParams* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipKernelNodeParams from_ptr(chip.hipKernelNodeParams *_ptr, bint owner=False):
+    cdef hipKernelNodeParams from_ptr(chip.hipKernelNodeParams* ptr, bint owner=False):
         """Factory function to create ``hipKernelNodeParams`` objects from
         given ``chip.hipKernelNodeParams`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipKernelNodeParams wrapper = hipKernelNodeParams.__new__(hipKernelNodeParams)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipKernelNodeParams from_pyobj(object pyobj):
+        """Derives a hipKernelNodeParams from a Python object.
+
+        Derives a hipKernelNodeParams from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipKernelNodeParams`` reference, this method
+        returns it directly. No new ``hipKernelNodeParams`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipKernelNodeParams``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipKernelNodeParams!
+        """
+        cdef hipKernelNodeParams wrapper = hipKernelNodeParams.__new__(hipKernelNodeParams)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipKernelNodeParams):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipKernelNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipKernelNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipKernelNodeParams*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipKernelNodeParams** ptr):
-        ptr[0] = <chip.hipKernelNodeParams *>stdlib.malloc(sizeof(chip.hipKernelNodeParams))
+        ptr[0] = <chip.hipKernelNodeParams*>stdlib.malloc(sizeof(chip.hipKernelNodeParams))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8871,13 +15239,26 @@ cdef class hipKernelNodeParams:
     cdef hipKernelNodeParams new():
         """Factory function to create hipKernelNodeParams objects with
         newly allocated chip.hipKernelNodeParams"""
-        cdef chip.hipKernelNodeParams *ptr;
+        cdef chip.hipKernelNodeParams* ptr;
         hipKernelNodeParams.__allocate(&ptr)
         return hipKernelNodeParams.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipKernelNodeParams.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipKernelNodeParams object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_blockDim(self, i):
         """Get value of ``blockDim`` of ``self._ptr[i]``.
         """
@@ -8908,37 +15289,78 @@ cdef class hipKernelNodeParams:
         self.set_sharedMemBytes(0,value)
 
 
-
 cdef class hipMemsetParams:
-    cdef chip.hipMemsetParams* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipMemsetParams from_ptr(chip.hipMemsetParams *_ptr, bint owner=False):
+    cdef hipMemsetParams from_ptr(chip.hipMemsetParams* ptr, bint owner=False):
         """Factory function to create ``hipMemsetParams`` objects from
         given ``chip.hipMemsetParams`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipMemsetParams wrapper = hipMemsetParams.__new__(hipMemsetParams)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipMemsetParams from_pyobj(object pyobj):
+        """Derives a hipMemsetParams from a Python object.
+
+        Derives a hipMemsetParams from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipMemsetParams`` reference, this method
+        returns it directly. No new ``hipMemsetParams`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipMemsetParams``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipMemsetParams!
+        """
+        cdef hipMemsetParams wrapper = hipMemsetParams.__new__(hipMemsetParams)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipMemsetParams):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipMemsetParams*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipMemsetParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipMemsetParams*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipMemsetParams** ptr):
-        ptr[0] = <chip.hipMemsetParams *>stdlib.malloc(sizeof(chip.hipMemsetParams))
+        ptr[0] = <chip.hipMemsetParams*>stdlib.malloc(sizeof(chip.hipMemsetParams))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -8948,13 +15370,26 @@ cdef class hipMemsetParams:
     cdef hipMemsetParams new():
         """Factory function to create hipMemsetParams objects with
         newly allocated chip.hipMemsetParams"""
-        cdef chip.hipMemsetParams *ptr;
+        cdef chip.hipMemsetParams* ptr;
         hipMemsetParams.__allocate(&ptr)
         return hipMemsetParams.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipMemsetParams.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipMemsetParams object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_elementSize(self, i):
         """Get value ``elementSize`` of ``self._ptr[i]``.
         """
@@ -9036,37 +15471,78 @@ class hipAccessProperty(enum.IntEnum):
     hipAccessPropertyStreaming = chip.hipAccessPropertyStreaming
     hipAccessPropertyPersisting = chip.hipAccessPropertyPersisting
 
-
 cdef class hipAccessPolicyWindow:
-    cdef chip.hipAccessPolicyWindow* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipAccessPolicyWindow from_ptr(chip.hipAccessPolicyWindow *_ptr, bint owner=False):
+    cdef hipAccessPolicyWindow from_ptr(chip.hipAccessPolicyWindow* ptr, bint owner=False):
         """Factory function to create ``hipAccessPolicyWindow`` objects from
         given ``chip.hipAccessPolicyWindow`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipAccessPolicyWindow wrapper = hipAccessPolicyWindow.__new__(hipAccessPolicyWindow)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipAccessPolicyWindow from_pyobj(object pyobj):
+        """Derives a hipAccessPolicyWindow from a Python object.
+
+        Derives a hipAccessPolicyWindow from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipAccessPolicyWindow`` reference, this method
+        returns it directly. No new ``hipAccessPolicyWindow`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipAccessPolicyWindow``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipAccessPolicyWindow!
+        """
+        cdef hipAccessPolicyWindow wrapper = hipAccessPolicyWindow.__new__(hipAccessPolicyWindow)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipAccessPolicyWindow):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipAccessPolicyWindow*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipAccessPolicyWindow*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipAccessPolicyWindow*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipAccessPolicyWindow** ptr):
-        ptr[0] = <chip.hipAccessPolicyWindow *>stdlib.malloc(sizeof(chip.hipAccessPolicyWindow))
+        ptr[0] = <chip.hipAccessPolicyWindow*>stdlib.malloc(sizeof(chip.hipAccessPolicyWindow))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9076,13 +15552,26 @@ cdef class hipAccessPolicyWindow:
     cdef hipAccessPolicyWindow new():
         """Factory function to create hipAccessPolicyWindow objects with
         newly allocated chip.hipAccessPolicyWindow"""
-        cdef chip.hipAccessPolicyWindow *ptr;
+        cdef chip.hipAccessPolicyWindow* ptr;
         hipAccessPolicyWindow.__allocate(&ptr)
         return hipAccessPolicyWindow.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipAccessPolicyWindow.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipAccessPolicyWindow object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_hitProp(self, i):
         """Get value of ``hitProp`` of ``self._ptr[i]``.
         """
@@ -9145,37 +15634,78 @@ cdef class hipAccessPolicyWindow:
         self.set_num_bytes(0,value)
 
 
-
 cdef class hipKernelNodeAttrValue:
-    cdef chip.hipKernelNodeAttrValue* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipKernelNodeAttrValue from_ptr(chip.hipKernelNodeAttrValue *_ptr, bint owner=False):
+    cdef hipKernelNodeAttrValue from_ptr(chip.hipKernelNodeAttrValue* ptr, bint owner=False):
         """Factory function to create ``hipKernelNodeAttrValue`` objects from
         given ``chip.hipKernelNodeAttrValue`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipKernelNodeAttrValue wrapper = hipKernelNodeAttrValue.__new__(hipKernelNodeAttrValue)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipKernelNodeAttrValue from_pyobj(object pyobj):
+        """Derives a hipKernelNodeAttrValue from a Python object.
+
+        Derives a hipKernelNodeAttrValue from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipKernelNodeAttrValue`` reference, this method
+        returns it directly. No new ``hipKernelNodeAttrValue`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipKernelNodeAttrValue``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipKernelNodeAttrValue!
+        """
+        cdef hipKernelNodeAttrValue wrapper = hipKernelNodeAttrValue.__new__(hipKernelNodeAttrValue)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipKernelNodeAttrValue):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipKernelNodeAttrValue*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipKernelNodeAttrValue*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipKernelNodeAttrValue*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipKernelNodeAttrValue** ptr):
-        ptr[0] = <chip.hipKernelNodeAttrValue *>stdlib.malloc(sizeof(chip.hipKernelNodeAttrValue))
+        ptr[0] = <chip.hipKernelNodeAttrValue*>stdlib.malloc(sizeof(chip.hipKernelNodeAttrValue))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9185,13 +15715,26 @@ cdef class hipKernelNodeAttrValue:
     cdef hipKernelNodeAttrValue new():
         """Factory function to create hipKernelNodeAttrValue objects with
         newly allocated chip.hipKernelNodeAttrValue"""
-        cdef chip.hipKernelNodeAttrValue *ptr;
+        cdef chip.hipKernelNodeAttrValue* ptr;
         hipKernelNodeAttrValue.__allocate(&ptr)
         return hipKernelNodeAttrValue.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipKernelNodeAttrValue.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipKernelNodeAttrValue object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_accessPolicyWindow(self, i):
         """Get value of ``accessPolicyWindow`` of ``self._ptr[i]``.
         """
@@ -9254,37 +15797,78 @@ class hipUserObjectRetainFlags(enum.IntEnum):
 class hipGraphInstantiateFlags(enum.IntEnum):
     hipGraphInstantiateFlagAutoFreeOnLaunch = chip.hipGraphInstantiateFlagAutoFreeOnLaunch
 
-
 cdef class hipMemAllocationProp_struct_0:
-    cdef chip.hipMemAllocationProp_struct_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipMemAllocationProp_struct_0 from_ptr(chip.hipMemAllocationProp_struct_0 *_ptr, bint owner=False):
+    cdef hipMemAllocationProp_struct_0 from_ptr(chip.hipMemAllocationProp_struct_0* ptr, bint owner=False):
         """Factory function to create ``hipMemAllocationProp_struct_0`` objects from
         given ``chip.hipMemAllocationProp_struct_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipMemAllocationProp_struct_0 wrapper = hipMemAllocationProp_struct_0.__new__(hipMemAllocationProp_struct_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipMemAllocationProp_struct_0 from_pyobj(object pyobj):
+        """Derives a hipMemAllocationProp_struct_0 from a Python object.
+
+        Derives a hipMemAllocationProp_struct_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipMemAllocationProp_struct_0`` reference, this method
+        returns it directly. No new ``hipMemAllocationProp_struct_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipMemAllocationProp_struct_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipMemAllocationProp_struct_0!
+        """
+        cdef hipMemAllocationProp_struct_0 wrapper = hipMemAllocationProp_struct_0.__new__(hipMemAllocationProp_struct_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipMemAllocationProp_struct_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipMemAllocationProp_struct_0** ptr):
-        ptr[0] = <chip.hipMemAllocationProp_struct_0 *>stdlib.malloc(sizeof(chip.hipMemAllocationProp_struct_0))
+        ptr[0] = <chip.hipMemAllocationProp_struct_0*>stdlib.malloc(sizeof(chip.hipMemAllocationProp_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9294,13 +15878,26 @@ cdef class hipMemAllocationProp_struct_0:
     cdef hipMemAllocationProp_struct_0 new():
         """Factory function to create hipMemAllocationProp_struct_0 objects with
         newly allocated chip.hipMemAllocationProp_struct_0"""
-        cdef chip.hipMemAllocationProp_struct_0 *ptr;
+        cdef chip.hipMemAllocationProp_struct_0* ptr;
         hipMemAllocationProp_struct_0.__allocate(&ptr)
         return hipMemAllocationProp_struct_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipMemAllocationProp_struct_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipMemAllocationProp_struct_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_compressionType(self, i):
         """Get value ``compressionType`` of ``self._ptr[i]``.
         """
@@ -9345,37 +15942,78 @@ cdef class hipMemAllocationProp_struct_0:
         self.set_usage(0,value)
 
 
-
 cdef class hipMemAllocationProp:
-    cdef chip.hipMemAllocationProp* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipMemAllocationProp from_ptr(chip.hipMemAllocationProp *_ptr, bint owner=False):
+    cdef hipMemAllocationProp from_ptr(chip.hipMemAllocationProp* ptr, bint owner=False):
         """Factory function to create ``hipMemAllocationProp`` objects from
         given ``chip.hipMemAllocationProp`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipMemAllocationProp wrapper = hipMemAllocationProp.__new__(hipMemAllocationProp)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipMemAllocationProp from_pyobj(object pyobj):
+        """Derives a hipMemAllocationProp from a Python object.
+
+        Derives a hipMemAllocationProp from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipMemAllocationProp`` reference, this method
+        returns it directly. No new ``hipMemAllocationProp`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipMemAllocationProp``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipMemAllocationProp!
+        """
+        cdef hipMemAllocationProp wrapper = hipMemAllocationProp.__new__(hipMemAllocationProp)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipMemAllocationProp):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipMemAllocationProp*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipMemAllocationProp*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipMemAllocationProp*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipMemAllocationProp** ptr):
-        ptr[0] = <chip.hipMemAllocationProp *>stdlib.malloc(sizeof(chip.hipMemAllocationProp))
+        ptr[0] = <chip.hipMemAllocationProp*>stdlib.malloc(sizeof(chip.hipMemAllocationProp))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9385,13 +16023,26 @@ cdef class hipMemAllocationProp:
     cdef hipMemAllocationProp new():
         """Factory function to create hipMemAllocationProp objects with
         newly allocated chip.hipMemAllocationProp"""
-        cdef chip.hipMemAllocationProp *ptr;
+        cdef chip.hipMemAllocationProp* ptr;
         hipMemAllocationProp.__allocate(&ptr)
         return hipMemAllocationProp.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipMemAllocationProp.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipMemAllocationProp object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -9440,25 +16091,80 @@ cdef class hipMemAllocationProp:
         return self.get_allocFlags(0)
 
 
-
 cdef class ihipMemGenericAllocationHandle:
-    cdef chip.ihipMemGenericAllocationHandle* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef ihipMemGenericAllocationHandle from_ptr(chip.ihipMemGenericAllocationHandle *_ptr, bint owner=False):
+    cdef ihipMemGenericAllocationHandle from_ptr(chip.ihipMemGenericAllocationHandle* ptr, bint owner=False):
         """Factory function to create ``ihipMemGenericAllocationHandle`` objects from
         given ``chip.ihipMemGenericAllocationHandle`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ihipMemGenericAllocationHandle wrapper = ihipMemGenericAllocationHandle.__new__(ihipMemGenericAllocationHandle)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef ihipMemGenericAllocationHandle from_pyobj(object pyobj):
+        """Derives a ihipMemGenericAllocationHandle from a Python object.
+
+        Derives a ihipMemGenericAllocationHandle from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``ihipMemGenericAllocationHandle`` reference, this method
+        returns it directly. No new ``ihipMemGenericAllocationHandle`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ihipMemGenericAllocationHandle``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of ihipMemGenericAllocationHandle!
+        """
+        cdef ihipMemGenericAllocationHandle wrapper = ihipMemGenericAllocationHandle.__new__(ihipMemGenericAllocationHandle)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,ihipMemGenericAllocationHandle):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<ihipMemGenericAllocationHandle object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 hipMemGenericAllocationHandle_t = ihipMemGenericAllocationHandle
@@ -9478,37 +16184,78 @@ class hipArraySparseSubresourceType(enum.IntEnum):
     hipArraySparseSubresourceTypeSparseLevel = chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeMiptail = chip.hipArraySparseSubresourceTypeMiptail
 
-
 cdef class hipArrayMapInfo_union_0:
-    cdef chip.hipArrayMapInfo_union_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipArrayMapInfo_union_0 from_ptr(chip.hipArrayMapInfo_union_0 *_ptr, bint owner=False):
+    cdef hipArrayMapInfo_union_0 from_ptr(chip.hipArrayMapInfo_union_0* ptr, bint owner=False):
         """Factory function to create ``hipArrayMapInfo_union_0`` objects from
         given ``chip.hipArrayMapInfo_union_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipArrayMapInfo_union_0 wrapper = hipArrayMapInfo_union_0.__new__(hipArrayMapInfo_union_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipArrayMapInfo_union_0 from_pyobj(object pyobj):
+        """Derives a hipArrayMapInfo_union_0 from a Python object.
+
+        Derives a hipArrayMapInfo_union_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipArrayMapInfo_union_0`` reference, this method
+        returns it directly. No new ``hipArrayMapInfo_union_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipArrayMapInfo_union_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipArrayMapInfo_union_0!
+        """
+        cdef hipArrayMapInfo_union_0 wrapper = hipArrayMapInfo_union_0.__new__(hipArrayMapInfo_union_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipArrayMapInfo_union_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipArrayMapInfo_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipArrayMapInfo_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipArrayMapInfo_union_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo_union_0** ptr):
-        ptr[0] = <chip.hipArrayMapInfo_union_0 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_0))
+        ptr[0] = <chip.hipArrayMapInfo_union_0*>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9518,13 +16265,26 @@ cdef class hipArrayMapInfo_union_0:
     cdef hipArrayMapInfo_union_0 new():
         """Factory function to create hipArrayMapInfo_union_0 objects with
         newly allocated chip.hipArrayMapInfo_union_0"""
-        cdef chip.hipArrayMapInfo_union_0 *ptr;
+        cdef chip.hipArrayMapInfo_union_0* ptr;
         hipArrayMapInfo_union_0.__allocate(&ptr)
         return hipArrayMapInfo_union_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipArrayMapInfo_union_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipArrayMapInfo_union_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_mipmap(self, i):
         """Get value of ``mipmap`` of ``self._ptr[i]``.
         """
@@ -9534,37 +16294,78 @@ cdef class hipArrayMapInfo_union_0:
         return self.get_mipmap(0)
 
 
-
 cdef class hipArrayMapInfo_union_1_struct_0:
-    cdef chip.hipArrayMapInfo_union_1_struct_0* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipArrayMapInfo_union_1_struct_0 from_ptr(chip.hipArrayMapInfo_union_1_struct_0 *_ptr, bint owner=False):
+    cdef hipArrayMapInfo_union_1_struct_0 from_ptr(chip.hipArrayMapInfo_union_1_struct_0* ptr, bint owner=False):
         """Factory function to create ``hipArrayMapInfo_union_1_struct_0`` objects from
         given ``chip.hipArrayMapInfo_union_1_struct_0`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipArrayMapInfo_union_1_struct_0 wrapper = hipArrayMapInfo_union_1_struct_0.__new__(hipArrayMapInfo_union_1_struct_0)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipArrayMapInfo_union_1_struct_0 from_pyobj(object pyobj):
+        """Derives a hipArrayMapInfo_union_1_struct_0 from a Python object.
+
+        Derives a hipArrayMapInfo_union_1_struct_0 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipArrayMapInfo_union_1_struct_0`` reference, this method
+        returns it directly. No new ``hipArrayMapInfo_union_1_struct_0`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipArrayMapInfo_union_1_struct_0``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipArrayMapInfo_union_1_struct_0!
+        """
+        cdef hipArrayMapInfo_union_1_struct_0 wrapper = hipArrayMapInfo_union_1_struct_0.__new__(hipArrayMapInfo_union_1_struct_0)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipArrayMapInfo_union_1_struct_0):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo_union_1_struct_0** ptr):
-        ptr[0] = <chip.hipArrayMapInfo_union_1_struct_0 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1_struct_0))
+        ptr[0] = <chip.hipArrayMapInfo_union_1_struct_0*>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1_struct_0))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9574,13 +16375,26 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     cdef hipArrayMapInfo_union_1_struct_0 new():
         """Factory function to create hipArrayMapInfo_union_1_struct_0 objects with
         newly allocated chip.hipArrayMapInfo_union_1_struct_0"""
-        cdef chip.hipArrayMapInfo_union_1_struct_0 *ptr;
+        cdef chip.hipArrayMapInfo_union_1_struct_0* ptr;
         hipArrayMapInfo_union_1_struct_0.__allocate(&ptr)
         return hipArrayMapInfo_union_1_struct_0.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipArrayMapInfo_union_1_struct_0.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipArrayMapInfo_union_1_struct_0 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_level(self, i):
         """Get value ``level`` of ``self._ptr[i]``.
         """
@@ -9695,37 +16509,78 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         self.set_extentDepth(0,value)
 
 
-
 cdef class hipArrayMapInfo_union_1_struct_1:
-    cdef chip.hipArrayMapInfo_union_1_struct_1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipArrayMapInfo_union_1_struct_1 from_ptr(chip.hipArrayMapInfo_union_1_struct_1 *_ptr, bint owner=False):
+    cdef hipArrayMapInfo_union_1_struct_1 from_ptr(chip.hipArrayMapInfo_union_1_struct_1* ptr, bint owner=False):
         """Factory function to create ``hipArrayMapInfo_union_1_struct_1`` objects from
         given ``chip.hipArrayMapInfo_union_1_struct_1`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipArrayMapInfo_union_1_struct_1 wrapper = hipArrayMapInfo_union_1_struct_1.__new__(hipArrayMapInfo_union_1_struct_1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipArrayMapInfo_union_1_struct_1 from_pyobj(object pyobj):
+        """Derives a hipArrayMapInfo_union_1_struct_1 from a Python object.
+
+        Derives a hipArrayMapInfo_union_1_struct_1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipArrayMapInfo_union_1_struct_1`` reference, this method
+        returns it directly. No new ``hipArrayMapInfo_union_1_struct_1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipArrayMapInfo_union_1_struct_1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipArrayMapInfo_union_1_struct_1!
+        """
+        cdef hipArrayMapInfo_union_1_struct_1 wrapper = hipArrayMapInfo_union_1_struct_1.__new__(hipArrayMapInfo_union_1_struct_1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipArrayMapInfo_union_1_struct_1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo_union_1_struct_1** ptr):
-        ptr[0] = <chip.hipArrayMapInfo_union_1_struct_1 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1_struct_1))
+        ptr[0] = <chip.hipArrayMapInfo_union_1_struct_1*>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1_struct_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9735,13 +16590,26 @@ cdef class hipArrayMapInfo_union_1_struct_1:
     cdef hipArrayMapInfo_union_1_struct_1 new():
         """Factory function to create hipArrayMapInfo_union_1_struct_1 objects with
         newly allocated chip.hipArrayMapInfo_union_1_struct_1"""
-        cdef chip.hipArrayMapInfo_union_1_struct_1 *ptr;
+        cdef chip.hipArrayMapInfo_union_1_struct_1* ptr;
         hipArrayMapInfo_union_1_struct_1.__allocate(&ptr)
         return hipArrayMapInfo_union_1_struct_1.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipArrayMapInfo_union_1_struct_1.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipArrayMapInfo_union_1_struct_1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_layer(self, i):
         """Get value ``layer`` of ``self._ptr[i]``.
         """
@@ -9786,37 +16654,78 @@ cdef class hipArrayMapInfo_union_1_struct_1:
         self.set_size(0,value)
 
 
-
 cdef class hipArrayMapInfo_union_1:
-    cdef chip.hipArrayMapInfo_union_1* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipArrayMapInfo_union_1 from_ptr(chip.hipArrayMapInfo_union_1 *_ptr, bint owner=False):
+    cdef hipArrayMapInfo_union_1 from_ptr(chip.hipArrayMapInfo_union_1* ptr, bint owner=False):
         """Factory function to create ``hipArrayMapInfo_union_1`` objects from
         given ``chip.hipArrayMapInfo_union_1`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipArrayMapInfo_union_1 wrapper = hipArrayMapInfo_union_1.__new__(hipArrayMapInfo_union_1)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipArrayMapInfo_union_1 from_pyobj(object pyobj):
+        """Derives a hipArrayMapInfo_union_1 from a Python object.
+
+        Derives a hipArrayMapInfo_union_1 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipArrayMapInfo_union_1`` reference, this method
+        returns it directly. No new ``hipArrayMapInfo_union_1`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipArrayMapInfo_union_1``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipArrayMapInfo_union_1!
+        """
+        cdef hipArrayMapInfo_union_1 wrapper = hipArrayMapInfo_union_1.__new__(hipArrayMapInfo_union_1)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipArrayMapInfo_union_1):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo_union_1** ptr):
-        ptr[0] = <chip.hipArrayMapInfo_union_1 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1))
+        ptr[0] = <chip.hipArrayMapInfo_union_1*>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_1))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9826,13 +16735,26 @@ cdef class hipArrayMapInfo_union_1:
     cdef hipArrayMapInfo_union_1 new():
         """Factory function to create hipArrayMapInfo_union_1 objects with
         newly allocated chip.hipArrayMapInfo_union_1"""
-        cdef chip.hipArrayMapInfo_union_1 *ptr;
+        cdef chip.hipArrayMapInfo_union_1* ptr;
         hipArrayMapInfo_union_1.__allocate(&ptr)
         return hipArrayMapInfo_union_1.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipArrayMapInfo_union_1.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipArrayMapInfo_union_1 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_sparseLevel(self, i):
         """Get value of ``sparseLevel`` of ``self._ptr[i]``.
         """
@@ -9849,37 +16771,78 @@ cdef class hipArrayMapInfo_union_1:
         return self.get_miptail(0)
 
 
-
 cdef class hipArrayMapInfo_union_2:
-    cdef chip.hipArrayMapInfo_union_2* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipArrayMapInfo_union_2 from_ptr(chip.hipArrayMapInfo_union_2 *_ptr, bint owner=False):
+    cdef hipArrayMapInfo_union_2 from_ptr(chip.hipArrayMapInfo_union_2* ptr, bint owner=False):
         """Factory function to create ``hipArrayMapInfo_union_2`` objects from
         given ``chip.hipArrayMapInfo_union_2`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipArrayMapInfo_union_2 wrapper = hipArrayMapInfo_union_2.__new__(hipArrayMapInfo_union_2)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipArrayMapInfo_union_2 from_pyobj(object pyobj):
+        """Derives a hipArrayMapInfo_union_2 from a Python object.
+
+        Derives a hipArrayMapInfo_union_2 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipArrayMapInfo_union_2`` reference, this method
+        returns it directly. No new ``hipArrayMapInfo_union_2`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipArrayMapInfo_union_2``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipArrayMapInfo_union_2!
+        """
+        cdef hipArrayMapInfo_union_2 wrapper = hipArrayMapInfo_union_2.__new__(hipArrayMapInfo_union_2)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipArrayMapInfo_union_2):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipArrayMapInfo_union_2*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipArrayMapInfo_union_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipArrayMapInfo_union_2*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo_union_2** ptr):
-        ptr[0] = <chip.hipArrayMapInfo_union_2 *>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_2))
+        ptr[0] = <chip.hipArrayMapInfo_union_2*>stdlib.malloc(sizeof(chip.hipArrayMapInfo_union_2))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9889,46 +16852,100 @@ cdef class hipArrayMapInfo_union_2:
     cdef hipArrayMapInfo_union_2 new():
         """Factory function to create hipArrayMapInfo_union_2 objects with
         newly allocated chip.hipArrayMapInfo_union_2"""
-        cdef chip.hipArrayMapInfo_union_2 *ptr;
+        cdef chip.hipArrayMapInfo_union_2* ptr;
         hipArrayMapInfo_union_2.__allocate(&ptr)
         return hipArrayMapInfo_union_2.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipArrayMapInfo_union_2.__allocate(&self._ptr)
        self.ptr_owner = True
-
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipArrayMapInfo_union_2 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class hipArrayMapInfo:
-    cdef chip.hipArrayMapInfo* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipArrayMapInfo from_ptr(chip.hipArrayMapInfo *_ptr, bint owner=False):
+    cdef hipArrayMapInfo from_ptr(chip.hipArrayMapInfo* ptr, bint owner=False):
         """Factory function to create ``hipArrayMapInfo`` objects from
         given ``chip.hipArrayMapInfo`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipArrayMapInfo wrapper = hipArrayMapInfo.__new__(hipArrayMapInfo)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipArrayMapInfo from_pyobj(object pyobj):
+        """Derives a hipArrayMapInfo from a Python object.
+
+        Derives a hipArrayMapInfo from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipArrayMapInfo`` reference, this method
+        returns it directly. No new ``hipArrayMapInfo`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipArrayMapInfo``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipArrayMapInfo!
+        """
+        cdef hipArrayMapInfo wrapper = hipArrayMapInfo.__new__(hipArrayMapInfo)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipArrayMapInfo):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipArrayMapInfo*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipArrayMapInfo*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipArrayMapInfo*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chip.hipArrayMapInfo** ptr):
-        ptr[0] = <chip.hipArrayMapInfo *>stdlib.malloc(sizeof(chip.hipArrayMapInfo))
+        ptr[0] = <chip.hipArrayMapInfo*>stdlib.malloc(sizeof(chip.hipArrayMapInfo))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -9938,13 +16955,26 @@ cdef class hipArrayMapInfo:
     cdef hipArrayMapInfo new():
         """Factory function to create hipArrayMapInfo objects with
         newly allocated chip.hipArrayMapInfo"""
-        cdef chip.hipArrayMapInfo *ptr;
+        cdef chip.hipArrayMapInfo* ptr;
         hipArrayMapInfo.__allocate(&ptr)
         return hipArrayMapInfo.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipArrayMapInfo.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipArrayMapInfo object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_resourceType(self, i):
         """Get value of ``resourceType`` of ``self._ptr[i]``.
         """
@@ -10094,8 +17124,8 @@ def hipInit(unsigned int flags):
     Most HIP APIs implicitly initialize the HIP runtime.
     This API provides control over the timing of the initialization.
     """
-    hipInit_____retval = hipError_t(chip.hipInit(flags))    # fully specified
-    return hipInit_____retval
+    _hipInit__retval = hipError_t(chip.hipInit(flags))    # fully specified
+    return _hipInit__retval
 
 
 @cython.embedsignature(True)
@@ -10111,8 +17141,8 @@ def hipDriverGetVersion():
     @see hipRuntimeGetVersion
     """
     cdef int driverVersion
-    hipDriverGetVersion_____retval = hipError_t(chip.hipDriverGetVersion(&driverVersion))    # fully specified
-    return (hipDriverGetVersion_____retval,driverVersion)
+    _hipDriverGetVersion__retval = hipError_t(chip.hipDriverGetVersion(&driverVersion))    # fully specified
+    return (_hipDriverGetVersion__retval,driverVersion)
 
 
 @cython.embedsignature(True)
@@ -10127,8 +17157,8 @@ def hipRuntimeGetVersion():
     @see hipDriverGetVersion
     """
     cdef int runtimeVersion
-    hipRuntimeGetVersion_____retval = hipError_t(chip.hipRuntimeGetVersion(&runtimeVersion))    # fully specified
-    return (hipRuntimeGetVersion_____retval,runtimeVersion)
+    _hipRuntimeGetVersion__retval = hipError_t(chip.hipRuntimeGetVersion(&runtimeVersion))    # fully specified
+    return (_hipRuntimeGetVersion__retval,runtimeVersion)
 
 
 @cython.embedsignature(True)
@@ -10139,8 +17169,8 @@ def hipDeviceGet(int ordinal):
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
     cdef int device
-    hipDeviceGet_____retval = hipError_t(chip.hipDeviceGet(&device,ordinal))    # fully specified
-    return (hipDeviceGet_____retval,device)
+    _hipDeviceGet__retval = hipError_t(chip.hipDeviceGet(&device,ordinal))    # fully specified
+    return (_hipDeviceGet__retval,device)
 
 
 @cython.embedsignature(True)
@@ -10153,8 +17183,8 @@ def hipDeviceComputeCapability(hipDevice_t device):
     """
     cdef int major
     cdef int minor
-    hipDeviceComputeCapability_____retval = hipError_t(chip.hipDeviceComputeCapability(&major,&minor,device))    # fully specified
-    return (hipDeviceComputeCapability_____retval,major,minor)
+    _hipDeviceComputeCapability__retval = hipError_t(chip.hipDeviceComputeCapability(&major,&minor,device))    # fully specified
+    return (_hipDeviceComputeCapability__retval,major,minor)
 
 
 @cython.embedsignature(True)
@@ -10165,12 +17195,12 @@ def hipDeviceGetName(char * name, int len, hipDevice_t device):
     @param [in] device
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
-    hipDeviceGetName_____retval = hipError_t(chip.hipDeviceGetName(name,len,device))    # fully specified
-    return hipDeviceGetName_____retval
+    _hipDeviceGetName__retval = hipError_t(chip.hipDeviceGetName(name,len,device))    # fully specified
+    return _hipDeviceGetName__retval
 
 
 @cython.embedsignature(True)
-def hipDeviceGetUuid(hipUUID_t uuid, hipDevice_t device):
+def hipDeviceGetUuid(object uuid, hipDevice_t device):
     """@brief Returns an UUID for the device.[BETA]
     @param [out] uuid
     @param [in] device
@@ -10179,8 +17209,9 @@ def hipDeviceGetUuid(hipUUID_t uuid, hipDevice_t device):
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotInitialized,
     #hipErrorDeinitialized
     """
-    hipDeviceGetUuid_____retval = hipError_t(chip.hipDeviceGetUuid(uuid._ptr,device))    # fully specified
-    return hipDeviceGetUuid_____retval
+    _hipDeviceGetUuid__retval = hipError_t(chip.hipDeviceGetUuid(
+        hipUUID_t.from_pyobj(uuid)._ptr,device))    # fully specified
+    return _hipDeviceGetUuid__retval
 
 
 @cython.embedsignature(True)
@@ -10195,8 +17226,8 @@ def hipDeviceGetP2PAttribute(object attr, int srcDevice, int dstDevice):
     cdef int value
     if not isinstance(attr,hipDeviceP2PAttr):
         raise TypeError("argument 'attr' must be of type 'hipDeviceP2PAttr'")
-    hipDeviceGetP2PAttribute_____retval = hipError_t(chip.hipDeviceGetP2PAttribute(&value,attr.value,srcDevice,dstDevice))    # fully specified
-    return (hipDeviceGetP2PAttribute_____retval,value)
+    _hipDeviceGetP2PAttribute__retval = hipError_t(chip.hipDeviceGetP2PAttribute(&value,attr.value,srcDevice,dstDevice))    # fully specified
+    return (_hipDeviceGetP2PAttribute__retval,value)
 
 
 @cython.embedsignature(True)
@@ -10207,8 +17238,8 @@ def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
     @param [in] device
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
-    hipDeviceGetPCIBusId_____retval = hipError_t(chip.hipDeviceGetPCIBusId(pciBusId,len,device))    # fully specified
-    return hipDeviceGetPCIBusId_____retval
+    _hipDeviceGetPCIBusId__retval = hipError_t(chip.hipDeviceGetPCIBusId(pciBusId,len,device))    # fully specified
+    return _hipDeviceGetPCIBusId__retval
 
 
 @cython.embedsignature(True)
@@ -10219,8 +17250,8 @@ def hipDeviceGetByPCIBusId(const char * pciBusId):
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     cdef int device
-    hipDeviceGetByPCIBusId_____retval = hipError_t(chip.hipDeviceGetByPCIBusId(&device,pciBusId))    # fully specified
-    return (hipDeviceGetByPCIBusId_____retval,device)
+    _hipDeviceGetByPCIBusId__retval = hipError_t(chip.hipDeviceGetByPCIBusId(&device,pciBusId))    # fully specified
+    return (_hipDeviceGetByPCIBusId__retval,device)
 
 
 @cython.embedsignature(True)
@@ -10231,8 +17262,8 @@ def hipDeviceTotalMem(hipDevice_t device):
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
     cdef int bytes
-    hipDeviceTotalMem_____retval = hipError_t(chip.hipDeviceTotalMem(&bytes,device))    # fully specified
-    return (hipDeviceTotalMem_____retval,bytes)
+    _hipDeviceTotalMem__retval = hipError_t(chip.hipDeviceTotalMem(&bytes,device))    # fully specified
+    return (_hipDeviceTotalMem__retval,bytes)
 
 
 @cython.embedsignature(True)
@@ -10247,8 +17278,8 @@ def hipDeviceSynchronize():
     @returns #hipSuccess
     @see hipSetDevice, hipDeviceReset
     """
-    hipDeviceSynchronize_____retval = hipError_t(chip.hipDeviceSynchronize())    # fully specified
-    return hipDeviceSynchronize_____retval
+    _hipDeviceSynchronize__retval = hipError_t(chip.hipDeviceSynchronize())    # fully specified
+    return _hipDeviceSynchronize__retval
 
 
 @cython.embedsignature(True)
@@ -10260,8 +17291,8 @@ def hipDeviceReset():
     @returns #hipSuccess
     @see hipDeviceSynchronize
     """
-    hipDeviceReset_____retval = hipError_t(chip.hipDeviceReset())    # fully specified
-    return hipDeviceReset_____retval
+    _hipDeviceReset__retval = hipError_t(chip.hipDeviceReset())    # fully specified
+    return _hipDeviceReset__retval
 
 
 @cython.embedsignature(True)
@@ -10288,8 +17319,8 @@ def hipSetDevice(int deviceId):
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorDeviceAlreadyInUse
     @see hipGetDevice, hipGetDeviceCount
     """
-    hipSetDevice_____retval = hipError_t(chip.hipSetDevice(deviceId))    # fully specified
-    return hipSetDevice_____retval
+    _hipSetDevice__retval = hipError_t(chip.hipSetDevice(deviceId))    # fully specified
+    return _hipSetDevice__retval
 
 
 @cython.embedsignature(True)
@@ -10303,8 +17334,8 @@ def hipGetDevice():
     @see hipSetDevice, hipGetDevicesizeBytes
     """
     cdef int deviceId
-    hipGetDevice_____retval = hipError_t(chip.hipGetDevice(&deviceId))    # fully specified
-    return (hipGetDevice_____retval,deviceId)
+    _hipGetDevice__retval = hipError_t(chip.hipGetDevice(&deviceId))    # fully specified
+    return (_hipGetDevice__retval,deviceId)
 
 
 @cython.embedsignature(True)
@@ -10317,8 +17348,8 @@ def hipGetDeviceCount():
     devices can be found, then hipGetDeviceCount returns #hipSuccess.
     """
     cdef int count
-    hipGetDeviceCount_____retval = hipError_t(chip.hipGetDeviceCount(&count))    # fully specified
-    return (hipGetDeviceCount_____retval,count)
+    _hipGetDeviceCount__retval = hipError_t(chip.hipGetDeviceCount(&count))    # fully specified
+    return (_hipGetDeviceCount__retval,count)
 
 
 @cython.embedsignature(True)
@@ -10332,8 +17363,8 @@ def hipDeviceGetAttribute(object attr, int deviceId):
     cdef int pi
     if not isinstance(attr,hipDeviceAttribute_t):
         raise TypeError("argument 'attr' must be of type 'hipDeviceAttribute_t'")
-    hipDeviceGetAttribute_____retval = hipError_t(chip.hipDeviceGetAttribute(&pi,attr.value,deviceId))    # fully specified
-    return (hipDeviceGetAttribute_____retval,pi)
+    _hipDeviceGetAttribute__retval = hipError_t(chip.hipDeviceGetAttribute(&pi,attr.value,deviceId))    # fully specified
+    return (_hipDeviceGetAttribute__retval,pi)
 
 
 @cython.embedsignature(True)
@@ -10348,12 +17379,12 @@ def hipDeviceGetDefaultMemPool(int device):
     it is still open to changes and may have outstanding issues.
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
-    hipDeviceGetDefaultMemPool_____retval = hipError_t(chip.hipDeviceGetDefaultMemPool(&mem_pool._ptr,device))    # fully specified
-    return (hipDeviceGetDefaultMemPool_____retval,mem_pool)
+    _hipDeviceGetDefaultMemPool__retval = hipError_t(chip.hipDeviceGetDefaultMemPool(&mem_pool._ptr,device))    # fully specified
+    return (_hipDeviceGetDefaultMemPool__retval,mem_pool)
 
 
 @cython.embedsignature(True)
-def hipDeviceSetMemPool(int device, ihipMemPoolHandle_t mem_pool):
+def hipDeviceSetMemPool(int device, object mem_pool):
     """@brief Sets the current memory pool of a device
     The memory pool must be local to the specified device.
     @p hipMallocAsync allocates from the current mempool of the provided stream's device.
@@ -10368,8 +17399,9 @@ def hipDeviceSetMemPool(int device, ihipMemPoolHandle_t mem_pool):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipDeviceSetMemPool_____retval = hipError_t(chip.hipDeviceSetMemPool(device,mem_pool._ptr))    # fully specified
-    return hipDeviceSetMemPool_____retval
+    _hipDeviceSetMemPool__retval = hipError_t(chip.hipDeviceSetMemPool(device,
+        ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr))    # fully specified
+    return _hipDeviceSetMemPool__retval
 
 
 @cython.embedsignature(True)
@@ -10388,12 +17420,12 @@ def hipDeviceGetMemPool(int device):
     it is still open to changes and may have outstanding issues.
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
-    hipDeviceGetMemPool_____retval = hipError_t(chip.hipDeviceGetMemPool(&mem_pool._ptr,device))    # fully specified
-    return (hipDeviceGetMemPool_____retval,mem_pool)
+    _hipDeviceGetMemPool__retval = hipError_t(chip.hipDeviceGetMemPool(&mem_pool._ptr,device))    # fully specified
+    return (_hipDeviceGetMemPool__retval,mem_pool)
 
 
 @cython.embedsignature(True)
-def hipGetDeviceProperties(hipDeviceProp_t prop, int deviceId):
+def hipGetDeviceProperties(object prop, int deviceId):
     """@brief Returns device properties.
     @param [out] prop written with device properties
     @param [in]  deviceId which device to query for information
@@ -10403,8 +17435,9 @@ def hipGetDeviceProperties(hipDeviceProp_t prop, int deviceId):
     @bug HCC always returns 0 for l2CacheSize
     Populates hipGetDeviceProperties with information for the specified device.
     """
-    hipGetDeviceProperties_____retval = hipError_t(chip.hipGetDeviceProperties(prop._ptr,deviceId))    # fully specified
-    return hipGetDeviceProperties_____retval
+    _hipGetDeviceProperties__retval = hipError_t(chip.hipGetDeviceProperties(
+        hipDeviceProp_t.from_pyobj(prop)._ptr,deviceId))    # fully specified
+    return _hipGetDeviceProperties__retval
 
 
 @cython.embedsignature(True)
@@ -10417,8 +17450,8 @@ def hipDeviceSetCacheConfig(object cacheConfig):
     """
     if not isinstance(cacheConfig,hipFuncCache_t):
         raise TypeError("argument 'cacheConfig' must be of type 'hipFuncCache_t'")
-    hipDeviceSetCacheConfig_____retval = hipError_t(chip.hipDeviceSetCacheConfig(cacheConfig.value))    # fully specified
-    return hipDeviceSetCacheConfig_____retval
+    _hipDeviceSetCacheConfig__retval = hipError_t(chip.hipDeviceSetCacheConfig(cacheConfig.value))    # fully specified
+    return _hipDeviceSetCacheConfig__retval
 
 
 @cython.embedsignature(True)
@@ -10430,8 +17463,8 @@ def hipDeviceGetCacheConfig():
     on those architectures.
     """
     cdef chip.hipFuncCache_t cacheConfig
-    hipDeviceGetCacheConfig_____retval = hipError_t(chip.hipDeviceGetCacheConfig(&cacheConfig))    # fully specified
-    return (hipDeviceGetCacheConfig_____retval,hipFuncCache_t(cacheConfig))
+    _hipDeviceGetCacheConfig__retval = hipError_t(chip.hipDeviceGetCacheConfig(&cacheConfig))    # fully specified
+    return (_hipDeviceGetCacheConfig__retval,hipFuncCache_t(cacheConfig))
 
 
 @cython.embedsignature(True)
@@ -10445,8 +17478,8 @@ def hipDeviceGetLimit(object limit):
     cdef int pValue
     if not isinstance(limit,hipLimit_t):
         raise TypeError("argument 'limit' must be of type 'hipLimit_t'")
-    hipDeviceGetLimit_____retval = hipError_t(chip.hipDeviceGetLimit(&pValue,limit.value))    # fully specified
-    return (hipDeviceGetLimit_____retval,pValue)
+    _hipDeviceGetLimit__retval = hipError_t(chip.hipDeviceGetLimit(&pValue,limit.value))    # fully specified
+    return (_hipDeviceGetLimit__retval,pValue)
 
 
 @cython.embedsignature(True)
@@ -10458,8 +17491,8 @@ def hipDeviceSetLimit(object limit, int value):
     """
     if not isinstance(limit,hipLimit_t):
         raise TypeError("argument 'limit' must be of type 'hipLimit_t'")
-    hipDeviceSetLimit_____retval = hipError_t(chip.hipDeviceSetLimit(limit.value,value))    # fully specified
-    return hipDeviceSetLimit_____retval
+    _hipDeviceSetLimit__retval = hipError_t(chip.hipDeviceSetLimit(limit.value,value))    # fully specified
+    return _hipDeviceSetLimit__retval
 
 
 @cython.embedsignature(True)
@@ -10471,8 +17504,8 @@ def hipDeviceGetSharedMemConfig():
     ignored on those architectures.
     """
     cdef chip.hipSharedMemConfig pConfig
-    hipDeviceGetSharedMemConfig_____retval = hipError_t(chip.hipDeviceGetSharedMemConfig(&pConfig))    # fully specified
-    return (hipDeviceGetSharedMemConfig_____retval,hipSharedMemConfig(pConfig))
+    _hipDeviceGetSharedMemConfig__retval = hipError_t(chip.hipDeviceGetSharedMemConfig(&pConfig))    # fully specified
+    return (_hipDeviceGetSharedMemConfig__retval,hipSharedMemConfig(pConfig))
 
 
 @cython.embedsignature(True)
@@ -10482,8 +17515,8 @@ def hipGetDeviceFlags():
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     cdef unsigned int flags
-    hipGetDeviceFlags_____retval = hipError_t(chip.hipGetDeviceFlags(&flags))    # fully specified
-    return (hipGetDeviceFlags_____retval,flags)
+    _hipGetDeviceFlags__retval = hipError_t(chip.hipGetDeviceFlags(&flags))    # fully specified
+    return (_hipGetDeviceFlags__retval,flags)
 
 
 @cython.embedsignature(True)
@@ -10496,8 +17529,8 @@ def hipDeviceSetSharedMemConfig(object config):
     """
     if not isinstance(config,hipSharedMemConfig):
         raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
-    hipDeviceSetSharedMemConfig_____retval = hipError_t(chip.hipDeviceSetSharedMemConfig(config.value))    # fully specified
-    return hipDeviceSetSharedMemConfig_____retval
+    _hipDeviceSetSharedMemConfig__retval = hipError_t(chip.hipDeviceSetSharedMemConfig(config.value))    # fully specified
+    return _hipDeviceSetSharedMemConfig__retval
 
 
 @cython.embedsignature(True)
@@ -10518,20 +17551,21 @@ def hipSetDeviceFlags(unsigned int flags):
     the flag is ignored. hipDeviceLmemResizeToMax      : @warning ROCm silently ignores this flag.
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorSetOnActiveProcess
     """
-    hipSetDeviceFlags_____retval = hipError_t(chip.hipSetDeviceFlags(flags))    # fully specified
-    return hipSetDeviceFlags_____retval
+    _hipSetDeviceFlags__retval = hipError_t(chip.hipSetDeviceFlags(flags))    # fully specified
+    return _hipSetDeviceFlags__retval
 
 
 @cython.embedsignature(True)
-def hipChooseDevice(hipDeviceProp_t prop):
+def hipChooseDevice(object prop):
     """@brief Device which matches hipDeviceProp_t is returned
     @param [out] device ID
     @param [in]  device properties pointer
     @returns #hipSuccess, #hipErrorInvalidValue
     """
     cdef int device
-    hipChooseDevice_____retval = hipError_t(chip.hipChooseDevice(&device,prop._ptr))    # fully specified
-    return (hipChooseDevice_____retval,device)
+    _hipChooseDevice__retval = hipError_t(chip.hipChooseDevice(&device,
+        hipDeviceProp_t.from_pyobj(prop)._ptr))    # fully specified
+    return (_hipChooseDevice__retval,device)
 
 
 @cython.embedsignature(True)
@@ -10546,12 +17580,12 @@ def hipExtGetLinkTypeAndHopCount(int device1, int device2):
     """
     cdef unsigned int linktype
     cdef unsigned int hopcount
-    hipExtGetLinkTypeAndHopCount_____retval = hipError_t(chip.hipExtGetLinkTypeAndHopCount(device1,device2,&linktype,&hopcount))    # fully specified
-    return (hipExtGetLinkTypeAndHopCount_____retval,linktype,hopcount)
+    _hipExtGetLinkTypeAndHopCount__retval = hipError_t(chip.hipExtGetLinkTypeAndHopCount(device1,device2,&linktype,&hopcount))    # fully specified
+    return (_hipExtGetLinkTypeAndHopCount__retval,linktype,hopcount)
 
 
 @cython.embedsignature(True)
-def hipIpcGetMemHandle(hipIpcMemHandle_st handle, devPtr):
+def hipIpcGetMemHandle(object handle, object devPtr):
     """@brief Gets an interprocess memory handle for an existing device memory
     allocation
     Takes a pointer to the base of an existing device memory allocation created
@@ -10571,10 +17605,14 @@ def hipIpcGetMemHandle(hipIpcMemHandle_st handle, devPtr):
     hipErrorOutOfMemory,
     hipErrorMapFailed,
     """
-    pass
+    _hipIpcGetMemHandle__retval = hipError_t(chip.hipIpcGetMemHandle(
+        hipIpcMemHandle_st.from_pyobj(handle)._ptr,
+        <void *>DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
+    return _hipIpcGetMemHandle__retval
+
 
 @cython.embedsignature(True)
-def hipIpcOpenMemHandle(handle, unsigned int flags):
+def hipIpcOpenMemHandle(unsigned int flags):
     """@brief Opens an interprocess memory handle exported from another process
     and returns a device pointer usable in the local process.
     Maps memory exported from another process with hipIpcGetMemHandle into
@@ -10603,10 +17641,11 @@ def hipIpcOpenMemHandle(handle, unsigned int flags):
     there is no guarantee that the same device poiter will be returned in @p *devPtr.
     This is diffrent from CUDA.
     """
+    devPtr = DataHandle.from_ptr(NULL)
     pass
 
 @cython.embedsignature(True)
-def hipIpcCloseMemHandle(devPtr):
+def hipIpcCloseMemHandle(object devPtr):
     """@brief Close memory mapped with hipIpcOpenMemHandle
     Unmaps memory returnd by hipIpcOpenMemHandle. The original allocation
     in the exporting process as well as imported mappings in other processes
@@ -10619,10 +17658,13 @@ def hipIpcCloseMemHandle(devPtr):
     hipErrorMapFailed,
     hipErrorInvalidHandle,
     """
-    pass
+    _hipIpcCloseMemHandle__retval = hipError_t(chip.hipIpcCloseMemHandle(
+        <void *>DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
+    return _hipIpcCloseMemHandle__retval
+
 
 @cython.embedsignature(True)
-def hipIpcGetEventHandle(hipIpcEventHandle_st handle, ihipEvent_t event):
+def hipIpcGetEventHandle(object handle, object event):
     """@brief Gets an opaque interprocess handle for an event.
     This opaque handle may be copied into other processes and opened with hipIpcOpenEventHandle.
     Then hipEventRecord, hipEventSynchronize, hipStreamWaitEvent and hipEventQuery may be used in
@@ -10632,12 +17674,14 @@ def hipIpcGetEventHandle(hipIpcEventHandle_st handle, ihipEvent_t event):
     @param[in]   event  Event allocated with hipEventInterprocess and hipEventDisableTiming flags
     @returns #hipSuccess, #hipErrorInvalidConfiguration, #hipErrorInvalidValue
     """
-    hipIpcGetEventHandle_____retval = hipError_t(chip.hipIpcGetEventHandle(handle._ptr,event._ptr))    # fully specified
-    return hipIpcGetEventHandle_____retval
+    _hipIpcGetEventHandle__retval = hipError_t(chip.hipIpcGetEventHandle(
+        hipIpcEventHandle_st.from_pyobj(handle)._ptr,
+        ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
+    return _hipIpcGetEventHandle__retval
 
 
 @cython.embedsignature(True)
-def hipIpcOpenEventHandle(handle):
+def hipIpcOpenEventHandle():
     """@brief Opens an interprocess event handles.
     Opens an interprocess event handle exported from another process with cudaIpcGetEventHandle. The returned
     hipEvent_t behaves like a locally created event with the hipEventDisableTiming flag specified. This event
@@ -10652,7 +17696,7 @@ def hipIpcOpenEventHandle(handle):
     pass
 
 @cython.embedsignature(True)
-def hipFuncSetAttribute(func, object attr, int value):
+def hipFuncSetAttribute(object func, object attr, int value):
     """@}
     @defgroup Execution Execution Control
     @{
@@ -10667,10 +17711,13 @@ def hipFuncSetAttribute(func, object attr, int value):
     """
     if not isinstance(attr,hipFuncAttribute):
         raise TypeError("argument 'attr' must be of type 'hipFuncAttribute'")
-    pass
+    _hipFuncSetAttribute__retval = hipError_t(chip.hipFuncSetAttribute(
+        <const void *>DataHandle.from_pyobj(func)._ptr,attr.value,value))    # fully specified
+    return _hipFuncSetAttribute__retval
+
 
 @cython.embedsignature(True)
-def hipFuncSetCacheConfig(func, object config):
+def hipFuncSetCacheConfig(object func, object config):
     """@brief Set Cache configuration for a specific function
     @param [in] config;
     @returns #hipSuccess, #hipErrorNotInitialized
@@ -10679,10 +17726,13 @@ def hipFuncSetCacheConfig(func, object config):
     """
     if not isinstance(config,hipFuncCache_t):
         raise TypeError("argument 'config' must be of type 'hipFuncCache_t'")
-    pass
+    _hipFuncSetCacheConfig__retval = hipError_t(chip.hipFuncSetCacheConfig(
+        <const void *>DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
+    return _hipFuncSetCacheConfig__retval
+
 
 @cython.embedsignature(True)
-def hipFuncSetSharedMemConfig(func, object config):
+def hipFuncSetSharedMemConfig(object func, object config):
     """@brief Set shared memory configuation for a specific function
     @param [in] func
     @param [in] config
@@ -10692,7 +17742,10 @@ def hipFuncSetSharedMemConfig(func, object config):
     """
     if not isinstance(config,hipSharedMemConfig):
         raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
-    pass
+    _hipFuncSetSharedMemConfig__retval = hipError_t(chip.hipFuncSetSharedMemConfig(
+        <const void *>DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
+    return _hipFuncSetSharedMemConfig__retval
+
 
 @cython.embedsignature(True)
 def hipGetLastError():
@@ -10709,8 +17762,8 @@ def hipGetLastError():
     thread, and then resets the saved error to #hipSuccess.
     @see hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
     """
-    hipGetLastError_____retval = hipError_t(chip.hipGetLastError())    # fully specified
-    return hipGetLastError_____retval
+    _hipGetLastError__retval = hipError_t(chip.hipGetLastError())    # fully specified
+    return _hipGetLastError__retval
 
 
 @cython.embedsignature(True)
@@ -10721,8 +17774,8 @@ def hipPeekAtLastError():
     thread. Unlike hipGetLastError, this function does not reset the saved error code.
     @see hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
     """
-    hipPeekAtLastError_____retval = hipError_t(chip.hipPeekAtLastError())    # fully specified
-    return hipPeekAtLastError_____retval
+    _hipPeekAtLastError__retval = hipError_t(chip.hipPeekAtLastError())    # fully specified
+    return _hipPeekAtLastError__retval
 
 
 @cython.embedsignature(True)
@@ -10734,7 +17787,7 @@ def hipGetErrorName(object hip_error):
     """
     if not isinstance(hip_error,hipError_t):
         raise TypeError("argument 'hip_error' must be of type 'hipError_t'")
-    cdef const char * hipGetErrorName_____retval = chip.hipGetErrorName(hip_error.value)    # fully specified
+    cdef const char * _hipGetErrorName__retval = chip.hipGetErrorName(hip_error.value)    # fully specified
 
 
 @cython.embedsignature(True)
@@ -10746,11 +17799,11 @@ def hipGetErrorString(object hipError):
     """
     if not isinstance(hipError,hipError_t):
         raise TypeError("argument 'hipError' must be of type 'hipError_t'")
-    cdef const char * hipGetErrorString_____retval = chip.hipGetErrorString(hipError.value)    # fully specified
+    cdef const char * _hipGetErrorString__retval = chip.hipGetErrorString(hipError.value)    # fully specified
 
 
 @cython.embedsignature(True)
-def hipDrvGetErrorName(object hipError):
+def hipDrvGetErrorName(object hipError, object errorString):
     """@brief Return hip error as text string form.
     @param [in] hipError Error code to convert to string.
     @param [out] const char pointer to the NULL-terminated error string
@@ -10759,10 +17812,13 @@ def hipDrvGetErrorName(object hipError):
     """
     if not isinstance(hipError,hipError_t):
         raise TypeError("argument 'hipError' must be of type 'hipError_t'")
-    pass
+    _hipDrvGetErrorName__retval = hipError_t(chip.hipDrvGetErrorName(hipError.value,
+        <const char **>DataHandle.from_pyobj(errorString)._ptr))    # fully specified
+    return _hipDrvGetErrorName__retval
+
 
 @cython.embedsignature(True)
-def hipDrvGetErrorString(object hipError):
+def hipDrvGetErrorString(object hipError, object errorString):
     """@brief Return handy text string message to explain the error which occurred
     @param [in] hipError Error code to convert to string.
     @param [out] const char pointer to the NULL-terminated error string
@@ -10771,7 +17827,10 @@ def hipDrvGetErrorString(object hipError):
     """
     if not isinstance(hipError,hipError_t):
         raise TypeError("argument 'hipError' must be of type 'hipError_t'")
-    pass
+    _hipDrvGetErrorString__retval = hipError_t(chip.hipDrvGetErrorString(hipError.value,
+        <const char **>DataHandle.from_pyobj(errorString)._ptr))    # fully specified
+    return _hipDrvGetErrorString__retval
+
 
 @cython.embedsignature(True)
 def hipStreamCreate():
@@ -10787,8 +17846,8 @@ def hipStreamCreate():
     @see hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
     stream = ihipStream_t.from_ptr(NULL,owner=True)
-    hipStreamCreate_____retval = hipError_t(chip.hipStreamCreate(&stream._ptr))    # fully specified
-    return (hipStreamCreate_____retval,stream)
+    _hipStreamCreate__retval = hipError_t(chip.hipStreamCreate(&stream._ptr))    # fully specified
+    return (_hipStreamCreate__retval,stream)
 
 
 @cython.embedsignature(True)
@@ -10805,8 +17864,8 @@ def hipStreamCreateWithFlags(unsigned int flags):
     @see hipStreamCreate, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
     stream = ihipStream_t.from_ptr(NULL,owner=True)
-    hipStreamCreateWithFlags_____retval = hipError_t(chip.hipStreamCreateWithFlags(&stream._ptr,flags))    # fully specified
-    return (hipStreamCreateWithFlags_____retval,stream)
+    _hipStreamCreateWithFlags__retval = hipError_t(chip.hipStreamCreateWithFlags(&stream._ptr,flags))    # fully specified
+    return (_hipStreamCreateWithFlags__retval,stream)
 
 
 @cython.embedsignature(True)
@@ -10824,8 +17883,8 @@ def hipStreamCreateWithPriority(unsigned int flags, int priority):
     @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
     stream = ihipStream_t.from_ptr(NULL,owner=True)
-    hipStreamCreateWithPriority_____retval = hipError_t(chip.hipStreamCreateWithPriority(&stream._ptr,flags,priority))    # fully specified
-    return (hipStreamCreateWithPriority_____retval,stream)
+    _hipStreamCreateWithPriority__retval = hipError_t(chip.hipStreamCreateWithPriority(&stream._ptr,flags,priority))    # fully specified
+    return (_hipStreamCreateWithPriority__retval,stream)
 
 
 @cython.embedsignature(True)
@@ -10842,12 +17901,12 @@ def hipDeviceGetStreamPriorityRange():
     """
     cdef int leastPriority
     cdef int greatestPriority
-    hipDeviceGetStreamPriorityRange_____retval = hipError_t(chip.hipDeviceGetStreamPriorityRange(&leastPriority,&greatestPriority))    # fully specified
-    return (hipDeviceGetStreamPriorityRange_____retval,leastPriority,greatestPriority)
+    _hipDeviceGetStreamPriorityRange__retval = hipError_t(chip.hipDeviceGetStreamPriorityRange(&leastPriority,&greatestPriority))    # fully specified
+    return (_hipDeviceGetStreamPriorityRange__retval,leastPriority,greatestPriority)
 
 
 @cython.embedsignature(True)
-def hipStreamDestroy(ihipStream_t stream):
+def hipStreamDestroy(object stream):
     """@brief Destroys the specified stream.
     @param[in, out] stream Valid pointer to hipStream_t.  This function writes the memory with the
     newly created stream.
@@ -10860,12 +17919,13 @@ def hipStreamDestroy(ihipStream_t stream):
     @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamQuery, hipStreamWaitEvent,
     hipStreamSynchronize
     """
-    hipStreamDestroy_____retval = hipError_t(chip.hipStreamDestroy(stream._ptr))    # fully specified
-    return hipStreamDestroy_____retval
+    _hipStreamDestroy__retval = hipError_t(chip.hipStreamDestroy(
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipStreamDestroy__retval
 
 
 @cython.embedsignature(True)
-def hipStreamQuery(ihipStream_t stream):
+def hipStreamQuery(object stream):
     """@brief Return #hipSuccess if all of the operations in the specified @p stream have completed, or
     #hipErrorNotReady if not.
     @param[in] stream stream to query
@@ -10876,12 +17936,13 @@ def hipStreamQuery(ihipStream_t stream):
     @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamSynchronize,
     hipStreamDestroy
     """
-    hipStreamQuery_____retval = hipError_t(chip.hipStreamQuery(stream._ptr))    # fully specified
-    return hipStreamQuery_____retval
+    _hipStreamQuery__retval = hipError_t(chip.hipStreamQuery(
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipStreamQuery__retval
 
 
 @cython.embedsignature(True)
-def hipStreamSynchronize(ihipStream_t stream):
+def hipStreamSynchronize(object stream):
     """@brief Wait for all commands in stream to complete.
     @param[in] stream stream identifier.
     @return #hipSuccess, #hipErrorInvalidHandle
@@ -10893,12 +17954,13 @@ def hipStreamSynchronize(ihipStream_t stream):
     or blocking.
     @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamDestroy
     """
-    hipStreamSynchronize_____retval = hipError_t(chip.hipStreamSynchronize(stream._ptr))    # fully specified
-    return hipStreamSynchronize_____retval
+    _hipStreamSynchronize__retval = hipError_t(chip.hipStreamSynchronize(
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipStreamSynchronize__retval
 
 
 @cython.embedsignature(True)
-def hipStreamWaitEvent(ihipStream_t stream, ihipEvent_t event, unsigned int flags):
+def hipStreamWaitEvent(object stream, object event, unsigned int flags):
     """@brief Make the specified compute stream wait for an event
     @param[in] stream stream to make wait.
     @param[in] event event to wait on
@@ -10912,12 +17974,14 @@ def hipStreamWaitEvent(ihipStream_t stream, ihipEvent_t event, unsigned int flag
     stream is created with hipStreamNonBlocking = 0.
     @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamDestroy
     """
-    hipStreamWaitEvent_____retval = hipError_t(chip.hipStreamWaitEvent(stream._ptr,event._ptr,flags))    # fully specified
-    return hipStreamWaitEvent_____retval
+    _hipStreamWaitEvent__retval = hipError_t(chip.hipStreamWaitEvent(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        ihipEvent_t.from_pyobj(event)._ptr,flags))    # fully specified
+    return _hipStreamWaitEvent__retval
 
 
 @cython.embedsignature(True)
-def hipStreamGetFlags(ihipStream_t stream):
+def hipStreamGetFlags(object stream):
     """@brief Return flags associated with this stream.
     @param[in] stream stream to be queried
     @param[in,out] flags Pointer to an unsigned integer in which the stream's flags are returned
@@ -10927,12 +17991,13 @@ def hipStreamGetFlags(ihipStream_t stream):
     @see hipStreamCreateWithFlags
     """
     cdef unsigned int flags
-    hipStreamGetFlags_____retval = hipError_t(chip.hipStreamGetFlags(stream._ptr,&flags))    # fully specified
-    return (hipStreamGetFlags_____retval,flags)
+    _hipStreamGetFlags__retval = hipError_t(chip.hipStreamGetFlags(
+        ihipStream_t.from_pyobj(stream)._ptr,&flags))    # fully specified
+    return (_hipStreamGetFlags__retval,flags)
 
 
 @cython.embedsignature(True)
-def hipStreamGetPriority(ihipStream_t stream):
+def hipStreamGetPriority(object stream):
     """@brief Query the priority of a stream.
     @param[in] stream stream to be queried
     @param[in,out] priority Pointer to an unsigned integer in which the stream's priority is returned
@@ -10942,8 +18007,9 @@ def hipStreamGetPriority(ihipStream_t stream):
     @see hipStreamCreateWithFlags
     """
     cdef int priority
-    hipStreamGetPriority_____retval = hipError_t(chip.hipStreamGetPriority(stream._ptr,&priority))    # fully specified
-    return (hipStreamGetPriority_____retval,priority)
+    _hipStreamGetPriority__retval = hipError_t(chip.hipStreamGetPriority(
+        ihipStream_t.from_pyobj(stream)._ptr,&priority))    # fully specified
+    return (_hipStreamGetPriority__retval,priority)
 
 
 @cython.embedsignature(True)
@@ -10964,12 +18030,12 @@ def hipExtStreamCreateWithCUMask(uint32_t cuMaskSize):
     """
     stream = ihipStream_t.from_ptr(NULL,owner=True)
     cdef const unsigned int cuMask
-    hipExtStreamCreateWithCUMask_____retval = hipError_t(chip.hipExtStreamCreateWithCUMask(&stream._ptr,cuMaskSize,&cuMask))    # fully specified
-    return (hipExtStreamCreateWithCUMask_____retval,stream,cuMask)
+    _hipExtStreamCreateWithCUMask__retval = hipError_t(chip.hipExtStreamCreateWithCUMask(&stream._ptr,cuMaskSize,&cuMask))    # fully specified
+    return (_hipExtStreamCreateWithCUMask__retval,stream,cuMask)
 
 
 @cython.embedsignature(True)
-def hipExtStreamGetCUMask(ihipStream_t stream, uint32_t cuMaskSize):
+def hipExtStreamGetCUMask(object stream, uint32_t cuMaskSize):
     """@brief Get CU mask associated with an asynchronous stream
     @param[in] stream stream to be queried
     @param[in] cuMaskSize number of the block of memories (uint32_t *) allocated by user
@@ -10980,33 +18046,89 @@ def hipExtStreamGetCUMask(ihipStream_t stream, uint32_t cuMaskSize):
     @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
     cdef unsigned int cuMask
-    hipExtStreamGetCUMask_____retval = hipError_t(chip.hipExtStreamGetCUMask(stream._ptr,cuMaskSize,&cuMask))    # fully specified
-    return (hipExtStreamGetCUMask_____retval,cuMask)
-
+    _hipExtStreamGetCUMask__retval = hipError_t(chip.hipExtStreamGetCUMask(
+        ihipStream_t.from_pyobj(stream)._ptr,cuMaskSize,&cuMask))    # fully specified
+    return (_hipExtStreamGetCUMask__retval,cuMask)
 
 
 cdef class hipStreamCallback_t:
-    cdef chip.hipStreamCallback_t* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipStreamCallback_t from_ptr(chip.hipStreamCallback_t *_ptr, bint owner=False):
+    cdef hipStreamCallback_t from_ptr(chip.hipStreamCallback_t* ptr, bint owner=False):
         """Factory function to create ``hipStreamCallback_t`` objects from
         given ``chip.hipStreamCallback_t`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipStreamCallback_t wrapper = hipStreamCallback_t.__new__(hipStreamCallback_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
 
+    @staticmethod
+    cdef hipStreamCallback_t from_pyobj(object pyobj):
+        """Derives a hipStreamCallback_t from a Python object.
+
+        Derives a hipStreamCallback_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipStreamCallback_t`` reference, this method
+        returns it directly. No new ``hipStreamCallback_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipStreamCallback_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipStreamCallback_t!
+        """
+        cdef hipStreamCallback_t wrapper = hipStreamCallback_t.__new__(hipStreamCallback_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipStreamCallback_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chip.hipStreamCallback_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chip.hipStreamCallback_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chip.hipStreamCallback_t*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipStreamCallback_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
+
 
 @cython.embedsignature(True)
-def hipStreamAddCallback(ihipStream_t stream, callback, userData, unsigned int flags):
+def hipStreamAddCallback(object stream, object userData, unsigned int flags):
     """@brief Adds a callback to be called on the host after all currently enqueued
     items in the stream have completed.  For each
     hipStreamAddCallback call, a callback will be executed exactly once.
@@ -11022,7 +18144,7 @@ def hipStreamAddCallback(ihipStream_t stream, callback, userData, unsigned int f
     pass
 
 @cython.embedsignature(True)
-def hipStreamWaitValue32(ihipStream_t stream, ptr, uint32_t value, unsigned int flags, uint32_t mask):
+def hipStreamWaitValue32(object stream, object ptr, uint32_t value, unsigned int flags, uint32_t mask):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -11052,10 +18174,14 @@ def hipStreamWaitValue32(ihipStream_t stream, ptr, uint32_t value, unsigned int 
     @see hipExtMallocWithFlags, hipFree, hipStreamWaitValue64, hipStreamWriteValue64,
     hipStreamWriteValue32, hipDeviceGetAttribute
     """
-    pass
+    _hipStreamWaitValue32__retval = hipError_t(chip.hipStreamWaitValue32(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
+    return _hipStreamWaitValue32__retval
+
 
 @cython.embedsignature(True)
-def hipStreamWaitValue64(ihipStream_t stream, ptr, uint64_t value, unsigned int flags, uint64_t mask):
+def hipStreamWaitValue64(object stream, object ptr, uint64_t value, unsigned int flags, uint64_t mask):
     """@brief Enqueues a wait command to the stream.[BETA]
     @param [in] stream - Stream identifier
     @param [in] ptr    - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
@@ -11079,10 +18205,14 @@ def hipStreamWaitValue64(ihipStream_t stream, ptr, uint64_t value, unsigned int 
     @see hipExtMallocWithFlags, hipFree, hipStreamWaitValue32, hipStreamWriteValue64,
     hipStreamWriteValue32, hipDeviceGetAttribute
     """
-    pass
+    _hipStreamWaitValue64__retval = hipError_t(chip.hipStreamWaitValue64(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
+    return _hipStreamWaitValue64__retval
+
 
 @cython.embedsignature(True)
-def hipStreamWriteValue32(ihipStream_t stream, ptr, uint32_t value, unsigned int flags):
+def hipStreamWriteValue32(object stream, object ptr, uint32_t value, unsigned int flags):
     """@brief Enqueues a write command to the stream.[BETA]
     @param [in] stream - Stream identifier
     @param [in] ptr    - Pointer to a GPU accessible memory object
@@ -11096,10 +18226,14 @@ def hipStreamWriteValue32(ihipStream_t stream, ptr, uint32_t value, unsigned int
     @see hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
     hipStreamWaitValue64
     """
-    pass
+    _hipStreamWriteValue32__retval = hipError_t(chip.hipStreamWriteValue32(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags))    # fully specified
+    return _hipStreamWriteValue32__retval
+
 
 @cython.embedsignature(True)
-def hipStreamWriteValue64(ihipStream_t stream, ptr, uint64_t value, unsigned int flags):
+def hipStreamWriteValue64(object stream, object ptr, uint64_t value, unsigned int flags):
     """@brief Enqueues a write command to the stream.[BETA]
     @param [in] stream - Stream identifier
     @param [in] ptr    - Pointer to a GPU accessible memory object
@@ -11113,7 +18247,11 @@ def hipStreamWriteValue64(ihipStream_t stream, ptr, uint64_t value, unsigned int
     @see hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
     hipStreamWaitValue64
     """
-    pass
+    _hipStreamWriteValue64__retval = hipError_t(chip.hipStreamWriteValue64(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags))    # fully specified
+    return _hipStreamWriteValue64__retval
+
 
 @cython.embedsignature(True)
 def hipEventCreateWithFlags(unsigned int flags):
@@ -11142,8 +18280,8 @@ def hipEventCreateWithFlags(unsigned int flags):
     @see hipEventCreate, hipEventSynchronize, hipEventDestroy, hipEventElapsedTime
     """
     event = ihipEvent_t.from_ptr(NULL,owner=True)
-    hipEventCreateWithFlags_____retval = hipError_t(chip.hipEventCreateWithFlags(&event._ptr,flags))    # fully specified
-    return (hipEventCreateWithFlags_____retval,event)
+    _hipEventCreateWithFlags__retval = hipError_t(chip.hipEventCreateWithFlags(&event._ptr,flags))    # fully specified
+    return (_hipEventCreateWithFlags__retval,event)
 
 
 @cython.embedsignature(True)
@@ -11156,20 +18294,22 @@ def hipEventCreate():
     hipEventDestroy, hipEventElapsedTime
     """
     event = ihipEvent_t.from_ptr(NULL,owner=True)
-    hipEventCreate_____retval = hipError_t(chip.hipEventCreate(&event._ptr))    # fully specified
-    return (hipEventCreate_____retval,event)
+    _hipEventCreate__retval = hipError_t(chip.hipEventCreate(&event._ptr))    # fully specified
+    return (_hipEventCreate__retval,event)
 
 
 @cython.embedsignature(True)
-def hipEventRecord(ihipEvent_t event, ihipStream_t stream):
+def hipEventRecord(object event, object stream):
     """
     """
-    hipEventRecord_____retval = hipError_t(chip.hipEventRecord(event._ptr,stream._ptr))    # fully specified
-    return hipEventRecord_____retval
+    _hipEventRecord__retval = hipError_t(chip.hipEventRecord(
+        ihipEvent_t.from_pyobj(event)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipEventRecord__retval
 
 
 @cython.embedsignature(True)
-def hipEventDestroy(ihipEvent_t event):
+def hipEventDestroy(object event):
     """@brief Destroy the specified event.
     @param[in] event Event to destroy.
     @returns #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
@@ -11181,12 +18321,13 @@ def hipEventDestroy(ihipEvent_t event):
     hipEventElapsedTime
     @returns #hipSuccess
     """
-    hipEventDestroy_____retval = hipError_t(chip.hipEventDestroy(event._ptr))    # fully specified
-    return hipEventDestroy_____retval
+    _hipEventDestroy__retval = hipError_t(chip.hipEventDestroy(
+        ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
+    return _hipEventDestroy__retval
 
 
 @cython.embedsignature(True)
-def hipEventSynchronize(ihipEvent_t event):
+def hipEventSynchronize(object event):
     """@brief Wait for an event to complete.
     This function will block until the event is ready, waiting for all previous work in the stream
     specified when event was recorded with hipEventRecord().
@@ -11198,12 +18339,13 @@ def hipEventSynchronize(ihipEvent_t event):
     @see hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
     hipEventElapsedTime
     """
-    hipEventSynchronize_____retval = hipError_t(chip.hipEventSynchronize(event._ptr))    # fully specified
-    return hipEventSynchronize_____retval
+    _hipEventSynchronize__retval = hipError_t(chip.hipEventSynchronize(
+        ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
+    return _hipEventSynchronize__retval
 
 
 @cython.embedsignature(True)
-def hipEventElapsedTime(ihipEvent_t start, ihipEvent_t stop):
+def hipEventElapsedTime(object start, object stop):
     """@brief Return the elapsed time between two events.
     @param[out] ms : Return time between start and stop in ms.
     @param[in]   start : Start event.
@@ -11226,12 +18368,14 @@ def hipEventElapsedTime(ihipEvent_t start, ihipEvent_t stop):
     hipEventSynchronize
     """
     cdef float ms
-    hipEventElapsedTime_____retval = hipError_t(chip.hipEventElapsedTime(&ms,start._ptr,stop._ptr))    # fully specified
-    return (hipEventElapsedTime_____retval,ms)
+    _hipEventElapsedTime__retval = hipError_t(chip.hipEventElapsedTime(&ms,
+        ihipEvent_t.from_pyobj(start)._ptr,
+        ihipEvent_t.from_pyobj(stop)._ptr))    # fully specified
+    return (_hipEventElapsedTime__retval,ms)
 
 
 @cython.embedsignature(True)
-def hipEventQuery(ihipEvent_t event):
+def hipEventQuery(object event):
     """@brief Query event status
     @param[in] event Event to query.
     @returns #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle, #hipErrorInvalidValue,
@@ -11243,12 +18387,13 @@ def hipEventQuery(ihipEvent_t event):
     @see hipEventCreate, hipEventCreateWithFlags, hipEventRecord, hipEventDestroy,
     hipEventSynchronize, hipEventElapsedTime
     """
-    hipEventQuery_____retval = hipError_t(chip.hipEventQuery(event._ptr))    # fully specified
-    return hipEventQuery_____retval
+    _hipEventQuery__retval = hipError_t(chip.hipEventQuery(
+        ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
+    return _hipEventQuery__retval
 
 
 @cython.embedsignature(True)
-def hipPointerGetAttributes(hipPointerAttribute_t attributes, ptr):
+def hipPointerGetAttributes(object attributes, object ptr):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -11265,10 +18410,14 @@ def hipPointerGetAttributes(hipPointerAttribute_t attributes, ptr):
     @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     @see hipPointerGetAttribute
     """
-    pass
+    _hipPointerGetAttributes__retval = hipError_t(chip.hipPointerGetAttributes(
+        hipPointerAttribute_t.from_pyobj(attributes)._ptr,
+        <const void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+    return _hipPointerGetAttributes__retval
+
 
 @cython.embedsignature(True)
-def hipPointerGetAttribute(data, object attribute, ptr):
+def hipPointerGetAttribute(object data, object attribute, object ptr):
     """@brief Returns information about the specified pointer.[BETA]
     @param [in, out] data     returned pointer attribute value
     @param [in]      atribute attribute to query for
@@ -11280,10 +18429,14 @@ def hipPointerGetAttribute(data, object attribute, ptr):
     """
     if not isinstance(attribute,hipPointer_attribute):
         raise TypeError("argument 'attribute' must be of type 'hipPointer_attribute'")
-    pass
+    _hipPointerGetAttribute__retval = hipError_t(chip.hipPointerGetAttribute(
+        <void *>DataHandle.from_pyobj(data)._ptr,attribute.value,
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+    return _hipPointerGetAttribute__retval
+
 
 @cython.embedsignature(True)
-def hipDrvPointerGetAttributes(unsigned int numAttributes, ptr):
+def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
     """@brief Returns information about the specified pointer.[BETA]
     @param [in]  numAttributes   number of attributes to query for
     @param [in]  attributes      attributes to query for
@@ -11296,20 +18449,29 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, ptr):
     @see hipPointerGetAttribute
     """
     cdef chip.hipPointer_attribute attributes
-    pass
+    data = DataHandle.from_ptr(NULL)
+    _hipDrvPointerGetAttributes__retval = hipError_t(chip.hipDrvPointerGetAttributes(numAttributes,&attributes,
+        <void **>&data._ptr,
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+    return (_hipDrvPointerGetAttributes__retval,hipPointer_attribute(attributes),data)
+
 
 @cython.embedsignature(True)
-def hipImportExternalSemaphore(hipExternalSemaphoreHandleDesc_st semHandleDesc):
+def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
     """@brief Imports an external semaphore.
     @param[out] extSem_out  External semaphores to be waited on
     @param[in] semHandleDesc Semaphore import handle descriptor
     @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     @see
     """
-    pass
+    _hipImportExternalSemaphore__retval = hipError_t(chip.hipImportExternalSemaphore(
+        <chip.hipExternalSemaphore_t*>DataHandle.from_pyobj(extSem_out)._ptr,
+        hipExternalSemaphoreHandleDesc_st.from_pyobj(semHandleDesc)._ptr))    # fully specified
+    return _hipImportExternalSemaphore__retval
+
 
 @cython.embedsignature(True)
-def hipSignalExternalSemaphoresAsync(hipExternalSemaphoreSignalParams_st paramsArray, unsigned int numExtSems, ihipStream_t stream):
+def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, unsigned int numExtSems, object stream):
     """@brief Signals a set of external semaphore objects.
     @param[in] extSem_out  External semaphores to be waited on
     @param[in] paramsArray Array of semaphore parameters
@@ -11318,10 +18480,15 @@ def hipSignalExternalSemaphoresAsync(hipExternalSemaphoreSignalParams_st paramsA
     @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     @see
     """
-    pass
+    _hipSignalExternalSemaphoresAsync__retval = hipError_t(chip.hipSignalExternalSemaphoresAsync(
+        <chip.hipExternalSemaphore_t *>DataHandle.from_pyobj(extSemArray)._ptr,
+        hipExternalSemaphoreSignalParams_st.from_pyobj(paramsArray)._ptr,numExtSems,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipSignalExternalSemaphoresAsync__retval
+
 
 @cython.embedsignature(True)
-def hipWaitExternalSemaphoresAsync(hipExternalSemaphoreWaitParams_st paramsArray, unsigned int numExtSems, ihipStream_t stream):
+def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsigned int numExtSems, object stream):
     """@brief Waits on a set of external semaphore objects
     @param[in] extSem_out  External semaphores to be waited on
     @param[in] paramsArray Array of semaphore parameters
@@ -11330,29 +18497,41 @@ def hipWaitExternalSemaphoresAsync(hipExternalSemaphoreWaitParams_st paramsArray
     @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     @see
     """
-    pass
+    _hipWaitExternalSemaphoresAsync__retval = hipError_t(chip.hipWaitExternalSemaphoresAsync(
+        <chip.hipExternalSemaphore_t *>DataHandle.from_pyobj(extSemArray)._ptr,
+        hipExternalSemaphoreWaitParams_st.from_pyobj(paramsArray)._ptr,numExtSems,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipWaitExternalSemaphoresAsync__retval
+
 
 @cython.embedsignature(True)
-def hipDestroyExternalSemaphore(extSem):
+def hipDestroyExternalSemaphore(object extSem):
     """@brief Destroys an external semaphore object and releases any references to the underlying resource. Any outstanding signals or waits must have completed before the semaphore is destroyed.
     @param[in] extSem handle to an external memory object
     @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     @see
     """
-    pass
+    _hipDestroyExternalSemaphore__retval = hipError_t(chip.hipDestroyExternalSemaphore(
+        <chip.hipExternalSemaphore_t>DataHandle.from_pyobj(extSem)._ptr))    # fully specified
+    return _hipDestroyExternalSemaphore__retval
+
 
 @cython.embedsignature(True)
-def hipImportExternalMemory(hipExternalMemoryHandleDesc_st memHandleDesc):
+def hipImportExternalMemory(object extMem_out, object memHandleDesc):
     """@brief Imports an external memory object.
     @param[out] extMem_out  Returned handle to an external memory object
     @param[in]  memHandleDesc Memory import handle descriptor
     @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     @see
     """
-    pass
+    _hipImportExternalMemory__retval = hipError_t(chip.hipImportExternalMemory(
+        <chip.hipExternalMemory_t*>DataHandle.from_pyobj(extMem_out)._ptr,
+        hipExternalMemoryHandleDesc_st.from_pyobj(memHandleDesc)._ptr))    # fully specified
+    return _hipImportExternalMemory__retval
+
 
 @cython.embedsignature(True)
-def hipExternalMemoryGetMappedBuffer(extMem, hipExternalMemoryBufferDesc_st bufferDesc):
+def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
     """@brief Maps a buffer onto an imported memory object.
     @param[out] devPtr Returned device pointer to buffer
     @param[in]  extMem  Handle to external memory object
@@ -11360,16 +18539,25 @@ def hipExternalMemoryGetMappedBuffer(extMem, hipExternalMemoryBufferDesc_st buff
     @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     @see
     """
-    pass
+    devPtr = DataHandle.from_ptr(NULL)
+    _hipExternalMemoryGetMappedBuffer__retval = hipError_t(chip.hipExternalMemoryGetMappedBuffer(
+        <void **>&devPtr._ptr,
+        <chip.hipExternalMemory_t>DataHandle.from_pyobj(extMem)._ptr,
+        hipExternalMemoryBufferDesc_st.from_pyobj(bufferDesc)._ptr))    # fully specified
+    return (_hipExternalMemoryGetMappedBuffer__retval,devPtr)
+
 
 @cython.embedsignature(True)
-def hipDestroyExternalMemory(extMem):
+def hipDestroyExternalMemory(object extMem):
     """@brief Destroys an external memory object.
     @param[in] extMem  External memory object to be destroyed
     @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     @see
     """
-    pass
+    _hipDestroyExternalMemory__retval = hipError_t(chip.hipDestroyExternalMemory(
+        <chip.hipExternalMemory_t>DataHandle.from_pyobj(extMem)._ptr))    # fully specified
+    return _hipDestroyExternalMemory__retval
+
 
 @cython.embedsignature(True)
 def hipMalloc(int size):
@@ -11381,7 +18569,11 @@ def hipMalloc(int size):
     @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
     hipHostFree, hipHostMalloc
     """
-    pass
+    ptr = DataHandle.from_ptr(NULL)
+    _hipMalloc__retval = hipError_t(chip.hipMalloc(
+        <void **>&ptr._ptr,size))    # fully specified
+    return (_hipMalloc__retval,ptr)
+
 
 @cython.embedsignature(True)
 def hipExtMallocWithFlags(int sizeBytes, unsigned int flags):
@@ -11394,7 +18586,11 @@ def hipExtMallocWithFlags(int sizeBytes, unsigned int flags):
     @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
     hipHostFree, hipHostMalloc
     """
-    pass
+    ptr = DataHandle.from_ptr(NULL)
+    _hipExtMallocWithFlags__retval = hipError_t(chip.hipExtMallocWithFlags(
+        <void **>&ptr._ptr,sizeBytes,flags))    # fully specified
+    return (_hipExtMallocWithFlags__retval,ptr)
+
 
 @cython.embedsignature(True)
 def hipMallocHost(int size):
@@ -11405,7 +18601,11 @@ def hipMallocHost(int size):
     @return #hipSuccess, #hipErrorOutOfMemory
     @deprecated use hipHostMalloc() instead
     """
-    pass
+    ptr = DataHandle.from_ptr(NULL)
+    _hipMallocHost__retval = hipError_t(chip.hipMallocHost(
+        <void **>&ptr._ptr,size))    # fully specified
+    return (_hipMallocHost__retval,ptr)
+
 
 @cython.embedsignature(True)
 def hipMemAllocHost(int size):
@@ -11416,7 +18616,11 @@ def hipMemAllocHost(int size):
     @return #hipSuccess, #hipErrorOutOfMemory
     @deprecated use hipHostMalloc() instead
     """
-    pass
+    ptr = DataHandle.from_ptr(NULL)
+    _hipMemAllocHost__retval = hipError_t(chip.hipMemAllocHost(
+        <void **>&ptr._ptr,size))    # fully specified
+    return (_hipMemAllocHost__retval,ptr)
+
 
 @cython.embedsignature(True)
 def hipHostMalloc(int size, unsigned int flags):
@@ -11428,7 +18632,11 @@ def hipHostMalloc(int size, unsigned int flags):
     @return #hipSuccess, #hipErrorOutOfMemory
     @see hipSetDeviceFlags, hipHostFree
     """
-    pass
+    ptr = DataHandle.from_ptr(NULL)
+    _hipHostMalloc__retval = hipError_t(chip.hipHostMalloc(
+        <void **>&ptr._ptr,size,flags))    # fully specified
+    return (_hipHostMalloc__retval,ptr)
+
 
 @cython.embedsignature(True)
 def hipMallocManaged(int size, unsigned int flags):
@@ -11445,10 +18653,14 @@ def hipMallocManaged(int size, unsigned int flags):
     (defaults to hipMemAttachGlobal)
     @returns #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
     """
-    pass
+    dev_ptr = DataHandle.from_ptr(NULL)
+    _hipMallocManaged__retval = hipError_t(chip.hipMallocManaged(
+        <void **>&dev_ptr._ptr,size,flags))    # fully specified
+    return (_hipMallocManaged__retval,dev_ptr)
+
 
 @cython.embedsignature(True)
-def hipMemPrefetchAsync(dev_ptr, int count, int device, ihipStream_t stream):
+def hipMemPrefetchAsync(object dev_ptr, int count, int device, object stream):
     """@brief Prefetches memory to the specified destination device using HIP.
     @param [in] dev_ptr  pointer to be prefetched
     @param [in] count    size in bytes for prefetching
@@ -11456,10 +18668,14 @@ def hipMemPrefetchAsync(dev_ptr, int count, int device, ihipStream_t stream):
     @param [in] stream   stream to enqueue prefetch operation
     @returns #hipSuccess, #hipErrorInvalidValue
     """
-    pass
+    _hipMemPrefetchAsync__retval = hipError_t(chip.hipMemPrefetchAsync(
+        <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count,device,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemPrefetchAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemAdvise(dev_ptr, int count, object advice, int device):
+def hipMemAdvise(object dev_ptr, int count, object advice, int device):
     """@brief Advise about the usage of a given memory range to HIP.
     @param [in] dev_ptr  pointer to memory to set the advice for
     @param [in] count    size in bytes of the memory range
@@ -11469,10 +18685,13 @@ def hipMemAdvise(dev_ptr, int count, object advice, int device):
     """
     if not isinstance(advice,hipMemoryAdvise):
         raise TypeError("argument 'advice' must be of type 'hipMemoryAdvise'")
-    pass
+    _hipMemAdvise__retval = hipError_t(chip.hipMemAdvise(
+        <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count,advice.value,device))    # fully specified
+    return _hipMemAdvise__retval
+
 
 @cython.embedsignature(True)
-def hipMemRangeGetAttribute(data, int data_size, object attribute, dev_ptr, int count):
+def hipMemRangeGetAttribute(object data, int data_size, object attribute, object dev_ptr, int count):
     """@brief Query an attribute of a given memory range in HIP.
     @param [in,out] data   a pointer to a memory location where the result of each
     attribute query will be written to
@@ -11484,10 +18703,14 @@ def hipMemRangeGetAttribute(data, int data_size, object attribute, dev_ptr, int 
     """
     if not isinstance(attribute,hipMemRangeAttribute):
         raise TypeError("argument 'attribute' must be of type 'hipMemRangeAttribute'")
-    pass
+    _hipMemRangeGetAttribute__retval = hipError_t(chip.hipMemRangeGetAttribute(
+        <void *>DataHandle.from_pyobj(data)._ptr,data_size,attribute.value,
+        <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count))    # fully specified
+    return _hipMemRangeGetAttribute__retval
+
 
 @cython.embedsignature(True)
-def hipMemRangeGetAttributes(int num_attributes, dev_ptr, int count):
+def hipMemRangeGetAttributes(int num_attributes, object dev_ptr, int count):
     """@brief Query attributes of a given memory range in HIP.
     @param [in,out] data     a two-dimensional array containing pointers to memory locations
     where the result of each attribute query will be written to
@@ -11499,12 +18722,17 @@ def hipMemRangeGetAttributes(int num_attributes, dev_ptr, int count):
     @param [in] count        size of the range to query
     @returns #hipSuccess, #hipErrorInvalidValue
     """
+    data = DataHandle.from_ptr(NULL)
     cdef int data_sizes
     cdef chip.hipMemRangeAttribute attributes
-    pass
+    _hipMemRangeGetAttributes__retval = hipError_t(chip.hipMemRangeGetAttributes(
+        <void **>&data._ptr,&data_sizes,&attributes,num_attributes,
+        <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count))    # fully specified
+    return (_hipMemRangeGetAttributes__retval,data,data_sizes,hipMemRangeAttribute(attributes))
+
 
 @cython.embedsignature(True)
-def hipStreamAttachMemAsync(ihipStream_t stream, dev_ptr, int length, unsigned int flags):
+def hipStreamAttachMemAsync(object stream, object dev_ptr, int length, unsigned int flags):
     """@brief Attach memory to a stream asynchronously in HIP.
     @param [in] stream     - stream in which to enqueue the attach operation
     @param [in] dev_ptr    - pointer to memory (must be a pointer to managed memory or
@@ -11514,10 +18742,14 @@ def hipStreamAttachMemAsync(ihipStream_t stream, dev_ptr, int length, unsigned i
     hipMemAttachSingle (defaults to hipMemAttachSingle)
     @returns #hipSuccess, #hipErrorInvalidValue
     """
-    pass
+    _hipStreamAttachMemAsync__retval = hipError_t(chip.hipStreamAttachMemAsync(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        <void *>DataHandle.from_pyobj(dev_ptr)._ptr,length,flags))    # fully specified
+    return _hipStreamAttachMemAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMallocAsync(int size, ihipStream_t stream):
+def hipMallocAsync(int size, object stream):
     """@brief Allocates memory with stream ordered semantics
     Inserts a memory allocation operation into @p stream.
     A pointer to the allocated memory is returned immediately in *dptr.
@@ -11540,10 +18772,15 @@ def hipMallocAsync(int size, ihipStream_t stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    dev_ptr = DataHandle.from_ptr(NULL)
+    _hipMallocAsync__retval = hipError_t(chip.hipMallocAsync(
+        <void **>&dev_ptr._ptr,size,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return (_hipMallocAsync__retval,dev_ptr)
+
 
 @cython.embedsignature(True)
-def hipFreeAsync(dev_ptr, ihipStream_t stream):
+def hipFreeAsync(object dev_ptr, object stream):
     """@brief Frees memory with stream ordered semantics
     Inserts a free operation into @p stream.
     The allocation must not be used after stream execution reaches the free.
@@ -11559,10 +18796,14 @@ def hipFreeAsync(dev_ptr, ihipStream_t stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    _hipFreeAsync__retval = hipError_t(chip.hipFreeAsync(
+        <void *>DataHandle.from_pyobj(dev_ptr)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipFreeAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemPoolTrimTo(ihipMemPoolHandle_t mem_pool, int min_bytes_to_hold):
+def hipMemPoolTrimTo(object mem_pool, int min_bytes_to_hold):
     """@brief Releases freed memory back to the OS
     Releases memory back to the OS until the pool contains fewer than @p min_bytes_to_keep
     reserved bytes, or there is no more memory that the allocator can safely release.
@@ -11581,12 +18822,13 @@ def hipMemPoolTrimTo(ihipMemPoolHandle_t mem_pool, int min_bytes_to_hold):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipMemPoolTrimTo_____retval = hipError_t(chip.hipMemPoolTrimTo(mem_pool._ptr,min_bytes_to_hold))    # fully specified
-    return hipMemPoolTrimTo_____retval
+    _hipMemPoolTrimTo__retval = hipError_t(chip.hipMemPoolTrimTo(
+        ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,min_bytes_to_hold))    # fully specified
+    return _hipMemPoolTrimTo__retval
 
 
 @cython.embedsignature(True)
-def hipMemPoolSetAttribute(ihipMemPoolHandle_t mem_pool, object attr, value):
+def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
     """@brief Sets attributes of a memory pool
     Supported attributes are:
     - @p hipMemPoolAttrReleaseThreshold: (value type = cuuint64_t)
@@ -11619,10 +18861,14 @@ def hipMemPoolSetAttribute(ihipMemPoolHandle_t mem_pool, object attr, value):
     """
     if not isinstance(attr,hipMemPoolAttr):
         raise TypeError("argument 'attr' must be of type 'hipMemPoolAttr'")
-    pass
+    _hipMemPoolSetAttribute__retval = hipError_t(chip.hipMemPoolSetAttribute(
+        ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,attr.value,
+        <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
+    return _hipMemPoolSetAttribute__retval
+
 
 @cython.embedsignature(True)
-def hipMemPoolGetAttribute(ihipMemPoolHandle_t mem_pool, object attr, value):
+def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
     """@brief Gets attributes of a memory pool
     Supported attributes are:
     - @p hipMemPoolAttrReleaseThreshold: (value type = cuuint64_t)
@@ -11655,10 +18901,14 @@ def hipMemPoolGetAttribute(ihipMemPoolHandle_t mem_pool, object attr, value):
     """
     if not isinstance(attr,hipMemPoolAttr):
         raise TypeError("argument 'attr' must be of type 'hipMemPoolAttr'")
-    pass
+    _hipMemPoolGetAttribute__retval = hipError_t(chip.hipMemPoolGetAttribute(
+        ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,attr.value,
+        <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
+    return _hipMemPoolGetAttribute__retval
+
 
 @cython.embedsignature(True)
-def hipMemPoolSetAccess(ihipMemPoolHandle_t mem_pool, hipMemAccessDesc desc_list, int count):
+def hipMemPoolSetAccess(object mem_pool, object desc_list, int count):
     """@brief Controls visibility of the specified pool between devices
     @param [in] mem_pool   Memory pool for acccess change
     @param [in] desc_list  Array of access descriptors. Each descriptor instructs the access to enable for a single gpu
@@ -11669,12 +18919,14 @@ def hipMemPoolSetAccess(ihipMemPoolHandle_t mem_pool, hipMemAccessDesc desc_list
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipMemPoolSetAccess_____retval = hipError_t(chip.hipMemPoolSetAccess(mem_pool._ptr,desc_list._ptr,count))    # fully specified
-    return hipMemPoolSetAccess_____retval
+    _hipMemPoolSetAccess__retval = hipError_t(chip.hipMemPoolSetAccess(
+        ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
+        hipMemAccessDesc.from_pyobj(desc_list)._ptr,count))    # fully specified
+    return _hipMemPoolSetAccess__retval
 
 
 @cython.embedsignature(True)
-def hipMemPoolGetAccess(ihipMemPoolHandle_t mem_pool, hipMemLocation location):
+def hipMemPoolGetAccess(object mem_pool, object location):
     """@brief Returns the accessibility of a pool from a device
     Returns the accessibility of the pool's memory from the specified location.
     @param [out] flags    Accessibility of the memory pool from the specified location/device
@@ -11687,12 +18939,14 @@ def hipMemPoolGetAccess(ihipMemPoolHandle_t mem_pool, hipMemLocation location):
     it is still open to changes and may have outstanding issues.
     """
     cdef chip.hipMemAccessFlags flags
-    hipMemPoolGetAccess_____retval = hipError_t(chip.hipMemPoolGetAccess(&flags,mem_pool._ptr,location._ptr))    # fully specified
-    return (hipMemPoolGetAccess_____retval,hipMemAccessFlags(flags))
+    _hipMemPoolGetAccess__retval = hipError_t(chip.hipMemPoolGetAccess(&flags,
+        ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
+        hipMemLocation.from_pyobj(location)._ptr))    # fully specified
+    return (_hipMemPoolGetAccess__retval,hipMemAccessFlags(flags))
 
 
 @cython.embedsignature(True)
-def hipMemPoolCreate(hipMemPoolProps pool_props):
+def hipMemPoolCreate(object pool_props):
     """@brief Creates a memory pool
     Creates a HIP memory pool and returns the handle in @p mem_pool. The @p pool_props determines
     the properties of the pool such as the backing device and IPC capabilities.
@@ -11707,12 +18961,13 @@ def hipMemPoolCreate(hipMemPoolProps pool_props):
     it is still open to changes and may have outstanding issues.
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
-    hipMemPoolCreate_____retval = hipError_t(chip.hipMemPoolCreate(&mem_pool._ptr,pool_props._ptr))    # fully specified
-    return (hipMemPoolCreate_____retval,mem_pool)
+    _hipMemPoolCreate__retval = hipError_t(chip.hipMemPoolCreate(&mem_pool._ptr,
+        hipMemPoolProps.from_pyobj(pool_props)._ptr))    # fully specified
+    return (_hipMemPoolCreate__retval,mem_pool)
 
 
 @cython.embedsignature(True)
-def hipMemPoolDestroy(ihipMemPoolHandle_t mem_pool):
+def hipMemPoolDestroy(object mem_pool):
     """@brief Destroys the specified memory pool
     If any pointers obtained from this pool haven't been freed or
     the pool has free operations that haven't completed
@@ -11729,12 +18984,13 @@ def hipMemPoolDestroy(ihipMemPoolHandle_t mem_pool):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipMemPoolDestroy_____retval = hipError_t(chip.hipMemPoolDestroy(mem_pool._ptr))    # fully specified
-    return hipMemPoolDestroy_____retval
+    _hipMemPoolDestroy__retval = hipError_t(chip.hipMemPoolDestroy(
+        ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr))    # fully specified
+    return _hipMemPoolDestroy__retval
 
 
 @cython.embedsignature(True)
-def hipMallocFromPoolAsync(int size, ihipMemPoolHandle_t mem_pool, ihipStream_t stream):
+def hipMallocFromPoolAsync(int size, object mem_pool, object stream):
     """@brief Allocates memory from a specified pool with stream ordered semantics.
     Inserts an allocation operation into @p stream.
     A pointer to the allocated memory is returned immediately in @p dev_ptr.
@@ -11757,10 +19013,16 @@ def hipMallocFromPoolAsync(int size, ihipMemPoolHandle_t mem_pool, ihipStream_t 
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    dev_ptr = DataHandle.from_ptr(NULL)
+    _hipMallocFromPoolAsync__retval = hipError_t(chip.hipMallocFromPoolAsync(
+        <void **>&dev_ptr._ptr,size,
+        ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return (_hipMallocFromPoolAsync__retval,dev_ptr)
+
 
 @cython.embedsignature(True)
-def hipMemPoolExportToShareableHandle(shared_handle, ihipMemPoolHandle_t mem_pool, object handle_type, unsigned int flags):
+def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, object handle_type, unsigned int flags):
     """@brief Exports a memory pool to the requested handle type.
     Given an IPC capable mempool, create an OS handle to share the pool with another process.
     A recipient process can convert the shareable handle into a mempool with @p hipMemPoolImportFromShareableHandle.
@@ -11780,10 +19042,14 @@ def hipMemPoolExportToShareableHandle(shared_handle, ihipMemPoolHandle_t mem_poo
     """
     if not isinstance(handle_type,hipMemAllocationHandleType):
         raise TypeError("argument 'handle_type' must be of type 'hipMemAllocationHandleType'")
-    pass
+    _hipMemPoolExportToShareableHandle__retval = hipError_t(chip.hipMemPoolExportToShareableHandle(
+        <void *>DataHandle.from_pyobj(shared_handle)._ptr,
+        ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,handle_type.value,flags))    # fully specified
+    return _hipMemPoolExportToShareableHandle__retval
+
 
 @cython.embedsignature(True)
-def hipMemPoolImportFromShareableHandle(shared_handle, object handle_type, unsigned int flags):
+def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type, unsigned int flags):
     """@brief Imports a memory pool from a shared handle.
     Specific allocations can be imported from the imported pool with @p hipMemPoolImportPointer.
     @note Imported memory pools do not support creating new allocations.
@@ -11801,10 +19067,13 @@ def hipMemPoolImportFromShareableHandle(shared_handle, object handle_type, unsig
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL,owner=True)
     if not isinstance(handle_type,hipMemAllocationHandleType):
         raise TypeError("argument 'handle_type' must be of type 'hipMemAllocationHandleType'")
-    pass
+    _hipMemPoolImportFromShareableHandle__retval = hipError_t(chip.hipMemPoolImportFromShareableHandle(&mem_pool._ptr,
+        <void *>DataHandle.from_pyobj(shared_handle)._ptr,handle_type.value,flags))    # fully specified
+    return (_hipMemPoolImportFromShareableHandle__retval,mem_pool)
+
 
 @cython.embedsignature(True)
-def hipMemPoolExportPointer(hipMemPoolPtrExportData export_data, dev_ptr):
+def hipMemPoolExportPointer(object export_data, object dev_ptr):
     """@brief Export data to share a memory pool allocation between processes.
     Constructs @p export_data for sharing a specific allocation from an already shared memory pool.
     The recipient process can import the allocation with the @p hipMemPoolImportPointer api.
@@ -11816,10 +19085,14 @@ def hipMemPoolExportPointer(hipMemPoolPtrExportData export_data, dev_ptr):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    _hipMemPoolExportPointer__retval = hipError_t(chip.hipMemPoolExportPointer(
+        hipMemPoolPtrExportData.from_pyobj(export_data)._ptr,
+        <void *>DataHandle.from_pyobj(dev_ptr)._ptr))    # fully specified
+    return _hipMemPoolExportPointer__retval
+
 
 @cython.embedsignature(True)
-def hipMemPoolImportPointer(ihipMemPoolHandle_t mem_pool, hipMemPoolPtrExportData export_data):
+def hipMemPoolImportPointer(object mem_pool, object export_data):
     """@brief Import a memory pool allocation from another process.
     Returns in @p dev_ptr a pointer to the imported memory.
     The imported memory must not be accessed before the allocation operation completes
@@ -11839,7 +19112,13 @@ def hipMemPoolImportPointer(ihipMemPoolHandle_t mem_pool, hipMemPoolPtrExportDat
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    dev_ptr = DataHandle.from_ptr(NULL)
+    _hipMemPoolImportPointer__retval = hipError_t(chip.hipMemPoolImportPointer(
+        <void **>&dev_ptr._ptr,
+        ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
+        hipMemPoolPtrExportData.from_pyobj(export_data)._ptr))    # fully specified
+    return (_hipMemPoolImportPointer__retval,dev_ptr)
+
 
 @cython.embedsignature(True)
 def hipHostAlloc(int size, unsigned int flags):
@@ -11851,10 +19130,14 @@ def hipHostAlloc(int size, unsigned int flags):
     @return #hipSuccess, #hipErrorOutOfMemory
     @deprecated use hipHostMalloc() instead
     """
-    pass
+    ptr = DataHandle.from_ptr(NULL)
+    _hipHostAlloc__retval = hipError_t(chip.hipHostAlloc(
+        <void **>&ptr._ptr,size,flags))    # fully specified
+    return (_hipHostAlloc__retval,ptr)
+
 
 @cython.embedsignature(True)
-def hipHostGetDevicePointer(hstPtr, unsigned int flags):
+def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
     """@brief Get Device pointer from Host Pointer allocated through hipHostMalloc
     @param[out] dstPtr Device Pointer mapped to passed host pointer
     @param[in]  hstPtr Host Pointer allocated through hipHostMalloc
@@ -11862,10 +19145,15 @@ def hipHostGetDevicePointer(hstPtr, unsigned int flags):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
     @see hipSetDeviceFlags, hipHostMalloc
     """
-    pass
+    devPtr = DataHandle.from_ptr(NULL)
+    _hipHostGetDevicePointer__retval = hipError_t(chip.hipHostGetDevicePointer(
+        <void **>&devPtr._ptr,
+        <void *>DataHandle.from_pyobj(hstPtr)._ptr,flags))    # fully specified
+    return (_hipHostGetDevicePointer__retval,devPtr)
+
 
 @cython.embedsignature(True)
-def hipHostGetFlags(hostPtr):
+def hipHostGetFlags(object hostPtr):
     """@brief Return flags associated with host pointer
     @param[out] flagsPtr Memory location to store flags
     @param[in]  hostPtr Host Pointer allocated through hipHostMalloc
@@ -11873,10 +19161,13 @@ def hipHostGetFlags(hostPtr):
     @see hipHostMalloc
     """
     cdef unsigned int flagsPtr
-    pass
+    _hipHostGetFlags__retval = hipError_t(chip.hipHostGetFlags(&flagsPtr,
+        <void *>DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
+    return (_hipHostGetFlags__retval,flagsPtr)
+
 
 @cython.embedsignature(True)
-def hipHostRegister(hostPtr, int sizeBytes, unsigned int flags):
+def hipHostRegister(object hostPtr, int sizeBytes, unsigned int flags):
     """@brief Register host memory so it can be accessed from the current device.
     @param[out] hostPtr Pointer to host memory to be registered.
     @param[in] sizeBytes size of the host memory
@@ -11903,16 +19194,22 @@ def hipHostRegister(hostPtr, int sizeBytes, unsigned int flags):
     @return #hipSuccess, #hipErrorOutOfMemory
     @see hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
     """
-    pass
+    _hipHostRegister__retval = hipError_t(chip.hipHostRegister(
+        <void *>DataHandle.from_pyobj(hostPtr)._ptr,sizeBytes,flags))    # fully specified
+    return _hipHostRegister__retval
+
 
 @cython.embedsignature(True)
-def hipHostUnregister(hostPtr):
+def hipHostUnregister(object hostPtr):
     """@brief Un-register host pointer
     @param[in] hostPtr Host pointer previously registered with #hipHostRegister
     @return Error code
     @see hipHostRegister
     """
-    pass
+    _hipHostUnregister__retval = hipError_t(chip.hipHostUnregister(
+        <void *>DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
+    return _hipHostUnregister__retval
+
 
 @cython.embedsignature(True)
 def hipMallocPitch(int width, int height):
@@ -11929,11 +19226,15 @@ def hipMallocPitch(int width, int height):
     @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
     hipMalloc3DArray, hipHostMalloc
     """
+    ptr = DataHandle.from_ptr(NULL)
     cdef int pitch
-    pass
+    _hipMallocPitch__retval = hipError_t(chip.hipMallocPitch(
+        <void **>&ptr._ptr,&pitch,width,height))    # fully specified
+    return (_hipMallocPitch__retval,ptr,pitch)
+
 
 @cython.embedsignature(True)
-def hipMemAllocPitch(int widthInBytes, int height, unsigned int elementSizeBytes):
+def hipMemAllocPitch(object dptr, int widthInBytes, int height, unsigned int elementSizeBytes):
     """Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
     The change in width size due to padding will be returned in *pitch.
@@ -11951,10 +19252,13 @@ def hipMemAllocPitch(int widthInBytes, int height, unsigned int elementSizeBytes
     hipMalloc3DArray, hipHostMalloc
     """
     cdef int pitch
-    pass
+    _hipMemAllocPitch__retval = hipError_t(chip.hipMemAllocPitch(
+        <chip.hipDeviceptr_t*>DataHandle.from_pyobj(dptr)._ptr,&pitch,widthInBytes,height,elementSizeBytes))    # fully specified
+    return (_hipMemAllocPitch__retval,pitch)
+
 
 @cython.embedsignature(True)
-def hipFree(ptr):
+def hipFree(object ptr):
     """@brief Free memory allocated by the hcc hip memory allocation API.
     This API performs an implicit hipDeviceSynchronize() call.
     If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
@@ -11965,10 +19269,13 @@ def hipFree(ptr):
     @see hipMalloc, hipMallocPitch, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
     hipMalloc3DArray, hipHostMalloc
     """
-    pass
+    _hipFree__retval = hipError_t(chip.hipFree(
+        <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+    return _hipFree__retval
+
 
 @cython.embedsignature(True)
-def hipFreeHost(ptr):
+def hipFreeHost(object ptr):
     """@brief Free memory allocated by the hcc hip host memory allocation API.  [Deprecated]
     @param[in] ptr Pointer to memory to be freed
     @return #hipSuccess,
@@ -11976,10 +19283,13 @@ def hipFreeHost(ptr):
      hipMalloc)
     @deprecated use hipHostFree() instead
     """
-    pass
+    _hipFreeHost__retval = hipError_t(chip.hipFreeHost(
+        <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+    return _hipFreeHost__retval
+
 
 @cython.embedsignature(True)
-def hipHostFree(ptr):
+def hipHostFree(object ptr):
     """@brief Free memory allocated by the hcc hip host memory allocation API
     This API performs an implicit hipDeviceSynchronize() call.
     If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
@@ -11990,10 +19300,13 @@ def hipHostFree(ptr):
     @see hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D,
     hipMalloc3DArray, hipHostMalloc
     """
-    pass
+    _hipHostFree__retval = hipError_t(chip.hipHostFree(
+        <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+    return _hipHostFree__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy(dst, src, int sizeBytes, object kind):
+def hipMemcpy(object dst, object src, int sizeBytes, object kind):
     """@brief Copy data from src to dst.
     It supports memory from host to device,
     device to host, device to device and host to host
@@ -12020,18 +19333,27 @@ def hipMemcpy(dst, src, int sizeBytes, object kind):
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy__retval = hipError_t(chip.hipMemcpy(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
+    return _hipMemcpy__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyWithStream(dst, src, int sizeBytes, object kind, ihipStream_t stream):
+def hipMemcpyWithStream(object dst, object src, int sizeBytes, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyWithStream__retval = hipError_t(chip.hipMemcpyWithStream(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyWithStream__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyHtoD(dst, src, int sizeBytes):
+def hipMemcpyHtoD(object dst, object src, int sizeBytes):
     """@brief Copy data from Host to Device
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -12045,10 +19367,14 @@ def hipMemcpyHtoD(dst, src, int sizeBytes):
     hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
-    pass
+    _hipMemcpyHtoD__retval = hipError_t(chip.hipMemcpyHtoD(
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
+        <void *>DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+    return _hipMemcpyHtoD__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyDtoH(dst, src, int sizeBytes):
+def hipMemcpyDtoH(object dst, object src, int sizeBytes):
     """@brief Copy data from Device to Host
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -12062,10 +19388,14 @@ def hipMemcpyDtoH(dst, src, int sizeBytes):
     hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
-    pass
+    _hipMemcpyDtoH__retval = hipError_t(chip.hipMemcpyDtoH(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+    return _hipMemcpyDtoH__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyDtoD(dst, src, int sizeBytes):
+def hipMemcpyDtoD(object dst, object src, int sizeBytes):
     """@brief Copy data from Device to Device
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -12079,10 +19409,14 @@ def hipMemcpyDtoD(dst, src, int sizeBytes):
     hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
-    pass
+    _hipMemcpyDtoD__retval = hipError_t(chip.hipMemcpyDtoD(
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+    return _hipMemcpyDtoD__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyHtoDAsync(dst, src, int sizeBytes, ihipStream_t stream):
+def hipMemcpyHtoDAsync(object dst, object src, int sizeBytes, object stream):
     """@brief Copy data from Host to Device asynchronously
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -12096,10 +19430,15 @@ def hipMemcpyHtoDAsync(dst, src, int sizeBytes, ihipStream_t stream):
     hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
-    pass
+    _hipMemcpyHtoDAsync__retval = hipError_t(chip.hipMemcpyHtoDAsync(
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
+        <void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyHtoDAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyDtoHAsync(dst, src, int sizeBytes, ihipStream_t stream):
+def hipMemcpyDtoHAsync(object dst, object src, int sizeBytes, object stream):
     """@brief Copy data from Device to Host asynchronously
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -12113,10 +19452,15 @@ def hipMemcpyDtoHAsync(dst, src, int sizeBytes, ihipStream_t stream):
     hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
-    pass
+    _hipMemcpyDtoHAsync__retval = hipError_t(chip.hipMemcpyDtoHAsync(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyDtoHAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyDtoDAsync(dst, src, int sizeBytes, ihipStream_t stream):
+def hipMemcpyDtoDAsync(object dst, object src, int sizeBytes, object stream):
     """@brief Copy data from Device to Device asynchronously
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -12130,10 +19474,15 @@ def hipMemcpyDtoDAsync(dst, src, int sizeBytes, ihipStream_t stream):
     hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
-    pass
+    _hipMemcpyDtoDAsync__retval = hipError_t(chip.hipMemcpyDtoDAsync(
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyDtoDAsync__retval
+
 
 @cython.embedsignature(True)
-def hipModuleGetGlobal(ihipModule_t hmod, const char * name):
+def hipModuleGetGlobal(object dptr, object hmod, const char * name):
     """@brief Returns a global pointer from a module.
     Returns in *dptr and *bytes the pointer and size of the global of name name located in module hmod.
     If no variable of that name exists, it returns hipErrorNotFound. Both parameters dptr and bytes are optional.
@@ -12145,29 +19494,41 @@ def hipModuleGetGlobal(ihipModule_t hmod, const char * name):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
     """
     cdef int bytes
-    pass
+    _hipModuleGetGlobal__retval = hipError_t(chip.hipModuleGetGlobal(
+        <chip.hipDeviceptr_t*>DataHandle.from_pyobj(dptr)._ptr,&bytes,
+        ihipModule_t.from_pyobj(hmod)._ptr,name))    # fully specified
+    return (_hipModuleGetGlobal__retval,bytes)
+
 
 @cython.embedsignature(True)
-def hipGetSymbolAddress(symbol):
+def hipGetSymbolAddress(object symbol):
     """@brief Gets device pointer associated with symbol on the device.
     @param[out]  devPtr  pointer to the device associated the symbole
     @param[in]   symbol  pointer to the symbole of the device
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    pass
+    devPtr = DataHandle.from_ptr(NULL)
+    _hipGetSymbolAddress__retval = hipError_t(chip.hipGetSymbolAddress(
+        <void **>&devPtr._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr))    # fully specified
+    return (_hipGetSymbolAddress__retval,devPtr)
+
 
 @cython.embedsignature(True)
-def hipGetSymbolSize(symbol):
+def hipGetSymbolSize(object symbol):
     """@brief Gets the size of the given symbol on the device.
     @param[in]   symbol  pointer to the device symbole
     @param[out]  size  pointer to the size
     @return #hipSuccess, #hipErrorInvalidValue
     """
     cdef int size
-    pass
+    _hipGetSymbolSize__retval = hipError_t(chip.hipGetSymbolSize(&size,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr))    # fully specified
+    return (_hipGetSymbolSize__retval,size)
+
 
 @cython.embedsignature(True)
-def hipMemcpyToSymbol(symbol, src, int sizeBytes, int offset, object kind):
+def hipMemcpyToSymbol(object symbol, object src, int sizeBytes, int offset, object kind):
     """@brief Copies data to the given symbol on the device.
     Symbol HIP APIs allow a kernel to define a device-side data symbol which can be accessed on
     the host side. The symbol can be in __constant or device space.
@@ -12184,10 +19545,14 @@ def hipMemcpyToSymbol(symbol, src, int sizeBytes, int offset, object kind):
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyToSymbol__retval = hipError_t(chip.hipMemcpyToSymbol(
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
+    return _hipMemcpyToSymbol__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyToSymbolAsync(symbol, src, int sizeBytes, int offset, object kind, ihipStream_t stream):
+def hipMemcpyToSymbolAsync(object symbol, object src, int sizeBytes, int offset, object kind, object stream):
     """@brief Copies data to the given symbol on the device asynchronously.
     @param[out]  symbol  pointer to the device symbole
     @param[in]   src  pointer to the source address
@@ -12199,10 +19564,15 @@ def hipMemcpyToSymbolAsync(symbol, src, int sizeBytes, int offset, object kind, 
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyToSymbolAsync__retval = hipError_t(chip.hipMemcpyToSymbolAsync(
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyToSymbolAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyFromSymbol(dst, symbol, int sizeBytes, int offset, object kind):
+def hipMemcpyFromSymbol(object dst, object symbol, int sizeBytes, int offset, object kind):
     """@brief Copies data from the given symbol on the device.
     @param[out]  dptr  Returns pointer to destinition memory address
     @param[in]   symbol  pointer to the symbole address on the device
@@ -12213,10 +19583,14 @@ def hipMemcpyFromSymbol(dst, symbol, int sizeBytes, int offset, object kind):
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyFromSymbol__retval = hipError_t(chip.hipMemcpyFromSymbol(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
+    return _hipMemcpyFromSymbol__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyFromSymbolAsync(dst, symbol, int sizeBytes, int offset, object kind, ihipStream_t stream):
+def hipMemcpyFromSymbolAsync(object dst, object symbol, int sizeBytes, int offset, object kind, object stream):
     """@brief Copies data from the given symbol on the device asynchronously.
     @param[out]  dptr  Returns pointer to destinition memory address
     @param[in]   symbol  pointer to the symbole address on the device
@@ -12228,10 +19602,15 @@ def hipMemcpyFromSymbolAsync(dst, symbol, int sizeBytes, int offset, object kind
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyFromSymbolAsync__retval = hipError_t(chip.hipMemcpyFromSymbolAsync(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyFromSymbolAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyAsync(dst, src, int sizeBytes, object kind, ihipStream_t stream):
+def hipMemcpyAsync(object dst, object src, int sizeBytes, object kind, object stream):
     """@brief Copy data from src to dst asynchronously.
     @warning If host or dest are not pinned, the memory copy will be performed synchronously.  For
     best performance, use hipHostMalloc to allocate host memory that is transferred asynchronously.
@@ -12256,10 +19635,15 @@ def hipMemcpyAsync(dst, src, int sizeBytes, object kind, ihipStream_t stream):
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyAsync__retval = hipError_t(chip.hipMemcpyAsync(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemset(dst, int value, int sizeBytes):
+def hipMemset(object dst, int value, int sizeBytes):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     byte value value.
     @param[out] dst Data being filled
@@ -12267,10 +19651,13 @@ def hipMemset(dst, int value, int sizeBytes):
     @param[in]  sizeBytes Data size in bytes
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
-    pass
+    _hipMemset__retval = hipError_t(chip.hipMemset(
+        <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
+    return _hipMemset__retval
+
 
 @cython.embedsignature(True)
-def hipMemsetD8(dest, unsigned char value, int count):
+def hipMemsetD8(object dest, unsigned char value, int count):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     byte value value.
     @param[out] dst Data ptr to be filled
@@ -12278,10 +19665,13 @@ def hipMemsetD8(dest, unsigned char value, int count):
     @param[in]  number of values to be set
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
-    pass
+    _hipMemsetD8__retval = hipError_t(chip.hipMemsetD8(
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+    return _hipMemsetD8__retval
+
 
 @cython.embedsignature(True)
-def hipMemsetD8Async(dest, unsigned char value, int count, ihipStream_t stream):
+def hipMemsetD8Async(object dest, unsigned char value, int count, object stream):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     byte value value.
     hipMemsetD8Async() is asynchronous with respect to the host, so the call may return before the
@@ -12294,10 +19684,14 @@ def hipMemsetD8Async(dest, unsigned char value, int count, ihipStream_t stream):
     @param[in]  stream - Stream identifier
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
-    pass
+    _hipMemsetD8Async__retval = hipError_t(chip.hipMemsetD8Async(
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemsetD8Async__retval
+
 
 @cython.embedsignature(True)
-def hipMemsetD16(dest, unsigned short value, int count):
+def hipMemsetD16(object dest, unsigned short value, int count):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     short value value.
     @param[out] dst Data ptr to be filled
@@ -12305,10 +19699,13 @@ def hipMemsetD16(dest, unsigned short value, int count):
     @param[in]  number of values to be set
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
-    pass
+    _hipMemsetD16__retval = hipError_t(chip.hipMemsetD16(
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+    return _hipMemsetD16__retval
+
 
 @cython.embedsignature(True)
-def hipMemsetD16Async(dest, unsigned short value, int count, ihipStream_t stream):
+def hipMemsetD16Async(object dest, unsigned short value, int count, object stream):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     short value value.
     hipMemsetD16Async() is asynchronous with respect to the host, so the call may return before the
@@ -12321,10 +19718,14 @@ def hipMemsetD16Async(dest, unsigned short value, int count, ihipStream_t stream
     @param[in]  stream - Stream identifier
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
-    pass
+    _hipMemsetD16Async__retval = hipError_t(chip.hipMemsetD16Async(
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemsetD16Async__retval
+
 
 @cython.embedsignature(True)
-def hipMemsetD32(dest, int value, int count):
+def hipMemsetD32(object dest, int value, int count):
     """@brief Fills the memory area pointed to by dest with the constant integer
     value for specified number of times.
     @param[out] dst Data being filled
@@ -12332,10 +19733,13 @@ def hipMemsetD32(dest, int value, int count):
     @param[in]  number of values to be set
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
-    pass
+    _hipMemsetD32__retval = hipError_t(chip.hipMemsetD32(
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+    return _hipMemsetD32__retval
+
 
 @cython.embedsignature(True)
-def hipMemsetAsync(dst, int value, int sizeBytes, ihipStream_t stream):
+def hipMemsetAsync(object dst, int value, int sizeBytes, object stream):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dev with the constant
     byte value value.
     hipMemsetAsync() is asynchronous with respect to the host, so the call may return before the
@@ -12348,10 +19752,14 @@ def hipMemsetAsync(dst, int value, int sizeBytes, ihipStream_t stream):
     @param[in]  stream - Stream identifier
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
-    pass
+    _hipMemsetAsync__retval = hipError_t(chip.hipMemsetAsync(
+        <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemsetAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemsetD32Async(dst, int value, int count, ihipStream_t stream):
+def hipMemsetD32Async(object dst, int value, int count, object stream):
     """@brief Fills the memory area pointed to by dev with the constant integer
     value for specified number of times.
     hipMemsetD32Async() is asynchronous with respect to the host, so the call may return before the
@@ -12364,10 +19772,14 @@ def hipMemsetD32Async(dst, int value, int count, ihipStream_t stream):
     @param[in]  stream - Stream identifier
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
-    pass
+    _hipMemsetD32Async__retval = hipError_t(chip.hipMemsetD32Async(
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,value,count,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemsetD32Async__retval
+
 
 @cython.embedsignature(True)
-def hipMemset2D(dst, int pitch, int value, int width, int height):
+def hipMemset2D(object dst, int pitch, int value, int width, int height):
     """@brief Fills the memory area pointed to by dst with the constant value.
     @param[out] dst Pointer to device memory
     @param[in]  pitch - data size in bytes
@@ -12376,10 +19788,13 @@ def hipMemset2D(dst, int pitch, int value, int width, int height):
     @param[in]  height
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
-    pass
+    _hipMemset2D__retval = hipError_t(chip.hipMemset2D(
+        <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
+    return _hipMemset2D__retval
+
 
 @cython.embedsignature(True)
-def hipMemset2DAsync(dst, int pitch, int value, int width, int height, ihipStream_t stream):
+def hipMemset2DAsync(object dst, int pitch, int value, int width, int height, object stream):
     """@brief Fills asynchronously the memory area pointed to by dst with the constant value.
     @param[in]  dst Pointer to device memory
     @param[in]  pitch - data size in bytes
@@ -12389,10 +19804,14 @@ def hipMemset2DAsync(dst, int pitch, int value, int width, int height, ihipStrea
     @param[in]  stream
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
-    pass
+    _hipMemset2DAsync__retval = hipError_t(chip.hipMemset2DAsync(
+        <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemset2DAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemset3D(pitchedDevPtr, int value, extent):
+def hipMemset3D(int value):
     """@brief Fills synchronously the memory area pointed to by pitchedDevPtr with the constant value.
     @param[in] pitchedDevPtr
     @param[in]  value - constant value to be set
@@ -12402,7 +19821,7 @@ def hipMemset3D(pitchedDevPtr, int value, extent):
     pass
 
 @cython.embedsignature(True)
-def hipMemset3DAsync(pitchedDevPtr, int value, extent, ihipStream_t stream):
+def hipMemset3DAsync(int value, object stream):
     """@brief Fills asynchronously the memory area pointed to by pitchedDevPtr with the constant value.
     @param[in] pitchedDevPtr
     @param[in]  value - constant value to be set
@@ -12423,19 +19842,22 @@ def hipMemGetInfo():
     """
     cdef int free
     cdef int total
-    hipMemGetInfo_____retval = hipError_t(chip.hipMemGetInfo(&free,&total))    # fully specified
-    return (hipMemGetInfo_____retval,free,total)
+    _hipMemGetInfo__retval = hipError_t(chip.hipMemGetInfo(&free,&total))    # fully specified
+    return (_hipMemGetInfo__retval,free,total)
 
 
 @cython.embedsignature(True)
-def hipMemPtrGetInfo(ptr):
+def hipMemPtrGetInfo(object ptr):
     """
     """
     cdef int size
-    pass
+    _hipMemPtrGetInfo__retval = hipError_t(chip.hipMemPtrGetInfo(
+        <void *>DataHandle.from_pyobj(ptr)._ptr,&size))    # fully specified
+    return (_hipMemPtrGetInfo__retval,size)
+
 
 @cython.embedsignature(True)
-def hipMallocArray(hipChannelFormatDesc desc, int width, int height, unsigned int flags):
+def hipMallocArray(object desc, int width, int height, unsigned int flags):
     """@brief Allocate an array on the device.
     @param[out]  array  Pointer to allocated array in device memory
     @param[in]   desc   Requested channel format
@@ -12446,65 +19868,71 @@ def hipMallocArray(hipChannelFormatDesc desc, int width, int height, unsigned in
     @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
     """
     array = hipArray.from_ptr(NULL,owner=True)
-    hipMallocArray_____retval = hipError_t(chip.hipMallocArray(&array._ptr,desc._ptr,width,height,flags))    # fully specified
-    return (hipMallocArray_____retval,array)
+    _hipMallocArray__retval = hipError_t(chip.hipMallocArray(&array._ptr,
+        hipChannelFormatDesc.from_pyobj(desc)._ptr,width,height,flags))    # fully specified
+    return (_hipMallocArray__retval,array)
 
 
 @cython.embedsignature(True)
-def hipArrayCreate(HIP_ARRAY_DESCRIPTOR pAllocateArray):
+def hipArrayCreate(object pAllocateArray):
     """
     """
     pHandle = hipArray.from_ptr(NULL,owner=True)
-    hipArrayCreate_____retval = hipError_t(chip.hipArrayCreate(&pHandle._ptr,pAllocateArray._ptr))    # fully specified
-    return (hipArrayCreate_____retval,pHandle)
+    _hipArrayCreate__retval = hipError_t(chip.hipArrayCreate(&pHandle._ptr,
+        HIP_ARRAY_DESCRIPTOR.from_pyobj(pAllocateArray)._ptr))    # fully specified
+    return (_hipArrayCreate__retval,pHandle)
 
 
 @cython.embedsignature(True)
-def hipArrayDestroy(hipArray array):
+def hipArrayDestroy(object array):
     """
     """
-    hipArrayDestroy_____retval = hipError_t(chip.hipArrayDestroy(array._ptr))    # fully specified
-    return hipArrayDestroy_____retval
+    _hipArrayDestroy__retval = hipError_t(chip.hipArrayDestroy(
+        hipArray.from_pyobj(array)._ptr))    # fully specified
+    return _hipArrayDestroy__retval
 
 
 @cython.embedsignature(True)
-def hipArray3DCreate(HIP_ARRAY3D_DESCRIPTOR pAllocateArray):
+def hipArray3DCreate(object pAllocateArray):
     """
     """
     array = hipArray.from_ptr(NULL,owner=True)
-    hipArray3DCreate_____retval = hipError_t(chip.hipArray3DCreate(&array._ptr,pAllocateArray._ptr))    # fully specified
-    return (hipArray3DCreate_____retval,array)
+    _hipArray3DCreate__retval = hipError_t(chip.hipArray3DCreate(&array._ptr,
+        HIP_ARRAY3D_DESCRIPTOR.from_pyobj(pAllocateArray)._ptr))    # fully specified
+    return (_hipArray3DCreate__retval,array)
 
 
 @cython.embedsignature(True)
-def hipMalloc3D(hipPitchedPtr pitchedDevPtr, extent):
+def hipMalloc3D(object pitchedDevPtr):
     """
     """
     pass
 
 @cython.embedsignature(True)
-def hipFreeArray(hipArray array):
+def hipFreeArray(object array):
     """@brief Frees an array on the device.
     @param[in]  array  Pointer to array to free
     @return     #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     @see hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipHostMalloc, hipHostFree
     """
-    hipFreeArray_____retval = hipError_t(chip.hipFreeArray(array._ptr))    # fully specified
-    return hipFreeArray_____retval
+    _hipFreeArray__retval = hipError_t(chip.hipFreeArray(
+        hipArray.from_pyobj(array)._ptr))    # fully specified
+    return _hipFreeArray__retval
 
 
 @cython.embedsignature(True)
-def hipFreeMipmappedArray(hipMipmappedArray mipmappedArray):
+def hipFreeMipmappedArray(object mipmappedArray):
     """@brief Frees a mipmapped array on the device
     @param[in] mipmappedArray - Pointer to mipmapped array to free
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    hipFreeMipmappedArray_____retval = hipError_t(chip.hipFreeMipmappedArray(mipmappedArray._ptr))    # fully specified
-    return hipFreeMipmappedArray_____retval
+    _hipFreeMipmappedArray__retval = hipError_t(chip.hipFreeMipmappedArray(
+        hipMipmappedArray.from_pyobj(mipmappedArray)._ptr))    # fully specified
+    return _hipFreeMipmappedArray__retval
 
 
 @cython.embedsignature(True)
-def hipMalloc3DArray(hipChannelFormatDesc desc, extent, unsigned int flags):
+def hipMalloc3DArray(object desc, unsigned int flags):
     """@brief Allocate an array on the device.
     @param[out]  array  Pointer to allocated array in device memory
     @param[in]   desc   Requested channel format
@@ -12517,7 +19945,7 @@ def hipMalloc3DArray(hipChannelFormatDesc desc, extent, unsigned int flags):
     pass
 
 @cython.embedsignature(True)
-def hipMallocMipmappedArray(hipChannelFormatDesc desc, extent, unsigned int numLevels, unsigned int flags):
+def hipMallocMipmappedArray(object desc, unsigned int numLevels, unsigned int flags):
     """@brief Allocate a mipmapped array on the device
     @param[out] mipmappedArray  - Pointer to allocated mipmapped array in device memory
     @param[in]  desc            - Requested channel format
@@ -12530,7 +19958,7 @@ def hipMallocMipmappedArray(hipChannelFormatDesc desc, extent, unsigned int numL
     pass
 
 @cython.embedsignature(True)
-def hipGetMipmappedArrayLevel(hipMipmappedArray mipmappedArray, unsigned int level):
+def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
     """@brief Gets a mipmap level of a HIP mipmapped array
     @param[out] levelArray     - Returned mipmap level HIP array
     @param[in]  mipmappedArray - HIP mipmapped array
@@ -12538,12 +19966,13 @@ def hipGetMipmappedArrayLevel(hipMipmappedArray mipmappedArray, unsigned int lev
     @return #hipSuccess, #hipErrorInvalidValue
     """
     levelArray = hipArray.from_ptr(NULL,owner=True)
-    hipGetMipmappedArrayLevel_____retval = hipError_t(chip.hipGetMipmappedArrayLevel(&levelArray._ptr,mipmappedArray._ptr,level))    # fully specified
-    return (hipGetMipmappedArrayLevel_____retval,levelArray)
+    _hipGetMipmappedArrayLevel__retval = hipError_t(chip.hipGetMipmappedArrayLevel(&levelArray._ptr,
+        hipMipmappedArray.from_pyobj(mipmappedArray)._ptr,level))    # fully specified
+    return (_hipGetMipmappedArrayLevel__retval,levelArray)
 
 
 @cython.embedsignature(True)
-def hipMemcpy2D(dst, int dpitch, src, int spitch, int width, int height, object kind):
+def hipMemcpy2D(object dst, int dpitch, object src, int spitch, int width, int height, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst    Destination memory address
     @param[in]   dpitch Pitch of destination memory
@@ -12559,10 +19988,14 @@ def hipMemcpy2D(dst, int dpitch, src, int spitch, int width, int height, object 
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy2D__retval = hipError_t(chip.hipMemcpy2D(
+        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+    return _hipMemcpy2D__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyParam2D(hip_Memcpy2D pCopy):
+def hipMemcpyParam2D(object pCopy):
     """@brief Copies memory for 2D arrays.
     @param[in]   pCopy Parameters for the memory copy
     @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
@@ -12570,12 +20003,13 @@ def hipMemcpyParam2D(hip_Memcpy2D pCopy):
     @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
     hipMemcpyToSymbol, hipMemcpyAsync
     """
-    hipMemcpyParam2D_____retval = hipError_t(chip.hipMemcpyParam2D(pCopy._ptr))    # fully specified
-    return hipMemcpyParam2D_____retval
+    _hipMemcpyParam2D__retval = hipError_t(chip.hipMemcpyParam2D(
+        hip_Memcpy2D.from_pyobj(pCopy)._ptr))    # fully specified
+    return _hipMemcpyParam2D__retval
 
 
 @cython.embedsignature(True)
-def hipMemcpyParam2DAsync(hip_Memcpy2D pCopy, ihipStream_t stream):
+def hipMemcpyParam2DAsync(object pCopy, object stream):
     """@brief Copies memory for 2D arrays.
     @param[in]   pCopy Parameters for the memory copy
     @param[in]   stream Stream to use
@@ -12584,12 +20018,14 @@ def hipMemcpyParam2DAsync(hip_Memcpy2D pCopy, ihipStream_t stream):
     @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
     hipMemcpyToSymbol, hipMemcpyAsync
     """
-    hipMemcpyParam2DAsync_____retval = hipError_t(chip.hipMemcpyParam2DAsync(pCopy._ptr,stream._ptr))    # fully specified
-    return hipMemcpyParam2DAsync_____retval
+    _hipMemcpyParam2DAsync__retval = hipError_t(chip.hipMemcpyParam2DAsync(
+        hip_Memcpy2D.from_pyobj(pCopy)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyParam2DAsync__retval
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DAsync(dst, int dpitch, src, int spitch, int width, int height, object kind, ihipStream_t stream):
+def hipMemcpy2DAsync(object dst, int dpitch, object src, int spitch, int width, int height, object kind, object stream):
     """@brief Copies data between host and device.
     @param[in]   dst    Destination memory address
     @param[in]   dpitch Pitch of destination memory
@@ -12606,10 +20042,15 @@ def hipMemcpy2DAsync(dst, int dpitch, src, int spitch, int width, int height, ob
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy2DAsync__retval = hipError_t(chip.hipMemcpy2DAsync(
+        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpy2DAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy2DToArray(hipArray dst, int wOffset, int hOffset, src, int spitch, int width, int height, object kind):
+def hipMemcpy2DToArray(object dst, int wOffset, int hOffset, object src, int spitch, int width, int height, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst     Destination memory address
     @param[in]   wOffset Destination starting X offset
@@ -12626,10 +20067,14 @@ def hipMemcpy2DToArray(hipArray dst, int wOffset, int hOffset, src, int spitch, 
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy2DToArray__retval = hipError_t(chip.hipMemcpy2DToArray(
+        hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
+        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+    return _hipMemcpy2DToArray__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy2DToArrayAsync(hipArray dst, int wOffset, int hOffset, src, int spitch, int width, int height, object kind, ihipStream_t stream):
+def hipMemcpy2DToArrayAsync(object dst, int wOffset, int hOffset, object src, int spitch, int width, int height, object kind, object stream):
     """@brief Copies data between host and device.
     @param[in]   dst     Destination memory address
     @param[in]   wOffset Destination starting X offset
@@ -12647,10 +20092,15 @@ def hipMemcpy2DToArrayAsync(hipArray dst, int wOffset, int hOffset, src, int spi
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy2DToArrayAsync__retval = hipError_t(chip.hipMemcpy2DToArrayAsync(
+        hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
+        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpy2DToArrayAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyToArray(hipArray dst, int wOffset, int hOffset, src, int count, object kind):
+def hipMemcpyToArray(object dst, int wOffset, int hOffset, object src, int count, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst     Destination memory address
     @param[in]   wOffset Destination starting X offset
@@ -12665,10 +20115,14 @@ def hipMemcpyToArray(hipArray dst, int wOffset, int hOffset, src, int count, obj
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyToArray__retval = hipError_t(chip.hipMemcpyToArray(
+        hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
+        <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+    return _hipMemcpyToArray__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyFromArray(dst, hipArray srcArray, int wOffset, int hOffset, int count, object kind):
+def hipMemcpyFromArray(object dst, object srcArray, int wOffset, int hOffset, int count, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst       Destination memory address
     @param[in]   srcArray  Source memory address
@@ -12683,10 +20137,14 @@ def hipMemcpyFromArray(dst, hipArray srcArray, int wOffset, int hOffset, int cou
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyFromArray__retval = hipError_t(chip.hipMemcpyFromArray(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        hipArray.from_pyobj(srcArray)._ptr,wOffset,hOffset,count,kind.value))    # fully specified
+    return _hipMemcpyFromArray__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy2DFromArray(dst, int dpitch, hipArray src, int wOffset, int hOffset, int width, int height, object kind):
+def hipMemcpy2DFromArray(object dst, int dpitch, object src, int wOffset, int hOffset, int width, int height, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst       Destination memory address
     @param[in]   dpitch    Pitch of destination memory
@@ -12703,10 +20161,14 @@ def hipMemcpy2DFromArray(dst, int dpitch, hipArray src, int wOffset, int hOffset
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy2DFromArray__retval = hipError_t(chip.hipMemcpy2DFromArray(
+        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value))    # fully specified
+    return _hipMemcpy2DFromArray__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy2DFromArrayAsync(dst, int dpitch, hipArray src, int wOffset, int hOffset, int width, int height, object kind, ihipStream_t stream):
+def hipMemcpy2DFromArrayAsync(object dst, int dpitch, object src, int wOffset, int hOffset, int width, int height, object kind, object stream):
     """@brief Copies data between host and device asynchronously.
     @param[in]   dst       Destination memory address
     @param[in]   dpitch    Pitch of destination memory
@@ -12724,10 +20186,15 @@ def hipMemcpy2DFromArrayAsync(dst, int dpitch, hipArray src, int wOffset, int hO
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy2DFromArrayAsync__retval = hipError_t(chip.hipMemcpy2DFromArrayAsync(
+        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpy2DFromArrayAsync__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyAtoH(dst, hipArray srcArray, int srcOffset, int count):
+def hipMemcpyAtoH(object dst, object srcArray, int srcOffset, int count):
     """@brief Copies data between host and device.
     @param[in]   dst       Destination memory address
     @param[in]   srcArray  Source array
@@ -12738,10 +20205,14 @@ def hipMemcpyAtoH(dst, hipArray srcArray, int srcOffset, int count):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    pass
+    _hipMemcpyAtoH__retval = hipError_t(chip.hipMemcpyAtoH(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        hipArray.from_pyobj(srcArray)._ptr,srcOffset,count))    # fully specified
+    return _hipMemcpyAtoH__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyHtoA(hipArray dstArray, int dstOffset, srcHost, int count):
+def hipMemcpyHtoA(object dstArray, int dstOffset, object srcHost, int count):
     """@brief Copies data between host and device.
     @param[in]   dstArray   Destination memory address
     @param[in]   dstOffset  Offset in bytes of destination array
@@ -12752,10 +20223,14 @@ def hipMemcpyHtoA(hipArray dstArray, int dstOffset, srcHost, int count):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    pass
+    _hipMemcpyHtoA__retval = hipError_t(chip.hipMemcpyHtoA(
+        hipArray.from_pyobj(dstArray)._ptr,dstOffset,
+        <const void *>DataHandle.from_pyobj(srcHost)._ptr,count))    # fully specified
+    return _hipMemcpyHtoA__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy3D(hipMemcpy3DParms p):
+def hipMemcpy3D(object p):
     """@brief Copies data between host and device.
     @param[in]   p   3D memory copy parameters
     @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
@@ -12763,12 +20238,13 @@ def hipMemcpy3D(hipMemcpy3DParms p):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    hipMemcpy3D_____retval = hipError_t(chip.hipMemcpy3D(p._ptr))    # fully specified
-    return hipMemcpy3D_____retval
+    _hipMemcpy3D__retval = hipError_t(chip.hipMemcpy3D(
+        hipMemcpy3DParms.from_pyobj(p)._ptr))    # fully specified
+    return _hipMemcpy3D__retval
 
 
 @cython.embedsignature(True)
-def hipMemcpy3DAsync(hipMemcpy3DParms p, ihipStream_t stream):
+def hipMemcpy3DAsync(object p, object stream):
     """@brief Copies data between host and device asynchronously.
     @param[in]   p        3D memory copy parameters
     @param[in]   stream   Stream to use
@@ -12777,12 +20253,14 @@ def hipMemcpy3DAsync(hipMemcpy3DParms p, ihipStream_t stream):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    hipMemcpy3DAsync_____retval = hipError_t(chip.hipMemcpy3DAsync(p._ptr,stream._ptr))    # fully specified
-    return hipMemcpy3DAsync_____retval
+    _hipMemcpy3DAsync__retval = hipError_t(chip.hipMemcpy3DAsync(
+        hipMemcpy3DParms.from_pyobj(p)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpy3DAsync__retval
 
 
 @cython.embedsignature(True)
-def hipDrvMemcpy3D(HIP_MEMCPY3D pCopy):
+def hipDrvMemcpy3D(object pCopy):
     """@brief Copies data between host and device.
     @param[in]   pCopy   3D memory copy parameters
     @return      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
@@ -12790,12 +20268,13 @@ def hipDrvMemcpy3D(HIP_MEMCPY3D pCopy):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    hipDrvMemcpy3D_____retval = hipError_t(chip.hipDrvMemcpy3D(pCopy._ptr))    # fully specified
-    return hipDrvMemcpy3D_____retval
+    _hipDrvMemcpy3D__retval = hipError_t(chip.hipDrvMemcpy3D(
+        HIP_MEMCPY3D.from_pyobj(pCopy)._ptr))    # fully specified
+    return _hipDrvMemcpy3D__retval
 
 
 @cython.embedsignature(True)
-def hipDrvMemcpy3DAsync(HIP_MEMCPY3D pCopy, ihipStream_t stream):
+def hipDrvMemcpy3DAsync(object pCopy, object stream):
     """@brief Copies data between host and device asynchronously.
     @param[in]   pCopy    3D memory copy parameters
     @param[in]   stream   Stream to use
@@ -12804,8 +20283,10 @@ def hipDrvMemcpy3DAsync(HIP_MEMCPY3D pCopy, ihipStream_t stream):
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    hipDrvMemcpy3DAsync_____retval = hipError_t(chip.hipDrvMemcpy3DAsync(pCopy._ptr,stream._ptr))    # fully specified
-    return hipDrvMemcpy3DAsync_____retval
+    _hipDrvMemcpy3DAsync__retval = hipError_t(chip.hipDrvMemcpy3DAsync(
+        HIP_MEMCPY3D.from_pyobj(pCopy)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipDrvMemcpy3DAsync__retval
 
 
 @cython.embedsignature(True)
@@ -12829,8 +20310,8 @@ def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
     @returns #hipErrorInvalidDevice if deviceId or peerDeviceId are not valid devices
     """
     cdef int canAccessPeer
-    hipDeviceCanAccessPeer_____retval = hipError_t(chip.hipDeviceCanAccessPeer(&canAccessPeer,deviceId,peerDeviceId))    # fully specified
-    return (hipDeviceCanAccessPeer_____retval,canAccessPeer)
+    _hipDeviceCanAccessPeer__retval = hipError_t(chip.hipDeviceCanAccessPeer(&canAccessPeer,deviceId,peerDeviceId))    # fully specified
+    return (_hipDeviceCanAccessPeer__retval,canAccessPeer)
 
 
 @cython.embedsignature(True)
@@ -12846,8 +20327,8 @@ def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
     Returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
     @returns #hipErrorPeerAccessAlreadyEnabled if peer access is already enabled for this device.
     """
-    hipDeviceEnablePeerAccess_____retval = hipError_t(chip.hipDeviceEnablePeerAccess(peerDeviceId,flags))    # fully specified
-    return hipDeviceEnablePeerAccess_____retval
+    _hipDeviceEnablePeerAccess__retval = hipError_t(chip.hipDeviceEnablePeerAccess(peerDeviceId,flags))    # fully specified
+    return _hipDeviceEnablePeerAccess__retval
 
 
 @cython.embedsignature(True)
@@ -12859,12 +20340,12 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
     @param [in] peerDeviceId
     @returns #hipSuccess, #hipErrorPeerAccessNotEnabled
     """
-    hipDeviceDisablePeerAccess_____retval = hipError_t(chip.hipDeviceDisablePeerAccess(peerDeviceId))    # fully specified
-    return hipDeviceDisablePeerAccess_____retval
+    _hipDeviceDisablePeerAccess__retval = hipError_t(chip.hipDeviceDisablePeerAccess(peerDeviceId))    # fully specified
+    return _hipDeviceDisablePeerAccess__retval
 
 
 @cython.embedsignature(True)
-def hipMemGetAddressRange(dptr):
+def hipMemGetAddressRange(object pbase, object dptr):
     """@brief Get information on memory allocations.
     @param [out] pbase - BAse pointer address
     @param [out] psize - Size of allocation
@@ -12874,10 +20355,14 @@ def hipMemGetAddressRange(dptr):
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     cdef int psize
-    pass
+    _hipMemGetAddressRange__retval = hipError_t(chip.hipMemGetAddressRange(
+        <chip.hipDeviceptr_t*>DataHandle.from_pyobj(pbase)._ptr,&psize,
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dptr)._ptr))    # fully specified
+    return (_hipMemGetAddressRange__retval,psize)
+
 
 @cython.embedsignature(True)
-def hipMemcpyPeer(dst, int dstDeviceId, src, int srcDeviceId, int sizeBytes):
+def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, int sizeBytes):
     """@brief Copies memory from one device to memory on another device.
     @param [out] dst - Destination device pointer.
     @param [in] dstDeviceId - Destination device
@@ -12886,10 +20371,14 @@ def hipMemcpyPeer(dst, int dstDeviceId, src, int srcDeviceId, int sizeBytes):
     @param [in] sizeBytes - Size of memory copy in bytes
     @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
     """
-    pass
+    _hipMemcpyPeer__retval = hipError_t(chip.hipMemcpyPeer(
+        <void *>DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
+        <const void *>DataHandle.from_pyobj(src)._ptr,srcDeviceId,sizeBytes))    # fully specified
+    return _hipMemcpyPeer__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyPeerAsync(dst, int dstDeviceId, src, int srcDevice, int sizeBytes, ihipStream_t stream):
+def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, int sizeBytes, object stream):
     """@brief Copies memory from one device to memory on another device.
     @param [out] dst - Destination device pointer.
     @param [in] dstDevice - Destination device
@@ -12899,7 +20388,12 @@ def hipMemcpyPeerAsync(dst, int dstDeviceId, src, int srcDevice, int sizeBytes, 
     @param [in] stream - Stream identifier
     @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
     """
-    pass
+    _hipMemcpyPeerAsync__retval = hipError_t(chip.hipMemcpyPeerAsync(
+        <void *>DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
+        <const void *>DataHandle.from_pyobj(src)._ptr,srcDevice,sizeBytes,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyPeerAsync__retval
+
 
 @cython.embedsignature(True)
 def hipCtxCreate(unsigned int flags, hipDevice_t device):
@@ -12922,20 +20416,21 @@ def hipCtxCreate(unsigned int flags, hipDevice_t device):
     hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     ctx = ihipCtx_t.from_ptr(NULL,owner=True)
-    hipCtxCreate_____retval = hipError_t(chip.hipCtxCreate(&ctx._ptr,flags,device))    # fully specified
-    return (hipCtxCreate_____retval,ctx)
+    _hipCtxCreate__retval = hipError_t(chip.hipCtxCreate(&ctx._ptr,flags,device))    # fully specified
+    return (_hipCtxCreate__retval,ctx)
 
 
 @cython.embedsignature(True)
-def hipCtxDestroy(ihipCtx_t ctx):
+def hipCtxDestroy(object ctx):
     """@brief Destroy a HIP context.
     @param [in] ctx Context to destroy
     @returns #hipSuccess, #hipErrorInvalidValue
     @see hipCtxCreate, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,hipCtxSetCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
     """
-    hipCtxDestroy_____retval = hipError_t(chip.hipCtxDestroy(ctx._ptr))    # fully specified
-    return hipCtxDestroy_____retval
+    _hipCtxDestroy__retval = hipError_t(chip.hipCtxDestroy(
+        ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
+    return _hipCtxDestroy__retval
 
 
 @cython.embedsignature(True)
@@ -12947,32 +20442,34 @@ def hipCtxPopCurrent():
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     ctx = ihipCtx_t.from_ptr(NULL,owner=True)
-    hipCtxPopCurrent_____retval = hipError_t(chip.hipCtxPopCurrent(&ctx._ptr))    # fully specified
-    return (hipCtxPopCurrent_____retval,ctx)
+    _hipCtxPopCurrent__retval = hipError_t(chip.hipCtxPopCurrent(&ctx._ptr))    # fully specified
+    return (_hipCtxPopCurrent__retval,ctx)
 
 
 @cython.embedsignature(True)
-def hipCtxPushCurrent(ihipCtx_t ctx):
+def hipCtxPushCurrent(object ctx):
     """@brief Push the context to be set as current/ default context
     @param [in] ctx
     @returns #hipSuccess, #hipErrorInvalidContext
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
     """
-    hipCtxPushCurrent_____retval = hipError_t(chip.hipCtxPushCurrent(ctx._ptr))    # fully specified
-    return hipCtxPushCurrent_____retval
+    _hipCtxPushCurrent__retval = hipError_t(chip.hipCtxPushCurrent(
+        ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
+    return _hipCtxPushCurrent__retval
 
 
 @cython.embedsignature(True)
-def hipCtxSetCurrent(ihipCtx_t ctx):
+def hipCtxSetCurrent(object ctx):
     """@brief Set the passed context as current/default
     @param [in] ctx
     @returns #hipSuccess, #hipErrorInvalidContext
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
     """
-    hipCtxSetCurrent_____retval = hipError_t(chip.hipCtxSetCurrent(ctx._ptr))    # fully specified
-    return hipCtxSetCurrent_____retval
+    _hipCtxSetCurrent__retval = hipError_t(chip.hipCtxSetCurrent(
+        ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
+    return _hipCtxSetCurrent__retval
 
 
 @cython.embedsignature(True)
@@ -12984,8 +20481,8 @@ def hipCtxGetCurrent():
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     ctx = ihipCtx_t.from_ptr(NULL,owner=True)
-    hipCtxGetCurrent_____retval = hipError_t(chip.hipCtxGetCurrent(&ctx._ptr))    # fully specified
-    return (hipCtxGetCurrent_____retval,ctx)
+    _hipCtxGetCurrent__retval = hipError_t(chip.hipCtxGetCurrent(&ctx._ptr))    # fully specified
+    return (_hipCtxGetCurrent__retval,ctx)
 
 
 @cython.embedsignature(True)
@@ -12997,12 +20494,12 @@ def hipCtxGetDevice():
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
     """
     cdef int device
-    hipCtxGetDevice_____retval = hipError_t(chip.hipCtxGetDevice(&device))    # fully specified
-    return (hipCtxGetDevice_____retval,device)
+    _hipCtxGetDevice__retval = hipError_t(chip.hipCtxGetDevice(&device))    # fully specified
+    return (_hipCtxGetDevice__retval,device)
 
 
 @cython.embedsignature(True)
-def hipCtxGetApiVersion(ihipCtx_t ctx):
+def hipCtxGetApiVersion(object ctx):
     """@brief Returns the approximate HIP api version.
     @param [in]  ctx Context to check
     @param [out] apiVersion
@@ -13016,8 +20513,9 @@ def hipCtxGetApiVersion(ihipCtx_t ctx):
     hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     cdef int apiVersion
-    hipCtxGetApiVersion_____retval = hipError_t(chip.hipCtxGetApiVersion(ctx._ptr,&apiVersion))    # fully specified
-    return (hipCtxGetApiVersion_____retval,apiVersion)
+    _hipCtxGetApiVersion__retval = hipError_t(chip.hipCtxGetApiVersion(
+        ihipCtx_t.from_pyobj(ctx)._ptr,&apiVersion))    # fully specified
+    return (_hipCtxGetApiVersion__retval,apiVersion)
 
 
 @cython.embedsignature(True)
@@ -13031,8 +20529,8 @@ def hipCtxGetCacheConfig():
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     cdef chip.hipFuncCache_t cacheConfig
-    hipCtxGetCacheConfig_____retval = hipError_t(chip.hipCtxGetCacheConfig(&cacheConfig))    # fully specified
-    return (hipCtxGetCacheConfig_____retval,hipFuncCache_t(cacheConfig))
+    _hipCtxGetCacheConfig__retval = hipError_t(chip.hipCtxGetCacheConfig(&cacheConfig))    # fully specified
+    return (_hipCtxGetCacheConfig__retval,hipFuncCache_t(cacheConfig))
 
 
 @cython.embedsignature(True)
@@ -13047,8 +20545,8 @@ def hipCtxSetCacheConfig(object cacheConfig):
     """
     if not isinstance(cacheConfig,hipFuncCache_t):
         raise TypeError("argument 'cacheConfig' must be of type 'hipFuncCache_t'")
-    hipCtxSetCacheConfig_____retval = hipError_t(chip.hipCtxSetCacheConfig(cacheConfig.value))    # fully specified
-    return hipCtxSetCacheConfig_____retval
+    _hipCtxSetCacheConfig__retval = hipError_t(chip.hipCtxSetCacheConfig(cacheConfig.value))    # fully specified
+    return _hipCtxSetCacheConfig__retval
 
 
 @cython.embedsignature(True)
@@ -13063,8 +20561,8 @@ def hipCtxSetSharedMemConfig(object config):
     """
     if not isinstance(config,hipSharedMemConfig):
         raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
-    hipCtxSetSharedMemConfig_____retval = hipError_t(chip.hipCtxSetSharedMemConfig(config.value))    # fully specified
-    return hipCtxSetSharedMemConfig_____retval
+    _hipCtxSetSharedMemConfig__retval = hipError_t(chip.hipCtxSetSharedMemConfig(config.value))    # fully specified
+    return _hipCtxSetSharedMemConfig__retval
 
 
 @cython.embedsignature(True)
@@ -13078,8 +20576,8 @@ def hipCtxGetSharedMemConfig():
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     cdef chip.hipSharedMemConfig pConfig
-    hipCtxGetSharedMemConfig_____retval = hipError_t(chip.hipCtxGetSharedMemConfig(&pConfig))    # fully specified
-    return (hipCtxGetSharedMemConfig_____retval,hipSharedMemConfig(pConfig))
+    _hipCtxGetSharedMemConfig__retval = hipError_t(chip.hipCtxGetSharedMemConfig(&pConfig))    # fully specified
+    return (_hipCtxGetSharedMemConfig__retval,hipSharedMemConfig(pConfig))
 
 
 @cython.embedsignature(True)
@@ -13091,8 +20589,8 @@ def hipCtxSynchronize():
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxGetDevice
     """
-    hipCtxSynchronize_____retval = hipError_t(chip.hipCtxSynchronize())    # fully specified
-    return hipCtxSynchronize_____retval
+    _hipCtxSynchronize__retval = hipError_t(chip.hipCtxSynchronize())    # fully specified
+    return _hipCtxSynchronize__retval
 
 
 @cython.embedsignature(True)
@@ -13104,12 +20602,12 @@ def hipCtxGetFlags():
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     cdef unsigned int flags
-    hipCtxGetFlags_____retval = hipError_t(chip.hipCtxGetFlags(&flags))    # fully specified
-    return (hipCtxGetFlags_____retval,flags)
+    _hipCtxGetFlags__retval = hipError_t(chip.hipCtxGetFlags(&flags))    # fully specified
+    return (_hipCtxGetFlags__retval,flags)
 
 
 @cython.embedsignature(True)
-def hipCtxEnablePeerAccess(ihipCtx_t peerCtx, unsigned int flags):
+def hipCtxEnablePeerAccess(object peerCtx, unsigned int flags):
     """@brief Enables direct access to memory allocations in a peer context.
     Memory which already allocated on peer device will be mapped into the address space of the
     current device.  In addition, all future memory allocations on peerDeviceId will be mapped into
@@ -13123,12 +20621,13 @@ def hipCtxEnablePeerAccess(ihipCtx_t peerCtx, unsigned int flags):
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     @warning PeerToPeer support is experimental.
     """
-    hipCtxEnablePeerAccess_____retval = hipError_t(chip.hipCtxEnablePeerAccess(peerCtx._ptr,flags))    # fully specified
-    return hipCtxEnablePeerAccess_____retval
+    _hipCtxEnablePeerAccess__retval = hipError_t(chip.hipCtxEnablePeerAccess(
+        ihipCtx_t.from_pyobj(peerCtx)._ptr,flags))    # fully specified
+    return _hipCtxEnablePeerAccess__retval
 
 
 @cython.embedsignature(True)
-def hipCtxDisablePeerAccess(ihipCtx_t peerCtx):
+def hipCtxDisablePeerAccess(object peerCtx):
     """@brief Disable direct access from current context's virtual address space to memory allocations
     physically located on a peer context.Disables direct access to memory allocations in a peer
     context and unregisters any registered allocations.
@@ -13140,8 +20639,9 @@ def hipCtxDisablePeerAccess(ihipCtx_t peerCtx):
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     @warning PeerToPeer support is experimental.
     """
-    hipCtxDisablePeerAccess_____retval = hipError_t(chip.hipCtxDisablePeerAccess(peerCtx._ptr))    # fully specified
-    return hipCtxDisablePeerAccess_____retval
+    _hipCtxDisablePeerAccess__retval = hipError_t(chip.hipCtxDisablePeerAccess(
+        ihipCtx_t.from_pyobj(peerCtx)._ptr))    # fully specified
+    return _hipCtxDisablePeerAccess__retval
 
 
 @cython.embedsignature(True)
@@ -13157,8 +20657,8 @@ def hipDevicePrimaryCtxGetState(hipDevice_t dev):
     """
     cdef unsigned int flags
     cdef int active
-    hipDevicePrimaryCtxGetState_____retval = hipError_t(chip.hipDevicePrimaryCtxGetState(dev,&flags,&active))    # fully specified
-    return (hipDevicePrimaryCtxGetState_____retval,flags,active)
+    _hipDevicePrimaryCtxGetState__retval = hipError_t(chip.hipDevicePrimaryCtxGetState(dev,&flags,&active))    # fully specified
+    return (_hipDevicePrimaryCtxGetState__retval,flags,active)
 
 
 @cython.embedsignature(True)
@@ -13171,8 +20671,8 @@ def hipDevicePrimaryCtxRelease(hipDevice_t dev):
     @warning This function return #hipSuccess though doesn't release the primaryCtx by design on
     HIP/HCC path.
     """
-    hipDevicePrimaryCtxRelease_____retval = hipError_t(chip.hipDevicePrimaryCtxRelease(dev))    # fully specified
-    return hipDevicePrimaryCtxRelease_____retval
+    _hipDevicePrimaryCtxRelease__retval = hipError_t(chip.hipDevicePrimaryCtxRelease(dev))    # fully specified
+    return _hipDevicePrimaryCtxRelease__retval
 
 
 @cython.embedsignature(True)
@@ -13185,8 +20685,8 @@ def hipDevicePrimaryCtxRetain(hipDevice_t dev):
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     pctx = ihipCtx_t.from_ptr(NULL,owner=True)
-    hipDevicePrimaryCtxRetain_____retval = hipError_t(chip.hipDevicePrimaryCtxRetain(&pctx._ptr,dev))    # fully specified
-    return (hipDevicePrimaryCtxRetain_____retval,pctx)
+    _hipDevicePrimaryCtxRetain__retval = hipError_t(chip.hipDevicePrimaryCtxRetain(&pctx._ptr,dev))    # fully specified
+    return (_hipDevicePrimaryCtxRetain__retval,pctx)
 
 
 @cython.embedsignature(True)
@@ -13197,8 +20697,8 @@ def hipDevicePrimaryCtxReset(hipDevice_t dev):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    hipDevicePrimaryCtxReset_____retval = hipError_t(chip.hipDevicePrimaryCtxReset(dev))    # fully specified
-    return hipDevicePrimaryCtxReset_____retval
+    _hipDevicePrimaryCtxReset__retval = hipError_t(chip.hipDevicePrimaryCtxReset(dev))    # fully specified
+    return _hipDevicePrimaryCtxReset__retval
 
 
 @cython.embedsignature(True)
@@ -13210,8 +20710,8 @@ def hipDevicePrimaryCtxSetFlags(hipDevice_t dev, unsigned int flags):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    hipDevicePrimaryCtxSetFlags_____retval = hipError_t(chip.hipDevicePrimaryCtxSetFlags(dev,flags))    # fully specified
-    return hipDevicePrimaryCtxSetFlags_____retval
+    _hipDevicePrimaryCtxSetFlags__retval = hipError_t(chip.hipDevicePrimaryCtxSetFlags(dev,flags))    # fully specified
+    return _hipDevicePrimaryCtxSetFlags__retval
 
 
 @cython.embedsignature(True)
@@ -13228,23 +20728,24 @@ def hipModuleLoad(const char * fname):
     hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
     """
     module = ihipModule_t.from_ptr(NULL,owner=True)
-    hipModuleLoad_____retval = hipError_t(chip.hipModuleLoad(&module._ptr,fname))    # fully specified
-    return (hipModuleLoad_____retval,module)
+    _hipModuleLoad__retval = hipError_t(chip.hipModuleLoad(&module._ptr,fname))    # fully specified
+    return (_hipModuleLoad__retval,module)
 
 
 @cython.embedsignature(True)
-def hipModuleUnload(ihipModule_t module):
+def hipModuleUnload(object module):
     """@brief Frees the module
     @param [in] module
     @returns hipSuccess, hipInvalidValue
     module is freed and the code objects associated with it are destroyed
     """
-    hipModuleUnload_____retval = hipError_t(chip.hipModuleUnload(module._ptr))    # fully specified
-    return hipModuleUnload_____retval
+    _hipModuleUnload__retval = hipError_t(chip.hipModuleUnload(
+        ihipModule_t.from_pyobj(module)._ptr))    # fully specified
+    return _hipModuleUnload__retval
 
 
 @cython.embedsignature(True)
-def hipModuleGetFunction(ihipModule_t module, const char * kname):
+def hipModuleGetFunction(object module, const char * kname):
     """@brief Function with kname will be extracted if present in module
     @param [in] module
     @param [in] kname
@@ -13253,21 +20754,26 @@ def hipModuleGetFunction(ihipModule_t module, const char * kname):
     hipErrorNotFound,
     """
     function = ihipModuleSymbol_t.from_ptr(NULL,owner=True)
-    hipModuleGetFunction_____retval = hipError_t(chip.hipModuleGetFunction(&function._ptr,module._ptr,kname))    # fully specified
-    return (hipModuleGetFunction_____retval,function)
+    _hipModuleGetFunction__retval = hipError_t(chip.hipModuleGetFunction(&function._ptr,
+        ihipModule_t.from_pyobj(module)._ptr,kname))    # fully specified
+    return (_hipModuleGetFunction__retval,function)
 
 
 @cython.embedsignature(True)
-def hipFuncGetAttributes(hipFuncAttributes attr, func):
+def hipFuncGetAttributes(object attr, object func):
     """@brief Find out attributes for a given function.
     @param [out] attr
     @param [in] func
     @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
     """
-    pass
+    _hipFuncGetAttributes__retval = hipError_t(chip.hipFuncGetAttributes(
+        hipFuncAttributes.from_pyobj(attr)._ptr,
+        <const void *>DataHandle.from_pyobj(func)._ptr))    # fully specified
+    return _hipFuncGetAttributes__retval
+
 
 @cython.embedsignature(True)
-def hipFuncGetAttribute(object attrib, ihipModuleSymbol_t hfunc):
+def hipFuncGetAttribute(object attrib, object hfunc):
     """@brief Find out a specific attribute for a given function.
     @param [out] value
     @param [in]  attrib
@@ -13277,12 +20783,13 @@ def hipFuncGetAttribute(object attrib, ihipModuleSymbol_t hfunc):
     cdef int value
     if not isinstance(attrib,hipFunction_attribute):
         raise TypeError("argument 'attrib' must be of type 'hipFunction_attribute'")
-    hipFuncGetAttribute_____retval = hipError_t(chip.hipFuncGetAttribute(&value,attrib.value,hfunc._ptr))    # fully specified
-    return (hipFuncGetAttribute_____retval,value)
+    _hipFuncGetAttribute__retval = hipError_t(chip.hipFuncGetAttribute(&value,attrib.value,
+        ihipModuleSymbol_t.from_pyobj(hfunc)._ptr))    # fully specified
+    return (_hipFuncGetAttribute__retval,value)
 
 
 @cython.embedsignature(True)
-def hipModuleGetTexRef(ihipModule_t hmod, const char * name):
+def hipModuleGetTexRef(object hmod, const char * name):
     """@brief returns the handle of the texture reference with the name from the module.
     @param [in] hmod
     @param [in] name
@@ -13290,12 +20797,13 @@ def hipModuleGetTexRef(ihipModule_t hmod, const char * name):
     @returns hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
     """
     texRef = textureReference.from_ptr(NULL,owner=True)
-    hipModuleGetTexRef_____retval = hipError_t(chip.hipModuleGetTexRef(&texRef._ptr,hmod._ptr,name))    # fully specified
-    return (hipModuleGetTexRef_____retval,texRef)
+    _hipModuleGetTexRef__retval = hipError_t(chip.hipModuleGetTexRef(&texRef._ptr,
+        ihipModule_t.from_pyobj(hmod)._ptr,name))    # fully specified
+    return (_hipModuleGetTexRef__retval,texRef)
 
 
 @cython.embedsignature(True)
-def hipModuleLoadData(image):
+def hipModuleLoadData(object image):
     """@brief builds module from code object which resides in host memory. Image is pointer to that
     location.
     @param [in] image
@@ -13303,10 +20811,13 @@ def hipModuleLoadData(image):
     @returns hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
     """
     module = ihipModule_t.from_ptr(NULL,owner=True)
-    pass
+    _hipModuleLoadData__retval = hipError_t(chip.hipModuleLoadData(&module._ptr,
+        <const void *>DataHandle.from_pyobj(image)._ptr))    # fully specified
+    return (_hipModuleLoadData__retval,module)
+
 
 @cython.embedsignature(True)
-def hipModuleLoadDataEx(image, unsigned int numOptions):
+def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValues):
     """@brief builds module from code object which resides in host memory. Image is pointer to that
     location. Options are not used. hipModuleLoadData is called.
     @param [in] image
@@ -13318,10 +20829,14 @@ def hipModuleLoadDataEx(image, unsigned int numOptions):
     """
     module = ihipModule_t.from_ptr(NULL,owner=True)
     cdef chip.hipJitOption options
-    pass
+    _hipModuleLoadDataEx__retval = hipError_t(chip.hipModuleLoadDataEx(&module._ptr,
+        <const void *>DataHandle.from_pyobj(image)._ptr,numOptions,&options,
+        <void **>DataHandle.from_pyobj(optionValues)._ptr))    # fully specified
+    return (_hipModuleLoadDataEx__retval,module,hipJitOption(options))
+
 
 @cython.embedsignature(True)
-def hipModuleLaunchKernel(ihipModuleSymbol_t f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, ihipStream_t stream):
+def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, object stream, object kernelParams, object extra):
     """@brief launches kernel f with launch parameters and shared memory on stream with arguments passed
     to kernelparams or extra
     @param [in] f         Kernel to launch.
@@ -13345,10 +20860,16 @@ def hipModuleLaunchKernel(ihipModuleSymbol_t f, unsigned int gridDimX, unsigned 
     @warning kernellParams argument is not yet implemented in HIP. Please use extra instead. Please
     refer to hip_porting_driver_api.md for sample usage.
     """
-    pass
+    _hipModuleLaunchKernel__retval = hipError_t(chip.hipModuleLaunchKernel(
+        ihipModuleSymbol_t.from_pyobj(f)._ptr,gridDimX,gridDimY,gridDimZ,blockDimX,blockDimY,blockDimZ,sharedMemBytes,
+        ihipStream_t.from_pyobj(stream)._ptr,
+        <void **>DataHandle.from_pyobj(kernelParams)._ptr,
+        <void **>DataHandle.from_pyobj(extra)._ptr))    # fully specified
+    return _hipModuleLaunchKernel__retval
+
 
 @cython.embedsignature(True)
-def hipLaunchCooperativeKernel(f, gridDim, blockDimX, unsigned int sharedMemBytes, ihipStream_t stream):
+def hipLaunchCooperativeKernel(object f, object kernelParams, unsigned int sharedMemBytes, object stream):
     """@brief launches kernel f with launch parameters and shared memory on stream with arguments passed
     to kernelparams or extra, where thread blocks can cooperate and synchronize as they execute
     @param [in] f         Kernel to launch.
@@ -13366,7 +20887,7 @@ def hipLaunchCooperativeKernel(f, gridDim, blockDimX, unsigned int sharedMemByte
     pass
 
 @cython.embedsignature(True)
-def hipLaunchCooperativeKernelMultiDevice(hipLaunchParams_t launchParamsList, int numDevices, unsigned int flags):
+def hipLaunchCooperativeKernelMultiDevice(object launchParamsList, int numDevices, unsigned int flags):
     """@brief Launches kernels on multiple devices where thread blocks can cooperate and
     synchronize as they execute.
     @param [in] launchParamsList         List of launch parameters, one per device.
@@ -13374,12 +20895,13 @@ def hipLaunchCooperativeKernelMultiDevice(hipLaunchParams_t launchParamsList, in
     @param [in] flags                    Flags to control launch behavior.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
     """
-    hipLaunchCooperativeKernelMultiDevice_____retval = hipError_t(chip.hipLaunchCooperativeKernelMultiDevice(launchParamsList._ptr,numDevices,flags))    # fully specified
-    return hipLaunchCooperativeKernelMultiDevice_____retval
+    _hipLaunchCooperativeKernelMultiDevice__retval = hipError_t(chip.hipLaunchCooperativeKernelMultiDevice(
+        hipLaunchParams_t.from_pyobj(launchParamsList)._ptr,numDevices,flags))    # fully specified
+    return _hipLaunchCooperativeKernelMultiDevice__retval
 
 
 @cython.embedsignature(True)
-def hipExtLaunchMultiKernelMultiDevice(hipLaunchParams_t launchParamsList, int numDevices, unsigned int flags):
+def hipExtLaunchMultiKernelMultiDevice(object launchParamsList, int numDevices, unsigned int flags):
     """@brief Launches kernels on multiple devices and guarantees all specified kernels are dispatched
     on respective streams before enqueuing any other work on the specified streams from any other threads
     @param [in] hipLaunchParams          List of launch parameters, one per device.
@@ -13387,12 +20909,13 @@ def hipExtLaunchMultiKernelMultiDevice(hipLaunchParams_t launchParamsList, int n
     @param [in] flags                    Flags to control launch behavior.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
-    hipExtLaunchMultiKernelMultiDevice_____retval = hipError_t(chip.hipExtLaunchMultiKernelMultiDevice(launchParamsList._ptr,numDevices,flags))    # fully specified
-    return hipExtLaunchMultiKernelMultiDevice_____retval
+    _hipExtLaunchMultiKernelMultiDevice__retval = hipError_t(chip.hipExtLaunchMultiKernelMultiDevice(
+        hipLaunchParams_t.from_pyobj(launchParamsList)._ptr,numDevices,flags))    # fully specified
+    return _hipExtLaunchMultiKernelMultiDevice__retval
 
 
 @cython.embedsignature(True)
-def hipModuleOccupancyMaxPotentialBlockSize(ihipModuleSymbol_t f, int dynSharedMemPerBlk, int blockSizeLimit):
+def hipModuleOccupancyMaxPotentialBlockSize(object f, int dynSharedMemPerBlk, int blockSizeLimit):
     """@}
     @defgroup Occupancy Occupancy
     @{
@@ -13409,12 +20932,13 @@ def hipModuleOccupancyMaxPotentialBlockSize(ihipModuleSymbol_t f, int dynSharedM
     """
     cdef int gridSize
     cdef int blockSize
-    hipModuleOccupancyMaxPotentialBlockSize_____retval = hipError_t(chip.hipModuleOccupancyMaxPotentialBlockSize(&gridSize,&blockSize,f._ptr,dynSharedMemPerBlk,blockSizeLimit))    # fully specified
-    return (hipModuleOccupancyMaxPotentialBlockSize_____retval,gridSize,blockSize)
+    _hipModuleOccupancyMaxPotentialBlockSize__retval = hipError_t(chip.hipModuleOccupancyMaxPotentialBlockSize(&gridSize,&blockSize,
+        ihipModuleSymbol_t.from_pyobj(f)._ptr,dynSharedMemPerBlk,blockSizeLimit))    # fully specified
+    return (_hipModuleOccupancyMaxPotentialBlockSize__retval,gridSize,blockSize)
 
 
 @cython.embedsignature(True)
-def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(ihipModuleSymbol_t f, int dynSharedMemPerBlk, int blockSizeLimit, unsigned int flags):
+def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, int dynSharedMemPerBlk, int blockSizeLimit, unsigned int flags):
     """@brief determine the grid and block sizes to achieves maximum occupancy for a kernel
     @param [out] gridSize           minimum grid size for maximum potential occupancy
     @param [out] blockSize          block size for maximum potential occupancy
@@ -13428,12 +20952,13 @@ def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(ihipModuleSymbol_t f, int d
     """
     cdef int gridSize
     cdef int blockSize
-    hipModuleOccupancyMaxPotentialBlockSizeWithFlags_____retval = hipError_t(chip.hipModuleOccupancyMaxPotentialBlockSizeWithFlags(&gridSize,&blockSize,f._ptr,dynSharedMemPerBlk,blockSizeLimit,flags))    # fully specified
-    return (hipModuleOccupancyMaxPotentialBlockSizeWithFlags_____retval,gridSize,blockSize)
+    _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__retval = hipError_t(chip.hipModuleOccupancyMaxPotentialBlockSizeWithFlags(&gridSize,&blockSize,
+        ihipModuleSymbol_t.from_pyobj(f)._ptr,dynSharedMemPerBlk,blockSizeLimit,flags))    # fully specified
+    return (_hipModuleOccupancyMaxPotentialBlockSizeWithFlags__retval,gridSize,blockSize)
 
 
 @cython.embedsignature(True)
-def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(ihipModuleSymbol_t f, int blockSize, int dynSharedMemPerBlk):
+def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, int dynSharedMemPerBlk):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  func             Kernel function (hipFunction) for which occupancy is calulated
@@ -13441,12 +20966,13 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(ihipModuleSymbol_t f, int
     @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
     """
     cdef int numBlocks
-    hipModuleOccupancyMaxActiveBlocksPerMultiprocessor_____retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,f._ptr,blockSize,dynSharedMemPerBlk))    # fully specified
-    return (hipModuleOccupancyMaxActiveBlocksPerMultiprocessor_____retval,numBlocks)
+    _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,
+        ihipModuleSymbol_t.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk))    # fully specified
+    return (_hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__retval,numBlocks)
 
 
 @cython.embedsignature(True)
-def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(ihipModuleSymbol_t f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
+def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  f                Kernel function(hipFunction_t) for which occupancy is calulated
@@ -13455,12 +20981,13 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(ihipModuleSymbol
     @param [in]  flags            Extra flags for occupancy calculation (only default supported)
     """
     cdef int numBlocks
-    hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags_____retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,f._ptr,blockSize,dynSharedMemPerBlk,flags))    # fully specified
-    return (hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags_____retval,numBlocks)
+    _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,
+        ihipModuleSymbol_t.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk,flags))    # fully specified
+    return (_hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval,numBlocks)
 
 
 @cython.embedsignature(True)
-def hipOccupancyMaxActiveBlocksPerMultiprocessor(f, int blockSize, int dynSharedMemPerBlk):
+def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, int dynSharedMemPerBlk):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  func             Kernel function for which occupancy is calulated
@@ -13468,10 +20995,13 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(f, int blockSize, int dynShared
     @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
     """
     cdef int numBlocks
-    pass
+    _hipOccupancyMaxActiveBlocksPerMultiprocessor__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,
+        <const void *>DataHandle.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk))    # fully specified
+    return (_hipOccupancyMaxActiveBlocksPerMultiprocessor__retval,numBlocks)
+
 
 @cython.embedsignature(True)
-def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
+def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  f                Kernel function for which occupancy is calulated
@@ -13480,10 +21010,13 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(f, int blockSize, int 
     @param [in]  flags            Extra flags for occupancy calculation (currently ignored)
     """
     cdef int numBlocks
-    pass
+    _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,
+        <const void *>DataHandle.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk,flags))    # fully specified
+    return (_hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval,numBlocks)
+
 
 @cython.embedsignature(True)
-def hipOccupancyMaxPotentialBlockSize(f, int dynSharedMemPerBlk, int blockSizeLimit):
+def hipOccupancyMaxPotentialBlockSize(object f, int dynSharedMemPerBlk, int blockSizeLimit):
     """@brief determine the grid and block sizes to achieves maximum occupancy for a kernel
     @param [out] gridSize           minimum grid size for maximum potential occupancy
     @param [out] blockSize          block size for maximum potential occupancy
@@ -13496,7 +21029,10 @@ def hipOccupancyMaxPotentialBlockSize(f, int dynSharedMemPerBlk, int blockSizeLi
     """
     cdef int gridSize
     cdef int blockSize
-    pass
+    _hipOccupancyMaxPotentialBlockSize__retval = hipError_t(chip.hipOccupancyMaxPotentialBlockSize(&gridSize,&blockSize,
+        <const void *>DataHandle.from_pyobj(f)._ptr,dynSharedMemPerBlk,blockSizeLimit))    # fully specified
+    return (_hipOccupancyMaxPotentialBlockSize__retval,gridSize,blockSize)
+
 
 @cython.embedsignature(True)
 def hipProfilerStart():
@@ -13504,8 +21040,8 @@ def hipProfilerStart():
     When using this API, start the profiler with profiling disabled.  (--startdisabled)
     @warning : hipProfilerStart API is under development.
     """
-    hipProfilerStart_____retval = hipError_t(chip.hipProfilerStart())    # fully specified
-    return hipProfilerStart_____retval
+    _hipProfilerStart__retval = hipError_t(chip.hipProfilerStart())    # fully specified
+    return _hipProfilerStart__retval
 
 
 @cython.embedsignature(True)
@@ -13514,12 +21050,12 @@ def hipProfilerStop():
     When using this API, start the profiler with profiling disabled.  (--startdisabled)
     @warning : hipProfilerStop API is under development.
     """
-    hipProfilerStop_____retval = hipError_t(chip.hipProfilerStop())    # fully specified
-    return hipProfilerStop_____retval
+    _hipProfilerStop__retval = hipError_t(chip.hipProfilerStop())    # fully specified
+    return _hipProfilerStop__retval
 
 
 @cython.embedsignature(True)
-def hipConfigureCall(gridDim, blockDim, int sharedMem, ihipStream_t stream):
+def hipConfigureCall(int sharedMem, object stream):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -13540,25 +21076,31 @@ def hipConfigureCall(gridDim, blockDim, int sharedMem, ihipStream_t stream):
     pass
 
 @cython.embedsignature(True)
-def hipSetupArgument(arg, int size, int offset):
+def hipSetupArgument(object arg, int size, int offset):
     """@brief Set a kernel argument.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     @param [in] arg    Pointer the argument in host memory.
     @param [in] size   Size of the argument.
     @param [in] offset Offset of the argument on the argument stack.
     """
-    pass
+    _hipSetupArgument__retval = hipError_t(chip.hipSetupArgument(
+        <const void *>DataHandle.from_pyobj(arg)._ptr,size,offset))    # fully specified
+    return _hipSetupArgument__retval
+
 
 @cython.embedsignature(True)
-def hipLaunchByPtr(func):
+def hipLaunchByPtr(object func):
     """@brief Launch a kernel.
     @param [in] func Kernel to launch.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
-    pass
+    _hipLaunchByPtr__retval = hipError_t(chip.hipLaunchByPtr(
+        <const void *>DataHandle.from_pyobj(func)._ptr))    # fully specified
+    return _hipLaunchByPtr__retval
+
 
 @cython.embedsignature(True)
-def hipLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemBytes, ihipStream_t stream):
+def hipLaunchKernel(object function_address, object args, int sharedMemBytes, object stream):
     """@brief C compliant kernel launch API
     @param [in] function_address - kernel stub function pointer.
     @param [in] numBlocks - number of blocks
@@ -13573,7 +21115,7 @@ def hipLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemBytes, 
     pass
 
 @cython.embedsignature(True)
-def hipLaunchHostFunc(ihipStream_t stream, fn, userData):
+def hipLaunchHostFunc(object stream, object userData):
     """@brief Enqueues a host function call in a stream.
     @param [in] stream - stream to enqueue work to.
     @param [in] fn - function to call once operations enqueued preceeding are complete.
@@ -13586,17 +21128,18 @@ def hipLaunchHostFunc(ihipStream_t stream, fn, userData):
     pass
 
 @cython.embedsignature(True)
-def hipDrvMemcpy2DUnaligned(hip_Memcpy2D pCopy):
+def hipDrvMemcpy2DUnaligned(object pCopy):
     """Copies memory for 2D arrays.
     @param pCopy           - Parameters for the memory copy
     @returns #hipSuccess, #hipErrorInvalidValue
     """
-    hipDrvMemcpy2DUnaligned_____retval = hipError_t(chip.hipDrvMemcpy2DUnaligned(pCopy._ptr))    # fully specified
-    return hipDrvMemcpy2DUnaligned_____retval
+    _hipDrvMemcpy2DUnaligned__retval = hipError_t(chip.hipDrvMemcpy2DUnaligned(
+        hip_Memcpy2D.from_pyobj(pCopy)._ptr))    # fully specified
+    return _hipDrvMemcpy2DUnaligned__retval
 
 
 @cython.embedsignature(True)
-def hipExtLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemBytes, ihipStream_t stream, ihipEvent_t startEvent, ihipEvent_t stopEvent, int flags):
+def hipExtLaunchKernel(object function_address, object args, int sharedMemBytes, object stream, object startEvent, object stopEvent, int flags):
     """@brief Launches kernel from the pointer address, with arguments and shared memory on stream.
     @param [in] function_address pointer to the Kernel to launch.
     @param [in] numBlocks number of blocks.
@@ -13617,19 +21160,22 @@ def hipExtLaunchKernel(function_address, numBlocks, dimBlocks, int sharedMemByte
     pass
 
 @cython.embedsignature(True)
-def hipBindTextureToMipmappedArray(textureReference tex, hipMipmappedArray mipmappedArray, hipChannelFormatDesc desc):
+def hipBindTextureToMipmappedArray(object tex, object mipmappedArray, object desc):
     """@brief  Binds a mipmapped array to a texture.
     @param [in] tex  pointer to the texture reference to bind
     @param [in] mipmappedArray  memory mipmapped array on the device
     @param [in] desc  opointer to the channel format
     @returns hipSuccess, hipErrorInvalidValue
     """
-    hipBindTextureToMipmappedArray_____retval = hipError_t(chip.hipBindTextureToMipmappedArray(tex._ptr,mipmappedArray._ptr,desc._ptr))    # fully specified
-    return hipBindTextureToMipmappedArray_____retval
+    _hipBindTextureToMipmappedArray__retval = hipError_t(chip.hipBindTextureToMipmappedArray(
+        textureReference.from_pyobj(tex)._ptr,
+        hipMipmappedArray.from_pyobj(mipmappedArray)._ptr,
+        hipChannelFormatDesc.from_pyobj(desc)._ptr))    # fully specified
+    return _hipBindTextureToMipmappedArray__retval
 
 
 @cython.embedsignature(True)
-def hipCreateTextureObject(hipResourceDesc pResDesc, hipTextureDesc pTexDesc, hipResourceViewDesc pResViewDesc):
+def hipCreateTextureObject(object pResDesc, object pTexDesc, object pResViewDesc):
     """@brief Creates a texture object.
     @param [out] pTexObject  pointer to the texture object to create
     @param [in] pResDesc  pointer to resource descriptor
@@ -13640,66 +21186,78 @@ def hipCreateTextureObject(hipResourceDesc pResDesc, hipTextureDesc pTexDesc, hi
     return hipErrorNotSupported.
     """
     pTexObject = __hip_texture.from_ptr(NULL,owner=True)
-    hipCreateTextureObject_____retval = hipError_t(chip.hipCreateTextureObject(&pTexObject._ptr,pResDesc._ptr,pTexDesc._ptr,pResViewDesc._ptr))    # fully specified
-    return (hipCreateTextureObject_____retval,pTexObject)
+    _hipCreateTextureObject__retval = hipError_t(chip.hipCreateTextureObject(&pTexObject._ptr,
+        hipResourceDesc.from_pyobj(pResDesc)._ptr,
+        hipTextureDesc.from_pyobj(pTexDesc)._ptr,
+        hipResourceViewDesc.from_pyobj(pResViewDesc)._ptr))    # fully specified
+    return (_hipCreateTextureObject__retval,pTexObject)
 
 
 @cython.embedsignature(True)
-def hipDestroyTextureObject(__hip_texture textureObject):
+def hipDestroyTextureObject(object textureObject):
     """@brief Destroys a texture object.
     @param [in] textureObject  texture object to destroy
     @returns hipSuccess, hipErrorInvalidValue
     """
-    hipDestroyTextureObject_____retval = hipError_t(chip.hipDestroyTextureObject(textureObject._ptr))    # fully specified
-    return hipDestroyTextureObject_____retval
+    _hipDestroyTextureObject__retval = hipError_t(chip.hipDestroyTextureObject(
+        __hip_texture.from_pyobj(textureObject)._ptr))    # fully specified
+    return _hipDestroyTextureObject__retval
 
 
 @cython.embedsignature(True)
-def hipGetChannelDesc(hipChannelFormatDesc desc, hipArray array):
+def hipGetChannelDesc(object desc, object array):
     """@brief Gets the channel descriptor in an array.
     @param [in] desc  pointer to channel format descriptor
     @param [out] array  memory array on the device
     @returns hipSuccess, hipErrorInvalidValue
     """
-    hipGetChannelDesc_____retval = hipError_t(chip.hipGetChannelDesc(desc._ptr,array._ptr))    # fully specified
-    return hipGetChannelDesc_____retval
+    _hipGetChannelDesc__retval = hipError_t(chip.hipGetChannelDesc(
+        hipChannelFormatDesc.from_pyobj(desc)._ptr,
+        hipArray.from_pyobj(array)._ptr))    # fully specified
+    return _hipGetChannelDesc__retval
 
 
 @cython.embedsignature(True)
-def hipGetTextureObjectResourceDesc(hipResourceDesc pResDesc, __hip_texture textureObject):
+def hipGetTextureObjectResourceDesc(object pResDesc, object textureObject):
     """@brief Gets resource descriptor for the texture object.
     @param [out] pResDesc  pointer to resource descriptor
     @param [in] textureObject  texture object
     @returns hipSuccess, hipErrorInvalidValue
     """
-    hipGetTextureObjectResourceDesc_____retval = hipError_t(chip.hipGetTextureObjectResourceDesc(pResDesc._ptr,textureObject._ptr))    # fully specified
-    return hipGetTextureObjectResourceDesc_____retval
+    _hipGetTextureObjectResourceDesc__retval = hipError_t(chip.hipGetTextureObjectResourceDesc(
+        hipResourceDesc.from_pyobj(pResDesc)._ptr,
+        __hip_texture.from_pyobj(textureObject)._ptr))    # fully specified
+    return _hipGetTextureObjectResourceDesc__retval
 
 
 @cython.embedsignature(True)
-def hipGetTextureObjectResourceViewDesc(hipResourceViewDesc pResViewDesc, __hip_texture textureObject):
+def hipGetTextureObjectResourceViewDesc(object pResViewDesc, object textureObject):
     """@brief Gets resource view descriptor for the texture object.
     @param [out] pResViewDesc  pointer to resource view descriptor
     @param [in] textureObject  texture object
     @returns hipSuccess, hipErrorInvalidValue
     """
-    hipGetTextureObjectResourceViewDesc_____retval = hipError_t(chip.hipGetTextureObjectResourceViewDesc(pResViewDesc._ptr,textureObject._ptr))    # fully specified
-    return hipGetTextureObjectResourceViewDesc_____retval
+    _hipGetTextureObjectResourceViewDesc__retval = hipError_t(chip.hipGetTextureObjectResourceViewDesc(
+        hipResourceViewDesc.from_pyobj(pResViewDesc)._ptr,
+        __hip_texture.from_pyobj(textureObject)._ptr))    # fully specified
+    return _hipGetTextureObjectResourceViewDesc__retval
 
 
 @cython.embedsignature(True)
-def hipGetTextureObjectTextureDesc(hipTextureDesc pTexDesc, __hip_texture textureObject):
+def hipGetTextureObjectTextureDesc(object pTexDesc, object textureObject):
     """@brief Gets texture descriptor for the texture object.
     @param [out] pTexDesc  pointer to texture descriptor
     @param [in] textureObject  texture object
     @returns hipSuccess, hipErrorInvalidValue
     """
-    hipGetTextureObjectTextureDesc_____retval = hipError_t(chip.hipGetTextureObjectTextureDesc(pTexDesc._ptr,textureObject._ptr))    # fully specified
-    return hipGetTextureObjectTextureDesc_____retval
+    _hipGetTextureObjectTextureDesc__retval = hipError_t(chip.hipGetTextureObjectTextureDesc(
+        hipTextureDesc.from_pyobj(pTexDesc)._ptr,
+        __hip_texture.from_pyobj(textureObject)._ptr))    # fully specified
+    return _hipGetTextureObjectTextureDesc__retval
 
 
 @cython.embedsignature(True)
-def hipTexObjectCreate(HIP_RESOURCE_DESC_st pResDesc, HIP_TEXTURE_DESC_st pTexDesc, HIP_RESOURCE_VIEW_DESC_st pResViewDesc):
+def hipTexObjectCreate(object pResDesc, object pTexDesc, object pResViewDesc):
     """@brief Creates a texture object.
     @param [out] pTexObject  pointer to texture object to create
     @param [in] pResDesc  pointer to resource descriptor
@@ -13708,55 +21266,65 @@ def hipTexObjectCreate(HIP_RESOURCE_DESC_st pResDesc, HIP_TEXTURE_DESC_st pTexDe
     @returns hipSuccess, hipErrorInvalidValue
     """
     pTexObject = __hip_texture.from_ptr(NULL,owner=True)
-    hipTexObjectCreate_____retval = hipError_t(chip.hipTexObjectCreate(&pTexObject._ptr,pResDesc._ptr,pTexDesc._ptr,pResViewDesc._ptr))    # fully specified
-    return (hipTexObjectCreate_____retval,pTexObject)
+    _hipTexObjectCreate__retval = hipError_t(chip.hipTexObjectCreate(&pTexObject._ptr,
+        HIP_RESOURCE_DESC_st.from_pyobj(pResDesc)._ptr,
+        HIP_TEXTURE_DESC_st.from_pyobj(pTexDesc)._ptr,
+        HIP_RESOURCE_VIEW_DESC_st.from_pyobj(pResViewDesc)._ptr))    # fully specified
+    return (_hipTexObjectCreate__retval,pTexObject)
 
 
 @cython.embedsignature(True)
-def hipTexObjectDestroy(__hip_texture texObject):
+def hipTexObjectDestroy(object texObject):
     """@brief Destroys a texture object.
     @param [in] texObject  texture object to destroy
     @returns hipSuccess, hipErrorInvalidValue
     """
-    hipTexObjectDestroy_____retval = hipError_t(chip.hipTexObjectDestroy(texObject._ptr))    # fully specified
-    return hipTexObjectDestroy_____retval
+    _hipTexObjectDestroy__retval = hipError_t(chip.hipTexObjectDestroy(
+        __hip_texture.from_pyobj(texObject)._ptr))    # fully specified
+    return _hipTexObjectDestroy__retval
 
 
 @cython.embedsignature(True)
-def hipTexObjectGetResourceDesc(HIP_RESOURCE_DESC_st pResDesc, __hip_texture texObject):
+def hipTexObjectGetResourceDesc(object pResDesc, object texObject):
     """@brief Gets resource descriptor of a texture object.
     @param [out] pResDesc  pointer to resource descriptor
     @param [in] texObject  texture object
     @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
-    hipTexObjectGetResourceDesc_____retval = hipError_t(chip.hipTexObjectGetResourceDesc(pResDesc._ptr,texObject._ptr))    # fully specified
-    return hipTexObjectGetResourceDesc_____retval
+    _hipTexObjectGetResourceDesc__retval = hipError_t(chip.hipTexObjectGetResourceDesc(
+        HIP_RESOURCE_DESC_st.from_pyobj(pResDesc)._ptr,
+        __hip_texture.from_pyobj(texObject)._ptr))    # fully specified
+    return _hipTexObjectGetResourceDesc__retval
 
 
 @cython.embedsignature(True)
-def hipTexObjectGetResourceViewDesc(HIP_RESOURCE_VIEW_DESC_st pResViewDesc, __hip_texture texObject):
+def hipTexObjectGetResourceViewDesc(object pResViewDesc, object texObject):
     """@brief Gets resource view descriptor of a texture object.
     @param [out] pResViewDesc  pointer to resource view descriptor
     @param [in] texObject  texture object
     @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
-    hipTexObjectGetResourceViewDesc_____retval = hipError_t(chip.hipTexObjectGetResourceViewDesc(pResViewDesc._ptr,texObject._ptr))    # fully specified
-    return hipTexObjectGetResourceViewDesc_____retval
+    _hipTexObjectGetResourceViewDesc__retval = hipError_t(chip.hipTexObjectGetResourceViewDesc(
+        HIP_RESOURCE_VIEW_DESC_st.from_pyobj(pResViewDesc)._ptr,
+        __hip_texture.from_pyobj(texObject)._ptr))    # fully specified
+    return _hipTexObjectGetResourceViewDesc__retval
 
 
 @cython.embedsignature(True)
-def hipTexObjectGetTextureDesc(HIP_TEXTURE_DESC_st pTexDesc, __hip_texture texObject):
+def hipTexObjectGetTextureDesc(object pTexDesc, object texObject):
     """@brief Gets texture descriptor of a texture object.
     @param [out] pTexDesc  pointer to texture descriptor
     @param [in] texObject  texture object
     @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
-    hipTexObjectGetTextureDesc_____retval = hipError_t(chip.hipTexObjectGetTextureDesc(pTexDesc._ptr,texObject._ptr))    # fully specified
-    return hipTexObjectGetTextureDesc_____retval
+    _hipTexObjectGetTextureDesc__retval = hipError_t(chip.hipTexObjectGetTextureDesc(
+        HIP_TEXTURE_DESC_st.from_pyobj(pTexDesc)._ptr,
+        __hip_texture.from_pyobj(texObject)._ptr))    # fully specified
+    return _hipTexObjectGetTextureDesc__retval
 
 
 @cython.embedsignature(True)
-def hipGetTextureReference(symbol):
+def hipGetTextureReference(object symbol):
     """@addtogroup TextureD Texture Management [Deprecated]
     @{
     @ingroup Texture
@@ -13767,273 +21335,330 @@ def hipGetTextureReference(symbol):
     @returns hipSuccess, hipErrorInvalidValue
     """
     texref = textureReference.from_ptr(NULL,owner=True)
-    pass
+    _hipGetTextureReference__retval = hipError_t(chip.hipGetTextureReference(&texref._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr))    # fully specified
+    return (_hipGetTextureReference__retval,texref)
+
 
 @cython.embedsignature(True)
-def hipTexRefSetAddressMode(textureReference texRef, int dim, object am):
+def hipTexRefSetAddressMode(object texRef, int dim, object am):
     """
     """
     if not isinstance(am,hipTextureAddressMode):
         raise TypeError("argument 'am' must be of type 'hipTextureAddressMode'")
-    hipTexRefSetAddressMode_____retval = hipError_t(chip.hipTexRefSetAddressMode(texRef._ptr,dim,am.value))    # fully specified
-    return hipTexRefSetAddressMode_____retval
+    _hipTexRefSetAddressMode__retval = hipError_t(chip.hipTexRefSetAddressMode(
+        textureReference.from_pyobj(texRef)._ptr,dim,am.value))    # fully specified
+    return _hipTexRefSetAddressMode__retval
 
 
 @cython.embedsignature(True)
-def hipTexRefSetArray(textureReference tex, hipArray array, unsigned int flags):
+def hipTexRefSetArray(object tex, object array, unsigned int flags):
     """
     """
-    hipTexRefSetArray_____retval = hipError_t(chip.hipTexRefSetArray(tex._ptr,array._ptr,flags))    # fully specified
-    return hipTexRefSetArray_____retval
+    _hipTexRefSetArray__retval = hipError_t(chip.hipTexRefSetArray(
+        textureReference.from_pyobj(tex)._ptr,
+        hipArray.from_pyobj(array)._ptr,flags))    # fully specified
+    return _hipTexRefSetArray__retval
 
 
 @cython.embedsignature(True)
-def hipTexRefSetFilterMode(textureReference texRef, object fm):
+def hipTexRefSetFilterMode(object texRef, object fm):
     """
     """
     if not isinstance(fm,hipTextureFilterMode):
         raise TypeError("argument 'fm' must be of type 'hipTextureFilterMode'")
-    hipTexRefSetFilterMode_____retval = hipError_t(chip.hipTexRefSetFilterMode(texRef._ptr,fm.value))    # fully specified
-    return hipTexRefSetFilterMode_____retval
+    _hipTexRefSetFilterMode__retval = hipError_t(chip.hipTexRefSetFilterMode(
+        textureReference.from_pyobj(texRef)._ptr,fm.value))    # fully specified
+    return _hipTexRefSetFilterMode__retval
 
 
 @cython.embedsignature(True)
-def hipTexRefSetFlags(textureReference texRef, unsigned int Flags):
+def hipTexRefSetFlags(object texRef, unsigned int Flags):
     """
     """
-    hipTexRefSetFlags_____retval = hipError_t(chip.hipTexRefSetFlags(texRef._ptr,Flags))    # fully specified
-    return hipTexRefSetFlags_____retval
+    _hipTexRefSetFlags__retval = hipError_t(chip.hipTexRefSetFlags(
+        textureReference.from_pyobj(texRef)._ptr,Flags))    # fully specified
+    return _hipTexRefSetFlags__retval
 
 
 @cython.embedsignature(True)
-def hipTexRefSetFormat(textureReference texRef, object fmt, int NumPackedComponents):
+def hipTexRefSetFormat(object texRef, object fmt, int NumPackedComponents):
     """
     """
     if not isinstance(fmt,hipArray_Format):
         raise TypeError("argument 'fmt' must be of type 'hipArray_Format'")
-    hipTexRefSetFormat_____retval = hipError_t(chip.hipTexRefSetFormat(texRef._ptr,fmt.value,NumPackedComponents))    # fully specified
-    return hipTexRefSetFormat_____retval
+    _hipTexRefSetFormat__retval = hipError_t(chip.hipTexRefSetFormat(
+        textureReference.from_pyobj(texRef)._ptr,fmt.value,NumPackedComponents))    # fully specified
+    return _hipTexRefSetFormat__retval
 
 
 @cython.embedsignature(True)
-def hipBindTexture(textureReference tex, devPtr, hipChannelFormatDesc desc, int size):
+def hipBindTexture(object tex, object devPtr, object desc, int size):
     """
     """
     cdef int offset
-    pass
+    _hipBindTexture__retval = hipError_t(chip.hipBindTexture(&offset,
+        textureReference.from_pyobj(tex)._ptr,
+        <const void *>DataHandle.from_pyobj(devPtr)._ptr,
+        hipChannelFormatDesc.from_pyobj(desc)._ptr,size))    # fully specified
+    return (_hipBindTexture__retval,offset)
+
 
 @cython.embedsignature(True)
-def hipBindTexture2D(textureReference tex, devPtr, hipChannelFormatDesc desc, int width, int height, int pitch):
+def hipBindTexture2D(object tex, object devPtr, object desc, int width, int height, int pitch):
     """
     """
     cdef int offset
-    pass
-
-@cython.embedsignature(True)
-def hipBindTextureToArray(textureReference tex, hipArray array, hipChannelFormatDesc desc):
-    """
-    """
-    hipBindTextureToArray_____retval = hipError_t(chip.hipBindTextureToArray(tex._ptr,array._ptr,desc._ptr))    # fully specified
-    return hipBindTextureToArray_____retval
+    _hipBindTexture2D__retval = hipError_t(chip.hipBindTexture2D(&offset,
+        textureReference.from_pyobj(tex)._ptr,
+        <const void *>DataHandle.from_pyobj(devPtr)._ptr,
+        hipChannelFormatDesc.from_pyobj(desc)._ptr,width,height,pitch))    # fully specified
+    return (_hipBindTexture2D__retval,offset)
 
 
 @cython.embedsignature(True)
-def hipGetTextureAlignmentOffset(textureReference texref):
+def hipBindTextureToArray(object tex, object array, object desc):
+    """
+    """
+    _hipBindTextureToArray__retval = hipError_t(chip.hipBindTextureToArray(
+        textureReference.from_pyobj(tex)._ptr,
+        hipArray.from_pyobj(array)._ptr,
+        hipChannelFormatDesc.from_pyobj(desc)._ptr))    # fully specified
+    return _hipBindTextureToArray__retval
+
+
+@cython.embedsignature(True)
+def hipGetTextureAlignmentOffset(object texref):
     """
     """
     cdef int offset
-    hipGetTextureAlignmentOffset_____retval = hipError_t(chip.hipGetTextureAlignmentOffset(&offset,texref._ptr))    # fully specified
-    return (hipGetTextureAlignmentOffset_____retval,offset)
+    _hipGetTextureAlignmentOffset__retval = hipError_t(chip.hipGetTextureAlignmentOffset(&offset,
+        textureReference.from_pyobj(texref)._ptr))    # fully specified
+    return (_hipGetTextureAlignmentOffset__retval,offset)
 
 
 @cython.embedsignature(True)
-def hipUnbindTexture(textureReference tex):
+def hipUnbindTexture(object tex):
     """
     """
-    hipUnbindTexture_____retval = hipError_t(chip.hipUnbindTexture(tex._ptr))    # fully specified
-    return hipUnbindTexture_____retval
+    _hipUnbindTexture__retval = hipError_t(chip.hipUnbindTexture(
+        textureReference.from_pyobj(tex)._ptr))    # fully specified
+    return _hipUnbindTexture__retval
 
 
 @cython.embedsignature(True)
-def hipTexRefGetAddress(textureReference texRef):
+def hipTexRefGetAddress(object texRef):
     """
     """
-    pass
+    dev_ptr = DataHandle.from_ptr(NULL)
+    _hipTexRefGetAddress__retval = hipError_t(chip.hipTexRefGetAddress(
+        <void **>&dev_ptr._ptr,
+        textureReference.from_pyobj(texRef)._ptr))    # fully specified
+    return (_hipTexRefGetAddress__retval,dev_ptr)
+
 
 @cython.embedsignature(True)
-def hipTexRefGetAddressMode(textureReference texRef, int dim):
+def hipTexRefGetAddressMode(object texRef, int dim):
     """
     """
     cdef chip.hipTextureAddressMode pam
-    hipTexRefGetAddressMode_____retval = hipError_t(chip.hipTexRefGetAddressMode(&pam,texRef._ptr,dim))    # fully specified
-    return (hipTexRefGetAddressMode_____retval,hipTextureAddressMode(pam))
+    _hipTexRefGetAddressMode__retval = hipError_t(chip.hipTexRefGetAddressMode(&pam,
+        textureReference.from_pyobj(texRef)._ptr,dim))    # fully specified
+    return (_hipTexRefGetAddressMode__retval,hipTextureAddressMode(pam))
 
 
 @cython.embedsignature(True)
-def hipTexRefGetFilterMode(textureReference texRef):
+def hipTexRefGetFilterMode(object texRef):
     """
     """
     cdef chip.hipTextureFilterMode pfm
-    hipTexRefGetFilterMode_____retval = hipError_t(chip.hipTexRefGetFilterMode(&pfm,texRef._ptr))    # fully specified
-    return (hipTexRefGetFilterMode_____retval,hipTextureFilterMode(pfm))
+    _hipTexRefGetFilterMode__retval = hipError_t(chip.hipTexRefGetFilterMode(&pfm,
+        textureReference.from_pyobj(texRef)._ptr))    # fully specified
+    return (_hipTexRefGetFilterMode__retval,hipTextureFilterMode(pfm))
 
 
 @cython.embedsignature(True)
-def hipTexRefGetFlags(textureReference texRef):
+def hipTexRefGetFlags(object texRef):
     """
     """
     cdef unsigned int pFlags
-    hipTexRefGetFlags_____retval = hipError_t(chip.hipTexRefGetFlags(&pFlags,texRef._ptr))    # fully specified
-    return (hipTexRefGetFlags_____retval,pFlags)
+    _hipTexRefGetFlags__retval = hipError_t(chip.hipTexRefGetFlags(&pFlags,
+        textureReference.from_pyobj(texRef)._ptr))    # fully specified
+    return (_hipTexRefGetFlags__retval,pFlags)
 
 
 @cython.embedsignature(True)
-def hipTexRefGetFormat(textureReference texRef):
+def hipTexRefGetFormat(object texRef):
     """
     """
     cdef chip.hipArray_Format pFormat
     cdef int pNumChannels
-    hipTexRefGetFormat_____retval = hipError_t(chip.hipTexRefGetFormat(&pFormat,&pNumChannels,texRef._ptr))    # fully specified
-    return (hipTexRefGetFormat_____retval,hipArray_Format(pFormat),pNumChannels)
+    _hipTexRefGetFormat__retval = hipError_t(chip.hipTexRefGetFormat(&pFormat,&pNumChannels,
+        textureReference.from_pyobj(texRef)._ptr))    # fully specified
+    return (_hipTexRefGetFormat__retval,hipArray_Format(pFormat),pNumChannels)
 
 
 @cython.embedsignature(True)
-def hipTexRefGetMaxAnisotropy(textureReference texRef):
+def hipTexRefGetMaxAnisotropy(object texRef):
     """
     """
     cdef int pmaxAnsio
-    hipTexRefGetMaxAnisotropy_____retval = hipError_t(chip.hipTexRefGetMaxAnisotropy(&pmaxAnsio,texRef._ptr))    # fully specified
-    return (hipTexRefGetMaxAnisotropy_____retval,pmaxAnsio)
+    _hipTexRefGetMaxAnisotropy__retval = hipError_t(chip.hipTexRefGetMaxAnisotropy(&pmaxAnsio,
+        textureReference.from_pyobj(texRef)._ptr))    # fully specified
+    return (_hipTexRefGetMaxAnisotropy__retval,pmaxAnsio)
 
 
 @cython.embedsignature(True)
-def hipTexRefGetMipmapFilterMode(textureReference texRef):
+def hipTexRefGetMipmapFilterMode(object texRef):
     """
     """
     cdef chip.hipTextureFilterMode pfm
-    hipTexRefGetMipmapFilterMode_____retval = hipError_t(chip.hipTexRefGetMipmapFilterMode(&pfm,texRef._ptr))    # fully specified
-    return (hipTexRefGetMipmapFilterMode_____retval,hipTextureFilterMode(pfm))
+    _hipTexRefGetMipmapFilterMode__retval = hipError_t(chip.hipTexRefGetMipmapFilterMode(&pfm,
+        textureReference.from_pyobj(texRef)._ptr))    # fully specified
+    return (_hipTexRefGetMipmapFilterMode__retval,hipTextureFilterMode(pfm))
 
 
 @cython.embedsignature(True)
-def hipTexRefGetMipmapLevelBias(textureReference texRef):
+def hipTexRefGetMipmapLevelBias(object texRef):
     """
     """
     cdef float pbias
-    hipTexRefGetMipmapLevelBias_____retval = hipError_t(chip.hipTexRefGetMipmapLevelBias(&pbias,texRef._ptr))    # fully specified
-    return (hipTexRefGetMipmapLevelBias_____retval,pbias)
+    _hipTexRefGetMipmapLevelBias__retval = hipError_t(chip.hipTexRefGetMipmapLevelBias(&pbias,
+        textureReference.from_pyobj(texRef)._ptr))    # fully specified
+    return (_hipTexRefGetMipmapLevelBias__retval,pbias)
 
 
 @cython.embedsignature(True)
-def hipTexRefGetMipmapLevelClamp(textureReference texRef):
+def hipTexRefGetMipmapLevelClamp(object texRef):
     """
     """
     cdef float pminMipmapLevelClamp
     cdef float pmaxMipmapLevelClamp
-    hipTexRefGetMipmapLevelClamp_____retval = hipError_t(chip.hipTexRefGetMipmapLevelClamp(&pminMipmapLevelClamp,&pmaxMipmapLevelClamp,texRef._ptr))    # fully specified
-    return (hipTexRefGetMipmapLevelClamp_____retval,pminMipmapLevelClamp,pmaxMipmapLevelClamp)
+    _hipTexRefGetMipmapLevelClamp__retval = hipError_t(chip.hipTexRefGetMipmapLevelClamp(&pminMipmapLevelClamp,&pmaxMipmapLevelClamp,
+        textureReference.from_pyobj(texRef)._ptr))    # fully specified
+    return (_hipTexRefGetMipmapLevelClamp__retval,pminMipmapLevelClamp,pmaxMipmapLevelClamp)
 
 
 @cython.embedsignature(True)
-def hipTexRefGetMipMappedArray(textureReference texRef):
+def hipTexRefGetMipMappedArray(object texRef):
     """
     """
     pArray = hipMipmappedArray.from_ptr(NULL,owner=True)
-    hipTexRefGetMipMappedArray_____retval = hipError_t(chip.hipTexRefGetMipMappedArray(&pArray._ptr,texRef._ptr))    # fully specified
-    return (hipTexRefGetMipMappedArray_____retval,pArray)
+    _hipTexRefGetMipMappedArray__retval = hipError_t(chip.hipTexRefGetMipMappedArray(&pArray._ptr,
+        textureReference.from_pyobj(texRef)._ptr))    # fully specified
+    return (_hipTexRefGetMipMappedArray__retval,pArray)
 
 
 @cython.embedsignature(True)
-def hipTexRefSetAddress(textureReference texRef, dptr, int bytes):
+def hipTexRefSetAddress(object texRef, object dptr, int bytes):
     """
     """
     cdef int ByteOffset
-    pass
-
-@cython.embedsignature(True)
-def hipTexRefSetAddress2D(textureReference texRef, HIP_ARRAY_DESCRIPTOR desc, dptr, int Pitch):
-    """
-    """
-    pass
-
-@cython.embedsignature(True)
-def hipTexRefSetMaxAnisotropy(textureReference texRef, unsigned int maxAniso):
-    """
-    """
-    hipTexRefSetMaxAnisotropy_____retval = hipError_t(chip.hipTexRefSetMaxAnisotropy(texRef._ptr,maxAniso))    # fully specified
-    return hipTexRefSetMaxAnisotropy_____retval
+    _hipTexRefSetAddress__retval = hipError_t(chip.hipTexRefSetAddress(&ByteOffset,
+        textureReference.from_pyobj(texRef)._ptr,
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dptr)._ptr,bytes))    # fully specified
+    return (_hipTexRefSetAddress__retval,ByteOffset)
 
 
 @cython.embedsignature(True)
-def hipTexRefSetBorderColor(textureReference texRef):
+def hipTexRefSetAddress2D(object texRef, object desc, object dptr, int Pitch):
+    """
+    """
+    _hipTexRefSetAddress2D__retval = hipError_t(chip.hipTexRefSetAddress2D(
+        textureReference.from_pyobj(texRef)._ptr,
+        HIP_ARRAY_DESCRIPTOR.from_pyobj(desc)._ptr,
+        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dptr)._ptr,Pitch))    # fully specified
+    return _hipTexRefSetAddress2D__retval
+
+
+@cython.embedsignature(True)
+def hipTexRefSetMaxAnisotropy(object texRef, unsigned int maxAniso):
+    """
+    """
+    _hipTexRefSetMaxAnisotropy__retval = hipError_t(chip.hipTexRefSetMaxAnisotropy(
+        textureReference.from_pyobj(texRef)._ptr,maxAniso))    # fully specified
+    return _hipTexRefSetMaxAnisotropy__retval
+
+
+@cython.embedsignature(True)
+def hipTexRefSetBorderColor(object texRef):
     """
     """
     cdef float pBorderColor
-    hipTexRefSetBorderColor_____retval = hipError_t(chip.hipTexRefSetBorderColor(texRef._ptr,&pBorderColor))    # fully specified
-    return (hipTexRefSetBorderColor_____retval,pBorderColor)
+    _hipTexRefSetBorderColor__retval = hipError_t(chip.hipTexRefSetBorderColor(
+        textureReference.from_pyobj(texRef)._ptr,&pBorderColor))    # fully specified
+    return (_hipTexRefSetBorderColor__retval,pBorderColor)
 
 
 @cython.embedsignature(True)
-def hipTexRefSetMipmapFilterMode(textureReference texRef, object fm):
+def hipTexRefSetMipmapFilterMode(object texRef, object fm):
     """
     """
     if not isinstance(fm,hipTextureFilterMode):
         raise TypeError("argument 'fm' must be of type 'hipTextureFilterMode'")
-    hipTexRefSetMipmapFilterMode_____retval = hipError_t(chip.hipTexRefSetMipmapFilterMode(texRef._ptr,fm.value))    # fully specified
-    return hipTexRefSetMipmapFilterMode_____retval
+    _hipTexRefSetMipmapFilterMode__retval = hipError_t(chip.hipTexRefSetMipmapFilterMode(
+        textureReference.from_pyobj(texRef)._ptr,fm.value))    # fully specified
+    return _hipTexRefSetMipmapFilterMode__retval
 
 
 @cython.embedsignature(True)
-def hipTexRefSetMipmapLevelBias(textureReference texRef, float bias):
+def hipTexRefSetMipmapLevelBias(object texRef, float bias):
     """
     """
-    hipTexRefSetMipmapLevelBias_____retval = hipError_t(chip.hipTexRefSetMipmapLevelBias(texRef._ptr,bias))    # fully specified
-    return hipTexRefSetMipmapLevelBias_____retval
+    _hipTexRefSetMipmapLevelBias__retval = hipError_t(chip.hipTexRefSetMipmapLevelBias(
+        textureReference.from_pyobj(texRef)._ptr,bias))    # fully specified
+    return _hipTexRefSetMipmapLevelBias__retval
 
 
 @cython.embedsignature(True)
-def hipTexRefSetMipmapLevelClamp(textureReference texRef, float minMipMapLevelClamp, float maxMipMapLevelClamp):
+def hipTexRefSetMipmapLevelClamp(object texRef, float minMipMapLevelClamp, float maxMipMapLevelClamp):
     """
     """
-    hipTexRefSetMipmapLevelClamp_____retval = hipError_t(chip.hipTexRefSetMipmapLevelClamp(texRef._ptr,minMipMapLevelClamp,maxMipMapLevelClamp))    # fully specified
-    return hipTexRefSetMipmapLevelClamp_____retval
+    _hipTexRefSetMipmapLevelClamp__retval = hipError_t(chip.hipTexRefSetMipmapLevelClamp(
+        textureReference.from_pyobj(texRef)._ptr,minMipMapLevelClamp,maxMipMapLevelClamp))    # fully specified
+    return _hipTexRefSetMipmapLevelClamp__retval
 
 
 @cython.embedsignature(True)
-def hipTexRefSetMipmappedArray(textureReference texRef, hipMipmappedArray mipmappedArray, unsigned int Flags):
+def hipTexRefSetMipmappedArray(object texRef, object mipmappedArray, unsigned int Flags):
     """
     """
-    hipTexRefSetMipmappedArray_____retval = hipError_t(chip.hipTexRefSetMipmappedArray(texRef._ptr,mipmappedArray._ptr,Flags))    # fully specified
-    return hipTexRefSetMipmappedArray_____retval
+    _hipTexRefSetMipmappedArray__retval = hipError_t(chip.hipTexRefSetMipmappedArray(
+        textureReference.from_pyobj(texRef)._ptr,
+        hipMipmappedArray.from_pyobj(mipmappedArray)._ptr,Flags))    # fully specified
+    return _hipTexRefSetMipmappedArray__retval
 
 
 @cython.embedsignature(True)
-def hipMipmappedArrayCreate(HIP_ARRAY3D_DESCRIPTOR pMipmappedArrayDesc, unsigned int numMipmapLevels):
+def hipMipmappedArrayCreate(object pMipmappedArrayDesc, unsigned int numMipmapLevels):
     """@addtogroup TextureU Texture Management [Not supported]
     @{
     @ingroup Texture
     This section describes the texture management functions currently unsupported in HIP runtime.
     """
     pHandle = hipMipmappedArray.from_ptr(NULL,owner=True)
-    hipMipmappedArrayCreate_____retval = hipError_t(chip.hipMipmappedArrayCreate(&pHandle._ptr,pMipmappedArrayDesc._ptr,numMipmapLevels))    # fully specified
-    return (hipMipmappedArrayCreate_____retval,pHandle)
+    _hipMipmappedArrayCreate__retval = hipError_t(chip.hipMipmappedArrayCreate(&pHandle._ptr,
+        HIP_ARRAY3D_DESCRIPTOR.from_pyobj(pMipmappedArrayDesc)._ptr,numMipmapLevels))    # fully specified
+    return (_hipMipmappedArrayCreate__retval,pHandle)
 
 
 @cython.embedsignature(True)
-def hipMipmappedArrayDestroy(hipMipmappedArray hMipmappedArray):
+def hipMipmappedArrayDestroy(object hMipmappedArray):
     """
     """
-    hipMipmappedArrayDestroy_____retval = hipError_t(chip.hipMipmappedArrayDestroy(hMipmappedArray._ptr))    # fully specified
-    return hipMipmappedArrayDestroy_____retval
+    _hipMipmappedArrayDestroy__retval = hipError_t(chip.hipMipmappedArrayDestroy(
+        hipMipmappedArray.from_pyobj(hMipmappedArray)._ptr))    # fully specified
+    return _hipMipmappedArrayDestroy__retval
 
 
 @cython.embedsignature(True)
-def hipMipmappedArrayGetLevel(hipMipmappedArray hMipMappedArray, unsigned int level):
+def hipMipmappedArrayGetLevel(object hMipMappedArray, unsigned int level):
     """
     """
     pLevelArray = hipArray.from_ptr(NULL,owner=True)
-    hipMipmappedArrayGetLevel_____retval = hipError_t(chip.hipMipmappedArrayGetLevel(&pLevelArray._ptr,hMipMappedArray._ptr,level))    # fully specified
-    return (hipMipmappedArrayGetLevel_____retval,pLevelArray)
+    _hipMipmappedArrayGetLevel__retval = hipError_t(chip.hipMipmappedArrayGetLevel(&pLevelArray._ptr,
+        hipMipmappedArray.from_pyobj(hMipMappedArray)._ptr,level))    # fully specified
+    return (_hipMipmappedArrayGetLevel__retval,pLevelArray)
 
 
 @cython.embedsignature(True)
@@ -14042,32 +21667,37 @@ def hipApiName(uint32_t id):
     @{
     This section describes the callback/Activity of HIP runtime API.
     """
-    cdef const char * hipApiName_____retval = chip.hipApiName(id)    # fully specified
+    cdef const char * _hipApiName__retval = chip.hipApiName(id)    # fully specified
 
 
 @cython.embedsignature(True)
-def hipKernelNameRef(ihipModuleSymbol_t f):
+def hipKernelNameRef(object f):
     """
     """
-    cdef const char * hipKernelNameRef_____retval = chip.hipKernelNameRef(f._ptr)    # fully specified
+    cdef const char * _hipKernelNameRef__retval = chip.hipKernelNameRef(
+        ihipModuleSymbol_t.from_pyobj(f)._ptr)    # fully specified
 
 
 @cython.embedsignature(True)
-def hipKernelNameRefByPtr(hostFunction, ihipStream_t stream):
+def hipKernelNameRefByPtr(object hostFunction, object stream):
     """
     """
-    pass
-
-@cython.embedsignature(True)
-def hipGetStreamDeviceId(ihipStream_t stream):
-    """
-    """
-    cdef int hipGetStreamDeviceId_____retval = chip.hipGetStreamDeviceId(stream._ptr)    # fully specified
-    return hipGetStreamDeviceId_____retval
+    cdef const char * _hipKernelNameRefByPtr__retval = chip.hipKernelNameRefByPtr(
+        <const void *>DataHandle.from_pyobj(hostFunction)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr)    # fully specified
 
 
 @cython.embedsignature(True)
-def hipStreamBeginCapture(ihipStream_t stream, object mode):
+def hipGetStreamDeviceId(object stream):
+    """
+    """
+    cdef int _hipGetStreamDeviceId__retval = chip.hipGetStreamDeviceId(
+        ihipStream_t.from_pyobj(stream)._ptr)    # fully specified
+    return _hipGetStreamDeviceId__retval
+
+
+@cython.embedsignature(True)
+def hipStreamBeginCapture(object stream, object mode):
     """@brief Begins graph capture on a stream.
     @param [in] stream - Stream to initiate capture.
     @param [in] mode - Controls the interaction of this capture sequence with other API calls that
@@ -14078,12 +21708,13 @@ def hipStreamBeginCapture(ihipStream_t stream, object mode):
     """
     if not isinstance(mode,hipStreamCaptureMode):
         raise TypeError("argument 'mode' must be of type 'hipStreamCaptureMode'")
-    hipStreamBeginCapture_____retval = hipError_t(chip.hipStreamBeginCapture(stream._ptr,mode.value))    # fully specified
-    return hipStreamBeginCapture_____retval
+    _hipStreamBeginCapture__retval = hipError_t(chip.hipStreamBeginCapture(
+        ihipStream_t.from_pyobj(stream)._ptr,mode.value))    # fully specified
+    return _hipStreamBeginCapture__retval
 
 
 @cython.embedsignature(True)
-def hipStreamEndCapture(ihipStream_t stream):
+def hipStreamEndCapture(object stream):
     """@brief Ends capture on a stream, returning the captured graph.
     @param [in] stream - Stream to end capture.
     @param [out] pGraph - returns the graph captured.
@@ -14092,12 +21723,13 @@ def hipStreamEndCapture(ihipStream_t stream):
     it is still open to changes and may have outstanding issues.
     """
     pGraph = ihipGraph.from_ptr(NULL,owner=True)
-    hipStreamEndCapture_____retval = hipError_t(chip.hipStreamEndCapture(stream._ptr,&pGraph._ptr))    # fully specified
-    return (hipStreamEndCapture_____retval,pGraph)
+    _hipStreamEndCapture__retval = hipError_t(chip.hipStreamEndCapture(
+        ihipStream_t.from_pyobj(stream)._ptr,&pGraph._ptr))    # fully specified
+    return (_hipStreamEndCapture__retval,pGraph)
 
 
 @cython.embedsignature(True)
-def hipStreamGetCaptureInfo(ihipStream_t stream):
+def hipStreamGetCaptureInfo(object stream):
     """@brief Get capture status of a stream.
     @param [in] stream - Stream under capture.
     @param [out] pCaptureStatus - returns current status of the capture.
@@ -14108,12 +21740,13 @@ def hipStreamGetCaptureInfo(ihipStream_t stream):
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     cdef unsigned long long pId
-    hipStreamGetCaptureInfo_____retval = hipError_t(chip.hipStreamGetCaptureInfo(stream._ptr,&pCaptureStatus,&pId))    # fully specified
-    return (hipStreamGetCaptureInfo_____retval,hipStreamCaptureStatus(pCaptureStatus),pId)
+    _hipStreamGetCaptureInfo__retval = hipError_t(chip.hipStreamGetCaptureInfo(
+        ihipStream_t.from_pyobj(stream)._ptr,&pCaptureStatus,&pId))    # fully specified
+    return (_hipStreamGetCaptureInfo__retval,hipStreamCaptureStatus(pCaptureStatus),pId)
 
 
 @cython.embedsignature(True)
-def hipStreamGetCaptureInfo_v2(ihipStream_t stream):
+def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
     """@brief Get stream's capture state
     @param [in] stream - Stream under capture.
     @param [out] captureStatus_out - returns current status of the capture.
@@ -14129,10 +21762,14 @@ def hipStreamGetCaptureInfo_v2(ihipStream_t stream):
     cdef unsigned long long id_out
     graph_out = ihipGraph.from_ptr(NULL,owner=True)
     cdef int numDependencies_out
-    pass
+    _hipStreamGetCaptureInfo_v2__retval = hipError_t(chip.hipStreamGetCaptureInfo_v2(
+        ihipStream_t.from_pyobj(stream)._ptr,&captureStatus_out,&id_out,&graph_out._ptr,
+        <chip.hipGraphNode_t **>DataHandle.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
+    return (_hipStreamGetCaptureInfo_v2__retval,hipStreamCaptureStatus(captureStatus_out),id_out,graph_out,numDependencies_out)
+
 
 @cython.embedsignature(True)
-def hipStreamIsCapturing(ihipStream_t stream):
+def hipStreamIsCapturing(object stream):
     """@brief Get stream's capture state
     @param [in] stream - Stream under capture.
     @param [out] pCaptureStatus - returns current status of the capture.
@@ -14141,12 +21778,13 @@ def hipStreamIsCapturing(ihipStream_t stream):
     it is still open to changes and may have outstanding issues.
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
-    hipStreamIsCapturing_____retval = hipError_t(chip.hipStreamIsCapturing(stream._ptr,&pCaptureStatus))    # fully specified
-    return (hipStreamIsCapturing_____retval,hipStreamCaptureStatus(pCaptureStatus))
+    _hipStreamIsCapturing__retval = hipError_t(chip.hipStreamIsCapturing(
+        ihipStream_t.from_pyobj(stream)._ptr,&pCaptureStatus))    # fully specified
+    return (_hipStreamIsCapturing__retval,hipStreamCaptureStatus(pCaptureStatus))
 
 
 @cython.embedsignature(True)
-def hipStreamUpdateCaptureDependencies(ihipStream_t stream, int numDependencies, unsigned int flags):
+def hipStreamUpdateCaptureDependencies(object stream, int numDependencies, unsigned int flags):
     """@brief Update the set of dependencies in a capturing stream
     @param [in] stream - Stream under capture.
     @param [in] dependencies - pointer to an array of nodes to Add/Replace.
@@ -14156,8 +21794,9 @@ def hipStreamUpdateCaptureDependencies(ihipStream_t stream, int numDependencies,
     it is still open to changes and may have outstanding issues.
     """
     dependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    hipStreamUpdateCaptureDependencies_____retval = hipError_t(chip.hipStreamUpdateCaptureDependencies(stream._ptr,&dependencies._ptr,numDependencies,flags))    # fully specified
-    return (hipStreamUpdateCaptureDependencies_____retval,dependencies)
+    _hipStreamUpdateCaptureDependencies__retval = hipError_t(chip.hipStreamUpdateCaptureDependencies(
+        ihipStream_t.from_pyobj(stream)._ptr,&dependencies._ptr,numDependencies,flags))    # fully specified
+    return (_hipStreamUpdateCaptureDependencies__retval,dependencies)
 
 
 @cython.embedsignature(True)
@@ -14169,8 +21808,8 @@ def hipThreadExchangeStreamCaptureMode():
     it is still open to changes and may have outstanding issues.
     """
     cdef chip.hipStreamCaptureMode mode
-    hipThreadExchangeStreamCaptureMode_____retval = hipError_t(chip.hipThreadExchangeStreamCaptureMode(&mode))    # fully specified
-    return (hipThreadExchangeStreamCaptureMode_____retval,hipStreamCaptureMode(mode))
+    _hipThreadExchangeStreamCaptureMode__retval = hipError_t(chip.hipThreadExchangeStreamCaptureMode(&mode))    # fully specified
+    return (_hipThreadExchangeStreamCaptureMode__retval,hipStreamCaptureMode(mode))
 
 
 @cython.embedsignature(True)
@@ -14183,24 +21822,25 @@ def hipGraphCreate(unsigned int flags):
     it is still open to changes and may have outstanding issues.
     """
     pGraph = ihipGraph.from_ptr(NULL,owner=True)
-    hipGraphCreate_____retval = hipError_t(chip.hipGraphCreate(&pGraph._ptr,flags))    # fully specified
-    return (hipGraphCreate_____retval,pGraph)
+    _hipGraphCreate__retval = hipError_t(chip.hipGraphCreate(&pGraph._ptr,flags))    # fully specified
+    return (_hipGraphCreate__retval,pGraph)
 
 
 @cython.embedsignature(True)
-def hipGraphDestroy(ihipGraph graph):
+def hipGraphDestroy(object graph):
     """@brief Destroys a graph
     @param [in] graph - instance of graph to destroy.
     @returns #hipSuccess, #hipErrorInvalidValue
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphDestroy_____retval = hipError_t(chip.hipGraphDestroy(graph._ptr))    # fully specified
-    return hipGraphDestroy_____retval
+    _hipGraphDestroy__retval = hipError_t(chip.hipGraphDestroy(
+        ihipGraph.from_pyobj(graph)._ptr))    # fully specified
+    return _hipGraphDestroy__retval
 
 
 @cython.embedsignature(True)
-def hipGraphAddDependencies(ihipGraph graph, int numDependencies):
+def hipGraphAddDependencies(object graph, int numDependencies):
     """@brief Adds dependency edges to a graph.
     @param [in] graph - instance of the graph to add dependencies.
     @param [in] from - pointer to the graph nodes with dependenties to add from.
@@ -14212,12 +21852,13 @@ def hipGraphAddDependencies(ihipGraph graph, int numDependencies):
     """
     from_ = hipGraphNode.from_ptr(NULL,owner=True)
     to = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphAddDependencies_____retval = hipError_t(chip.hipGraphAddDependencies(graph._ptr,&from_._ptr,&to._ptr,numDependencies))    # fully specified
-    return (hipGraphAddDependencies_____retval,from_,to)
+    _hipGraphAddDependencies__retval = hipError_t(chip.hipGraphAddDependencies(
+        ihipGraph.from_pyobj(graph)._ptr,&from_._ptr,&to._ptr,numDependencies))    # fully specified
+    return (_hipGraphAddDependencies__retval,from_,to)
 
 
 @cython.embedsignature(True)
-def hipGraphRemoveDependencies(ihipGraph graph, int numDependencies):
+def hipGraphRemoveDependencies(object graph, int numDependencies):
     """@brief Removes dependency edges from a graph.
     @param [in] graph - instance of the graph to remove dependencies.
     @param [in] from - Array of nodes that provide the dependencies.
@@ -14229,12 +21870,13 @@ def hipGraphRemoveDependencies(ihipGraph graph, int numDependencies):
     """
     from_ = hipGraphNode.from_ptr(NULL,owner=True)
     to = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphRemoveDependencies_____retval = hipError_t(chip.hipGraphRemoveDependencies(graph._ptr,&from_._ptr,&to._ptr,numDependencies))    # fully specified
-    return (hipGraphRemoveDependencies_____retval,from_,to)
+    _hipGraphRemoveDependencies__retval = hipError_t(chip.hipGraphRemoveDependencies(
+        ihipGraph.from_pyobj(graph)._ptr,&from_._ptr,&to._ptr,numDependencies))    # fully specified
+    return (_hipGraphRemoveDependencies__retval,from_,to)
 
 
 @cython.embedsignature(True)
-def hipGraphGetEdges(ihipGraph graph):
+def hipGraphGetEdges(object graph):
     """@brief Returns a graph's dependency edges.
     @param [in] graph - instance of the graph to get the edges from.
     @param [out] from - pointer to the graph nodes to return edge endpoints.
@@ -14251,12 +21893,13 @@ def hipGraphGetEdges(ihipGraph graph):
     from_ = hipGraphNode.from_ptr(NULL,owner=True)
     to = hipGraphNode.from_ptr(NULL,owner=True)
     cdef int numEdges
-    hipGraphGetEdges_____retval = hipError_t(chip.hipGraphGetEdges(graph._ptr,&from_._ptr,&to._ptr,&numEdges))    # fully specified
-    return (hipGraphGetEdges_____retval,from_,to,numEdges)
+    _hipGraphGetEdges__retval = hipError_t(chip.hipGraphGetEdges(
+        ihipGraph.from_pyobj(graph)._ptr,&from_._ptr,&to._ptr,&numEdges))    # fully specified
+    return (_hipGraphGetEdges__retval,from_,to,numEdges)
 
 
 @cython.embedsignature(True)
-def hipGraphGetNodes(ihipGraph graph):
+def hipGraphGetNodes(object graph):
     """@brief Returns graph nodes.
     @param [in] graph - instance of graph to get the nodes.
     @param [out] nodes - pointer to return the  graph nodes.
@@ -14271,12 +21914,13 @@ def hipGraphGetNodes(ihipGraph graph):
     """
     nodes = hipGraphNode.from_ptr(NULL,owner=True)
     cdef int numNodes
-    hipGraphGetNodes_____retval = hipError_t(chip.hipGraphGetNodes(graph._ptr,&nodes._ptr,&numNodes))    # fully specified
-    return (hipGraphGetNodes_____retval,nodes,numNodes)
+    _hipGraphGetNodes__retval = hipError_t(chip.hipGraphGetNodes(
+        ihipGraph.from_pyobj(graph)._ptr,&nodes._ptr,&numNodes))    # fully specified
+    return (_hipGraphGetNodes__retval,nodes,numNodes)
 
 
 @cython.embedsignature(True)
-def hipGraphGetRootNodes(ihipGraph graph):
+def hipGraphGetRootNodes(object graph):
     """@brief Returns graph's root nodes.
     @param [in] graph - instance of the graph to get the nodes.
     @param [out] pRootNodes - pointer to return the graph's root nodes.
@@ -14291,12 +21935,13 @@ def hipGraphGetRootNodes(ihipGraph graph):
     """
     pRootNodes = hipGraphNode.from_ptr(NULL,owner=True)
     cdef int pNumRootNodes
-    hipGraphGetRootNodes_____retval = hipError_t(chip.hipGraphGetRootNodes(graph._ptr,&pRootNodes._ptr,&pNumRootNodes))    # fully specified
-    return (hipGraphGetRootNodes_____retval,pRootNodes,pNumRootNodes)
+    _hipGraphGetRootNodes__retval = hipError_t(chip.hipGraphGetRootNodes(
+        ihipGraph.from_pyobj(graph)._ptr,&pRootNodes._ptr,&pNumRootNodes))    # fully specified
+    return (_hipGraphGetRootNodes__retval,pRootNodes,pNumRootNodes)
 
 
 @cython.embedsignature(True)
-def hipGraphNodeGetDependencies(hipGraphNode node):
+def hipGraphNodeGetDependencies(object node):
     """@brief Returns a node's dependencies.
     @param [in] node - graph node to get the dependencies from.
     @param [out] pDependencies - pointer to to return the dependencies.
@@ -14311,12 +21956,13 @@ def hipGraphNodeGetDependencies(hipGraphNode node):
     """
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     cdef int pNumDependencies
-    hipGraphNodeGetDependencies_____retval = hipError_t(chip.hipGraphNodeGetDependencies(node._ptr,&pDependencies._ptr,&pNumDependencies))    # fully specified
-    return (hipGraphNodeGetDependencies_____retval,pDependencies,pNumDependencies)
+    _hipGraphNodeGetDependencies__retval = hipError_t(chip.hipGraphNodeGetDependencies(
+        hipGraphNode.from_pyobj(node)._ptr,&pDependencies._ptr,&pNumDependencies))    # fully specified
+    return (_hipGraphNodeGetDependencies__retval,pDependencies,pNumDependencies)
 
 
 @cython.embedsignature(True)
-def hipGraphNodeGetDependentNodes(hipGraphNode node):
+def hipGraphNodeGetDependentNodes(object node):
     """@brief Returns a node's dependent nodes.
     @param [in] node - graph node to get the Dependent nodes from.
     @param [out] pDependentNodes - pointer to return the graph dependent nodes.
@@ -14332,12 +21978,13 @@ def hipGraphNodeGetDependentNodes(hipGraphNode node):
     """
     pDependentNodes = hipGraphNode.from_ptr(NULL,owner=True)
     cdef int pNumDependentNodes
-    hipGraphNodeGetDependentNodes_____retval = hipError_t(chip.hipGraphNodeGetDependentNodes(node._ptr,&pDependentNodes._ptr,&pNumDependentNodes))    # fully specified
-    return (hipGraphNodeGetDependentNodes_____retval,pDependentNodes,pNumDependentNodes)
+    _hipGraphNodeGetDependentNodes__retval = hipError_t(chip.hipGraphNodeGetDependentNodes(
+        hipGraphNode.from_pyobj(node)._ptr,&pDependentNodes._ptr,&pNumDependentNodes))    # fully specified
+    return (_hipGraphNodeGetDependentNodes__retval,pDependentNodes,pNumDependentNodes)
 
 
 @cython.embedsignature(True)
-def hipGraphNodeGetType(hipGraphNode node):
+def hipGraphNodeGetType(object node):
     """@brief Returns a node's type.
     @param [in] node - instance of the graph to add dependencies.
     @param [out] pType - pointer to the return the type
@@ -14346,24 +21993,26 @@ def hipGraphNodeGetType(hipGraphNode node):
     it is still open to changes and may have outstanding issues.
     """
     cdef chip.hipGraphNodeType pType
-    hipGraphNodeGetType_____retval = hipError_t(chip.hipGraphNodeGetType(node._ptr,&pType))    # fully specified
-    return (hipGraphNodeGetType_____retval,hipGraphNodeType(pType))
+    _hipGraphNodeGetType__retval = hipError_t(chip.hipGraphNodeGetType(
+        hipGraphNode.from_pyobj(node)._ptr,&pType))    # fully specified
+    return (_hipGraphNodeGetType__retval,hipGraphNodeType(pType))
 
 
 @cython.embedsignature(True)
-def hipGraphDestroyNode(hipGraphNode node):
+def hipGraphDestroyNode(object node):
     """@brief Remove a node from the graph.
     @param [in] node - graph node to remove
     @returns #hipSuccess, #hipErrorInvalidValue
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphDestroyNode_____retval = hipError_t(chip.hipGraphDestroyNode(node._ptr))    # fully specified
-    return hipGraphDestroyNode_____retval
+    _hipGraphDestroyNode__retval = hipError_t(chip.hipGraphDestroyNode(
+        hipGraphNode.from_pyobj(node)._ptr))    # fully specified
+    return _hipGraphDestroyNode__retval
 
 
 @cython.embedsignature(True)
-def hipGraphClone(ihipGraph originalGraph):
+def hipGraphClone(object originalGraph):
     """@brief Clones a graph.
     @param [out] pGraphClone - Returns newly created cloned graph.
     @param [in] originalGraph - original graph to clone from.
@@ -14372,12 +22021,13 @@ def hipGraphClone(ihipGraph originalGraph):
     it is still open to changes and may have outstanding issues.
     """
     pGraphClone = ihipGraph.from_ptr(NULL,owner=True)
-    hipGraphClone_____retval = hipError_t(chip.hipGraphClone(&pGraphClone._ptr,originalGraph._ptr))    # fully specified
-    return (hipGraphClone_____retval,pGraphClone)
+    _hipGraphClone__retval = hipError_t(chip.hipGraphClone(&pGraphClone._ptr,
+        ihipGraph.from_pyobj(originalGraph)._ptr))    # fully specified
+    return (_hipGraphClone__retval,pGraphClone)
 
 
 @cython.embedsignature(True)
-def hipGraphNodeFindInClone(hipGraphNode originalNode, ihipGraph clonedGraph):
+def hipGraphNodeFindInClone(object originalNode, object clonedGraph):
     """@brief Finds a cloned version of a node.
     @param [out] pNode - Returns the cloned node.
     @param [in] originalNode - original node handle.
@@ -14387,12 +22037,14 @@ def hipGraphNodeFindInClone(hipGraphNode originalNode, ihipGraph clonedGraph):
     it is still open to changes and may have outstanding issues.
     """
     pNode = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphNodeFindInClone_____retval = hipError_t(chip.hipGraphNodeFindInClone(&pNode._ptr,originalNode._ptr,clonedGraph._ptr))    # fully specified
-    return (hipGraphNodeFindInClone_____retval,pNode)
+    _hipGraphNodeFindInClone__retval = hipError_t(chip.hipGraphNodeFindInClone(&pNode._ptr,
+        hipGraphNode.from_pyobj(originalNode)._ptr,
+        ihipGraph.from_pyobj(clonedGraph)._ptr))    # fully specified
+    return (_hipGraphNodeFindInClone__retval,pNode)
 
 
 @cython.embedsignature(True)
-def hipGraphInstantiate(ihipGraph graph, char * pLogBuffer, int bufferSize):
+def hipGraphInstantiate(object graph, char * pLogBuffer, int bufferSize):
     """@brief Creates an executable graph from a graph
     @param [out] pGraphExec - pointer to instantiated executable graph that is created.
     @param [in] graph - instance of graph to instantiate.
@@ -14406,12 +22058,13 @@ def hipGraphInstantiate(ihipGraph graph, char * pLogBuffer, int bufferSize):
     """
     pGraphExec = hipGraphExec.from_ptr(NULL,owner=True)
     pErrorNode = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphInstantiate_____retval = hipError_t(chip.hipGraphInstantiate(&pGraphExec._ptr,graph._ptr,&pErrorNode._ptr,pLogBuffer,bufferSize))    # fully specified
-    return (hipGraphInstantiate_____retval,pGraphExec,pErrorNode)
+    _hipGraphInstantiate__retval = hipError_t(chip.hipGraphInstantiate(&pGraphExec._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pErrorNode._ptr,pLogBuffer,bufferSize))    # fully specified
+    return (_hipGraphInstantiate__retval,pGraphExec,pErrorNode)
 
 
 @cython.embedsignature(True)
-def hipGraphInstantiateWithFlags(ihipGraph graph, unsigned long long flags):
+def hipGraphInstantiateWithFlags(object graph, unsigned long long flags):
     """@brief Creates an executable graph from a graph.
     @param [out] pGraphExec - pointer to instantiated executable graph that is created.
     @param [in] graph - instance of graph to instantiate.
@@ -14421,12 +22074,13 @@ def hipGraphInstantiateWithFlags(ihipGraph graph, unsigned long long flags):
     it is still open to changes and may have outstanding issues.
     """
     pGraphExec = hipGraphExec.from_ptr(NULL,owner=True)
-    hipGraphInstantiateWithFlags_____retval = hipError_t(chip.hipGraphInstantiateWithFlags(&pGraphExec._ptr,graph._ptr,flags))    # fully specified
-    return (hipGraphInstantiateWithFlags_____retval,pGraphExec)
+    _hipGraphInstantiateWithFlags__retval = hipError_t(chip.hipGraphInstantiateWithFlags(&pGraphExec._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,flags))    # fully specified
+    return (_hipGraphInstantiateWithFlags__retval,pGraphExec)
 
 
 @cython.embedsignature(True)
-def hipGraphLaunch(hipGraphExec graphExec, ihipStream_t stream):
+def hipGraphLaunch(object graphExec, object stream):
     """@brief launches an executable graph in a stream
     @param [in] graphExec - instance of executable graph to launch.
     @param [in] stream - instance of stream in which to launch executable graph.
@@ -14434,12 +22088,14 @@ def hipGraphLaunch(hipGraphExec graphExec, ihipStream_t stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphLaunch_____retval = hipError_t(chip.hipGraphLaunch(graphExec._ptr,stream._ptr))    # fully specified
-    return hipGraphLaunch_____retval
+    _hipGraphLaunch__retval = hipError_t(chip.hipGraphLaunch(
+        hipGraphExec.from_pyobj(graphExec)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipGraphLaunch__retval
 
 
 @cython.embedsignature(True)
-def hipGraphUpload(hipGraphExec graphExec, ihipStream_t stream):
+def hipGraphUpload(object graphExec, object stream):
     """@brief uploads an executable graph in a stream
     @param [in] graphExec - instance of executable graph to launch.
     @param [in] stream - instance of stream in which to launch executable graph.
@@ -14447,24 +22103,27 @@ def hipGraphUpload(hipGraphExec graphExec, ihipStream_t stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphUpload_____retval = hipError_t(chip.hipGraphUpload(graphExec._ptr,stream._ptr))    # fully specified
-    return hipGraphUpload_____retval
+    _hipGraphUpload__retval = hipError_t(chip.hipGraphUpload(
+        hipGraphExec.from_pyobj(graphExec)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipGraphUpload__retval
 
 
 @cython.embedsignature(True)
-def hipGraphExecDestroy(hipGraphExec graphExec):
+def hipGraphExecDestroy(object graphExec):
     """@brief Destroys an executable graph
     @param [in] pGraphExec - instance of executable graph to destry.
     @returns #hipSuccess.
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphExecDestroy_____retval = hipError_t(chip.hipGraphExecDestroy(graphExec._ptr))    # fully specified
-    return hipGraphExecDestroy_____retval
+    _hipGraphExecDestroy__retval = hipError_t(chip.hipGraphExecDestroy(
+        hipGraphExec.from_pyobj(graphExec)._ptr))    # fully specified
+    return _hipGraphExecDestroy__retval
 
 
 @cython.embedsignature(True)
-def hipGraphExecUpdate(hipGraphExec hGraphExec, ihipGraph hGraph):
+def hipGraphExecUpdate(object hGraphExec, object hGraph):
     """@brief Check whether an executable graph can be updated with a graph and perform the update if  *
     possible.
     @param [in] hGraphExec - instance of executable graph to update.
@@ -14477,12 +22136,14 @@ def hipGraphExecUpdate(hipGraphExec hGraphExec, ihipGraph hGraph):
     """
     hErrorNode_out = hipGraphNode.from_ptr(NULL,owner=True)
     cdef chip.hipGraphExecUpdateResult updateResult_out
-    hipGraphExecUpdate_____retval = hipError_t(chip.hipGraphExecUpdate(hGraphExec._ptr,hGraph._ptr,&hErrorNode_out._ptr,&updateResult_out))    # fully specified
-    return (hipGraphExecUpdate_____retval,hErrorNode_out,hipGraphExecUpdateResult(updateResult_out))
+    _hipGraphExecUpdate__retval = hipError_t(chip.hipGraphExecUpdate(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        ihipGraph.from_pyobj(hGraph)._ptr,&hErrorNode_out._ptr,&updateResult_out))    # fully specified
+    return (_hipGraphExecUpdate__retval,hErrorNode_out,hipGraphExecUpdateResult(updateResult_out))
 
 
 @cython.embedsignature(True)
-def hipGraphAddKernelNode(ihipGraph graph, int numDependencies, hipKernelNodeParams pNodeParams):
+def hipGraphAddKernelNode(object graph, int numDependencies, object pNodeParams):
     """@brief Creates a kernel execution node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -14495,12 +22156,14 @@ def hipGraphAddKernelNode(ihipGraph graph, int numDependencies, hipKernelNodePar
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphAddKernelNode_____retval = hipError_t(chip.hipGraphAddKernelNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,pNodeParams._ptr))    # fully specified
-    return (hipGraphAddKernelNode_____retval,pGraphNode,pDependencies)
+    _hipGraphAddKernelNode__retval = hipError_t(chip.hipGraphAddKernelNode(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
+        hipKernelNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return (_hipGraphAddKernelNode__retval,pGraphNode,pDependencies)
 
 
 @cython.embedsignature(True)
-def hipGraphKernelNodeGetParams(hipGraphNode node, hipKernelNodeParams pNodeParams):
+def hipGraphKernelNodeGetParams(object node, object pNodeParams):
     """@brief Gets kernel node's parameters.
     @param [in] node - instance of the node to get parameters from.
     @param [out] pNodeParams - pointer to the parameters
@@ -14508,12 +22171,14 @@ def hipGraphKernelNodeGetParams(hipGraphNode node, hipKernelNodeParams pNodePara
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphKernelNodeGetParams_____retval = hipError_t(chip.hipGraphKernelNodeGetParams(node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphKernelNodeGetParams_____retval
+    _hipGraphKernelNodeGetParams__retval = hipError_t(chip.hipGraphKernelNodeGetParams(
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipKernelNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphKernelNodeGetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphKernelNodeSetParams(hipGraphNode node, hipKernelNodeParams pNodeParams):
+def hipGraphKernelNodeSetParams(object node, object pNodeParams):
     """@brief Sets a kernel node's parameters.
     @param [in] node - instance of the node to set parameters to.
     @param [in] pNodeParams - const pointer to the parameters.
@@ -14521,12 +22186,14 @@ def hipGraphKernelNodeSetParams(hipGraphNode node, hipKernelNodeParams pNodePara
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphKernelNodeSetParams_____retval = hipError_t(chip.hipGraphKernelNodeSetParams(node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphKernelNodeSetParams_____retval
+    _hipGraphKernelNodeSetParams__retval = hipError_t(chip.hipGraphKernelNodeSetParams(
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipKernelNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphKernelNodeSetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphExecKernelNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, hipKernelNodeParams pNodeParams):
+def hipGraphExecKernelNodeSetParams(object hGraphExec, object node, object pNodeParams):
     """@brief Sets the parameters for a kernel node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] node - instance of the node to set parameters to.
@@ -14535,12 +22202,15 @@ def hipGraphExecKernelNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, 
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphExecKernelNodeSetParams_____retval = hipError_t(chip.hipGraphExecKernelNodeSetParams(hGraphExec._ptr,node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphExecKernelNodeSetParams_____retval
+    _hipGraphExecKernelNodeSetParams__retval = hipError_t(chip.hipGraphExecKernelNodeSetParams(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipKernelNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphExecKernelNodeSetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphAddMemcpyNode(ihipGraph graph, int numDependencies, hipMemcpy3DParms pCopyParams):
+def hipGraphAddMemcpyNode(object graph, int numDependencies, object pCopyParams):
     """@brief Creates a memcpy node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -14553,12 +22223,14 @@ def hipGraphAddMemcpyNode(ihipGraph graph, int numDependencies, hipMemcpy3DParms
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphAddMemcpyNode_____retval = hipError_t(chip.hipGraphAddMemcpyNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,pCopyParams._ptr))    # fully specified
-    return (hipGraphAddMemcpyNode_____retval,pGraphNode,pDependencies)
+    _hipGraphAddMemcpyNode__retval = hipError_t(chip.hipGraphAddMemcpyNode(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
+        hipMemcpy3DParms.from_pyobj(pCopyParams)._ptr))    # fully specified
+    return (_hipGraphAddMemcpyNode__retval,pGraphNode,pDependencies)
 
 
 @cython.embedsignature(True)
-def hipGraphMemcpyNodeGetParams(hipGraphNode node, hipMemcpy3DParms pNodeParams):
+def hipGraphMemcpyNodeGetParams(object node, object pNodeParams):
     """@brief Gets a memcpy node's parameters.
     @param [in] node - instance of the node to get parameters from.
     @param [out] pNodeParams - pointer to the parameters.
@@ -14566,12 +22238,14 @@ def hipGraphMemcpyNodeGetParams(hipGraphNode node, hipMemcpy3DParms pNodeParams)
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphMemcpyNodeGetParams_____retval = hipError_t(chip.hipGraphMemcpyNodeGetParams(node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphMemcpyNodeGetParams_____retval
+    _hipGraphMemcpyNodeGetParams__retval = hipError_t(chip.hipGraphMemcpyNodeGetParams(
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipMemcpy3DParms.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphMemcpyNodeGetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphMemcpyNodeSetParams(hipGraphNode node, hipMemcpy3DParms pNodeParams):
+def hipGraphMemcpyNodeSetParams(object node, object pNodeParams):
     """@brief Sets a memcpy node's parameters.
     @param [in] node - instance of the node to set parameters to.
     @param [in] pNodeParams - const pointer to the parameters.
@@ -14579,12 +22253,14 @@ def hipGraphMemcpyNodeSetParams(hipGraphNode node, hipMemcpy3DParms pNodeParams)
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphMemcpyNodeSetParams_____retval = hipError_t(chip.hipGraphMemcpyNodeSetParams(node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphMemcpyNodeSetParams_____retval
+    _hipGraphMemcpyNodeSetParams__retval = hipError_t(chip.hipGraphMemcpyNodeSetParams(
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipMemcpy3DParms.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphMemcpyNodeSetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphKernelNodeSetAttribute(hipGraphNode hNode, object attr, hipKernelNodeAttrValue value):
+def hipGraphKernelNodeSetAttribute(object hNode, object attr, object value):
     """@brief Sets a node attribute.
     @param [in] hNode - instance of the node to set parameters to.
     @param [in] attr - the attribute node is set to.
@@ -14595,12 +22271,14 @@ def hipGraphKernelNodeSetAttribute(hipGraphNode hNode, object attr, hipKernelNod
     """
     if not isinstance(attr,hipKernelNodeAttrID):
         raise TypeError("argument 'attr' must be of type 'hipKernelNodeAttrID'")
-    hipGraphKernelNodeSetAttribute_____retval = hipError_t(chip.hipGraphKernelNodeSetAttribute(hNode._ptr,attr.value,value._ptr))    # fully specified
-    return hipGraphKernelNodeSetAttribute_____retval
+    _hipGraphKernelNodeSetAttribute__retval = hipError_t(chip.hipGraphKernelNodeSetAttribute(
+        hipGraphNode.from_pyobj(hNode)._ptr,attr.value,
+        hipKernelNodeAttrValue.from_pyobj(value)._ptr))    # fully specified
+    return _hipGraphKernelNodeSetAttribute__retval
 
 
 @cython.embedsignature(True)
-def hipGraphKernelNodeGetAttribute(hipGraphNode hNode, object attr, hipKernelNodeAttrValue value):
+def hipGraphKernelNodeGetAttribute(object hNode, object attr, object value):
     """@brief Gets a node attribute.
     @param [in] hNode - instance of the node to set parameters to.
     @param [in] attr - the attribute node is set to.
@@ -14611,12 +22289,14 @@ def hipGraphKernelNodeGetAttribute(hipGraphNode hNode, object attr, hipKernelNod
     """
     if not isinstance(attr,hipKernelNodeAttrID):
         raise TypeError("argument 'attr' must be of type 'hipKernelNodeAttrID'")
-    hipGraphKernelNodeGetAttribute_____retval = hipError_t(chip.hipGraphKernelNodeGetAttribute(hNode._ptr,attr.value,value._ptr))    # fully specified
-    return hipGraphKernelNodeGetAttribute_____retval
+    _hipGraphKernelNodeGetAttribute__retval = hipError_t(chip.hipGraphKernelNodeGetAttribute(
+        hipGraphNode.from_pyobj(hNode)._ptr,attr.value,
+        hipKernelNodeAttrValue.from_pyobj(value)._ptr))    # fully specified
+    return _hipGraphKernelNodeGetAttribute__retval
 
 
 @cython.embedsignature(True)
-def hipGraphExecMemcpyNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, hipMemcpy3DParms pNodeParams):
+def hipGraphExecMemcpyNodeSetParams(object hGraphExec, object node, object pNodeParams):
     """@brief Sets the parameters for a memcpy node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] node - instance of the node to set parameters to.
@@ -14625,12 +22305,15 @@ def hipGraphExecMemcpyNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, 
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphExecMemcpyNodeSetParams_____retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParams(hGraphExec._ptr,node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphExecMemcpyNodeSetParams_____retval
+    _hipGraphExecMemcpyNodeSetParams__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParams(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipMemcpy3DParms.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphExecMemcpyNodeSetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphAddMemcpyNode1D(ihipGraph graph, int numDependencies, dst, src, int count, object kind):
+def hipGraphAddMemcpyNode1D(object graph, int numDependencies, object dst, object src, int count, object kind):
     """@brief Creates a 1D memcpy node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -14648,10 +22331,15 @@ def hipGraphAddMemcpyNode1D(ihipGraph graph, int numDependencies, dst, src, int 
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipGraphAddMemcpyNode1D__retval = hipError_t(chip.hipGraphAddMemcpyNode1D(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+    return (_hipGraphAddMemcpyNode1D__retval,pGraphNode,pDependencies)
+
 
 @cython.embedsignature(True)
-def hipGraphMemcpyNodeSetParams1D(hipGraphNode node, dst, src, int count, object kind):
+def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, int count, object kind):
     """@brief Sets a memcpy node's parameters to perform a 1-dimensional copy.
     @param [in] node - instance of the node to set parameters to.
     @param [in] dst - pointer to memory address to the destination.
@@ -14664,10 +22352,15 @@ def hipGraphMemcpyNodeSetParams1D(hipGraphNode node, dst, src, int count, object
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipGraphMemcpyNodeSetParams1D__retval = hipError_t(chip.hipGraphMemcpyNodeSetParams1D(
+        hipGraphNode.from_pyobj(node)._ptr,
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+    return _hipGraphMemcpyNodeSetParams1D__retval
+
 
 @cython.embedsignature(True)
-def hipGraphExecMemcpyNodeSetParams1D(hipGraphExec hGraphExec, hipGraphNode node, dst, src, int count, object kind):
+def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst, object src, int count, object kind):
     """@brief Sets the parameters for a memcpy node in the given graphExec to perform a 1-dimensional
     copy.
     @param [in] hGraphExec - instance of the executable graph with the node.
@@ -14682,10 +22375,16 @@ def hipGraphExecMemcpyNodeSetParams1D(hipGraphExec hGraphExec, hipGraphNode node
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipGraphExecMemcpyNodeSetParams1D__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParams1D(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        hipGraphNode.from_pyobj(node)._ptr,
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+    return _hipGraphExecMemcpyNodeSetParams1D__retval
+
 
 @cython.embedsignature(True)
-def hipGraphAddMemcpyNodeFromSymbol(ihipGraph graph, int numDependencies, dst, symbol, int count, int offset, object kind):
+def hipGraphAddMemcpyNodeFromSymbol(object graph, int numDependencies, object dst, object symbol, int count, int offset, object kind):
     """@brief Creates a memcpy node to copy from a symbol on the device and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -14704,10 +22403,15 @@ def hipGraphAddMemcpyNodeFromSymbol(ihipGraph graph, int numDependencies, dst, s
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipGraphAddMemcpyNodeFromSymbol__retval = hipError_t(chip.hipGraphAddMemcpyNodeFromSymbol(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
+    return (_hipGraphAddMemcpyNodeFromSymbol__retval,pGraphNode,pDependencies)
+
 
 @cython.embedsignature(True)
-def hipGraphMemcpyNodeSetParamsFromSymbol(hipGraphNode node, dst, symbol, int count, int offset, object kind):
+def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol, int count, int offset, object kind):
     """@brief Sets a memcpy node's parameters to copy from a symbol on the device.
     @param [in] node - instance of the node to set parameters to.
     @param [in] dst - pointer to memory address to the destination.
@@ -14721,10 +22425,15 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(hipGraphNode node, dst, symbol, int co
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipGraphMemcpyNodeSetParamsFromSymbol__retval = hipError_t(chip.hipGraphMemcpyNodeSetParamsFromSymbol(
+        hipGraphNode.from_pyobj(node)._ptr,
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
+    return _hipGraphMemcpyNodeSetParamsFromSymbol__retval
+
 
 @cython.embedsignature(True)
-def hipGraphExecMemcpyNodeSetParamsFromSymbol(hipGraphExec hGraphExec, hipGraphNode node, dst, symbol, int count, int offset, object kind):
+def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, object dst, object symbol, int count, int offset, object kind):
     """@brief Sets the parameters for a memcpy node in the given graphExec to copy from a symbol on the
     device.
     @param [in] hGraphExec - instance of the executable graph with the node.
@@ -14740,10 +22449,16 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(hipGraphExec hGraphExec, hipGraphN
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipGraphExecMemcpyNodeSetParamsFromSymbol__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParamsFromSymbol(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        hipGraphNode.from_pyobj(node)._ptr,
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
+    return _hipGraphExecMemcpyNodeSetParamsFromSymbol__retval
+
 
 @cython.embedsignature(True)
-def hipGraphAddMemcpyNodeToSymbol(ihipGraph graph, int numDependencies, symbol, src, int count, int offset, object kind):
+def hipGraphAddMemcpyNodeToSymbol(object graph, int numDependencies, object symbol, object src, int count, int offset, object kind):
     """@brief Creates a memcpy node to copy to a symbol on the device and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -14762,10 +22477,15 @@ def hipGraphAddMemcpyNodeToSymbol(ihipGraph graph, int numDependencies, symbol, 
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipGraphAddMemcpyNodeToSymbol__retval = hipError_t(chip.hipGraphAddMemcpyNodeToSymbol(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
+    return (_hipGraphAddMemcpyNodeToSymbol__retval,pGraphNode,pDependencies)
+
 
 @cython.embedsignature(True)
-def hipGraphMemcpyNodeSetParamsToSymbol(hipGraphNode node, symbol, src, int count, int offset, object kind):
+def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, int count, int offset, object kind):
     """@brief Sets a memcpy node's parameters to copy to a symbol on the device.
     @param [in] node - instance of the node to set parameters to.
     @param [in] symbol - Device symbol address.
@@ -14779,10 +22499,15 @@ def hipGraphMemcpyNodeSetParamsToSymbol(hipGraphNode node, symbol, src, int coun
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipGraphMemcpyNodeSetParamsToSymbol__retval = hipError_t(chip.hipGraphMemcpyNodeSetParamsToSymbol(
+        hipGraphNode.from_pyobj(node)._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
+    return _hipGraphMemcpyNodeSetParamsToSymbol__retval
+
 
 @cython.embedsignature(True)
-def hipGraphExecMemcpyNodeSetParamsToSymbol(hipGraphExec hGraphExec, hipGraphNode node, symbol, src, int count, int offset, object kind):
+def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, object symbol, object src, int count, int offset, object kind):
     """@brief Sets the parameters for a memcpy node in the given graphExec to copy to a symbol on the
     device.
     @param [in] hGraphExec - instance of the executable graph with the node.
@@ -14798,10 +22523,16 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(hipGraphExec hGraphExec, hipGraphNod
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipGraphExecMemcpyNodeSetParamsToSymbol__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParamsToSymbol(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        hipGraphNode.from_pyobj(node)._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
+    return _hipGraphExecMemcpyNodeSetParamsToSymbol__retval
+
 
 @cython.embedsignature(True)
-def hipGraphAddMemsetNode(ihipGraph graph, int numDependencies, hipMemsetParams pMemsetParams):
+def hipGraphAddMemsetNode(object graph, int numDependencies, object pMemsetParams):
     """@brief Creates a memset node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -14814,12 +22545,14 @@ def hipGraphAddMemsetNode(ihipGraph graph, int numDependencies, hipMemsetParams 
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphAddMemsetNode_____retval = hipError_t(chip.hipGraphAddMemsetNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,pMemsetParams._ptr))    # fully specified
-    return (hipGraphAddMemsetNode_____retval,pGraphNode,pDependencies)
+    _hipGraphAddMemsetNode__retval = hipError_t(chip.hipGraphAddMemsetNode(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
+        hipMemsetParams.from_pyobj(pMemsetParams)._ptr))    # fully specified
+    return (_hipGraphAddMemsetNode__retval,pGraphNode,pDependencies)
 
 
 @cython.embedsignature(True)
-def hipGraphMemsetNodeGetParams(hipGraphNode node, hipMemsetParams pNodeParams):
+def hipGraphMemsetNodeGetParams(object node, object pNodeParams):
     """@brief Gets a memset node's parameters.
     @param [in] node - instane of the node to get parameters from.
     @param [out] pNodeParams - pointer to the parameters.
@@ -14827,12 +22560,14 @@ def hipGraphMemsetNodeGetParams(hipGraphNode node, hipMemsetParams pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphMemsetNodeGetParams_____retval = hipError_t(chip.hipGraphMemsetNodeGetParams(node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphMemsetNodeGetParams_____retval
+    _hipGraphMemsetNodeGetParams__retval = hipError_t(chip.hipGraphMemsetNodeGetParams(
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipMemsetParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphMemsetNodeGetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphMemsetNodeSetParams(hipGraphNode node, hipMemsetParams pNodeParams):
+def hipGraphMemsetNodeSetParams(object node, object pNodeParams):
     """@brief Sets a memset node's parameters.
     @param [in] node - instance of the node to set parameters to.
     @param [in] pNodeParams - pointer to the parameters.
@@ -14840,12 +22575,14 @@ def hipGraphMemsetNodeSetParams(hipGraphNode node, hipMemsetParams pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphMemsetNodeSetParams_____retval = hipError_t(chip.hipGraphMemsetNodeSetParams(node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphMemsetNodeSetParams_____retval
+    _hipGraphMemsetNodeSetParams__retval = hipError_t(chip.hipGraphMemsetNodeSetParams(
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipMemsetParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphMemsetNodeSetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphExecMemsetNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, hipMemsetParams pNodeParams):
+def hipGraphExecMemsetNodeSetParams(object hGraphExec, object node, object pNodeParams):
     """@brief Sets the parameters for a memset node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] node - instance of the node to set parameters to.
@@ -14854,12 +22591,15 @@ def hipGraphExecMemsetNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, 
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphExecMemsetNodeSetParams_____retval = hipError_t(chip.hipGraphExecMemsetNodeSetParams(hGraphExec._ptr,node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphExecMemsetNodeSetParams_____retval
+    _hipGraphExecMemsetNodeSetParams__retval = hipError_t(chip.hipGraphExecMemsetNodeSetParams(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipMemsetParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphExecMemsetNodeSetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphAddHostNode(ihipGraph graph, int numDependencies, hipHostNodeParams pNodeParams):
+def hipGraphAddHostNode(object graph, int numDependencies, object pNodeParams):
     """@brief Creates a host execution node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -14872,12 +22612,14 @@ def hipGraphAddHostNode(ihipGraph graph, int numDependencies, hipHostNodeParams 
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphAddHostNode_____retval = hipError_t(chip.hipGraphAddHostNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,pNodeParams._ptr))    # fully specified
-    return (hipGraphAddHostNode_____retval,pGraphNode,pDependencies)
+    _hipGraphAddHostNode__retval = hipError_t(chip.hipGraphAddHostNode(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
+        hipHostNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return (_hipGraphAddHostNode__retval,pGraphNode,pDependencies)
 
 
 @cython.embedsignature(True)
-def hipGraphHostNodeGetParams(hipGraphNode node, hipHostNodeParams pNodeParams):
+def hipGraphHostNodeGetParams(object node, object pNodeParams):
     """@brief Returns a host node's parameters.
     @param [in] node - instane of the node to get parameters from.
     @param [out] pNodeParams - pointer to the parameters.
@@ -14885,12 +22627,14 @@ def hipGraphHostNodeGetParams(hipGraphNode node, hipHostNodeParams pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphHostNodeGetParams_____retval = hipError_t(chip.hipGraphHostNodeGetParams(node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphHostNodeGetParams_____retval
+    _hipGraphHostNodeGetParams__retval = hipError_t(chip.hipGraphHostNodeGetParams(
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipHostNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphHostNodeGetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphHostNodeSetParams(hipGraphNode node, hipHostNodeParams pNodeParams):
+def hipGraphHostNodeSetParams(object node, object pNodeParams):
     """@brief Sets a host node's parameters.
     @param [in] node - instance of the node to set parameters to.
     @param [in] pNodeParams - pointer to the parameters.
@@ -14898,12 +22642,14 @@ def hipGraphHostNodeSetParams(hipGraphNode node, hipHostNodeParams pNodeParams):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphHostNodeSetParams_____retval = hipError_t(chip.hipGraphHostNodeSetParams(node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphHostNodeSetParams_____retval
+    _hipGraphHostNodeSetParams__retval = hipError_t(chip.hipGraphHostNodeSetParams(
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipHostNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphHostNodeSetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphExecHostNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, hipHostNodeParams pNodeParams):
+def hipGraphExecHostNodeSetParams(object hGraphExec, object node, object pNodeParams):
     """@brief Sets the parameters for a host node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] node - instance of the node to set parameters to.
@@ -14912,12 +22658,15 @@ def hipGraphExecHostNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, hi
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphExecHostNodeSetParams_____retval = hipError_t(chip.hipGraphExecHostNodeSetParams(hGraphExec._ptr,node._ptr,pNodeParams._ptr))    # fully specified
-    return hipGraphExecHostNodeSetParams_____retval
+    _hipGraphExecHostNodeSetParams__retval = hipError_t(chip.hipGraphExecHostNodeSetParams(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        hipGraphNode.from_pyobj(node)._ptr,
+        hipHostNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
+    return _hipGraphExecHostNodeSetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphAddChildGraphNode(ihipGraph graph, int numDependencies, ihipGraph childGraph):
+def hipGraphAddChildGraphNode(object graph, int numDependencies, object childGraph):
     """@brief Creates a child graph node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -14930,12 +22679,14 @@ def hipGraphAddChildGraphNode(ihipGraph graph, int numDependencies, ihipGraph ch
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphAddChildGraphNode_____retval = hipError_t(chip.hipGraphAddChildGraphNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,childGraph._ptr))    # fully specified
-    return (hipGraphAddChildGraphNode_____retval,pGraphNode,pDependencies)
+    _hipGraphAddChildGraphNode__retval = hipError_t(chip.hipGraphAddChildGraphNode(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
+        ihipGraph.from_pyobj(childGraph)._ptr))    # fully specified
+    return (_hipGraphAddChildGraphNode__retval,pGraphNode,pDependencies)
 
 
 @cython.embedsignature(True)
-def hipGraphChildGraphNodeGetGraph(hipGraphNode node):
+def hipGraphChildGraphNodeGetGraph(object node):
     """@brief Gets a handle to the embedded graph of a child graph node.
     @param [in] node - instane of the node to get child graph.
     @param [out] pGraph - pointer to get the graph.
@@ -14944,12 +22695,13 @@ def hipGraphChildGraphNodeGetGraph(hipGraphNode node):
     it is still open to changes and may have outstanding issues.
     """
     pGraph = ihipGraph.from_ptr(NULL,owner=True)
-    hipGraphChildGraphNodeGetGraph_____retval = hipError_t(chip.hipGraphChildGraphNodeGetGraph(node._ptr,&pGraph._ptr))    # fully specified
-    return (hipGraphChildGraphNodeGetGraph_____retval,pGraph)
+    _hipGraphChildGraphNodeGetGraph__retval = hipError_t(chip.hipGraphChildGraphNodeGetGraph(
+        hipGraphNode.from_pyobj(node)._ptr,&pGraph._ptr))    # fully specified
+    return (_hipGraphChildGraphNodeGetGraph__retval,pGraph)
 
 
 @cython.embedsignature(True)
-def hipGraphExecChildGraphNodeSetParams(hipGraphExec hGraphExec, hipGraphNode node, ihipGraph childGraph):
+def hipGraphExecChildGraphNodeSetParams(object hGraphExec, object node, object childGraph):
     """@brief Updates node parameters in the child graph node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] node - node from the graph which was used to instantiate graphExec.
@@ -14958,12 +22710,15 @@ def hipGraphExecChildGraphNodeSetParams(hipGraphExec hGraphExec, hipGraphNode no
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphExecChildGraphNodeSetParams_____retval = hipError_t(chip.hipGraphExecChildGraphNodeSetParams(hGraphExec._ptr,node._ptr,childGraph._ptr))    # fully specified
-    return hipGraphExecChildGraphNodeSetParams_____retval
+    _hipGraphExecChildGraphNodeSetParams__retval = hipError_t(chip.hipGraphExecChildGraphNodeSetParams(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        hipGraphNode.from_pyobj(node)._ptr,
+        ihipGraph.from_pyobj(childGraph)._ptr))    # fully specified
+    return _hipGraphExecChildGraphNodeSetParams__retval
 
 
 @cython.embedsignature(True)
-def hipGraphAddEmptyNode(ihipGraph graph, int numDependencies):
+def hipGraphAddEmptyNode(object graph, int numDependencies):
     """@brief Creates an empty node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node is add to.
@@ -14975,12 +22730,13 @@ def hipGraphAddEmptyNode(ihipGraph graph, int numDependencies):
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphAddEmptyNode_____retval = hipError_t(chip.hipGraphAddEmptyNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies))    # fully specified
-    return (hipGraphAddEmptyNode_____retval,pGraphNode,pDependencies)
+    _hipGraphAddEmptyNode__retval = hipError_t(chip.hipGraphAddEmptyNode(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies))    # fully specified
+    return (_hipGraphAddEmptyNode__retval,pGraphNode,pDependencies)
 
 
 @cython.embedsignature(True)
-def hipGraphAddEventRecordNode(ihipGraph graph, int numDependencies, ihipEvent_t event):
+def hipGraphAddEventRecordNode(object graph, int numDependencies, object event):
     """@brief Creates an event record node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node to be added.
@@ -14993,12 +22749,14 @@ def hipGraphAddEventRecordNode(ihipGraph graph, int numDependencies, ihipEvent_t
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphAddEventRecordNode_____retval = hipError_t(chip.hipGraphAddEventRecordNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,event._ptr))    # fully specified
-    return (hipGraphAddEventRecordNode_____retval,pGraphNode,pDependencies)
+    _hipGraphAddEventRecordNode__retval = hipError_t(chip.hipGraphAddEventRecordNode(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
+        ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
+    return (_hipGraphAddEventRecordNode__retval,pGraphNode,pDependencies)
 
 
 @cython.embedsignature(True)
-def hipGraphEventRecordNodeGetEvent(hipGraphNode node):
+def hipGraphEventRecordNodeGetEvent(object node):
     """@brief Returns the event associated with an event record node.
     @param [in] node -  instane of the node to get event from.
     @param [out] event_out - Pointer to return the event.
@@ -15007,12 +22765,13 @@ def hipGraphEventRecordNodeGetEvent(hipGraphNode node):
     it is still open to changes and may have outstanding issues.
     """
     event_out = ihipEvent_t.from_ptr(NULL,owner=True)
-    hipGraphEventRecordNodeGetEvent_____retval = hipError_t(chip.hipGraphEventRecordNodeGetEvent(node._ptr,&event_out._ptr))    # fully specified
-    return (hipGraphEventRecordNodeGetEvent_____retval,event_out)
+    _hipGraphEventRecordNodeGetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeGetEvent(
+        hipGraphNode.from_pyobj(node)._ptr,&event_out._ptr))    # fully specified
+    return (_hipGraphEventRecordNodeGetEvent__retval,event_out)
 
 
 @cython.embedsignature(True)
-def hipGraphEventRecordNodeSetEvent(hipGraphNode node, ihipEvent_t event):
+def hipGraphEventRecordNodeSetEvent(object node, object event):
     """@brief Sets an event record node's event.
     @param [in] node - instane of the node to set event to.
     @param [in] event - pointer to the event.
@@ -15020,12 +22779,14 @@ def hipGraphEventRecordNodeSetEvent(hipGraphNode node, ihipEvent_t event):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphEventRecordNodeSetEvent_____retval = hipError_t(chip.hipGraphEventRecordNodeSetEvent(node._ptr,event._ptr))    # fully specified
-    return hipGraphEventRecordNodeSetEvent_____retval
+    _hipGraphEventRecordNodeSetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeSetEvent(
+        hipGraphNode.from_pyobj(node)._ptr,
+        ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
+    return _hipGraphEventRecordNodeSetEvent__retval
 
 
 @cython.embedsignature(True)
-def hipGraphExecEventRecordNodeSetEvent(hipGraphExec hGraphExec, hipGraphNode hNode, ihipEvent_t event):
+def hipGraphExecEventRecordNodeSetEvent(object hGraphExec, object hNode, object event):
     """@brief Sets the event for an event record node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] hNode - node from the graph which was used to instantiate graphExec.
@@ -15034,12 +22795,15 @@ def hipGraphExecEventRecordNodeSetEvent(hipGraphExec hGraphExec, hipGraphNode hN
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphExecEventRecordNodeSetEvent_____retval = hipError_t(chip.hipGraphExecEventRecordNodeSetEvent(hGraphExec._ptr,hNode._ptr,event._ptr))    # fully specified
-    return hipGraphExecEventRecordNodeSetEvent_____retval
+    _hipGraphExecEventRecordNodeSetEvent__retval = hipError_t(chip.hipGraphExecEventRecordNodeSetEvent(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        hipGraphNode.from_pyobj(hNode)._ptr,
+        ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
+    return _hipGraphExecEventRecordNodeSetEvent__retval
 
 
 @cython.embedsignature(True)
-def hipGraphAddEventWaitNode(ihipGraph graph, int numDependencies, ihipEvent_t event):
+def hipGraphAddEventWaitNode(object graph, int numDependencies, object event):
     """@brief Creates an event wait node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node to be added.
@@ -15052,12 +22816,14 @@ def hipGraphAddEventWaitNode(ihipGraph graph, int numDependencies, ihipEvent_t e
     """
     pGraphNode = hipGraphNode.from_ptr(NULL,owner=True)
     pDependencies = hipGraphNode.from_ptr(NULL,owner=True)
-    hipGraphAddEventWaitNode_____retval = hipError_t(chip.hipGraphAddEventWaitNode(&pGraphNode._ptr,graph._ptr,&pDependencies._ptr,numDependencies,event._ptr))    # fully specified
-    return (hipGraphAddEventWaitNode_____retval,pGraphNode,pDependencies)
+    _hipGraphAddEventWaitNode__retval = hipError_t(chip.hipGraphAddEventWaitNode(&pGraphNode._ptr,
+        ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
+        ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
+    return (_hipGraphAddEventWaitNode__retval,pGraphNode,pDependencies)
 
 
 @cython.embedsignature(True)
-def hipGraphEventWaitNodeGetEvent(hipGraphNode node):
+def hipGraphEventWaitNodeGetEvent(object node):
     """@brief Returns the event associated with an event wait node.
     @param [in] node -  instane of the node to get event from.
     @param [out] event_out - Pointer to return the event.
@@ -15066,12 +22832,13 @@ def hipGraphEventWaitNodeGetEvent(hipGraphNode node):
     it is still open to changes and may have outstanding issues.
     """
     event_out = ihipEvent_t.from_ptr(NULL,owner=True)
-    hipGraphEventWaitNodeGetEvent_____retval = hipError_t(chip.hipGraphEventWaitNodeGetEvent(node._ptr,&event_out._ptr))    # fully specified
-    return (hipGraphEventWaitNodeGetEvent_____retval,event_out)
+    _hipGraphEventWaitNodeGetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeGetEvent(
+        hipGraphNode.from_pyobj(node)._ptr,&event_out._ptr))    # fully specified
+    return (_hipGraphEventWaitNodeGetEvent__retval,event_out)
 
 
 @cython.embedsignature(True)
-def hipGraphEventWaitNodeSetEvent(hipGraphNode node, ihipEvent_t event):
+def hipGraphEventWaitNodeSetEvent(object node, object event):
     """@brief Sets an event wait node's event.
     @param [in] node - instane of the node to set event to.
     @param [in] event - pointer to the event.
@@ -15079,12 +22846,14 @@ def hipGraphEventWaitNodeSetEvent(hipGraphNode node, ihipEvent_t event):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphEventWaitNodeSetEvent_____retval = hipError_t(chip.hipGraphEventWaitNodeSetEvent(node._ptr,event._ptr))    # fully specified
-    return hipGraphEventWaitNodeSetEvent_____retval
+    _hipGraphEventWaitNodeSetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeSetEvent(
+        hipGraphNode.from_pyobj(node)._ptr,
+        ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
+    return _hipGraphEventWaitNodeSetEvent__retval
 
 
 @cython.embedsignature(True)
-def hipGraphExecEventWaitNodeSetEvent(hipGraphExec hGraphExec, hipGraphNode hNode, ihipEvent_t event):
+def hipGraphExecEventWaitNodeSetEvent(object hGraphExec, object hNode, object event):
     """@brief Sets the event for an event record node in the given graphExec.
     @param [in] hGraphExec - instance of the executable graph with the node.
     @param [in] hNode - node from the graph which was used to instantiate graphExec.
@@ -15093,12 +22862,15 @@ def hipGraphExecEventWaitNodeSetEvent(hipGraphExec hGraphExec, hipGraphNode hNod
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphExecEventWaitNodeSetEvent_____retval = hipError_t(chip.hipGraphExecEventWaitNodeSetEvent(hGraphExec._ptr,hNode._ptr,event._ptr))    # fully specified
-    return hipGraphExecEventWaitNodeSetEvent_____retval
+    _hipGraphExecEventWaitNodeSetEvent__retval = hipError_t(chip.hipGraphExecEventWaitNodeSetEvent(
+        hipGraphExec.from_pyobj(hGraphExec)._ptr,
+        hipGraphNode.from_pyobj(hNode)._ptr,
+        ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
+    return _hipGraphExecEventWaitNodeSetEvent__retval
 
 
 @cython.embedsignature(True)
-def hipDeviceGetGraphMemAttribute(int device, object attr, value):
+def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
     """@brief Get the mem attribute for graphs.
     @param [in] device - device the attr is get for.
     @param [in] attr - attr to get.
@@ -15109,10 +22881,13 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, value):
     """
     if not isinstance(attr,hipGraphMemAttributeType):
         raise TypeError("argument 'attr' must be of type 'hipGraphMemAttributeType'")
-    pass
+    _hipDeviceGetGraphMemAttribute__retval = hipError_t(chip.hipDeviceGetGraphMemAttribute(device,attr.value,
+        <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
+    return _hipDeviceGetGraphMemAttribute__retval
+
 
 @cython.embedsignature(True)
-def hipDeviceSetGraphMemAttribute(int device, object attr, value):
+def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
     """@brief Set the mem attribute for graphs.
     @param [in] device - device the attr is set for.
     @param [in] attr - attr to set.
@@ -15123,7 +22898,10 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, value):
     """
     if not isinstance(attr,hipGraphMemAttributeType):
         raise TypeError("argument 'attr' must be of type 'hipGraphMemAttributeType'")
-    pass
+    _hipDeviceSetGraphMemAttribute__retval = hipError_t(chip.hipDeviceSetGraphMemAttribute(device,attr.value,
+        <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
+    return _hipDeviceSetGraphMemAttribute__retval
+
 
 @cython.embedsignature(True)
 def hipDeviceGraphMemTrim(int device):
@@ -15132,12 +22910,12 @@ def hipDeviceGraphMemTrim(int device):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipDeviceGraphMemTrim_____retval = hipError_t(chip.hipDeviceGraphMemTrim(device))    # fully specified
-    return hipDeviceGraphMemTrim_____retval
+    _hipDeviceGraphMemTrim__retval = hipError_t(chip.hipDeviceGraphMemTrim(device))    # fully specified
+    return _hipDeviceGraphMemTrim__retval
 
 
 @cython.embedsignature(True)
-def hipUserObjectCreate(ptr, destroy, unsigned int initialRefcount, unsigned int flags):
+def hipUserObjectCreate(object ptr, unsigned int initialRefcount, unsigned int flags):
     """@brief Create an instance of userObject to manage lifetime of a resource.
     @param [out] object_out - pointer to instace of userobj.
     @param [in] ptr - pointer to pass to destroy function.
@@ -15152,7 +22930,7 @@ def hipUserObjectCreate(ptr, destroy, unsigned int initialRefcount, unsigned int
     pass
 
 @cython.embedsignature(True)
-def hipUserObjectRelease(hipUserObject object, unsigned int count):
+def hipUserObjectRelease(object object, unsigned int count):
     """@brief Release number of references to resource.
     @param [in] object - pointer to instace of userobj.
     @param [in] count - reference to resource to be retained.
@@ -15160,12 +22938,13 @@ def hipUserObjectRelease(hipUserObject object, unsigned int count):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipUserObjectRelease_____retval = hipError_t(chip.hipUserObjectRelease(object._ptr,count))    # fully specified
-    return hipUserObjectRelease_____retval
+    _hipUserObjectRelease__retval = hipError_t(chip.hipUserObjectRelease(
+        hipUserObject.from_pyobj(object)._ptr,count))    # fully specified
+    return _hipUserObjectRelease__retval
 
 
 @cython.embedsignature(True)
-def hipUserObjectRetain(hipUserObject object, unsigned int count):
+def hipUserObjectRetain(object object, unsigned int count):
     """@brief Retain number of references to resource.
     @param [in] object - pointer to instace of userobj.
     @param [in] count - reference to resource to be retained.
@@ -15173,12 +22952,13 @@ def hipUserObjectRetain(hipUserObject object, unsigned int count):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipUserObjectRetain_____retval = hipError_t(chip.hipUserObjectRetain(object._ptr,count))    # fully specified
-    return hipUserObjectRetain_____retval
+    _hipUserObjectRetain__retval = hipError_t(chip.hipUserObjectRetain(
+        hipUserObject.from_pyobj(object)._ptr,count))    # fully specified
+    return _hipUserObjectRetain__retval
 
 
 @cython.embedsignature(True)
-def hipGraphRetainUserObject(ihipGraph graph, hipUserObject object, unsigned int count, unsigned int flags):
+def hipGraphRetainUserObject(object graph, object object, unsigned int count, unsigned int flags):
     """@brief Retain user object for graphs.
     @param [in] graph - pointer to graph to retain the user object for.
     @param [in] object - pointer to instace of userobj.
@@ -15188,12 +22968,14 @@ def hipGraphRetainUserObject(ihipGraph graph, hipUserObject object, unsigned int
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphRetainUserObject_____retval = hipError_t(chip.hipGraphRetainUserObject(graph._ptr,object._ptr,count,flags))    # fully specified
-    return hipGraphRetainUserObject_____retval
+    _hipGraphRetainUserObject__retval = hipError_t(chip.hipGraphRetainUserObject(
+        ihipGraph.from_pyobj(graph)._ptr,
+        hipUserObject.from_pyobj(object)._ptr,count,flags))    # fully specified
+    return _hipGraphRetainUserObject__retval
 
 
 @cython.embedsignature(True)
-def hipGraphReleaseUserObject(ihipGraph graph, hipUserObject object, unsigned int count):
+def hipGraphReleaseUserObject(object graph, object object, unsigned int count):
     """@brief Release user object from graphs.
     @param [in] graph - pointer to graph to retain the user object for.
     @param [in] object - pointer to instace of userobj.
@@ -15202,12 +22984,14 @@ def hipGraphReleaseUserObject(ihipGraph graph, hipUserObject object, unsigned in
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipGraphReleaseUserObject_____retval = hipError_t(chip.hipGraphReleaseUserObject(graph._ptr,object._ptr,count))    # fully specified
-    return hipGraphReleaseUserObject_____retval
+    _hipGraphReleaseUserObject__retval = hipError_t(chip.hipGraphReleaseUserObject(
+        ihipGraph.from_pyobj(graph)._ptr,
+        hipUserObject.from_pyobj(object)._ptr,count))    # fully specified
+    return _hipGraphReleaseUserObject__retval
 
 
 @cython.embedsignature(True)
-def hipMemAddressFree(devPtr, int size):
+def hipMemAddressFree(object devPtr, int size):
     """@brief Frees an address range reservation made via hipMemAddressReserve
     @param [in] devPtr - starting address of the range.
     @param [in] size - size of the range.
@@ -15215,10 +22999,13 @@ def hipMemAddressFree(devPtr, int size):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    _hipMemAddressFree__retval = hipError_t(chip.hipMemAddressFree(
+        <void *>DataHandle.from_pyobj(devPtr)._ptr,size))    # fully specified
+    return _hipMemAddressFree__retval
+
 
 @cython.embedsignature(True)
-def hipMemAddressReserve(int size, int alignment, addr, unsigned long long flags):
+def hipMemAddressReserve(int size, int alignment, object addr, unsigned long long flags):
     """@brief Reserves an address range
     @param [out] ptr - starting address of the reserved range.
     @param [in] size - size of the reservation.
@@ -15229,10 +23016,15 @@ def hipMemAddressReserve(int size, int alignment, addr, unsigned long long flags
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    ptr = DataHandle.from_ptr(NULL)
+    _hipMemAddressReserve__retval = hipError_t(chip.hipMemAddressReserve(
+        <void **>&ptr._ptr,size,alignment,
+        <void *>DataHandle.from_pyobj(addr)._ptr,flags))    # fully specified
+    return (_hipMemAddressReserve__retval,ptr)
+
 
 @cython.embedsignature(True)
-def hipMemCreate(int size, hipMemAllocationProp prop, unsigned long long flags):
+def hipMemCreate(int size, object prop, unsigned long long flags):
     """@brief Creates a memory allocation described by the properties and size
     @param [out] handle - value of the returned handle.
     @param [in] size - size of the allocation.
@@ -15243,12 +23035,13 @@ def hipMemCreate(int size, hipMemAllocationProp prop, unsigned long long flags):
     it is still open to changes and may have outstanding issues.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
-    hipMemCreate_____retval = hipError_t(chip.hipMemCreate(&handle._ptr,size,prop._ptr,flags))    # fully specified
-    return (hipMemCreate_____retval,handle)
+    _hipMemCreate__retval = hipError_t(chip.hipMemCreate(&handle._ptr,size,
+        hipMemAllocationProp.from_pyobj(prop)._ptr,flags))    # fully specified
+    return (_hipMemCreate__retval,handle)
 
 
 @cython.embedsignature(True)
-def hipMemExportToShareableHandle(shareableHandle, ihipMemGenericAllocationHandle handle, object handleType, unsigned long long flags):
+def hipMemExportToShareableHandle(object shareableHandle, object handle, object handleType, unsigned long long flags):
     """@brief Exports an allocation to a requested shareable handle type.
     @param [out] shareableHandle - value of the returned handle.
     @param [in] handle - handle to share.
@@ -15260,10 +23053,14 @@ def hipMemExportToShareableHandle(shareableHandle, ihipMemGenericAllocationHandl
     """
     if not isinstance(handleType,hipMemAllocationHandleType):
         raise TypeError("argument 'handleType' must be of type 'hipMemAllocationHandleType'")
-    pass
+    _hipMemExportToShareableHandle__retval = hipError_t(chip.hipMemExportToShareableHandle(
+        <void *>DataHandle.from_pyobj(shareableHandle)._ptr,
+        ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr,handleType.value,flags))    # fully specified
+    return _hipMemExportToShareableHandle__retval
+
 
 @cython.embedsignature(True)
-def hipMemGetAccess(hipMemLocation location, ptr):
+def hipMemGetAccess(object location, object ptr):
     """@brief Get the access flags set for the given location and ptr.
     @param [out] flags - flags for this location.
     @param [in] location - target location.
@@ -15273,10 +23070,14 @@ def hipMemGetAccess(hipMemLocation location, ptr):
     it is still open to changes and may have outstanding issues.
     """
     cdef unsigned long long flags
-    pass
+    _hipMemGetAccess__retval = hipError_t(chip.hipMemGetAccess(&flags,
+        hipMemLocation.from_pyobj(location)._ptr,
+        <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+    return (_hipMemGetAccess__retval,flags)
+
 
 @cython.embedsignature(True)
-def hipMemGetAllocationGranularity(hipMemAllocationProp prop, object option):
+def hipMemGetAllocationGranularity(object prop, object option):
     """@brief Calculates either the minimal or recommended granularity.
     @param [out] granularity - returned granularity.
     @param [in] prop - location properties.
@@ -15288,12 +23089,13 @@ def hipMemGetAllocationGranularity(hipMemAllocationProp prop, object option):
     cdef int granularity
     if not isinstance(option,hipMemAllocationGranularity_flags):
         raise TypeError("argument 'option' must be of type 'hipMemAllocationGranularity_flags'")
-    hipMemGetAllocationGranularity_____retval = hipError_t(chip.hipMemGetAllocationGranularity(&granularity,prop._ptr,option.value))    # fully specified
-    return (hipMemGetAllocationGranularity_____retval,granularity)
+    _hipMemGetAllocationGranularity__retval = hipError_t(chip.hipMemGetAllocationGranularity(&granularity,
+        hipMemAllocationProp.from_pyobj(prop)._ptr,option.value))    # fully specified
+    return (_hipMemGetAllocationGranularity__retval,granularity)
 
 
 @cython.embedsignature(True)
-def hipMemGetAllocationPropertiesFromHandle(hipMemAllocationProp prop, ihipMemGenericAllocationHandle handle):
+def hipMemGetAllocationPropertiesFromHandle(object prop, object handle):
     """@brief Retrieve the property structure of the given handle.
     @param [out] prop - properties of the given handle.
     @param [in] handle - handle to perform the query on.
@@ -15301,12 +23103,14 @@ def hipMemGetAllocationPropertiesFromHandle(hipMemAllocationProp prop, ihipMemGe
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipMemGetAllocationPropertiesFromHandle_____retval = hipError_t(chip.hipMemGetAllocationPropertiesFromHandle(prop._ptr,handle._ptr))    # fully specified
-    return hipMemGetAllocationPropertiesFromHandle_____retval
+    _hipMemGetAllocationPropertiesFromHandle__retval = hipError_t(chip.hipMemGetAllocationPropertiesFromHandle(
+        hipMemAllocationProp.from_pyobj(prop)._ptr,
+        ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr))    # fully specified
+    return _hipMemGetAllocationPropertiesFromHandle__retval
 
 
 @cython.embedsignature(True)
-def hipMemImportFromShareableHandle(osHandle, object shHandleType):
+def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
     """@brief Imports an allocation from a requested shareable handle type.
     @param [out] handle - returned value.
     @param [in] osHandle - shareable handle representing the memory allocation.
@@ -15318,10 +23122,13 @@ def hipMemImportFromShareableHandle(osHandle, object shHandleType):
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
     if not isinstance(shHandleType,hipMemAllocationHandleType):
         raise TypeError("argument 'shHandleType' must be of type 'hipMemAllocationHandleType'")
-    pass
+    _hipMemImportFromShareableHandle__retval = hipError_t(chip.hipMemImportFromShareableHandle(&handle._ptr,
+        <void *>DataHandle.from_pyobj(osHandle)._ptr,shHandleType.value))    # fully specified
+    return (_hipMemImportFromShareableHandle__retval,handle)
+
 
 @cython.embedsignature(True)
-def hipMemMap(ptr, int size, int offset, ihipMemGenericAllocationHandle handle, unsigned long long flags):
+def hipMemMap(object ptr, int size, int offset, object handle, unsigned long long flags):
     """@brief Maps an allocation handle to a reserved virtual address range.
     @param [in] ptr - address where the memory will be mapped.
     @param [in] size - size of the mapping.
@@ -15332,10 +23139,14 @@ def hipMemMap(ptr, int size, int offset, ihipMemGenericAllocationHandle handle, 
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    _hipMemMap__retval = hipError_t(chip.hipMemMap(
+        <void *>DataHandle.from_pyobj(ptr)._ptr,size,offset,
+        ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr,flags))    # fully specified
+    return _hipMemMap__retval
+
 
 @cython.embedsignature(True)
-def hipMemMapArrayAsync(hipArrayMapInfo mapInfoList, unsigned int count, ihipStream_t stream):
+def hipMemMapArrayAsync(object mapInfoList, unsigned int count, object stream):
     """@brief Maps or unmaps subregions of sparse HIP arrays and sparse HIP mipmapped arrays.
     @param [in] mapInfoList - list of hipArrayMapInfo.
     @param [in] count - number of hipArrayMapInfo in mapInfoList.
@@ -15344,24 +23155,27 @@ def hipMemMapArrayAsync(hipArrayMapInfo mapInfoList, unsigned int count, ihipStr
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipMemMapArrayAsync_____retval = hipError_t(chip.hipMemMapArrayAsync(mapInfoList._ptr,count,stream._ptr))    # fully specified
-    return hipMemMapArrayAsync_____retval
+    _hipMemMapArrayAsync__retval = hipError_t(chip.hipMemMapArrayAsync(
+        hipArrayMapInfo.from_pyobj(mapInfoList)._ptr,count,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemMapArrayAsync__retval
 
 
 @cython.embedsignature(True)
-def hipMemRelease(ihipMemGenericAllocationHandle handle):
+def hipMemRelease(object handle):
     """@brief Release a memory handle representing a memory allocation which was previously allocated through hipMemCreate.
     @param [in] handle - handle of the memory allocation.
     @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    hipMemRelease_____retval = hipError_t(chip.hipMemRelease(handle._ptr))    # fully specified
-    return hipMemRelease_____retval
+    _hipMemRelease__retval = hipError_t(chip.hipMemRelease(
+        ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr))    # fully specified
+    return _hipMemRelease__retval
 
 
 @cython.embedsignature(True)
-def hipMemRetainAllocationHandle(addr):
+def hipMemRetainAllocationHandle(object addr):
     """@brief Returns the allocation handle of the backing memory allocation given the address.
     @param [out] handle - handle representing addr.
     @param [in] addr - address to look up.
@@ -15370,10 +23184,13 @@ def hipMemRetainAllocationHandle(addr):
     it is still open to changes and may have outstanding issues.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL,owner=True)
-    pass
+    _hipMemRetainAllocationHandle__retval = hipError_t(chip.hipMemRetainAllocationHandle(&handle._ptr,
+        <void *>DataHandle.from_pyobj(addr)._ptr))    # fully specified
+    return (_hipMemRetainAllocationHandle__retval,handle)
+
 
 @cython.embedsignature(True)
-def hipMemSetAccess(ptr, int size, hipMemAccessDesc desc, int count):
+def hipMemSetAccess(object ptr, int size, object desc, int count):
     """@brief Set the access flags for each location specified in desc for the given virtual address range.
     @param [in] ptr - starting address of the virtual address range.
     @param [in] size - size of the range.
@@ -15383,10 +23200,14 @@ def hipMemSetAccess(ptr, int size, hipMemAccessDesc desc, int count):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    _hipMemSetAccess__retval = hipError_t(chip.hipMemSetAccess(
+        <void *>DataHandle.from_pyobj(ptr)._ptr,size,
+        hipMemAccessDesc.from_pyobj(desc)._ptr,count))    # fully specified
+    return _hipMemSetAccess__retval
+
 
 @cython.embedsignature(True)
-def hipMemUnmap(ptr, int size):
+def hipMemUnmap(object ptr, int size):
     """@brief Unmap memory allocation of a given address range.
     @param [in] ptr - starting address of the range to unmap.
     @param [in] size - size of the virtual address range.
@@ -15394,48 +23215,9 @@ def hipMemUnmap(ptr, int size):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
-
-
-cdef class GLuint:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef GLuint from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``GLuint`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef GLuint wrapper = GLuint.__new__(GLuint)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
-cdef class GLenum:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef GLenum from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``GLenum`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef GLenum wrapper = GLenum.__new__(GLenum)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
+    _hipMemUnmap__retval = hipError_t(chip.hipMemUnmap(
+        <void *>DataHandle.from_pyobj(ptr)._ptr,size))    # fully specified
+    return _hipMemUnmap__retval
 
 
 @cython.embedsignature(True)
@@ -15446,8 +23228,8 @@ def hipGLGetDevices(unsigned int hipDeviceCount, object deviceList):
     cdef int pHipDevices
     if not isinstance(deviceList,hipGLDeviceList):
         raise TypeError("argument 'deviceList' must be of type 'hipGLDeviceList'")
-    hipGLGetDevices_____retval = hipError_t(chip.hipGLGetDevices(&pHipDeviceCount,&pHipDevices,hipDeviceCount,deviceList.value))    # fully specified
-    return (hipGLGetDevices_____retval,pHipDeviceCount,pHipDevices)
+    _hipGLGetDevices__retval = hipError_t(chip.hipGLGetDevices(&pHipDeviceCount,&pHipDevices,hipDeviceCount,deviceList.value))    # fully specified
+    return (_hipGLGetDevices__retval,pHipDeviceCount,pHipDevices)
 
 
 @cython.embedsignature(True)
@@ -15455,8 +23237,8 @@ def hipGraphicsGLRegisterBuffer(GLuint buffer, unsigned int flags):
     """
     """
     resource = _hipGraphicsResource.from_ptr(NULL,owner=True)
-    hipGraphicsGLRegisterBuffer_____retval = hipError_t(chip.hipGraphicsGLRegisterBuffer(&resource._ptr,buffer,flags))    # fully specified
-    return (hipGraphicsGLRegisterBuffer_____retval,resource)
+    _hipGraphicsGLRegisterBuffer__retval = hipError_t(chip.hipGraphicsGLRegisterBuffer(&resource._ptr,buffer,flags))    # fully specified
+    return (_hipGraphicsGLRegisterBuffer__retval,resource)
 
 
 @cython.embedsignature(True)
@@ -15464,334 +23246,436 @@ def hipGraphicsGLRegisterImage(GLuint image, GLenum target, unsigned int flags):
     """
     """
     resource = _hipGraphicsResource.from_ptr(NULL,owner=True)
-    hipGraphicsGLRegisterImage_____retval = hipError_t(chip.hipGraphicsGLRegisterImage(&resource._ptr,image,target,flags))    # fully specified
-    return (hipGraphicsGLRegisterImage_____retval,resource)
+    _hipGraphicsGLRegisterImage__retval = hipError_t(chip.hipGraphicsGLRegisterImage(&resource._ptr,image,target,flags))    # fully specified
+    return (_hipGraphicsGLRegisterImage__retval,resource)
 
 
 @cython.embedsignature(True)
-def hipGraphicsMapResources(int count, ihipStream_t stream):
+def hipGraphicsMapResources(int count, object stream):
     """
     """
     resources = _hipGraphicsResource.from_ptr(NULL,owner=True)
-    hipGraphicsMapResources_____retval = hipError_t(chip.hipGraphicsMapResources(count,&resources._ptr,stream._ptr))    # fully specified
-    return (hipGraphicsMapResources_____retval,resources)
+    _hipGraphicsMapResources__retval = hipError_t(chip.hipGraphicsMapResources(count,&resources._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return (_hipGraphicsMapResources__retval,resources)
 
 
 @cython.embedsignature(True)
-def hipGraphicsSubResourceGetMappedArray(_hipGraphicsResource resource, unsigned int arrayIndex, unsigned int mipLevel):
+def hipGraphicsSubResourceGetMappedArray(object resource, unsigned int arrayIndex, unsigned int mipLevel):
     """
     """
     array = hipArray.from_ptr(NULL,owner=True)
-    hipGraphicsSubResourceGetMappedArray_____retval = hipError_t(chip.hipGraphicsSubResourceGetMappedArray(&array._ptr,resource._ptr,arrayIndex,mipLevel))    # fully specified
-    return (hipGraphicsSubResourceGetMappedArray_____retval,array)
+    _hipGraphicsSubResourceGetMappedArray__retval = hipError_t(chip.hipGraphicsSubResourceGetMappedArray(&array._ptr,
+        _hipGraphicsResource.from_pyobj(resource)._ptr,arrayIndex,mipLevel))    # fully specified
+    return (_hipGraphicsSubResourceGetMappedArray__retval,array)
 
 
 @cython.embedsignature(True)
-def hipGraphicsResourceGetMappedPointer(_hipGraphicsResource resource):
+def hipGraphicsResourceGetMappedPointer(object resource):
     """
     """
+    devPtr = DataHandle.from_ptr(NULL)
     cdef int size
-    pass
+    _hipGraphicsResourceGetMappedPointer__retval = hipError_t(chip.hipGraphicsResourceGetMappedPointer(
+        <void **>&devPtr._ptr,&size,
+        _hipGraphicsResource.from_pyobj(resource)._ptr))    # fully specified
+    return (_hipGraphicsResourceGetMappedPointer__retval,devPtr,size)
+
 
 @cython.embedsignature(True)
-def hipGraphicsUnmapResources(int count, ihipStream_t stream):
+def hipGraphicsUnmapResources(int count, object stream):
     """
     """
     resources = _hipGraphicsResource.from_ptr(NULL,owner=True)
-    hipGraphicsUnmapResources_____retval = hipError_t(chip.hipGraphicsUnmapResources(count,&resources._ptr,stream._ptr))    # fully specified
-    return (hipGraphicsUnmapResources_____retval,resources)
+    _hipGraphicsUnmapResources__retval = hipError_t(chip.hipGraphicsUnmapResources(count,&resources._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return (_hipGraphicsUnmapResources__retval,resources)
 
 
 @cython.embedsignature(True)
-def hipGraphicsUnregisterResource(_hipGraphicsResource resource):
+def hipGraphicsUnregisterResource(object resource):
     """
     """
-    hipGraphicsUnregisterResource_____retval = hipError_t(chip.hipGraphicsUnregisterResource(resource._ptr))    # fully specified
-    return hipGraphicsUnregisterResource_____retval
+    _hipGraphicsUnregisterResource__retval = hipError_t(chip.hipGraphicsUnregisterResource(
+        _hipGraphicsResource.from_pyobj(resource)._ptr))    # fully specified
+    return _hipGraphicsUnregisterResource__retval
 
 
 @cython.embedsignature(True)
-def hipMemcpy_spt(dst, src, int sizeBytes, object kind):
+def hipMemcpy_spt(object dst, object src, int sizeBytes, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy_spt__retval = hipError_t(chip.hipMemcpy_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
+    return _hipMemcpy_spt__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyToSymbol_spt(symbol, src, int sizeBytes, int offset, object kind):
+def hipMemcpyToSymbol_spt(object symbol, object src, int sizeBytes, int offset, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyToSymbol_spt__retval = hipError_t(chip.hipMemcpyToSymbol_spt(
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
+    return _hipMemcpyToSymbol_spt__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyFromSymbol_spt(dst, symbol, int sizeBytes, int offset, object kind):
+def hipMemcpyFromSymbol_spt(object dst, object symbol, int sizeBytes, int offset, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyFromSymbol_spt__retval = hipError_t(chip.hipMemcpyFromSymbol_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
+    return _hipMemcpyFromSymbol_spt__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy2D_spt(dst, int dpitch, src, int spitch, int width, int height, object kind):
+def hipMemcpy2D_spt(object dst, int dpitch, object src, int spitch, int width, int height, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy2D_spt__retval = hipError_t(chip.hipMemcpy2D_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+    return _hipMemcpy2D_spt__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy2DFromArray_spt(dst, int dpitch, hipArray src, int wOffset, int hOffset, int width, int height, object kind):
+def hipMemcpy2DFromArray_spt(object dst, int dpitch, object src, int wOffset, int hOffset, int width, int height, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    _hipMemcpy2DFromArray_spt__retval = hipError_t(chip.hipMemcpy2DFromArray_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value))    # fully specified
+    return _hipMemcpy2DFromArray_spt__retval
+
+
+@cython.embedsignature(True)
+def hipMemcpy3D_spt(object p):
+    """
+    """
+    _hipMemcpy3D_spt__retval = hipError_t(chip.hipMemcpy3D_spt(
+        hipMemcpy3DParms.from_pyobj(p)._ptr))    # fully specified
+    return _hipMemcpy3D_spt__retval
+
+
+@cython.embedsignature(True)
+def hipMemset_spt(object dst, int value, int sizeBytes):
+    """
+    """
+    _hipMemset_spt__retval = hipError_t(chip.hipMemset_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
+    return _hipMemset_spt__retval
+
+
+@cython.embedsignature(True)
+def hipMemsetAsync_spt(object dst, int value, int sizeBytes, object stream):
+    """
+    """
+    _hipMemsetAsync_spt__retval = hipError_t(chip.hipMemsetAsync_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemsetAsync_spt__retval
+
+
+@cython.embedsignature(True)
+def hipMemset2D_spt(object dst, int pitch, int value, int width, int height):
+    """
+    """
+    _hipMemset2D_spt__retval = hipError_t(chip.hipMemset2D_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
+    return _hipMemset2D_spt__retval
+
+
+@cython.embedsignature(True)
+def hipMemset2DAsync_spt(object dst, int pitch, int value, int width, int height, object stream):
+    """
+    """
+    _hipMemset2DAsync_spt__retval = hipError_t(chip.hipMemset2DAsync_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemset2DAsync_spt__retval
+
+
+@cython.embedsignature(True)
+def hipMemset3DAsync_spt(int value, object stream):
+    """
+    """
     pass
 
 @cython.embedsignature(True)
-def hipMemcpy3D_spt(hipMemcpy3DParms p):
-    """
-    """
-    hipMemcpy3D_spt_____retval = hipError_t(chip.hipMemcpy3D_spt(p._ptr))    # fully specified
-    return hipMemcpy3D_spt_____retval
-
-
-@cython.embedsignature(True)
-def hipMemset_spt(dst, int value, int sizeBytes):
+def hipMemset3D_spt(int value):
     """
     """
     pass
 
 @cython.embedsignature(True)
-def hipMemsetAsync_spt(dst, int value, int sizeBytes, ihipStream_t stream):
-    """
-    """
-    pass
-
-@cython.embedsignature(True)
-def hipMemset2D_spt(dst, int pitch, int value, int width, int height):
-    """
-    """
-    pass
-
-@cython.embedsignature(True)
-def hipMemset2DAsync_spt(dst, int pitch, int value, int width, int height, ihipStream_t stream):
-    """
-    """
-    pass
-
-@cython.embedsignature(True)
-def hipMemset3DAsync_spt(pitchedDevPtr, int value, extent, ihipStream_t stream):
-    """
-    """
-    pass
-
-@cython.embedsignature(True)
-def hipMemset3D_spt(pitchedDevPtr, int value, extent):
-    """
-    """
-    pass
-
-@cython.embedsignature(True)
-def hipMemcpyAsync_spt(dst, src, int sizeBytes, object kind, ihipStream_t stream):
+def hipMemcpyAsync_spt(object dst, object src, int sizeBytes, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
-
-@cython.embedsignature(True)
-def hipMemcpy3DAsync_spt(hipMemcpy3DParms p, ihipStream_t stream):
-    """
-    """
-    hipMemcpy3DAsync_spt_____retval = hipError_t(chip.hipMemcpy3DAsync_spt(p._ptr,stream._ptr))    # fully specified
-    return hipMemcpy3DAsync_spt_____retval
+    _hipMemcpyAsync_spt__retval = hipError_t(chip.hipMemcpyAsync_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyAsync_spt__retval
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DAsync_spt(dst, int dpitch, src, int spitch, int width, int height, object kind, ihipStream_t stream):
+def hipMemcpy3DAsync_spt(object p, object stream):
+    """
+    """
+    _hipMemcpy3DAsync_spt__retval = hipError_t(chip.hipMemcpy3DAsync_spt(
+        hipMemcpy3DParms.from_pyobj(p)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpy3DAsync_spt__retval
+
+
+@cython.embedsignature(True)
+def hipMemcpy2DAsync_spt(object dst, int dpitch, object src, int spitch, int width, int height, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy2DAsync_spt__retval = hipError_t(chip.hipMemcpy2DAsync_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpy2DAsync_spt__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyFromSymbolAsync_spt(dst, symbol, int sizeBytes, int offset, object kind, ihipStream_t stream):
+def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, int sizeBytes, int offset, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyFromSymbolAsync_spt__retval = hipError_t(chip.hipMemcpyFromSymbolAsync_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyFromSymbolAsync_spt__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyToSymbolAsync_spt(symbol, src, int sizeBytes, int offset, object kind, ihipStream_t stream):
+def hipMemcpyToSymbolAsync_spt(object symbol, object src, int sizeBytes, int offset, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyToSymbolAsync_spt__retval = hipError_t(chip.hipMemcpyToSymbolAsync_spt(
+        <const void *>DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpyToSymbolAsync_spt__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpyFromArray_spt(dst, hipArray src, int wOffsetSrc, int hOffset, int count, object kind):
+def hipMemcpyFromArray_spt(object dst, object src, int wOffsetSrc, int hOffset, int count, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpyFromArray_spt__retval = hipError_t(chip.hipMemcpyFromArray_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,
+        hipArray.from_pyobj(src)._ptr,wOffsetSrc,hOffset,count,kind.value))    # fully specified
+    return _hipMemcpyFromArray_spt__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy2DToArray_spt(hipArray dst, int wOffset, int hOffset, src, int spitch, int width, int height, object kind):
+def hipMemcpy2DToArray_spt(object dst, int wOffset, int hOffset, object src, int spitch, int width, int height, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy2DToArray_spt__retval = hipError_t(chip.hipMemcpy2DToArray_spt(
+        hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
+        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+    return _hipMemcpy2DToArray_spt__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy2DFromArrayAsync_spt(dst, int dpitch, hipArray src, int wOffsetSrc, int hOffsetSrc, int width, int height, object kind, ihipStream_t stream):
+def hipMemcpy2DFromArrayAsync_spt(object dst, int dpitch, object src, int wOffsetSrc, int hOffsetSrc, int width, int height, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
+    _hipMemcpy2DFromArrayAsync_spt__retval = hipError_t(chip.hipMemcpy2DFromArrayAsync_spt(
+        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        hipArray.from_pyobj(src)._ptr,wOffsetSrc,hOffsetSrc,width,height,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpy2DFromArrayAsync_spt__retval
+
 
 @cython.embedsignature(True)
-def hipMemcpy2DToArrayAsync_spt(hipArray dst, int wOffset, int hOffset, src, int spitch, int width, int height, object kind, ihipStream_t stream):
+def hipMemcpy2DToArrayAsync_spt(object dst, int wOffset, int hOffset, object src, int spitch, int width, int height, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
-    pass
-
-@cython.embedsignature(True)
-def hipStreamQuery_spt(ihipStream_t stream):
-    """
-    """
-    hipStreamQuery_spt_____retval = hipError_t(chip.hipStreamQuery_spt(stream._ptr))    # fully specified
-    return hipStreamQuery_spt_____retval
+    _hipMemcpy2DToArrayAsync_spt__retval = hipError_t(chip.hipMemcpy2DToArrayAsync_spt(
+        hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
+        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipMemcpy2DToArrayAsync_spt__retval
 
 
 @cython.embedsignature(True)
-def hipStreamSynchronize_spt(ihipStream_t stream):
+def hipStreamQuery_spt(object stream):
     """
     """
-    hipStreamSynchronize_spt_____retval = hipError_t(chip.hipStreamSynchronize_spt(stream._ptr))    # fully specified
-    return hipStreamSynchronize_spt_____retval
+    _hipStreamQuery_spt__retval = hipError_t(chip.hipStreamQuery_spt(
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipStreamQuery_spt__retval
 
 
 @cython.embedsignature(True)
-def hipStreamGetPriority_spt(ihipStream_t stream):
+def hipStreamSynchronize_spt(object stream):
+    """
+    """
+    _hipStreamSynchronize_spt__retval = hipError_t(chip.hipStreamSynchronize_spt(
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipStreamSynchronize_spt__retval
+
+
+@cython.embedsignature(True)
+def hipStreamGetPriority_spt(object stream):
     """
     """
     cdef int priority
-    hipStreamGetPriority_spt_____retval = hipError_t(chip.hipStreamGetPriority_spt(stream._ptr,&priority))    # fully specified
-    return (hipStreamGetPriority_spt_____retval,priority)
+    _hipStreamGetPriority_spt__retval = hipError_t(chip.hipStreamGetPriority_spt(
+        ihipStream_t.from_pyobj(stream)._ptr,&priority))    # fully specified
+    return (_hipStreamGetPriority_spt__retval,priority)
 
 
 @cython.embedsignature(True)
-def hipStreamWaitEvent_spt(ihipStream_t stream, ihipEvent_t event, unsigned int flags):
+def hipStreamWaitEvent_spt(object stream, object event, unsigned int flags):
     """
     """
-    hipStreamWaitEvent_spt_____retval = hipError_t(chip.hipStreamWaitEvent_spt(stream._ptr,event._ptr,flags))    # fully specified
-    return hipStreamWaitEvent_spt_____retval
+    _hipStreamWaitEvent_spt__retval = hipError_t(chip.hipStreamWaitEvent_spt(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        ihipEvent_t.from_pyobj(event)._ptr,flags))    # fully specified
+    return _hipStreamWaitEvent_spt__retval
 
 
 @cython.embedsignature(True)
-def hipStreamGetFlags_spt(ihipStream_t stream):
+def hipStreamGetFlags_spt(object stream):
     """
     """
     cdef unsigned int flags
-    hipStreamGetFlags_spt_____retval = hipError_t(chip.hipStreamGetFlags_spt(stream._ptr,&flags))    # fully specified
-    return (hipStreamGetFlags_spt_____retval,flags)
+    _hipStreamGetFlags_spt__retval = hipError_t(chip.hipStreamGetFlags_spt(
+        ihipStream_t.from_pyobj(stream)._ptr,&flags))    # fully specified
+    return (_hipStreamGetFlags_spt__retval,flags)
 
 
 @cython.embedsignature(True)
-def hipStreamAddCallback_spt(ihipStream_t stream, callback, userData, unsigned int flags):
+def hipStreamAddCallback_spt(object stream, object userData, unsigned int flags):
     """
     """
     pass
 
 @cython.embedsignature(True)
-def hipEventRecord_spt(ihipEvent_t event, ihipStream_t stream):
+def hipEventRecord_spt(object event, object stream):
     """
     """
-    hipEventRecord_spt_____retval = hipError_t(chip.hipEventRecord_spt(event._ptr,stream._ptr))    # fully specified
-    return hipEventRecord_spt_____retval
+    _hipEventRecord_spt__retval = hipError_t(chip.hipEventRecord_spt(
+        ihipEvent_t.from_pyobj(event)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipEventRecord_spt__retval
 
 
 @cython.embedsignature(True)
-def hipLaunchCooperativeKernel_spt(f, gridDim, blockDim, uint32_t sharedMemBytes, ihipStream_t hStream):
+def hipLaunchCooperativeKernel_spt(object f, object kernelParams, uint32_t sharedMemBytes, object hStream):
     """
     """
     pass
 
 @cython.embedsignature(True)
-def hipLaunchKernel_spt(function_address, numBlocks, dimBlocks, int sharedMemBytes, ihipStream_t stream):
+def hipLaunchKernel_spt(object function_address, object args, int sharedMemBytes, object stream):
     """
     """
     pass
 
 @cython.embedsignature(True)
-def hipGraphLaunch_spt(hipGraphExec graphExec, ihipStream_t stream):
+def hipGraphLaunch_spt(object graphExec, object stream):
     """
     """
-    hipGraphLaunch_spt_____retval = hipError_t(chip.hipGraphLaunch_spt(graphExec._ptr,stream._ptr))    # fully specified
-    return hipGraphLaunch_spt_____retval
+    _hipGraphLaunch_spt__retval = hipError_t(chip.hipGraphLaunch_spt(
+        hipGraphExec.from_pyobj(graphExec)._ptr,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipGraphLaunch_spt__retval
 
 
 @cython.embedsignature(True)
-def hipStreamBeginCapture_spt(ihipStream_t stream, object mode):
+def hipStreamBeginCapture_spt(object stream, object mode):
     """
     """
     if not isinstance(mode,hipStreamCaptureMode):
         raise TypeError("argument 'mode' must be of type 'hipStreamCaptureMode'")
-    hipStreamBeginCapture_spt_____retval = hipError_t(chip.hipStreamBeginCapture_spt(stream._ptr,mode.value))    # fully specified
-    return hipStreamBeginCapture_spt_____retval
+    _hipStreamBeginCapture_spt__retval = hipError_t(chip.hipStreamBeginCapture_spt(
+        ihipStream_t.from_pyobj(stream)._ptr,mode.value))    # fully specified
+    return _hipStreamBeginCapture_spt__retval
 
 
 @cython.embedsignature(True)
-def hipStreamEndCapture_spt(ihipStream_t stream):
+def hipStreamEndCapture_spt(object stream):
     """
     """
     pGraph = ihipGraph.from_ptr(NULL,owner=True)
-    hipStreamEndCapture_spt_____retval = hipError_t(chip.hipStreamEndCapture_spt(stream._ptr,&pGraph._ptr))    # fully specified
-    return (hipStreamEndCapture_spt_____retval,pGraph)
+    _hipStreamEndCapture_spt__retval = hipError_t(chip.hipStreamEndCapture_spt(
+        ihipStream_t.from_pyobj(stream)._ptr,&pGraph._ptr))    # fully specified
+    return (_hipStreamEndCapture_spt__retval,pGraph)
 
 
 @cython.embedsignature(True)
-def hipStreamIsCapturing_spt(ihipStream_t stream):
+def hipStreamIsCapturing_spt(object stream):
     """
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
-    hipStreamIsCapturing_spt_____retval = hipError_t(chip.hipStreamIsCapturing_spt(stream._ptr,&pCaptureStatus))    # fully specified
-    return (hipStreamIsCapturing_spt_____retval,hipStreamCaptureStatus(pCaptureStatus))
+    _hipStreamIsCapturing_spt__retval = hipError_t(chip.hipStreamIsCapturing_spt(
+        ihipStream_t.from_pyobj(stream)._ptr,&pCaptureStatus))    # fully specified
+    return (_hipStreamIsCapturing_spt__retval,hipStreamCaptureStatus(pCaptureStatus))
 
 
 @cython.embedsignature(True)
-def hipStreamGetCaptureInfo_spt(ihipStream_t stream):
+def hipStreamGetCaptureInfo_spt(object stream):
     """
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     cdef unsigned long long pId
-    hipStreamGetCaptureInfo_spt_____retval = hipError_t(chip.hipStreamGetCaptureInfo_spt(stream._ptr,&pCaptureStatus,&pId))    # fully specified
-    return (hipStreamGetCaptureInfo_spt_____retval,hipStreamCaptureStatus(pCaptureStatus),pId)
+    _hipStreamGetCaptureInfo_spt__retval = hipError_t(chip.hipStreamGetCaptureInfo_spt(
+        ihipStream_t.from_pyobj(stream)._ptr,&pCaptureStatus,&pId))    # fully specified
+    return (_hipStreamGetCaptureInfo_spt__retval,hipStreamCaptureStatus(pCaptureStatus),pId)
 
 
 @cython.embedsignature(True)
-def hipStreamGetCaptureInfo_v2_spt(ihipStream_t stream):
+def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
     """
     """
     cdef chip.hipStreamCaptureStatus captureStatus_out
     cdef unsigned long long id_out
     graph_out = ihipGraph.from_ptr(NULL,owner=True)
     cdef int numDependencies_out
-    pass
+    _hipStreamGetCaptureInfo_v2_spt__retval = hipError_t(chip.hipStreamGetCaptureInfo_v2_spt(
+        ihipStream_t.from_pyobj(stream)._ptr,&captureStatus_out,&id_out,&graph_out._ptr,
+        <chip.hipGraphNode_t **>DataHandle.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
+    return (_hipStreamGetCaptureInfo_v2_spt__retval,hipStreamCaptureStatus(captureStatus_out),id_out,graph_out,numDependencies_out)
+
 
 @cython.embedsignature(True)
-def hipLaunchHostFunc_spt(ihipStream_t stream, fn, userData):
+def hipLaunchHostFunc_spt(object stream, object userData):
     """
     """
     pass

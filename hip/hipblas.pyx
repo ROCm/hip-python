@@ -1,10 +1,17 @@
 # AMD_COPYRIGHT
+# c imports
 from libc cimport stdlib
 from libc.stdint cimport *
+cimport cpython.long
+cimport cpython.buffer
+# python imports
 import cython
+import ctypes
 import enum
+from hip._util.datahandle cimport DataHandle
 #ctypedef int16_t __int16_t
 #ctypedef uint16_t __uint16_t
+from .hip cimport ihipStream_t
 
 from . cimport chipblas
 hipblasVersionMajor = chipblas.hipblasVersionMajor
@@ -15,163 +22,154 @@ hipblasVersionMinor = chipblas.hipblasVersionMinor
 
 hipblasVersionPatch = chipblas.hipblasVersionPatch
 
-
-cdef class __int16_t:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef __int16_t from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``__int16_t`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef __int16_t wrapper = __int16_t.__new__(__int16_t)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
-cdef class __uint16_t:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef __uint16_t from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``__uint16_t`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef __uint16_t wrapper = __uint16_t.__new__(__uint16_t)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
 cdef class hipblasHandle_t:
-    cdef void* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipblasHandle_t from_ptr(void *_ptr, bint owner=False):
+    cdef hipblasHandle_t from_ptr(void * ptr, bint owner=False):
         """Factory function to create ``hipblasHandle_t`` objects from
         given ``void`` pointer.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipblasHandle_t wrapper = hipblasHandle_t.__new__(hipblasHandle_t)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
-
-
-
-cdef class hipblasHalf:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
 
     @staticmethod
-    cdef hipblasHalf from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipblasHalf`` objects from
-        given ``void`` pointer.
+    cdef hipblasHandle_t from_pyobj(object pyobj):
+        """Derives a hipblasHandle_t from a Python object.
+
+        Derives a hipblasHandle_t from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipblasHandle_t`` reference, this method
+        returns it directly. No new ``hipblasHandle_t`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipblasHandle_t``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipblasHandle_t!
         """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipblasHalf wrapper = hipblasHalf.__new__(hipblasHalf)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
+        cdef hipblasHandle_t wrapper = hipblasHandle_t.__new__(hipblasHandle_t)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipblasHandle_t):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <void *>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper
-
-
-
-cdef class hipblasInt8:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipblasInt8 from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipblasInt8`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipblasInt8 wrapper = hipblasInt8.__new__(hipblasInt8)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
-
-
-cdef class hipblasStride:
-    cdef void* _ptr
-    cdef bint ptr_owner
-
-    def __cinit__(self):
-        self._ptr = NULL
-        self.ptr_owner = False
-
-    @staticmethod
-    cdef hipblasStride from_ptr(void *_ptr, bint owner=False):
-        """Factory function to create ``hipblasStride`` objects from
-        given ``void`` pointer.
-        """
-        # Fast call to __new__() that bypasses the __init__() constructor.
-        cdef hipblasStride wrapper = hipblasStride.__new__(hipblasStride)
-        wrapper._ptr = _ptr
-        wrapper.ptr_owner = owner
-        return wrapper
-
+    def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipblasHandle_t object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
 
 
 cdef class hipblasBfloat16:
-    cdef chipblas.hipblasBfloat16* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipblasBfloat16 from_ptr(chipblas.hipblasBfloat16 *_ptr, bint owner=False):
+    cdef hipblasBfloat16 from_ptr(chipblas.hipblasBfloat16* ptr, bint owner=False):
         """Factory function to create ``hipblasBfloat16`` objects from
         given ``chipblas.hipblasBfloat16`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipblasBfloat16 wrapper = hipblasBfloat16.__new__(hipblasBfloat16)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipblasBfloat16 from_pyobj(object pyobj):
+        """Derives a hipblasBfloat16 from a Python object.
+
+        Derives a hipblasBfloat16 from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipblasBfloat16`` reference, this method
+        returns it directly. No new ``hipblasBfloat16`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipblasBfloat16``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipblasBfloat16!
+        """
+        cdef hipblasBfloat16 wrapper = hipblasBfloat16.__new__(hipblasBfloat16)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipblasBfloat16):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chipblas.hipblasBfloat16*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chipblas.hipblasBfloat16*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chipblas.hipblasBfloat16*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chipblas.hipblasBfloat16** ptr):
-        ptr[0] = <chipblas.hipblasBfloat16 *>stdlib.malloc(sizeof(chipblas.hipblasBfloat16))
+        ptr[0] = <chipblas.hipblasBfloat16*>stdlib.malloc(sizeof(chipblas.hipblasBfloat16))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -181,13 +179,26 @@ cdef class hipblasBfloat16:
     cdef hipblasBfloat16 new():
         """Factory function to create hipblasBfloat16 objects with
         newly allocated chipblas.hipblasBfloat16"""
-        cdef chipblas.hipblasBfloat16 *ptr;
+        cdef chipblas.hipblasBfloat16* ptr;
         hipblasBfloat16.__allocate(&ptr)
         return hipblasBfloat16.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipblasBfloat16.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipblasBfloat16 object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_data(self, i):
         """Get value ``data`` of ``self._ptr[i]``.
         """
@@ -204,37 +215,78 @@ cdef class hipblasBfloat16:
         self.set_data(0,value)
 
 
-
 cdef class hipblasComplex:
-    cdef chipblas.hipblasComplex* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipblasComplex from_ptr(chipblas.hipblasComplex *_ptr, bint owner=False):
+    cdef hipblasComplex from_ptr(chipblas.hipblasComplex* ptr, bint owner=False):
         """Factory function to create ``hipblasComplex`` objects from
         given ``chipblas.hipblasComplex`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipblasComplex wrapper = hipblasComplex.__new__(hipblasComplex)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipblasComplex from_pyobj(object pyobj):
+        """Derives a hipblasComplex from a Python object.
+
+        Derives a hipblasComplex from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipblasComplex`` reference, this method
+        returns it directly. No new ``hipblasComplex`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipblasComplex``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipblasComplex!
+        """
+        cdef hipblasComplex wrapper = hipblasComplex.__new__(hipblasComplex)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipblasComplex):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chipblas.hipblasComplex*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chipblas.hipblasComplex*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chipblas.hipblasComplex*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chipblas.hipblasComplex** ptr):
-        ptr[0] = <chipblas.hipblasComplex *>stdlib.malloc(sizeof(chipblas.hipblasComplex))
+        ptr[0] = <chipblas.hipblasComplex*>stdlib.malloc(sizeof(chipblas.hipblasComplex))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -244,13 +296,26 @@ cdef class hipblasComplex:
     cdef hipblasComplex new():
         """Factory function to create hipblasComplex objects with
         newly allocated chipblas.hipblasComplex"""
-        cdef chipblas.hipblasComplex *ptr;
+        cdef chipblas.hipblasComplex* ptr;
         hipblasComplex.__allocate(&ptr)
         return hipblasComplex.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipblasComplex.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipblasComplex object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -281,37 +346,78 @@ cdef class hipblasComplex:
         self.set_y(0,value)
 
 
-
 cdef class hipblasDoubleComplex:
-    cdef chipblas.hipblasDoubleComplex* _ptr
-    cdef bint ptr_owner
+    # members declared in pxd file
 
     def __cinit__(self):
         self._ptr = NULL
         self.ptr_owner = False
+        self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipblasDoubleComplex from_ptr(chipblas.hipblasDoubleComplex *_ptr, bint owner=False):
+    cdef hipblasDoubleComplex from_ptr(chipblas.hipblasDoubleComplex* ptr, bint owner=False):
         """Factory function to create ``hipblasDoubleComplex`` objects from
         given ``chipblas.hipblasDoubleComplex`` pointer.
 
         Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
+        the extension type to ``free`` the structure pointed to by ``ptr``
         when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipblasDoubleComplex wrapper = hipblasDoubleComplex.__new__(hipblasDoubleComplex)
-        wrapper._ptr = _ptr
+        wrapper._ptr = ptr
         wrapper.ptr_owner = owner
         return wrapper
+
+    @staticmethod
+    cdef hipblasDoubleComplex from_pyobj(object pyobj):
+        """Derives a hipblasDoubleComplex from a Python object.
+
+        Derives a hipblasDoubleComplex from the given Python object ``pyobj``.
+        In case ``pyobj`` is itself an ``hipblasDoubleComplex`` reference, this method
+        returns it directly. No new ``hipblasDoubleComplex`` is created in this case.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``hipblasDoubleComplex``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of hipblasDoubleComplex!
+        """
+        cdef hipblasDoubleComplex wrapper = hipblasDoubleComplex.__new__(hipblasDoubleComplex)
+        if pyobj is None:
+            wrapper._ptr = NULL
+        elif isinstance(pyobj,hipblasDoubleComplex):
+            return pyobj
+        elif isinstance(pyobj,int):
+            wrapper._ptr = <chipblas.hipblasDoubleComplex*>cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            wrapper._ptr = <chipblas.hipblasDoubleComplex*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                wrapper.ptr,
+                &wrapper._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            wrapper._py_buffer_acquired = True
+            wrapper._ptr = <chipblas.hipblasDoubleComplex*>wrapper._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
+        return wrapper
     def __dealloc__(self):
+        # Release the buffer handle
+        if self._py_buffer_acquired is True:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
         # De-allocate if not null and flag is set
         if self._ptr is not NULL and self.ptr_owner is True:
             stdlib.free(self._ptr)
             self._ptr = NULL
     @staticmethod
     cdef __allocate(chipblas.hipblasDoubleComplex** ptr):
-        ptr[0] = <chipblas.hipblasDoubleComplex *>stdlib.malloc(sizeof(chipblas.hipblasDoubleComplex))
+        ptr[0] = <chipblas.hipblasDoubleComplex*>stdlib.malloc(sizeof(chipblas.hipblasDoubleComplex))
 
         if ptr[0] is NULL:
             raise MemoryError
@@ -321,13 +427,26 @@ cdef class hipblasDoubleComplex:
     cdef hipblasDoubleComplex new():
         """Factory function to create hipblasDoubleComplex objects with
         newly allocated chipblas.hipblasDoubleComplex"""
-        cdef chipblas.hipblasDoubleComplex *ptr;
+        cdef chipblas.hipblasDoubleComplex* ptr;
         hipblasDoubleComplex.__allocate(&ptr)
         return hipblasDoubleComplex.from_ptr(ptr, owner=True)
     
     def __init__(self):
        hipblasDoubleComplex.__allocate(&self._ptr)
        self.ptr_owner = True
+    
+    @property
+    def ptr(self):
+        """Returns the data's address as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<hipblasDoubleComplex object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """Returns the data's address as `ctypes.c_void_p`"""
+        return ctypes.c_void_p(self.ptr)
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -429,65 +548,77 @@ class hipblasInt8Datatype_t(enum.IntEnum):
 def hipblasCreate():
     """! \brief Create hipblas handle. */
     """
-    handle = hipblasHandle_t.from_ptr(NULL,owner=True)
-    hipblasCreate_____retval = hipblasStatus_t(chipblas.hipblasCreate(&handle._ptr))    # fully specified
-    return (hipblasCreate_____retval,handle)
+    handle = DataHandle.from_ptr(NULL)
+    _hipblasCreate__retval = hipblasStatus_t(chipblas.hipblasCreate(
+        <void **>&handle._ptr))    # fully specified
+    return (_hipblasCreate__retval,handle)
 
 
 @cython.embedsignature(True)
-def hipblasDestroy(hipblasHandle_t handle):
+def hipblasDestroy(object handle):
     """! \brief Destroys the library context created using hipblasCreate() */
     """
-    hipblasDestroy_____retval = hipblasStatus_t(chipblas.hipblasDestroy(handle._ptr))    # fully specified
-    return hipblasDestroy_____retval
+    _hipblasDestroy__retval = hipblasStatus_t(chipblas.hipblasDestroy(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr))    # fully specified
+    return _hipblasDestroy__retval
 
 
 @cython.embedsignature(True)
-def hipblasSetStream(hipblasHandle_t handle, streamId):
+def hipblasSetStream(object handle, object streamId):
     """! \brief Set stream for handle */
     """
-    pass
+    _hipblasSetStream__retval = hipblasStatus_t(chipblas.hipblasSetStream(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        ihipStream_t.from_pyobj(streamId)._ptr))    # fully specified
+    return _hipblasSetStream__retval
+
 
 @cython.embedsignature(True)
-def hipblasGetStream(hipblasHandle_t handle):
+def hipblasGetStream(object handle, object streamId):
     """! \brief Get stream[0] for handle */
     """
-    pass
+    _hipblasGetStream__retval = hipblasStatus_t(chipblas.hipblasGetStream(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        <chipblas.hipStream_t*>DataHandle.from_pyobj(streamId)._ptr))    # fully specified
+    return _hipblasGetStream__retval
+
 
 @cython.embedsignature(True)
-def hipblasSetPointerMode(hipblasHandle_t handle, object mode):
+def hipblasSetPointerMode(object handle, object mode):
     """! \brief Set hipblas pointer mode */
     """
     if not isinstance(mode,hipblasPointerMode_t):
         raise TypeError("argument 'mode' must be of type 'hipblasPointerMode_t'")
-    hipblasSetPointerMode_____retval = hipblasStatus_t(chipblas.hipblasSetPointerMode(handle._ptr,mode.value))    # fully specified
-    return hipblasSetPointerMode_____retval
+    _hipblasSetPointerMode__retval = hipblasStatus_t(chipblas.hipblasSetPointerMode(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,mode.value))    # fully specified
+    return _hipblasSetPointerMode__retval
 
 
 @cython.embedsignature(True)
-def hipblasGetPointerMode(hipblasHandle_t handle, mode):
+def hipblasGetPointerMode(object handle):
     """! \brief Get hipblas pointer mode */
     """
     pass
 
 @cython.embedsignature(True)
-def hipblasSetInt8Datatype(hipblasHandle_t handle, object int8Type):
+def hipblasSetInt8Datatype(object handle, object int8Type):
     """! \brief Set hipblas int8 Datatype */
     """
     if not isinstance(int8Type,hipblasInt8Datatype_t):
         raise TypeError("argument 'int8Type' must be of type 'hipblasInt8Datatype_t'")
-    hipblasSetInt8Datatype_____retval = hipblasStatus_t(chipblas.hipblasSetInt8Datatype(handle._ptr,int8Type.value))    # fully specified
-    return hipblasSetInt8Datatype_____retval
+    _hipblasSetInt8Datatype__retval = hipblasStatus_t(chipblas.hipblasSetInt8Datatype(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,int8Type.value))    # fully specified
+    return _hipblasSetInt8Datatype__retval
 
 
 @cython.embedsignature(True)
-def hipblasGetInt8Datatype(hipblasHandle_t handle, int8Type):
+def hipblasGetInt8Datatype(object handle):
     """! \brief Get hipblas int8 Datatype*/
     """
     pass
 
 @cython.embedsignature(True)
-def hipblasSetVector(int n, int elemSize, x, int incx, y, int incy):
+def hipblasSetVector(int n, int elemSize, object x, int incx, object y, int incy):
     """! \brief copy vector from host to device
         @param[in]
         n           [int]
@@ -506,10 +637,14 @@ def hipblasSetVector(int n, int elemSize, x, int incx, y, int incy):
         incy        [int]
                     specifies the increment for the elements of the vector
     """
-    pass
+    _hipblasSetVector__retval = hipblasStatus_t(chipblas.hipblasSetVector(n,elemSize,
+        <const void *>DataHandle.from_pyobj(x)._ptr,incx,
+        <void *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasSetVector__retval
+
 
 @cython.embedsignature(True)
-def hipblasGetVector(int n, int elemSize, x, int incx, y, int incy):
+def hipblasGetVector(int n, int elemSize, object x, int incx, object y, int incy):
     """! \brief copy vector from device to host
         @param[in]
         n           [int]
@@ -528,10 +663,14 @@ def hipblasGetVector(int n, int elemSize, x, int incx, y, int incy):
         incy        [int]
                     specifies the increment for the elements of the vector
     """
-    pass
+    _hipblasGetVector__retval = hipblasStatus_t(chipblas.hipblasGetVector(n,elemSize,
+        <const void *>DataHandle.from_pyobj(x)._ptr,incx,
+        <void *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasGetVector__retval
+
 
 @cython.embedsignature(True)
-def hipblasSetMatrix(int rows, int cols, int elemSize, AP, int lda, BP, int ldb):
+def hipblasSetMatrix(int rows, int cols, int elemSize, object AP, int lda, object BP, int ldb):
     """! \brief copy matrix from host to device
         @param[in]
         rows        [int]
@@ -553,10 +692,14 @@ def hipblasSetMatrix(int rows, int cols, int elemSize, AP, int lda, BP, int ldb)
         ldb         [int]
                     specifies the leading dimension of B, ldb >= rows
     """
-    pass
+    _hipblasSetMatrix__retval = hipblasStatus_t(chipblas.hipblasSetMatrix(rows,cols,elemSize,
+        <const void *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <void *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+    return _hipblasSetMatrix__retval
+
 
 @cython.embedsignature(True)
-def hipblasGetMatrix(int rows, int cols, int elemSize, AP, int lda, BP, int ldb):
+def hipblasGetMatrix(int rows, int cols, int elemSize, object AP, int lda, object BP, int ldb):
     """! \brief copy matrix from device to host
         @param[in]
         rows        [int]
@@ -578,10 +721,14 @@ def hipblasGetMatrix(int rows, int cols, int elemSize, AP, int lda, BP, int ldb)
         ldb         [int]
                     specifies the leading dimension of B, ldb >= rows
     """
-    pass
+    _hipblasGetMatrix__retval = hipblasStatus_t(chipblas.hipblasGetMatrix(rows,cols,elemSize,
+        <const void *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <void *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+    return _hipblasGetMatrix__retval
+
 
 @cython.embedsignature(True)
-def hipblasSetVectorAsync(int n, int elemSize, x, int incx, y, int incy, stream):
+def hipblasSetVectorAsync(int n, int elemSize, object x, int incx, object y, int incy, object stream):
     """! \brief asynchronously copy vector from host to device
         \details
         hipblasSetVectorAsync copies a vector from pinned host memory to device memory asynchronously.
@@ -605,10 +752,15 @@ def hipblasSetVectorAsync(int n, int elemSize, x, int incx, y, int incy, stream)
         @param[in]
         stream      specifies the stream into which this transfer request is queued
     """
-    pass
+    _hipblasSetVectorAsync__retval = hipblasStatus_t(chipblas.hipblasSetVectorAsync(n,elemSize,
+        <const void *>DataHandle.from_pyobj(x)._ptr,incx,
+        <void *>DataHandle.from_pyobj(y)._ptr,incy,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipblasSetVectorAsync__retval
+
 
 @cython.embedsignature(True)
-def hipblasGetVectorAsync(int n, int elemSize, x, int incx, y, int incy, stream):
+def hipblasGetVectorAsync(int n, int elemSize, object x, int incx, object y, int incy, object stream):
     """! \brief asynchronously copy vector from device to host
         \details
         hipblasGetVectorAsync copies a vector from pinned host memory to device memory asynchronously.
@@ -632,10 +784,15 @@ def hipblasGetVectorAsync(int n, int elemSize, x, int incx, y, int incy, stream)
         @param[in]
         stream      specifies the stream into which this transfer request is queued
     """
-    pass
+    _hipblasGetVectorAsync__retval = hipblasStatus_t(chipblas.hipblasGetVectorAsync(n,elemSize,
+        <const void *>DataHandle.from_pyobj(x)._ptr,incx,
+        <void *>DataHandle.from_pyobj(y)._ptr,incy,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipblasGetVectorAsync__retval
+
 
 @cython.embedsignature(True)
-def hipblasSetMatrixAsync(int rows, int cols, int elemSize, AP, int lda, BP, int ldb, stream):
+def hipblasSetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, object BP, int ldb, object stream):
     """! \brief asynchronously copy matrix from host to device
         \details
         hipblasSetMatrixAsync copies a matrix from pinned host memory to device memory asynchronously.
@@ -662,10 +819,15 @@ def hipblasSetMatrixAsync(int rows, int cols, int elemSize, AP, int lda, BP, int
         @param[in]
         stream      specifies the stream into which this transfer request is queued
     """
-    pass
+    _hipblasSetMatrixAsync__retval = hipblasStatus_t(chipblas.hipblasSetMatrixAsync(rows,cols,elemSize,
+        <const void *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <void *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipblasSetMatrixAsync__retval
+
 
 @cython.embedsignature(True)
-def hipblasGetMatrixAsync(int rows, int cols, int elemSize, AP, int lda, BP, int ldb, stream):
+def hipblasGetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, object BP, int ldb, object stream):
     """! \brief asynchronously copy matrix from device to host
         \details
         hipblasGetMatrixAsync copies a matrix from device memory to pinned host memory asynchronously.
@@ -692,26 +854,32 @@ def hipblasGetMatrixAsync(int rows, int cols, int elemSize, AP, int lda, BP, int
         @param[in]
         stream      specifies the stream into which this transfer request is queued
     """
-    pass
+    _hipblasGetMatrixAsync__retval = hipblasStatus_t(chipblas.hipblasGetMatrixAsync(rows,cols,elemSize,
+        <const void *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <void *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return _hipblasGetMatrixAsync__retval
+
 
 @cython.embedsignature(True)
-def hipblasSetAtomicsMode(hipblasHandle_t handle, object atomics_mode):
+def hipblasSetAtomicsMode(object handle, object atomics_mode):
     """! \brief Set hipblasSetAtomicsMode*/
     """
     if not isinstance(atomics_mode,hipblasAtomicsMode_t):
         raise TypeError("argument 'atomics_mode' must be of type 'hipblasAtomicsMode_t'")
-    hipblasSetAtomicsMode_____retval = hipblasStatus_t(chipblas.hipblasSetAtomicsMode(handle._ptr,atomics_mode.value))    # fully specified
-    return hipblasSetAtomicsMode_____retval
+    _hipblasSetAtomicsMode__retval = hipblasStatus_t(chipblas.hipblasSetAtomicsMode(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,atomics_mode.value))    # fully specified
+    return _hipblasSetAtomicsMode__retval
 
 
 @cython.embedsignature(True)
-def hipblasGetAtomicsMode(hipblasHandle_t handle, atomics_mode):
+def hipblasGetAtomicsMode(object handle):
     """! \brief Get hipblasSetAtomicsMode*/
     """
     pass
 
 @cython.embedsignature(True)
-def hipblasIsamax(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasIsamax(object handle, int n, object x, int incx, object result):
     """! @{
         \brief BLAS Level 1 API
 
@@ -737,28 +905,48 @@ def hipblasIsamax(hipblasHandle_t handle, int n, x, int incx, result):
                   device pointer or host pointer to store the amax index.
                   return is 0.0 if n, incx<=0.
     """
-    pass
+    _hipblasIsamax__retval = hipblasStatus_t(chipblas.hipblasIsamax(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasIsamax__retval
+
 
 @cython.embedsignature(True)
-def hipblasIdamax(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasIdamax(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasIdamax__retval = hipblasStatus_t(chipblas.hipblasIdamax(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasIdamax__retval
+
 
 @cython.embedsignature(True)
-def hipblasIcamax(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasIcamax(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasIcamax__retval = hipblasStatus_t(chipblas.hipblasIcamax(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasIcamax__retval
+
 
 @cython.embedsignature(True)
-def hipblasIzamax(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasIzamax(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasIzamax__retval = hipblasStatus_t(chipblas.hipblasIzamax(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasIzamax__retval
+
 
 @cython.embedsignature(True)
-def hipblasIsamin(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasIsamin(object handle, int n, object x, int incx, object result):
     """! @{
         \brief BLAS Level 1 API
 
@@ -784,28 +972,48 @@ def hipblasIsamin(hipblasHandle_t handle, int n, x, int incx, result):
                   device pointer or host pointer to store the amin index.
                   return is 0.0 if n, incx<=0.
     """
-    pass
+    _hipblasIsamin__retval = hipblasStatus_t(chipblas.hipblasIsamin(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasIsamin__retval
+
 
 @cython.embedsignature(True)
-def hipblasIdamin(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasIdamin(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasIdamin__retval = hipblasStatus_t(chipblas.hipblasIdamin(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasIdamin__retval
+
 
 @cython.embedsignature(True)
-def hipblasIcamin(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasIcamin(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasIcamin__retval = hipblasStatus_t(chipblas.hipblasIcamin(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasIcamin__retval
+
 
 @cython.embedsignature(True)
-def hipblasIzamin(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasIzamin(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasIzamin__retval = hipblasStatus_t(chipblas.hipblasIzamin(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasIzamin__retval
+
 
 @cython.embedsignature(True)
-def hipblasSasum(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasSasum(object handle, int n, object x, int incx, object result):
     """! @{
         \brief BLAS Level 1 API
 
@@ -832,28 +1040,48 @@ def hipblasSasum(hipblasHandle_t handle, int n, x, int incx, result):
                   device pointer or host pointer to store the asum product.
                   return is 0.0 if n <= 0.
     """
-    pass
+    _hipblasSasum__retval = hipblasStatus_t(chipblas.hipblasSasum(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasSasum__retval
+
 
 @cython.embedsignature(True)
-def hipblasDasum(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasDasum(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasDasum__retval = hipblasStatus_t(chipblas.hipblasDasum(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasDasum__retval
+
 
 @cython.embedsignature(True)
-def hipblasScasum(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasScasum(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasScasum__retval = hipblasStatus_t(chipblas.hipblasScasum(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasScasum__retval
+
 
 @cython.embedsignature(True)
-def hipblasDzasum(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasDzasum(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasDzasum__retval = hipblasStatus_t(chipblas.hipblasDzasum(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasDzasum__retval
+
 
 @cython.embedsignature(True)
-def hipblasHaxpy(hipblasHandle_t handle, int n, __uint16_t alpha, x, int incx, y, int incy):
+def hipblasHaxpy(object handle, int n, object alpha, object x, int incx, object y, int incy):
     """! @{
         \brief BLAS Level 1 API
 
@@ -884,34 +1112,64 @@ def hipblasHaxpy(hipblasHandle_t handle, int n, __uint16_t alpha, x, int incx, y
         incy      [int]
                   specifies the increment for the elements of y.
     """
-    pass
+    _hipblasHaxpy__retval = hipblasStatus_t(chipblas.hipblasHaxpy(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasHaxpy__retval
+
 
 @cython.embedsignature(True)
-def hipblasSaxpy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
+def hipblasSaxpy(object handle, int n, object alpha, object x, int incx, object y, int incy):
     """
     """
-    pass
+    _hipblasSaxpy__retval = hipblasStatus_t(chipblas.hipblasSaxpy(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasSaxpy__retval
+
 
 @cython.embedsignature(True)
-def hipblasDaxpy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
+def hipblasDaxpy(object handle, int n, object alpha, object x, int incx, object y, int incy):
     """
     """
-    pass
+    _hipblasDaxpy__retval = hipblasStatus_t(chipblas.hipblasDaxpy(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasDaxpy__retval
+
 
 @cython.embedsignature(True)
-def hipblasCaxpy(hipblasHandle_t handle, int n, hipblasComplex alpha, x, int incx, y, int incy):
+def hipblasCaxpy(object handle, int n, object alpha, object x, int incx, object y, int incy):
     """
     """
-    pass
+    _hipblasCaxpy__retval = hipblasStatus_t(chipblas.hipblasCaxpy(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasCaxpy__retval
+
 
 @cython.embedsignature(True)
-def hipblasZaxpy(hipblasHandle_t handle, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy):
+def hipblasZaxpy(object handle, int n, object alpha, object x, int incx, object y, int incy):
     """
     """
-    pass
+    _hipblasZaxpy__retval = hipblasStatus_t(chipblas.hipblasZaxpy(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasZaxpy__retval
+
 
 @cython.embedsignature(True)
-def hipblasScopy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
+def hipblasScopy(object handle, int n, object x, int incx, object y, int incy):
     """! @{
         \brief BLAS Level 1 API
 
@@ -940,28 +1198,48 @@ def hipblasScopy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
         incy      [int]
                   specifies the increment for the elements of y.
     """
-    pass
+    _hipblasScopy__retval = hipblasStatus_t(chipblas.hipblasScopy(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasScopy__retval
+
 
 @cython.embedsignature(True)
-def hipblasDcopy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
+def hipblasDcopy(object handle, int n, object x, int incx, object y, int incy):
     """
     """
-    pass
+    _hipblasDcopy__retval = hipblasStatus_t(chipblas.hipblasDcopy(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasDcopy__retval
+
 
 @cython.embedsignature(True)
-def hipblasCcopy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
+def hipblasCcopy(object handle, int n, object x, int incx, object y, int incy):
     """
     """
-    pass
+    _hipblasCcopy__retval = hipblasStatus_t(chipblas.hipblasCcopy(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasCcopy__retval
+
 
 @cython.embedsignature(True)
-def hipblasZcopy(hipblasHandle_t handle, int n, x, int incx, y, int incy):
+def hipblasZcopy(object handle, int n, object x, int incx, object y, int incy):
     """
     """
-    pass
+    _hipblasZcopy__retval = hipblasStatus_t(chipblas.hipblasZcopy(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasZcopy__retval
+
 
 @cython.embedsignature(True)
-def hipblasHdot(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
+def hipblasHdot(object handle, int n, object x, int incx, object y, int incy, object result):
     """! @{
         \brief BLAS Level 1 API
 
@@ -998,52 +1276,100 @@ def hipblasHdot(hipblasHandle_t handle, int n, x, int incx, y, int incy, result)
                   device pointer or host pointer to store the dot product.
                   return is 0.0 if n <= 0.
     """
-    pass
+    _hipblasHdot__retval = hipblasStatus_t(chipblas.hipblasHdot(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(x)._ptr,incx,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(y)._ptr,incy,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasHdot__retval
+
 
 @cython.embedsignature(True)
-def hipblasBfdot(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
+def hipblasBfdot(object handle, int n, object x, int incx, object y, int incy, object result):
     """
     """
-    pass
+    _hipblasBfdot__retval = hipblasStatus_t(chipblas.hipblasBfdot(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasBfloat16.from_pyobj(x)._ptr,incx,
+        hipblasBfloat16.from_pyobj(y)._ptr,incy,
+        hipblasBfloat16.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasBfdot__retval
+
 
 @cython.embedsignature(True)
-def hipblasSdot(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
+def hipblasSdot(object handle, int n, object x, int incx, object y, int incy, object result):
     """
     """
-    pass
+    _hipblasSdot__retval = hipblasStatus_t(chipblas.hipblasSdot(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const float *>DataHandle.from_pyobj(y)._ptr,incy,
+        <float *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasSdot__retval
+
 
 @cython.embedsignature(True)
-def hipblasDdot(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
+def hipblasDdot(object handle, int n, object x, int incx, object y, int incy, object result):
     """
     """
-    pass
+    _hipblasDdot__retval = hipblasStatus_t(chipblas.hipblasDdot(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const double *>DataHandle.from_pyobj(y)._ptr,incy,
+        <double *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasDdot__retval
+
 
 @cython.embedsignature(True)
-def hipblasCdotc(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
+def hipblasCdotc(object handle, int n, object x, int incx, object y, int incy, object result):
     """
     """
-    pass
+    _hipblasCdotc__retval = hipblasStatus_t(chipblas.hipblasCdotc(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy,
+        hipblasComplex.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasCdotc__retval
+
 
 @cython.embedsignature(True)
-def hipblasCdotu(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
+def hipblasCdotu(object handle, int n, object x, int incx, object y, int incy, object result):
     """
     """
-    pass
+    _hipblasCdotu__retval = hipblasStatus_t(chipblas.hipblasCdotu(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy,
+        hipblasComplex.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasCdotu__retval
+
 
 @cython.embedsignature(True)
-def hipblasZdotc(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
+def hipblasZdotc(object handle, int n, object x, int incx, object y, int incy, object result):
     """
     """
-    pass
+    _hipblasZdotc__retval = hipblasStatus_t(chipblas.hipblasZdotc(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
+        hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasZdotc__retval
+
 
 @cython.embedsignature(True)
-def hipblasZdotu(hipblasHandle_t handle, int n, x, int incx, y, int incy, result):
+def hipblasZdotu(object handle, int n, object x, int incx, object y, int incy, object result):
     """
     """
-    pass
+    _hipblasZdotu__retval = hipblasStatus_t(chipblas.hipblasZdotu(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
+        hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasZdotu__retval
+
 
 @cython.embedsignature(True)
-def hipblasSnrm2(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasSnrm2(object handle, int n, object x, int incx, object result):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1072,28 +1398,48 @@ def hipblasSnrm2(hipblasHandle_t handle, int n, x, int incx, result):
                   device pointer or host pointer to store the nrm2 product.
                   return is 0.0 if n, incx<=0.
     """
-    pass
+    _hipblasSnrm2__retval = hipblasStatus_t(chipblas.hipblasSnrm2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasSnrm2__retval
+
 
 @cython.embedsignature(True)
-def hipblasDnrm2(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasDnrm2(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasDnrm2__retval = hipblasStatus_t(chipblas.hipblasDnrm2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasDnrm2__retval
+
 
 @cython.embedsignature(True)
-def hipblasScnrm2(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasScnrm2(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasScnrm2__retval = hipblasStatus_t(chipblas.hipblasScnrm2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasScnrm2__retval
+
 
 @cython.embedsignature(True)
-def hipblasDznrm2(hipblasHandle_t handle, int n, x, int incx, result):
+def hipblasDznrm2(object handle, int n, object x, int incx, object result):
     """
     """
-    pass
+    _hipblasDznrm2__retval = hipblasStatus_t(chipblas.hipblasDznrm2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(result)._ptr))    # fully specified
+    return _hipblasDznrm2__retval
+
 
 @cython.embedsignature(True)
-def hipblasSrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
+def hipblasSrot(object handle, int n, object x, int incx, object y, int incy, object c, object s):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1125,40 +1471,82 @@ def hipblasSrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
         @param[in]
         s       device pointer or host pointer storing scalar sine component of the rotation matrix.
     """
-    pass
+    _hipblasSrot__retval = hipblasStatus_t(chipblas.hipblasSrot(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(y)._ptr,incy,
+        <const float *>DataHandle.from_pyobj(c)._ptr,
+        <const float *>DataHandle.from_pyobj(s)._ptr))    # fully specified
+    return _hipblasSrot__retval
+
 
 @cython.embedsignature(True)
-def hipblasDrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
+def hipblasDrot(object handle, int n, object x, int incx, object y, int incy, object c, object s):
     """
     """
-    pass
+    _hipblasDrot__retval = hipblasStatus_t(chipblas.hipblasDrot(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(y)._ptr,incy,
+        <const double *>DataHandle.from_pyobj(c)._ptr,
+        <const double *>DataHandle.from_pyobj(s)._ptr))    # fully specified
+    return _hipblasDrot__retval
+
 
 @cython.embedsignature(True)
-def hipblasCrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
+def hipblasCrot(object handle, int n, object x, int incx, object y, int incy, object c, object s):
     """
     """
-    pass
+    _hipblasCrot__retval = hipblasStatus_t(chipblas.hipblasCrot(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy,
+        <const float *>DataHandle.from_pyobj(c)._ptr,
+        hipblasComplex.from_pyobj(s)._ptr))    # fully specified
+    return _hipblasCrot__retval
+
 
 @cython.embedsignature(True)
-def hipblasCsrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
+def hipblasCsrot(object handle, int n, object x, int incx, object y, int incy, object c, object s):
     """
     """
-    pass
+    _hipblasCsrot__retval = hipblasStatus_t(chipblas.hipblasCsrot(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy,
+        <const float *>DataHandle.from_pyobj(c)._ptr,
+        <const float *>DataHandle.from_pyobj(s)._ptr))    # fully specified
+    return _hipblasCsrot__retval
+
 
 @cython.embedsignature(True)
-def hipblasZrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
+def hipblasZrot(object handle, int n, object x, int incx, object y, int incy, object c, object s):
     """
     """
-    pass
+    _hipblasZrot__retval = hipblasStatus_t(chipblas.hipblasZrot(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
+        <const double *>DataHandle.from_pyobj(c)._ptr,
+        hipblasDoubleComplex.from_pyobj(s)._ptr))    # fully specified
+    return _hipblasZrot__retval
+
 
 @cython.embedsignature(True)
-def hipblasZdrot(hipblasHandle_t handle, int n, x, int incx, y, int incy, c, s):
+def hipblasZdrot(object handle, int n, object x, int incx, object y, int incy, object c, object s):
     """
     """
-    pass
+    _hipblasZdrot__retval = hipblasStatus_t(chipblas.hipblasZdrot(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
+        <const double *>DataHandle.from_pyobj(c)._ptr,
+        <const double *>DataHandle.from_pyobj(s)._ptr))    # fully specified
+    return _hipblasZdrot__retval
+
 
 @cython.embedsignature(True)
-def hipblasSrotg(hipblasHandle_t handle, a, b, c, s):
+def hipblasSrotg(object handle, object a, object b, object c, object s):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1183,28 +1571,56 @@ def hipblasSrotg(hipblasHandle_t handle, a, b, c, s):
         @param[inout]
         s       device pointer or host pointer sine element of Givens rotation.
     """
-    pass
+    _hipblasSrotg__retval = hipblasStatus_t(chipblas.hipblasSrotg(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        <float *>DataHandle.from_pyobj(a)._ptr,
+        <float *>DataHandle.from_pyobj(b)._ptr,
+        <float *>DataHandle.from_pyobj(c)._ptr,
+        <float *>DataHandle.from_pyobj(s)._ptr))    # fully specified
+    return _hipblasSrotg__retval
+
 
 @cython.embedsignature(True)
-def hipblasDrotg(hipblasHandle_t handle, a, b, c, s):
+def hipblasDrotg(object handle, object a, object b, object c, object s):
     """
     """
-    pass
+    _hipblasDrotg__retval = hipblasStatus_t(chipblas.hipblasDrotg(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        <double *>DataHandle.from_pyobj(a)._ptr,
+        <double *>DataHandle.from_pyobj(b)._ptr,
+        <double *>DataHandle.from_pyobj(c)._ptr,
+        <double *>DataHandle.from_pyobj(s)._ptr))    # fully specified
+    return _hipblasDrotg__retval
+
 
 @cython.embedsignature(True)
-def hipblasCrotg(hipblasHandle_t handle, a, b, c, s):
+def hipblasCrotg(object handle, object a, object b, object c, object s):
     """
     """
-    pass
+    _hipblasCrotg__retval = hipblasStatus_t(chipblas.hipblasCrotg(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        hipblasComplex.from_pyobj(a)._ptr,
+        hipblasComplex.from_pyobj(b)._ptr,
+        <float *>DataHandle.from_pyobj(c)._ptr,
+        hipblasComplex.from_pyobj(s)._ptr))    # fully specified
+    return _hipblasCrotg__retval
+
 
 @cython.embedsignature(True)
-def hipblasZrotg(hipblasHandle_t handle, a, b, c, s):
+def hipblasZrotg(object handle, object a, object b, object c, object s):
     """
     """
-    pass
+    _hipblasZrotg__retval = hipblasStatus_t(chipblas.hipblasZrotg(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        hipblasDoubleComplex.from_pyobj(a)._ptr,
+        hipblasDoubleComplex.from_pyobj(b)._ptr,
+        <double *>DataHandle.from_pyobj(c)._ptr,
+        hipblasDoubleComplex.from_pyobj(s)._ptr))    # fully specified
+    return _hipblasZrotg__retval
+
 
 @cython.embedsignature(True)
-def hipblasSrotm(hipblasHandle_t handle, int n, x, int incx, y, int incy, param):
+def hipblasSrotm(object handle, int n, object x, int incx, object y, int incy, object param):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1244,16 +1660,28 @@ def hipblasSrotm(hipblasHandle_t handle, int n, x, int incx, y, int incy, param)
                 flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
                 param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
     """
-    pass
+    _hipblasSrotm__retval = hipblasStatus_t(chipblas.hipblasSrotm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(y)._ptr,incy,
+        <const float *>DataHandle.from_pyobj(param)._ptr))    # fully specified
+    return _hipblasSrotm__retval
+
 
 @cython.embedsignature(True)
-def hipblasDrotm(hipblasHandle_t handle, int n, x, int incx, y, int incy, param):
+def hipblasDrotm(object handle, int n, object x, int incx, object y, int incy, object param):
     """
     """
-    pass
+    _hipblasDrotm__retval = hipblasStatus_t(chipblas.hipblasDrotm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(y)._ptr,incy,
+        <const double *>DataHandle.from_pyobj(param)._ptr))    # fully specified
+    return _hipblasDrotm__retval
+
 
 @cython.embedsignature(True)
-def hipblasSrotmg(hipblasHandle_t handle, d1, d2, x1, y1, param):
+def hipblasSrotmg(object handle, object d1, object d2, object x1, object y1, object param):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1291,16 +1719,32 @@ def hipblasSrotmg(hipblasHandle_t handle, d1, d2, x1, y1, param):
                 flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
                 param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
     """
-    pass
+    _hipblasSrotmg__retval = hipblasStatus_t(chipblas.hipblasSrotmg(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        <float *>DataHandle.from_pyobj(d1)._ptr,
+        <float *>DataHandle.from_pyobj(d2)._ptr,
+        <float *>DataHandle.from_pyobj(x1)._ptr,
+        <const float *>DataHandle.from_pyobj(y1)._ptr,
+        <float *>DataHandle.from_pyobj(param)._ptr))    # fully specified
+    return _hipblasSrotmg__retval
+
 
 @cython.embedsignature(True)
-def hipblasDrotmg(hipblasHandle_t handle, d1, d2, x1, y1, param):
+def hipblasDrotmg(object handle, object d1, object d2, object x1, object y1, object param):
     """
     """
-    pass
+    _hipblasDrotmg__retval = hipblasStatus_t(chipblas.hipblasDrotmg(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        <double *>DataHandle.from_pyobj(d1)._ptr,
+        <double *>DataHandle.from_pyobj(d2)._ptr,
+        <double *>DataHandle.from_pyobj(x1)._ptr,
+        <const double *>DataHandle.from_pyobj(y1)._ptr,
+        <double *>DataHandle.from_pyobj(param)._ptr))    # fully specified
+    return _hipblasDrotmg__retval
+
 
 @cython.embedsignature(True)
-def hipblasSscal(hipblasHandle_t handle, int n, x, int incx):
+def hipblasSscal(object handle, int n, object alpha, object x, int incx):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1326,40 +1770,70 @@ def hipblasSscal(hipblasHandle_t handle, int n, x, int incx):
         incx      [int]
                   specifies the increment for the elements of x.
     """
-    pass
+    _hipblasSscal__retval = hipblasStatus_t(chipblas.hipblasSscal(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasSscal__retval
+
 
 @cython.embedsignature(True)
-def hipblasDscal(hipblasHandle_t handle, int n, x, int incx):
+def hipblasDscal(object handle, int n, object alpha, object x, int incx):
     """
     """
-    pass
+    _hipblasDscal__retval = hipblasStatus_t(chipblas.hipblasDscal(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasDscal__retval
+
 
 @cython.embedsignature(True)
-def hipblasCscal(hipblasHandle_t handle, int n, hipblasComplex alpha, x, int incx):
+def hipblasCscal(object handle, int n, object alpha, object x, int incx):
     """
     """
-    pass
+    _hipblasCscal__retval = hipblasStatus_t(chipblas.hipblasCscal(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasCscal__retval
+
 
 @cython.embedsignature(True)
-def hipblasCsscal(hipblasHandle_t handle, int n, x, int incx):
+def hipblasCsscal(object handle, int n, object alpha, object x, int incx):
     """
     """
-    pass
+    _hipblasCsscal__retval = hipblasStatus_t(chipblas.hipblasCsscal(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasCsscal__retval
+
 
 @cython.embedsignature(True)
-def hipblasZscal(hipblasHandle_t handle, int n, hipblasDoubleComplex alpha, x, int incx):
+def hipblasZscal(object handle, int n, object alpha, object x, int incx):
     """
     """
-    pass
+    _hipblasZscal__retval = hipblasStatus_t(chipblas.hipblasZscal(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasZscal__retval
+
 
 @cython.embedsignature(True)
-def hipblasZdscal(hipblasHandle_t handle, int n, x, int incx):
+def hipblasZdscal(object handle, int n, object alpha, object x, int incx):
     """
     """
-    pass
+    _hipblasZdscal__retval = hipblasStatus_t(chipblas.hipblasZdscal(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasZdscal__retval
+
 
 @cython.embedsignature(True)
-def hipblasSswap(hipblasHandle_t handle, int n, x, int incx, y, int incy):
+def hipblasSswap(object handle, int n, object x, int incx, object y, int incy):
     """! @{
         \brief BLAS Level 1 API
 
@@ -1388,28 +1862,48 @@ def hipblasSswap(hipblasHandle_t handle, int n, x, int incx, y, int incy):
         incy      [int]
                   specifies the increment for the elements of y.
     """
-    pass
+    _hipblasSswap__retval = hipblasStatus_t(chipblas.hipblasSswap(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasSswap__retval
+
 
 @cython.embedsignature(True)
-def hipblasDswap(hipblasHandle_t handle, int n, x, int incx, y, int incy):
+def hipblasDswap(object handle, int n, object x, int incx, object y, int incy):
     """
     """
-    pass
+    _hipblasDswap__retval = hipblasStatus_t(chipblas.hipblasDswap(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasDswap__retval
+
 
 @cython.embedsignature(True)
-def hipblasCswap(hipblasHandle_t handle, int n, x, int incx, y, int incy):
+def hipblasCswap(object handle, int n, object x, int incx, object y, int incy):
     """
     """
-    pass
+    _hipblasCswap__retval = hipblasStatus_t(chipblas.hipblasCswap(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasCswap__retval
+
 
 @cython.embedsignature(True)
-def hipblasZswap(hipblasHandle_t handle, int n, x, int incx, y, int incy):
+def hipblasZswap(object handle, int n, object x, int incx, object y, int incy):
     """
     """
-    pass
+    _hipblasZswap__retval = hipblasStatus_t(chipblas.hipblasZswap(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasZswap__retval
+
 
 @cython.embedsignature(True)
-def hipblasSgbmv(hipblasHandle_t handle, object trans, int m, int n, int kl, int ku, AP, int lda, x, int incx, y, int incy):
+def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1481,34 +1975,66 @@ def hipblasSgbmv(hipblasHandle_t handle, object trans, int m, int n, int kl, int
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasSgbmv__retval = hipblasStatus_t(chipblas.hipblasSgbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasSgbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDgbmv(hipblasHandle_t handle, object trans, int m, int n, int kl, int ku, AP, int lda, x, int incx, y, int incy):
+def hipblasDgbmv(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasDgbmv__retval = hipblasStatus_t(chipblas.hipblasDgbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasDgbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasCgbmv(hipblasHandle_t handle, object trans, int m, int n, int kl, int ku, hipblasComplex alpha, AP, int lda, x, int incx, hipblasComplex beta, y, int incy):
+def hipblasCgbmv(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCgbmv__retval = hipblasStatus_t(chipblas.hipblasCgbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasCgbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZgbmv(hipblasHandle_t handle, object trans, int m, int n, int kl, int ku, hipblasDoubleComplex alpha, AP, int lda, x, int incx, hipblasDoubleComplex beta, y, int incy):
+def hipblasZgbmv(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZgbmv__retval = hipblasStatus_t(chipblas.hipblasZgbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasZgbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasSgemv(hipblasHandle_t handle, object trans, int m, int n, AP, int lda, x, int incx, y, int incy):
+def hipblasSgemv(object handle, object trans, int m, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1559,34 +2085,66 @@ def hipblasSgemv(hipblasHandle_t handle, object trans, int m, int n, AP, int lda
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasSgemv__retval = hipblasStatus_t(chipblas.hipblasSgemv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasSgemv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDgemv(hipblasHandle_t handle, object trans, int m, int n, AP, int lda, x, int incx, y, int incy):
+def hipblasDgemv(object handle, object trans, int m, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasDgemv__retval = hipblasStatus_t(chipblas.hipblasDgemv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasDgemv__retval
+
 
 @cython.embedsignature(True)
-def hipblasCgemv(hipblasHandle_t handle, object trans, int m, int n, hipblasComplex alpha, AP, int lda, x, int incx, hipblasComplex beta, y, int incy):
+def hipblasCgemv(object handle, object trans, int m, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCgemv__retval = hipblasStatus_t(chipblas.hipblasCgemv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasCgemv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZgemv(hipblasHandle_t handle, object trans, int m, int n, hipblasDoubleComplex alpha, AP, int lda, x, int incx, hipblasDoubleComplex beta, y, int incy):
+def hipblasZgemv(object handle, object trans, int m, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZgemv__retval = hipblasStatus_t(chipblas.hipblasZgemv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasZgemv__retval
+
 
 @cython.embedsignature(True)
-def hipblasSger(hipblasHandle_t handle, int m, int n, x, int incx, y, int incy, AP, int lda):
+def hipblasSger(object handle, int m, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1630,40 +2188,82 @@ def hipblasSger(hipblasHandle_t handle, int m, int n, x, int incx, y, int incy, 
         lda       [int]
                   specifies the leading dimension of A.
     """
-    pass
+    _hipblasSger__retval = hipblasStatus_t(chipblas.hipblasSger(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,m,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const float *>DataHandle.from_pyobj(y)._ptr,incy,
+        <float *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasSger__retval
+
 
 @cython.embedsignature(True)
-def hipblasDger(hipblasHandle_t handle, int m, int n, x, int incx, y, int incy, AP, int lda):
+def hipblasDger(object handle, int m, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
-    pass
+    _hipblasDger__retval = hipblasStatus_t(chipblas.hipblasDger(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,m,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const double *>DataHandle.from_pyobj(y)._ptr,incy,
+        <double *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasDger__retval
+
 
 @cython.embedsignature(True)
-def hipblasCgeru(hipblasHandle_t handle, int m, int n, hipblasComplex alpha, x, int incx, y, int incy, AP, int lda):
+def hipblasCgeru(object handle, int m, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
-    pass
+    _hipblasCgeru__retval = hipblasStatus_t(chipblas.hipblasCgeru(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,m,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy,
+        hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasCgeru__retval
+
 
 @cython.embedsignature(True)
-def hipblasCgerc(hipblasHandle_t handle, int m, int n, hipblasComplex alpha, x, int incx, y, int incy, AP, int lda):
+def hipblasCgerc(object handle, int m, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
-    pass
+    _hipblasCgerc__retval = hipblasStatus_t(chipblas.hipblasCgerc(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,m,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy,
+        hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasCgerc__retval
+
 
 @cython.embedsignature(True)
-def hipblasZgeru(hipblasHandle_t handle, int m, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy, AP, int lda):
+def hipblasZgeru(object handle, int m, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
-    pass
+    _hipblasZgeru__retval = hipblasStatus_t(chipblas.hipblasZgeru(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,m,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasZgeru__retval
+
 
 @cython.embedsignature(True)
-def hipblasZgerc(hipblasHandle_t handle, int m, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy, AP, int lda):
+def hipblasZgerc(object handle, int m, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
-    pass
+    _hipblasZgerc__retval = hipblasStatus_t(chipblas.hipblasZgerc(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,m,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasZgerc__retval
+
 
 @cython.embedsignature(True)
-def hipblasChbmv(hipblasHandle_t handle, object uplo, int n, int k, hipblasComplex alpha, AP, int lda, x, int incx, hipblasComplex beta, y, int incy):
+def hipblasChbmv(object handle, object uplo, int n, int k, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1741,18 +2341,34 @@ def hipblasChbmv(hipblasHandle_t handle, object uplo, int n, int k, hipblasCompl
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasChbmv__retval = hipblasStatus_t(chipblas.hipblasChbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasChbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZhbmv(hipblasHandle_t handle, object uplo, int n, int k, hipblasDoubleComplex alpha, AP, int lda, x, int incx, hipblasDoubleComplex beta, y, int incy):
+def hipblasZhbmv(object handle, object uplo, int n, int k, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZhbmv__retval = hipblasStatus_t(chipblas.hipblasZhbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasZhbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasChemv(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, AP, int lda, x, int incx, hipblasComplex beta, y, int incy):
+def hipblasChemv(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1809,18 +2425,34 @@ def hipblasChemv(hipblasHandle_t handle, object uplo, int n, hipblasComplex alph
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasChemv__retval = hipblasStatus_t(chipblas.hipblasChemv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasChemv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZhemv(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, AP, int lda, x, int incx, hipblasDoubleComplex beta, y, int incy):
+def hipblasZhemv(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZhemv__retval = hipblasStatus_t(chipblas.hipblasZhemv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasZhemv__retval
+
 
 @cython.embedsignature(True)
-def hipblasCher(hipblasHandle_t handle, object uplo, int n, x, int incx, AP, int lda):
+def hipblasCher(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1871,18 +2503,30 @@ def hipblasCher(hipblasHandle_t handle, object uplo, int n, x, int incx, AP, int
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasCher__retval = hipblasStatus_t(chipblas.hipblasCher(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasCher__retval
+
 
 @cython.embedsignature(True)
-def hipblasZher(hipblasHandle_t handle, object uplo, int n, x, int incx, AP, int lda):
+def hipblasZher(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZher__retval = hipblasStatus_t(chipblas.hipblasZher(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasZher__retval
+
 
 @cython.embedsignature(True)
-def hipblasCher2(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, x, int incx, y, int incy, AP, int lda):
+def hipblasCher2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """! @{
         \brief BLAS Level 2 API
 
@@ -1938,18 +2582,32 @@ def hipblasCher2(hipblasHandle_t handle, object uplo, int n, hipblasComplex alph
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasCher2__retval = hipblasStatus_t(chipblas.hipblasCher2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy,
+        hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasCher2__retval
+
 
 @cython.embedsignature(True)
-def hipblasZher2(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy, AP, int lda):
+def hipblasZher2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZher2__retval = hipblasStatus_t(chipblas.hipblasZher2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasZher2__retval
+
 
 @cython.embedsignature(True)
-def hipblasChpmv(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, AP, x, int incx, hipblasComplex beta, y, int incy):
+def hipblasChpmv(object handle, object uplo, int n, object alpha, object AP, object x, int incx, object beta, object y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2018,18 +2676,34 @@ def hipblasChpmv(hipblasHandle_t handle, object uplo, int n, hipblasComplex alph
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasChpmv__retval = hipblasStatus_t(chipblas.hipblasChpmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasChpmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZhpmv(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, AP, x, int incx, hipblasDoubleComplex beta, y, int incy):
+def hipblasZhpmv(object handle, object uplo, int n, object alpha, object AP, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZhpmv__retval = hipblasStatus_t(chipblas.hipblasZhpmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasZhpmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasChpr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP):
+def hipblasChpr(object handle, object uplo, int n, object alpha, object x, int incx, object AP):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2093,18 +2767,30 @@ def hipblasChpr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP):
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasChpr__retval = hipblasStatus_t(chipblas.hipblasChpr(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(AP)._ptr))    # fully specified
+    return _hipblasChpr__retval
+
 
 @cython.embedsignature(True)
-def hipblasZhpr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP):
+def hipblasZhpr(object handle, object uplo, int n, object alpha, object x, int incx, object AP):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZhpr__retval = hipblasStatus_t(chipblas.hipblasZhpr(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr))    # fully specified
+    return _hipblasZhpr__retval
+
 
 @cython.embedsignature(True)
-def hipblasChpr2(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, x, int incx, y, int incy, AP):
+def hipblasChpr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2173,18 +2859,32 @@ def hipblasChpr2(hipblasHandle_t handle, object uplo, int n, hipblasComplex alph
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasChpr2__retval = hipblasStatus_t(chipblas.hipblasChpr2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy,
+        hipblasComplex.from_pyobj(AP)._ptr))    # fully specified
+    return _hipblasChpr2__retval
+
 
 @cython.embedsignature(True)
-def hipblasZhpr2(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy, AP):
+def hipblasZhpr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZhpr2__retval = hipblasStatus_t(chipblas.hipblasZhpr2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr))    # fully specified
+    return _hipblasZhpr2__retval
+
 
 @cython.embedsignature(True)
-def hipblasSsbmv(hipblasHandle_t handle, object uplo, int n, int k, AP, int lda, x, int incx, y, int incy):
+def hipblasSsbmv(object handle, object uplo, int n, int k, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2235,18 +2935,34 @@ def hipblasSsbmv(hipblasHandle_t handle, object uplo, int n, int k, AP, int lda,
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasSsbmv__retval = hipblasStatus_t(chipblas.hipblasSsbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasSsbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDsbmv(hipblasHandle_t handle, object uplo, int n, int k, AP, int lda, x, int incx, y, int incy):
+def hipblasDsbmv(object handle, object uplo, int n, int k, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasDsbmv__retval = hipblasStatus_t(chipblas.hipblasDsbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasDsbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasSspmv(hipblasHandle_t handle, object uplo, int n, AP, x, int incx, y, int incy):
+def hipblasSspmv(object handle, object uplo, int n, object alpha, object AP, object x, int incx, object beta, object y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2291,18 +3007,34 @@ def hipblasSspmv(hipblasHandle_t handle, object uplo, int n, AP, x, int incx, y,
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasSspmv__retval = hipblasStatus_t(chipblas.hipblasSspmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasSspmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDspmv(hipblasHandle_t handle, object uplo, int n, AP, x, int incx, y, int incy):
+def hipblasDspmv(object handle, object uplo, int n, object alpha, object AP, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasDspmv__retval = hipblasStatus_t(chipblas.hipblasDspmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasDspmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasSspr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP):
+def hipblasSspr(object handle, object uplo, int n, object alpha, object x, int incx, object AP):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2366,34 +3098,58 @@ def hipblasSspr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP):
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasSspr__retval = hipblasStatus_t(chipblas.hipblasSspr(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(AP)._ptr))    # fully specified
+    return _hipblasSspr__retval
+
 
 @cython.embedsignature(True)
-def hipblasDspr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP):
+def hipblasDspr(object handle, object uplo, int n, object alpha, object x, int incx, object AP):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasDspr__retval = hipblasStatus_t(chipblas.hipblasDspr(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(AP)._ptr))    # fully specified
+    return _hipblasDspr__retval
+
 
 @cython.embedsignature(True)
-def hipblasCspr(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, x, int incx, AP):
+def hipblasCspr(object handle, object uplo, int n, object alpha, object x, int incx, object AP):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasCspr__retval = hipblasStatus_t(chipblas.hipblasCspr(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(AP)._ptr))    # fully specified
+    return _hipblasCspr__retval
+
 
 @cython.embedsignature(True)
-def hipblasZspr(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, x, int incx, AP):
+def hipblasZspr(object handle, object uplo, int n, object alpha, object x, int incx, object AP):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZspr__retval = hipblasStatus_t(chipblas.hipblasZspr(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr))    # fully specified
+    return _hipblasZspr__retval
+
 
 @cython.embedsignature(True)
-def hipblasSspr2(hipblasHandle_t handle, object uplo, int n, x, int incx, y, int incy, AP):
+def hipblasSspr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2462,18 +3218,32 @@ def hipblasSspr2(hipblasHandle_t handle, object uplo, int n, x, int incx, y, int
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasSspr2__retval = hipblasStatus_t(chipblas.hipblasSspr2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const float *>DataHandle.from_pyobj(y)._ptr,incy,
+        <float *>DataHandle.from_pyobj(AP)._ptr))    # fully specified
+    return _hipblasSspr2__retval
+
 
 @cython.embedsignature(True)
-def hipblasDspr2(hipblasHandle_t handle, object uplo, int n, x, int incx, y, int incy, AP):
+def hipblasDspr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasDspr2__retval = hipblasStatus_t(chipblas.hipblasDspr2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const double *>DataHandle.from_pyobj(y)._ptr,incy,
+        <double *>DataHandle.from_pyobj(AP)._ptr))    # fully specified
+    return _hipblasDspr2__retval
+
 
 @cython.embedsignature(True)
-def hipblasSsymv(hipblasHandle_t handle, object uplo, int n, AP, int lda, x, int incx, y, int incy):
+def hipblasSsymv(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2521,34 +3291,66 @@ def hipblasSsymv(hipblasHandle_t handle, object uplo, int n, AP, int lda, x, int
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasSsymv__retval = hipblasStatus_t(chipblas.hipblasSsymv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasSsymv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDsymv(hipblasHandle_t handle, object uplo, int n, AP, int lda, x, int incx, y, int incy):
+def hipblasDsymv(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasDsymv__retval = hipblasStatus_t(chipblas.hipblasDsymv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasDsymv__retval
+
 
 @cython.embedsignature(True)
-def hipblasCsymv(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, AP, int lda, x, int incx, hipblasComplex beta, y, int incy):
+def hipblasCsymv(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasCsymv__retval = hipblasStatus_t(chipblas.hipblasCsymv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasCsymv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZsymv(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, AP, int lda, x, int incx, hipblasDoubleComplex beta, y, int incy):
+def hipblasZsymv(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZsymv__retval = hipblasStatus_t(chipblas.hipblasZsymv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
+    return _hipblasZsymv__retval
+
 
 @cython.embedsignature(True)
-def hipblasSsyr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP, int lda):
+def hipblasSsyr(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2591,34 +3393,58 @@ def hipblasSsyr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP, int
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasSsyr__retval = hipblasStatus_t(chipblas.hipblasSsyr(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasSsyr__retval
+
 
 @cython.embedsignature(True)
-def hipblasDsyr(hipblasHandle_t handle, object uplo, int n, x, int incx, AP, int lda):
+def hipblasDsyr(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasDsyr__retval = hipblasStatus_t(chipblas.hipblasDsyr(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasDsyr__retval
+
 
 @cython.embedsignature(True)
-def hipblasCsyr(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, x, int incx, AP, int lda):
+def hipblasCsyr(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasCsyr__retval = hipblasStatus_t(chipblas.hipblasCsyr(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasCsyr__retval
+
 
 @cython.embedsignature(True)
-def hipblasZsyr(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, x, int incx, AP, int lda):
+def hipblasZsyr(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZsyr__retval = hipblasStatus_t(chipblas.hipblasZsyr(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasZsyr__retval
+
 
 @cython.embedsignature(True)
-def hipblasSsyr2(hipblasHandle_t handle, object uplo, int n, x, int incx, y, int incy, AP, int lda):
+def hipblasSsyr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2666,34 +3492,62 @@ def hipblasSsyr2(hipblasHandle_t handle, object uplo, int n, x, int incx, y, int
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasSsyr2__retval = hipblasStatus_t(chipblas.hipblasSsyr2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const float *>DataHandle.from_pyobj(y)._ptr,incy,
+        <float *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasSsyr2__retval
+
 
 @cython.embedsignature(True)
-def hipblasDsyr2(hipblasHandle_t handle, object uplo, int n, x, int incx, y, int incy, AP, int lda):
+def hipblasDsyr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasDsyr2__retval = hipblasStatus_t(chipblas.hipblasDsyr2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <const double *>DataHandle.from_pyobj(y)._ptr,incy,
+        <double *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasDsyr2__retval
+
 
 @cython.embedsignature(True)
-def hipblasCsyr2(hipblasHandle_t handle, object uplo, int n, hipblasComplex alpha, x, int incx, y, int incy, AP, int lda):
+def hipblasCsyr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasCsyr2__retval = hipblasStatus_t(chipblas.hipblasCsyr2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(y)._ptr,incy,
+        hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasCsyr2__retval
+
 
 @cython.embedsignature(True)
-def hipblasZsyr2(hipblasHandle_t handle, object uplo, int n, hipblasDoubleComplex alpha, x, int incx, y, int incy, AP, int lda):
+def hipblasZsyr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZsyr2__retval = hipblasStatus_t(chipblas.hipblasZsyr2(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
+    return _hipblasZsyr2__retval
+
 
 @cython.embedsignature(True)
-def hipblasStbmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, int k, AP, int lda, x, int incx):
+def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, object x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2776,10 +3630,15 @@ def hipblasStbmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasStbmv__retval = hipblasStatus_t(chipblas.hipblasStbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasStbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDtbmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, int k, AP, int lda, x, int incx):
+def hipblasDtbmv(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -2788,10 +3647,15 @@ def hipblasDtbmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasDtbmv__retval = hipblasStatus_t(chipblas.hipblasDtbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasDtbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasCtbmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, int k, AP, int lda, x, int incx):
+def hipblasCtbmv(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -2800,10 +3664,15 @@ def hipblasCtbmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasCtbmv__retval = hipblasStatus_t(chipblas.hipblasCtbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasCtbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZtbmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, int k, AP, int lda, x, int incx):
+def hipblasZtbmv(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -2812,10 +3681,15 @@ def hipblasZtbmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasZtbmv__retval = hipblasStatus_t(chipblas.hipblasZtbmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasZtbmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasStbsv(hipblasHandle_t handle, object uplo, object transA, object diag, int n, int k, AP, int lda, x, int incx):
+def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, object x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2882,10 +3756,15 @@ def hipblasStbsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasStbsv__retval = hipblasStatus_t(chipblas.hipblasStbsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasStbsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDtbsv(hipblasHandle_t handle, object uplo, object transA, object diag, int n, int k, AP, int lda, x, int incx):
+def hipblasDtbsv(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -2894,10 +3773,15 @@ def hipblasDtbsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasDtbsv__retval = hipblasStatus_t(chipblas.hipblasDtbsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasDtbsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasCtbsv(hipblasHandle_t handle, object uplo, object transA, object diag, int n, int k, AP, int lda, x, int incx):
+def hipblasCtbsv(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -2906,10 +3790,15 @@ def hipblasCtbsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasCtbsv__retval = hipblasStatus_t(chipblas.hipblasCtbsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasCtbsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZtbsv(hipblasHandle_t handle, object uplo, object transA, object diag, int n, int k, AP, int lda, x, int incx):
+def hipblasZtbsv(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -2918,10 +3807,15 @@ def hipblasZtbsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasZtbsv__retval = hipblasStatus_t(chipblas.hipblasZtbsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasZtbsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasStpmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
+def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -2985,10 +3879,15 @@ def hipblasStpmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasStpmv__retval = hipblasStatus_t(chipblas.hipblasStpmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,
+        <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasStpmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDtpmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
+def hipblasDtpmv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -2997,10 +3896,15 @@ def hipblasDtpmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasDtpmv__retval = hipblasStatus_t(chipblas.hipblasDtpmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,
+        <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasDtpmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasCtpmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
+def hipblasCtpmv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3009,10 +3913,15 @@ def hipblasCtpmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasCtpmv__retval = hipblasStatus_t(chipblas.hipblasCtpmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        hipblasComplex.from_pyobj(AP)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasCtpmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZtpmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
+def hipblasZtpmv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3021,10 +3930,15 @@ def hipblasZtpmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasZtpmv__retval = hipblasStatus_t(chipblas.hipblasZtpmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasZtpmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasStpsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
+def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -3082,10 +3996,15 @@ def hipblasStpsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasStpsv__retval = hipblasStatus_t(chipblas.hipblasStpsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,
+        <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasStpsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDtpsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
+def hipblasDtpsv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3094,10 +4013,15 @@ def hipblasDtpsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasDtpsv__retval = hipblasStatus_t(chipblas.hipblasDtpsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,
+        <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasDtpsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasCtpsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
+def hipblasCtpsv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3106,10 +4030,15 @@ def hipblasCtpsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasCtpsv__retval = hipblasStatus_t(chipblas.hipblasCtpsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        hipblasComplex.from_pyobj(AP)._ptr,
+        hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasCtpsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZtpsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, x, int incx):
+def hipblasZtpsv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3118,10 +4047,15 @@ def hipblasZtpsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasZtpsv__retval = hipblasStatus_t(chipblas.hipblasZtpsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasZtpsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasStrmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
+def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -3180,10 +4114,15 @@ def hipblasStrmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasStrmv__retval = hipblasStatus_t(chipblas.hipblasStrmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasStrmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDtrmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
+def hipblasDtrmv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3192,10 +4131,15 @@ def hipblasDtrmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasDtrmv__retval = hipblasStatus_t(chipblas.hipblasDtrmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasDtrmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasCtrmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
+def hipblasCtrmv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3204,10 +4148,15 @@ def hipblasCtrmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasCtrmv__retval = hipblasStatus_t(chipblas.hipblasCtrmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasCtrmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZtrmv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
+def hipblasZtrmv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3216,10 +4165,15 @@ def hipblasZtrmv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasZtrmv__retval = hipblasStatus_t(chipblas.hipblasZtrmv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasZtrmv__retval
+
 
 @cython.embedsignature(True)
-def hipblasStrsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
+def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """! @{
         \brief BLAS Level 2 API
 
@@ -3278,10 +4232,15 @@ def hipblasStrsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasStrsv__retval = hipblasStatus_t(chipblas.hipblasStrsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasStrsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasDtrsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
+def hipblasDtrsv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3290,10 +4249,15 @@ def hipblasDtrsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasDtrsv__retval = hipblasStatus_t(chipblas.hipblasDtrsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasDtrsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasCtrsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
+def hipblasCtrsv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3302,10 +4266,15 @@ def hipblasCtrsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasCtrsv__retval = hipblasStatus_t(chipblas.hipblasCtrsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasCtrsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasZtrsv(hipblasHandle_t handle, object uplo, object transA, object diag, int m, AP, int lda, x, int incx):
+def hipblasZtrsv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
@@ -3314,10 +4283,15 @@ def hipblasZtrsv(hipblasHandle_t handle, object uplo, object transA, object diag
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasZtrsv__retval = hipblasStatus_t(chipblas.hipblasZtrsv(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
+    return _hipblasZtrsv__retval
+
 
 @cython.embedsignature(True)
-def hipblasHgemm(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, __uint16_t alpha, AP, int lda, BP, int ldb, __uint16_t beta, CP, int ldc):
+def hipblasHgemm(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3381,50 +4355,90 @@ def hipblasHgemm(hipblasHandle_t handle, object transA, object transB, int m, in
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasHgemm__retval = hipblasStatus_t(chipblas.hipblasHgemm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(alpha)._ptr,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(beta)._ptr,
+        <chipblas.hipblasHalf *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasHgemm__retval
+
 
 @cython.embedsignature(True)
-def hipblasSgemm(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasSgemm(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasSgemm__retval = hipblasStatus_t(chipblas.hipblasSgemm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasSgemm__retval
+
 
 @cython.embedsignature(True)
-def hipblasDgemm(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasDgemm(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasDgemm__retval = hipblasStatus_t(chipblas.hipblasDgemm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasDgemm__retval
+
 
 @cython.embedsignature(True)
-def hipblasCgemm(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, hipblasComplex beta, CP, int ldc):
+def hipblasCgemm(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCgemm__retval = hipblasStatus_t(chipblas.hipblasCgemm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasCgemm__retval
+
 
 @cython.embedsignature(True)
-def hipblasZgemm(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, hipblasDoubleComplex beta, CP, int ldc):
+def hipblasZgemm(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZgemm__retval = hipblasStatus_t(chipblas.hipblasZgemm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZgemm__retval
+
 
 @cython.embedsignature(True)
-def hipblasCherk(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, CP, int ldc):
+def hipblasCherk(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3499,20 +4513,34 @@ def hipblasCherk(hipblasHandle_t handle, object uplo, object transA, int n, int 
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCherk__retval = hipblasStatus_t(chipblas.hipblasCherk(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasCherk__retval
+
 
 @cython.embedsignature(True)
-def hipblasZherk(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, CP, int ldc):
+def hipblasZherk(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZherk__retval = hipblasStatus_t(chipblas.hipblasZherk(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZherk__retval
+
 
 @cython.embedsignature(True)
-def hipblasCherkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasCherkx(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3598,20 +4626,36 @@ def hipblasCherkx(hipblasHandle_t handle, object uplo, object transA, int n, int
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCherkx__retval = hipblasStatus_t(chipblas.hipblasCherkx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasCherkx__retval
+
 
 @cython.embedsignature(True)
-def hipblasZherkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasZherkx(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZherkx__retval = hipblasStatus_t(chipblas.hipblasZherkx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZherkx__retval
+
 
 @cython.embedsignature(True)
-def hipblasCher2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasCher2k(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3695,20 +4739,36 @@ def hipblasCher2k(hipblasHandle_t handle, object uplo, object transA, int n, int
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCher2k__retval = hipblasStatus_t(chipblas.hipblasCher2k(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasCher2k__retval
+
 
 @cython.embedsignature(True)
-def hipblasZher2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasZher2k(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZher2k__retval = hipblasStatus_t(chipblas.hipblasZher2k(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZher2k__retval
+
 
 @cython.embedsignature(True)
-def hipblasSsymm(hipblasHandle_t handle, object side, object uplo, int m, int n, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasSsymm(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3789,40 +4849,72 @@ def hipblasSsymm(hipblasHandle_t handle, object side, object uplo, int m, int n,
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasSsymm__retval = hipblasStatus_t(chipblas.hipblasSsymm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasSsymm__retval
+
 
 @cython.embedsignature(True)
-def hipblasDsymm(hipblasHandle_t handle, object side, object uplo, int m, int n, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasDsymm(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasDsymm__retval = hipblasStatus_t(chipblas.hipblasDsymm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasDsymm__retval
+
 
 @cython.embedsignature(True)
-def hipblasCsymm(hipblasHandle_t handle, object side, object uplo, int m, int n, hipblasComplex alpha, AP, int lda, BP, int ldb, hipblasComplex beta, CP, int ldc):
+def hipblasCsymm(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasCsymm__retval = hipblasStatus_t(chipblas.hipblasCsymm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasCsymm__retval
+
 
 @cython.embedsignature(True)
-def hipblasZsymm(hipblasHandle_t handle, object side, object uplo, int m, int n, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, hipblasDoubleComplex beta, CP, int ldc):
+def hipblasZsymm(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZsymm__retval = hipblasStatus_t(chipblas.hipblasZsymm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZsymm__retval
+
 
 @cython.embedsignature(True)
-def hipblasSsyrk(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, CP, int ldc):
+def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -3900,40 +4992,68 @@ def hipblasSsyrk(hipblasHandle_t handle, object uplo, object transA, int n, int 
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasSsyrk__retval = hipblasStatus_t(chipblas.hipblasSsyrk(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasSsyrk__retval
+
 
 @cython.embedsignature(True)
-def hipblasDsyrk(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, CP, int ldc):
+def hipblasDsyrk(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasDsyrk__retval = hipblasStatus_t(chipblas.hipblasDsyrk(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasDsyrk__retval
+
 
 @cython.embedsignature(True)
-def hipblasCsyrk(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasComplex alpha, AP, int lda, hipblasComplex beta, CP, int ldc):
+def hipblasCsyrk(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCsyrk__retval = hipblasStatus_t(chipblas.hipblasCsyrk(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasCsyrk__retval
+
 
 @cython.embedsignature(True)
-def hipblasZsyrk(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasDoubleComplex alpha, AP, int lda, hipblasDoubleComplex beta, CP, int ldc):
+def hipblasZsyrk(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZsyrk__retval = hipblasStatus_t(chipblas.hipblasZsyrk(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZsyrk__retval
+
 
 @cython.embedsignature(True)
-def hipblasSsyr2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -4016,40 +5136,72 @@ def hipblasSsyr2k(hipblasHandle_t handle, object uplo, object transA, int n, int
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasSsyr2k__retval = hipblasStatus_t(chipblas.hipblasSsyr2k(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasSsyr2k__retval
+
 
 @cython.embedsignature(True)
-def hipblasDsyr2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasDsyr2k(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasDsyr2k__retval = hipblasStatus_t(chipblas.hipblasDsyr2k(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasDsyr2k__retval
+
 
 @cython.embedsignature(True)
-def hipblasCsyr2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, hipblasComplex beta, CP, int ldc):
+def hipblasCsyr2k(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCsyr2k__retval = hipblasStatus_t(chipblas.hipblasCsyr2k(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasCsyr2k__retval
+
 
 @cython.embedsignature(True)
-def hipblasZsyr2k(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, hipblasDoubleComplex beta, CP, int ldc):
+def hipblasZsyr2k(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZsyr2k__retval = hipblasStatus_t(chipblas.hipblasZsyr2k(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZsyr2k__retval
+
 
 @cython.embedsignature(True)
-def hipblasSsyrkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -4135,40 +5287,72 @@ def hipblasSsyrkx(hipblasHandle_t handle, object uplo, object transA, int n, int
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasSsyrkx__retval = hipblasStatus_t(chipblas.hipblasSsyrkx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasSsyrkx__retval
+
 
 @cython.embedsignature(True)
-def hipblasDsyrkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasDsyrkx(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasDsyrkx__retval = hipblasStatus_t(chipblas.hipblasDsyrkx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasDsyrkx__retval
+
 
 @cython.embedsignature(True)
-def hipblasCsyrkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, hipblasComplex beta, CP, int ldc):
+def hipblasCsyrkx(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCsyrkx__retval = hipblasStatus_t(chipblas.hipblasCsyrkx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasCsyrkx__retval
+
 
 @cython.embedsignature(True)
-def hipblasZsyrkx(hipblasHandle_t handle, object uplo, object transA, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, hipblasDoubleComplex beta, CP, int ldc):
+def hipblasZsyrkx(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZsyrkx__retval = hipblasStatus_t(chipblas.hipblasZsyrkx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZsyrkx__retval
+
 
 @cython.embedsignature(True)
-def hipblasSgeam(hipblasHandle_t handle, object transA, object transB, int m, int n, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasSgeam(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, object beta, object BP, int ldb, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -4228,40 +5412,72 @@ def hipblasSgeam(hipblasHandle_t handle, object transA, object transB, int m, in
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasSgeam__retval = hipblasStatus_t(chipblas.hipblasSgeam(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(beta)._ptr,
+        <const float *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasSgeam__retval
+
 
 @cython.embedsignature(True)
-def hipblasDgeam(hipblasHandle_t handle, object transA, object transB, int m, int n, AP, int lda, BP, int ldb, CP, int ldc):
+def hipblasDgeam(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, object beta, object BP, int ldb, object CP, int ldc):
     """
     """
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasDgeam__retval = hipblasStatus_t(chipblas.hipblasDgeam(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(beta)._ptr,
+        <const double *>DataHandle.from_pyobj(BP)._ptr,ldb,
+        <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasDgeam__retval
+
 
 @cython.embedsignature(True)
-def hipblasCgeam(hipblasHandle_t handle, object transA, object transB, int m, int n, hipblasComplex alpha, AP, int lda, hipblasComplex beta, BP, int ldb, CP, int ldc):
+def hipblasCgeam(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, object beta, object BP, int ldb, object CP, int ldc):
     """
     """
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCgeam__retval = hipblasStatus_t(chipblas.hipblasCgeam(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasCgeam__retval
+
 
 @cython.embedsignature(True)
-def hipblasZgeam(hipblasHandle_t handle, object transA, object transB, int m, int n, hipblasDoubleComplex alpha, AP, int lda, hipblasDoubleComplex beta, BP, int ldb, CP, int ldc):
+def hipblasZgeam(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, object beta, object BP, int ldb, object CP, int ldc):
     """
     """
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZgeam__retval = hipblasStatus_t(chipblas.hipblasZgeam(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZgeam__retval
+
 
 @cython.embedsignature(True)
-def hipblasChemm(hipblasHandle_t handle, object side, object uplo, int n, int k, hipblasComplex alpha, AP, int lda, BP, int ldb, hipblasComplex beta, CP, int ldc):
+def hipblasChemm(object handle, object side, object uplo, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -4343,20 +5559,36 @@ def hipblasChemm(hipblasHandle_t handle, object side, object uplo, int n, int k,
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasChemm__retval = hipblasStatus_t(chipblas.hipblasChemm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasComplex.from_pyobj(beta)._ptr,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasChemm__retval
+
 
 @cython.embedsignature(True)
-def hipblasZhemm(hipblasHandle_t handle, object side, object uplo, int n, int k, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb, hipblasDoubleComplex beta, CP, int ldc):
+def hipblasZhemm(object handle, object side, object uplo, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
-    pass
+    _hipblasZhemm__retval = hipblasStatus_t(chipblas.hipblasZhemm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
+        hipblasDoubleComplex.from_pyobj(beta)._ptr,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZhemm__retval
+
 
 @cython.embedsignature(True)
-def hipblasStrmm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, AP, int lda, BP, int ldb):
+def hipblasStrmm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """! @{
         \brief BLAS Level 3 API
 
@@ -4461,10 +5693,16 @@ def hipblasStrmm(hipblasHandle_t handle, object side, object uplo, object transA
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasStrmm__retval = hipblasStatus_t(chipblas.hipblasStrmm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <float *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+    return _hipblasStrmm__retval
+
 
 @cython.embedsignature(True)
-def hipblasDtrmm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, AP, int lda, BP, int ldb):
+def hipblasDtrmm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
@@ -4475,10 +5713,16 @@ def hipblasDtrmm(hipblasHandle_t handle, object side, object uplo, object transA
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasDtrmm__retval = hipblasStatus_t(chipblas.hipblasDtrmm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <double *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+    return _hipblasDtrmm__retval
+
 
 @cython.embedsignature(True)
-def hipblasCtrmm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, hipblasComplex alpha, AP, int lda, BP, int ldb):
+def hipblasCtrmm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
@@ -4489,10 +5733,16 @@ def hipblasCtrmm(hipblasHandle_t handle, object side, object uplo, object transA
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasCtrmm__retval = hipblasStatus_t(chipblas.hipblasCtrmm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
+    return _hipblasCtrmm__retval
+
 
 @cython.embedsignature(True)
-def hipblasZtrmm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb):
+def hipblasZtrmm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
@@ -4503,10 +5753,16 @@ def hipblasZtrmm(hipblasHandle_t handle, object side, object uplo, object transA
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasZtrmm__retval = hipblasStatus_t(chipblas.hipblasZtrmm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
+    return _hipblasZtrmm__retval
+
 
 @cython.embedsignature(True)
-def hipblasStrsm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, AP, int lda, BP, int ldb):
+def hipblasStrsm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """! @{
         \brief BLAS Level 3 API
 
@@ -4604,10 +5860,16 @@ def hipblasStrsm(hipblasHandle_t handle, object side, object uplo, object transA
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasStrsm__retval = hipblasStatus_t(chipblas.hipblasStrsm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const float *>DataHandle.from_pyobj(alpha)._ptr,
+        <float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <float *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+    return _hipblasStrsm__retval
+
 
 @cython.embedsignature(True)
-def hipblasDtrsm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, AP, int lda, BP, int ldb):
+def hipblasDtrsm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
@@ -4618,10 +5880,16 @@ def hipblasDtrsm(hipblasHandle_t handle, object side, object uplo, object transA
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasDtrsm__retval = hipblasStatus_t(chipblas.hipblasDtrsm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const double *>DataHandle.from_pyobj(alpha)._ptr,
+        <double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <double *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
+    return _hipblasDtrsm__retval
+
 
 @cython.embedsignature(True)
-def hipblasCtrsm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, hipblasComplex alpha, AP, int lda, BP, int ldb):
+def hipblasCtrsm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
@@ -4632,10 +5900,16 @@ def hipblasCtrsm(hipblasHandle_t handle, object side, object uplo, object transA
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasCtrsm__retval = hipblasStatus_t(chipblas.hipblasCtrsm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        hipblasComplex.from_pyobj(alpha)._ptr,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
+    return _hipblasCtrsm__retval
+
 
 @cython.embedsignature(True)
-def hipblasZtrsm(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, hipblasDoubleComplex alpha, AP, int lda, BP, int ldb):
+def hipblasZtrsm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
@@ -4646,10 +5920,16 @@ def hipblasZtrsm(hipblasHandle_t handle, object side, object uplo, object transA
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasZtrsm__retval = hipblasStatus_t(chipblas.hipblasZtrsm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        hipblasDoubleComplex.from_pyobj(alpha)._ptr,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
+    return _hipblasZtrsm__retval
+
 
 @cython.embedsignature(True)
-def hipblasStrtri(hipblasHandle_t handle, object uplo, object diag, int n, AP, int lda, invA, int ldinvA):
+def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int lda, object invA, int ldinvA):
     """! @{
         \brief BLAS Level 3 API
 
@@ -4691,40 +5971,60 @@ def hipblasStrtri(hipblasHandle_t handle, object uplo, object diag, int n, AP, i
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasStrtri__retval = hipblasStatus_t(chipblas.hipblasStrtri(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <float *>DataHandle.from_pyobj(invA)._ptr,ldinvA))    # fully specified
+    return _hipblasStrtri__retval
+
 
 @cython.embedsignature(True)
-def hipblasDtrtri(hipblasHandle_t handle, object uplo, object diag, int n, AP, int lda, invA, int ldinvA):
+def hipblasDtrtri(object handle, object uplo, object diag, int n, object AP, int lda, object invA, int ldinvA):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasDtrtri__retval = hipblasStatus_t(chipblas.hipblasDtrtri(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <double *>DataHandle.from_pyobj(invA)._ptr,ldinvA))    # fully specified
+    return _hipblasDtrtri__retval
+
 
 @cython.embedsignature(True)
-def hipblasCtrtri(hipblasHandle_t handle, object uplo, object diag, int n, AP, int lda, invA, int ldinvA):
+def hipblasCtrtri(object handle, object uplo, object diag, int n, object AP, int lda, object invA, int ldinvA):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasCtrtri__retval = hipblasStatus_t(chipblas.hipblasCtrtri(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(invA)._ptr,ldinvA))    # fully specified
+    return _hipblasCtrtri__retval
+
 
 @cython.embedsignature(True)
-def hipblasZtrtri(hipblasHandle_t handle, object uplo, object diag, int n, AP, int lda, invA, int ldinvA):
+def hipblasZtrtri(object handle, object uplo, object diag, int n, object AP, int lda, object invA, int ldinvA):
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
-    pass
+    _hipblasZtrtri__retval = hipblasStatus_t(chipblas.hipblasZtrtri(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(invA)._ptr,ldinvA))    # fully specified
+    return _hipblasZtrtri__retval
+
 
 @cython.embedsignature(True)
-def hipblasSdgmm(hipblasHandle_t handle, object side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
+def hipblasSdgmm(object handle, object side, int m, int n, object AP, int lda, object x, int incx, object CP, int ldc):
     """! @{
         \brief BLAS Level 3 API
 
@@ -4771,34 +6071,58 @@ def hipblasSdgmm(hipblasHandle_t handle, object side, int m, int n, AP, int lda,
     """
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
-    pass
+    _hipblasSdgmm__retval = hipblasStatus_t(chipblas.hipblasSdgmm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const float *>DataHandle.from_pyobj(x)._ptr,incx,
+        <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasSdgmm__retval
+
 
 @cython.embedsignature(True)
-def hipblasDdgmm(hipblasHandle_t handle, object side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
+def hipblasDdgmm(object handle, object side, int m, int n, object AP, int lda, object x, int incx, object CP, int ldc):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
-    pass
+    _hipblasDdgmm__retval = hipblasStatus_t(chipblas.hipblasDdgmm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
+        <const double *>DataHandle.from_pyobj(x)._ptr,incx,
+        <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasDdgmm__retval
+
 
 @cython.embedsignature(True)
-def hipblasCdgmm(hipblasHandle_t handle, object side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
+def hipblasCdgmm(object handle, object side, int m, int n, object AP, int lda, object x, int incx, object CP, int ldc):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
-    pass
+    _hipblasCdgmm__retval = hipblasStatus_t(chipblas.hipblasCdgmm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        hipblasComplex.from_pyobj(AP)._ptr,lda,
+        hipblasComplex.from_pyobj(x)._ptr,incx,
+        hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasCdgmm__retval
+
 
 @cython.embedsignature(True)
-def hipblasZdgmm(hipblasHandle_t handle, object side, int m, int n, AP, int lda, x, int incx, CP, int ldc):
+def hipblasZdgmm(object handle, object side, int m, int n, object AP, int lda, object x, int incx, object CP, int ldc):
     """
     """
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
-    pass
+    _hipblasZdgmm__retval = hipblasStatus_t(chipblas.hipblasZdgmm(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
+        hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
+    return _hipblasZdgmm__retval
+
 
 @cython.embedsignature(True)
-def hipblasSgetrf(hipblasHandle_t handle, const int n, A, const int lda, ipiv, info):
+def hipblasSgetrf(object handle, const int n, object A, const int lda, object ipiv, object info):
     """! @{
         \brief SOLVER API
 
@@ -4851,28 +6175,52 @@ def hipblasSgetrf(hipblasHandle_t handle, const int n, A, const int lda, ipiv, i
                   If info = 0, successful exit.
                   If info = j > 0, U is singular. U[j,j] is the first zero pivot.
     """
-    pass
+    _hipblasSgetrf__retval = hipblasStatus_t(chipblas.hipblasSgetrf(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <float *>DataHandle.from_pyobj(A)._ptr,lda,
+        <int *>DataHandle.from_pyobj(ipiv)._ptr,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasSgetrf__retval
+
 
 @cython.embedsignature(True)
-def hipblasDgetrf(hipblasHandle_t handle, const int n, A, const int lda, ipiv, info):
+def hipblasDgetrf(object handle, const int n, object A, const int lda, object ipiv, object info):
     """
     """
-    pass
+    _hipblasDgetrf__retval = hipblasStatus_t(chipblas.hipblasDgetrf(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <double *>DataHandle.from_pyobj(A)._ptr,lda,
+        <int *>DataHandle.from_pyobj(ipiv)._ptr,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasDgetrf__retval
+
 
 @cython.embedsignature(True)
-def hipblasCgetrf(hipblasHandle_t handle, const int n, A, const int lda, ipiv, info):
+def hipblasCgetrf(object handle, const int n, object A, const int lda, object ipiv, object info):
     """
     """
-    pass
+    _hipblasCgetrf__retval = hipblasStatus_t(chipblas.hipblasCgetrf(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasComplex.from_pyobj(A)._ptr,lda,
+        <int *>DataHandle.from_pyobj(ipiv)._ptr,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasCgetrf__retval
+
 
 @cython.embedsignature(True)
-def hipblasZgetrf(hipblasHandle_t handle, const int n, A, const int lda, ipiv, info):
+def hipblasZgetrf(object handle, const int n, object A, const int lda, object ipiv, object info):
     """
     """
-    pass
+    _hipblasZgetrf__retval = hipblasStatus_t(chipblas.hipblasZgetrf(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
+        <int *>DataHandle.from_pyobj(ipiv)._ptr,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasZgetrf__retval
+
 
 @cython.embedsignature(True)
-def hipblasSgetrs(hipblasHandle_t handle, object trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
+def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, object A, const int lda, object ipiv, object B, const int ldb, object info):
     """! @{
         \brief SOLVER API
 
@@ -4930,34 +6278,62 @@ def hipblasSgetrs(hipblasHandle_t handle, object trans, const int n, const int n
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasSgetrs__retval = hipblasStatus_t(chipblas.hipblasSgetrs(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <float *>DataHandle.from_pyobj(A)._ptr,lda,
+        <const int *>DataHandle.from_pyobj(ipiv)._ptr,
+        <float *>DataHandle.from_pyobj(B)._ptr,ldb,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasSgetrs__retval
+
 
 @cython.embedsignature(True)
-def hipblasDgetrs(hipblasHandle_t handle, object trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
+def hipblasDgetrs(object handle, object trans, const int n, const int nrhs, object A, const int lda, object ipiv, object B, const int ldb, object info):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasDgetrs__retval = hipblasStatus_t(chipblas.hipblasDgetrs(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <double *>DataHandle.from_pyobj(A)._ptr,lda,
+        <const int *>DataHandle.from_pyobj(ipiv)._ptr,
+        <double *>DataHandle.from_pyobj(B)._ptr,ldb,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasDgetrs__retval
+
 
 @cython.embedsignature(True)
-def hipblasCgetrs(hipblasHandle_t handle, object trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
+def hipblasCgetrs(object handle, object trans, const int n, const int nrhs, object A, const int lda, object ipiv, object B, const int ldb, object info):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCgetrs__retval = hipblasStatus_t(chipblas.hipblasCgetrs(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        hipblasComplex.from_pyobj(A)._ptr,lda,
+        <const int *>DataHandle.from_pyobj(ipiv)._ptr,
+        hipblasComplex.from_pyobj(B)._ptr,ldb,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasCgetrs__retval
+
 
 @cython.embedsignature(True)
-def hipblasZgetrs(hipblasHandle_t handle, object trans, const int n, const int nrhs, A, const int lda, ipiv, B, const int ldb, info):
+def hipblasZgetrs(object handle, object trans, const int n, const int nrhs, object A, const int lda, object ipiv, object B, const int ldb, object info):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZgetrs__retval = hipblasStatus_t(chipblas.hipblasZgetrs(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
+        <const int *>DataHandle.from_pyobj(ipiv)._ptr,
+        hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasZgetrs__retval
+
 
 @cython.embedsignature(True)
-def hipblasSgels(hipblasHandle_t handle, object trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
+def hipblasSgels(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, object B, const int ldb, object info, object deviceInfo):
     """! @{
         \brief GELS solves an overdetermined (or underdetermined) linear system defined by an m-by-n
         matrix A, and a corresponding matrix B, using the QR factorization computed by \ref hipblasSgeqrf "GEQRF" (or the LQ
@@ -5028,34 +6404,62 @@ def hipblasSgels(hipblasHandle_t handle, object trans, const int m, const int n,
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasSgels__retval = hipblasStatus_t(chipblas.hipblasSgels(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <float *>DataHandle.from_pyobj(A)._ptr,lda,
+        <float *>DataHandle.from_pyobj(B)._ptr,ldb,
+        <int *>DataHandle.from_pyobj(info)._ptr,
+        <int *>DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
+    return _hipblasSgels__retval
+
 
 @cython.embedsignature(True)
-def hipblasDgels(hipblasHandle_t handle, object trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
+def hipblasDgels(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, object B, const int ldb, object info, object deviceInfo):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasDgels__retval = hipblasStatus_t(chipblas.hipblasDgels(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <double *>DataHandle.from_pyobj(A)._ptr,lda,
+        <double *>DataHandle.from_pyobj(B)._ptr,ldb,
+        <int *>DataHandle.from_pyobj(info)._ptr,
+        <int *>DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
+    return _hipblasDgels__retval
+
 
 @cython.embedsignature(True)
-def hipblasCgels(hipblasHandle_t handle, object trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
+def hipblasCgels(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, object B, const int ldb, object info, object deviceInfo):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasCgels__retval = hipblasStatus_t(chipblas.hipblasCgels(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        hipblasComplex.from_pyobj(A)._ptr,lda,
+        hipblasComplex.from_pyobj(B)._ptr,ldb,
+        <int *>DataHandle.from_pyobj(info)._ptr,
+        <int *>DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
+    return _hipblasCgels__retval
+
 
 @cython.embedsignature(True)
-def hipblasZgels(hipblasHandle_t handle, object trans, const int m, const int n, const int nrhs, A, const int lda, B, const int ldb, info, deviceInfo):
+def hipblasZgels(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, object B, const int ldb, object info, object deviceInfo):
     """
     """
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
-    pass
+    _hipblasZgels__retval = hipblasStatus_t(chipblas.hipblasZgels(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,
+        <int *>DataHandle.from_pyobj(info)._ptr,
+        <int *>DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
+    return _hipblasZgels__retval
+
 
 @cython.embedsignature(True)
-def hipblasSgeqrf(hipblasHandle_t handle, const int m, const int n, A, const int lda, ipiv, info):
+def hipblasSgeqrf(object handle, const int m, const int n, object A, const int lda, object ipiv, object info):
     """! @{
         \brief SOLVER API
 
@@ -5114,28 +6518,52 @@ def hipblasSgeqrf(hipblasHandle_t handle, const int m, const int n, A, const int
                   If info = 0, successful exit.
                   If info = j < 0, the j-th argument is invalid.
     """
-    pass
+    _hipblasSgeqrf__retval = hipblasStatus_t(chipblas.hipblasSgeqrf(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,m,n,
+        <float *>DataHandle.from_pyobj(A)._ptr,lda,
+        <float *>DataHandle.from_pyobj(ipiv)._ptr,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasSgeqrf__retval
+
 
 @cython.embedsignature(True)
-def hipblasDgeqrf(hipblasHandle_t handle, const int m, const int n, A, const int lda, ipiv, info):
+def hipblasDgeqrf(object handle, const int m, const int n, object A, const int lda, object ipiv, object info):
     """
     """
-    pass
+    _hipblasDgeqrf__retval = hipblasStatus_t(chipblas.hipblasDgeqrf(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,m,n,
+        <double *>DataHandle.from_pyobj(A)._ptr,lda,
+        <double *>DataHandle.from_pyobj(ipiv)._ptr,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasDgeqrf__retval
+
 
 @cython.embedsignature(True)
-def hipblasCgeqrf(hipblasHandle_t handle, const int m, const int n, A, const int lda, ipiv, info):
+def hipblasCgeqrf(object handle, const int m, const int n, object A, const int lda, object ipiv, object info):
     """
     """
-    pass
+    _hipblasCgeqrf__retval = hipblasStatus_t(chipblas.hipblasCgeqrf(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,m,n,
+        hipblasComplex.from_pyobj(A)._ptr,lda,
+        hipblasComplex.from_pyobj(ipiv)._ptr,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasCgeqrf__retval
+
 
 @cython.embedsignature(True)
-def hipblasZgeqrf(hipblasHandle_t handle, const int m, const int n, A, const int lda, ipiv, info):
+def hipblasZgeqrf(object handle, const int m, const int n, object A, const int lda, object ipiv, object info):
     """
     """
-    pass
+    _hipblasZgeqrf__retval = hipblasStatus_t(chipblas.hipblasZgeqrf(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,m,n,
+        hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
+        hipblasDoubleComplex.from_pyobj(ipiv)._ptr,
+        <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
+    return _hipblasZgeqrf__retval
+
 
 @cython.embedsignature(True)
-def hipblasGemmEx(hipblasHandle_t handle, object transA, object transB, int m, int n, int k, A, object aType, int lda, B, object bType, int ldb, C, object cType, int ldc, object computeType, object algo):
+def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int k, object alpha, object A, object aType, int lda, object B, object bType, int ldb, object beta, object C, object cType, int ldc, object computeType, object algo):
     """! \brief BLAS EX API
 
         \details
@@ -5231,10 +6659,18 @@ def hipblasGemmEx(hipblasHandle_t handle, object transA, object transB, int m, i
         raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")                    
     if not isinstance(algo,hipblasGemmAlgo_t):
         raise TypeError("argument 'algo' must be of type 'hipblasGemmAlgo_t'")
-    pass
+    _hipblasGemmEx__retval = hipblasStatus_t(chipblas.hipblasGemmEx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const void *>DataHandle.from_pyobj(alpha)._ptr,
+        <const void *>DataHandle.from_pyobj(A)._ptr,aType.value,lda,
+        <const void *>DataHandle.from_pyobj(B)._ptr,bType.value,ldb,
+        <const void *>DataHandle.from_pyobj(beta)._ptr,
+        <void *>DataHandle.from_pyobj(C)._ptr,cType.value,ldc,computeType.value,algo.value))    # fully specified
+    return _hipblasGemmEx__retval
+
 
 @cython.embedsignature(True)
-def hipblasTrsmEx(hipblasHandle_t handle, object side, object uplo, object transA, object diag, int m, int n, A, int lda, B, int ldb, invA, int invAsize, object computeType):
+def hipblasTrsmEx(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object A, int lda, object B, int ldb, object invA, int invAsize, object computeType):
     """! BLAS EX API
 
         \details
@@ -5365,10 +6801,17 @@ def hipblasTrsmEx(hipblasHandle_t handle, object side, object uplo, object trans
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")                    
     if not isinstance(computeType,hipblasDatatype_t):
         raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")
-    pass
+    _hipblasTrsmEx__retval = hipblasStatus_t(chipblas.hipblasTrsmEx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <const void *>DataHandle.from_pyobj(alpha)._ptr,
+        <void *>DataHandle.from_pyobj(A)._ptr,lda,
+        <void *>DataHandle.from_pyobj(B)._ptr,ldb,
+        <const void *>DataHandle.from_pyobj(invA)._ptr,invAsize,computeType.value))    # fully specified
+    return _hipblasTrsmEx__retval
+
 
 @cython.embedsignature(True)
-def hipblasAxpyEx(hipblasHandle_t handle, int n, object alphaType, x, object xType, int incx, y, object yType, int incy, object executionType):
+def hipblasAxpyEx(object handle, int n, object alpha, object alphaType, object x, object xType, int incx, object y, object yType, int incy, object executionType):
     """! \brief BLAS EX API
 
         \details
@@ -5417,10 +6860,16 @@ def hipblasAxpyEx(hipblasHandle_t handle, int n, object alphaType, x, object xTy
         raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
-    pass
+    _hipblasAxpyEx__retval = hipblasStatus_t(chipblas.hipblasAxpyEx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const void *>DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
+        <const void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,
+        <void *>DataHandle.from_pyobj(y)._ptr,yType.value,incy,executionType.value))    # fully specified
+    return _hipblasAxpyEx__retval
+
 
 @cython.embedsignature(True)
-def hipblasDotEx(hipblasHandle_t handle, int n, x, object xType, int incx, y, object yType, int incy, result, object resultType, object executionType):
+def hipblasDotEx(object handle, int n, object x, object xType, int incx, object y, object yType, int incy, object result, object resultType, object executionType):
     """! @{
         \brief BLAS EX API
 
@@ -5476,10 +6925,16 @@ def hipblasDotEx(hipblasHandle_t handle, int n, x, object xType, int incx, y, ob
         raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
-    pass
+    _hipblasDotEx__retval = hipblasStatus_t(chipblas.hipblasDotEx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,
+        <const void *>DataHandle.from_pyobj(y)._ptr,yType.value,incy,
+        <void *>DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+    return _hipblasDotEx__retval
+
 
 @cython.embedsignature(True)
-def hipblasDotcEx(hipblasHandle_t handle, int n, x, object xType, int incx, y, object yType, int incy, result, object resultType, object executionType):
+def hipblasDotcEx(object handle, int n, object x, object xType, int incx, object y, object yType, int incy, object result, object resultType, object executionType):
     """
     """
     if not isinstance(xType,hipblasDatatype_t):
@@ -5490,10 +6945,16 @@ def hipblasDotcEx(hipblasHandle_t handle, int n, x, object xType, int incx, y, o
         raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
-    pass
+    _hipblasDotcEx__retval = hipblasStatus_t(chipblas.hipblasDotcEx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,
+        <const void *>DataHandle.from_pyobj(y)._ptr,yType.value,incy,
+        <void *>DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+    return _hipblasDotcEx__retval
+
 
 @cython.embedsignature(True)
-def hipblasNrm2Ex(hipblasHandle_t handle, int n, x, object xType, int incx, result, object resultType, object executionType):
+def hipblasNrm2Ex(object handle, int n, object x, object xType, int incx, object result, object resultType, object executionType):
     """! \brief BLAS_EX API
 
         \details
@@ -5536,10 +6997,15 @@ def hipblasNrm2Ex(hipblasHandle_t handle, int n, x, object xType, int incx, resu
         raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
-    pass
+    _hipblasNrm2Ex__retval = hipblasStatus_t(chipblas.hipblasNrm2Ex(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,
+        <void *>DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
+    return _hipblasNrm2Ex__retval
+
 
 @cython.embedsignature(True)
-def hipblasRotEx(hipblasHandle_t handle, int n, x, object xType, int incx, y, object yType, int incy, c, s, object csType, object executionType):
+def hipblasRotEx(object handle, int n, object x, object xType, int incx, object y, object yType, int incy, object c, object s, object csType, object executionType):
     """! \brief BLAS EX API
 
         \details
@@ -5597,10 +7063,17 @@ def hipblasRotEx(hipblasHandle_t handle, int n, x, object xType, int incx, y, ob
         raise TypeError("argument 'csType' must be of type 'hipblasDatatype_t'")                    
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
-    pass
+    _hipblasRotEx__retval = hipblasStatus_t(chipblas.hipblasRotEx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,
+        <void *>DataHandle.from_pyobj(y)._ptr,yType.value,incy,
+        <const void *>DataHandle.from_pyobj(c)._ptr,
+        <const void *>DataHandle.from_pyobj(s)._ptr,csType.value,executionType.value))    # fully specified
+    return _hipblasRotEx__retval
+
 
 @cython.embedsignature(True)
-def hipblasScalEx(hipblasHandle_t handle, int n, object alphaType, x, object xType, int incx, object executionType):
+def hipblasScalEx(object handle, int n, object alpha, object alphaType, object x, object xType, int incx, object executionType):
     """! \brief BLAS EX API
 
         \details
@@ -5639,7 +7112,12 @@ def hipblasScalEx(hipblasHandle_t handle, int n, object alphaType, x, object xTy
         raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
-    pass
+    _hipblasScalEx__retval = hipblasStatus_t(chipblas.hipblasScalEx(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
+        <const void *>DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
+        <void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,executionType.value))    # fully specified
+    return _hipblasScalEx__retval
+
 
 @cython.embedsignature(True)
 def hipblasStatusToString(object status):
@@ -5656,4 +7134,4 @@ def hipblasStatusToString(object status):
     """
     if not isinstance(status,hipblasStatus_t):
         raise TypeError("argument 'status' must be of type 'hipblasStatus_t'")
-    cdef const char * hipblasStatusToString_____retval = chipblas.hipblasStatusToString(status.value)    # fully specified
+    cdef const char * _hipblasStatusToString__retval = chipblas.hipblasStatusToString(status.value)    # fully specified

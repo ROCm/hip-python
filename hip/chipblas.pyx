@@ -8,95 +8,95 @@ cimport hip._util.posixloader as loader
 cdef void* _lib_handle = loader.open_library("libhipblas.so")
 
 
-cdef void* hipblasCreate_funptr = NULL
+cdef void* _hipblasCreate__funptr = NULL
 # ! \brief Create hipblas handle. */
 cdef hipblasStatus_t hipblasCreate(hipblasHandle_t* handle) nogil:
     global _lib_handle
-    global hipblasCreate_funptr
-    if hipblasCreate_funptr == NULL:
+    global _hipblasCreate__funptr
+    if _hipblasCreate__funptr == NULL:
         with gil:
-            hipblasCreate_funptr = loader.load_symbol(_lib_handle, "hipblasCreate")
-    return (<hipblasStatus_t (*)(hipblasHandle_t*) nogil> hipblasCreate_funptr)(handle)
+            _hipblasCreate__funptr = loader.load_symbol(_lib_handle, "hipblasCreate")
+    return (<hipblasStatus_t (*)(hipblasHandle_t*) nogil> _hipblasCreate__funptr)(handle)
 
 
-cdef void* hipblasDestroy_funptr = NULL
+cdef void* _hipblasDestroy__funptr = NULL
 # ! \brief Destroys the library context created using hipblasCreate() */
 cdef hipblasStatus_t hipblasDestroy(hipblasHandle_t handle) nogil:
     global _lib_handle
-    global hipblasDestroy_funptr
-    if hipblasDestroy_funptr == NULL:
+    global _hipblasDestroy__funptr
+    if _hipblasDestroy__funptr == NULL:
         with gil:
-            hipblasDestroy_funptr = loader.load_symbol(_lib_handle, "hipblasDestroy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t) nogil> hipblasDestroy_funptr)(handle)
+            _hipblasDestroy__funptr = loader.load_symbol(_lib_handle, "hipblasDestroy")
+    return (<hipblasStatus_t (*)(hipblasHandle_t) nogil> _hipblasDestroy__funptr)(handle)
 
 
-cdef void* hipblasSetStream_funptr = NULL
+cdef void* _hipblasSetStream__funptr = NULL
 # ! \brief Set stream for handle */
 cdef hipblasStatus_t hipblasSetStream(hipblasHandle_t handle,hipStream_t streamId) nogil:
     global _lib_handle
-    global hipblasSetStream_funptr
-    if hipblasSetStream_funptr == NULL:
+    global _hipblasSetStream__funptr
+    if _hipblasSetStream__funptr == NULL:
         with gil:
-            hipblasSetStream_funptr = loader.load_symbol(_lib_handle, "hipblasSetStream")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipStream_t) nogil> hipblasSetStream_funptr)(handle,streamId)
+            _hipblasSetStream__funptr = loader.load_symbol(_lib_handle, "hipblasSetStream")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipStream_t) nogil> _hipblasSetStream__funptr)(handle,streamId)
 
 
-cdef void* hipblasGetStream_funptr = NULL
+cdef void* _hipblasGetStream__funptr = NULL
 # ! \brief Get stream[0] for handle */
 cdef hipblasStatus_t hipblasGetStream(hipblasHandle_t handle,hipStream_t* streamId) nogil:
     global _lib_handle
-    global hipblasGetStream_funptr
-    if hipblasGetStream_funptr == NULL:
+    global _hipblasGetStream__funptr
+    if _hipblasGetStream__funptr == NULL:
         with gil:
-            hipblasGetStream_funptr = loader.load_symbol(_lib_handle, "hipblasGetStream")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipStream_t*) nogil> hipblasGetStream_funptr)(handle,streamId)
+            _hipblasGetStream__funptr = loader.load_symbol(_lib_handle, "hipblasGetStream")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipStream_t*) nogil> _hipblasGetStream__funptr)(handle,streamId)
 
 
-cdef void* hipblasSetPointerMode_funptr = NULL
+cdef void* _hipblasSetPointerMode__funptr = NULL
 # ! \brief Set hipblas pointer mode */
 cdef hipblasStatus_t hipblasSetPointerMode(hipblasHandle_t handle,hipblasPointerMode_t mode) nogil:
     global _lib_handle
-    global hipblasSetPointerMode_funptr
-    if hipblasSetPointerMode_funptr == NULL:
+    global _hipblasSetPointerMode__funptr
+    if _hipblasSetPointerMode__funptr == NULL:
         with gil:
-            hipblasSetPointerMode_funptr = loader.load_symbol(_lib_handle, "hipblasSetPointerMode")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasPointerMode_t) nogil> hipblasSetPointerMode_funptr)(handle,mode)
+            _hipblasSetPointerMode__funptr = loader.load_symbol(_lib_handle, "hipblasSetPointerMode")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasPointerMode_t) nogil> _hipblasSetPointerMode__funptr)(handle,mode)
 
 
-cdef void* hipblasGetPointerMode_funptr = NULL
+cdef void* _hipblasGetPointerMode__funptr = NULL
 # ! \brief Get hipblas pointer mode */
 cdef hipblasStatus_t hipblasGetPointerMode(hipblasHandle_t handle,hipblasPointerMode_t * mode) nogil:
     global _lib_handle
-    global hipblasGetPointerMode_funptr
-    if hipblasGetPointerMode_funptr == NULL:
+    global _hipblasGetPointerMode__funptr
+    if _hipblasGetPointerMode__funptr == NULL:
         with gil:
-            hipblasGetPointerMode_funptr = loader.load_symbol(_lib_handle, "hipblasGetPointerMode")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasPointerMode_t *) nogil> hipblasGetPointerMode_funptr)(handle,mode)
+            _hipblasGetPointerMode__funptr = loader.load_symbol(_lib_handle, "hipblasGetPointerMode")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasPointerMode_t *) nogil> _hipblasGetPointerMode__funptr)(handle,mode)
 
 
-cdef void* hipblasSetInt8Datatype_funptr = NULL
+cdef void* _hipblasSetInt8Datatype__funptr = NULL
 # ! \brief Set hipblas int8 Datatype */
 cdef hipblasStatus_t hipblasSetInt8Datatype(hipblasHandle_t handle,hipblasInt8Datatype_t int8Type) nogil:
     global _lib_handle
-    global hipblasSetInt8Datatype_funptr
-    if hipblasSetInt8Datatype_funptr == NULL:
+    global _hipblasSetInt8Datatype__funptr
+    if _hipblasSetInt8Datatype__funptr == NULL:
         with gil:
-            hipblasSetInt8Datatype_funptr = loader.load_symbol(_lib_handle, "hipblasSetInt8Datatype")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasInt8Datatype_t) nogil> hipblasSetInt8Datatype_funptr)(handle,int8Type)
+            _hipblasSetInt8Datatype__funptr = loader.load_symbol(_lib_handle, "hipblasSetInt8Datatype")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasInt8Datatype_t) nogil> _hipblasSetInt8Datatype__funptr)(handle,int8Type)
 
 
-cdef void* hipblasGetInt8Datatype_funptr = NULL
+cdef void* _hipblasGetInt8Datatype__funptr = NULL
 # ! \brief Get hipblas int8 Datatype*/
 cdef hipblasStatus_t hipblasGetInt8Datatype(hipblasHandle_t handle,hipblasInt8Datatype_t * int8Type) nogil:
     global _lib_handle
-    global hipblasGetInt8Datatype_funptr
-    if hipblasGetInt8Datatype_funptr == NULL:
+    global _hipblasGetInt8Datatype__funptr
+    if _hipblasGetInt8Datatype__funptr == NULL:
         with gil:
-            hipblasGetInt8Datatype_funptr = loader.load_symbol(_lib_handle, "hipblasGetInt8Datatype")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasInt8Datatype_t *) nogil> hipblasGetInt8Datatype_funptr)(handle,int8Type)
+            _hipblasGetInt8Datatype__funptr = loader.load_symbol(_lib_handle, "hipblasGetInt8Datatype")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasInt8Datatype_t *) nogil> _hipblasGetInt8Datatype__funptr)(handle,int8Type)
 
 
-cdef void* hipblasSetVector_funptr = NULL
+cdef void* _hipblasSetVector__funptr = NULL
 # ! \brief copy vector from host to device
 #     @param[in]
 #     n           [int]
@@ -116,14 +116,14 @@ cdef void* hipblasSetVector_funptr = NULL
 #                 specifies the increment for the elements of the vector
 cdef hipblasStatus_t hipblasSetVector(int n,int elemSize,const void * x,int incx,void * y,int incy) nogil:
     global _lib_handle
-    global hipblasSetVector_funptr
-    if hipblasSetVector_funptr == NULL:
+    global _hipblasSetVector__funptr
+    if _hipblasSetVector__funptr == NULL:
         with gil:
-            hipblasSetVector_funptr = loader.load_symbol(_lib_handle, "hipblasSetVector")
-    return (<hipblasStatus_t (*)(int,int,const void *,int,void *,int) nogil> hipblasSetVector_funptr)(n,elemSize,x,incx,y,incy)
+            _hipblasSetVector__funptr = loader.load_symbol(_lib_handle, "hipblasSetVector")
+    return (<hipblasStatus_t (*)(int,int,const void *,int,void *,int) nogil> _hipblasSetVector__funptr)(n,elemSize,x,incx,y,incy)
 
 
-cdef void* hipblasGetVector_funptr = NULL
+cdef void* _hipblasGetVector__funptr = NULL
 # ! \brief copy vector from device to host
 #     @param[in]
 #     n           [int]
@@ -143,14 +143,14 @@ cdef void* hipblasGetVector_funptr = NULL
 #                 specifies the increment for the elements of the vector
 cdef hipblasStatus_t hipblasGetVector(int n,int elemSize,const void * x,int incx,void * y,int incy) nogil:
     global _lib_handle
-    global hipblasGetVector_funptr
-    if hipblasGetVector_funptr == NULL:
+    global _hipblasGetVector__funptr
+    if _hipblasGetVector__funptr == NULL:
         with gil:
-            hipblasGetVector_funptr = loader.load_symbol(_lib_handle, "hipblasGetVector")
-    return (<hipblasStatus_t (*)(int,int,const void *,int,void *,int) nogil> hipblasGetVector_funptr)(n,elemSize,x,incx,y,incy)
+            _hipblasGetVector__funptr = loader.load_symbol(_lib_handle, "hipblasGetVector")
+    return (<hipblasStatus_t (*)(int,int,const void *,int,void *,int) nogil> _hipblasGetVector__funptr)(n,elemSize,x,incx,y,incy)
 
 
-cdef void* hipblasSetMatrix_funptr = NULL
+cdef void* _hipblasSetMatrix__funptr = NULL
 # ! \brief copy matrix from host to device
 #     @param[in]
 #     rows        [int]
@@ -173,14 +173,14 @@ cdef void* hipblasSetMatrix_funptr = NULL
 #                 specifies the leading dimension of B, ldb >= rows
 cdef hipblasStatus_t hipblasSetMatrix(int rows,int cols,int elemSize,const void * AP,int lda,void * BP,int ldb) nogil:
     global _lib_handle
-    global hipblasSetMatrix_funptr
-    if hipblasSetMatrix_funptr == NULL:
+    global _hipblasSetMatrix__funptr
+    if _hipblasSetMatrix__funptr == NULL:
         with gil:
-            hipblasSetMatrix_funptr = loader.load_symbol(_lib_handle, "hipblasSetMatrix")
-    return (<hipblasStatus_t (*)(int,int,int,const void *,int,void *,int) nogil> hipblasSetMatrix_funptr)(rows,cols,elemSize,AP,lda,BP,ldb)
+            _hipblasSetMatrix__funptr = loader.load_symbol(_lib_handle, "hipblasSetMatrix")
+    return (<hipblasStatus_t (*)(int,int,int,const void *,int,void *,int) nogil> _hipblasSetMatrix__funptr)(rows,cols,elemSize,AP,lda,BP,ldb)
 
 
-cdef void* hipblasGetMatrix_funptr = NULL
+cdef void* _hipblasGetMatrix__funptr = NULL
 # ! \brief copy matrix from device to host
 #     @param[in]
 #     rows        [int]
@@ -203,14 +203,14 @@ cdef void* hipblasGetMatrix_funptr = NULL
 #                 specifies the leading dimension of B, ldb >= rows
 cdef hipblasStatus_t hipblasGetMatrix(int rows,int cols,int elemSize,const void * AP,int lda,void * BP,int ldb) nogil:
     global _lib_handle
-    global hipblasGetMatrix_funptr
-    if hipblasGetMatrix_funptr == NULL:
+    global _hipblasGetMatrix__funptr
+    if _hipblasGetMatrix__funptr == NULL:
         with gil:
-            hipblasGetMatrix_funptr = loader.load_symbol(_lib_handle, "hipblasGetMatrix")
-    return (<hipblasStatus_t (*)(int,int,int,const void *,int,void *,int) nogil> hipblasGetMatrix_funptr)(rows,cols,elemSize,AP,lda,BP,ldb)
+            _hipblasGetMatrix__funptr = loader.load_symbol(_lib_handle, "hipblasGetMatrix")
+    return (<hipblasStatus_t (*)(int,int,int,const void *,int,void *,int) nogil> _hipblasGetMatrix__funptr)(rows,cols,elemSize,AP,lda,BP,ldb)
 
 
-cdef void* hipblasSetVectorAsync_funptr = NULL
+cdef void* _hipblasSetVectorAsync__funptr = NULL
 # ! \brief asynchronously copy vector from host to device
 #     \details
 #     hipblasSetVectorAsync copies a vector from pinned host memory to device memory asynchronously.
@@ -235,14 +235,14 @@ cdef void* hipblasSetVectorAsync_funptr = NULL
 #     stream      specifies the stream into which this transfer request is queued
 cdef hipblasStatus_t hipblasSetVectorAsync(int n,int elemSize,const void * x,int incx,void * y,int incy,hipStream_t stream) nogil:
     global _lib_handle
-    global hipblasSetVectorAsync_funptr
-    if hipblasSetVectorAsync_funptr == NULL:
+    global _hipblasSetVectorAsync__funptr
+    if _hipblasSetVectorAsync__funptr == NULL:
         with gil:
-            hipblasSetVectorAsync_funptr = loader.load_symbol(_lib_handle, "hipblasSetVectorAsync")
-    return (<hipblasStatus_t (*)(int,int,const void *,int,void *,int,hipStream_t) nogil> hipblasSetVectorAsync_funptr)(n,elemSize,x,incx,y,incy,stream)
+            _hipblasSetVectorAsync__funptr = loader.load_symbol(_lib_handle, "hipblasSetVectorAsync")
+    return (<hipblasStatus_t (*)(int,int,const void *,int,void *,int,hipStream_t) nogil> _hipblasSetVectorAsync__funptr)(n,elemSize,x,incx,y,incy,stream)
 
 
-cdef void* hipblasGetVectorAsync_funptr = NULL
+cdef void* _hipblasGetVectorAsync__funptr = NULL
 # ! \brief asynchronously copy vector from device to host
 #     \details
 #     hipblasGetVectorAsync copies a vector from pinned host memory to device memory asynchronously.
@@ -267,14 +267,14 @@ cdef void* hipblasGetVectorAsync_funptr = NULL
 #     stream      specifies the stream into which this transfer request is queued
 cdef hipblasStatus_t hipblasGetVectorAsync(int n,int elemSize,const void * x,int incx,void * y,int incy,hipStream_t stream) nogil:
     global _lib_handle
-    global hipblasGetVectorAsync_funptr
-    if hipblasGetVectorAsync_funptr == NULL:
+    global _hipblasGetVectorAsync__funptr
+    if _hipblasGetVectorAsync__funptr == NULL:
         with gil:
-            hipblasGetVectorAsync_funptr = loader.load_symbol(_lib_handle, "hipblasGetVectorAsync")
-    return (<hipblasStatus_t (*)(int,int,const void *,int,void *,int,hipStream_t) nogil> hipblasGetVectorAsync_funptr)(n,elemSize,x,incx,y,incy,stream)
+            _hipblasGetVectorAsync__funptr = loader.load_symbol(_lib_handle, "hipblasGetVectorAsync")
+    return (<hipblasStatus_t (*)(int,int,const void *,int,void *,int,hipStream_t) nogil> _hipblasGetVectorAsync__funptr)(n,elemSize,x,incx,y,incy,stream)
 
 
-cdef void* hipblasSetMatrixAsync_funptr = NULL
+cdef void* _hipblasSetMatrixAsync__funptr = NULL
 # ! \brief asynchronously copy matrix from host to device
 #     \details
 #     hipblasSetMatrixAsync copies a matrix from pinned host memory to device memory asynchronously.
@@ -302,14 +302,14 @@ cdef void* hipblasSetMatrixAsync_funptr = NULL
 #     stream      specifies the stream into which this transfer request is queued
 cdef hipblasStatus_t hipblasSetMatrixAsync(int rows,int cols,int elemSize,const void * AP,int lda,void * BP,int ldb,hipStream_t stream) nogil:
     global _lib_handle
-    global hipblasSetMatrixAsync_funptr
-    if hipblasSetMatrixAsync_funptr == NULL:
+    global _hipblasSetMatrixAsync__funptr
+    if _hipblasSetMatrixAsync__funptr == NULL:
         with gil:
-            hipblasSetMatrixAsync_funptr = loader.load_symbol(_lib_handle, "hipblasSetMatrixAsync")
-    return (<hipblasStatus_t (*)(int,int,int,const void *,int,void *,int,hipStream_t) nogil> hipblasSetMatrixAsync_funptr)(rows,cols,elemSize,AP,lda,BP,ldb,stream)
+            _hipblasSetMatrixAsync__funptr = loader.load_symbol(_lib_handle, "hipblasSetMatrixAsync")
+    return (<hipblasStatus_t (*)(int,int,int,const void *,int,void *,int,hipStream_t) nogil> _hipblasSetMatrixAsync__funptr)(rows,cols,elemSize,AP,lda,BP,ldb,stream)
 
 
-cdef void* hipblasGetMatrixAsync_funptr = NULL
+cdef void* _hipblasGetMatrixAsync__funptr = NULL
 # ! \brief asynchronously copy matrix from device to host
 #     \details
 #     hipblasGetMatrixAsync copies a matrix from device memory to pinned host memory asynchronously.
@@ -337,36 +337,36 @@ cdef void* hipblasGetMatrixAsync_funptr = NULL
 #     stream      specifies the stream into which this transfer request is queued
 cdef hipblasStatus_t hipblasGetMatrixAsync(int rows,int cols,int elemSize,const void * AP,int lda,void * BP,int ldb,hipStream_t stream) nogil:
     global _lib_handle
-    global hipblasGetMatrixAsync_funptr
-    if hipblasGetMatrixAsync_funptr == NULL:
+    global _hipblasGetMatrixAsync__funptr
+    if _hipblasGetMatrixAsync__funptr == NULL:
         with gil:
-            hipblasGetMatrixAsync_funptr = loader.load_symbol(_lib_handle, "hipblasGetMatrixAsync")
-    return (<hipblasStatus_t (*)(int,int,int,const void *,int,void *,int,hipStream_t) nogil> hipblasGetMatrixAsync_funptr)(rows,cols,elemSize,AP,lda,BP,ldb,stream)
+            _hipblasGetMatrixAsync__funptr = loader.load_symbol(_lib_handle, "hipblasGetMatrixAsync")
+    return (<hipblasStatus_t (*)(int,int,int,const void *,int,void *,int,hipStream_t) nogil> _hipblasGetMatrixAsync__funptr)(rows,cols,elemSize,AP,lda,BP,ldb,stream)
 
 
-cdef void* hipblasSetAtomicsMode_funptr = NULL
+cdef void* _hipblasSetAtomicsMode__funptr = NULL
 # ! \brief Set hipblasSetAtomicsMode*/
 cdef hipblasStatus_t hipblasSetAtomicsMode(hipblasHandle_t handle,hipblasAtomicsMode_t atomics_mode) nogil:
     global _lib_handle
-    global hipblasSetAtomicsMode_funptr
-    if hipblasSetAtomicsMode_funptr == NULL:
+    global _hipblasSetAtomicsMode__funptr
+    if _hipblasSetAtomicsMode__funptr == NULL:
         with gil:
-            hipblasSetAtomicsMode_funptr = loader.load_symbol(_lib_handle, "hipblasSetAtomicsMode")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasAtomicsMode_t) nogil> hipblasSetAtomicsMode_funptr)(handle,atomics_mode)
+            _hipblasSetAtomicsMode__funptr = loader.load_symbol(_lib_handle, "hipblasSetAtomicsMode")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasAtomicsMode_t) nogil> _hipblasSetAtomicsMode__funptr)(handle,atomics_mode)
 
 
-cdef void* hipblasGetAtomicsMode_funptr = NULL
+cdef void* _hipblasGetAtomicsMode__funptr = NULL
 # ! \brief Get hipblasSetAtomicsMode*/
 cdef hipblasStatus_t hipblasGetAtomicsMode(hipblasHandle_t handle,hipblasAtomicsMode_t * atomics_mode) nogil:
     global _lib_handle
-    global hipblasGetAtomicsMode_funptr
-    if hipblasGetAtomicsMode_funptr == NULL:
+    global _hipblasGetAtomicsMode__funptr
+    if _hipblasGetAtomicsMode__funptr == NULL:
         with gil:
-            hipblasGetAtomicsMode_funptr = loader.load_symbol(_lib_handle, "hipblasGetAtomicsMode")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasAtomicsMode_t *) nogil> hipblasGetAtomicsMode_funptr)(handle,atomics_mode)
+            _hipblasGetAtomicsMode__funptr = loader.load_symbol(_lib_handle, "hipblasGetAtomicsMode")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasAtomicsMode_t *) nogil> _hipblasGetAtomicsMode__funptr)(handle,atomics_mode)
 
 
-cdef void* hipblasIsamax_funptr = NULL
+cdef void* _hipblasIsamax__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -393,44 +393,44 @@ cdef void* hipblasIsamax_funptr = NULL
 #               return is 0.0 if n, incx<=0.
 cdef hipblasStatus_t hipblasIsamax(hipblasHandle_t handle,int n,const float * x,int incx,int * result) nogil:
     global _lib_handle
-    global hipblasIsamax_funptr
-    if hipblasIsamax_funptr == NULL:
+    global _hipblasIsamax__funptr
+    if _hipblasIsamax__funptr == NULL:
         with gil:
-            hipblasIsamax_funptr = loader.load_symbol(_lib_handle, "hipblasIsamax")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,int *) nogil> hipblasIsamax_funptr)(handle,n,x,incx,result)
+            _hipblasIsamax__funptr = loader.load_symbol(_lib_handle, "hipblasIsamax")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,int *) nogil> _hipblasIsamax__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasIdamax_funptr = NULL
+cdef void* _hipblasIdamax__funptr = NULL
 cdef hipblasStatus_t hipblasIdamax(hipblasHandle_t handle,int n,const double * x,int incx,int * result) nogil:
     global _lib_handle
-    global hipblasIdamax_funptr
-    if hipblasIdamax_funptr == NULL:
+    global _hipblasIdamax__funptr
+    if _hipblasIdamax__funptr == NULL:
         with gil:
-            hipblasIdamax_funptr = loader.load_symbol(_lib_handle, "hipblasIdamax")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,int *) nogil> hipblasIdamax_funptr)(handle,n,x,incx,result)
+            _hipblasIdamax__funptr = loader.load_symbol(_lib_handle, "hipblasIdamax")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,int *) nogil> _hipblasIdamax__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasIcamax_funptr = NULL
+cdef void* _hipblasIcamax__funptr = NULL
 cdef hipblasStatus_t hipblasIcamax(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,int * result) nogil:
     global _lib_handle
-    global hipblasIcamax_funptr
-    if hipblasIcamax_funptr == NULL:
+    global _hipblasIcamax__funptr
+    if _hipblasIcamax__funptr == NULL:
         with gil:
-            hipblasIcamax_funptr = loader.load_symbol(_lib_handle, "hipblasIcamax")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,int *) nogil> hipblasIcamax_funptr)(handle,n,x,incx,result)
+            _hipblasIcamax__funptr = loader.load_symbol(_lib_handle, "hipblasIcamax")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,int *) nogil> _hipblasIcamax__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasIzamax_funptr = NULL
+cdef void* _hipblasIzamax__funptr = NULL
 cdef hipblasStatus_t hipblasIzamax(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,int * result) nogil:
     global _lib_handle
-    global hipblasIzamax_funptr
-    if hipblasIzamax_funptr == NULL:
+    global _hipblasIzamax__funptr
+    if _hipblasIzamax__funptr == NULL:
         with gil:
-            hipblasIzamax_funptr = loader.load_symbol(_lib_handle, "hipblasIzamax")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,int *) nogil> hipblasIzamax_funptr)(handle,n,x,incx,result)
+            _hipblasIzamax__funptr = loader.load_symbol(_lib_handle, "hipblasIzamax")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,int *) nogil> _hipblasIzamax__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasIsamin_funptr = NULL
+cdef void* _hipblasIsamin__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -457,44 +457,44 @@ cdef void* hipblasIsamin_funptr = NULL
 #               return is 0.0 if n, incx<=0.
 cdef hipblasStatus_t hipblasIsamin(hipblasHandle_t handle,int n,const float * x,int incx,int * result) nogil:
     global _lib_handle
-    global hipblasIsamin_funptr
-    if hipblasIsamin_funptr == NULL:
+    global _hipblasIsamin__funptr
+    if _hipblasIsamin__funptr == NULL:
         with gil:
-            hipblasIsamin_funptr = loader.load_symbol(_lib_handle, "hipblasIsamin")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,int *) nogil> hipblasIsamin_funptr)(handle,n,x,incx,result)
+            _hipblasIsamin__funptr = loader.load_symbol(_lib_handle, "hipblasIsamin")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,int *) nogil> _hipblasIsamin__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasIdamin_funptr = NULL
+cdef void* _hipblasIdamin__funptr = NULL
 cdef hipblasStatus_t hipblasIdamin(hipblasHandle_t handle,int n,const double * x,int incx,int * result) nogil:
     global _lib_handle
-    global hipblasIdamin_funptr
-    if hipblasIdamin_funptr == NULL:
+    global _hipblasIdamin__funptr
+    if _hipblasIdamin__funptr == NULL:
         with gil:
-            hipblasIdamin_funptr = loader.load_symbol(_lib_handle, "hipblasIdamin")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,int *) nogil> hipblasIdamin_funptr)(handle,n,x,incx,result)
+            _hipblasIdamin__funptr = loader.load_symbol(_lib_handle, "hipblasIdamin")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,int *) nogil> _hipblasIdamin__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasIcamin_funptr = NULL
+cdef void* _hipblasIcamin__funptr = NULL
 cdef hipblasStatus_t hipblasIcamin(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,int * result) nogil:
     global _lib_handle
-    global hipblasIcamin_funptr
-    if hipblasIcamin_funptr == NULL:
+    global _hipblasIcamin__funptr
+    if _hipblasIcamin__funptr == NULL:
         with gil:
-            hipblasIcamin_funptr = loader.load_symbol(_lib_handle, "hipblasIcamin")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,int *) nogil> hipblasIcamin_funptr)(handle,n,x,incx,result)
+            _hipblasIcamin__funptr = loader.load_symbol(_lib_handle, "hipblasIcamin")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,int *) nogil> _hipblasIcamin__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasIzamin_funptr = NULL
+cdef void* _hipblasIzamin__funptr = NULL
 cdef hipblasStatus_t hipblasIzamin(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,int * result) nogil:
     global _lib_handle
-    global hipblasIzamin_funptr
-    if hipblasIzamin_funptr == NULL:
+    global _hipblasIzamin__funptr
+    if _hipblasIzamin__funptr == NULL:
         with gil:
-            hipblasIzamin_funptr = loader.load_symbol(_lib_handle, "hipblasIzamin")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,int *) nogil> hipblasIzamin_funptr)(handle,n,x,incx,result)
+            _hipblasIzamin__funptr = loader.load_symbol(_lib_handle, "hipblasIzamin")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,int *) nogil> _hipblasIzamin__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasSasum_funptr = NULL
+cdef void* _hipblasSasum__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -523,44 +523,44 @@ cdef void* hipblasSasum_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSasum(hipblasHandle_t handle,int n,const float * x,int incx,float * result) nogil:
     global _lib_handle
-    global hipblasSasum_funptr
-    if hipblasSasum_funptr == NULL:
+    global _hipblasSasum__funptr
+    if _hipblasSasum__funptr == NULL:
         with gil:
-            hipblasSasum_funptr = loader.load_symbol(_lib_handle, "hipblasSasum")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,float *) nogil> hipblasSasum_funptr)(handle,n,x,incx,result)
+            _hipblasSasum__funptr = loader.load_symbol(_lib_handle, "hipblasSasum")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,float *) nogil> _hipblasSasum__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasDasum_funptr = NULL
+cdef void* _hipblasDasum__funptr = NULL
 cdef hipblasStatus_t hipblasDasum(hipblasHandle_t handle,int n,const double * x,int incx,double * result) nogil:
     global _lib_handle
-    global hipblasDasum_funptr
-    if hipblasDasum_funptr == NULL:
+    global _hipblasDasum__funptr
+    if _hipblasDasum__funptr == NULL:
         with gil:
-            hipblasDasum_funptr = loader.load_symbol(_lib_handle, "hipblasDasum")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,double *) nogil> hipblasDasum_funptr)(handle,n,x,incx,result)
+            _hipblasDasum__funptr = loader.load_symbol(_lib_handle, "hipblasDasum")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,double *) nogil> _hipblasDasum__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasScasum_funptr = NULL
+cdef void* _hipblasScasum__funptr = NULL
 cdef hipblasStatus_t hipblasScasum(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,float * result) nogil:
     global _lib_handle
-    global hipblasScasum_funptr
-    if hipblasScasum_funptr == NULL:
+    global _hipblasScasum__funptr
+    if _hipblasScasum__funptr == NULL:
         with gil:
-            hipblasScasum_funptr = loader.load_symbol(_lib_handle, "hipblasScasum")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,float *) nogil> hipblasScasum_funptr)(handle,n,x,incx,result)
+            _hipblasScasum__funptr = loader.load_symbol(_lib_handle, "hipblasScasum")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,float *) nogil> _hipblasScasum__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasDzasum_funptr = NULL
+cdef void* _hipblasDzasum__funptr = NULL
 cdef hipblasStatus_t hipblasDzasum(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,double * result) nogil:
     global _lib_handle
-    global hipblasDzasum_funptr
-    if hipblasDzasum_funptr == NULL:
+    global _hipblasDzasum__funptr
+    if _hipblasDzasum__funptr == NULL:
         with gil:
-            hipblasDzasum_funptr = loader.load_symbol(_lib_handle, "hipblasDzasum")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,double *) nogil> hipblasDzasum_funptr)(handle,n,x,incx,result)
+            _hipblasDzasum__funptr = loader.load_symbol(_lib_handle, "hipblasDzasum")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,double *) nogil> _hipblasDzasum__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasHaxpy_funptr = NULL
+cdef void* _hipblasHaxpy__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -593,54 +593,54 @@ cdef void* hipblasHaxpy_funptr = NULL
 #
 cdef hipblasStatus_t hipblasHaxpy(hipblasHandle_t handle,int n,hipblasHalf * alpha,hipblasHalf * x,int incx,hipblasHalf * y,int incy) nogil:
     global _lib_handle
-    global hipblasHaxpy_funptr
-    if hipblasHaxpy_funptr == NULL:
+    global _hipblasHaxpy__funptr
+    if _hipblasHaxpy__funptr == NULL:
         with gil:
-            hipblasHaxpy_funptr = loader.load_symbol(_lib_handle, "hipblasHaxpy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasHalf *,hipblasHalf *,int,hipblasHalf *,int) nogil> hipblasHaxpy_funptr)(handle,n,alpha,x,incx,y,incy)
+            _hipblasHaxpy__funptr = loader.load_symbol(_lib_handle, "hipblasHaxpy")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasHalf *,hipblasHalf *,int,hipblasHalf *,int) nogil> _hipblasHaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
 
 
-cdef void* hipblasSaxpy_funptr = NULL
+cdef void* _hipblasSaxpy__funptr = NULL
 cdef hipblasStatus_t hipblasSaxpy(hipblasHandle_t handle,int n,const float * alpha,const float * x,int incx,float * y,int incy) nogil:
     global _lib_handle
-    global hipblasSaxpy_funptr
-    if hipblasSaxpy_funptr == NULL:
+    global _hipblasSaxpy__funptr
+    if _hipblasSaxpy__funptr == NULL:
         with gil:
-            hipblasSaxpy_funptr = loader.load_symbol(_lib_handle, "hipblasSaxpy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,const float *,int,float *,int) nogil> hipblasSaxpy_funptr)(handle,n,alpha,x,incx,y,incy)
+            _hipblasSaxpy__funptr = loader.load_symbol(_lib_handle, "hipblasSaxpy")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,const float *,int,float *,int) nogil> _hipblasSaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
 
 
-cdef void* hipblasDaxpy_funptr = NULL
+cdef void* _hipblasDaxpy__funptr = NULL
 cdef hipblasStatus_t hipblasDaxpy(hipblasHandle_t handle,int n,const double * alpha,const double * x,int incx,double * y,int incy) nogil:
     global _lib_handle
-    global hipblasDaxpy_funptr
-    if hipblasDaxpy_funptr == NULL:
+    global _hipblasDaxpy__funptr
+    if _hipblasDaxpy__funptr == NULL:
         with gil:
-            hipblasDaxpy_funptr = loader.load_symbol(_lib_handle, "hipblasDaxpy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,const double *,int,double *,int) nogil> hipblasDaxpy_funptr)(handle,n,alpha,x,incx,y,incy)
+            _hipblasDaxpy__funptr = loader.load_symbol(_lib_handle, "hipblasDaxpy")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,const double *,int,double *,int) nogil> _hipblasDaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
 
 
-cdef void* hipblasCaxpy_funptr = NULL
+cdef void* _hipblasCaxpy__funptr = NULL
 cdef hipblasStatus_t hipblasCaxpy(hipblasHandle_t handle,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasCaxpy_funptr
-    if hipblasCaxpy_funptr == NULL:
+    global _hipblasCaxpy__funptr
+    if _hipblasCaxpy__funptr == NULL:
         with gil:
-            hipblasCaxpy_funptr = loader.load_symbol(_lib_handle, "hipblasCaxpy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCaxpy_funptr)(handle,n,alpha,x,incx,y,incy)
+            _hipblasCaxpy__funptr = loader.load_symbol(_lib_handle, "hipblasCaxpy")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
 
 
-cdef void* hipblasZaxpy_funptr = NULL
+cdef void* _hipblasZaxpy__funptr = NULL
 cdef hipblasStatus_t hipblasZaxpy(hipblasHandle_t handle,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasZaxpy_funptr
-    if hipblasZaxpy_funptr == NULL:
+    global _hipblasZaxpy__funptr
+    if _hipblasZaxpy__funptr == NULL:
         with gil:
-            hipblasZaxpy_funptr = loader.load_symbol(_lib_handle, "hipblasZaxpy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZaxpy_funptr)(handle,n,alpha,x,incx,y,incy)
+            _hipblasZaxpy__funptr = loader.load_symbol(_lib_handle, "hipblasZaxpy")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
 
 
-cdef void* hipblasScopy_funptr = NULL
+cdef void* _hipblasScopy__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -671,44 +671,44 @@ cdef void* hipblasScopy_funptr = NULL
 #
 cdef hipblasStatus_t hipblasScopy(hipblasHandle_t handle,int n,const float * x,int incx,float * y,int incy) nogil:
     global _lib_handle
-    global hipblasScopy_funptr
-    if hipblasScopy_funptr == NULL:
+    global _hipblasScopy__funptr
+    if _hipblasScopy__funptr == NULL:
         with gil:
-            hipblasScopy_funptr = loader.load_symbol(_lib_handle, "hipblasScopy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,float *,int) nogil> hipblasScopy_funptr)(handle,n,x,incx,y,incy)
+            _hipblasScopy__funptr = loader.load_symbol(_lib_handle, "hipblasScopy")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,float *,int) nogil> _hipblasScopy__funptr)(handle,n,x,incx,y,incy)
 
 
-cdef void* hipblasDcopy_funptr = NULL
+cdef void* _hipblasDcopy__funptr = NULL
 cdef hipblasStatus_t hipblasDcopy(hipblasHandle_t handle,int n,const double * x,int incx,double * y,int incy) nogil:
     global _lib_handle
-    global hipblasDcopy_funptr
-    if hipblasDcopy_funptr == NULL:
+    global _hipblasDcopy__funptr
+    if _hipblasDcopy__funptr == NULL:
         with gil:
-            hipblasDcopy_funptr = loader.load_symbol(_lib_handle, "hipblasDcopy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,double *,int) nogil> hipblasDcopy_funptr)(handle,n,x,incx,y,incy)
+            _hipblasDcopy__funptr = loader.load_symbol(_lib_handle, "hipblasDcopy")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,double *,int) nogil> _hipblasDcopy__funptr)(handle,n,x,incx,y,incy)
 
 
-cdef void* hipblasCcopy_funptr = NULL
+cdef void* _hipblasCcopy__funptr = NULL
 cdef hipblasStatus_t hipblasCcopy(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasCcopy_funptr
-    if hipblasCcopy_funptr == NULL:
+    global _hipblasCcopy__funptr
+    if _hipblasCcopy__funptr == NULL:
         with gil:
-            hipblasCcopy_funptr = loader.load_symbol(_lib_handle, "hipblasCcopy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCcopy_funptr)(handle,n,x,incx,y,incy)
+            _hipblasCcopy__funptr = loader.load_symbol(_lib_handle, "hipblasCcopy")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCcopy__funptr)(handle,n,x,incx,y,incy)
 
 
-cdef void* hipblasZcopy_funptr = NULL
+cdef void* _hipblasZcopy__funptr = NULL
 cdef hipblasStatus_t hipblasZcopy(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasZcopy_funptr
-    if hipblasZcopy_funptr == NULL:
+    global _hipblasZcopy__funptr
+    if _hipblasZcopy__funptr == NULL:
         with gil:
-            hipblasZcopy_funptr = loader.load_symbol(_lib_handle, "hipblasZcopy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZcopy_funptr)(handle,n,x,incx,y,incy)
+            _hipblasZcopy__funptr = loader.load_symbol(_lib_handle, "hipblasZcopy")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZcopy__funptr)(handle,n,x,incx,y,incy)
 
 
-cdef void* hipblasHdot_funptr = NULL
+cdef void* _hipblasHdot__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -747,84 +747,84 @@ cdef void* hipblasHdot_funptr = NULL
 #
 cdef hipblasStatus_t hipblasHdot(hipblasHandle_t handle,int n,hipblasHalf * x,int incx,hipblasHalf * y,int incy,hipblasHalf * result) nogil:
     global _lib_handle
-    global hipblasHdot_funptr
-    if hipblasHdot_funptr == NULL:
+    global _hipblasHdot__funptr
+    if _hipblasHdot__funptr == NULL:
         with gil:
-            hipblasHdot_funptr = loader.load_symbol(_lib_handle, "hipblasHdot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasHalf *,int,hipblasHalf *,int,hipblasHalf *) nogil> hipblasHdot_funptr)(handle,n,x,incx,y,incy,result)
+            _hipblasHdot__funptr = loader.load_symbol(_lib_handle, "hipblasHdot")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasHalf *,int,hipblasHalf *,int,hipblasHalf *) nogil> _hipblasHdot__funptr)(handle,n,x,incx,y,incy,result)
 
 
-cdef void* hipblasBfdot_funptr = NULL
+cdef void* _hipblasBfdot__funptr = NULL
 cdef hipblasStatus_t hipblasBfdot(hipblasHandle_t handle,int n,hipblasBfloat16 * x,int incx,hipblasBfloat16 * y,int incy,hipblasBfloat16 * result) nogil:
     global _lib_handle
-    global hipblasBfdot_funptr
-    if hipblasBfdot_funptr == NULL:
+    global _hipblasBfdot__funptr
+    if _hipblasBfdot__funptr == NULL:
         with gil:
-            hipblasBfdot_funptr = loader.load_symbol(_lib_handle, "hipblasBfdot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasBfloat16 *,int,hipblasBfloat16 *,int,hipblasBfloat16 *) nogil> hipblasBfdot_funptr)(handle,n,x,incx,y,incy,result)
+            _hipblasBfdot__funptr = loader.load_symbol(_lib_handle, "hipblasBfdot")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasBfloat16 *,int,hipblasBfloat16 *,int,hipblasBfloat16 *) nogil> _hipblasBfdot__funptr)(handle,n,x,incx,y,incy,result)
 
 
-cdef void* hipblasSdot_funptr = NULL
+cdef void* _hipblasSdot__funptr = NULL
 cdef hipblasStatus_t hipblasSdot(hipblasHandle_t handle,int n,const float * x,int incx,const float * y,int incy,float * result) nogil:
     global _lib_handle
-    global hipblasSdot_funptr
-    if hipblasSdot_funptr == NULL:
+    global _hipblasSdot__funptr
+    if _hipblasSdot__funptr == NULL:
         with gil:
-            hipblasSdot_funptr = loader.load_symbol(_lib_handle, "hipblasSdot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,const float *,int,float *) nogil> hipblasSdot_funptr)(handle,n,x,incx,y,incy,result)
+            _hipblasSdot__funptr = loader.load_symbol(_lib_handle, "hipblasSdot")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,const float *,int,float *) nogil> _hipblasSdot__funptr)(handle,n,x,incx,y,incy,result)
 
 
-cdef void* hipblasDdot_funptr = NULL
+cdef void* _hipblasDdot__funptr = NULL
 cdef hipblasStatus_t hipblasDdot(hipblasHandle_t handle,int n,const double * x,int incx,const double * y,int incy,double * result) nogil:
     global _lib_handle
-    global hipblasDdot_funptr
-    if hipblasDdot_funptr == NULL:
+    global _hipblasDdot__funptr
+    if _hipblasDdot__funptr == NULL:
         with gil:
-            hipblasDdot_funptr = loader.load_symbol(_lib_handle, "hipblasDdot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,const double *,int,double *) nogil> hipblasDdot_funptr)(handle,n,x,incx,y,incy,result)
+            _hipblasDdot__funptr = loader.load_symbol(_lib_handle, "hipblasDdot")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,const double *,int,double *) nogil> _hipblasDdot__funptr)(handle,n,x,incx,y,incy,result)
 
 
-cdef void* hipblasCdotc_funptr = NULL
+cdef void* _hipblasCdotc__funptr = NULL
 cdef hipblasStatus_t hipblasCdotc(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * result) nogil:
     global _lib_handle
-    global hipblasCdotc_funptr
-    if hipblasCdotc_funptr == NULL:
+    global _hipblasCdotc__funptr
+    if _hipblasCdotc__funptr == NULL:
         with gil:
-            hipblasCdotc_funptr = loader.load_symbol(_lib_handle, "hipblasCdotc")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> hipblasCdotc_funptr)(handle,n,x,incx,y,incy,result)
+            _hipblasCdotc__funptr = loader.load_symbol(_lib_handle, "hipblasCdotc")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasCdotc__funptr)(handle,n,x,incx,y,incy,result)
 
 
-cdef void* hipblasCdotu_funptr = NULL
+cdef void* _hipblasCdotu__funptr = NULL
 cdef hipblasStatus_t hipblasCdotu(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * result) nogil:
     global _lib_handle
-    global hipblasCdotu_funptr
-    if hipblasCdotu_funptr == NULL:
+    global _hipblasCdotu__funptr
+    if _hipblasCdotu__funptr == NULL:
         with gil:
-            hipblasCdotu_funptr = loader.load_symbol(_lib_handle, "hipblasCdotu")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> hipblasCdotu_funptr)(handle,n,x,incx,y,incy,result)
+            _hipblasCdotu__funptr = loader.load_symbol(_lib_handle, "hipblasCdotu")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasCdotu__funptr)(handle,n,x,incx,y,incy,result)
 
 
-cdef void* hipblasZdotc_funptr = NULL
+cdef void* _hipblasZdotc__funptr = NULL
 cdef hipblasStatus_t hipblasZdotc(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * result) nogil:
     global _lib_handle
-    global hipblasZdotc_funptr
-    if hipblasZdotc_funptr == NULL:
+    global _hipblasZdotc__funptr
+    if _hipblasZdotc__funptr == NULL:
         with gil:
-            hipblasZdotc_funptr = loader.load_symbol(_lib_handle, "hipblasZdotc")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> hipblasZdotc_funptr)(handle,n,x,incx,y,incy,result)
+            _hipblasZdotc__funptr = loader.load_symbol(_lib_handle, "hipblasZdotc")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZdotc__funptr)(handle,n,x,incx,y,incy,result)
 
 
-cdef void* hipblasZdotu_funptr = NULL
+cdef void* _hipblasZdotu__funptr = NULL
 cdef hipblasStatus_t hipblasZdotu(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * result) nogil:
     global _lib_handle
-    global hipblasZdotu_funptr
-    if hipblasZdotu_funptr == NULL:
+    global _hipblasZdotu__funptr
+    if _hipblasZdotu__funptr == NULL:
         with gil:
-            hipblasZdotu_funptr = loader.load_symbol(_lib_handle, "hipblasZdotu")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> hipblasZdotu_funptr)(handle,n,x,incx,y,incy,result)
+            _hipblasZdotu__funptr = loader.load_symbol(_lib_handle, "hipblasZdotu")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZdotu__funptr)(handle,n,x,incx,y,incy,result)
 
 
-cdef void* hipblasSnrm2_funptr = NULL
+cdef void* _hipblasSnrm2__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -854,44 +854,44 @@ cdef void* hipblasSnrm2_funptr = NULL
 #               return is 0.0 if n, incx<=0.
 cdef hipblasStatus_t hipblasSnrm2(hipblasHandle_t handle,int n,const float * x,int incx,float * result) nogil:
     global _lib_handle
-    global hipblasSnrm2_funptr
-    if hipblasSnrm2_funptr == NULL:
+    global _hipblasSnrm2__funptr
+    if _hipblasSnrm2__funptr == NULL:
         with gil:
-            hipblasSnrm2_funptr = loader.load_symbol(_lib_handle, "hipblasSnrm2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,float *) nogil> hipblasSnrm2_funptr)(handle,n,x,incx,result)
+            _hipblasSnrm2__funptr = loader.load_symbol(_lib_handle, "hipblasSnrm2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,float *) nogil> _hipblasSnrm2__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasDnrm2_funptr = NULL
+cdef void* _hipblasDnrm2__funptr = NULL
 cdef hipblasStatus_t hipblasDnrm2(hipblasHandle_t handle,int n,const double * x,int incx,double * result) nogil:
     global _lib_handle
-    global hipblasDnrm2_funptr
-    if hipblasDnrm2_funptr == NULL:
+    global _hipblasDnrm2__funptr
+    if _hipblasDnrm2__funptr == NULL:
         with gil:
-            hipblasDnrm2_funptr = loader.load_symbol(_lib_handle, "hipblasDnrm2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,double *) nogil> hipblasDnrm2_funptr)(handle,n,x,incx,result)
+            _hipblasDnrm2__funptr = loader.load_symbol(_lib_handle, "hipblasDnrm2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,double *) nogil> _hipblasDnrm2__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasScnrm2_funptr = NULL
+cdef void* _hipblasScnrm2__funptr = NULL
 cdef hipblasStatus_t hipblasScnrm2(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,float * result) nogil:
     global _lib_handle
-    global hipblasScnrm2_funptr
-    if hipblasScnrm2_funptr == NULL:
+    global _hipblasScnrm2__funptr
+    if _hipblasScnrm2__funptr == NULL:
         with gil:
-            hipblasScnrm2_funptr = loader.load_symbol(_lib_handle, "hipblasScnrm2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,float *) nogil> hipblasScnrm2_funptr)(handle,n,x,incx,result)
+            _hipblasScnrm2__funptr = loader.load_symbol(_lib_handle, "hipblasScnrm2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,float *) nogil> _hipblasScnrm2__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasDznrm2_funptr = NULL
+cdef void* _hipblasDznrm2__funptr = NULL
 cdef hipblasStatus_t hipblasDznrm2(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,double * result) nogil:
     global _lib_handle
-    global hipblasDznrm2_funptr
-    if hipblasDznrm2_funptr == NULL:
+    global _hipblasDznrm2__funptr
+    if _hipblasDznrm2__funptr == NULL:
         with gil:
-            hipblasDznrm2_funptr = loader.load_symbol(_lib_handle, "hipblasDznrm2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,double *) nogil> hipblasDznrm2_funptr)(handle,n,x,incx,result)
+            _hipblasDznrm2__funptr = loader.load_symbol(_lib_handle, "hipblasDznrm2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,double *) nogil> _hipblasDznrm2__funptr)(handle,n,x,incx,result)
 
 
-cdef void* hipblasSrot_funptr = NULL
+cdef void* _hipblasSrot__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -925,64 +925,64 @@ cdef void* hipblasSrot_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSrot(hipblasHandle_t handle,int n,float * x,int incx,float * y,int incy,const float * c,const float * s) nogil:
     global _lib_handle
-    global hipblasSrot_funptr
-    if hipblasSrot_funptr == NULL:
+    global _hipblasSrot__funptr
+    if _hipblasSrot__funptr == NULL:
         with gil:
-            hipblasSrot_funptr = loader.load_symbol(_lib_handle, "hipblasSrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,float *,int,float *,int,const float *,const float *) nogil> hipblasSrot_funptr)(handle,n,x,incx,y,incy,c,s)
+            _hipblasSrot__funptr = loader.load_symbol(_lib_handle, "hipblasSrot")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,float *,int,float *,int,const float *,const float *) nogil> _hipblasSrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
-cdef void* hipblasDrot_funptr = NULL
+cdef void* _hipblasDrot__funptr = NULL
 cdef hipblasStatus_t hipblasDrot(hipblasHandle_t handle,int n,double * x,int incx,double * y,int incy,const double * c,const double * s) nogil:
     global _lib_handle
-    global hipblasDrot_funptr
-    if hipblasDrot_funptr == NULL:
+    global _hipblasDrot__funptr
+    if _hipblasDrot__funptr == NULL:
         with gil:
-            hipblasDrot_funptr = loader.load_symbol(_lib_handle, "hipblasDrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,double *,int,double *,int,const double *,const double *) nogil> hipblasDrot_funptr)(handle,n,x,incx,y,incy,c,s)
+            _hipblasDrot__funptr = loader.load_symbol(_lib_handle, "hipblasDrot")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,double *,int,double *,int,const double *,const double *) nogil> _hipblasDrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
-cdef void* hipblasCrot_funptr = NULL
+cdef void* _hipblasCrot__funptr = NULL
 cdef hipblasStatus_t hipblasCrot(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,const float * c,hipblasComplex * s) nogil:
     global _lib_handle
-    global hipblasCrot_funptr
-    if hipblasCrot_funptr == NULL:
+    global _hipblasCrot__funptr
+    if _hipblasCrot__funptr == NULL:
         with gil:
-            hipblasCrot_funptr = loader.load_symbol(_lib_handle, "hipblasCrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *) nogil> hipblasCrot_funptr)(handle,n,x,incx,y,incy,c,s)
+            _hipblasCrot__funptr = loader.load_symbol(_lib_handle, "hipblasCrot")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *) nogil> _hipblasCrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
-cdef void* hipblasCsrot_funptr = NULL
+cdef void* _hipblasCsrot__funptr = NULL
 cdef hipblasStatus_t hipblasCsrot(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,const float * c,const float * s) nogil:
     global _lib_handle
-    global hipblasCsrot_funptr
-    if hipblasCsrot_funptr == NULL:
+    global _hipblasCsrot__funptr
+    if _hipblasCsrot__funptr == NULL:
         with gil:
-            hipblasCsrot_funptr = loader.load_symbol(_lib_handle, "hipblasCsrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,const float *,const float *) nogil> hipblasCsrot_funptr)(handle,n,x,incx,y,incy,c,s)
+            _hipblasCsrot__funptr = loader.load_symbol(_lib_handle, "hipblasCsrot")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,const float *,const float *) nogil> _hipblasCsrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
-cdef void* hipblasZrot_funptr = NULL
+cdef void* _hipblasZrot__funptr = NULL
 cdef hipblasStatus_t hipblasZrot(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,const double * c,hipblasDoubleComplex * s) nogil:
     global _lib_handle
-    global hipblasZrot_funptr
-    if hipblasZrot_funptr == NULL:
+    global _hipblasZrot__funptr
+    if _hipblasZrot__funptr == NULL:
         with gil:
-            hipblasZrot_funptr = loader.load_symbol(_lib_handle, "hipblasZrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *) nogil> hipblasZrot_funptr)(handle,n,x,incx,y,incy,c,s)
+            _hipblasZrot__funptr = loader.load_symbol(_lib_handle, "hipblasZrot")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *) nogil> _hipblasZrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
-cdef void* hipblasZdrot_funptr = NULL
+cdef void* _hipblasZdrot__funptr = NULL
 cdef hipblasStatus_t hipblasZdrot(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,const double * c,const double * s) nogil:
     global _lib_handle
-    global hipblasZdrot_funptr
-    if hipblasZdrot_funptr == NULL:
+    global _hipblasZdrot__funptr
+    if _hipblasZdrot__funptr == NULL:
         with gil:
-            hipblasZdrot_funptr = loader.load_symbol(_lib_handle, "hipblasZdrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,const double *) nogil> hipblasZdrot_funptr)(handle,n,x,incx,y,incy,c,s)
+            _hipblasZdrot__funptr = loader.load_symbol(_lib_handle, "hipblasZdrot")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,const double *) nogil> _hipblasZdrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
-cdef void* hipblasSrotg_funptr = NULL
+cdef void* _hipblasSrotg__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -1009,44 +1009,44 @@ cdef void* hipblasSrotg_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSrotg(hipblasHandle_t handle,float * a,float * b,float * c,float * s) nogil:
     global _lib_handle
-    global hipblasSrotg_funptr
-    if hipblasSrotg_funptr == NULL:
+    global _hipblasSrotg__funptr
+    if _hipblasSrotg__funptr == NULL:
         with gil:
-            hipblasSrotg_funptr = loader.load_symbol(_lib_handle, "hipblasSrotg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,float *,float *,float *,float *) nogil> hipblasSrotg_funptr)(handle,a,b,c,s)
+            _hipblasSrotg__funptr = loader.load_symbol(_lib_handle, "hipblasSrotg")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,float *,float *,float *,float *) nogil> _hipblasSrotg__funptr)(handle,a,b,c,s)
 
 
-cdef void* hipblasDrotg_funptr = NULL
+cdef void* _hipblasDrotg__funptr = NULL
 cdef hipblasStatus_t hipblasDrotg(hipblasHandle_t handle,double * a,double * b,double * c,double * s) nogil:
     global _lib_handle
-    global hipblasDrotg_funptr
-    if hipblasDrotg_funptr == NULL:
+    global _hipblasDrotg__funptr
+    if _hipblasDrotg__funptr == NULL:
         with gil:
-            hipblasDrotg_funptr = loader.load_symbol(_lib_handle, "hipblasDrotg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,double *,double *,double *,double *) nogil> hipblasDrotg_funptr)(handle,a,b,c,s)
+            _hipblasDrotg__funptr = loader.load_symbol(_lib_handle, "hipblasDrotg")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,double *,double *,double *,double *) nogil> _hipblasDrotg__funptr)(handle,a,b,c,s)
 
 
-cdef void* hipblasCrotg_funptr = NULL
+cdef void* _hipblasCrotg__funptr = NULL
 cdef hipblasStatus_t hipblasCrotg(hipblasHandle_t handle,hipblasComplex * a,hipblasComplex * b,float * c,hipblasComplex * s) nogil:
     global _lib_handle
-    global hipblasCrotg_funptr
-    if hipblasCrotg_funptr == NULL:
+    global _hipblasCrotg__funptr
+    if _hipblasCrotg__funptr == NULL:
         with gil:
-            hipblasCrotg_funptr = loader.load_symbol(_lib_handle, "hipblasCrotg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasComplex *,hipblasComplex *,float *,hipblasComplex *) nogil> hipblasCrotg_funptr)(handle,a,b,c,s)
+            _hipblasCrotg__funptr = loader.load_symbol(_lib_handle, "hipblasCrotg")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasComplex *,hipblasComplex *,float *,hipblasComplex *) nogil> _hipblasCrotg__funptr)(handle,a,b,c,s)
 
 
-cdef void* hipblasZrotg_funptr = NULL
+cdef void* _hipblasZrotg__funptr = NULL
 cdef hipblasStatus_t hipblasZrotg(hipblasHandle_t handle,hipblasDoubleComplex * a,hipblasDoubleComplex * b,double * c,hipblasDoubleComplex * s) nogil:
     global _lib_handle
-    global hipblasZrotg_funptr
-    if hipblasZrotg_funptr == NULL:
+    global _hipblasZrotg__funptr
+    if _hipblasZrotg__funptr == NULL:
         with gil:
-            hipblasZrotg_funptr = loader.load_symbol(_lib_handle, "hipblasZrotg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasDoubleComplex *,hipblasDoubleComplex *,double *,hipblasDoubleComplex *) nogil> hipblasZrotg_funptr)(handle,a,b,c,s)
+            _hipblasZrotg__funptr = loader.load_symbol(_lib_handle, "hipblasZrotg")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasDoubleComplex *,hipblasDoubleComplex *,double *,hipblasDoubleComplex *) nogil> _hipblasZrotg__funptr)(handle,a,b,c,s)
 
 
-cdef void* hipblasSrotm_funptr = NULL
+cdef void* _hipblasSrotm__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -1088,24 +1088,24 @@ cdef void* hipblasSrotm_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSrotm(hipblasHandle_t handle,int n,float * x,int incx,float * y,int incy,const float * param) nogil:
     global _lib_handle
-    global hipblasSrotm_funptr
-    if hipblasSrotm_funptr == NULL:
+    global _hipblasSrotm__funptr
+    if _hipblasSrotm__funptr == NULL:
         with gil:
-            hipblasSrotm_funptr = loader.load_symbol(_lib_handle, "hipblasSrotm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,float *,int,float *,int,const float *) nogil> hipblasSrotm_funptr)(handle,n,x,incx,y,incy,param)
+            _hipblasSrotm__funptr = loader.load_symbol(_lib_handle, "hipblasSrotm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,float *,int,float *,int,const float *) nogil> _hipblasSrotm__funptr)(handle,n,x,incx,y,incy,param)
 
 
-cdef void* hipblasDrotm_funptr = NULL
+cdef void* _hipblasDrotm__funptr = NULL
 cdef hipblasStatus_t hipblasDrotm(hipblasHandle_t handle,int n,double * x,int incx,double * y,int incy,const double * param) nogil:
     global _lib_handle
-    global hipblasDrotm_funptr
-    if hipblasDrotm_funptr == NULL:
+    global _hipblasDrotm__funptr
+    if _hipblasDrotm__funptr == NULL:
         with gil:
-            hipblasDrotm_funptr = loader.load_symbol(_lib_handle, "hipblasDrotm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,double *,int,double *,int,const double *) nogil> hipblasDrotm_funptr)(handle,n,x,incx,y,incy,param)
+            _hipblasDrotm__funptr = loader.load_symbol(_lib_handle, "hipblasDrotm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,double *,int,double *,int,const double *) nogil> _hipblasDrotm__funptr)(handle,n,x,incx,y,incy,param)
 
 
-cdef void* hipblasSrotmg_funptr = NULL
+cdef void* _hipblasSrotmg__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -1145,24 +1145,24 @@ cdef void* hipblasSrotmg_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSrotmg(hipblasHandle_t handle,float * d1,float * d2,float * x1,const float * y1,float * param) nogil:
     global _lib_handle
-    global hipblasSrotmg_funptr
-    if hipblasSrotmg_funptr == NULL:
+    global _hipblasSrotmg__funptr
+    if _hipblasSrotmg__funptr == NULL:
         with gil:
-            hipblasSrotmg_funptr = loader.load_symbol(_lib_handle, "hipblasSrotmg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,float *,float *,float *,const float *,float *) nogil> hipblasSrotmg_funptr)(handle,d1,d2,x1,y1,param)
+            _hipblasSrotmg__funptr = loader.load_symbol(_lib_handle, "hipblasSrotmg")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,float *,float *,float *,const float *,float *) nogil> _hipblasSrotmg__funptr)(handle,d1,d2,x1,y1,param)
 
 
-cdef void* hipblasDrotmg_funptr = NULL
+cdef void* _hipblasDrotmg__funptr = NULL
 cdef hipblasStatus_t hipblasDrotmg(hipblasHandle_t handle,double * d1,double * d2,double * x1,const double * y1,double * param) nogil:
     global _lib_handle
-    global hipblasDrotmg_funptr
-    if hipblasDrotmg_funptr == NULL:
+    global _hipblasDrotmg__funptr
+    if _hipblasDrotmg__funptr == NULL:
         with gil:
-            hipblasDrotmg_funptr = loader.load_symbol(_lib_handle, "hipblasDrotmg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,double *,double *,double *,const double *,double *) nogil> hipblasDrotmg_funptr)(handle,d1,d2,x1,y1,param)
+            _hipblasDrotmg__funptr = loader.load_symbol(_lib_handle, "hipblasDrotmg")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,double *,double *,double *,const double *,double *) nogil> _hipblasDrotmg__funptr)(handle,d1,d2,x1,y1,param)
 
 
-cdef void* hipblasSscal_funptr = NULL
+cdef void* _hipblasSscal__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -1191,64 +1191,64 @@ cdef void* hipblasSscal_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSscal(hipblasHandle_t handle,int n,const float * alpha,float * x,int incx) nogil:
     global _lib_handle
-    global hipblasSscal_funptr
-    if hipblasSscal_funptr == NULL:
+    global _hipblasSscal__funptr
+    if _hipblasSscal__funptr == NULL:
         with gil:
-            hipblasSscal_funptr = loader.load_symbol(_lib_handle, "hipblasSscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,float *,int) nogil> hipblasSscal_funptr)(handle,n,alpha,x,incx)
+            _hipblasSscal__funptr = loader.load_symbol(_lib_handle, "hipblasSscal")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,float *,int) nogil> _hipblasSscal__funptr)(handle,n,alpha,x,incx)
 
 
-cdef void* hipblasDscal_funptr = NULL
+cdef void* _hipblasDscal__funptr = NULL
 cdef hipblasStatus_t hipblasDscal(hipblasHandle_t handle,int n,const double * alpha,double * x,int incx) nogil:
     global _lib_handle
-    global hipblasDscal_funptr
-    if hipblasDscal_funptr == NULL:
+    global _hipblasDscal__funptr
+    if _hipblasDscal__funptr == NULL:
         with gil:
-            hipblasDscal_funptr = loader.load_symbol(_lib_handle, "hipblasDscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,double *,int) nogil> hipblasDscal_funptr)(handle,n,alpha,x,incx)
+            _hipblasDscal__funptr = loader.load_symbol(_lib_handle, "hipblasDscal")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,double *,int) nogil> _hipblasDscal__funptr)(handle,n,alpha,x,incx)
 
 
-cdef void* hipblasCscal_funptr = NULL
+cdef void* _hipblasCscal__funptr = NULL
 cdef hipblasStatus_t hipblasCscal(hipblasHandle_t handle,int n,hipblasComplex * alpha,hipblasComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasCscal_funptr
-    if hipblasCscal_funptr == NULL:
+    global _hipblasCscal__funptr
+    if _hipblasCscal__funptr == NULL:
         with gil:
-            hipblasCscal_funptr = loader.load_symbol(_lib_handle, "hipblasCscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCscal_funptr)(handle,n,alpha,x,incx)
+            _hipblasCscal__funptr = loader.load_symbol(_lib_handle, "hipblasCscal")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCscal__funptr)(handle,n,alpha,x,incx)
 
 
-cdef void* hipblasCsscal_funptr = NULL
+cdef void* _hipblasCsscal__funptr = NULL
 cdef hipblasStatus_t hipblasCsscal(hipblasHandle_t handle,int n,const float * alpha,hipblasComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasCsscal_funptr
-    if hipblasCsscal_funptr == NULL:
+    global _hipblasCsscal__funptr
+    if _hipblasCsscal__funptr == NULL:
         with gil:
-            hipblasCsscal_funptr = loader.load_symbol(_lib_handle, "hipblasCsscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,hipblasComplex *,int) nogil> hipblasCsscal_funptr)(handle,n,alpha,x,incx)
+            _hipblasCsscal__funptr = loader.load_symbol(_lib_handle, "hipblasCsscal")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,hipblasComplex *,int) nogil> _hipblasCsscal__funptr)(handle,n,alpha,x,incx)
 
 
-cdef void* hipblasZscal_funptr = NULL
+cdef void* _hipblasZscal__funptr = NULL
 cdef hipblasStatus_t hipblasZscal(hipblasHandle_t handle,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasZscal_funptr
-    if hipblasZscal_funptr == NULL:
+    global _hipblasZscal__funptr
+    if _hipblasZscal__funptr == NULL:
         with gil:
-            hipblasZscal_funptr = loader.load_symbol(_lib_handle, "hipblasZscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZscal_funptr)(handle,n,alpha,x,incx)
+            _hipblasZscal__funptr = loader.load_symbol(_lib_handle, "hipblasZscal")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZscal__funptr)(handle,n,alpha,x,incx)
 
 
-cdef void* hipblasZdscal_funptr = NULL
+cdef void* _hipblasZdscal__funptr = NULL
 cdef hipblasStatus_t hipblasZdscal(hipblasHandle_t handle,int n,const double * alpha,hipblasDoubleComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasZdscal_funptr
-    if hipblasZdscal_funptr == NULL:
+    global _hipblasZdscal__funptr
+    if _hipblasZdscal__funptr == NULL:
         with gil:
-            hipblasZdscal_funptr = loader.load_symbol(_lib_handle, "hipblasZdscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,hipblasDoubleComplex *,int) nogil> hipblasZdscal_funptr)(handle,n,alpha,x,incx)
+            _hipblasZdscal__funptr = loader.load_symbol(_lib_handle, "hipblasZdscal")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZdscal__funptr)(handle,n,alpha,x,incx)
 
 
-cdef void* hipblasSswap_funptr = NULL
+cdef void* _hipblasSswap__funptr = NULL
 # ! @{
 #     \brief BLAS Level 1 API
 # 
@@ -1279,44 +1279,44 @@ cdef void* hipblasSswap_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSswap(hipblasHandle_t handle,int n,float * x,int incx,float * y,int incy) nogil:
     global _lib_handle
-    global hipblasSswap_funptr
-    if hipblasSswap_funptr == NULL:
+    global _hipblasSswap__funptr
+    if _hipblasSswap__funptr == NULL:
         with gil:
-            hipblasSswap_funptr = loader.load_symbol(_lib_handle, "hipblasSswap")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,float *,int,float *,int) nogil> hipblasSswap_funptr)(handle,n,x,incx,y,incy)
+            _hipblasSswap__funptr = loader.load_symbol(_lib_handle, "hipblasSswap")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,float *,int,float *,int) nogil> _hipblasSswap__funptr)(handle,n,x,incx,y,incy)
 
 
-cdef void* hipblasDswap_funptr = NULL
+cdef void* _hipblasDswap__funptr = NULL
 cdef hipblasStatus_t hipblasDswap(hipblasHandle_t handle,int n,double * x,int incx,double * y,int incy) nogil:
     global _lib_handle
-    global hipblasDswap_funptr
-    if hipblasDswap_funptr == NULL:
+    global _hipblasDswap__funptr
+    if _hipblasDswap__funptr == NULL:
         with gil:
-            hipblasDswap_funptr = loader.load_symbol(_lib_handle, "hipblasDswap")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,double *,int,double *,int) nogil> hipblasDswap_funptr)(handle,n,x,incx,y,incy)
+            _hipblasDswap__funptr = loader.load_symbol(_lib_handle, "hipblasDswap")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,double *,int,double *,int) nogil> _hipblasDswap__funptr)(handle,n,x,incx,y,incy)
 
 
-cdef void* hipblasCswap_funptr = NULL
+cdef void* _hipblasCswap__funptr = NULL
 cdef hipblasStatus_t hipblasCswap(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasCswap_funptr
-    if hipblasCswap_funptr == NULL:
+    global _hipblasCswap__funptr
+    if _hipblasCswap__funptr == NULL:
         with gil:
-            hipblasCswap_funptr = loader.load_symbol(_lib_handle, "hipblasCswap")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCswap_funptr)(handle,n,x,incx,y,incy)
+            _hipblasCswap__funptr = loader.load_symbol(_lib_handle, "hipblasCswap")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCswap__funptr)(handle,n,x,incx,y,incy)
 
 
-cdef void* hipblasZswap_funptr = NULL
+cdef void* _hipblasZswap__funptr = NULL
 cdef hipblasStatus_t hipblasZswap(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasZswap_funptr
-    if hipblasZswap_funptr == NULL:
+    global _hipblasZswap__funptr
+    if _hipblasZswap__funptr == NULL:
         with gil:
-            hipblasZswap_funptr = loader.load_symbol(_lib_handle, "hipblasZswap")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZswap_funptr)(handle,n,x,incx,y,incy)
+            _hipblasZswap__funptr = loader.load_symbol(_lib_handle, "hipblasZswap")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZswap__funptr)(handle,n,x,incx,y,incy)
 
 
-cdef void* hipblasSgbmv_funptr = NULL
+cdef void* _hipblasSgbmv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -1388,44 +1388,44 @@ cdef void* hipblasSgbmv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSgbmv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,int kl,int ku,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _lib_handle
-    global hipblasSgbmv_funptr
-    if hipblasSgbmv_funptr == NULL:
+    global _hipblasSgbmv__funptr
+    if _hipblasSgbmv__funptr == NULL:
         with gil:
-            hipblasSgbmv_funptr = loader.load_symbol(_lib_handle, "hipblasSgbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> hipblasSgbmv_funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasSgbmv__funptr = loader.load_symbol(_lib_handle, "hipblasSgbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasDgbmv_funptr = NULL
+cdef void* _hipblasDgbmv__funptr = NULL
 cdef hipblasStatus_t hipblasDgbmv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,int kl,int ku,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
     global _lib_handle
-    global hipblasDgbmv_funptr
-    if hipblasDgbmv_funptr == NULL:
+    global _hipblasDgbmv__funptr
+    if _hipblasDgbmv__funptr == NULL:
         with gil:
-            hipblasDgbmv_funptr = loader.load_symbol(_lib_handle, "hipblasDgbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> hipblasDgbmv_funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasDgbmv__funptr = loader.load_symbol(_lib_handle, "hipblasDgbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasCgbmv_funptr = NULL
+cdef void* _hipblasCgbmv__funptr = NULL
 cdef hipblasStatus_t hipblasCgbmv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,int kl,int ku,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasCgbmv_funptr
-    if hipblasCgbmv_funptr == NULL:
+    global _hipblasCgbmv__funptr
+    if _hipblasCgbmv__funptr == NULL:
         with gil:
-            hipblasCgbmv_funptr = loader.load_symbol(_lib_handle, "hipblasCgbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCgbmv_funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasCgbmv__funptr = loader.load_symbol(_lib_handle, "hipblasCgbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasZgbmv_funptr = NULL
+cdef void* _hipblasZgbmv__funptr = NULL
 cdef hipblasStatus_t hipblasZgbmv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,int kl,int ku,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasZgbmv_funptr
-    if hipblasZgbmv_funptr == NULL:
+    global _hipblasZgbmv__funptr
+    if _hipblasZgbmv__funptr == NULL:
         with gil:
-            hipblasZgbmv_funptr = loader.load_symbol(_lib_handle, "hipblasZgbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZgbmv_funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasZgbmv__funptr = loader.load_symbol(_lib_handle, "hipblasZgbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasSgemv_funptr = NULL
+cdef void* _hipblasSgemv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -1476,44 +1476,44 @@ cdef void* hipblasSgemv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSgemv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _lib_handle
-    global hipblasSgemv_funptr
-    if hipblasSgemv_funptr == NULL:
+    global _hipblasSgemv__funptr
+    if _hipblasSgemv__funptr == NULL:
         with gil:
-            hipblasSgemv_funptr = loader.load_symbol(_lib_handle, "hipblasSgemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> hipblasSgemv_funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasSgemv__funptr = loader.load_symbol(_lib_handle, "hipblasSgemv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasDgemv_funptr = NULL
+cdef void* _hipblasDgemv__funptr = NULL
 cdef hipblasStatus_t hipblasDgemv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
     global _lib_handle
-    global hipblasDgemv_funptr
-    if hipblasDgemv_funptr == NULL:
+    global _hipblasDgemv__funptr
+    if _hipblasDgemv__funptr == NULL:
         with gil:
-            hipblasDgemv_funptr = loader.load_symbol(_lib_handle, "hipblasDgemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> hipblasDgemv_funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasDgemv__funptr = loader.load_symbol(_lib_handle, "hipblasDgemv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasCgemv_funptr = NULL
+cdef void* _hipblasCgemv__funptr = NULL
 cdef hipblasStatus_t hipblasCgemv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasCgemv_funptr
-    if hipblasCgemv_funptr == NULL:
+    global _hipblasCgemv__funptr
+    if _hipblasCgemv__funptr == NULL:
         with gil:
-            hipblasCgemv_funptr = loader.load_symbol(_lib_handle, "hipblasCgemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCgemv_funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasCgemv__funptr = loader.load_symbol(_lib_handle, "hipblasCgemv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasZgemv_funptr = NULL
+cdef void* _hipblasZgemv__funptr = NULL
 cdef hipblasStatus_t hipblasZgemv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasZgemv_funptr
-    if hipblasZgemv_funptr == NULL:
+    global _hipblasZgemv__funptr
+    if _hipblasZgemv__funptr == NULL:
         with gil:
-            hipblasZgemv_funptr = loader.load_symbol(_lib_handle, "hipblasZgemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZgemv_funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasZgemv__funptr = loader.load_symbol(_lib_handle, "hipblasZgemv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasSger_funptr = NULL
+cdef void* _hipblasSger__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -1559,64 +1559,64 @@ cdef void* hipblasSger_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSger(hipblasHandle_t handle,int m,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP,int lda) nogil:
     global _lib_handle
-    global hipblasSger_funptr
-    if hipblasSger_funptr == NULL:
+    global _hipblasSger__funptr
+    if _hipblasSger__funptr == NULL:
         with gil:
-            hipblasSger_funptr = loader.load_symbol(_lib_handle, "hipblasSger")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,const float *,const float *,int,const float *,int,float *,int) nogil> hipblasSger_funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasSger__funptr = loader.load_symbol(_lib_handle, "hipblasSger")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,const float *,const float *,int,const float *,int,float *,int) nogil> _hipblasSger__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasDger_funptr = NULL
+cdef void* _hipblasDger__funptr = NULL
 cdef hipblasStatus_t hipblasDger(hipblasHandle_t handle,int m,int n,const double * alpha,const double * x,int incx,const double * y,int incy,double * AP,int lda) nogil:
     global _lib_handle
-    global hipblasDger_funptr
-    if hipblasDger_funptr == NULL:
+    global _hipblasDger__funptr
+    if _hipblasDger__funptr == NULL:
         with gil:
-            hipblasDger_funptr = loader.load_symbol(_lib_handle, "hipblasDger")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,const double *,const double *,int,const double *,int,double *,int) nogil> hipblasDger_funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasDger__funptr = loader.load_symbol(_lib_handle, "hipblasDger")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,const double *,const double *,int,const double *,int,double *,int) nogil> _hipblasDger__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasCgeru_funptr = NULL
+cdef void* _hipblasCgeru__funptr = NULL
 cdef hipblasStatus_t hipblasCgeru(hipblasHandle_t handle,int m,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasCgeru_funptr
-    if hipblasCgeru_funptr == NULL:
+    global _hipblasCgeru__funptr
+    if _hipblasCgeru__funptr == NULL:
         with gil:
-            hipblasCgeru_funptr = loader.load_symbol(_lib_handle, "hipblasCgeru")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCgeru_funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasCgeru__funptr = loader.load_symbol(_lib_handle, "hipblasCgeru")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCgeru__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasCgerc_funptr = NULL
+cdef void* _hipblasCgerc__funptr = NULL
 cdef hipblasStatus_t hipblasCgerc(hipblasHandle_t handle,int m,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasCgerc_funptr
-    if hipblasCgerc_funptr == NULL:
+    global _hipblasCgerc__funptr
+    if _hipblasCgerc__funptr == NULL:
         with gil:
-            hipblasCgerc_funptr = loader.load_symbol(_lib_handle, "hipblasCgerc")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCgerc_funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasCgerc__funptr = loader.load_symbol(_lib_handle, "hipblasCgerc")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCgerc__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasZgeru_funptr = NULL
+cdef void* _hipblasZgeru__funptr = NULL
 cdef hipblasStatus_t hipblasZgeru(hipblasHandle_t handle,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasZgeru_funptr
-    if hipblasZgeru_funptr == NULL:
+    global _hipblasZgeru__funptr
+    if _hipblasZgeru__funptr == NULL:
         with gil:
-            hipblasZgeru_funptr = loader.load_symbol(_lib_handle, "hipblasZgeru")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZgeru_funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasZgeru__funptr = loader.load_symbol(_lib_handle, "hipblasZgeru")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZgeru__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasZgerc_funptr = NULL
+cdef void* _hipblasZgerc__funptr = NULL
 cdef hipblasStatus_t hipblasZgerc(hipblasHandle_t handle,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasZgerc_funptr
-    if hipblasZgerc_funptr == NULL:
+    global _hipblasZgerc__funptr
+    if _hipblasZgerc__funptr == NULL:
         with gil:
-            hipblasZgerc_funptr = loader.load_symbol(_lib_handle, "hipblasZgerc")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZgerc_funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasZgerc__funptr = loader.load_symbol(_lib_handle, "hipblasZgerc")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZgerc__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasChbmv_funptr = NULL
+cdef void* _hipblasChbmv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -1694,24 +1694,24 @@ cdef void* hipblasChbmv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasChbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasChbmv_funptr
-    if hipblasChbmv_funptr == NULL:
+    global _hipblasChbmv__funptr
+    if _hipblasChbmv__funptr == NULL:
         with gil:
-            hipblasChbmv_funptr = loader.load_symbol(_lib_handle, "hipblasChbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasChbmv_funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasChbmv__funptr = loader.load_symbol(_lib_handle, "hipblasChbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasZhbmv_funptr = NULL
+cdef void* _hipblasZhbmv__funptr = NULL
 cdef hipblasStatus_t hipblasZhbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasZhbmv_funptr
-    if hipblasZhbmv_funptr == NULL:
+    global _hipblasZhbmv__funptr
+    if _hipblasZhbmv__funptr == NULL:
         with gil:
-            hipblasZhbmv_funptr = loader.load_symbol(_lib_handle, "hipblasZhbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZhbmv_funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasZhbmv__funptr = loader.load_symbol(_lib_handle, "hipblasZhbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasChemv_funptr = NULL
+cdef void* _hipblasChemv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -1768,24 +1768,24 @@ cdef void* hipblasChemv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasChemv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasChemv_funptr
-    if hipblasChemv_funptr == NULL:
+    global _hipblasChemv__funptr
+    if _hipblasChemv__funptr == NULL:
         with gil:
-            hipblasChemv_funptr = loader.load_symbol(_lib_handle, "hipblasChemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasChemv_funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasChemv__funptr = loader.load_symbol(_lib_handle, "hipblasChemv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChemv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasZhemv_funptr = NULL
+cdef void* _hipblasZhemv__funptr = NULL
 cdef hipblasStatus_t hipblasZhemv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasZhemv_funptr
-    if hipblasZhemv_funptr == NULL:
+    global _hipblasZhemv__funptr
+    if _hipblasZhemv__funptr == NULL:
         with gil:
-            hipblasZhemv_funptr = loader.load_symbol(_lib_handle, "hipblasZhemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZhemv_funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasZhemv__funptr = loader.load_symbol(_lib_handle, "hipblasZhemv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhemv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasCher_funptr = NULL
+cdef void* _hipblasCher__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -1835,24 +1835,24 @@ cdef void* hipblasCher_funptr = NULL
 #               specifies the leading dimension of A. Must be at least max(1, n).
 cdef hipblasStatus_t hipblasCher(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex * x,int incx,hipblasComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasCher_funptr
-    if hipblasCher_funptr == NULL:
+    global _hipblasCher__funptr
+    if _hipblasCher__funptr == NULL:
         with gil:
-            hipblasCher_funptr = loader.load_symbol(_lib_handle, "hipblasCher")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCher_funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+            _hipblasCher__funptr = loader.load_symbol(_lib_handle, "hipblasCher")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCher__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
-cdef void* hipblasZher_funptr = NULL
+cdef void* _hipblasZher__funptr = NULL
 cdef hipblasStatus_t hipblasZher(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasZher_funptr
-    if hipblasZher_funptr == NULL:
+    global _hipblasZher__funptr
+    if _hipblasZher__funptr == NULL:
         with gil:
-            hipblasZher_funptr = loader.load_symbol(_lib_handle, "hipblasZher")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZher_funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+            _hipblasZher__funptr = loader.load_symbol(_lib_handle, "hipblasZher")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZher__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
-cdef void* hipblasCher2_funptr = NULL
+cdef void* _hipblasCher2__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -1907,24 +1907,24 @@ cdef void* hipblasCher2_funptr = NULL
 #               specifies the leading dimension of A. Must be at least max(lda, 1).
 cdef hipblasStatus_t hipblasCher2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasCher2_funptr
-    if hipblasCher2_funptr == NULL:
+    global _hipblasCher2__funptr
+    if _hipblasCher2__funptr == NULL:
         with gil:
-            hipblasCher2_funptr = loader.load_symbol(_lib_handle, "hipblasCher2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCher2_funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasCher2__funptr = loader.load_symbol(_lib_handle, "hipblasCher2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCher2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasZher2_funptr = NULL
+cdef void* _hipblasZher2__funptr = NULL
 cdef hipblasStatus_t hipblasZher2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasZher2_funptr
-    if hipblasZher2_funptr == NULL:
+    global _hipblasZher2__funptr
+    if _hipblasZher2__funptr == NULL:
         with gil:
-            hipblasZher2_funptr = loader.load_symbol(_lib_handle, "hipblasZher2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZher2_funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasZher2__funptr = loader.load_symbol(_lib_handle, "hipblasZher2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZher2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasChpmv_funptr = NULL
+cdef void* _hipblasChpmv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -1993,24 +1993,24 @@ cdef void* hipblasChpmv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasChpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasChpmv_funptr
-    if hipblasChpmv_funptr == NULL:
+    global _hipblasChpmv__funptr
+    if _hipblasChpmv__funptr == NULL:
         with gil:
-            hipblasChpmv_funptr = loader.load_symbol(_lib_handle, "hipblasChpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasChpmv_funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
+            _hipblasChpmv__funptr = loader.load_symbol(_lib_handle, "hipblasChpmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChpmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
 
 
-cdef void* hipblasZhpmv_funptr = NULL
+cdef void* _hipblasZhpmv__funptr = NULL
 cdef hipblasStatus_t hipblasZhpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasZhpmv_funptr
-    if hipblasZhpmv_funptr == NULL:
+    global _hipblasZhpmv__funptr
+    if _hipblasZhpmv__funptr == NULL:
         with gil:
-            hipblasZhpmv_funptr = loader.load_symbol(_lib_handle, "hipblasZhpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZhpmv_funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
+            _hipblasZhpmv__funptr = loader.load_symbol(_lib_handle, "hipblasZhpmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhpmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
 
 
-cdef void* hipblasChpr_funptr = NULL
+cdef void* _hipblasChpr__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2073,24 +2073,24 @@ cdef void* hipblasChpr_funptr = NULL
 #             to be 0.
 cdef hipblasStatus_t hipblasChpr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex * x,int incx,hipblasComplex * AP) nogil:
     global _lib_handle
-    global hipblasChpr_funptr
-    if hipblasChpr_funptr == NULL:
+    global _hipblasChpr__funptr
+    if _hipblasChpr__funptr == NULL:
         with gil:
-            hipblasChpr_funptr = loader.load_symbol(_lib_handle, "hipblasChpr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,hipblasComplex *,int,hipblasComplex *) nogil> hipblasChpr_funptr)(handle,uplo,n,alpha,x,incx,AP)
+            _hipblasChpr__funptr = loader.load_symbol(_lib_handle, "hipblasChpr")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasChpr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
-cdef void* hipblasZhpr_funptr = NULL
+cdef void* _hipblasZhpr__funptr = NULL
 cdef hipblasStatus_t hipblasZhpr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP) nogil:
     global _lib_handle
-    global hipblasZhpr_funptr
-    if hipblasZhpr_funptr == NULL:
+    global _hipblasZhpr__funptr
+    if _hipblasZhpr__funptr == NULL:
         with gil:
-            hipblasZhpr_funptr = loader.load_symbol(_lib_handle, "hipblasZhpr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> hipblasZhpr_funptr)(handle,uplo,n,alpha,x,incx,AP)
+            _hipblasZhpr__funptr = loader.load_symbol(_lib_handle, "hipblasZhpr")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZhpr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
-cdef void* hipblasChpr2_funptr = NULL
+cdef void* _hipblasChpr2__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2158,24 +2158,24 @@ cdef void* hipblasChpr2_funptr = NULL
 #             to be 0.
 cdef hipblasStatus_t hipblasChpr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP) nogil:
     global _lib_handle
-    global hipblasChpr2_funptr
-    if hipblasChpr2_funptr == NULL:
+    global _hipblasChpr2__funptr
+    if _hipblasChpr2__funptr == NULL:
         with gil:
-            hipblasChpr2_funptr = loader.load_symbol(_lib_handle, "hipblasChpr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> hipblasChpr2_funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
+            _hipblasChpr2__funptr = loader.load_symbol(_lib_handle, "hipblasChpr2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasChpr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
 
 
-cdef void* hipblasZhpr2_funptr = NULL
+cdef void* _hipblasZhpr2__funptr = NULL
 cdef hipblasStatus_t hipblasZhpr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP) nogil:
     global _lib_handle
-    global hipblasZhpr2_funptr
-    if hipblasZhpr2_funptr == NULL:
+    global _hipblasZhpr2__funptr
+    if _hipblasZhpr2__funptr == NULL:
         with gil:
-            hipblasZhpr2_funptr = loader.load_symbol(_lib_handle, "hipblasZhpr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> hipblasZhpr2_funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
+            _hipblasZhpr2__funptr = loader.load_symbol(_lib_handle, "hipblasZhpr2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZhpr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
 
 
-cdef void* hipblasSsbmv_funptr = NULL
+cdef void* _hipblasSsbmv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2226,24 +2226,24 @@ cdef void* hipblasSsbmv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSsbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,int k,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _lib_handle
-    global hipblasSsbmv_funptr
-    if hipblasSsbmv_funptr == NULL:
+    global _hipblasSsbmv__funptr
+    if _hipblasSsbmv__funptr == NULL:
         with gil:
-            hipblasSsbmv_funptr = loader.load_symbol(_lib_handle, "hipblasSsbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> hipblasSsbmv_funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasSsbmv__funptr = loader.load_symbol(_lib_handle, "hipblasSsbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasDsbmv_funptr = NULL
+cdef void* _hipblasDsbmv__funptr = NULL
 cdef hipblasStatus_t hipblasDsbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,int k,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
     global _lib_handle
-    global hipblasDsbmv_funptr
-    if hipblasDsbmv_funptr == NULL:
+    global _hipblasDsbmv__funptr
+    if _hipblasDsbmv__funptr == NULL:
         with gil:
-            hipblasDsbmv_funptr = loader.load_symbol(_lib_handle, "hipblasDsbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> hipblasDsbmv_funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasDsbmv__funptr = loader.load_symbol(_lib_handle, "hipblasDsbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasSspmv_funptr = NULL
+cdef void* _hipblasSspmv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2288,24 +2288,24 @@ cdef void* hipblasSspmv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSspmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * AP,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _lib_handle
-    global hipblasSspmv_funptr
-    if hipblasSspmv_funptr == NULL:
+    global _hipblasSspmv__funptr
+    if _hipblasSspmv__funptr == NULL:
         with gil:
-            hipblasSspmv_funptr = loader.load_symbol(_lib_handle, "hipblasSspmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,const float *,int,const float *,float *,int) nogil> hipblasSspmv_funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
+            _hipblasSspmv__funptr = loader.load_symbol(_lib_handle, "hipblasSspmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,const float *,int,const float *,float *,int) nogil> _hipblasSspmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
 
 
-cdef void* hipblasDspmv_funptr = NULL
+cdef void* _hipblasDspmv__funptr = NULL
 cdef hipblasStatus_t hipblasDspmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * AP,const double * x,int incx,const double * beta,double * y,int incy) nogil:
     global _lib_handle
-    global hipblasDspmv_funptr
-    if hipblasDspmv_funptr == NULL:
+    global _hipblasDspmv__funptr
+    if _hipblasDspmv__funptr == NULL:
         with gil:
-            hipblasDspmv_funptr = loader.load_symbol(_lib_handle, "hipblasDspmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,const double *,int,const double *,double *,int) nogil> hipblasDspmv_funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
+            _hipblasDspmv__funptr = loader.load_symbol(_lib_handle, "hipblasDspmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,const double *,int,const double *,double *,int) nogil> _hipblasDspmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
 
 
-cdef void* hipblasSspr_funptr = NULL
+cdef void* _hipblasSspr__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2368,44 +2368,44 @@ cdef void* hipblasSspr_funptr = NULL
 #                         4 7 9 0
 cdef hipblasStatus_t hipblasSspr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,float * AP) nogil:
     global _lib_handle
-    global hipblasSspr_funptr
-    if hipblasSspr_funptr == NULL:
+    global _hipblasSspr__funptr
+    if _hipblasSspr__funptr == NULL:
         with gil:
-            hipblasSspr_funptr = loader.load_symbol(_lib_handle, "hipblasSspr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,float *) nogil> hipblasSspr_funptr)(handle,uplo,n,alpha,x,incx,AP)
+            _hipblasSspr__funptr = loader.load_symbol(_lib_handle, "hipblasSspr")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,float *) nogil> _hipblasSspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
-cdef void* hipblasDspr_funptr = NULL
+cdef void* _hipblasDspr__funptr = NULL
 cdef hipblasStatus_t hipblasDspr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,double * AP) nogil:
     global _lib_handle
-    global hipblasDspr_funptr
-    if hipblasDspr_funptr == NULL:
+    global _hipblasDspr__funptr
+    if _hipblasDspr__funptr == NULL:
         with gil:
-            hipblasDspr_funptr = loader.load_symbol(_lib_handle, "hipblasDspr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,double *) nogil> hipblasDspr_funptr)(handle,uplo,n,alpha,x,incx,AP)
+            _hipblasDspr__funptr = loader.load_symbol(_lib_handle, "hipblasDspr")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,double *) nogil> _hipblasDspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
-cdef void* hipblasCspr_funptr = NULL
+cdef void* _hipblasCspr__funptr = NULL
 cdef hipblasStatus_t hipblasCspr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * AP) nogil:
     global _lib_handle
-    global hipblasCspr_funptr
-    if hipblasCspr_funptr == NULL:
+    global _hipblasCspr__funptr
+    if _hipblasCspr__funptr == NULL:
         with gil:
-            hipblasCspr_funptr = loader.load_symbol(_lib_handle, "hipblasCspr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *) nogil> hipblasCspr_funptr)(handle,uplo,n,alpha,x,incx,AP)
+            _hipblasCspr__funptr = loader.load_symbol(_lib_handle, "hipblasCspr")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasCspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
-cdef void* hipblasZspr_funptr = NULL
+cdef void* _hipblasZspr__funptr = NULL
 cdef hipblasStatus_t hipblasZspr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP) nogil:
     global _lib_handle
-    global hipblasZspr_funptr
-    if hipblasZspr_funptr == NULL:
+    global _hipblasZspr__funptr
+    if _hipblasZspr__funptr == NULL:
         with gil:
-            hipblasZspr_funptr = loader.load_symbol(_lib_handle, "hipblasZspr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> hipblasZspr_funptr)(handle,uplo,n,alpha,x,incx,AP)
+            _hipblasZspr__funptr = loader.load_symbol(_lib_handle, "hipblasZspr")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
-cdef void* hipblasSspr2_funptr = NULL
+cdef void* _hipblasSspr2__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2473,24 +2473,24 @@ cdef void* hipblasSspr2_funptr = NULL
 #                         4 7 9 0
 cdef hipblasStatus_t hipblasSspr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP) nogil:
     global _lib_handle
-    global hipblasSspr2_funptr
-    if hipblasSspr2_funptr == NULL:
+    global _hipblasSspr2__funptr
+    if _hipblasSspr2__funptr == NULL:
         with gil:
-            hipblasSspr2_funptr = loader.load_symbol(_lib_handle, "hipblasSspr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,float *) nogil> hipblasSspr2_funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
+            _hipblasSspr2__funptr = loader.load_symbol(_lib_handle, "hipblasSspr2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,float *) nogil> _hipblasSspr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
 
 
-cdef void* hipblasDspr2_funptr = NULL
+cdef void* _hipblasDspr2__funptr = NULL
 cdef hipblasStatus_t hipblasDspr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,const double * y,int incy,double * AP) nogil:
     global _lib_handle
-    global hipblasDspr2_funptr
-    if hipblasDspr2_funptr == NULL:
+    global _hipblasDspr2__funptr
+    if _hipblasDspr2__funptr == NULL:
         with gil:
-            hipblasDspr2_funptr = loader.load_symbol(_lib_handle, "hipblasDspr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,double *) nogil> hipblasDspr2_funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
+            _hipblasDspr2__funptr = loader.load_symbol(_lib_handle, "hipblasDspr2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,double *) nogil> _hipblasDspr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
 
 
-cdef void* hipblasSsymv_funptr = NULL
+cdef void* _hipblasSsymv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2538,44 +2538,44 @@ cdef void* hipblasSsymv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSsymv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _lib_handle
-    global hipblasSsymv_funptr
-    if hipblasSsymv_funptr == NULL:
+    global _hipblasSsymv__funptr
+    if _hipblasSsymv__funptr == NULL:
         with gil:
-            hipblasSsymv_funptr = loader.load_symbol(_lib_handle, "hipblasSsymv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> hipblasSsymv_funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasSsymv__funptr = loader.load_symbol(_lib_handle, "hipblasSsymv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasDsymv_funptr = NULL
+cdef void* _hipblasDsymv__funptr = NULL
 cdef hipblasStatus_t hipblasDsymv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
     global _lib_handle
-    global hipblasDsymv_funptr
-    if hipblasDsymv_funptr == NULL:
+    global _hipblasDsymv__funptr
+    if _hipblasDsymv__funptr == NULL:
         with gil:
-            hipblasDsymv_funptr = loader.load_symbol(_lib_handle, "hipblasDsymv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> hipblasDsymv_funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasDsymv__funptr = loader.load_symbol(_lib_handle, "hipblasDsymv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasCsymv_funptr = NULL
+cdef void* _hipblasCsymv__funptr = NULL
 cdef hipblasStatus_t hipblasCsymv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasCsymv_funptr
-    if hipblasCsymv_funptr == NULL:
+    global _hipblasCsymv__funptr
+    if _hipblasCsymv__funptr == NULL:
         with gil:
-            hipblasCsymv_funptr = loader.load_symbol(_lib_handle, "hipblasCsymv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCsymv_funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasCsymv__funptr = loader.load_symbol(_lib_handle, "hipblasCsymv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasZsymv_funptr = NULL
+cdef void* _hipblasZsymv__funptr = NULL
 cdef hipblasStatus_t hipblasZsymv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _lib_handle
-    global hipblasZsymv_funptr
-    if hipblasZsymv_funptr == NULL:
+    global _hipblasZsymv__funptr
+    if _hipblasZsymv__funptr == NULL:
         with gil:
-            hipblasZsymv_funptr = loader.load_symbol(_lib_handle, "hipblasZsymv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZsymv_funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+            _hipblasZsymv__funptr = loader.load_symbol(_lib_handle, "hipblasZsymv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
-cdef void* hipblasSsyr_funptr = NULL
+cdef void* _hipblasSsyr__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2618,44 +2618,44 @@ cdef void* hipblasSsyr_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSsyr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,float * AP,int lda) nogil:
     global _lib_handle
-    global hipblasSsyr_funptr
-    if hipblasSsyr_funptr == NULL:
+    global _hipblasSsyr__funptr
+    if _hipblasSsyr__funptr == NULL:
         with gil:
-            hipblasSsyr_funptr = loader.load_symbol(_lib_handle, "hipblasSsyr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,float *,int) nogil> hipblasSsyr_funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+            _hipblasSsyr__funptr = loader.load_symbol(_lib_handle, "hipblasSsyr")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,float *,int) nogil> _hipblasSsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
-cdef void* hipblasDsyr_funptr = NULL
+cdef void* _hipblasDsyr__funptr = NULL
 cdef hipblasStatus_t hipblasDsyr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,double * AP,int lda) nogil:
     global _lib_handle
-    global hipblasDsyr_funptr
-    if hipblasDsyr_funptr == NULL:
+    global _hipblasDsyr__funptr
+    if _hipblasDsyr__funptr == NULL:
         with gil:
-            hipblasDsyr_funptr = loader.load_symbol(_lib_handle, "hipblasDsyr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,double *,int) nogil> hipblasDsyr_funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+            _hipblasDsyr__funptr = loader.load_symbol(_lib_handle, "hipblasDsyr")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,double *,int) nogil> _hipblasDsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
-cdef void* hipblasCsyr_funptr = NULL
+cdef void* _hipblasCsyr__funptr = NULL
 cdef hipblasStatus_t hipblasCsyr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasCsyr_funptr
-    if hipblasCsyr_funptr == NULL:
+    global _hipblasCsyr__funptr
+    if _hipblasCsyr__funptr == NULL:
         with gil:
-            hipblasCsyr_funptr = loader.load_symbol(_lib_handle, "hipblasCsyr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCsyr_funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+            _hipblasCsyr__funptr = loader.load_symbol(_lib_handle, "hipblasCsyr")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
-cdef void* hipblasZsyr_funptr = NULL
+cdef void* _hipblasZsyr__funptr = NULL
 cdef hipblasStatus_t hipblasZsyr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasZsyr_funptr
-    if hipblasZsyr_funptr == NULL:
+    global _hipblasZsyr__funptr
+    if _hipblasZsyr__funptr == NULL:
         with gil:
-            hipblasZsyr_funptr = loader.load_symbol(_lib_handle, "hipblasZsyr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZsyr_funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+            _hipblasZsyr__funptr = loader.load_symbol(_lib_handle, "hipblasZsyr")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
-cdef void* hipblasSsyr2_funptr = NULL
+cdef void* _hipblasSsyr2__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2703,44 +2703,44 @@ cdef void* hipblasSsyr2_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSsyr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP,int lda) nogil:
     global _lib_handle
-    global hipblasSsyr2_funptr
-    if hipblasSsyr2_funptr == NULL:
+    global _hipblasSsyr2__funptr
+    if _hipblasSsyr2__funptr == NULL:
         with gil:
-            hipblasSsyr2_funptr = loader.load_symbol(_lib_handle, "hipblasSsyr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,float *,int) nogil> hipblasSsyr2_funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasSsyr2__funptr = loader.load_symbol(_lib_handle, "hipblasSsyr2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,float *,int) nogil> _hipblasSsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasDsyr2_funptr = NULL
+cdef void* _hipblasDsyr2__funptr = NULL
 cdef hipblasStatus_t hipblasDsyr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,const double * y,int incy,double * AP,int lda) nogil:
     global _lib_handle
-    global hipblasDsyr2_funptr
-    if hipblasDsyr2_funptr == NULL:
+    global _hipblasDsyr2__funptr
+    if _hipblasDsyr2__funptr == NULL:
         with gil:
-            hipblasDsyr2_funptr = loader.load_symbol(_lib_handle, "hipblasDsyr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,double *,int) nogil> hipblasDsyr2_funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasDsyr2__funptr = loader.load_symbol(_lib_handle, "hipblasDsyr2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,double *,int) nogil> _hipblasDsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasCsyr2_funptr = NULL
+cdef void* _hipblasCsyr2__funptr = NULL
 cdef hipblasStatus_t hipblasCsyr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasCsyr2_funptr
-    if hipblasCsyr2_funptr == NULL:
+    global _hipblasCsyr2__funptr
+    if _hipblasCsyr2__funptr == NULL:
         with gil:
-            hipblasCsyr2_funptr = loader.load_symbol(_lib_handle, "hipblasCsyr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCsyr2_funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasCsyr2__funptr = loader.load_symbol(_lib_handle, "hipblasCsyr2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasZsyr2_funptr = NULL
+cdef void* _hipblasZsyr2__funptr = NULL
 cdef hipblasStatus_t hipblasZsyr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
     global _lib_handle
-    global hipblasZsyr2_funptr
-    if hipblasZsyr2_funptr == NULL:
+    global _hipblasZsyr2__funptr
+    if _hipblasZsyr2__funptr == NULL:
         with gil:
-            hipblasZsyr2_funptr = loader.load_symbol(_lib_handle, "hipblasZsyr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZsyr2_funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+            _hipblasZsyr2__funptr = loader.load_symbol(_lib_handle, "hipblasZsyr2")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
-cdef void* hipblasStbmv_funptr = NULL
+cdef void* _hipblasStbmv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2819,44 +2819,44 @@ cdef void* hipblasStbmv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasStbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,const float * AP,int lda,float * x,int incx) nogil:
     global _lib_handle
-    global hipblasStbmv_funptr
-    if hipblasStbmv_funptr == NULL:
+    global _hipblasStbmv__funptr
+    if _hipblasStbmv__funptr == NULL:
         with gil:
-            hipblasStbmv_funptr = loader.load_symbol(_lib_handle, "hipblasStbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,int,float *,int) nogil> hipblasStbmv_funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
+            _hipblasStbmv__funptr = loader.load_symbol(_lib_handle, "hipblasStbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,int,float *,int) nogil> _hipblasStbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
 
 
-cdef void* hipblasDtbmv_funptr = NULL
+cdef void* _hipblasDtbmv__funptr = NULL
 cdef hipblasStatus_t hipblasDtbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,const double * AP,int lda,double * x,int incx) nogil:
     global _lib_handle
-    global hipblasDtbmv_funptr
-    if hipblasDtbmv_funptr == NULL:
+    global _hipblasDtbmv__funptr
+    if _hipblasDtbmv__funptr == NULL:
         with gil:
-            hipblasDtbmv_funptr = loader.load_symbol(_lib_handle, "hipblasDtbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,int,double *,int) nogil> hipblasDtbmv_funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
+            _hipblasDtbmv__funptr = loader.load_symbol(_lib_handle, "hipblasDtbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,int,double *,int) nogil> _hipblasDtbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
 
 
-cdef void* hipblasCtbmv_funptr = NULL
+cdef void* _hipblasCtbmv__funptr = NULL
 cdef hipblasStatus_t hipblasCtbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasCtbmv_funptr
-    if hipblasCtbmv_funptr == NULL:
+    global _hipblasCtbmv__funptr
+    if _hipblasCtbmv__funptr == NULL:
         with gil:
-            hipblasCtbmv_funptr = loader.load_symbol(_lib_handle, "hipblasCtbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCtbmv_funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
+            _hipblasCtbmv__funptr = loader.load_symbol(_lib_handle, "hipblasCtbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
 
 
-cdef void* hipblasZtbmv_funptr = NULL
+cdef void* _hipblasZtbmv__funptr = NULL
 cdef hipblasStatus_t hipblasZtbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasZtbmv_funptr
-    if hipblasZtbmv_funptr == NULL:
+    global _hipblasZtbmv__funptr
+    if _hipblasZtbmv__funptr == NULL:
         with gil:
-            hipblasZtbmv_funptr = loader.load_symbol(_lib_handle, "hipblasZtbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZtbmv_funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
+            _hipblasZtbmv__funptr = loader.load_symbol(_lib_handle, "hipblasZtbmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
 
 
-cdef void* hipblasStbsv_funptr = NULL
+cdef void* _hipblasStbsv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -2919,44 +2919,44 @@ cdef void* hipblasStbsv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasStbsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,const float * AP,int lda,float * x,int incx) nogil:
     global _lib_handle
-    global hipblasStbsv_funptr
-    if hipblasStbsv_funptr == NULL:
+    global _hipblasStbsv__funptr
+    if _hipblasStbsv__funptr == NULL:
         with gil:
-            hipblasStbsv_funptr = loader.load_symbol(_lib_handle, "hipblasStbsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,int,float *,int) nogil> hipblasStbsv_funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
+            _hipblasStbsv__funptr = loader.load_symbol(_lib_handle, "hipblasStbsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,int,float *,int) nogil> _hipblasStbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
 
 
-cdef void* hipblasDtbsv_funptr = NULL
+cdef void* _hipblasDtbsv__funptr = NULL
 cdef hipblasStatus_t hipblasDtbsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,const double * AP,int lda,double * x,int incx) nogil:
     global _lib_handle
-    global hipblasDtbsv_funptr
-    if hipblasDtbsv_funptr == NULL:
+    global _hipblasDtbsv__funptr
+    if _hipblasDtbsv__funptr == NULL:
         with gil:
-            hipblasDtbsv_funptr = loader.load_symbol(_lib_handle, "hipblasDtbsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,int,double *,int) nogil> hipblasDtbsv_funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
+            _hipblasDtbsv__funptr = loader.load_symbol(_lib_handle, "hipblasDtbsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,int,double *,int) nogil> _hipblasDtbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
 
 
-cdef void* hipblasCtbsv_funptr = NULL
+cdef void* _hipblasCtbsv__funptr = NULL
 cdef hipblasStatus_t hipblasCtbsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasCtbsv_funptr
-    if hipblasCtbsv_funptr == NULL:
+    global _hipblasCtbsv__funptr
+    if _hipblasCtbsv__funptr == NULL:
         with gil:
-            hipblasCtbsv_funptr = loader.load_symbol(_lib_handle, "hipblasCtbsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCtbsv_funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
+            _hipblasCtbsv__funptr = loader.load_symbol(_lib_handle, "hipblasCtbsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
 
 
-cdef void* hipblasZtbsv_funptr = NULL
+cdef void* _hipblasZtbsv__funptr = NULL
 cdef hipblasStatus_t hipblasZtbsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasZtbsv_funptr
-    if hipblasZtbsv_funptr == NULL:
+    global _hipblasZtbsv__funptr
+    if _hipblasZtbsv__funptr == NULL:
         with gil:
-            hipblasZtbsv_funptr = loader.load_symbol(_lib_handle, "hipblasZtbsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZtbsv_funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
+            _hipblasZtbsv__funptr = loader.load_symbol(_lib_handle, "hipblasZtbsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
 
 
-cdef void* hipblasStpmv_funptr = NULL
+cdef void* _hipblasStpmv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -3016,44 +3016,44 @@ cdef void* hipblasStpmv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasStpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,float * x,int incx) nogil:
     global _lib_handle
-    global hipblasStpmv_funptr
-    if hipblasStpmv_funptr == NULL:
+    global _hipblasStpmv__funptr
+    if _hipblasStpmv__funptr == NULL:
         with gil:
-            hipblasStpmv_funptr = loader.load_symbol(_lib_handle, "hipblasStpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,float *,int) nogil> hipblasStpmv_funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+            _hipblasStpmv__funptr = loader.load_symbol(_lib_handle, "hipblasStpmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,float *,int) nogil> _hipblasStpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
-cdef void* hipblasDtpmv_funptr = NULL
+cdef void* _hipblasDtpmv__funptr = NULL
 cdef hipblasStatus_t hipblasDtpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,double * x,int incx) nogil:
     global _lib_handle
-    global hipblasDtpmv_funptr
-    if hipblasDtpmv_funptr == NULL:
+    global _hipblasDtpmv__funptr
+    if _hipblasDtpmv__funptr == NULL:
         with gil:
-            hipblasDtpmv_funptr = loader.load_symbol(_lib_handle, "hipblasDtpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,double *,int) nogil> hipblasDtpmv_funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+            _hipblasDtpmv__funptr = loader.load_symbol(_lib_handle, "hipblasDtpmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,double *,int) nogil> _hipblasDtpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
-cdef void* hipblasCtpmv_funptr = NULL
+cdef void* _hipblasCtpmv__funptr = NULL
 cdef hipblasStatus_t hipblasCtpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,hipblasComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasCtpmv_funptr
-    if hipblasCtpmv_funptr == NULL:
+    global _hipblasCtpmv__funptr
+    if _hipblasCtpmv__funptr == NULL:
         with gil:
-            hipblasCtpmv_funptr = loader.load_symbol(_lib_handle, "hipblasCtpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCtpmv_funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+            _hipblasCtpmv__funptr = loader.load_symbol(_lib_handle, "hipblasCtpmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCtpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
-cdef void* hipblasZtpmv_funptr = NULL
+cdef void* _hipblasZtpmv__funptr = NULL
 cdef hipblasStatus_t hipblasZtpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,hipblasDoubleComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasZtpmv_funptr
-    if hipblasZtpmv_funptr == NULL:
+    global _hipblasZtpmv__funptr
+    if _hipblasZtpmv__funptr == NULL:
         with gil:
-            hipblasZtpmv_funptr = loader.load_symbol(_lib_handle, "hipblasZtpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZtpmv_funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+            _hipblasZtpmv__funptr = loader.load_symbol(_lib_handle, "hipblasZtpmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZtpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
-cdef void* hipblasStpsv_funptr = NULL
+cdef void* _hipblasStpsv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -3107,44 +3107,44 @@ cdef void* hipblasStpsv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasStpsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,float * x,int incx) nogil:
     global _lib_handle
-    global hipblasStpsv_funptr
-    if hipblasStpsv_funptr == NULL:
+    global _hipblasStpsv__funptr
+    if _hipblasStpsv__funptr == NULL:
         with gil:
-            hipblasStpsv_funptr = loader.load_symbol(_lib_handle, "hipblasStpsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,float *,int) nogil> hipblasStpsv_funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+            _hipblasStpsv__funptr = loader.load_symbol(_lib_handle, "hipblasStpsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,float *,int) nogil> _hipblasStpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
-cdef void* hipblasDtpsv_funptr = NULL
+cdef void* _hipblasDtpsv__funptr = NULL
 cdef hipblasStatus_t hipblasDtpsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,double * x,int incx) nogil:
     global _lib_handle
-    global hipblasDtpsv_funptr
-    if hipblasDtpsv_funptr == NULL:
+    global _hipblasDtpsv__funptr
+    if _hipblasDtpsv__funptr == NULL:
         with gil:
-            hipblasDtpsv_funptr = loader.load_symbol(_lib_handle, "hipblasDtpsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,double *,int) nogil> hipblasDtpsv_funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+            _hipblasDtpsv__funptr = loader.load_symbol(_lib_handle, "hipblasDtpsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,double *,int) nogil> _hipblasDtpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
-cdef void* hipblasCtpsv_funptr = NULL
+cdef void* _hipblasCtpsv__funptr = NULL
 cdef hipblasStatus_t hipblasCtpsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,hipblasComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasCtpsv_funptr
-    if hipblasCtpsv_funptr == NULL:
+    global _hipblasCtpsv__funptr
+    if _hipblasCtpsv__funptr == NULL:
         with gil:
-            hipblasCtpsv_funptr = loader.load_symbol(_lib_handle, "hipblasCtpsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCtpsv_funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+            _hipblasCtpsv__funptr = loader.load_symbol(_lib_handle, "hipblasCtpsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCtpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
-cdef void* hipblasZtpsv_funptr = NULL
+cdef void* _hipblasZtpsv__funptr = NULL
 cdef hipblasStatus_t hipblasZtpsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,hipblasDoubleComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasZtpsv_funptr
-    if hipblasZtpsv_funptr == NULL:
+    global _hipblasZtpsv__funptr
+    if _hipblasZtpsv__funptr == NULL:
         with gil:
-            hipblasZtpsv_funptr = loader.load_symbol(_lib_handle, "hipblasZtpsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZtpsv_funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+            _hipblasZtpsv__funptr = loader.load_symbol(_lib_handle, "hipblasZtpsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZtpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
-cdef void* hipblasStrmv_funptr = NULL
+cdef void* _hipblasStrmv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -3199,44 +3199,44 @@ cdef void* hipblasStrmv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasStrmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,int lda,float * x,int incx) nogil:
     global _lib_handle
-    global hipblasStrmv_funptr
-    if hipblasStrmv_funptr == NULL:
+    global _hipblasStrmv__funptr
+    if _hipblasStrmv__funptr == NULL:
         with gil:
-            hipblasStrmv_funptr = loader.load_symbol(_lib_handle, "hipblasStrmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> hipblasStrmv_funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+            _hipblasStrmv__funptr = loader.load_symbol(_lib_handle, "hipblasStrmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> _hipblasStrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
-cdef void* hipblasDtrmv_funptr = NULL
+cdef void* _hipblasDtrmv__funptr = NULL
 cdef hipblasStatus_t hipblasDtrmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,int lda,double * x,int incx) nogil:
     global _lib_handle
-    global hipblasDtrmv_funptr
-    if hipblasDtrmv_funptr == NULL:
+    global _hipblasDtrmv__funptr
+    if _hipblasDtrmv__funptr == NULL:
         with gil:
-            hipblasDtrmv_funptr = loader.load_symbol(_lib_handle, "hipblasDtrmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> hipblasDtrmv_funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+            _hipblasDtrmv__funptr = loader.load_symbol(_lib_handle, "hipblasDtrmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> _hipblasDtrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
-cdef void* hipblasCtrmv_funptr = NULL
+cdef void* _hipblasCtrmv__funptr = NULL
 cdef hipblasStatus_t hipblasCtrmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasCtrmv_funptr
-    if hipblasCtrmv_funptr == NULL:
+    global _hipblasCtrmv__funptr
+    if _hipblasCtrmv__funptr == NULL:
         with gil:
-            hipblasCtrmv_funptr = loader.load_symbol(_lib_handle, "hipblasCtrmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCtrmv_funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+            _hipblasCtrmv__funptr = loader.load_symbol(_lib_handle, "hipblasCtrmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
-cdef void* hipblasZtrmv_funptr = NULL
+cdef void* _hipblasZtrmv__funptr = NULL
 cdef hipblasStatus_t hipblasZtrmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasZtrmv_funptr
-    if hipblasZtrmv_funptr == NULL:
+    global _hipblasZtrmv__funptr
+    if _hipblasZtrmv__funptr == NULL:
         with gil:
-            hipblasZtrmv_funptr = loader.load_symbol(_lib_handle, "hipblasZtrmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZtrmv_funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+            _hipblasZtrmv__funptr = loader.load_symbol(_lib_handle, "hipblasZtrmv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
-cdef void* hipblasStrsv_funptr = NULL
+cdef void* _hipblasStrsv__funptr = NULL
 # ! @{
 #     \brief BLAS Level 2 API
 # 
@@ -3291,44 +3291,44 @@ cdef void* hipblasStrsv_funptr = NULL
 #
 cdef hipblasStatus_t hipblasStrsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,int lda,float * x,int incx) nogil:
     global _lib_handle
-    global hipblasStrsv_funptr
-    if hipblasStrsv_funptr == NULL:
+    global _hipblasStrsv__funptr
+    if _hipblasStrsv__funptr == NULL:
         with gil:
-            hipblasStrsv_funptr = loader.load_symbol(_lib_handle, "hipblasStrsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> hipblasStrsv_funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+            _hipblasStrsv__funptr = loader.load_symbol(_lib_handle, "hipblasStrsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> _hipblasStrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
-cdef void* hipblasDtrsv_funptr = NULL
+cdef void* _hipblasDtrsv__funptr = NULL
 cdef hipblasStatus_t hipblasDtrsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,int lda,double * x,int incx) nogil:
     global _lib_handle
-    global hipblasDtrsv_funptr
-    if hipblasDtrsv_funptr == NULL:
+    global _hipblasDtrsv__funptr
+    if _hipblasDtrsv__funptr == NULL:
         with gil:
-            hipblasDtrsv_funptr = loader.load_symbol(_lib_handle, "hipblasDtrsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> hipblasDtrsv_funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+            _hipblasDtrsv__funptr = loader.load_symbol(_lib_handle, "hipblasDtrsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> _hipblasDtrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
-cdef void* hipblasCtrsv_funptr = NULL
+cdef void* _hipblasCtrsv__funptr = NULL
 cdef hipblasStatus_t hipblasCtrsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasCtrsv_funptr
-    if hipblasCtrsv_funptr == NULL:
+    global _hipblasCtrsv__funptr
+    if _hipblasCtrsv__funptr == NULL:
         with gil:
-            hipblasCtrsv_funptr = loader.load_symbol(_lib_handle, "hipblasCtrsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCtrsv_funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+            _hipblasCtrsv__funptr = loader.load_symbol(_lib_handle, "hipblasCtrsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
-cdef void* hipblasZtrsv_funptr = NULL
+cdef void* _hipblasZtrsv__funptr = NULL
 cdef hipblasStatus_t hipblasZtrsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
     global _lib_handle
-    global hipblasZtrsv_funptr
-    if hipblasZtrsv_funptr == NULL:
+    global _hipblasZtrsv__funptr
+    if _hipblasZtrsv__funptr == NULL:
         with gil:
-            hipblasZtrsv_funptr = loader.load_symbol(_lib_handle, "hipblasZtrsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZtrsv_funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+            _hipblasZtrsv__funptr = loader.load_symbol(_lib_handle, "hipblasZtrsv")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
-cdef void* hipblasHgemm_funptr = NULL
+cdef void* _hipblasHgemm__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -3390,54 +3390,54 @@ cdef void* hipblasHgemm_funptr = NULL
 #
 cdef hipblasStatus_t hipblasHgemm(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,hipblasHalf * alpha,hipblasHalf * AP,int lda,hipblasHalf * BP,int ldb,hipblasHalf * beta,hipblasHalf * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasHgemm_funptr
-    if hipblasHgemm_funptr == NULL:
+    global _hipblasHgemm__funptr
+    if _hipblasHgemm__funptr == NULL:
         with gil:
-            hipblasHgemm_funptr = loader.load_symbol(_lib_handle, "hipblasHgemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasHalf *,hipblasHalf *,int,hipblasHalf *,int,hipblasHalf *,hipblasHalf *,int) nogil> hipblasHgemm_funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasHgemm__funptr = loader.load_symbol(_lib_handle, "hipblasHgemm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasHalf *,hipblasHalf *,int,hipblasHalf *,int,hipblasHalf *,hipblasHalf *,int) nogil> _hipblasHgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasSgemm_funptr = NULL
+cdef void* _hipblasSgemm__funptr = NULL
 cdef hipblasStatus_t hipblasSgemm(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasSgemm_funptr
-    if hipblasSgemm_funptr == NULL:
+    global _hipblasSgemm__funptr
+    if _hipblasSgemm__funptr == NULL:
         with gil:
-            hipblasSgemm_funptr = loader.load_symbol(_lib_handle, "hipblasSgemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> hipblasSgemm_funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasSgemm__funptr = loader.load_symbol(_lib_handle, "hipblasSgemm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasDgemm_funptr = NULL
+cdef void* _hipblasDgemm__funptr = NULL
 cdef hipblasStatus_t hipblasDgemm(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasDgemm_funptr
-    if hipblasDgemm_funptr == NULL:
+    global _hipblasDgemm__funptr
+    if _hipblasDgemm__funptr == NULL:
         with gil:
-            hipblasDgemm_funptr = loader.load_symbol(_lib_handle, "hipblasDgemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> hipblasDgemm_funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasDgemm__funptr = loader.load_symbol(_lib_handle, "hipblasDgemm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasCgemm_funptr = NULL
+cdef void* _hipblasCgemm__funptr = NULL
 cdef hipblasStatus_t hipblasCgemm(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasCgemm_funptr
-    if hipblasCgemm_funptr == NULL:
+    global _hipblasCgemm__funptr
+    if _hipblasCgemm__funptr == NULL:
         with gil:
-            hipblasCgemm_funptr = loader.load_symbol(_lib_handle, "hipblasCgemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCgemm_funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasCgemm__funptr = loader.load_symbol(_lib_handle, "hipblasCgemm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasZgemm_funptr = NULL
+cdef void* _hipblasZgemm__funptr = NULL
 cdef hipblasStatus_t hipblasZgemm(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZgemm_funptr
-    if hipblasZgemm_funptr == NULL:
+    global _hipblasZgemm__funptr
+    if _hipblasZgemm__funptr == NULL:
         with gil:
-            hipblasZgemm_funptr = loader.load_symbol(_lib_handle, "hipblasZgemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZgemm_funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasZgemm__funptr = loader.load_symbol(_lib_handle, "hipblasZgemm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasCherk_funptr = NULL
+cdef void* _hipblasCherk__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -3510,24 +3510,24 @@ cdef void* hipblasCherk_funptr = NULL
 #
 cdef hipblasStatus_t hipblasCherk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,hipblasComplex * AP,int lda,const float * beta,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasCherk_funptr
-    if hipblasCherk_funptr == NULL:
+    global _hipblasCherk__funptr
+    if _hipblasCherk__funptr == NULL:
         with gil:
-            hipblasCherk_funptr = loader.load_symbol(_lib_handle, "hipblasCherk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> hipblasCherk_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+            _hipblasCherk__funptr = loader.load_symbol(_lib_handle, "hipblasCherk")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> _hipblasCherk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
-cdef void* hipblasZherk_funptr = NULL
+cdef void* _hipblasZherk__funptr = NULL
 cdef hipblasStatus_t hipblasZherk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,hipblasDoubleComplex * AP,int lda,const double * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZherk_funptr
-    if hipblasZherk_funptr == NULL:
+    global _hipblasZherk__funptr
+    if _hipblasZherk__funptr == NULL:
         with gil:
-            hipblasZherk_funptr = loader.load_symbol(_lib_handle, "hipblasZherk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> hipblasZherk_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+            _hipblasZherk__funptr = loader.load_symbol(_lib_handle, "hipblasZherk")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZherk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
-cdef void* hipblasCherkx_funptr = NULL
+cdef void* _hipblasCherkx__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -3611,24 +3611,24 @@ cdef void* hipblasCherkx_funptr = NULL
 #
 cdef hipblasStatus_t hipblasCherkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,const float * beta,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasCherkx_funptr
-    if hipblasCherkx_funptr == NULL:
+    global _hipblasCherkx__funptr
+    if _hipblasCherkx__funptr == NULL:
         with gil:
-            hipblasCherkx_funptr = loader.load_symbol(_lib_handle, "hipblasCherkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> hipblasCherkx_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasCherkx__funptr = loader.load_symbol(_lib_handle, "hipblasCherkx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> _hipblasCherkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasZherkx_funptr = NULL
+cdef void* _hipblasZherkx__funptr = NULL
 cdef hipblasStatus_t hipblasZherkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,const double * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZherkx_funptr
-    if hipblasZherkx_funptr == NULL:
+    global _hipblasZherkx__funptr
+    if _hipblasZherkx__funptr == NULL:
         with gil:
-            hipblasZherkx_funptr = loader.load_symbol(_lib_handle, "hipblasZherkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> hipblasZherkx_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasZherkx__funptr = loader.load_symbol(_lib_handle, "hipblasZherkx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZherkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasCher2k_funptr = NULL
+cdef void* _hipblasCher2k__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -3710,24 +3710,24 @@ cdef void* hipblasCher2k_funptr = NULL
 #
 cdef hipblasStatus_t hipblasCher2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,const float * beta,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasCher2k_funptr
-    if hipblasCher2k_funptr == NULL:
+    global _hipblasCher2k__funptr
+    if _hipblasCher2k__funptr == NULL:
         with gil:
-            hipblasCher2k_funptr = loader.load_symbol(_lib_handle, "hipblasCher2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> hipblasCher2k_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasCher2k__funptr = loader.load_symbol(_lib_handle, "hipblasCher2k")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> _hipblasCher2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasZher2k_funptr = NULL
+cdef void* _hipblasZher2k__funptr = NULL
 cdef hipblasStatus_t hipblasZher2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,const double * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZher2k_funptr
-    if hipblasZher2k_funptr == NULL:
+    global _hipblasZher2k__funptr
+    if _hipblasZher2k__funptr == NULL:
         with gil:
-            hipblasZher2k_funptr = loader.load_symbol(_lib_handle, "hipblasZher2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> hipblasZher2k_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasZher2k__funptr = loader.load_symbol(_lib_handle, "hipblasZher2k")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZher2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasSsymm_funptr = NULL
+cdef void* _hipblasSsymm__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -3806,44 +3806,44 @@ cdef void* hipblasSsymm_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSsymm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasSsymm_funptr
-    if hipblasSsymm_funptr == NULL:
+    global _hipblasSsymm__funptr
+    if _hipblasSsymm__funptr == NULL:
         with gil:
-            hipblasSsymm_funptr = loader.load_symbol(_lib_handle, "hipblasSsymm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> hipblasSsymm_funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasSsymm__funptr = loader.load_symbol(_lib_handle, "hipblasSsymm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasDsymm_funptr = NULL
+cdef void* _hipblasDsymm__funptr = NULL
 cdef hipblasStatus_t hipblasDsymm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasDsymm_funptr
-    if hipblasDsymm_funptr == NULL:
+    global _hipblasDsymm__funptr
+    if _hipblasDsymm__funptr == NULL:
         with gil:
-            hipblasDsymm_funptr = loader.load_symbol(_lib_handle, "hipblasDsymm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> hipblasDsymm_funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasDsymm__funptr = loader.load_symbol(_lib_handle, "hipblasDsymm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasCsymm_funptr = NULL
+cdef void* _hipblasCsymm__funptr = NULL
 cdef hipblasStatus_t hipblasCsymm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasCsymm_funptr
-    if hipblasCsymm_funptr == NULL:
+    global _hipblasCsymm__funptr
+    if _hipblasCsymm__funptr == NULL:
         with gil:
-            hipblasCsymm_funptr = loader.load_symbol(_lib_handle, "hipblasCsymm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCsymm_funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasCsymm__funptr = loader.load_symbol(_lib_handle, "hipblasCsymm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasZsymm_funptr = NULL
+cdef void* _hipblasZsymm__funptr = NULL
 cdef hipblasStatus_t hipblasZsymm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZsymm_funptr
-    if hipblasZsymm_funptr == NULL:
+    global _hipblasZsymm__funptr
+    if _hipblasZsymm__funptr == NULL:
         with gil:
-            hipblasZsymm_funptr = loader.load_symbol(_lib_handle, "hipblasZsymm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZsymm_funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasZsymm__funptr = loader.load_symbol(_lib_handle, "hipblasZsymm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasSsyrk_funptr = NULL
+cdef void* _hipblasSsyrk__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -3919,44 +3919,44 @@ cdef void* hipblasSsyrk_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSsyrk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * beta,float * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasSsyrk_funptr
-    if hipblasSsyrk_funptr == NULL:
+    global _hipblasSsyrk__funptr
+    if _hipblasSsyrk__funptr == NULL:
         with gil:
-            hipblasSsyrk_funptr = loader.load_symbol(_lib_handle, "hipblasSsyrk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,float *,int) nogil> hipblasSsyrk_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+            _hipblasSsyrk__funptr = loader.load_symbol(_lib_handle, "hipblasSsyrk")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,float *,int) nogil> _hipblasSsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
-cdef void* hipblasDsyrk_funptr = NULL
+cdef void* _hipblasDsyrk__funptr = NULL
 cdef hipblasStatus_t hipblasDsyrk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,const double * AP,int lda,const double * beta,double * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasDsyrk_funptr
-    if hipblasDsyrk_funptr == NULL:
+    global _hipblasDsyrk__funptr
+    if _hipblasDsyrk__funptr == NULL:
         with gil:
-            hipblasDsyrk_funptr = loader.load_symbol(_lib_handle, "hipblasDsyrk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,double *,int) nogil> hipblasDsyrk_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+            _hipblasDsyrk__funptr = loader.load_symbol(_lib_handle, "hipblasDsyrk")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,double *,int) nogil> _hipblasDsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
-cdef void* hipblasCsyrk_funptr = NULL
+cdef void* _hipblasCsyrk__funptr = NULL
 cdef hipblasStatus_t hipblasCsyrk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasCsyrk_funptr
-    if hipblasCsyrk_funptr == NULL:
+    global _hipblasCsyrk__funptr
+    if _hipblasCsyrk__funptr == NULL:
         with gil:
-            hipblasCsyrk_funptr = loader.load_symbol(_lib_handle, "hipblasCsyrk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCsyrk_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+            _hipblasCsyrk__funptr = loader.load_symbol(_lib_handle, "hipblasCsyrk")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
-cdef void* hipblasZsyrk_funptr = NULL
+cdef void* _hipblasZsyrk__funptr = NULL
 cdef hipblasStatus_t hipblasZsyrk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZsyrk_funptr
-    if hipblasZsyrk_funptr == NULL:
+    global _hipblasZsyrk__funptr
+    if _hipblasZsyrk__funptr == NULL:
         with gil:
-            hipblasZsyrk_funptr = loader.load_symbol(_lib_handle, "hipblasZsyrk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZsyrk_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+            _hipblasZsyrk__funptr = loader.load_symbol(_lib_handle, "hipblasZsyrk")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
-cdef void* hipblasSsyr2k_funptr = NULL
+cdef void* _hipblasSsyr2k__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -4037,44 +4037,44 @@ cdef void* hipblasSsyr2k_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSsyr2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasSsyr2k_funptr
-    if hipblasSsyr2k_funptr == NULL:
+    global _hipblasSsyr2k__funptr
+    if _hipblasSsyr2k__funptr == NULL:
         with gil:
-            hipblasSsyr2k_funptr = loader.load_symbol(_lib_handle, "hipblasSsyr2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> hipblasSsyr2k_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasSsyr2k__funptr = loader.load_symbol(_lib_handle, "hipblasSsyr2k")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasDsyr2k_funptr = NULL
+cdef void* _hipblasDsyr2k__funptr = NULL
 cdef hipblasStatus_t hipblasDsyr2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasDsyr2k_funptr
-    if hipblasDsyr2k_funptr == NULL:
+    global _hipblasDsyr2k__funptr
+    if _hipblasDsyr2k__funptr == NULL:
         with gil:
-            hipblasDsyr2k_funptr = loader.load_symbol(_lib_handle, "hipblasDsyr2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> hipblasDsyr2k_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasDsyr2k__funptr = loader.load_symbol(_lib_handle, "hipblasDsyr2k")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasCsyr2k_funptr = NULL
+cdef void* _hipblasCsyr2k__funptr = NULL
 cdef hipblasStatus_t hipblasCsyr2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasCsyr2k_funptr
-    if hipblasCsyr2k_funptr == NULL:
+    global _hipblasCsyr2k__funptr
+    if _hipblasCsyr2k__funptr == NULL:
         with gil:
-            hipblasCsyr2k_funptr = loader.load_symbol(_lib_handle, "hipblasCsyr2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCsyr2k_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasCsyr2k__funptr = loader.load_symbol(_lib_handle, "hipblasCsyr2k")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasZsyr2k_funptr = NULL
+cdef void* _hipblasZsyr2k__funptr = NULL
 cdef hipblasStatus_t hipblasZsyr2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZsyr2k_funptr
-    if hipblasZsyr2k_funptr == NULL:
+    global _hipblasZsyr2k__funptr
+    if _hipblasZsyr2k__funptr == NULL:
         with gil:
-            hipblasZsyr2k_funptr = loader.load_symbol(_lib_handle, "hipblasZsyr2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZsyr2k_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasZsyr2k__funptr = loader.load_symbol(_lib_handle, "hipblasZsyr2k")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasSsyrkx_funptr = NULL
+cdef void* _hipblasSsyrkx__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -4158,44 +4158,44 @@ cdef void* hipblasSsyrkx_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSsyrkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasSsyrkx_funptr
-    if hipblasSsyrkx_funptr == NULL:
+    global _hipblasSsyrkx__funptr
+    if _hipblasSsyrkx__funptr == NULL:
         with gil:
-            hipblasSsyrkx_funptr = loader.load_symbol(_lib_handle, "hipblasSsyrkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> hipblasSsyrkx_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasSsyrkx__funptr = loader.load_symbol(_lib_handle, "hipblasSsyrkx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasDsyrkx_funptr = NULL
+cdef void* _hipblasDsyrkx__funptr = NULL
 cdef hipblasStatus_t hipblasDsyrkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasDsyrkx_funptr
-    if hipblasDsyrkx_funptr == NULL:
+    global _hipblasDsyrkx__funptr
+    if _hipblasDsyrkx__funptr == NULL:
         with gil:
-            hipblasDsyrkx_funptr = loader.load_symbol(_lib_handle, "hipblasDsyrkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> hipblasDsyrkx_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasDsyrkx__funptr = loader.load_symbol(_lib_handle, "hipblasDsyrkx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasCsyrkx_funptr = NULL
+cdef void* _hipblasCsyrkx__funptr = NULL
 cdef hipblasStatus_t hipblasCsyrkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasCsyrkx_funptr
-    if hipblasCsyrkx_funptr == NULL:
+    global _hipblasCsyrkx__funptr
+    if _hipblasCsyrkx__funptr == NULL:
         with gil:
-            hipblasCsyrkx_funptr = loader.load_symbol(_lib_handle, "hipblasCsyrkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasCsyrkx_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasCsyrkx__funptr = loader.load_symbol(_lib_handle, "hipblasCsyrkx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasZsyrkx_funptr = NULL
+cdef void* _hipblasZsyrkx__funptr = NULL
 cdef hipblasStatus_t hipblasZsyrkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZsyrkx_funptr
-    if hipblasZsyrkx_funptr == NULL:
+    global _hipblasZsyrkx__funptr
+    if _hipblasZsyrkx__funptr == NULL:
         with gil:
-            hipblasZsyrkx_funptr = loader.load_symbol(_lib_handle, "hipblasZsyrkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZsyrkx_funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasZsyrkx__funptr = loader.load_symbol(_lib_handle, "hipblasZsyrkx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasSgeam_funptr = NULL
+cdef void* _hipblasSgeam__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -4253,44 +4253,44 @@ cdef void* hipblasSgeam_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSgeam(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,const float * alpha,const float * AP,int lda,const float * beta,const float * BP,int ldb,float * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasSgeam_funptr
-    if hipblasSgeam_funptr == NULL:
+    global _hipblasSgeam__funptr
+    if _hipblasSgeam__funptr == NULL:
         with gil:
-            hipblasSgeam_funptr = loader.load_symbol(_lib_handle, "hipblasSgeam")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,const float *,int,float *,int) nogil> hipblasSgeam_funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
+            _hipblasSgeam__funptr = loader.load_symbol(_lib_handle, "hipblasSgeam")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,const float *,int,float *,int) nogil> _hipblasSgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
 
 
-cdef void* hipblasDgeam_funptr = NULL
+cdef void* _hipblasDgeam__funptr = NULL
 cdef hipblasStatus_t hipblasDgeam(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,const double * alpha,const double * AP,int lda,const double * beta,const double * BP,int ldb,double * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasDgeam_funptr
-    if hipblasDgeam_funptr == NULL:
+    global _hipblasDgeam__funptr
+    if _hipblasDgeam__funptr == NULL:
         with gil:
-            hipblasDgeam_funptr = loader.load_symbol(_lib_handle, "hipblasDgeam")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,const double *,int,double *,int) nogil> hipblasDgeam_funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
+            _hipblasDgeam__funptr = loader.load_symbol(_lib_handle, "hipblasDgeam")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,const double *,int,double *,int) nogil> _hipblasDgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
 
 
-cdef void* hipblasCgeam_funptr = NULL
+cdef void* _hipblasCgeam__funptr = NULL
 cdef hipblasStatus_t hipblasCgeam(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * beta,hipblasComplex * BP,int ldb,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasCgeam_funptr
-    if hipblasCgeam_funptr == NULL:
+    global _hipblasCgeam__funptr
+    if _hipblasCgeam__funptr == NULL:
         with gil:
-            hipblasCgeam_funptr = loader.load_symbol(_lib_handle, "hipblasCgeam")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCgeam_funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
+            _hipblasCgeam__funptr = loader.load_symbol(_lib_handle, "hipblasCgeam")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
 
 
-cdef void* hipblasZgeam_funptr = NULL
+cdef void* _hipblasZgeam__funptr = NULL
 cdef hipblasStatus_t hipblasZgeam(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * beta,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZgeam_funptr
-    if hipblasZgeam_funptr == NULL:
+    global _hipblasZgeam__funptr
+    if _hipblasZgeam__funptr == NULL:
         with gil:
-            hipblasZgeam_funptr = loader.load_symbol(_lib_handle, "hipblasZgeam")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZgeam_funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
+            _hipblasZgeam__funptr = loader.load_symbol(_lib_handle, "hipblasZgeam")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
 
 
-cdef void* hipblasChemm_funptr = NULL
+cdef void* _hipblasChemm__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -4370,24 +4370,24 @@ cdef void* hipblasChemm_funptr = NULL
 #
 cdef hipblasStatus_t hipblasChemm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasChemm_funptr
-    if hipblasChemm_funptr == NULL:
+    global _hipblasChemm__funptr
+    if _hipblasChemm__funptr == NULL:
         with gil:
-            hipblasChemm_funptr = loader.load_symbol(_lib_handle, "hipblasChemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> hipblasChemm_funptr)(handle,side,uplo,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasChemm__funptr = loader.load_symbol(_lib_handle, "hipblasChemm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChemm__funptr)(handle,side,uplo,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasZhemm_funptr = NULL
+cdef void* _hipblasZhemm__funptr = NULL
 cdef hipblasStatus_t hipblasZhemm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZhemm_funptr
-    if hipblasZhemm_funptr == NULL:
+    global _hipblasZhemm__funptr
+    if _hipblasZhemm__funptr == NULL:
         with gil:
-            hipblasZhemm_funptr = loader.load_symbol(_lib_handle, "hipblasZhemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> hipblasZhemm_funptr)(handle,side,uplo,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+            _hipblasZhemm__funptr = loader.load_symbol(_lib_handle, "hipblasZhemm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhemm__funptr)(handle,side,uplo,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
-cdef void* hipblasStrmm_funptr = NULL
+cdef void* _hipblasStrmm__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -4486,44 +4486,44 @@ cdef void* hipblasStrmm_funptr = NULL
 #
 cdef hipblasStatus_t hipblasStrmm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float * AP,int lda,float * BP,int ldb) nogil:
     global _lib_handle
-    global hipblasStrmm_funptr
-    if hipblasStrmm_funptr == NULL:
+    global _hipblasStrmm__funptr
+    if _hipblasStrmm__funptr == NULL:
         with gil:
-            hipblasStrmm_funptr = loader.load_symbol(_lib_handle, "hipblasStrmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,const float *,int,float *,int) nogil> hipblasStrmm_funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+            _hipblasStrmm__funptr = loader.load_symbol(_lib_handle, "hipblasStrmm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,const float *,int,float *,int) nogil> _hipblasStrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
-cdef void* hipblasDtrmm_funptr = NULL
+cdef void* _hipblasDtrmm__funptr = NULL
 cdef hipblasStatus_t hipblasDtrmm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,const double * AP,int lda,double * BP,int ldb) nogil:
     global _lib_handle
-    global hipblasDtrmm_funptr
-    if hipblasDtrmm_funptr == NULL:
+    global _hipblasDtrmm__funptr
+    if _hipblasDtrmm__funptr == NULL:
         with gil:
-            hipblasDtrmm_funptr = loader.load_symbol(_lib_handle, "hipblasDtrmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,const double *,int,double *,int) nogil> hipblasDtrmm_funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+            _hipblasDtrmm__funptr = loader.load_symbol(_lib_handle, "hipblasDtrmm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,const double *,int,double *,int) nogil> _hipblasDtrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
-cdef void* hipblasCtrmm_funptr = NULL
+cdef void* _hipblasCtrmm__funptr = NULL
 cdef hipblasStatus_t hipblasCtrmm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb) nogil:
     global _lib_handle
-    global hipblasCtrmm_funptr
-    if hipblasCtrmm_funptr == NULL:
+    global _hipblasCtrmm__funptr
+    if _hipblasCtrmm__funptr == NULL:
         with gil:
-            hipblasCtrmm_funptr = loader.load_symbol(_lib_handle, "hipblasCtrmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCtrmm_funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+            _hipblasCtrmm__funptr = loader.load_symbol(_lib_handle, "hipblasCtrmm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
-cdef void* hipblasZtrmm_funptr = NULL
+cdef void* _hipblasZtrmm__funptr = NULL
 cdef hipblasStatus_t hipblasZtrmm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb) nogil:
     global _lib_handle
-    global hipblasZtrmm_funptr
-    if hipblasZtrmm_funptr == NULL:
+    global _hipblasZtrmm__funptr
+    if _hipblasZtrmm__funptr == NULL:
         with gil:
-            hipblasZtrmm_funptr = loader.load_symbol(_lib_handle, "hipblasZtrmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZtrmm_funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+            _hipblasZtrmm__funptr = loader.load_symbol(_lib_handle, "hipblasZtrmm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
-cdef void* hipblasStrsm_funptr = NULL
+cdef void* _hipblasStrsm__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -4615,44 +4615,44 @@ cdef void* hipblasStrsm_funptr = NULL
 #
 cdef hipblasStatus_t hipblasStrsm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,float * AP,int lda,float * BP,int ldb) nogil:
     global _lib_handle
-    global hipblasStrsm_funptr
-    if hipblasStrsm_funptr == NULL:
+    global _hipblasStrsm__funptr
+    if _hipblasStrsm__funptr == NULL:
         with gil:
-            hipblasStrsm_funptr = loader.load_symbol(_lib_handle, "hipblasStrsm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,float *,int,float *,int) nogil> hipblasStrsm_funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+            _hipblasStrsm__funptr = loader.load_symbol(_lib_handle, "hipblasStrsm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,float *,int,float *,int) nogil> _hipblasStrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
-cdef void* hipblasDtrsm_funptr = NULL
+cdef void* _hipblasDtrsm__funptr = NULL
 cdef hipblasStatus_t hipblasDtrsm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,double * AP,int lda,double * BP,int ldb) nogil:
     global _lib_handle
-    global hipblasDtrsm_funptr
-    if hipblasDtrsm_funptr == NULL:
+    global _hipblasDtrsm__funptr
+    if _hipblasDtrsm__funptr == NULL:
         with gil:
-            hipblasDtrsm_funptr = loader.load_symbol(_lib_handle, "hipblasDtrsm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,double *,int,double *,int) nogil> hipblasDtrsm_funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+            _hipblasDtrsm__funptr = loader.load_symbol(_lib_handle, "hipblasDtrsm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,double *,int,double *,int) nogil> _hipblasDtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
-cdef void* hipblasCtrsm_funptr = NULL
+cdef void* _hipblasCtrsm__funptr = NULL
 cdef hipblasStatus_t hipblasCtrsm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb) nogil:
     global _lib_handle
-    global hipblasCtrsm_funptr
-    if hipblasCtrsm_funptr == NULL:
+    global _hipblasCtrsm__funptr
+    if _hipblasCtrsm__funptr == NULL:
         with gil:
-            hipblasCtrsm_funptr = loader.load_symbol(_lib_handle, "hipblasCtrsm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCtrsm_funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+            _hipblasCtrsm__funptr = loader.load_symbol(_lib_handle, "hipblasCtrsm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
-cdef void* hipblasZtrsm_funptr = NULL
+cdef void* _hipblasZtrsm__funptr = NULL
 cdef hipblasStatus_t hipblasZtrsm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb) nogil:
     global _lib_handle
-    global hipblasZtrsm_funptr
-    if hipblasZtrsm_funptr == NULL:
+    global _hipblasZtrsm__funptr
+    if _hipblasZtrsm__funptr == NULL:
         with gil:
-            hipblasZtrsm_funptr = loader.load_symbol(_lib_handle, "hipblasZtrsm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZtrsm_funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+            _hipblasZtrsm__funptr = loader.load_symbol(_lib_handle, "hipblasZtrsm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
-cdef void* hipblasStrtri_funptr = NULL
+cdef void* _hipblasStrtri__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -4692,44 +4692,44 @@ cdef void* hipblasStrtri_funptr = NULL
 #
 cdef hipblasStatus_t hipblasStrtri(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,const float * AP,int lda,float * invA,int ldinvA) nogil:
     global _lib_handle
-    global hipblasStrtri_funptr
-    if hipblasStrtri_funptr == NULL:
+    global _hipblasStrtri__funptr
+    if _hipblasStrtri__funptr == NULL:
         with gil:
-            hipblasStrtri_funptr = loader.load_symbol(_lib_handle, "hipblasStrtri")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> hipblasStrtri_funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
+            _hipblasStrtri__funptr = loader.load_symbol(_lib_handle, "hipblasStrtri")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> _hipblasStrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
 
 
-cdef void* hipblasDtrtri_funptr = NULL
+cdef void* _hipblasDtrtri__funptr = NULL
 cdef hipblasStatus_t hipblasDtrtri(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,const double * AP,int lda,double * invA,int ldinvA) nogil:
     global _lib_handle
-    global hipblasDtrtri_funptr
-    if hipblasDtrtri_funptr == NULL:
+    global _hipblasDtrtri__funptr
+    if _hipblasDtrtri__funptr == NULL:
         with gil:
-            hipblasDtrtri_funptr = loader.load_symbol(_lib_handle, "hipblasDtrtri")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> hipblasDtrtri_funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
+            _hipblasDtrtri__funptr = loader.load_symbol(_lib_handle, "hipblasDtrtri")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> _hipblasDtrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
 
 
-cdef void* hipblasCtrtri_funptr = NULL
+cdef void* _hipblasCtrtri__funptr = NULL
 cdef hipblasStatus_t hipblasCtrtri(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,hipblasComplex * AP,int lda,hipblasComplex * invA,int ldinvA) nogil:
     global _lib_handle
-    global hipblasCtrtri_funptr
-    if hipblasCtrtri_funptr == NULL:
+    global _hipblasCtrtri__funptr
+    if _hipblasCtrtri__funptr == NULL:
         with gil:
-            hipblasCtrtri_funptr = loader.load_symbol(_lib_handle, "hipblasCtrtri")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCtrtri_funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
+            _hipblasCtrtri__funptr = loader.load_symbol(_lib_handle, "hipblasCtrtri")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
 
 
-cdef void* hipblasZtrtri_funptr = NULL
+cdef void* _hipblasZtrtri__funptr = NULL
 cdef hipblasStatus_t hipblasZtrtri(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * invA,int ldinvA) nogil:
     global _lib_handle
-    global hipblasZtrtri_funptr
-    if hipblasZtrtri_funptr == NULL:
+    global _hipblasZtrtri__funptr
+    if _hipblasZtrtri__funptr == NULL:
         with gil:
-            hipblasZtrtri_funptr = loader.load_symbol(_lib_handle, "hipblasZtrtri")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZtrtri_funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
+            _hipblasZtrtri__funptr = loader.load_symbol(_lib_handle, "hipblasZtrtri")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
 
 
-cdef void* hipblasSdgmm_funptr = NULL
+cdef void* _hipblasSdgmm__funptr = NULL
 # ! @{
 #     \brief BLAS Level 3 API
 # 
@@ -4776,44 +4776,44 @@ cdef void* hipblasSdgmm_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSdgmm(hipblasHandle_t handle,hipblasSideMode_t side,int m,int n,const float * AP,int lda,const float * x,int incx,float * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasSdgmm_funptr
-    if hipblasSdgmm_funptr == NULL:
+    global _hipblasSdgmm__funptr
+    if _hipblasSdgmm__funptr == NULL:
         with gil:
-            hipblasSdgmm_funptr = loader.load_symbol(_lib_handle, "hipblasSdgmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,const float *,int,const float *,int,float *,int) nogil> hipblasSdgmm_funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
+            _hipblasSdgmm__funptr = loader.load_symbol(_lib_handle, "hipblasSdgmm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,const float *,int,const float *,int,float *,int) nogil> _hipblasSdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
 
 
-cdef void* hipblasDdgmm_funptr = NULL
+cdef void* _hipblasDdgmm__funptr = NULL
 cdef hipblasStatus_t hipblasDdgmm(hipblasHandle_t handle,hipblasSideMode_t side,int m,int n,const double * AP,int lda,const double * x,int incx,double * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasDdgmm_funptr
-    if hipblasDdgmm_funptr == NULL:
+    global _hipblasDdgmm__funptr
+    if _hipblasDdgmm__funptr == NULL:
         with gil:
-            hipblasDdgmm_funptr = loader.load_symbol(_lib_handle, "hipblasDdgmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,const double *,int,const double *,int,double *,int) nogil> hipblasDdgmm_funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
+            _hipblasDdgmm__funptr = loader.load_symbol(_lib_handle, "hipblasDdgmm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,const double *,int,const double *,int,double *,int) nogil> _hipblasDdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
 
 
-cdef void* hipblasCdgmm_funptr = NULL
+cdef void* _hipblasCdgmm__funptr = NULL
 cdef hipblasStatus_t hipblasCdgmm(hipblasHandle_t handle,hipblasSideMode_t side,int m,int n,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasCdgmm_funptr
-    if hipblasCdgmm_funptr == NULL:
+    global _hipblasCdgmm__funptr
+    if _hipblasCdgmm__funptr == NULL:
         with gil:
-            hipblasCdgmm_funptr = loader.load_symbol(_lib_handle, "hipblasCdgmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> hipblasCdgmm_funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
+            _hipblasCdgmm__funptr = loader.load_symbol(_lib_handle, "hipblasCdgmm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
 
 
-cdef void* hipblasZdgmm_funptr = NULL
+cdef void* _hipblasZdgmm__funptr = NULL
 cdef hipblasStatus_t hipblasZdgmm(hipblasHandle_t handle,hipblasSideMode_t side,int m,int n,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * CP,int ldc) nogil:
     global _lib_handle
-    global hipblasZdgmm_funptr
-    if hipblasZdgmm_funptr == NULL:
+    global _hipblasZdgmm__funptr
+    if _hipblasZdgmm__funptr == NULL:
         with gil:
-            hipblasZdgmm_funptr = loader.load_symbol(_lib_handle, "hipblasZdgmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> hipblasZdgmm_funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
+            _hipblasZdgmm__funptr = loader.load_symbol(_lib_handle, "hipblasZdgmm")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
 
 
-cdef void* hipblasSgetrf_funptr = NULL
+cdef void* _hipblasSgetrf__funptr = NULL
 # ! @{
 #     \brief SOLVER API
 # 
@@ -4867,44 +4867,44 @@ cdef void* hipblasSgetrf_funptr = NULL
 #               If info = j > 0, U is singular. U[j,j] is the first zero pivot.
 cdef hipblasStatus_t hipblasSgetrf(hipblasHandle_t handle,const int n,float * A,const int lda,int * ipiv,int * info) nogil:
     global _lib_handle
-    global hipblasSgetrf_funptr
-    if hipblasSgetrf_funptr == NULL:
+    global _hipblasSgetrf__funptr
+    if _hipblasSgetrf__funptr == NULL:
         with gil:
-            hipblasSgetrf_funptr = loader.load_symbol(_lib_handle, "hipblasSgetrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,float *,const int,int *,int *) nogil> hipblasSgetrf_funptr)(handle,n,A,lda,ipiv,info)
+            _hipblasSgetrf__funptr = loader.load_symbol(_lib_handle, "hipblasSgetrf")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,float *,const int,int *,int *) nogil> _hipblasSgetrf__funptr)(handle,n,A,lda,ipiv,info)
 
 
-cdef void* hipblasDgetrf_funptr = NULL
+cdef void* _hipblasDgetrf__funptr = NULL
 cdef hipblasStatus_t hipblasDgetrf(hipblasHandle_t handle,const int n,double * A,const int lda,int * ipiv,int * info) nogil:
     global _lib_handle
-    global hipblasDgetrf_funptr
-    if hipblasDgetrf_funptr == NULL:
+    global _hipblasDgetrf__funptr
+    if _hipblasDgetrf__funptr == NULL:
         with gil:
-            hipblasDgetrf_funptr = loader.load_symbol(_lib_handle, "hipblasDgetrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,double *,const int,int *,int *) nogil> hipblasDgetrf_funptr)(handle,n,A,lda,ipiv,info)
+            _hipblasDgetrf__funptr = loader.load_symbol(_lib_handle, "hipblasDgetrf")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,double *,const int,int *,int *) nogil> _hipblasDgetrf__funptr)(handle,n,A,lda,ipiv,info)
 
 
-cdef void* hipblasCgetrf_funptr = NULL
+cdef void* _hipblasCgetrf__funptr = NULL
 cdef hipblasStatus_t hipblasCgetrf(hipblasHandle_t handle,const int n,hipblasComplex * A,const int lda,int * ipiv,int * info) nogil:
     global _lib_handle
-    global hipblasCgetrf_funptr
-    if hipblasCgetrf_funptr == NULL:
+    global _hipblasCgetrf__funptr
+    if _hipblasCgetrf__funptr == NULL:
         with gil:
-            hipblasCgetrf_funptr = loader.load_symbol(_lib_handle, "hipblasCgetrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,hipblasComplex *,const int,int *,int *) nogil> hipblasCgetrf_funptr)(handle,n,A,lda,ipiv,info)
+            _hipblasCgetrf__funptr = loader.load_symbol(_lib_handle, "hipblasCgetrf")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,hipblasComplex *,const int,int *,int *) nogil> _hipblasCgetrf__funptr)(handle,n,A,lda,ipiv,info)
 
 
-cdef void* hipblasZgetrf_funptr = NULL
+cdef void* _hipblasZgetrf__funptr = NULL
 cdef hipblasStatus_t hipblasZgetrf(hipblasHandle_t handle,const int n,hipblasDoubleComplex * A,const int lda,int * ipiv,int * info) nogil:
     global _lib_handle
-    global hipblasZgetrf_funptr
-    if hipblasZgetrf_funptr == NULL:
+    global _hipblasZgetrf__funptr
+    if _hipblasZgetrf__funptr == NULL:
         with gil:
-            hipblasZgetrf_funptr = loader.load_symbol(_lib_handle, "hipblasZgetrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,hipblasDoubleComplex *,const int,int *,int *) nogil> hipblasZgetrf_funptr)(handle,n,A,lda,ipiv,info)
+            _hipblasZgetrf__funptr = loader.load_symbol(_lib_handle, "hipblasZgetrf")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,hipblasDoubleComplex *,const int,int *,int *) nogil> _hipblasZgetrf__funptr)(handle,n,A,lda,ipiv,info)
 
 
-cdef void* hipblasSgetrs_funptr = NULL
+cdef void* _hipblasSgetrs__funptr = NULL
 # ! @{
 #     \brief SOLVER API
 # 
@@ -4961,44 +4961,44 @@ cdef void* hipblasSgetrs_funptr = NULL
 #               If info = j < 0, the j-th argument is invalid.
 cdef hipblasStatus_t hipblasSgetrs(hipblasHandle_t handle,hipblasOperation_t trans,const int n,const int nrhs,float * A,const int lda,const int * ipiv,float * B,const int ldb,int * info) nogil:
     global _lib_handle
-    global hipblasSgetrs_funptr
-    if hipblasSgetrs_funptr == NULL:
+    global _hipblasSgetrs__funptr
+    if _hipblasSgetrs__funptr == NULL:
         with gil:
-            hipblasSgetrs_funptr = loader.load_symbol(_lib_handle, "hipblasSgetrs")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,float *,const int,const int *,float *,const int,int *) nogil> hipblasSgetrs_funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
+            _hipblasSgetrs__funptr = loader.load_symbol(_lib_handle, "hipblasSgetrs")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,float *,const int,const int *,float *,const int,int *) nogil> _hipblasSgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
 
 
-cdef void* hipblasDgetrs_funptr = NULL
+cdef void* _hipblasDgetrs__funptr = NULL
 cdef hipblasStatus_t hipblasDgetrs(hipblasHandle_t handle,hipblasOperation_t trans,const int n,const int nrhs,double * A,const int lda,const int * ipiv,double * B,const int ldb,int * info) nogil:
     global _lib_handle
-    global hipblasDgetrs_funptr
-    if hipblasDgetrs_funptr == NULL:
+    global _hipblasDgetrs__funptr
+    if _hipblasDgetrs__funptr == NULL:
         with gil:
-            hipblasDgetrs_funptr = loader.load_symbol(_lib_handle, "hipblasDgetrs")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,double *,const int,const int *,double *,const int,int *) nogil> hipblasDgetrs_funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
+            _hipblasDgetrs__funptr = loader.load_symbol(_lib_handle, "hipblasDgetrs")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,double *,const int,const int *,double *,const int,int *) nogil> _hipblasDgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
 
 
-cdef void* hipblasCgetrs_funptr = NULL
+cdef void* _hipblasCgetrs__funptr = NULL
 cdef hipblasStatus_t hipblasCgetrs(hipblasHandle_t handle,hipblasOperation_t trans,const int n,const int nrhs,hipblasComplex * A,const int lda,const int * ipiv,hipblasComplex * B,const int ldb,int * info) nogil:
     global _lib_handle
-    global hipblasCgetrs_funptr
-    if hipblasCgetrs_funptr == NULL:
+    global _hipblasCgetrs__funptr
+    if _hipblasCgetrs__funptr == NULL:
         with gil:
-            hipblasCgetrs_funptr = loader.load_symbol(_lib_handle, "hipblasCgetrs")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,hipblasComplex *,const int,const int *,hipblasComplex *,const int,int *) nogil> hipblasCgetrs_funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
+            _hipblasCgetrs__funptr = loader.load_symbol(_lib_handle, "hipblasCgetrs")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,hipblasComplex *,const int,const int *,hipblasComplex *,const int,int *) nogil> _hipblasCgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
 
 
-cdef void* hipblasZgetrs_funptr = NULL
+cdef void* _hipblasZgetrs__funptr = NULL
 cdef hipblasStatus_t hipblasZgetrs(hipblasHandle_t handle,hipblasOperation_t trans,const int n,const int nrhs,hipblasDoubleComplex * A,const int lda,const int * ipiv,hipblasDoubleComplex * B,const int ldb,int * info) nogil:
     global _lib_handle
-    global hipblasZgetrs_funptr
-    if hipblasZgetrs_funptr == NULL:
+    global _hipblasZgetrs__funptr
+    if _hipblasZgetrs__funptr == NULL:
         with gil:
-            hipblasZgetrs_funptr = loader.load_symbol(_lib_handle, "hipblasZgetrs")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,hipblasDoubleComplex *,const int,const int *,hipblasDoubleComplex *,const int,int *) nogil> hipblasZgetrs_funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
+            _hipblasZgetrs__funptr = loader.load_symbol(_lib_handle, "hipblasZgetrs")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,hipblasDoubleComplex *,const int,const int *,hipblasDoubleComplex *,const int,int *) nogil> _hipblasZgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
 
 
-cdef void* hipblasSgels_funptr = NULL
+cdef void* _hipblasSgels__funptr = NULL
 # ! @{
 #     \brief GELS solves an overdetermined (or underdetermined) linear system defined by an m-by-n
 #     matrix A, and a corresponding matrix B, using the QR factorization computed by \ref hipblasSgeqrf "GEQRF" (or the LQ
@@ -5068,44 +5068,44 @@ cdef void* hipblasSgels_funptr = NULL
 #                 rank deficient; the i-th diagonal element of its triangular factor is zero.
 cdef hipblasStatus_t hipblasSgels(hipblasHandle_t handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,float * A,const int lda,float * B,const int ldb,int * info,int * deviceInfo) nogil:
     global _lib_handle
-    global hipblasSgels_funptr
-    if hipblasSgels_funptr == NULL:
+    global _hipblasSgels__funptr
+    if _hipblasSgels__funptr == NULL:
         with gil:
-            hipblasSgels_funptr = loader.load_symbol(_lib_handle, "hipblasSgels")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,float *,const int,float *,const int,int *,int *) nogil> hipblasSgels_funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
+            _hipblasSgels__funptr = loader.load_symbol(_lib_handle, "hipblasSgels")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,float *,const int,float *,const int,int *,int *) nogil> _hipblasSgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
 
 
-cdef void* hipblasDgels_funptr = NULL
+cdef void* _hipblasDgels__funptr = NULL
 cdef hipblasStatus_t hipblasDgels(hipblasHandle_t handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,double * A,const int lda,double * B,const int ldb,int * info,int * deviceInfo) nogil:
     global _lib_handle
-    global hipblasDgels_funptr
-    if hipblasDgels_funptr == NULL:
+    global _hipblasDgels__funptr
+    if _hipblasDgels__funptr == NULL:
         with gil:
-            hipblasDgels_funptr = loader.load_symbol(_lib_handle, "hipblasDgels")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,double *,const int,double *,const int,int *,int *) nogil> hipblasDgels_funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
+            _hipblasDgels__funptr = loader.load_symbol(_lib_handle, "hipblasDgels")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,double *,const int,double *,const int,int *,int *) nogil> _hipblasDgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
 
 
-cdef void* hipblasCgels_funptr = NULL
+cdef void* _hipblasCgels__funptr = NULL
 cdef hipblasStatus_t hipblasCgels(hipblasHandle_t handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,hipblasComplex * A,const int lda,hipblasComplex * B,const int ldb,int * info,int * deviceInfo) nogil:
     global _lib_handle
-    global hipblasCgels_funptr
-    if hipblasCgels_funptr == NULL:
+    global _hipblasCgels__funptr
+    if _hipblasCgels__funptr == NULL:
         with gil:
-            hipblasCgels_funptr = loader.load_symbol(_lib_handle, "hipblasCgels")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,hipblasComplex *,const int,hipblasComplex *,const int,int *,int *) nogil> hipblasCgels_funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
+            _hipblasCgels__funptr = loader.load_symbol(_lib_handle, "hipblasCgels")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,hipblasComplex *,const int,hipblasComplex *,const int,int *,int *) nogil> _hipblasCgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
 
 
-cdef void* hipblasZgels_funptr = NULL
+cdef void* _hipblasZgels__funptr = NULL
 cdef hipblasStatus_t hipblasZgels(hipblasHandle_t handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,hipblasDoubleComplex * A,const int lda,hipblasDoubleComplex * B,const int ldb,int * info,int * deviceInfo) nogil:
     global _lib_handle
-    global hipblasZgels_funptr
-    if hipblasZgels_funptr == NULL:
+    global _hipblasZgels__funptr
+    if _hipblasZgels__funptr == NULL:
         with gil:
-            hipblasZgels_funptr = loader.load_symbol(_lib_handle, "hipblasZgels")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,hipblasDoubleComplex *,const int,hipblasDoubleComplex *,const int,int *,int *) nogil> hipblasZgels_funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
+            _hipblasZgels__funptr = loader.load_symbol(_lib_handle, "hipblasZgels")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,hipblasDoubleComplex *,const int,hipblasDoubleComplex *,const int,int *,int *) nogil> _hipblasZgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
 
 
-cdef void* hipblasSgeqrf_funptr = NULL
+cdef void* _hipblasSgeqrf__funptr = NULL
 # ! @{
 #     \brief SOLVER API
 # 
@@ -5166,44 +5166,44 @@ cdef void* hipblasSgeqrf_funptr = NULL
 #
 cdef hipblasStatus_t hipblasSgeqrf(hipblasHandle_t handle,const int m,const int n,float * A,const int lda,float * ipiv,int * info) nogil:
     global _lib_handle
-    global hipblasSgeqrf_funptr
-    if hipblasSgeqrf_funptr == NULL:
+    global _hipblasSgeqrf__funptr
+    if _hipblasSgeqrf__funptr == NULL:
         with gil:
-            hipblasSgeqrf_funptr = loader.load_symbol(_lib_handle, "hipblasSgeqrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,float *,const int,float *,int *) nogil> hipblasSgeqrf_funptr)(handle,m,n,A,lda,ipiv,info)
+            _hipblasSgeqrf__funptr = loader.load_symbol(_lib_handle, "hipblasSgeqrf")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,float *,const int,float *,int *) nogil> _hipblasSgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
 
 
-cdef void* hipblasDgeqrf_funptr = NULL
+cdef void* _hipblasDgeqrf__funptr = NULL
 cdef hipblasStatus_t hipblasDgeqrf(hipblasHandle_t handle,const int m,const int n,double * A,const int lda,double * ipiv,int * info) nogil:
     global _lib_handle
-    global hipblasDgeqrf_funptr
-    if hipblasDgeqrf_funptr == NULL:
+    global _hipblasDgeqrf__funptr
+    if _hipblasDgeqrf__funptr == NULL:
         with gil:
-            hipblasDgeqrf_funptr = loader.load_symbol(_lib_handle, "hipblasDgeqrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,double *,const int,double *,int *) nogil> hipblasDgeqrf_funptr)(handle,m,n,A,lda,ipiv,info)
+            _hipblasDgeqrf__funptr = loader.load_symbol(_lib_handle, "hipblasDgeqrf")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,double *,const int,double *,int *) nogil> _hipblasDgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
 
 
-cdef void* hipblasCgeqrf_funptr = NULL
+cdef void* _hipblasCgeqrf__funptr = NULL
 cdef hipblasStatus_t hipblasCgeqrf(hipblasHandle_t handle,const int m,const int n,hipblasComplex * A,const int lda,hipblasComplex * ipiv,int * info) nogil:
     global _lib_handle
-    global hipblasCgeqrf_funptr
-    if hipblasCgeqrf_funptr == NULL:
+    global _hipblasCgeqrf__funptr
+    if _hipblasCgeqrf__funptr == NULL:
         with gil:
-            hipblasCgeqrf_funptr = loader.load_symbol(_lib_handle, "hipblasCgeqrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,hipblasComplex *,const int,hipblasComplex *,int *) nogil> hipblasCgeqrf_funptr)(handle,m,n,A,lda,ipiv,info)
+            _hipblasCgeqrf__funptr = loader.load_symbol(_lib_handle, "hipblasCgeqrf")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,hipblasComplex *,const int,hipblasComplex *,int *) nogil> _hipblasCgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
 
 
-cdef void* hipblasZgeqrf_funptr = NULL
+cdef void* _hipblasZgeqrf__funptr = NULL
 cdef hipblasStatus_t hipblasZgeqrf(hipblasHandle_t handle,const int m,const int n,hipblasDoubleComplex * A,const int lda,hipblasDoubleComplex * ipiv,int * info) nogil:
     global _lib_handle
-    global hipblasZgeqrf_funptr
-    if hipblasZgeqrf_funptr == NULL:
+    global _hipblasZgeqrf__funptr
+    if _hipblasZgeqrf__funptr == NULL:
         with gil:
-            hipblasZgeqrf_funptr = loader.load_symbol(_lib_handle, "hipblasZgeqrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,hipblasDoubleComplex *,const int,hipblasDoubleComplex *,int *) nogil> hipblasZgeqrf_funptr)(handle,m,n,A,lda,ipiv,info)
+            _hipblasZgeqrf__funptr = loader.load_symbol(_lib_handle, "hipblasZgeqrf")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,hipblasDoubleComplex *,const int,hipblasDoubleComplex *,int *) nogil> _hipblasZgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
 
 
-cdef void* hipblasGemmEx_funptr = NULL
+cdef void* _hipblasGemmEx__funptr = NULL
 # ! \brief BLAS EX API
 # 
 #     \details
@@ -5287,14 +5287,14 @@ cdef void* hipblasGemmEx_funptr = NULL
 #
 cdef hipblasStatus_t hipblasGemmEx(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const void * alpha,const void * A,hipblasDatatype_t aType,int lda,const void * B,hipblasDatatype_t bType,int ldb,const void * beta,void * C,hipblasDatatype_t cType,int ldc,hipblasDatatype_t computeType,hipblasGemmAlgo_t algo) nogil:
     global _lib_handle
-    global hipblasGemmEx_funptr
-    if hipblasGemmEx_funptr == NULL:
+    global _hipblasGemmEx__funptr
+    if _hipblasGemmEx__funptr == NULL:
         with gil:
-            hipblasGemmEx_funptr = loader.load_symbol(_lib_handle, "hipblasGemmEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,const void *,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,const void *,void *,hipblasDatatype_t,int,hipblasDatatype_t,hipblasGemmAlgo_t) nogil> hipblasGemmEx_funptr)(handle,transA,transB,m,n,k,alpha,A,aType,lda,B,bType,ldb,beta,C,cType,ldc,computeType,algo)
+            _hipblasGemmEx__funptr = loader.load_symbol(_lib_handle, "hipblasGemmEx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,const void *,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,const void *,void *,hipblasDatatype_t,int,hipblasDatatype_t,hipblasGemmAlgo_t) nogil> _hipblasGemmEx__funptr)(handle,transA,transB,m,n,k,alpha,A,aType,lda,B,bType,ldb,beta,C,cType,ldc,computeType,algo)
 
 
-cdef void* hipblasTrsmEx_funptr = NULL
+cdef void* _hipblasTrsmEx__funptr = NULL
 # ! BLAS EX API
 # 
 #     \details
@@ -5417,14 +5417,14 @@ cdef void* hipblasTrsmEx_funptr = NULL
 #
 cdef hipblasStatus_t hipblasTrsmEx(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const void * alpha,void * A,int lda,void * B,int ldb,const void * invA,int invAsize,hipblasDatatype_t computeType) nogil:
     global _lib_handle
-    global hipblasTrsmEx_funptr
-    if hipblasTrsmEx_funptr == NULL:
+    global _hipblasTrsmEx__funptr
+    if _hipblasTrsmEx__funptr == NULL:
         with gil:
-            hipblasTrsmEx_funptr = loader.load_symbol(_lib_handle, "hipblasTrsmEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const void *,void *,int,void *,int,const void *,int,hipblasDatatype_t) nogil> hipblasTrsmEx_funptr)(handle,side,uplo,transA,diag,m,n,alpha,A,lda,B,ldb,invA,invAsize,computeType)
+            _hipblasTrsmEx__funptr = loader.load_symbol(_lib_handle, "hipblasTrsmEx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const void *,void *,int,void *,int,const void *,int,hipblasDatatype_t) nogil> _hipblasTrsmEx__funptr)(handle,side,uplo,transA,diag,m,n,alpha,A,lda,B,ldb,invA,invAsize,computeType)
 
 
-cdef void* hipblasAxpyEx_funptr = NULL
+cdef void* _hipblasAxpyEx__funptr = NULL
 # ! \brief BLAS EX API
 # 
 #     \details
@@ -5467,14 +5467,14 @@ cdef void* hipblasAxpyEx_funptr = NULL
 #
 cdef hipblasStatus_t hipblasAxpyEx(hipblasHandle_t handle,int n,const void * alpha,hipblasDatatype_t alphaType,const void * x,hipblasDatatype_t xType,int incx,void * y,hipblasDatatype_t yType,int incy,hipblasDatatype_t executionType) nogil:
     global _lib_handle
-    global hipblasAxpyEx_funptr
-    if hipblasAxpyEx_funptr == NULL:
+    global _hipblasAxpyEx__funptr
+    if _hipblasAxpyEx__funptr == NULL:
         with gil:
-            hipblasAxpyEx_funptr = loader.load_symbol(_lib_handle, "hipblasAxpyEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,int,hipblasDatatype_t) nogil> hipblasAxpyEx_funptr)(handle,n,alpha,alphaType,x,xType,incx,y,yType,incy,executionType)
+            _hipblasAxpyEx__funptr = loader.load_symbol(_lib_handle, "hipblasAxpyEx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,int,hipblasDatatype_t) nogil> _hipblasAxpyEx__funptr)(handle,n,alpha,alphaType,x,xType,incx,y,yType,incy,executionType)
 
 
-cdef void* hipblasDotEx_funptr = NULL
+cdef void* _hipblasDotEx__funptr = NULL
 # ! @{
 #     \brief BLAS EX API
 # 
@@ -5524,24 +5524,24 @@ cdef void* hipblasDotEx_funptr = NULL
 #
 cdef hipblasStatus_t hipblasDotEx(hipblasHandle_t handle,int n,const void * x,hipblasDatatype_t xType,int incx,const void * y,hipblasDatatype_t yType,int incy,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _lib_handle
-    global hipblasDotEx_funptr
-    if hipblasDotEx_funptr == NULL:
+    global _hipblasDotEx__funptr
+    if _hipblasDotEx__funptr == NULL:
         with gil:
-            hipblasDotEx_funptr = loader.load_symbol(_lib_handle, "hipblasDotEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> hipblasDotEx_funptr)(handle,n,x,xType,incx,y,yType,incy,result,resultType,executionType)
+            _hipblasDotEx__funptr = loader.load_symbol(_lib_handle, "hipblasDotEx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasDotEx__funptr)(handle,n,x,xType,incx,y,yType,incy,result,resultType,executionType)
 
 
-cdef void* hipblasDotcEx_funptr = NULL
+cdef void* _hipblasDotcEx__funptr = NULL
 cdef hipblasStatus_t hipblasDotcEx(hipblasHandle_t handle,int n,const void * x,hipblasDatatype_t xType,int incx,const void * y,hipblasDatatype_t yType,int incy,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _lib_handle
-    global hipblasDotcEx_funptr
-    if hipblasDotcEx_funptr == NULL:
+    global _hipblasDotcEx__funptr
+    if _hipblasDotcEx__funptr == NULL:
         with gil:
-            hipblasDotcEx_funptr = loader.load_symbol(_lib_handle, "hipblasDotcEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> hipblasDotcEx_funptr)(handle,n,x,xType,incx,y,yType,incy,result,resultType,executionType)
+            _hipblasDotcEx__funptr = loader.load_symbol(_lib_handle, "hipblasDotcEx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasDotcEx__funptr)(handle,n,x,xType,incx,y,yType,incy,result,resultType,executionType)
 
 
-cdef void* hipblasNrm2Ex_funptr = NULL
+cdef void* _hipblasNrm2Ex__funptr = NULL
 # ! \brief BLAS_EX API
 # 
 #     \details
@@ -5579,14 +5579,14 @@ cdef void* hipblasNrm2Ex_funptr = NULL
 #                   specifies the datatype of computation.
 cdef hipblasStatus_t hipblasNrm2Ex(hipblasHandle_t handle,int n,const void * x,hipblasDatatype_t xType,int incx,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _lib_handle
-    global hipblasNrm2Ex_funptr
-    if hipblasNrm2Ex_funptr == NULL:
+    global _hipblasNrm2Ex__funptr
+    if _hipblasNrm2Ex__funptr == NULL:
         with gil:
-            hipblasNrm2Ex_funptr = loader.load_symbol(_lib_handle, "hipblasNrm2Ex")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> hipblasNrm2Ex_funptr)(handle,n,x,xType,incx,result,resultType,executionType)
+            _hipblasNrm2Ex__funptr = loader.load_symbol(_lib_handle, "hipblasNrm2Ex")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasNrm2Ex__funptr)(handle,n,x,xType,incx,result,resultType,executionType)
 
 
-cdef void* hipblasRotEx_funptr = NULL
+cdef void* _hipblasRotEx__funptr = NULL
 # ! \brief BLAS EX API
 # 
 #     \details
@@ -5638,14 +5638,14 @@ cdef void* hipblasRotEx_funptr = NULL
 #
 cdef hipblasStatus_t hipblasRotEx(hipblasHandle_t handle,int n,void * x,hipblasDatatype_t xType,int incx,void * y,hipblasDatatype_t yType,int incy,const void * c,const void * s,hipblasDatatype_t csType,hipblasDatatype_t executionType) nogil:
     global _lib_handle
-    global hipblasRotEx_funptr
-    if hipblasRotEx_funptr == NULL:
+    global _hipblasRotEx__funptr
+    if _hipblasRotEx__funptr == NULL:
         with gil:
-            hipblasRotEx_funptr = loader.load_symbol(_lib_handle, "hipblasRotEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,int,const void *,const void *,hipblasDatatype_t,hipblasDatatype_t) nogil> hipblasRotEx_funptr)(handle,n,x,xType,incx,y,yType,incy,c,s,csType,executionType)
+            _hipblasRotEx__funptr = loader.load_symbol(_lib_handle, "hipblasRotEx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,int,const void *,const void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasRotEx__funptr)(handle,n,x,xType,incx,y,yType,incy,c,s,csType,executionType)
 
 
-cdef void* hipblasScalEx_funptr = NULL
+cdef void* _hipblasScalEx__funptr = NULL
 # ! \brief BLAS EX API
 # 
 #     \details
@@ -5680,14 +5680,14 @@ cdef void* hipblasScalEx_funptr = NULL
 #
 cdef hipblasStatus_t hipblasScalEx(hipblasHandle_t handle,int n,const void * alpha,hipblasDatatype_t alphaType,void * x,hipblasDatatype_t xType,int incx,hipblasDatatype_t executionType) nogil:
     global _lib_handle
-    global hipblasScalEx_funptr
-    if hipblasScalEx_funptr == NULL:
+    global _hipblasScalEx__funptr
+    if _hipblasScalEx__funptr == NULL:
         with gil:
-            hipblasScalEx_funptr = loader.load_symbol(_lib_handle, "hipblasScalEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,void *,hipblasDatatype_t,int,hipblasDatatype_t) nogil> hipblasScalEx_funptr)(handle,n,alpha,alphaType,x,xType,incx,executionType)
+            _hipblasScalEx__funptr = loader.load_symbol(_lib_handle, "hipblasScalEx")
+    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,void *,hipblasDatatype_t,int,hipblasDatatype_t) nogil> _hipblasScalEx__funptr)(handle,n,alpha,alphaType,x,xType,incx,executionType)
 
 
-cdef void* hipblasStatusToString_funptr = NULL
+cdef void* _hipblasStatusToString__funptr = NULL
 # ! HIPBLAS Auxiliary API
 # 
 #     \details
@@ -5700,8 +5700,8 @@ cdef void* hipblasStatusToString_funptr = NULL
 #             hipBLAS status to convert to string
 cdef const char * hipblasStatusToString(hipblasStatus_t status) nogil:
     global _lib_handle
-    global hipblasStatusToString_funptr
-    if hipblasStatusToString_funptr == NULL:
+    global _hipblasStatusToString__funptr
+    if _hipblasStatusToString__funptr == NULL:
         with gil:
-            hipblasStatusToString_funptr = loader.load_symbol(_lib_handle, "hipblasStatusToString")
-    return (<const char * (*)(hipblasStatus_t) nogil> hipblasStatusToString_funptr)(status)
+            _hipblasStatusToString__funptr = loader.load_symbol(_lib_handle, "hipblasStatusToString")
+    return (<const char * (*)(hipblasStatus_t) nogil> _hipblasStatusToString__funptr)(status)

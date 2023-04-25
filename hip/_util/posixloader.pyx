@@ -1,3 +1,7 @@
+# AMD_COPYRIGHT
+
+__author__ = "AMD_AUTHOR"
+
 cimport posix.dlfcn
 
 cdef void* open_library(const char* path):
