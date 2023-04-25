@@ -775,7 +775,7 @@ cdef void* {funptr_name} = NULL
                 ):
                     parm_typename = parm.lookup_innermost_type().cython_name
                     prolog.append(
-                        f"{parm_name} = {parm_typename}.from_ptr(NULL,owner=True)"
+                        f"{parm_name} = {parm_typename}.from_ptr(NULL)"
                     )
                     c_interface_call_args.append(f"&{parm_name}._ptr")
                     out_args.append(parm_name)
