@@ -1,0 +1,6 @@
+CHANGES
+*.so
+hip/*.c
+hip/_util/*.c
+hip/_version.py
+hip/__init__.py
