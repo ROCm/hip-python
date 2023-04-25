@@ -201,7 +201,7 @@ if HIP_PYTHON_SETUP_GENERATE:
                 return True
         return False
 
-    def hip_ptr_parm_intent(node: Parm):
+    def hip_ptr_parm_intent(parm: Parm):
         """Flags pointer parameters that are actually return values
         that are passed as C-style reference, i.e. `<type>* <param>`.
 
@@ -219,14 +219,17 @@ if HIP_PYTHON_SETUP_GENERATE:
         return values that are created internally by the respective function.
         """
         if (
-            node.is_pointer_to_record(degree=2)
-            or node.is_pointer_to_enum(degree=1)
+            parm.is_pointer_to_record(degree=2)
+            or parm.is_pointer_to_enum(degree=1)
             or (
-                node.is_pointer_to_basic_type(degree=1)
-                and not node.is_pointer_to_char(degree=1)
+                parm.is_pointer_to_basic_type(degree=1)
+                and not parm.is_pointer_to_char(degree=1)
             )
         ):
             return PointerParamIntent.OUT
+        if parm.is_pointer_to_void(degree=2):
+            if parm.name in ["devPtr","ptr","dev_ptr","data"]:
+                return PointerParamIntent.OUT
         return PointerParamIntent.IN
 
     def hip_ptr_rank(node: Node):
@@ -344,6 +347,7 @@ from .chip cimport hipStream_t
     generator.python_interface_preamble += """\
 #ctypedef int16_t __int16_t
 #ctypedef uint16_t __uint16_t
+from .hip cimport ihipStream_t
 """
     generator.write_package_files(output_dir="hip")
 
@@ -372,6 +376,7 @@ if HIP_PYTHON_SETUP_BUILD:
         )
 
     cython_module_sources = [
+        ("hip._util.datahandle", ["./hip/_util/datahandle.pyx"]),
         ("hip.chiprtc", ["./hip/chiprtc.pyx"]),
         ("hip.chip", ["./hip/chip.pyx"]),
         ("hip.chipblas", ["./hip/chipblas.pyx"]),

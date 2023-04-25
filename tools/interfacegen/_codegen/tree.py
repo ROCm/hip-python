@@ -409,6 +409,10 @@ class Typed:
                             type_kind,
                             degree: int = 1):
         """If this is a pointerof the given ``degree`` to the given type kind.
+        
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+
         Note:
             Does not check for any const modifiers.
         """
@@ -418,14 +422,22 @@ class Typed:
             assert isinstance(type_kind,clang.cindex.TypeKind)
             type_kinds = (type_kind,)
 
-        if list(self._type_handler.clang_type_layer_kinds(canonical=True))[-1] in type_kinds:
-            return self.get_pointer_degree() == degree
+        if degree >= 0:
+            if list(self._type_handler.clang_type_layer_kinds(canonical=True))[-1] in type_kinds:
+                return self.get_pointer_degree() == degree
+        else:
+            if list(self._type_handler.clang_type_layer_kinds(canonical=True))[-1] in type_kinds:
+                return self.get_pointer_degree() >= abs(degree)
         
     def _is_pointer_to_category(self,
                                type_category,
                                degree: int = 1,
-                               subdivide_categories:bool =False):
+                               subdivide_categories:bool = False):
         """If this is a pointerof the given ``degree`` to the given type category.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+
         Note:
             Does not check for any const modifiers.
         """
@@ -435,8 +447,12 @@ class Typed:
             assert isinstance(type_category,self._type_handler.TypeCategory)
             type_categories = (type_category,)
 
-        if list(self._type_handler.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))[-1] in type_categories:
-            return self.get_pointer_degree() == degree
+        if degree >= 0:
+            if list(self._type_handler.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))[-1] in type_categories:
+                return self.get_pointer_degree() == degree
+        else:
+            if list(self._type_handler.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))[-1] in type_categories:
+                return self.get_pointer_degree() >= abs(degree)
 
     @property
     def is_void(self):

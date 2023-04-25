@@ -6,7 +6,6 @@ import enum
 
 import clang.cindex
 
-
 def walk_cursors(root: clang.cindex.Cursor, postorder=False):
     """Yields a triple of cursor, level, parents per traversed cursor.
 
