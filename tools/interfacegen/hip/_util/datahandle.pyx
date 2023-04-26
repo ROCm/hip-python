@@ -47,7 +47,7 @@ cdef class DataHandle:
             wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr, 
+                pyobj, 
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
