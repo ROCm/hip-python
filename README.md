@@ -1,6 +1,39 @@
 # hip-python
 HIP Python Low-level Bindings 
 
+## Build requirements
+
+> * Commit used for evaluation : 9a5505be427b95ead61a45c0f6e89c1ba2edc0ef
+> * Date: 04/21/2023
+
+Python >= 3.7 is required plus Python development files (e.g. via ``apt install python3-dev`` on Ubuntu).
+
+To build ``pip`` packages (``.whl``) you need to install the ``pip`` package ``build``.
+You further need to have `venv` installed (e.g. via ``apt install python3-venv`` on Ubuntu).
+
+The following ``pip`` packages are required for running ``setup.py``
+
+* ``cython``
+* ``setuptools`` >= 10.0.1
+
+* ``libclang`` (>= 14.0.1, != 15.0.3, != 15.0.6, <= 15.0.6.1)
+
+  The following ``libclang`` versions have been tested:
+
+  * 9.0.1	-- fail
+  * 10.0.1.0 -- fail
+  * 11.0.0 -- fail
+  * 11.0.1 -- fail
+  * 11.1.0 -- fail
+  * 12.0.0 -- fail
+  * 13.0.0 -- fail
+  * 14.0.1 -- **success**
+  * 14.0.6 -- **success**
+  * 15.0.3 -- fail
+  * 15.0.6 -- fail
+  * 15.0.6.1 -- **success**
+  * 16.0.0 -- fail
+
 #### Legal Requirements:
 Always include the appropriate copyright and MIT X11 notice (see below)
 * at the top of the AMD developed files, and
@@ -8,7 +41,6 @@ Always include the appropriate copyright and MIT X11 notice (see below)
 
 #### Standard ongoing code readiness and release obligations:
 * Follow the Developer Guidelines here: http://confluence.amd.com/pages/viewpage.action?pageId=52793191
-
 
 ```
 MIT License
