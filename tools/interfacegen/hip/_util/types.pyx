@@ -89,45 +89,44 @@ cdef class DataHandle:
     def __init__(self):
         raise RuntimeError("not expected to be instantiated from Python")
 
-cdef class ListOfStr(DataHandle):
+cdef class ListOfBytes(DataHandle):
     # members declared in declaration part ``types.pxd``
 
     def __cinit__(self):
-        DataHandle.__cinit__(self)
         self._owner = False
         self._num_entries = 0 # only carries valid data if _owner is True
 
     @staticmethod
-    cdef ListOfStr from_ptr(void* ptr):
-        cdef ListOfStr wrapper = ListOfStr.__new__(ListOfStr)
+    cdef ListOfBytes from_ptr(void* ptr):
+        cdef ListOfBytes wrapper = ListOfBytes.__new__(ListOfBytes)
         wrapper._ptr = ptr
         return wrapper
 
     @staticmethod
-    cdef ListOfStr from_pyobj(object pyobj):
-        """Derives a ListOfStr from the given object.
+    cdef ListOfBytes from_pyobj(object pyobj):
+        """Derives a ListOfBytes from the given object.
 
-        In case ``pyobj`` is itself an ``ListOfStr`` instance, this method
-        returns it directly. No new ListOfStr is created.
+        In case ``pyobj`` is itself an ``ListOfBytes`` instance, this method
+        returns it directly. No new ListOfBytes is created.
 
         Args:
             pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``ListOfStr``, ``int``, or ``ctypes.c_void_p``
+                            or of type ``ListOfBytes``, ``int``, or ``ctypes.c_void_p``
 
         Note:
             This routine does not perform a copy but returns the original pyobj
-            if ``pyobj`` is an instance of ListOfStr.
+            if ``pyobj`` is an instance of ListOfBytes.
         Note:
             This routines assumes that the original input is not garbage
             collected before the deletion of this object.
         """
-        cdef ListOfStr wrapper = ListOfStr.__new__(ListOfStr)
+        cdef ListOfBytes wrapper = ListOfBytes.__new__(ListOfBytes)
         cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
         cdef const char* entry_as_cstr = NULL
 
         if pyobj is None:
             wrapper._ptr = NULL
-        elif isinstance(pyobj,ListOfStr):
+        elif isinstance(pyobj,ListOfBytes):
             return pyobj
         elif isinstance(pyobj,int):
             wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
@@ -136,10 +135,10 @@ cdef class ListOfStr(DataHandle):
         elif isinstance(pyobj,(list,tuple)):
             wrapper._owner = True
             wrapper._num_entries = len(pyobj) # zero length is allowed
-            wrapper._ptr = libc.stdlib.malloc(wrapper._num_entries) # may be 
+            wrapper._ptr = libc.stdlib.malloc(wrapper._num_entries)
             for i,entry in enumerate(pyobj):
-                if not isinstance(entry,str):
-                    raise ValueError("elements of list/tuple input must be of type 'str'")
+                if not isinstance(entry,bytes):
+                    raise ValueError("elements of list/tuple input must be of type 'bytes'")
                 entry_as_cstr = entry # assumes pyobj/pyobj's entries won't be garbage collected
                 # More details: https://cython.readthedocs.io/en/latest/src/tutorial/strings.html
                 (<const char**>wrapper._ptr)[i] = entry_as_cstr
@@ -163,7 +162,6 @@ cdef class ListOfStr(DataHandle):
         return wrapper
 
     def __dealloc__(self):
-        DataHandle.__dealloc__(self)
         if self._owner:
             libc.stdlib.free(self._ptr)
 

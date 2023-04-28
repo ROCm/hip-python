@@ -290,7 +290,7 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
     """
     _hiprtcCompileProgram__retval = hiprtcResult(chiprtc.hiprtcCompileProgram(
         _hiprtcProgram.from_pyobj(prog)._ptr,numOptions,
-        <const char **>hip._util.types.ListOfStr.from_pyobj(options)._ptr))    # fully specified
+        <const char **>hip._util.types.ListOfBytes.from_pyobj(options)._ptr))    # fully specified
     return (_hiprtcCompileProgram__retval,)
 
 
@@ -312,8 +312,8 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
     """
     prog = _hiprtcProgram.from_ptr(NULL)
     _hiprtcCreateProgram__retval = hiprtcResult(chiprtc.hiprtcCreateProgram(&prog._ptr,src,name,numHeaders,
-        <const char **>hip._util.types.ListOfStr.from_pyobj(headers)._ptr,
-        <const char **>hip._util.types.ListOfStr.from_pyobj(includeNames)._ptr))    # fully specified
+        <const char **>hip._util.types.ListOfBytes.from_pyobj(headers)._ptr,
+        <const char **>hip._util.types.ListOfBytes.from_pyobj(includeNames)._ptr))    # fully specified
     return (_hiprtcCreateProgram__retval,prog)
 
 

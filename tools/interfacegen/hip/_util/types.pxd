@@ -13,6 +13,6 @@ cdef class DataHandle:
     @staticmethod
     cdef DataHandle from_pyobj(object pyobj)
 
-cdef class ListOfStr(DataHandle):
+cdef class ListOfBytes(DataHandle):
     cdef bint _owner
     cdef size_t _num_entries
