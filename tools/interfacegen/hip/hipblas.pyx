@@ -623,10 +623,14 @@ def hipblasSetPointerMode(object handle, object mode):
 
 
 @cython.embedsignature(True)
-def hipblasGetPointerMode(object handle):
+def hipblasGetPointerMode(object handle, object mode):
     """! \brief Get hipblas pointer mode */
     """
-    pass
+    _hipblasGetPointerMode__retval = hipblasStatus_t(chipblas.hipblasGetPointerMode(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        <chipblas.hipblasPointerMode_t *>DataHandle.from_pyobj(mode)._ptr))    # fully specified
+    return (_hipblasGetPointerMode__retval,)
+
 
 @cython.embedsignature(True)
 def hipblasSetInt8Datatype(object handle, object int8Type):
@@ -640,10 +644,14 @@ def hipblasSetInt8Datatype(object handle, object int8Type):
 
 
 @cython.embedsignature(True)
-def hipblasGetInt8Datatype(object handle):
+def hipblasGetInt8Datatype(object handle, object int8Type):
     """! \brief Get hipblas int8 Datatype*/
     """
-    pass
+    _hipblasGetInt8Datatype__retval = hipblasStatus_t(chipblas.hipblasGetInt8Datatype(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        <chipblas.hipblasInt8Datatype_t *>DataHandle.from_pyobj(int8Type)._ptr))    # fully specified
+    return (_hipblasGetInt8Datatype__retval,)
+
 
 @cython.embedsignature(True)
 def hipblasSetVector(int n, int elemSize, object x, int incx, object y, int incy):
@@ -901,10 +909,14 @@ def hipblasSetAtomicsMode(object handle, object atomics_mode):
 
 
 @cython.embedsignature(True)
-def hipblasGetAtomicsMode(object handle):
+def hipblasGetAtomicsMode(object handle, object atomics_mode):
     """! \brief Get hipblasSetAtomicsMode*/
     """
-    pass
+    _hipblasGetAtomicsMode__retval = hipblasStatus_t(chipblas.hipblasGetAtomicsMode(
+        <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
+        <chipblas.hipblasAtomicsMode_t *>DataHandle.from_pyobj(atomics_mode)._ptr))    # fully specified
+    return (_hipblasGetAtomicsMode__retval,)
+
 
 @cython.embedsignature(True)
 def hipblasIsamax(object handle, int n, object x, int incx, object result):
@@ -3653,9 +3665,9 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
                   specifies the increment for the elements of x.
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStbmv__retval = hipblasStatus_t(chipblas.hipblasStbmv(
@@ -3670,9 +3682,9 @@ def hipblasDtbmv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtbmv__retval = hipblasStatus_t(chipblas.hipblasDtbmv(
@@ -3687,9 +3699,9 @@ def hipblasCtbmv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtbmv__retval = hipblasStatus_t(chipblas.hipblasCtbmv(
@@ -3704,9 +3716,9 @@ def hipblasZtbmv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtbmv__retval = hipblasStatus_t(chipblas.hipblasZtbmv(
@@ -3779,9 +3791,9 @@ def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, 
                   specifies the increment for the elements of x.
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStbsv__retval = hipblasStatus_t(chipblas.hipblasStbsv(
@@ -3796,9 +3808,9 @@ def hipblasDtbsv(object handle, object uplo, object transA, object diag, int n, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtbsv__retval = hipblasStatus_t(chipblas.hipblasDtbsv(
@@ -3813,9 +3825,9 @@ def hipblasCtbsv(object handle, object uplo, object transA, object diag, int n, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtbsv__retval = hipblasStatus_t(chipblas.hipblasCtbsv(
@@ -3830,9 +3842,9 @@ def hipblasZtbsv(object handle, object uplo, object transA, object diag, int n, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtbsv__retval = hipblasStatus_t(chipblas.hipblasZtbsv(
@@ -3902,9 +3914,9 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
                 specifies the increment for the elements of x. incx must not be zero.
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStpmv__retval = hipblasStatus_t(chipblas.hipblasStpmv(
@@ -3919,9 +3931,9 @@ def hipblasDtpmv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtpmv__retval = hipblasStatus_t(chipblas.hipblasDtpmv(
@@ -3936,9 +3948,9 @@ def hipblasCtpmv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtpmv__retval = hipblasStatus_t(chipblas.hipblasCtpmv(
@@ -3953,9 +3965,9 @@ def hipblasZtpmv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtpmv__retval = hipblasStatus_t(chipblas.hipblasZtpmv(
@@ -4019,9 +4031,9 @@ def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, 
                   specifies the increment for the elements of x.
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStpsv__retval = hipblasStatus_t(chipblas.hipblasStpsv(
@@ -4036,9 +4048,9 @@ def hipblasDtpsv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtpsv__retval = hipblasStatus_t(chipblas.hipblasDtpsv(
@@ -4053,9 +4065,9 @@ def hipblasCtpsv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtpsv__retval = hipblasStatus_t(chipblas.hipblasCtpsv(
@@ -4070,9 +4082,9 @@ def hipblasZtpsv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtpsv__retval = hipblasStatus_t(chipblas.hipblasZtpsv(
@@ -4137,9 +4149,9 @@ def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, 
                   specifies the increment for the elements of x.
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStrmv__retval = hipblasStatus_t(chipblas.hipblasStrmv(
@@ -4154,9 +4166,9 @@ def hipblasDtrmv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtrmv__retval = hipblasStatus_t(chipblas.hipblasDtrmv(
@@ -4171,9 +4183,9 @@ def hipblasCtrmv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtrmv__retval = hipblasStatus_t(chipblas.hipblasCtrmv(
@@ -4188,9 +4200,9 @@ def hipblasZtrmv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtrmv__retval = hipblasStatus_t(chipblas.hipblasZtrmv(
@@ -4255,9 +4267,9 @@ def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, 
                   specifies the increment for the elements of x.
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStrsv__retval = hipblasStatus_t(chipblas.hipblasStrsv(
@@ -4272,9 +4284,9 @@ def hipblasDtrsv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtrsv__retval = hipblasStatus_t(chipblas.hipblasDtrsv(
@@ -4289,9 +4301,9 @@ def hipblasCtrsv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtrsv__retval = hipblasStatus_t(chipblas.hipblasCtrsv(
@@ -4306,9 +4318,9 @@ def hipblasZtrsv(object handle, object uplo, object transA, object diag, int m, 
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtrsv__retval = hipblasStatus_t(chipblas.hipblasZtrsv(
@@ -4380,7 +4392,7 @@ def hipblasHgemm(object handle, object transA, object transB, int m, int n, int 
                   specifies the leading dimension of C.
     """
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasHgemm__retval = hipblasStatus_t(chipblas.hipblasHgemm(
@@ -4398,7 +4410,7 @@ def hipblasSgemm(object handle, object transA, object transB, int m, int n, int 
     """
     """
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasSgemm__retval = hipblasStatus_t(chipblas.hipblasSgemm(
@@ -4416,7 +4428,7 @@ def hipblasDgemm(object handle, object transA, object transB, int m, int n, int 
     """
     """
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasDgemm__retval = hipblasStatus_t(chipblas.hipblasDgemm(
@@ -4434,7 +4446,7 @@ def hipblasCgemm(object handle, object transA, object transB, int m, int n, int 
     """
     """
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasCgemm__retval = hipblasStatus_t(chipblas.hipblasCgemm(
@@ -4452,7 +4464,7 @@ def hipblasZgemm(object handle, object transA, object transB, int m, int n, int 
     """
     """
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasZgemm__retval = hipblasStatus_t(chipblas.hipblasZgemm(
@@ -4538,7 +4550,7 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCherk__retval = hipblasStatus_t(chipblas.hipblasCherk(
@@ -4555,7 +4567,7 @@ def hipblasZherk(object handle, object uplo, object transA, int n, int k, object
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZherk__retval = hipblasStatus_t(chipblas.hipblasZherk(
@@ -4651,7 +4663,7 @@ def hipblasCherkx(object handle, object uplo, object transA, int n, int k, objec
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCherkx__retval = hipblasStatus_t(chipblas.hipblasCherkx(
@@ -4669,7 +4681,7 @@ def hipblasZherkx(object handle, object uplo, object transA, int n, int k, objec
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZherkx__retval = hipblasStatus_t(chipblas.hipblasZherkx(
@@ -4764,7 +4776,7 @@ def hipblasCher2k(object handle, object uplo, object transA, int n, int k, objec
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCher2k__retval = hipblasStatus_t(chipblas.hipblasCher2k(
@@ -4782,7 +4794,7 @@ def hipblasZher2k(object handle, object uplo, object transA, int n, int k, objec
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZher2k__retval = hipblasStatus_t(chipblas.hipblasZher2k(
@@ -4874,7 +4886,7 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
                ldc specifies the first dimension of C. ldc >= max( 1, m )
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasSsymm__retval = hipblasStatus_t(chipblas.hipblasSsymm(
@@ -4892,7 +4904,7 @@ def hipblasDsymm(object handle, object side, object uplo, int m, int n, object a
     """
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasDsymm__retval = hipblasStatus_t(chipblas.hipblasDsymm(
@@ -4910,7 +4922,7 @@ def hipblasCsymm(object handle, object side, object uplo, int m, int n, object a
     """
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasCsymm__retval = hipblasStatus_t(chipblas.hipblasCsymm(
@@ -4928,7 +4940,7 @@ def hipblasZsymm(object handle, object side, object uplo, int m, int n, object a
     """
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZsymm__retval = hipblasStatus_t(chipblas.hipblasZsymm(
@@ -5017,7 +5029,7 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasSsyrk__retval = hipblasStatus_t(chipblas.hipblasSsyrk(
@@ -5034,7 +5046,7 @@ def hipblasDsyrk(object handle, object uplo, object transA, int n, int k, object
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasDsyrk__retval = hipblasStatus_t(chipblas.hipblasDsyrk(
@@ -5051,7 +5063,7 @@ def hipblasCsyrk(object handle, object uplo, object transA, int n, int k, object
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCsyrk__retval = hipblasStatus_t(chipblas.hipblasCsyrk(
@@ -5068,7 +5080,7 @@ def hipblasZsyrk(object handle, object uplo, object transA, int n, int k, object
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZsyrk__retval = hipblasStatus_t(chipblas.hipblasZsyrk(
@@ -5161,7 +5173,7 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasSsyr2k__retval = hipblasStatus_t(chipblas.hipblasSsyr2k(
@@ -5179,7 +5191,7 @@ def hipblasDsyr2k(object handle, object uplo, object transA, int n, int k, objec
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasDsyr2k__retval = hipblasStatus_t(chipblas.hipblasDsyr2k(
@@ -5197,7 +5209,7 @@ def hipblasCsyr2k(object handle, object uplo, object transA, int n, int k, objec
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCsyr2k__retval = hipblasStatus_t(chipblas.hipblasCsyr2k(
@@ -5215,7 +5227,7 @@ def hipblasZsyr2k(object handle, object uplo, object transA, int n, int k, objec
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZsyr2k__retval = hipblasStatus_t(chipblas.hipblasZsyr2k(
@@ -5312,7 +5324,7 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasSsyrkx__retval = hipblasStatus_t(chipblas.hipblasSsyrkx(
@@ -5330,7 +5342,7 @@ def hipblasDsyrkx(object handle, object uplo, object transA, int n, int k, objec
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasDsyrkx__retval = hipblasStatus_t(chipblas.hipblasDsyrkx(
@@ -5348,7 +5360,7 @@ def hipblasCsyrkx(object handle, object uplo, object transA, int n, int k, objec
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCsyrkx__retval = hipblasStatus_t(chipblas.hipblasCsyrkx(
@@ -5366,7 +5378,7 @@ def hipblasZsyrkx(object handle, object uplo, object transA, int n, int k, objec
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZsyrkx__retval = hipblasStatus_t(chipblas.hipblasZsyrkx(
@@ -5437,7 +5449,7 @@ def hipblasSgeam(object handle, object transA, object transB, int m, int n, obje
                   specifies the leading dimension of C.
     """
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasSgeam__retval = hipblasStatus_t(chipblas.hipblasSgeam(
@@ -5455,7 +5467,7 @@ def hipblasDgeam(object handle, object transA, object transB, int m, int n, obje
     """
     """
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasDgeam__retval = hipblasStatus_t(chipblas.hipblasDgeam(
@@ -5473,7 +5485,7 @@ def hipblasCgeam(object handle, object transA, object transB, int m, int n, obje
     """
     """
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasCgeam__retval = hipblasStatus_t(chipblas.hipblasCgeam(
@@ -5491,7 +5503,7 @@ def hipblasZgeam(object handle, object transA, object transB, int m, int n, obje
     """
     """
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasZgeam__retval = hipblasStatus_t(chipblas.hipblasZgeam(
@@ -5584,7 +5596,7 @@ def hipblasChemm(object handle, object side, object uplo, int n, int k, object a
                ldc specifies the first dimension of C. ldc >= max( 1, m )
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasChemm__retval = hipblasStatus_t(chipblas.hipblasChemm(
@@ -5602,7 +5614,7 @@ def hipblasZhemm(object handle, object side, object uplo, int n, int k, object a
     """
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZhemm__retval = hipblasStatus_t(chipblas.hipblasZhemm(
@@ -5714,11 +5726,11 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
                ldb specifies the first dimension of B. ldb >= max( 1, m ).
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStrmm__retval = hipblasStatus_t(chipblas.hipblasStrmm(
@@ -5734,11 +5746,11 @@ def hipblasDtrmm(object handle, object side, object uplo, object transA, object 
     """
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtrmm__retval = hipblasStatus_t(chipblas.hipblasDtrmm(
@@ -5754,11 +5766,11 @@ def hipblasCtrmm(object handle, object side, object uplo, object transA, object 
     """
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtrmm__retval = hipblasStatus_t(chipblas.hipblasCtrmm(
@@ -5774,11 +5786,11 @@ def hipblasZtrmm(object handle, object side, object uplo, object transA, object 
     """
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtrmm__retval = hipblasStatus_t(chipblas.hipblasZtrmm(
@@ -5881,11 +5893,11 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
                ldb specifies the first dimension of B. ldb >= max( 1, m ).
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStrsm__retval = hipblasStatus_t(chipblas.hipblasStrsm(
@@ -5901,11 +5913,11 @@ def hipblasDtrsm(object handle, object side, object uplo, object transA, object 
     """
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtrsm__retval = hipblasStatus_t(chipblas.hipblasDtrsm(
@@ -5921,11 +5933,11 @@ def hipblasCtrsm(object handle, object side, object uplo, object transA, object 
     """
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtrsm__retval = hipblasStatus_t(chipblas.hipblasCtrsm(
@@ -5941,11 +5953,11 @@ def hipblasZtrsm(object handle, object side, object uplo, object transA, object 
     """
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtrsm__retval = hipblasStatus_t(chipblas.hipblasZtrsm(
@@ -5996,7 +6008,7 @@ def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int
                   specifies the leading dimension of invA.
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStrtri__retval = hipblasStatus_t(chipblas.hipblasStrtri(
@@ -6011,7 +6023,7 @@ def hipblasDtrtri(object handle, object uplo, object diag, int n, object AP, int
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtrtri__retval = hipblasStatus_t(chipblas.hipblasDtrtri(
@@ -6026,7 +6038,7 @@ def hipblasCtrtri(object handle, object uplo, object diag, int n, object AP, int
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtrtri__retval = hipblasStatus_t(chipblas.hipblasCtrtri(
@@ -6041,7 +6053,7 @@ def hipblasZtrtri(object handle, object uplo, object diag, int n, object AP, int
     """
     """
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtrtri__retval = hipblasStatus_t(chipblas.hipblasZtrtri(
@@ -6674,17 +6686,17 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
                   enumerant specifying the algorithm type.
     """
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")                        
     if not isinstance(aType,hipblasDatatype_t):
-        raise TypeError("argument 'aType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'aType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(bType,hipblasDatatype_t):
-        raise TypeError("argument 'bType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'bType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(cType,hipblasDatatype_t):
-        raise TypeError("argument 'cType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'cType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(computeType,hipblasDatatype_t):
-        raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(algo,hipblasGemmAlgo_t):
         raise TypeError("argument 'algo' must be of type 'hipblasGemmAlgo_t'")
     _hipblasGemmEx__retval = hipblasStatus_t(chipblas.hipblasGemmEx(
@@ -6820,13 +6832,13 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
                 specifies the datatype of computation
     """
     if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
+        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                        
     if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
+        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                        
     if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
+        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                        
     if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")                    
+        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")                        
     if not isinstance(computeType,hipblasDatatype_t):
         raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")
     _hipblasTrsmEx__retval = hipblasStatus_t(chipblas.hipblasTrsmEx(
@@ -6881,11 +6893,11 @@ def hipblasAxpyEx(object handle, int n, object alpha, object alphaType, object x
                       specifies the datatype of computation.
     """
     if not isinstance(alphaType,hipblasDatatype_t):
-        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasAxpyEx__retval = hipblasStatus_t(chipblas.hipblasAxpyEx(
@@ -6946,11 +6958,11 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
                       specifies the datatype of computation.
     """
     if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasDotEx__retval = hipblasStatus_t(chipblas.hipblasDotEx(
@@ -6966,11 +6978,11 @@ def hipblasDotcEx(object handle, int n, object x, object xType, int incx, object
     """
     """
     if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasDotcEx__retval = hipblasStatus_t(chipblas.hipblasDotcEx(
@@ -7020,9 +7032,9 @@ def hipblasNrm2Ex(object handle, int n, object x, object xType, int incx, object
                       specifies the datatype of computation.
     """
     if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasNrm2Ex__retval = hipblasStatus_t(chipblas.hipblasNrm2Ex(
@@ -7084,11 +7096,11 @@ def hipblasRotEx(object handle, int n, object x, object xType, int incx, object 
                        specifies the datatype of computation.
     """
     if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(csType,hipblasDatatype_t):
-        raise TypeError("argument 'csType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'csType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasRotEx__retval = hipblasStatus_t(chipblas.hipblasRotEx(
@@ -7135,9 +7147,9 @@ def hipblasScalEx(object handle, int n, object alpha, object alphaType, object x
                        specifies the datatype of computation.
     """
     if not isinstance(alphaType,hipblasDatatype_t):
-        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
+        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                        
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasScalEx__retval = hipblasStatus_t(chipblas.hipblasScalEx(
