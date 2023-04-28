@@ -36,6 +36,7 @@ cdef class DataHandle:
             if ``pyobj`` is an instance of DataHandle.
         """
         cdef DataHandle wrapper = DataHandle.__new__(DataHandle)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
         
         if pyobj is None:
             wrapper._ptr = NULL
@@ -45,6 +46,11 @@ cdef class DataHandle:
             wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 pyobj, 
