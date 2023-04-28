@@ -132,6 +132,16 @@ def generate_hiprtc_package_files():
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
+    
+    def hiprtc_ptr_complicated_type_handler(parm: Parm):
+        list_of_str_parms = (
+            ("hiprtcCompileProgram","options"),
+            ("hiprtcCreateProgram","headers"),
+            ("hiprtcCreateProgram","includeNames"),
+        )
+        if (parm.parent.name, parm.name) in list_of_str_parms:
+            return "hip._util.types.ListOfStr"
+        return "hip._util.types.DataHandle"
 
     generator = CythonPackageGenerator(
         "hiprtc",
@@ -142,6 +152,7 @@ def generate_hiprtc_package_files():
         node_filter=hiprtc_node_filter,
         ptr_parm_intent=hiprtc_ptr_parm_intent,
         ptr_rank=hiprtc_ptr_rank,
+        ptr_complicated_type_handler=hiprtc_ptr_complicated_type_handler,
         cflags=hip_platform.cflags,
     )
     if HIP_PYTHON_SETUP_GENERATE:
@@ -473,7 +484,7 @@ if HIP_PYTHON_SETUP_BUILD:
         )
 
     cython_module_sources = [
-        ("hip._util.datahandle", ["./hip/_util/datahandle.pyx"]),
+        ("hip._util.types", ["./hip/_util/types.pyx"]),
         ("hip.chiprtc", ["./hip/chiprtc.pyx"]),
         ("hip.chip", ["./hip/chip.pyx"]),
         ("hip.chipblas", ["./hip/chipblas.pyx"]),

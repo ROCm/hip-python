@@ -39,6 +39,8 @@ def DEFAULT_RENAMER(name):  # backend-specific
 def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
 
+def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm):
+    return "hip._util.types.DataHandle"
 
 default_c_interface_preamble = """\
 # AMD_COPYRIGHT
@@ -56,7 +58,7 @@ cimport cpython.buffer
 import cython
 import ctypes
 import enum
-from hip._util.datahandle cimport DataHandle
+cimport hip._util.types
 """
 
 # Note: wrapper_class_decl_template must declare all ``@staticmethod`` ``cdef`` functions
@@ -639,12 +641,13 @@ class TypedefedFunctionPointerMixin(FunctionPointerMixin):
 class AnonymousFunctionPointerMixin(FunctionPointerMixin):
     pass
 
-
 class ParmMixin(CythonMixin, Typed):
     def __init__(self):
+        global DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
         CythonMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
         self.ptr_intent = control.DEFAULT_PTR_PARAM_INTENT
+        self.ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
 
     @property
     def cython_repr(self):
@@ -764,14 +767,16 @@ cdef void* {funptr_name} = NULL
         c_interface_call_args = [] # arguments that are passed to the C interface
         prolog = [] # additional code before the C interface call
 
-        def emit_datahandle_(parm_typename: str, parm_name: str, cprefix: str = ""):
+        def emit_datahandle_(parm_typename: str, parm: tree.Parm, cprefix: str = ""):
             global indent
             nonlocal sig_args
             nonlocal c_interface_call_args
 
+            parm_name = parm.cython_name
+            handler_name = parm.ptr_complicated_type_handler(parm)
             sig_args.append(f"object {parm_name}")
             c_interface_call_args.append(
-                f"\n{indent*2}<{cprefix}{parm_typename}>DataHandle.from_pyobj({parm_name})._ptr"
+                f"\n{indent*2}<{cprefix}{parm_typename}>{handler_name}.from_pyobj({parm_name})._ptr"
             )
 
         def emit_data_handle_for_void_basic_enum_type_(parm: tree.Parm):
@@ -782,7 +787,7 @@ cdef void* {funptr_name} = NULL
             )
             emit_datahandle_(
                 parm_typename,
-                parm_name,
+                parm,
                 cprefix=cprefix if parm.has_typeref else "",
             )
 
@@ -792,6 +797,7 @@ cdef void* {funptr_name} = NULL
             nonlocal c_interface_call_args
             nonlocal prolog
 
+            parm_name = parm.cython_name
             if (
                  parm.is_pointer_to_basic_type(degree=1)
                  or parm.is_pointer_to_char(degree=2)
@@ -820,7 +826,8 @@ cdef void* {funptr_name} = NULL
                 degree=-2
             ):
                 parm_typename = parm.cursor.type.get_canonical().spelling
-                prolog.append(f"{parm_name} = DataHandle.from_ptr(NULL)")
+                handler_name = parm.ptr_complicated_type_handler(parm)
+                prolog.append(f"{parm_name} = {handler_name}.from_ptr(NULL)")
                 c_interface_call_args.append(
                     f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr"
                 )
@@ -831,6 +838,7 @@ cdef void* {funptr_name} = NULL
             nonlocal c_interface_call_args
             nonlocal sig_args
 
+            parm_name = parm.cython_name
             if (
                 parm.is_pointer_to_void(degree=-1)
                 or parm.is_pointer_to_basic_type(degree=-1)
@@ -850,8 +858,8 @@ cdef void* {funptr_name} = NULL
                 emit_data_handle_for_void_basic_enum_type_(parm)
 
         for parm in self.parms:
-            assert isinstance(parm, ParmMixin)
             parm_name = parm.cython_name
+            assert isinstance(parm, ParmMixin)
             if parm.is_ptr:
                 if parm.is_out_ptr:
                     assert parm.is_indirection # make exception
@@ -928,7 +936,7 @@ cdef void* {funptr_name} = NULL
             fully_specified,
             sig_args,
             out_args,
-            out_arg_names, # required
+            out_arg_names, # required for parsing parameter documentation
             call_args,
             prolog,
         ) = self._analyze_parms(cprefix)
@@ -967,6 +975,7 @@ class CythonBackend:
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
+        ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,    
         renamer: callable = DEFAULT_RENAMER,
         warnings: control.Warnings = control.Warnings.IGNORE,
     ):
@@ -974,7 +983,7 @@ class CythonBackend:
 
         root = tree.from_libclang_translation_unit(translation_unit, warnings)
         return CythonBackend(
-            root, filename, node_filter, macro_type, ptr_parm_intent, ptr_rank, renamer
+            root, filename, node_filter, macro_type, ptr_parm_intent, ptr_rank, ptr_complicated_type_handler,renamer
         )
 
     def __init__(
@@ -985,6 +994,7 @@ class CythonBackend:
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
+        ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
     ):
         """
@@ -999,12 +1009,9 @@ class CythonBackend:
         self.filename = filename
         self.node_filter = node_filter
         self.macro_type = macro_type
-        self.ptr_parm_intent = (
-            ptr_parm_intent  # TODO use for FunctionMixin.render_python_interface_impl
-        )
-        self.ptr_rank = (
-            ptr_rank  # TODO use for FunctionMixin.render_python_interface_impl
-        )
+        self.ptr_parm_intent = ptr_parm_intent
+        self.ptr_rank = ptr_rank
+        self.ptr_complicated_type_handler = ptr_complicated_type_handler
         self.renamer = renamer
 
     def _walk_filtered_nodes(self):
@@ -1027,6 +1034,7 @@ class CythonBackend:
                 elif isinstance(node, (ParmMixin)):
                     setattr(node, "ptr_rank", self.ptr_rank)
                     setattr(node, "ptr_intent", self.ptr_parm_intent)
+                    setattr(node, "ptr_complicated_type_handler", self.ptr_complicated_type_handler)
                 # yield relevant nodes
                 if not isinstance(node, (FieldMixin, ParmMixin)):
                     if self.node_filter(node):
@@ -1195,6 +1203,7 @@ class CythonPackageGenerator:
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
+        ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
         warnings=control.Warnings.WARN,
         cflags=[],
@@ -1253,6 +1262,7 @@ class CythonPackageGenerator:
             macro_type,
             ptr_parm_intent,
             ptr_rank,
+            ptr_complicated_type_handler,
             renamer,
             warnings,
         )

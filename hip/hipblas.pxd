@@ -8,7 +8,7 @@ cimport cpython.buffer
 import cython
 import ctypes
 import enum
-from hip._util.datahandle cimport DataHandle
+cimport hip._util.types
 #ctypedef int16_t __int16_t
 #ctypedef uint16_t __uint16_t
 from .hip cimport ihipStream_t

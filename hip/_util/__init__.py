@@ -1,2 +1,2 @@
 
-from .datahandle import DataHandle
+from .types import DataHandle

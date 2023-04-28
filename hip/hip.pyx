@@ -8,7 +8,7 @@ cimport cpython.buffer
 import cython
 import ctypes
 import enum
-from hip._util.datahandle cimport DataHandle
+cimport hip._util.types
 
 from . cimport chip
 HIP_VERSION_MAJOR = chip.HIP_VERSION_MAJOR
@@ -18570,7 +18570,7 @@ def hipIpcGetMemHandle(object handle, object devPtr):
     """
     _hipIpcGetMemHandle__retval = hipError_t(chip.hipIpcGetMemHandle(
         hipIpcMemHandle_st.from_pyobj(handle)._ptr,
-        <void *>DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
     return (_hipIpcGetMemHandle__retval,)
 
 
@@ -18604,7 +18604,7 @@ def hipIpcOpenMemHandle(unsigned int flags):
     there is no guarantee that the same device poiter will be returned in @p *devPtr.
     This is diffrent from CUDA.
     """
-    devPtr = DataHandle.from_ptr(NULL)
+    devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     pass
 
 @cython.embedsignature(True)
@@ -18622,7 +18622,7 @@ def hipIpcCloseMemHandle(object devPtr):
     hipErrorInvalidHandle,
     """
     _hipIpcCloseMemHandle__retval = hipError_t(chip.hipIpcCloseMemHandle(
-        <void *>DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
     return (_hipIpcCloseMemHandle__retval,)
 
 
@@ -18675,7 +18675,7 @@ def hipFuncSetAttribute(object func, object attr, int value):
     if not isinstance(attr,hipFuncAttribute):
         raise TypeError("argument 'attr' must be of type 'hipFuncAttribute'")
     _hipFuncSetAttribute__retval = hipError_t(chip.hipFuncSetAttribute(
-        <const void *>DataHandle.from_pyobj(func)._ptr,attr.value,value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr,attr.value,value))    # fully specified
     return (_hipFuncSetAttribute__retval,)
 
 
@@ -18690,7 +18690,7 @@ def hipFuncSetCacheConfig(object func, object config):
     if not isinstance(config,hipFuncCache_t):
         raise TypeError("argument 'config' must be of type 'hipFuncCache_t'")
     _hipFuncSetCacheConfig__retval = hipError_t(chip.hipFuncSetCacheConfig(
-        <const void *>DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
     return (_hipFuncSetCacheConfig__retval,)
 
 
@@ -18706,7 +18706,7 @@ def hipFuncSetSharedMemConfig(object func, object config):
     if not isinstance(config,hipSharedMemConfig):
         raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
     _hipFuncSetSharedMemConfig__retval = hipError_t(chip.hipFuncSetSharedMemConfig(
-        <const void *>DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
     return (_hipFuncSetSharedMemConfig__retval,)
 
 
@@ -18776,7 +18776,7 @@ def hipDrvGetErrorName(object hipError, object errorString):
     if not isinstance(hipError,hipError_t):
         raise TypeError("argument 'hipError' must be of type 'hipError_t'")
     _hipDrvGetErrorName__retval = hipError_t(chip.hipDrvGetErrorName(hipError.value,
-        <const char **>DataHandle.from_pyobj(errorString)._ptr))    # fully specified
+        <const char **>hip._util.types.DataHandle.from_pyobj(errorString)._ptr))    # fully specified
     return (_hipDrvGetErrorName__retval,)
 
 
@@ -18791,7 +18791,7 @@ def hipDrvGetErrorString(object hipError, object errorString):
     if not isinstance(hipError,hipError_t):
         raise TypeError("argument 'hipError' must be of type 'hipError_t'")
     _hipDrvGetErrorString__retval = hipError_t(chip.hipDrvGetErrorString(hipError.value,
-        <const char **>DataHandle.from_pyobj(errorString)._ptr))    # fully specified
+        <const char **>hip._util.types.DataHandle.from_pyobj(errorString)._ptr))    # fully specified
     return (_hipDrvGetErrorString__retval,)
 
 
@@ -19114,7 +19114,7 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
     _hipStreamAddCallback__retval = hipError_t(chip.hipStreamAddCallback(
         ihipStream_t.from_pyobj(stream)._ptr,
         hipStreamCallback_t.from_pyobj(callback)._ptr,
-        <void *>DataHandle.from_pyobj(userData)._ptr,flags))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(userData)._ptr,flags))    # fully specified
     return (_hipStreamAddCallback__retval,)
 
 
@@ -19151,7 +19151,7 @@ def hipStreamWaitValue32(object stream, object ptr, uint32_t value, unsigned int
     """
     _hipStreamWaitValue32__retval = hipError_t(chip.hipStreamWaitValue32(
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
     return (_hipStreamWaitValue32__retval,)
 
 
@@ -19182,7 +19182,7 @@ def hipStreamWaitValue64(object stream, object ptr, uint64_t value, unsigned int
     """
     _hipStreamWaitValue64__retval = hipError_t(chip.hipStreamWaitValue64(
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
     return (_hipStreamWaitValue64__retval,)
 
 
@@ -19203,7 +19203,7 @@ def hipStreamWriteValue32(object stream, object ptr, uint32_t value, unsigned in
     """
     _hipStreamWriteValue32__retval = hipError_t(chip.hipStreamWriteValue32(
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,value,flags))    # fully specified
     return (_hipStreamWriteValue32__retval,)
 
 
@@ -19224,7 +19224,7 @@ def hipStreamWriteValue64(object stream, object ptr, uint64_t value, unsigned in
     """
     _hipStreamWriteValue64__retval = hipError_t(chip.hipStreamWriteValue64(
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,value,flags))    # fully specified
     return (_hipStreamWriteValue64__retval,)
 
 
@@ -19387,7 +19387,7 @@ def hipPointerGetAttributes(object attributes, object ptr):
     """
     _hipPointerGetAttributes__retval = hipError_t(chip.hipPointerGetAttributes(
         hipPointerAttribute_t.from_pyobj(attributes)._ptr,
-        <const void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipPointerGetAttributes__retval,)
 
 
@@ -19405,8 +19405,8 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
     if not isinstance(attribute,hipPointer_attribute):
         raise TypeError("argument 'attribute' must be of type 'hipPointer_attribute'")
     _hipPointerGetAttribute__retval = hipError_t(chip.hipPointerGetAttribute(
-        <void *>DataHandle.from_pyobj(data)._ptr,attribute.value,
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,attribute.value,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipPointerGetAttribute__retval,)
 
 
@@ -19424,10 +19424,10 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
     @see hipPointerGetAttribute
     """
     cdef chip.hipPointer_attribute attributes
-    data = DataHandle.from_ptr(NULL)
+    data = hip._util.types.DataHandle.from_ptr(NULL)
     _hipDrvPointerGetAttributes__retval = hipError_t(chip.hipDrvPointerGetAttributes(numAttributes,&attributes,
         <void **>&data._ptr,
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipDrvPointerGetAttributes__retval,hipPointer_attribute(attributes),data)
 
 
@@ -19440,7 +19440,7 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
     @see
     """
     _hipImportExternalSemaphore__retval = hipError_t(chip.hipImportExternalSemaphore(
-        <chip.hipExternalSemaphore_t*>DataHandle.from_pyobj(extSem_out)._ptr,
+        <chip.hipExternalSemaphore_t*>hip._util.types.DataHandle.from_pyobj(extSem_out)._ptr,
         hipExternalSemaphoreHandleDesc_st.from_pyobj(semHandleDesc)._ptr))    # fully specified
     return (_hipImportExternalSemaphore__retval,)
 
@@ -19456,7 +19456,7 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
     @see
     """
     _hipSignalExternalSemaphoresAsync__retval = hipError_t(chip.hipSignalExternalSemaphoresAsync(
-        <chip.hipExternalSemaphore_t *>DataHandle.from_pyobj(extSemArray)._ptr,
+        <chip.hipExternalSemaphore_t *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
         hipExternalSemaphoreSignalParams_st.from_pyobj(paramsArray)._ptr,numExtSems,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipSignalExternalSemaphoresAsync__retval,)
@@ -19473,7 +19473,7 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
     @see
     """
     _hipWaitExternalSemaphoresAsync__retval = hipError_t(chip.hipWaitExternalSemaphoresAsync(
-        <chip.hipExternalSemaphore_t *>DataHandle.from_pyobj(extSemArray)._ptr,
+        <chip.hipExternalSemaphore_t *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
         hipExternalSemaphoreWaitParams_st.from_pyobj(paramsArray)._ptr,numExtSems,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipWaitExternalSemaphoresAsync__retval,)
@@ -19487,7 +19487,7 @@ def hipDestroyExternalSemaphore(object extSem):
     @see
     """
     _hipDestroyExternalSemaphore__retval = hipError_t(chip.hipDestroyExternalSemaphore(
-        <chip.hipExternalSemaphore_t>DataHandle.from_pyobj(extSem)._ptr))    # fully specified
+        <chip.hipExternalSemaphore_t>hip._util.types.DataHandle.from_pyobj(extSem)._ptr))    # fully specified
     return (_hipDestroyExternalSemaphore__retval,)
 
 
@@ -19500,7 +19500,7 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
     @see
     """
     _hipImportExternalMemory__retval = hipError_t(chip.hipImportExternalMemory(
-        <chip.hipExternalMemory_t*>DataHandle.from_pyobj(extMem_out)._ptr,
+        <chip.hipExternalMemory_t*>hip._util.types.DataHandle.from_pyobj(extMem_out)._ptr,
         hipExternalMemoryHandleDesc_st.from_pyobj(memHandleDesc)._ptr))    # fully specified
     return (_hipImportExternalMemory__retval,)
 
@@ -19514,10 +19514,10 @@ def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
     @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     @see
     """
-    devPtr = DataHandle.from_ptr(NULL)
+    devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipExternalMemoryGetMappedBuffer__retval = hipError_t(chip.hipExternalMemoryGetMappedBuffer(
         <void **>&devPtr._ptr,
-        <chip.hipExternalMemory_t>DataHandle.from_pyobj(extMem)._ptr,
+        <chip.hipExternalMemory_t>hip._util.types.DataHandle.from_pyobj(extMem)._ptr,
         hipExternalMemoryBufferDesc_st.from_pyobj(bufferDesc)._ptr))    # fully specified
     return (_hipExternalMemoryGetMappedBuffer__retval,devPtr)
 
@@ -19530,7 +19530,7 @@ def hipDestroyExternalMemory(object extMem):
     @see
     """
     _hipDestroyExternalMemory__retval = hipError_t(chip.hipDestroyExternalMemory(
-        <chip.hipExternalMemory_t>DataHandle.from_pyobj(extMem)._ptr))    # fully specified
+        <chip.hipExternalMemory_t>hip._util.types.DataHandle.from_pyobj(extMem)._ptr))    # fully specified
     return (_hipDestroyExternalMemory__retval,)
 
 
@@ -19544,7 +19544,7 @@ def hipMalloc(int size):
     @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
     hipHostFree, hipHostMalloc
     """
-    ptr = DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMalloc__retval = hipError_t(chip.hipMalloc(
         <void **>&ptr._ptr,size))    # fully specified
     return (_hipMalloc__retval,ptr)
@@ -19561,7 +19561,7 @@ def hipExtMallocWithFlags(int sizeBytes, unsigned int flags):
     @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
     hipHostFree, hipHostMalloc
     """
-    ptr = DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipExtMallocWithFlags__retval = hipError_t(chip.hipExtMallocWithFlags(
         <void **>&ptr._ptr,sizeBytes,flags))    # fully specified
     return (_hipExtMallocWithFlags__retval,ptr)
@@ -19576,7 +19576,7 @@ def hipMallocHost(int size):
     @return #hipSuccess, #hipErrorOutOfMemory
     @deprecated use hipHostMalloc() instead
     """
-    ptr = DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMallocHost__retval = hipError_t(chip.hipMallocHost(
         <void **>&ptr._ptr,size))    # fully specified
     return (_hipMallocHost__retval,ptr)
@@ -19591,7 +19591,7 @@ def hipMemAllocHost(int size):
     @return #hipSuccess, #hipErrorOutOfMemory
     @deprecated use hipHostMalloc() instead
     """
-    ptr = DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMemAllocHost__retval = hipError_t(chip.hipMemAllocHost(
         <void **>&ptr._ptr,size))    # fully specified
     return (_hipMemAllocHost__retval,ptr)
@@ -19607,7 +19607,7 @@ def hipHostMalloc(int size, unsigned int flags):
     @return #hipSuccess, #hipErrorOutOfMemory
     @see hipSetDeviceFlags, hipHostFree
     """
-    ptr = DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipHostMalloc__retval = hipError_t(chip.hipHostMalloc(
         <void **>&ptr._ptr,size,flags))    # fully specified
     return (_hipHostMalloc__retval,ptr)
@@ -19628,7 +19628,7 @@ def hipMallocManaged(int size, unsigned int flags):
     (defaults to hipMemAttachGlobal)
     @returns #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
     """
-    dev_ptr = DataHandle.from_ptr(NULL)
+    dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMallocManaged__retval = hipError_t(chip.hipMallocManaged(
         <void **>&dev_ptr._ptr,size,flags))    # fully specified
     return (_hipMallocManaged__retval,dev_ptr)
@@ -19644,7 +19644,7 @@ def hipMemPrefetchAsync(object dev_ptr, int count, int device, object stream):
     @returns #hipSuccess, #hipErrorInvalidValue
     """
     _hipMemPrefetchAsync__retval = hipError_t(chip.hipMemPrefetchAsync(
-        <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count,device,
+        <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count,device,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemPrefetchAsync__retval,)
 
@@ -19661,7 +19661,7 @@ def hipMemAdvise(object dev_ptr, int count, object advice, int device):
     if not isinstance(advice,hipMemoryAdvise):
         raise TypeError("argument 'advice' must be of type 'hipMemoryAdvise'")
     _hipMemAdvise__retval = hipError_t(chip.hipMemAdvise(
-        <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count,advice.value,device))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count,advice.value,device))    # fully specified
     return (_hipMemAdvise__retval,)
 
 
@@ -19679,8 +19679,8 @@ def hipMemRangeGetAttribute(object data, int data_size, object attribute, object
     if not isinstance(attribute,hipMemRangeAttribute):
         raise TypeError("argument 'attribute' must be of type 'hipMemRangeAttribute'")
     _hipMemRangeGetAttribute__retval = hipError_t(chip.hipMemRangeGetAttribute(
-        <void *>DataHandle.from_pyobj(data)._ptr,data_size,attribute.value,
-        <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,data_size,attribute.value,
+        <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count))    # fully specified
     return (_hipMemRangeGetAttribute__retval,)
 
 
@@ -19697,12 +19697,12 @@ def hipMemRangeGetAttributes(int num_attributes, object dev_ptr, int count):
     @param [in] count        size of the range to query
     @returns #hipSuccess, #hipErrorInvalidValue
     """
-    data = DataHandle.from_ptr(NULL)
+    data = hip._util.types.DataHandle.from_ptr(NULL)
     cdef int data_sizes
     cdef chip.hipMemRangeAttribute attributes
     _hipMemRangeGetAttributes__retval = hipError_t(chip.hipMemRangeGetAttributes(
         <void **>&data._ptr,&data_sizes,&attributes,num_attributes,
-        <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count))    # fully specified
     return (_hipMemRangeGetAttributes__retval,data,data_sizes,hipMemRangeAttribute(attributes))
 
 
@@ -19719,7 +19719,7 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, int length, unsigned 
     """
     _hipStreamAttachMemAsync__retval = hipError_t(chip.hipStreamAttachMemAsync(
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void *>DataHandle.from_pyobj(dev_ptr)._ptr,length,flags))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,length,flags))    # fully specified
     return (_hipStreamAttachMemAsync__retval,)
 
 
@@ -19747,7 +19747,7 @@ def hipMallocAsync(int size, object stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    dev_ptr = DataHandle.from_ptr(NULL)
+    dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMallocAsync__retval = hipError_t(chip.hipMallocAsync(
         <void **>&dev_ptr._ptr,size,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
@@ -19772,7 +19772,7 @@ def hipFreeAsync(object dev_ptr, object stream):
     it is still open to changes and may have outstanding issues.
     """
     _hipFreeAsync__retval = hipError_t(chip.hipFreeAsync(
-        <void *>DataHandle.from_pyobj(dev_ptr)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipFreeAsync__retval,)
 
@@ -19838,7 +19838,7 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
         raise TypeError("argument 'attr' must be of type 'hipMemPoolAttr'")
     _hipMemPoolSetAttribute__retval = hipError_t(chip.hipMemPoolSetAttribute(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,attr.value,
-        <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
     return (_hipMemPoolSetAttribute__retval,)
 
 
@@ -19878,7 +19878,7 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
         raise TypeError("argument 'attr' must be of type 'hipMemPoolAttr'")
     _hipMemPoolGetAttribute__retval = hipError_t(chip.hipMemPoolGetAttribute(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,attr.value,
-        <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
     return (_hipMemPoolGetAttribute__retval,)
 
 
@@ -19988,7 +19988,7 @@ def hipMallocFromPoolAsync(int size, object mem_pool, object stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    dev_ptr = DataHandle.from_ptr(NULL)
+    dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMallocFromPoolAsync__retval = hipError_t(chip.hipMallocFromPoolAsync(
         <void **>&dev_ptr._ptr,size,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
@@ -20018,7 +20018,7 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
     if not isinstance(handle_type,hipMemAllocationHandleType):
         raise TypeError("argument 'handle_type' must be of type 'hipMemAllocationHandleType'")
     _hipMemPoolExportToShareableHandle__retval = hipError_t(chip.hipMemPoolExportToShareableHandle(
-        <void *>DataHandle.from_pyobj(shared_handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(shared_handle)._ptr,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,handle_type.value,flags))    # fully specified
     return (_hipMemPoolExportToShareableHandle__retval,)
 
@@ -20043,7 +20043,7 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
     if not isinstance(handle_type,hipMemAllocationHandleType):
         raise TypeError("argument 'handle_type' must be of type 'hipMemAllocationHandleType'")
     _hipMemPoolImportFromShareableHandle__retval = hipError_t(chip.hipMemPoolImportFromShareableHandle(&mem_pool._ptr,
-        <void *>DataHandle.from_pyobj(shared_handle)._ptr,handle_type.value,flags))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(shared_handle)._ptr,handle_type.value,flags))    # fully specified
     return (_hipMemPoolImportFromShareableHandle__retval,mem_pool)
 
 
@@ -20062,7 +20062,7 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
     """
     _hipMemPoolExportPointer__retval = hipError_t(chip.hipMemPoolExportPointer(
         hipMemPoolPtrExportData.from_pyobj(export_data)._ptr,
-        <void *>DataHandle.from_pyobj(dev_ptr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr))    # fully specified
     return (_hipMemPoolExportPointer__retval,)
 
 
@@ -20087,7 +20087,7 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    dev_ptr = DataHandle.from_ptr(NULL)
+    dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMemPoolImportPointer__retval = hipError_t(chip.hipMemPoolImportPointer(
         <void **>&dev_ptr._ptr,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
@@ -20105,7 +20105,7 @@ def hipHostAlloc(int size, unsigned int flags):
     @return #hipSuccess, #hipErrorOutOfMemory
     @deprecated use hipHostMalloc() instead
     """
-    ptr = DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipHostAlloc__retval = hipError_t(chip.hipHostAlloc(
         <void **>&ptr._ptr,size,flags))    # fully specified
     return (_hipHostAlloc__retval,ptr)
@@ -20120,10 +20120,10 @@ def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
     @see hipSetDeviceFlags, hipHostMalloc
     """
-    devPtr = DataHandle.from_ptr(NULL)
+    devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipHostGetDevicePointer__retval = hipError_t(chip.hipHostGetDevicePointer(
         <void **>&devPtr._ptr,
-        <void *>DataHandle.from_pyobj(hstPtr)._ptr,flags))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(hstPtr)._ptr,flags))    # fully specified
     return (_hipHostGetDevicePointer__retval,devPtr)
 
 
@@ -20137,7 +20137,7 @@ def hipHostGetFlags(object hostPtr):
     """
     cdef unsigned int flagsPtr
     _hipHostGetFlags__retval = hipError_t(chip.hipHostGetFlags(&flagsPtr,
-        <void *>DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
     return (_hipHostGetFlags__retval,flagsPtr)
 
 
@@ -20170,7 +20170,7 @@ def hipHostRegister(object hostPtr, int sizeBytes, unsigned int flags):
     @see hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
     """
     _hipHostRegister__retval = hipError_t(chip.hipHostRegister(
-        <void *>DataHandle.from_pyobj(hostPtr)._ptr,sizeBytes,flags))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(hostPtr)._ptr,sizeBytes,flags))    # fully specified
     return (_hipHostRegister__retval,)
 
 
@@ -20182,7 +20182,7 @@ def hipHostUnregister(object hostPtr):
     @see hipHostRegister
     """
     _hipHostUnregister__retval = hipError_t(chip.hipHostUnregister(
-        <void *>DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
     return (_hipHostUnregister__retval,)
 
 
@@ -20201,7 +20201,7 @@ def hipMallocPitch(int width, int height):
     @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
     hipMalloc3DArray, hipHostMalloc
     """
-    ptr = DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef int pitch
     _hipMallocPitch__retval = hipError_t(chip.hipMallocPitch(
         <void **>&ptr._ptr,&pitch,width,height))    # fully specified
@@ -20228,7 +20228,7 @@ def hipMemAllocPitch(object dptr, int widthInBytes, int height, unsigned int ele
     """
     cdef int pitch
     _hipMemAllocPitch__retval = hipError_t(chip.hipMemAllocPitch(
-        <chip.hipDeviceptr_t*>DataHandle.from_pyobj(dptr)._ptr,&pitch,widthInBytes,height,elementSizeBytes))    # fully specified
+        <chip.hipDeviceptr_t*>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,&pitch,widthInBytes,height,elementSizeBytes))    # fully specified
     return (_hipMemAllocPitch__retval,pitch)
 
 
@@ -20245,7 +20245,7 @@ def hipFree(object ptr):
     hipMalloc3DArray, hipHostMalloc
     """
     _hipFree__retval = hipError_t(chip.hipFree(
-        <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipFree__retval,)
 
 
@@ -20259,7 +20259,7 @@ def hipFreeHost(object ptr):
     @deprecated use hipHostFree() instead
     """
     _hipFreeHost__retval = hipError_t(chip.hipFreeHost(
-        <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipFreeHost__retval,)
 
 
@@ -20276,7 +20276,7 @@ def hipHostFree(object ptr):
     hipMalloc3DArray, hipHostMalloc
     """
     _hipHostFree__retval = hipError_t(chip.hipHostFree(
-        <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipHostFree__retval,)
 
 
@@ -20309,8 +20309,8 @@ def hipMemcpy(object dst, object src, int sizeBytes, object kind):
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy__retval = hipError_t(chip.hipMemcpy(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
     return (_hipMemcpy__retval,)
 
 
@@ -20321,8 +20321,8 @@ def hipMemcpyWithStream(object dst, object src, int sizeBytes, object kind, obje
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyWithStream__retval = hipError_t(chip.hipMemcpyWithStream(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyWithStream__retval,)
 
@@ -20343,8 +20343,8 @@ def hipMemcpyHtoD(object dst, object src, int sizeBytes):
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
     _hipMemcpyHtoD__retval = hipError_t(chip.hipMemcpyHtoD(
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
-        <void *>DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
     return (_hipMemcpyHtoD__retval,)
 
 
@@ -20364,8 +20364,8 @@ def hipMemcpyDtoH(object dst, object src, int sizeBytes):
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
     _hipMemcpyDtoH__retval = hipError_t(chip.hipMemcpyDtoH(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
     return (_hipMemcpyDtoH__retval,)
 
 
@@ -20385,8 +20385,8 @@ def hipMemcpyDtoD(object dst, object src, int sizeBytes):
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
     _hipMemcpyDtoD__retval = hipError_t(chip.hipMemcpyDtoD(
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
     return (_hipMemcpyDtoD__retval,)
 
 
@@ -20406,8 +20406,8 @@ def hipMemcpyHtoDAsync(object dst, object src, int sizeBytes, object stream):
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
     _hipMemcpyHtoDAsync__retval = hipError_t(chip.hipMemcpyHtoDAsync(
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
-        <void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyHtoDAsync__retval,)
 
@@ -20428,8 +20428,8 @@ def hipMemcpyDtoHAsync(object dst, object src, int sizeBytes, object stream):
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
     _hipMemcpyDtoHAsync__retval = hipError_t(chip.hipMemcpyDtoHAsync(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyDtoHAsync__retval,)
 
@@ -20450,8 +20450,8 @@ def hipMemcpyDtoDAsync(object dst, object src, int sizeBytes, object stream):
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
     _hipMemcpyDtoDAsync__retval = hipError_t(chip.hipMemcpyDtoDAsync(
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyDtoDAsync__retval,)
 
@@ -20470,7 +20470,7 @@ def hipModuleGetGlobal(object dptr, object hmod, const char * name):
     """
     cdef int bytes
     _hipModuleGetGlobal__retval = hipError_t(chip.hipModuleGetGlobal(
-        <chip.hipDeviceptr_t*>DataHandle.from_pyobj(dptr)._ptr,&bytes,
+        <chip.hipDeviceptr_t*>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,&bytes,
         ihipModule_t.from_pyobj(hmod)._ptr,name))    # fully specified
     return (_hipModuleGetGlobal__retval,bytes)
 
@@ -20482,10 +20482,10 @@ def hipGetSymbolAddress(object symbol):
     @param[in]   symbol  pointer to the symbole of the device
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    devPtr = DataHandle.from_ptr(NULL)
+    devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipGetSymbolAddress__retval = hipError_t(chip.hipGetSymbolAddress(
         <void **>&devPtr._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr))    # fully specified
     return (_hipGetSymbolAddress__retval,devPtr)
 
 
@@ -20498,7 +20498,7 @@ def hipGetSymbolSize(object symbol):
     """
     cdef int size
     _hipGetSymbolSize__retval = hipError_t(chip.hipGetSymbolSize(&size,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr))    # fully specified
     return (_hipGetSymbolSize__retval,size)
 
 
@@ -20521,8 +20521,8 @@ def hipMemcpyToSymbol(object symbol, object src, int sizeBytes, int offset, obje
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyToSymbol__retval = hipError_t(chip.hipMemcpyToSymbol(
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
     return (_hipMemcpyToSymbol__retval,)
 
 
@@ -20540,8 +20540,8 @@ def hipMemcpyToSymbolAsync(object symbol, object src, int sizeBytes, int offset,
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyToSymbolAsync__retval = hipError_t(chip.hipMemcpyToSymbolAsync(
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyToSymbolAsync__retval,)
 
@@ -20559,8 +20559,8 @@ def hipMemcpyFromSymbol(object dst, object symbol, int sizeBytes, int offset, ob
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyFromSymbol__retval = hipError_t(chip.hipMemcpyFromSymbol(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
     return (_hipMemcpyFromSymbol__retval,)
 
 
@@ -20578,8 +20578,8 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, int sizeBytes, int offse
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyFromSymbolAsync__retval = hipError_t(chip.hipMemcpyFromSymbolAsync(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyFromSymbolAsync__retval,)
 
@@ -20611,8 +20611,8 @@ def hipMemcpyAsync(object dst, object src, int sizeBytes, object kind, object st
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyAsync__retval = hipError_t(chip.hipMemcpyAsync(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyAsync__retval,)
 
@@ -20627,7 +20627,7 @@ def hipMemset(object dst, int value, int sizeBytes):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemset__retval = hipError_t(chip.hipMemset(
-        <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
     return (_hipMemset__retval,)
 
 
@@ -20641,7 +20641,7 @@ def hipMemsetD8(object dest, unsigned char value, int count):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD8__retval = hipError_t(chip.hipMemsetD8(
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
     return (_hipMemsetD8__retval,)
 
 
@@ -20660,7 +20660,7 @@ def hipMemsetD8Async(object dest, unsigned char value, int count, object stream)
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD8Async__retval = hipError_t(chip.hipMemsetD8Async(
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetD8Async__retval,)
 
@@ -20675,7 +20675,7 @@ def hipMemsetD16(object dest, unsigned short value, int count):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD16__retval = hipError_t(chip.hipMemsetD16(
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
     return (_hipMemsetD16__retval,)
 
 
@@ -20694,7 +20694,7 @@ def hipMemsetD16Async(object dest, unsigned short value, int count, object strea
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD16Async__retval = hipError_t(chip.hipMemsetD16Async(
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetD16Async__retval,)
 
@@ -20709,7 +20709,7 @@ def hipMemsetD32(object dest, int value, int count):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD32__retval = hipError_t(chip.hipMemsetD32(
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
     return (_hipMemsetD32__retval,)
 
 
@@ -20728,7 +20728,7 @@ def hipMemsetAsync(object dst, int value, int sizeBytes, object stream):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemsetAsync__retval = hipError_t(chip.hipMemsetAsync(
-        <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetAsync__retval,)
 
@@ -20748,7 +20748,7 @@ def hipMemsetD32Async(object dst, int value, int count, object stream):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemsetD32Async__retval = hipError_t(chip.hipMemsetD32Async(
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,value,count,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetD32Async__retval,)
 
@@ -20764,7 +20764,7 @@ def hipMemset2D(object dst, int pitch, int value, int width, int height):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemset2D__retval = hipError_t(chip.hipMemset2D(
-        <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
     return (_hipMemset2D__retval,)
 
 
@@ -20780,7 +20780,7 @@ def hipMemset2DAsync(object dst, int pitch, int value, int width, int height, ob
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemset2DAsync__retval = hipError_t(chip.hipMemset2DAsync(
-        <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemset2DAsync__retval,)
 
@@ -20827,7 +20827,7 @@ def hipMemPtrGetInfo(object ptr):
     """
     cdef int size
     _hipMemPtrGetInfo__retval = hipError_t(chip.hipMemPtrGetInfo(
-        <void *>DataHandle.from_pyobj(ptr)._ptr,&size))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,&size))    # fully specified
     return (_hipMemPtrGetInfo__retval,size)
 
 
@@ -20964,8 +20964,8 @@ def hipMemcpy2D(object dst, int dpitch, object src, int spitch, int width, int h
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2D__retval = hipError_t(chip.hipMemcpy2D(
-        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
-        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
     return (_hipMemcpy2D__retval,)
 
 
@@ -21018,8 +21018,8 @@ def hipMemcpy2DAsync(object dst, int dpitch, object src, int spitch, int width, 
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2DAsync__retval = hipError_t(chip.hipMemcpy2DAsync(
-        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
-        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DAsync__retval,)
 
@@ -21044,7 +21044,7 @@ def hipMemcpy2DToArray(object dst, int wOffset, int hOffset, object src, int spi
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2DToArray__retval = hipError_t(chip.hipMemcpy2DToArray(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
-        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
     return (_hipMemcpy2DToArray__retval,)
 
 
@@ -21069,7 +21069,7 @@ def hipMemcpy2DToArrayAsync(object dst, int wOffset, int hOffset, object src, in
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2DToArrayAsync__retval = hipError_t(chip.hipMemcpy2DToArrayAsync(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
-        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DToArrayAsync__retval,)
 
@@ -21092,7 +21092,7 @@ def hipMemcpyToArray(object dst, int wOffset, int hOffset, object src, int count
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyToArray__retval = hipError_t(chip.hipMemcpyToArray(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
-        <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
     return (_hipMemcpyToArray__retval,)
 
 
@@ -21113,7 +21113,7 @@ def hipMemcpyFromArray(object dst, object srcArray, int wOffset, int hOffset, in
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyFromArray__retval = hipError_t(chip.hipMemcpyFromArray(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(srcArray)._ptr,wOffset,hOffset,count,kind.value))    # fully specified
     return (_hipMemcpyFromArray__retval,)
 
@@ -21137,7 +21137,7 @@ def hipMemcpy2DFromArray(object dst, int dpitch, object src, int wOffset, int hO
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2DFromArray__retval = hipError_t(chip.hipMemcpy2DFromArray(
-        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value))    # fully specified
     return (_hipMemcpy2DFromArray__retval,)
 
@@ -21162,7 +21162,7 @@ def hipMemcpy2DFromArrayAsync(object dst, int dpitch, object src, int wOffset, i
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2DFromArrayAsync__retval = hipError_t(chip.hipMemcpy2DFromArrayAsync(
-        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DFromArrayAsync__retval,)
@@ -21181,7 +21181,7 @@ def hipMemcpyAtoH(object dst, object srcArray, int srcOffset, int count):
     hipMemcpyAsync
     """
     _hipMemcpyAtoH__retval = hipError_t(chip.hipMemcpyAtoH(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(srcArray)._ptr,srcOffset,count))    # fully specified
     return (_hipMemcpyAtoH__retval,)
 
@@ -21200,7 +21200,7 @@ def hipMemcpyHtoA(object dstArray, int dstOffset, object srcHost, int count):
     """
     _hipMemcpyHtoA__retval = hipError_t(chip.hipMemcpyHtoA(
         hipArray.from_pyobj(dstArray)._ptr,dstOffset,
-        <const void *>DataHandle.from_pyobj(srcHost)._ptr,count))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(srcHost)._ptr,count))    # fully specified
     return (_hipMemcpyHtoA__retval,)
 
 
@@ -21331,8 +21331,8 @@ def hipMemGetAddressRange(object pbase, object dptr):
     """
     cdef int psize
     _hipMemGetAddressRange__retval = hipError_t(chip.hipMemGetAddressRange(
-        <chip.hipDeviceptr_t*>DataHandle.from_pyobj(pbase)._ptr,&psize,
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dptr)._ptr))    # fully specified
+        <chip.hipDeviceptr_t*>hip._util.types.DataHandle.from_pyobj(pbase)._ptr,&psize,
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dptr)._ptr))    # fully specified
     return (_hipMemGetAddressRange__retval,psize)
 
 
@@ -21347,8 +21347,8 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, int 
     @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
     """
     _hipMemcpyPeer__retval = hipError_t(chip.hipMemcpyPeer(
-        <void *>DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
-        <const void *>DataHandle.from_pyobj(src)._ptr,srcDeviceId,sizeBytes))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,srcDeviceId,sizeBytes))    # fully specified
     return (_hipMemcpyPeer__retval,)
 
 
@@ -21364,8 +21364,8 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, i
     @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
     """
     _hipMemcpyPeerAsync__retval = hipError_t(chip.hipMemcpyPeerAsync(
-        <void *>DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
-        <const void *>DataHandle.from_pyobj(src)._ptr,srcDevice,sizeBytes,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,srcDevice,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyPeerAsync__retval,)
 
@@ -21743,7 +21743,7 @@ def hipFuncGetAttributes(object attr, object func):
     """
     _hipFuncGetAttributes__retval = hipError_t(chip.hipFuncGetAttributes(
         hipFuncAttributes.from_pyobj(attr)._ptr,
-        <const void *>DataHandle.from_pyobj(func)._ptr))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr))    # fully specified
     return (_hipFuncGetAttributes__retval,)
 
 
@@ -21787,7 +21787,7 @@ def hipModuleLoadData(object image):
     """
     module = ihipModule_t.from_ptr(NULL)
     _hipModuleLoadData__retval = hipError_t(chip.hipModuleLoadData(&module._ptr,
-        <const void *>DataHandle.from_pyobj(image)._ptr))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(image)._ptr))    # fully specified
     return (_hipModuleLoadData__retval,module)
 
 
@@ -21805,8 +21805,8 @@ def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValu
     module = ihipModule_t.from_ptr(NULL)
     cdef chip.hipJitOption options
     _hipModuleLoadDataEx__retval = hipError_t(chip.hipModuleLoadDataEx(&module._ptr,
-        <const void *>DataHandle.from_pyobj(image)._ptr,numOptions,&options,
-        <void **>DataHandle.from_pyobj(optionValues)._ptr))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(image)._ptr,numOptions,&options,
+        <void **>hip._util.types.DataHandle.from_pyobj(optionValues)._ptr))    # fully specified
     return (_hipModuleLoadDataEx__retval,module,hipJitOption(options))
 
 
@@ -21838,8 +21838,8 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
     _hipModuleLaunchKernel__retval = hipError_t(chip.hipModuleLaunchKernel(
         ihipModuleSymbol_t.from_pyobj(f)._ptr,gridDimX,gridDimY,gridDimZ,blockDimX,blockDimY,blockDimZ,sharedMemBytes,
         ihipStream_t.from_pyobj(stream)._ptr,
-        <void **>DataHandle.from_pyobj(kernelParams)._ptr,
-        <void **>DataHandle.from_pyobj(extra)._ptr))    # fully specified
+        <void **>hip._util.types.DataHandle.from_pyobj(kernelParams)._ptr,
+        <void **>hip._util.types.DataHandle.from_pyobj(extra)._ptr))    # fully specified
     return (_hipModuleLaunchKernel__retval,)
 
 
@@ -21971,7 +21971,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, int dy
     """
     cdef int numBlocks
     _hipOccupancyMaxActiveBlocksPerMultiprocessor__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,
-        <const void *>DataHandle.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk))    # fully specified
     return (_hipOccupancyMaxActiveBlocksPerMultiprocessor__retval,numBlocks)
 
 
@@ -21986,7 +21986,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSiz
     """
     cdef int numBlocks
     _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,
-        <const void *>DataHandle.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk,flags))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,blockSize,dynSharedMemPerBlk,flags))    # fully specified
     return (_hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval,numBlocks)
 
 
@@ -22005,7 +22005,7 @@ def hipOccupancyMaxPotentialBlockSize(object f, int dynSharedMemPerBlk, int bloc
     cdef int gridSize
     cdef int blockSize
     _hipOccupancyMaxPotentialBlockSize__retval = hipError_t(chip.hipOccupancyMaxPotentialBlockSize(&gridSize,&blockSize,
-        <const void *>DataHandle.from_pyobj(f)._ptr,dynSharedMemPerBlk,blockSizeLimit))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,dynSharedMemPerBlk,blockSizeLimit))    # fully specified
     return (_hipOccupancyMaxPotentialBlockSize__retval,gridSize,blockSize)
 
 
@@ -22059,7 +22059,7 @@ def hipSetupArgument(object arg, int size, int offset):
     @param [in] offset Offset of the argument on the argument stack.
     """
     _hipSetupArgument__retval = hipError_t(chip.hipSetupArgument(
-        <const void *>DataHandle.from_pyobj(arg)._ptr,size,offset))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(arg)._ptr,size,offset))    # fully specified
     return (_hipSetupArgument__retval,)
 
 
@@ -22070,7 +22070,7 @@ def hipLaunchByPtr(object func):
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipLaunchByPtr__retval = hipError_t(chip.hipLaunchByPtr(
-        <const void *>DataHandle.from_pyobj(func)._ptr))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr))    # fully specified
     return (_hipLaunchByPtr__retval,)
 
 
@@ -22103,7 +22103,7 @@ def hipLaunchHostFunc(object stream, object fn, object userData):
     _hipLaunchHostFunc__retval = hipError_t(chip.hipLaunchHostFunc(
         ihipStream_t.from_pyobj(stream)._ptr,
         hipHostFn_t.from_pyobj(fn)._ptr,
-        <void *>DataHandle.from_pyobj(userData)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(userData)._ptr))    # fully specified
     return (_hipLaunchHostFunc__retval,)
 
 
@@ -22316,7 +22316,7 @@ def hipGetTextureReference(object symbol):
     """
     texref = textureReference.from_ptr(NULL)
     _hipGetTextureReference__retval = hipError_t(chip.hipGetTextureReference(&texref._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr))    # fully specified
     return (_hipGetTextureReference__retval,texref)
 
 
@@ -22379,7 +22379,7 @@ def hipBindTexture(object tex, object devPtr, object desc, int size):
     cdef int offset
     _hipBindTexture__retval = hipError_t(chip.hipBindTexture(&offset,
         textureReference.from_pyobj(tex)._ptr,
-        <const void *>DataHandle.from_pyobj(devPtr)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr,
         hipChannelFormatDesc.from_pyobj(desc)._ptr,size))    # fully specified
     return (_hipBindTexture__retval,offset)
 
@@ -22391,7 +22391,7 @@ def hipBindTexture2D(object tex, object devPtr, object desc, int width, int heig
     cdef int offset
     _hipBindTexture2D__retval = hipError_t(chip.hipBindTexture2D(&offset,
         textureReference.from_pyobj(tex)._ptr,
-        <const void *>DataHandle.from_pyobj(devPtr)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr,
         hipChannelFormatDesc.from_pyobj(desc)._ptr,width,height,pitch))    # fully specified
     return (_hipBindTexture2D__retval,offset)
 
@@ -22430,7 +22430,7 @@ def hipUnbindTexture(object tex):
 def hipTexRefGetAddress(object texRef):
     """
     """
-    dev_ptr = DataHandle.from_ptr(NULL)
+    dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipTexRefGetAddress__retval = hipError_t(chip.hipTexRefGetAddress(
         <void **>&dev_ptr._ptr,
         textureReference.from_pyobj(texRef)._ptr))    # fully specified
@@ -22536,7 +22536,7 @@ def hipTexRefSetAddress(object texRef, object dptr, int bytes):
     cdef int ByteOffset
     _hipTexRefSetAddress__retval = hipError_t(chip.hipTexRefSetAddress(&ByteOffset,
         textureReference.from_pyobj(texRef)._ptr,
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dptr)._ptr,bytes))    # fully specified
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,bytes))    # fully specified
     return (_hipTexRefSetAddress__retval,ByteOffset)
 
 
@@ -22547,7 +22547,7 @@ def hipTexRefSetAddress2D(object texRef, object desc, object dptr, int Pitch):
     _hipTexRefSetAddress2D__retval = hipError_t(chip.hipTexRefSetAddress2D(
         textureReference.from_pyobj(texRef)._ptr,
         HIP_ARRAY_DESCRIPTOR.from_pyobj(desc)._ptr,
-        <chip.hipDeviceptr_t>DataHandle.from_pyobj(dptr)._ptr,Pitch))    # fully specified
+        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,Pitch))    # fully specified
     return (_hipTexRefSetAddress2D__retval,)
 
 
@@ -22663,7 +22663,7 @@ def hipKernelNameRefByPtr(object hostFunction, object stream):
     """
     """
     cdef const char * _hipKernelNameRefByPtr__retval = chip.hipKernelNameRefByPtr(
-        <const void *>DataHandle.from_pyobj(hostFunction)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(hostFunction)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr)    # fully specified
 
 
@@ -22744,7 +22744,7 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
     cdef int numDependencies_out
     _hipStreamGetCaptureInfo_v2__retval = hipError_t(chip.hipStreamGetCaptureInfo_v2(
         ihipStream_t.from_pyobj(stream)._ptr,&captureStatus_out,&id_out,&graph_out._ptr,
-        <chip.hipGraphNode_t **>DataHandle.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
+        <chip.hipGraphNode_t **>hip._util.types.DataHandle.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
     return (_hipStreamGetCaptureInfo_v2__retval,hipStreamCaptureStatus(captureStatus_out),id_out,graph_out,numDependencies_out)
 
 
@@ -23313,8 +23313,8 @@ def hipGraphAddMemcpyNode1D(object graph, int numDependencies, object dst, objec
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipGraphAddMemcpyNode1D__retval = hipError_t(chip.hipGraphAddMemcpyNode1D(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
     return (_hipGraphAddMemcpyNode1D__retval,pGraphNode,pDependencies)
 
 
@@ -23334,8 +23334,8 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, int count
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipGraphMemcpyNodeSetParams1D__retval = hipError_t(chip.hipGraphMemcpyNodeSetParams1D(
         hipGraphNode.from_pyobj(node)._ptr,
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
     return (_hipGraphMemcpyNodeSetParams1D__retval,)
 
 
@@ -23358,8 +23358,8 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
     _hipGraphExecMemcpyNodeSetParams1D__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParams1D(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
     return (_hipGraphExecMemcpyNodeSetParams1D__retval,)
 
 
@@ -23385,8 +23385,8 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, int numDependencies, object ds
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipGraphAddMemcpyNodeFromSymbol__retval = hipError_t(chip.hipGraphAddMemcpyNodeFromSymbol(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphAddMemcpyNodeFromSymbol__retval,pGraphNode,pDependencies)
 
 
@@ -23407,8 +23407,8 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipGraphMemcpyNodeSetParamsFromSymbol__retval = hipError_t(chip.hipGraphMemcpyNodeSetParamsFromSymbol(
         hipGraphNode.from_pyobj(node)._ptr,
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphMemcpyNodeSetParamsFromSymbol__retval,)
 
 
@@ -23432,8 +23432,8 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
     _hipGraphExecMemcpyNodeSetParamsFromSymbol__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParamsFromSymbol(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphExecMemcpyNodeSetParamsFromSymbol__retval,)
 
 
@@ -23459,8 +23459,8 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, int numDependencies, object symb
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipGraphAddMemcpyNodeToSymbol__retval = hipError_t(chip.hipGraphAddMemcpyNodeToSymbol(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphAddMemcpyNodeToSymbol__retval,pGraphNode,pDependencies)
 
 
@@ -23481,8 +23481,8 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipGraphMemcpyNodeSetParamsToSymbol__retval = hipError_t(chip.hipGraphMemcpyNodeSetParamsToSymbol(
         hipGraphNode.from_pyobj(node)._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphMemcpyNodeSetParamsToSymbol__retval,)
 
 
@@ -23506,8 +23506,8 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
     _hipGraphExecMemcpyNodeSetParamsToSymbol__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParamsToSymbol(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
     return (_hipGraphExecMemcpyNodeSetParamsToSymbol__retval,)
 
 
@@ -23862,7 +23862,7 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
     if not isinstance(attr,hipGraphMemAttributeType):
         raise TypeError("argument 'attr' must be of type 'hipGraphMemAttributeType'")
     _hipDeviceGetGraphMemAttribute__retval = hipError_t(chip.hipDeviceGetGraphMemAttribute(device,attr.value,
-        <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
     return (_hipDeviceGetGraphMemAttribute__retval,)
 
 
@@ -23879,7 +23879,7 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
     if not isinstance(attr,hipGraphMemAttributeType):
         raise TypeError("argument 'attr' must be of type 'hipGraphMemAttributeType'")
     _hipDeviceSetGraphMemAttribute__retval = hipError_t(chip.hipDeviceSetGraphMemAttribute(device,attr.value,
-        <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
     return (_hipDeviceSetGraphMemAttribute__retval,)
 
 
@@ -23908,7 +23908,7 @@ def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount
     """
     object_out = hipUserObject.from_ptr(NULL)
     _hipUserObjectCreate__retval = hipError_t(chip.hipUserObjectCreate(&object_out._ptr,
-        <void *>DataHandle.from_pyobj(ptr)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,
         hipHostFn_t.from_pyobj(destroy)._ptr,initialRefcount,flags))    # fully specified
     return (_hipUserObjectCreate__retval,object_out)
 
@@ -23984,7 +23984,7 @@ def hipMemAddressFree(object devPtr, int size):
     it is still open to changes and may have outstanding issues.
     """
     _hipMemAddressFree__retval = hipError_t(chip.hipMemAddressFree(
-        <void *>DataHandle.from_pyobj(devPtr)._ptr,size))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr,size))    # fully specified
     return (_hipMemAddressFree__retval,)
 
 
@@ -24000,10 +24000,10 @@ def hipMemAddressReserve(int size, int alignment, object addr, unsigned long lon
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    ptr = DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMemAddressReserve__retval = hipError_t(chip.hipMemAddressReserve(
         <void **>&ptr._ptr,size,alignment,
-        <void *>DataHandle.from_pyobj(addr)._ptr,flags))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(addr)._ptr,flags))    # fully specified
     return (_hipMemAddressReserve__retval,ptr)
 
 
@@ -24038,7 +24038,7 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
     if not isinstance(handleType,hipMemAllocationHandleType):
         raise TypeError("argument 'handleType' must be of type 'hipMemAllocationHandleType'")
     _hipMemExportToShareableHandle__retval = hipError_t(chip.hipMemExportToShareableHandle(
-        <void *>DataHandle.from_pyobj(shareableHandle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(shareableHandle)._ptr,
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr,handleType.value,flags))    # fully specified
     return (_hipMemExportToShareableHandle__retval,)
 
@@ -24056,7 +24056,7 @@ def hipMemGetAccess(object location, object ptr):
     cdef unsigned long long flags
     _hipMemGetAccess__retval = hipError_t(chip.hipMemGetAccess(&flags,
         hipMemLocation.from_pyobj(location)._ptr,
-        <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipMemGetAccess__retval,flags)
 
 
@@ -24107,7 +24107,7 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
     if not isinstance(shHandleType,hipMemAllocationHandleType):
         raise TypeError("argument 'shHandleType' must be of type 'hipMemAllocationHandleType'")
     _hipMemImportFromShareableHandle__retval = hipError_t(chip.hipMemImportFromShareableHandle(&handle._ptr,
-        <void *>DataHandle.from_pyobj(osHandle)._ptr,shHandleType.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(osHandle)._ptr,shHandleType.value))    # fully specified
     return (_hipMemImportFromShareableHandle__retval,handle)
 
 
@@ -24124,7 +24124,7 @@ def hipMemMap(object ptr, int size, int offset, object handle, unsigned long lon
     it is still open to changes and may have outstanding issues.
     """
     _hipMemMap__retval = hipError_t(chip.hipMemMap(
-        <void *>DataHandle.from_pyobj(ptr)._ptr,size,offset,
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size,offset,
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr,flags))    # fully specified
     return (_hipMemMap__retval,)
 
@@ -24169,7 +24169,7 @@ def hipMemRetainAllocationHandle(object addr):
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemRetainAllocationHandle__retval = hipError_t(chip.hipMemRetainAllocationHandle(&handle._ptr,
-        <void *>DataHandle.from_pyobj(addr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(addr)._ptr))    # fully specified
     return (_hipMemRetainAllocationHandle__retval,handle)
 
 
@@ -24185,7 +24185,7 @@ def hipMemSetAccess(object ptr, int size, object desc, int count):
     it is still open to changes and may have outstanding issues.
     """
     _hipMemSetAccess__retval = hipError_t(chip.hipMemSetAccess(
-        <void *>DataHandle.from_pyobj(ptr)._ptr,size,
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size,
         hipMemAccessDesc.from_pyobj(desc)._ptr,count))    # fully specified
     return (_hipMemSetAccess__retval,)
 
@@ -24200,7 +24200,7 @@ def hipMemUnmap(object ptr, int size):
     it is still open to changes and may have outstanding issues.
     """
     _hipMemUnmap__retval = hipError_t(chip.hipMemUnmap(
-        <void *>DataHandle.from_pyobj(ptr)._ptr,size))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size))    # fully specified
     return (_hipMemUnmap__retval,)
 
 
@@ -24258,7 +24258,7 @@ def hipGraphicsSubResourceGetMappedArray(object resource, unsigned int arrayInde
 def hipGraphicsResourceGetMappedPointer(object resource):
     """
     """
-    devPtr = DataHandle.from_ptr(NULL)
+    devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef int size
     _hipGraphicsResourceGetMappedPointer__retval = hipError_t(chip.hipGraphicsResourceGetMappedPointer(
         <void **>&devPtr._ptr,&size,
@@ -24292,8 +24292,8 @@ def hipMemcpy_spt(object dst, object src, int sizeBytes, object kind):
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy_spt__retval = hipError_t(chip.hipMemcpy_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
     return (_hipMemcpy_spt__retval,)
 
 
@@ -24304,8 +24304,8 @@ def hipMemcpyToSymbol_spt(object symbol, object src, int sizeBytes, int offset, 
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyToSymbol_spt__retval = hipError_t(chip.hipMemcpyToSymbol_spt(
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
     return (_hipMemcpyToSymbol_spt__retval,)
 
 
@@ -24316,8 +24316,8 @@ def hipMemcpyFromSymbol_spt(object dst, object symbol, int sizeBytes, int offset
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyFromSymbol_spt__retval = hipError_t(chip.hipMemcpyFromSymbol_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
     return (_hipMemcpyFromSymbol_spt__retval,)
 
 
@@ -24328,8 +24328,8 @@ def hipMemcpy2D_spt(object dst, int dpitch, object src, int spitch, int width, i
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2D_spt__retval = hipError_t(chip.hipMemcpy2D_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
-        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
     return (_hipMemcpy2D_spt__retval,)
 
 
@@ -24340,7 +24340,7 @@ def hipMemcpy2DFromArray_spt(object dst, int dpitch, object src, int wOffset, in
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2DFromArray_spt__retval = hipError_t(chip.hipMemcpy2DFromArray_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value))    # fully specified
     return (_hipMemcpy2DFromArray_spt__retval,)
 
@@ -24359,7 +24359,7 @@ def hipMemset_spt(object dst, int value, int sizeBytes):
     """
     """
     _hipMemset_spt__retval = hipError_t(chip.hipMemset_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
     return (_hipMemset_spt__retval,)
 
 
@@ -24368,7 +24368,7 @@ def hipMemsetAsync_spt(object dst, int value, int sizeBytes, object stream):
     """
     """
     _hipMemsetAsync_spt__retval = hipError_t(chip.hipMemsetAsync_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetAsync_spt__retval,)
 
@@ -24378,7 +24378,7 @@ def hipMemset2D_spt(object dst, int pitch, int value, int width, int height):
     """
     """
     _hipMemset2D_spt__retval = hipError_t(chip.hipMemset2D_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
     return (_hipMemset2D_spt__retval,)
 
 
@@ -24387,7 +24387,7 @@ def hipMemset2DAsync_spt(object dst, int pitch, int value, int width, int height
     """
     """
     _hipMemset2DAsync_spt__retval = hipError_t(chip.hipMemset2DAsync_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemset2DAsync_spt__retval,)
 
@@ -24411,8 +24411,8 @@ def hipMemcpyAsync_spt(object dst, object src, int sizeBytes, object kind, objec
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyAsync_spt__retval = hipError_t(chip.hipMemcpyAsync_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyAsync_spt__retval,)
 
@@ -24434,8 +24434,8 @@ def hipMemcpy2DAsync_spt(object dst, int dpitch, object src, int spitch, int wid
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2DAsync_spt__retval = hipError_t(chip.hipMemcpy2DAsync_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
-        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DAsync_spt__retval,)
 
@@ -24447,8 +24447,8 @@ def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, int sizeBytes, int o
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyFromSymbolAsync_spt__retval = hipError_t(chip.hipMemcpyFromSymbolAsync_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyFromSymbolAsync_spt__retval,)
 
@@ -24460,8 +24460,8 @@ def hipMemcpyToSymbolAsync_spt(object symbol, object src, int sizeBytes, int off
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyToSymbolAsync_spt__retval = hipError_t(chip.hipMemcpyToSymbolAsync_spt(
-        <const void *>DataHandle.from_pyobj(symbol)._ptr,
-        <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
+        <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyToSymbolAsync_spt__retval,)
 
@@ -24473,7 +24473,7 @@ def hipMemcpyFromArray_spt(object dst, object src, int wOffsetSrc, int hOffset, 
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpyFromArray_spt__retval = hipError_t(chip.hipMemcpyFromArray_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(src)._ptr,wOffsetSrc,hOffset,count,kind.value))    # fully specified
     return (_hipMemcpyFromArray_spt__retval,)
 
@@ -24486,7 +24486,7 @@ def hipMemcpy2DToArray_spt(object dst, int wOffset, int hOffset, object src, int
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2DToArray_spt__retval = hipError_t(chip.hipMemcpy2DToArray_spt(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
-        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
     return (_hipMemcpy2DToArray_spt__retval,)
 
 
@@ -24497,7 +24497,7 @@ def hipMemcpy2DFromArrayAsync_spt(object dst, int dpitch, object src, int wOffse
     if not isinstance(kind,hipMemcpyKind):
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2DFromArrayAsync_spt__retval = hipError_t(chip.hipMemcpy2DFromArrayAsync_spt(
-        <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffsetSrc,hOffsetSrc,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DFromArrayAsync_spt__retval,)
@@ -24511,7 +24511,7 @@ def hipMemcpy2DToArrayAsync_spt(object dst, int wOffset, int hOffset, object src
         raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
     _hipMemcpy2DToArrayAsync_spt__retval = hipError_t(chip.hipMemcpy2DToArrayAsync_spt(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
-        <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
+        <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpy2DToArrayAsync_spt__retval,)
 
@@ -24571,7 +24571,7 @@ def hipStreamAddCallback_spt(object stream, object callback, object userData, un
     _hipStreamAddCallback_spt__retval = hipError_t(chip.hipStreamAddCallback_spt(
         ihipStream_t.from_pyobj(stream)._ptr,
         hipStreamCallback_t.from_pyobj(callback)._ptr,
-        <void *>DataHandle.from_pyobj(userData)._ptr,flags))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(userData)._ptr,flags))    # fully specified
     return (_hipStreamAddCallback_spt__retval,)
 
 
@@ -24659,7 +24659,7 @@ def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
     cdef int numDependencies_out
     _hipStreamGetCaptureInfo_v2_spt__retval = hipError_t(chip.hipStreamGetCaptureInfo_v2_spt(
         ihipStream_t.from_pyobj(stream)._ptr,&captureStatus_out,&id_out,&graph_out._ptr,
-        <chip.hipGraphNode_t **>DataHandle.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
+        <chip.hipGraphNode_t **>hip._util.types.DataHandle.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
     return (_hipStreamGetCaptureInfo_v2_spt__retval,hipStreamCaptureStatus(captureStatus_out),id_out,graph_out,numDependencies_out)
 
 
@@ -24670,5 +24670,5 @@ def hipLaunchHostFunc_spt(object stream, object fn, object userData):
     _hipLaunchHostFunc_spt__retval = hipError_t(chip.hipLaunchHostFunc_spt(
         ihipStream_t.from_pyobj(stream)._ptr,
         hipHostFn_t.from_pyobj(fn)._ptr,
-        <void *>DataHandle.from_pyobj(userData)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(userData)._ptr))    # fully specified
     return (_hipLaunchHostFunc_spt__retval,)
