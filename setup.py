@@ -140,7 +140,7 @@ def generate_hiprtc_package_files():
             ("hiprtcCreateProgram","includeNames"),
         )
         if (parm.parent.name, parm.name) in list_of_str_parms:
-            return "hip._util.types.ListOfStr"
+            return "hip._util.types.ListOfBytes"
         return "hip._util.types.DataHandle"
 
     generator = CythonPackageGenerator(
