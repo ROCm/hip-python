@@ -103,6 +103,8 @@ cdef class ihiprtcLinkState:
             if ``pyobj`` is an instance of ihiprtcLinkState!
         """
         cdef ihiprtcLinkState wrapper = ihiprtcLinkState.__new__(ihiprtcLinkState)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ihiprtcLinkState):
@@ -111,6 +113,11 @@ cdef class ihiprtcLinkState:
             wrapper._ptr = <chiprtc.ihiprtcLinkState*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chiprtc.ihiprtcLinkState*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chiprtc.ihiprtcLinkState*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -168,7 +175,7 @@ def hiprtcVersion(object major, object minor):
     _hiprtcVersion__retval = hiprtcResult(chiprtc.hiprtcVersion(
         <int *>DataHandle.from_pyobj(major)._ptr,
         <int *>DataHandle.from_pyobj(minor)._ptr))    # fully specified
-    return _hiprtcVersion__retval
+    return (_hiprtcVersion__retval,)
 
 
 cdef class _hiprtcProgram:
@@ -207,6 +214,8 @@ cdef class _hiprtcProgram:
             if ``pyobj`` is an instance of _hiprtcProgram!
         """
         cdef _hiprtcProgram wrapper = _hiprtcProgram.__new__(_hiprtcProgram)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,_hiprtcProgram):
@@ -215,6 +224,11 @@ cdef class _hiprtcProgram:
             wrapper._ptr = <chiprtc._hiprtcProgram*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chiprtc._hiprtcProgram*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chiprtc._hiprtcProgram*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -260,7 +274,7 @@ def hiprtcAddNameExpression(object prog, const char * name_expression):
     """
     _hiprtcAddNameExpression__retval = hiprtcResult(chiprtc.hiprtcAddNameExpression(
         _hiprtcProgram.from_pyobj(prog)._ptr,name_expression))    # fully specified
-    return _hiprtcAddNameExpression__retval
+    return (_hiprtcAddNameExpression__retval,)
 
 
 @cython.embedsignature(True)
@@ -277,7 +291,7 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
     _hiprtcCompileProgram__retval = hiprtcResult(chiprtc.hiprtcCompileProgram(
         _hiprtcProgram.from_pyobj(prog)._ptr,numOptions,
         <const char **>DataHandle.from_pyobj(options)._ptr))    # fully specified
-    return _hiprtcCompileProgram__retval
+    return (_hiprtcCompileProgram__retval,)
 
 
 @cython.embedsignature(True)
@@ -300,7 +314,7 @@ def hiprtcCreateProgram(object prog, const char * src, const char * name, int nu
         <chiprtc.hiprtcProgram*>DataHandle.from_pyobj(prog)._ptr,src,name,numHeaders,
         <const char **>DataHandle.from_pyobj(headers)._ptr,
         <const char **>DataHandle.from_pyobj(includeNames)._ptr))    # fully specified
-    return _hiprtcCreateProgram__retval
+    return (_hiprtcCreateProgram__retval,)
 
 
 @cython.embedsignature(True)
@@ -313,7 +327,7 @@ def hiprtcDestroyProgram(object prog):
     """
     _hiprtcDestroyProgram__retval = hiprtcResult(chiprtc.hiprtcDestroyProgram(
         <chiprtc.hiprtcProgram*>DataHandle.from_pyobj(prog)._ptr))    # fully specified
-    return _hiprtcDestroyProgram__retval
+    return (_hiprtcDestroyProgram__retval,)
 
 
 @cython.embedsignature(True)
@@ -332,7 +346,7 @@ def hiprtcGetLoweredName(object prog, const char * name_expression, object lower
     _hiprtcGetLoweredName__retval = hiprtcResult(chiprtc.hiprtcGetLoweredName(
         _hiprtcProgram.from_pyobj(prog)._ptr,name_expression,
         <const char **>DataHandle.from_pyobj(lowered_name)._ptr))    # fully specified
-    return _hiprtcGetLoweredName__retval
+    return (_hiprtcGetLoweredName__retval,)
 
 
 @cython.embedsignature(True)
@@ -345,7 +359,7 @@ def hiprtcGetProgramLog(object prog, char * log):
     """
     _hiprtcGetProgramLog__retval = hiprtcResult(chiprtc.hiprtcGetProgramLog(
         _hiprtcProgram.from_pyobj(prog)._ptr,log))    # fully specified
-    return _hiprtcGetProgramLog__retval
+    return (_hiprtcGetProgramLog__retval,)
 
 
 @cython.embedsignature(True)
@@ -359,7 +373,7 @@ def hiprtcGetProgramLogSize(object prog, object logSizeRet):
     _hiprtcGetProgramLogSize__retval = hiprtcResult(chiprtc.hiprtcGetProgramLogSize(
         _hiprtcProgram.from_pyobj(prog)._ptr,
         <int *>DataHandle.from_pyobj(logSizeRet)._ptr))    # fully specified
-    return _hiprtcGetProgramLogSize__retval
+    return (_hiprtcGetProgramLogSize__retval,)
 
 
 @cython.embedsignature(True)
@@ -372,7 +386,7 @@ def hiprtcGetCode(object prog, char * code):
     """
     _hiprtcGetCode__retval = hiprtcResult(chiprtc.hiprtcGetCode(
         _hiprtcProgram.from_pyobj(prog)._ptr,code))    # fully specified
-    return _hiprtcGetCode__retval
+    return (_hiprtcGetCode__retval,)
 
 
 @cython.embedsignature(True)
@@ -386,7 +400,7 @@ def hiprtcGetCodeSize(object prog, object codeSizeRet):
     _hiprtcGetCodeSize__retval = hiprtcResult(chiprtc.hiprtcGetCodeSize(
         _hiprtcProgram.from_pyobj(prog)._ptr,
         <int *>DataHandle.from_pyobj(codeSizeRet)._ptr))    # fully specified
-    return _hiprtcGetCodeSize__retval
+    return (_hiprtcGetCodeSize__retval,)
 
 
 @cython.embedsignature(True)
@@ -399,7 +413,7 @@ def hiprtcGetBitcode(object prog, char * bitcode):
     """
     _hiprtcGetBitcode__retval = hiprtcResult(chiprtc.hiprtcGetBitcode(
         _hiprtcProgram.from_pyobj(prog)._ptr,bitcode))    # fully specified
-    return _hiprtcGetBitcode__retval
+    return (_hiprtcGetBitcode__retval,)
 
 
 @cython.embedsignature(True)
@@ -413,7 +427,7 @@ def hiprtcGetBitcodeSize(object prog, object bitcode_size):
     _hiprtcGetBitcodeSize__retval = hiprtcResult(chiprtc.hiprtcGetBitcodeSize(
         _hiprtcProgram.from_pyobj(prog)._ptr,
         <int *>DataHandle.from_pyobj(bitcode_size)._ptr))    # fully specified
-    return _hiprtcGetBitcodeSize__retval
+    return (_hiprtcGetBitcodeSize__retval,)
 
 
 @cython.embedsignature(True)
@@ -470,7 +484,7 @@ def hiprtcLinkComplete(object hip_link_state, object bin_out, object size_out):
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr,
         <void **>DataHandle.from_pyobj(bin_out)._ptr,
         <int *>DataHandle.from_pyobj(size_out)._ptr))    # fully specified
-    return _hiprtcLinkComplete__retval
+    return (_hiprtcLinkComplete__retval,)
 
 
 @cython.embedsignature(True)
@@ -485,4 +499,4 @@ def hiprtcLinkDestroy(object hip_link_state):
     """
     _hiprtcLinkDestroy__retval = hiprtcResult(chiprtc.hiprtcLinkDestroy(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr))    # fully specified
-    return _hiprtcLinkDestroy__retval
+    return (_hiprtcLinkDestroy__retval,)

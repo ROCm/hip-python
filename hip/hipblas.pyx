@@ -58,6 +58,8 @@ cdef class hipblasHandle_t:
             if ``pyobj`` is an instance of hipblasHandle_t!
         """
         cdef hipblasHandle_t wrapper = hipblasHandle_t.__new__(hipblasHandle_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipblasHandle_t):
@@ -66,6 +68,11 @@ cdef class hipblasHandle_t:
             wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -138,6 +145,8 @@ cdef class hipblasBfloat16:
             if ``pyobj`` is an instance of hipblasBfloat16!
         """
         cdef hipblasBfloat16 wrapper = hipblasBfloat16.__new__(hipblasBfloat16)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipblasBfloat16):
@@ -146,6 +155,11 @@ cdef class hipblasBfloat16:
             wrapper._ptr = <chipblas.hipblasBfloat16*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chipblas.hipblasBfloat16*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chipblas.hipblasBfloat16*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -255,6 +269,8 @@ cdef class hipblasComplex:
             if ``pyobj`` is an instance of hipblasComplex!
         """
         cdef hipblasComplex wrapper = hipblasComplex.__new__(hipblasComplex)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipblasComplex):
@@ -263,6 +279,11 @@ cdef class hipblasComplex:
             wrapper._ptr = <chipblas.hipblasComplex*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chipblas.hipblasComplex*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chipblas.hipblasComplex*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -386,6 +407,8 @@ cdef class hipblasDoubleComplex:
             if ``pyobj`` is an instance of hipblasDoubleComplex!
         """
         cdef hipblasDoubleComplex wrapper = hipblasDoubleComplex.__new__(hipblasDoubleComplex)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipblasDoubleComplex):
@@ -394,6 +417,11 @@ cdef class hipblasDoubleComplex:
             wrapper._ptr = <chipblas.hipblasDoubleComplex*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chipblas.hipblasDoubleComplex*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chipblas.hipblasDoubleComplex*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -560,7 +588,7 @@ def hipblasDestroy(object handle):
     """
     _hipblasDestroy__retval = hipblasStatus_t(chipblas.hipblasDestroy(
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr))    # fully specified
-    return _hipblasDestroy__retval
+    return (_hipblasDestroy__retval,)
 
 
 @cython.embedsignature(True)
@@ -570,7 +598,7 @@ def hipblasSetStream(object handle, object streamId):
     _hipblasSetStream__retval = hipblasStatus_t(chipblas.hipblasSetStream(
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
         ihipStream_t.from_pyobj(streamId)._ptr))    # fully specified
-    return _hipblasSetStream__retval
+    return (_hipblasSetStream__retval,)
 
 
 @cython.embedsignature(True)
@@ -580,7 +608,7 @@ def hipblasGetStream(object handle, object streamId):
     _hipblasGetStream__retval = hipblasStatus_t(chipblas.hipblasGetStream(
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,
         <chipblas.hipStream_t*>DataHandle.from_pyobj(streamId)._ptr))    # fully specified
-    return _hipblasGetStream__retval
+    return (_hipblasGetStream__retval,)
 
 
 @cython.embedsignature(True)
@@ -591,7 +619,7 @@ def hipblasSetPointerMode(object handle, object mode):
         raise TypeError("argument 'mode' must be of type 'hipblasPointerMode_t'")
     _hipblasSetPointerMode__retval = hipblasStatus_t(chipblas.hipblasSetPointerMode(
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,mode.value))    # fully specified
-    return _hipblasSetPointerMode__retval
+    return (_hipblasSetPointerMode__retval,)
 
 
 @cython.embedsignature(True)
@@ -608,7 +636,7 @@ def hipblasSetInt8Datatype(object handle, object int8Type):
         raise TypeError("argument 'int8Type' must be of type 'hipblasInt8Datatype_t'")
     _hipblasSetInt8Datatype__retval = hipblasStatus_t(chipblas.hipblasSetInt8Datatype(
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,int8Type.value))    # fully specified
-    return _hipblasSetInt8Datatype__retval
+    return (_hipblasSetInt8Datatype__retval,)
 
 
 @cython.embedsignature(True)
@@ -640,7 +668,7 @@ def hipblasSetVector(int n, int elemSize, object x, int incx, object y, int incy
     _hipblasSetVector__retval = hipblasStatus_t(chipblas.hipblasSetVector(n,elemSize,
         <const void *>DataHandle.from_pyobj(x)._ptr,incx,
         <void *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasSetVector__retval
+    return (_hipblasSetVector__retval,)
 
 
 @cython.embedsignature(True)
@@ -666,7 +694,7 @@ def hipblasGetVector(int n, int elemSize, object x, int incx, object y, int incy
     _hipblasGetVector__retval = hipblasStatus_t(chipblas.hipblasGetVector(n,elemSize,
         <const void *>DataHandle.from_pyobj(x)._ptr,incx,
         <void *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasGetVector__retval
+    return (_hipblasGetVector__retval,)
 
 
 @cython.embedsignature(True)
@@ -695,7 +723,7 @@ def hipblasSetMatrix(int rows, int cols, int elemSize, object AP, int lda, objec
     _hipblasSetMatrix__retval = hipblasStatus_t(chipblas.hipblasSetMatrix(rows,cols,elemSize,
         <const void *>DataHandle.from_pyobj(AP)._ptr,lda,
         <void *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
-    return _hipblasSetMatrix__retval
+    return (_hipblasSetMatrix__retval,)
 
 
 @cython.embedsignature(True)
@@ -724,7 +752,7 @@ def hipblasGetMatrix(int rows, int cols, int elemSize, object AP, int lda, objec
     _hipblasGetMatrix__retval = hipblasStatus_t(chipblas.hipblasGetMatrix(rows,cols,elemSize,
         <const void *>DataHandle.from_pyobj(AP)._ptr,lda,
         <void *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
-    return _hipblasGetMatrix__retval
+    return (_hipblasGetMatrix__retval,)
 
 
 @cython.embedsignature(True)
@@ -756,7 +784,7 @@ def hipblasSetVectorAsync(int n, int elemSize, object x, int incx, object y, int
         <const void *>DataHandle.from_pyobj(x)._ptr,incx,
         <void *>DataHandle.from_pyobj(y)._ptr,incy,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipblasSetVectorAsync__retval
+    return (_hipblasSetVectorAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -788,7 +816,7 @@ def hipblasGetVectorAsync(int n, int elemSize, object x, int incx, object y, int
         <const void *>DataHandle.from_pyobj(x)._ptr,incx,
         <void *>DataHandle.from_pyobj(y)._ptr,incy,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipblasGetVectorAsync__retval
+    return (_hipblasGetVectorAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -823,7 +851,7 @@ def hipblasSetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
         <const void *>DataHandle.from_pyobj(AP)._ptr,lda,
         <void *>DataHandle.from_pyobj(BP)._ptr,ldb,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipblasSetMatrixAsync__retval
+    return (_hipblasSetMatrixAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -858,7 +886,7 @@ def hipblasGetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
         <const void *>DataHandle.from_pyobj(AP)._ptr,lda,
         <void *>DataHandle.from_pyobj(BP)._ptr,ldb,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipblasGetMatrixAsync__retval
+    return (_hipblasGetMatrixAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -869,7 +897,7 @@ def hipblasSetAtomicsMode(object handle, object atomics_mode):
         raise TypeError("argument 'atomics_mode' must be of type 'hipblasAtomicsMode_t'")
     _hipblasSetAtomicsMode__retval = hipblasStatus_t(chipblas.hipblasSetAtomicsMode(
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,atomics_mode.value))    # fully specified
-    return _hipblasSetAtomicsMode__retval
+    return (_hipblasSetAtomicsMode__retval,)
 
 
 @cython.embedsignature(True)
@@ -909,7 +937,7 @@ def hipblasIsamax(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasIsamax__retval
+    return (_hipblasIsamax__retval,)
 
 
 @cython.embedsignature(True)
@@ -920,7 +948,7 @@ def hipblasIdamax(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasIdamax__retval
+    return (_hipblasIdamax__retval,)
 
 
 @cython.embedsignature(True)
@@ -931,7 +959,7 @@ def hipblasIcamax(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasIcamax__retval
+    return (_hipblasIcamax__retval,)
 
 
 @cython.embedsignature(True)
@@ -942,7 +970,7 @@ def hipblasIzamax(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasIzamax__retval
+    return (_hipblasIzamax__retval,)
 
 
 @cython.embedsignature(True)
@@ -976,7 +1004,7 @@ def hipblasIsamin(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasIsamin__retval
+    return (_hipblasIsamin__retval,)
 
 
 @cython.embedsignature(True)
@@ -987,7 +1015,7 @@ def hipblasIdamin(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasIdamin__retval
+    return (_hipblasIdamin__retval,)
 
 
 @cython.embedsignature(True)
@@ -998,7 +1026,7 @@ def hipblasIcamin(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasIcamin__retval
+    return (_hipblasIcamin__retval,)
 
 
 @cython.embedsignature(True)
@@ -1009,7 +1037,7 @@ def hipblasIzamin(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         <int *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasIzamin__retval
+    return (_hipblasIzamin__retval,)
 
 
 @cython.embedsignature(True)
@@ -1044,7 +1072,7 @@ def hipblasSasum(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasSasum__retval
+    return (_hipblasSasum__retval,)
 
 
 @cython.embedsignature(True)
@@ -1055,7 +1083,7 @@ def hipblasDasum(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasDasum__retval
+    return (_hipblasDasum__retval,)
 
 
 @cython.embedsignature(True)
@@ -1066,7 +1094,7 @@ def hipblasScasum(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasScasum__retval
+    return (_hipblasScasum__retval,)
 
 
 @cython.embedsignature(True)
@@ -1077,7 +1105,7 @@ def hipblasDzasum(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasDzasum__retval
+    return (_hipblasDzasum__retval,)
 
 
 @cython.embedsignature(True)
@@ -1117,7 +1145,7 @@ def hipblasHaxpy(object handle, int n, object alpha, object x, int incx, object 
         <chipblas.hipblasHalf *>DataHandle.from_pyobj(alpha)._ptr,
         <chipblas.hipblasHalf *>DataHandle.from_pyobj(x)._ptr,incx,
         <chipblas.hipblasHalf *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasHaxpy__retval
+    return (_hipblasHaxpy__retval,)
 
 
 @cython.embedsignature(True)
@@ -1129,7 +1157,7 @@ def hipblasSaxpy(object handle, int n, object alpha, object x, int incx, object 
         <const float *>DataHandle.from_pyobj(alpha)._ptr,
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasSaxpy__retval
+    return (_hipblasSaxpy__retval,)
 
 
 @cython.embedsignature(True)
@@ -1141,7 +1169,7 @@ def hipblasDaxpy(object handle, int n, object alpha, object x, int incx, object 
         <const double *>DataHandle.from_pyobj(alpha)._ptr,
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasDaxpy__retval
+    return (_hipblasDaxpy__retval,)
 
 
 @cython.embedsignature(True)
@@ -1153,7 +1181,7 @@ def hipblasCaxpy(object handle, int n, object alpha, object x, int incx, object 
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasCaxpy__retval
+    return (_hipblasCaxpy__retval,)
 
 
 @cython.embedsignature(True)
@@ -1165,7 +1193,7 @@ def hipblasZaxpy(object handle, int n, object alpha, object x, int incx, object 
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasZaxpy__retval
+    return (_hipblasZaxpy__retval,)
 
 
 @cython.embedsignature(True)
@@ -1202,7 +1230,7 @@ def hipblasScopy(object handle, int n, object x, int incx, object y, int incy):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasScopy__retval
+    return (_hipblasScopy__retval,)
 
 
 @cython.embedsignature(True)
@@ -1213,7 +1241,7 @@ def hipblasDcopy(object handle, int n, object x, int incx, object y, int incy):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasDcopy__retval
+    return (_hipblasDcopy__retval,)
 
 
 @cython.embedsignature(True)
@@ -1224,7 +1252,7 @@ def hipblasCcopy(object handle, int n, object x, int incx, object y, int incy):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasCcopy__retval
+    return (_hipblasCcopy__retval,)
 
 
 @cython.embedsignature(True)
@@ -1235,7 +1263,7 @@ def hipblasZcopy(object handle, int n, object x, int incx, object y, int incy):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasZcopy__retval
+    return (_hipblasZcopy__retval,)
 
 
 @cython.embedsignature(True)
@@ -1281,7 +1309,7 @@ def hipblasHdot(object handle, int n, object x, int incx, object y, int incy, ob
         <chipblas.hipblasHalf *>DataHandle.from_pyobj(x)._ptr,incx,
         <chipblas.hipblasHalf *>DataHandle.from_pyobj(y)._ptr,incy,
         <chipblas.hipblasHalf *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasHdot__retval
+    return (_hipblasHdot__retval,)
 
 
 @cython.embedsignature(True)
@@ -1293,7 +1321,7 @@ def hipblasBfdot(object handle, int n, object x, int incx, object y, int incy, o
         hipblasBfloat16.from_pyobj(x)._ptr,incx,
         hipblasBfloat16.from_pyobj(y)._ptr,incy,
         hipblasBfloat16.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasBfdot__retval
+    return (_hipblasBfdot__retval,)
 
 
 @cython.embedsignature(True)
@@ -1305,7 +1333,7 @@ def hipblasSdot(object handle, int n, object x, int incx, object y, int incy, ob
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>DataHandle.from_pyobj(y)._ptr,incy,
         <float *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasSdot__retval
+    return (_hipblasSdot__retval,)
 
 
 @cython.embedsignature(True)
@@ -1317,7 +1345,7 @@ def hipblasDdot(object handle, int n, object x, int incx, object y, int incy, ob
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>DataHandle.from_pyobj(y)._ptr,incy,
         <double *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasDdot__retval
+    return (_hipblasDdot__retval,)
 
 
 @cython.embedsignature(True)
@@ -1329,7 +1357,7 @@ def hipblasCdotc(object handle, int n, object x, int incx, object y, int incy, o
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasCdotc__retval
+    return (_hipblasCdotc__retval,)
 
 
 @cython.embedsignature(True)
@@ -1341,7 +1369,7 @@ def hipblasCdotu(object handle, int n, object x, int incx, object y, int incy, o
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasCdotu__retval
+    return (_hipblasCdotu__retval,)
 
 
 @cython.embedsignature(True)
@@ -1353,7 +1381,7 @@ def hipblasZdotc(object handle, int n, object x, int incx, object y, int incy, o
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasZdotc__retval
+    return (_hipblasZdotc__retval,)
 
 
 @cython.embedsignature(True)
@@ -1365,7 +1393,7 @@ def hipblasZdotu(object handle, int n, object x, int incx, object y, int incy, o
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasZdotu__retval
+    return (_hipblasZdotu__retval,)
 
 
 @cython.embedsignature(True)
@@ -1402,7 +1430,7 @@ def hipblasSnrm2(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasSnrm2__retval
+    return (_hipblasSnrm2__retval,)
 
 
 @cython.embedsignature(True)
@@ -1413,7 +1441,7 @@ def hipblasDnrm2(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasDnrm2__retval
+    return (_hipblasDnrm2__retval,)
 
 
 @cython.embedsignature(True)
@@ -1424,7 +1452,7 @@ def hipblasScnrm2(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasScnrm2__retval
+    return (_hipblasScnrm2__retval,)
 
 
 @cython.embedsignature(True)
@@ -1435,7 +1463,7 @@ def hipblasDznrm2(object handle, int n, object x, int incx, object result):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(result)._ptr))    # fully specified
-    return _hipblasDznrm2__retval
+    return (_hipblasDznrm2__retval,)
 
 
 @cython.embedsignature(True)
@@ -1477,7 +1505,7 @@ def hipblasSrot(object handle, int n, object x, int incx, object y, int incy, ob
         <float *>DataHandle.from_pyobj(y)._ptr,incy,
         <const float *>DataHandle.from_pyobj(c)._ptr,
         <const float *>DataHandle.from_pyobj(s)._ptr))    # fully specified
-    return _hipblasSrot__retval
+    return (_hipblasSrot__retval,)
 
 
 @cython.embedsignature(True)
@@ -1490,7 +1518,7 @@ def hipblasDrot(object handle, int n, object x, int incx, object y, int incy, ob
         <double *>DataHandle.from_pyobj(y)._ptr,incy,
         <const double *>DataHandle.from_pyobj(c)._ptr,
         <const double *>DataHandle.from_pyobj(s)._ptr))    # fully specified
-    return _hipblasDrot__retval
+    return (_hipblasDrot__retval,)
 
 
 @cython.embedsignature(True)
@@ -1503,7 +1531,7 @@ def hipblasCrot(object handle, int n, object x, int incx, object y, int incy, ob
         hipblasComplex.from_pyobj(y)._ptr,incy,
         <const float *>DataHandle.from_pyobj(c)._ptr,
         hipblasComplex.from_pyobj(s)._ptr))    # fully specified
-    return _hipblasCrot__retval
+    return (_hipblasCrot__retval,)
 
 
 @cython.embedsignature(True)
@@ -1516,7 +1544,7 @@ def hipblasCsrot(object handle, int n, object x, int incx, object y, int incy, o
         hipblasComplex.from_pyobj(y)._ptr,incy,
         <const float *>DataHandle.from_pyobj(c)._ptr,
         <const float *>DataHandle.from_pyobj(s)._ptr))    # fully specified
-    return _hipblasCsrot__retval
+    return (_hipblasCsrot__retval,)
 
 
 @cython.embedsignature(True)
@@ -1529,7 +1557,7 @@ def hipblasZrot(object handle, int n, object x, int incx, object y, int incy, ob
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         <const double *>DataHandle.from_pyobj(c)._ptr,
         hipblasDoubleComplex.from_pyobj(s)._ptr))    # fully specified
-    return _hipblasZrot__retval
+    return (_hipblasZrot__retval,)
 
 
 @cython.embedsignature(True)
@@ -1542,7 +1570,7 @@ def hipblasZdrot(object handle, int n, object x, int incx, object y, int incy, o
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         <const double *>DataHandle.from_pyobj(c)._ptr,
         <const double *>DataHandle.from_pyobj(s)._ptr))    # fully specified
-    return _hipblasZdrot__retval
+    return (_hipblasZdrot__retval,)
 
 
 @cython.embedsignature(True)
@@ -1577,7 +1605,7 @@ def hipblasSrotg(object handle, object a, object b, object c, object s):
         <float *>DataHandle.from_pyobj(b)._ptr,
         <float *>DataHandle.from_pyobj(c)._ptr,
         <float *>DataHandle.from_pyobj(s)._ptr))    # fully specified
-    return _hipblasSrotg__retval
+    return (_hipblasSrotg__retval,)
 
 
 @cython.embedsignature(True)
@@ -1590,7 +1618,7 @@ def hipblasDrotg(object handle, object a, object b, object c, object s):
         <double *>DataHandle.from_pyobj(b)._ptr,
         <double *>DataHandle.from_pyobj(c)._ptr,
         <double *>DataHandle.from_pyobj(s)._ptr))    # fully specified
-    return _hipblasDrotg__retval
+    return (_hipblasDrotg__retval,)
 
 
 @cython.embedsignature(True)
@@ -1603,7 +1631,7 @@ def hipblasCrotg(object handle, object a, object b, object c, object s):
         hipblasComplex.from_pyobj(b)._ptr,
         <float *>DataHandle.from_pyobj(c)._ptr,
         hipblasComplex.from_pyobj(s)._ptr))    # fully specified
-    return _hipblasCrotg__retval
+    return (_hipblasCrotg__retval,)
 
 
 @cython.embedsignature(True)
@@ -1616,7 +1644,7 @@ def hipblasZrotg(object handle, object a, object b, object c, object s):
         hipblasDoubleComplex.from_pyobj(b)._ptr,
         <double *>DataHandle.from_pyobj(c)._ptr,
         hipblasDoubleComplex.from_pyobj(s)._ptr))    # fully specified
-    return _hipblasZrotg__retval
+    return (_hipblasZrotg__retval,)
 
 
 @cython.embedsignature(True)
@@ -1665,7 +1693,7 @@ def hipblasSrotm(object handle, int n, object x, int incx, object y, int incy, o
         <float *>DataHandle.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(y)._ptr,incy,
         <const float *>DataHandle.from_pyobj(param)._ptr))    # fully specified
-    return _hipblasSrotm__retval
+    return (_hipblasSrotm__retval,)
 
 
 @cython.embedsignature(True)
@@ -1677,7 +1705,7 @@ def hipblasDrotm(object handle, int n, object x, int incx, object y, int incy, o
         <double *>DataHandle.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(y)._ptr,incy,
         <const double *>DataHandle.from_pyobj(param)._ptr))    # fully specified
-    return _hipblasDrotm__retval
+    return (_hipblasDrotm__retval,)
 
 
 @cython.embedsignature(True)
@@ -1726,7 +1754,7 @@ def hipblasSrotmg(object handle, object d1, object d2, object x1, object y1, obj
         <float *>DataHandle.from_pyobj(x1)._ptr,
         <const float *>DataHandle.from_pyobj(y1)._ptr,
         <float *>DataHandle.from_pyobj(param)._ptr))    # fully specified
-    return _hipblasSrotmg__retval
+    return (_hipblasSrotmg__retval,)
 
 
 @cython.embedsignature(True)
@@ -1740,7 +1768,7 @@ def hipblasDrotmg(object handle, object d1, object d2, object x1, object y1, obj
         <double *>DataHandle.from_pyobj(x1)._ptr,
         <const double *>DataHandle.from_pyobj(y1)._ptr,
         <double *>DataHandle.from_pyobj(param)._ptr))    # fully specified
-    return _hipblasDrotmg__retval
+    return (_hipblasDrotmg__retval,)
 
 
 @cython.embedsignature(True)
@@ -1774,7 +1802,7 @@ def hipblasSscal(object handle, int n, object alpha, object x, int incx):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>DataHandle.from_pyobj(alpha)._ptr,
         <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasSscal__retval
+    return (_hipblasSscal__retval,)
 
 
 @cython.embedsignature(True)
@@ -1785,7 +1813,7 @@ def hipblasDscal(object handle, int n, object alpha, object x, int incx):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>DataHandle.from_pyobj(alpha)._ptr,
         <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasDscal__retval
+    return (_hipblasDscal__retval,)
 
 
 @cython.embedsignature(True)
@@ -1796,7 +1824,7 @@ def hipblasCscal(object handle, int n, object alpha, object x, int incx):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasCscal__retval
+    return (_hipblasCscal__retval,)
 
 
 @cython.embedsignature(True)
@@ -1807,7 +1835,7 @@ def hipblasCsscal(object handle, int n, object alpha, object x, int incx):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>DataHandle.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasCsscal__retval
+    return (_hipblasCsscal__retval,)
 
 
 @cython.embedsignature(True)
@@ -1818,7 +1846,7 @@ def hipblasZscal(object handle, int n, object alpha, object x, int incx):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasZscal__retval
+    return (_hipblasZscal__retval,)
 
 
 @cython.embedsignature(True)
@@ -1829,7 +1857,7 @@ def hipblasZdscal(object handle, int n, object alpha, object x, int incx):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>DataHandle.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasZdscal__retval
+    return (_hipblasZdscal__retval,)
 
 
 @cython.embedsignature(True)
@@ -1866,7 +1894,7 @@ def hipblasSswap(object handle, int n, object x, int incx, object y, int incy):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <float *>DataHandle.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasSswap__retval
+    return (_hipblasSswap__retval,)
 
 
 @cython.embedsignature(True)
@@ -1877,7 +1905,7 @@ def hipblasDswap(object handle, int n, object x, int incx, object y, int incy):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <double *>DataHandle.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasDswap__retval
+    return (_hipblasDswap__retval,)
 
 
 @cython.embedsignature(True)
@@ -1888,7 +1916,7 @@ def hipblasCswap(object handle, int n, object x, int incx, object y, int incy):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasCswap__retval
+    return (_hipblasCswap__retval,)
 
 
 @cython.embedsignature(True)
@@ -1899,7 +1927,7 @@ def hipblasZswap(object handle, int n, object x, int incx, object y, int incy):
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasZswap__retval
+    return (_hipblasZswap__retval,)
 
 
 @cython.embedsignature(True)
@@ -1982,7 +2010,7 @@ def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasSgbmv__retval
+    return (_hipblasSgbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -1998,7 +2026,7 @@ def hipblasDgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasDgbmv__retval
+    return (_hipblasDgbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2014,7 +2042,7 @@ def hipblasCgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasCgbmv__retval
+    return (_hipblasCgbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2030,7 +2058,7 @@ def hipblasZgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasZgbmv__retval
+    return (_hipblasZgbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2092,7 +2120,7 @@ def hipblasSgemv(object handle, object trans, int m, int n, object alpha, object
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasSgemv__retval
+    return (_hipblasSgemv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2108,7 +2136,7 @@ def hipblasDgemv(object handle, object trans, int m, int n, object alpha, object
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasDgemv__retval
+    return (_hipblasDgemv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2124,7 +2152,7 @@ def hipblasCgemv(object handle, object trans, int m, int n, object alpha, object
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasCgemv__retval
+    return (_hipblasCgemv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2140,7 +2168,7 @@ def hipblasZgemv(object handle, object trans, int m, int n, object alpha, object
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasZgemv__retval
+    return (_hipblasZgemv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2194,7 +2222,7 @@ def hipblasSger(object handle, int m, int n, object alpha, object x, int incx, o
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>DataHandle.from_pyobj(y)._ptr,incy,
         <float *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasSger__retval
+    return (_hipblasSger__retval,)
 
 
 @cython.embedsignature(True)
@@ -2207,7 +2235,7 @@ def hipblasDger(object handle, int m, int n, object alpha, object x, int incx, o
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>DataHandle.from_pyobj(y)._ptr,incy,
         <double *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasDger__retval
+    return (_hipblasDger__retval,)
 
 
 @cython.embedsignature(True)
@@ -2220,7 +2248,7 @@ def hipblasCgeru(object handle, int m, int n, object alpha, object x, int incx, 
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasCgeru__retval
+    return (_hipblasCgeru__retval,)
 
 
 @cython.embedsignature(True)
@@ -2233,7 +2261,7 @@ def hipblasCgerc(object handle, int m, int n, object alpha, object x, int incx, 
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasCgerc__retval
+    return (_hipblasCgerc__retval,)
 
 
 @cython.embedsignature(True)
@@ -2246,7 +2274,7 @@ def hipblasZgeru(object handle, int m, int n, object alpha, object x, int incx, 
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasZgeru__retval
+    return (_hipblasZgeru__retval,)
 
 
 @cython.embedsignature(True)
@@ -2259,7 +2287,7 @@ def hipblasZgerc(object handle, int m, int n, object alpha, object x, int incx, 
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasZgerc__retval
+    return (_hipblasZgerc__retval,)
 
 
 @cython.embedsignature(True)
@@ -2348,7 +2376,7 @@ def hipblasChbmv(object handle, object uplo, int n, int k, object alpha, object 
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasChbmv__retval
+    return (_hipblasChbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2364,7 +2392,7 @@ def hipblasZhbmv(object handle, object uplo, int n, int k, object alpha, object 
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasZhbmv__retval
+    return (_hipblasZhbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2432,7 +2460,7 @@ def hipblasChemv(object handle, object uplo, int n, object alpha, object AP, int
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasChemv__retval
+    return (_hipblasChemv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2448,7 +2476,7 @@ def hipblasZhemv(object handle, object uplo, int n, object alpha, object AP, int
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasZhemv__retval
+    return (_hipblasZhemv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2508,7 +2536,7 @@ def hipblasCher(object handle, object uplo, int n, object alpha, object x, int i
         <const float *>DataHandle.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasCher__retval
+    return (_hipblasCher__retval,)
 
 
 @cython.embedsignature(True)
@@ -2522,7 +2550,7 @@ def hipblasZher(object handle, object uplo, int n, object alpha, object x, int i
         <const double *>DataHandle.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasZher__retval
+    return (_hipblasZher__retval,)
 
 
 @cython.embedsignature(True)
@@ -2588,7 +2616,7 @@ def hipblasCher2(object handle, object uplo, int n, object alpha, object x, int 
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasCher2__retval
+    return (_hipblasCher2__retval,)
 
 
 @cython.embedsignature(True)
@@ -2603,7 +2631,7 @@ def hipblasZher2(object handle, object uplo, int n, object alpha, object x, int 
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasZher2__retval
+    return (_hipblasZher2__retval,)
 
 
 @cython.embedsignature(True)
@@ -2683,7 +2711,7 @@ def hipblasChpmv(object handle, object uplo, int n, object alpha, object AP, obj
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasChpmv__retval
+    return (_hipblasChpmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2699,7 +2727,7 @@ def hipblasZhpmv(object handle, object uplo, int n, object alpha, object AP, obj
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasZhpmv__retval
+    return (_hipblasZhpmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2772,7 +2800,7 @@ def hipblasChpr(object handle, object uplo, int n, object alpha, object x, int i
         <const float *>DataHandle.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr))    # fully specified
-    return _hipblasChpr__retval
+    return (_hipblasChpr__retval,)
 
 
 @cython.embedsignature(True)
@@ -2786,7 +2814,7 @@ def hipblasZhpr(object handle, object uplo, int n, object alpha, object x, int i
         <const double *>DataHandle.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr))    # fully specified
-    return _hipblasZhpr__retval
+    return (_hipblasZhpr__retval,)
 
 
 @cython.embedsignature(True)
@@ -2865,7 +2893,7 @@ def hipblasChpr2(object handle, object uplo, int n, object alpha, object x, int 
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(AP)._ptr))    # fully specified
-    return _hipblasChpr2__retval
+    return (_hipblasChpr2__retval,)
 
 
 @cython.embedsignature(True)
@@ -2880,7 +2908,7 @@ def hipblasZhpr2(object handle, object uplo, int n, object alpha, object x, int 
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(AP)._ptr))    # fully specified
-    return _hipblasZhpr2__retval
+    return (_hipblasZhpr2__retval,)
 
 
 @cython.embedsignature(True)
@@ -2942,7 +2970,7 @@ def hipblasSsbmv(object handle, object uplo, int n, int k, object alpha, object 
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasSsbmv__retval
+    return (_hipblasSsbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -2958,7 +2986,7 @@ def hipblasDsbmv(object handle, object uplo, int n, int k, object alpha, object 
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasDsbmv__retval
+    return (_hipblasDsbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3014,7 +3042,7 @@ def hipblasSspmv(object handle, object uplo, int n, object alpha, object AP, obj
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasSspmv__retval
+    return (_hipblasSspmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3030,7 +3058,7 @@ def hipblasDspmv(object handle, object uplo, int n, object alpha, object AP, obj
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasDspmv__retval
+    return (_hipblasDspmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3103,7 +3131,7 @@ def hipblasSspr(object handle, object uplo, int n, object alpha, object x, int i
         <const float *>DataHandle.from_pyobj(alpha)._ptr,
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(AP)._ptr))    # fully specified
-    return _hipblasSspr__retval
+    return (_hipblasSspr__retval,)
 
 
 @cython.embedsignature(True)
@@ -3117,7 +3145,7 @@ def hipblasDspr(object handle, object uplo, int n, object alpha, object x, int i
         <const double *>DataHandle.from_pyobj(alpha)._ptr,
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(AP)._ptr))    # fully specified
-    return _hipblasDspr__retval
+    return (_hipblasDspr__retval,)
 
 
 @cython.embedsignature(True)
@@ -3131,7 +3159,7 @@ def hipblasCspr(object handle, object uplo, int n, object alpha, object x, int i
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr))    # fully specified
-    return _hipblasCspr__retval
+    return (_hipblasCspr__retval,)
 
 
 @cython.embedsignature(True)
@@ -3145,7 +3173,7 @@ def hipblasZspr(object handle, object uplo, int n, object alpha, object x, int i
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr))    # fully specified
-    return _hipblasZspr__retval
+    return (_hipblasZspr__retval,)
 
 
 @cython.embedsignature(True)
@@ -3224,7 +3252,7 @@ def hipblasSspr2(object handle, object uplo, int n, object alpha, object x, int 
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>DataHandle.from_pyobj(y)._ptr,incy,
         <float *>DataHandle.from_pyobj(AP)._ptr))    # fully specified
-    return _hipblasSspr2__retval
+    return (_hipblasSspr2__retval,)
 
 
 @cython.embedsignature(True)
@@ -3239,7 +3267,7 @@ def hipblasDspr2(object handle, object uplo, int n, object alpha, object x, int 
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>DataHandle.from_pyobj(y)._ptr,incy,
         <double *>DataHandle.from_pyobj(AP)._ptr))    # fully specified
-    return _hipblasDspr2__retval
+    return (_hipblasDspr2__retval,)
 
 
 @cython.embedsignature(True)
@@ -3298,7 +3326,7 @@ def hipblasSsymv(object handle, object uplo, int n, object alpha, object AP, int
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <float *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasSsymv__retval
+    return (_hipblasSsymv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3314,7 +3342,7 @@ def hipblasDsymv(object handle, object uplo, int n, object alpha, object AP, int
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <double *>DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasDsymv__retval
+    return (_hipblasDsymv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3330,7 +3358,7 @@ def hipblasCsymv(object handle, object uplo, int n, object alpha, object AP, int
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasCsymv__retval
+    return (_hipblasCsymv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3346,7 +3374,7 @@ def hipblasZsymv(object handle, object uplo, int n, object alpha, object AP, int
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
-    return _hipblasZsymv__retval
+    return (_hipblasZsymv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3398,7 +3426,7 @@ def hipblasSsyr(object handle, object uplo, int n, object alpha, object x, int i
         <const float *>DataHandle.from_pyobj(alpha)._ptr,
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasSsyr__retval
+    return (_hipblasSsyr__retval,)
 
 
 @cython.embedsignature(True)
@@ -3412,7 +3440,7 @@ def hipblasDsyr(object handle, object uplo, int n, object alpha, object x, int i
         <const double *>DataHandle.from_pyobj(alpha)._ptr,
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasDsyr__retval
+    return (_hipblasDsyr__retval,)
 
 
 @cython.embedsignature(True)
@@ -3426,7 +3454,7 @@ def hipblasCsyr(object handle, object uplo, int n, object alpha, object x, int i
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasCsyr__retval
+    return (_hipblasCsyr__retval,)
 
 
 @cython.embedsignature(True)
@@ -3440,7 +3468,7 @@ def hipblasZsyr(object handle, object uplo, int n, object alpha, object x, int i
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasZsyr__retval
+    return (_hipblasZsyr__retval,)
 
 
 @cython.embedsignature(True)
@@ -3498,7 +3526,7 @@ def hipblasSsyr2(object handle, object uplo, int n, object alpha, object x, int 
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>DataHandle.from_pyobj(y)._ptr,incy,
         <float *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasSsyr2__retval
+    return (_hipblasSsyr2__retval,)
 
 
 @cython.embedsignature(True)
@@ -3513,7 +3541,7 @@ def hipblasDsyr2(object handle, object uplo, int n, object alpha, object x, int 
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>DataHandle.from_pyobj(y)._ptr,incy,
         <double *>DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasDsyr2__retval
+    return (_hipblasDsyr2__retval,)
 
 
 @cython.embedsignature(True)
@@ -3528,7 +3556,7 @@ def hipblasCsyr2(object handle, object uplo, int n, object alpha, object x, int 
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasCsyr2__retval
+    return (_hipblasCsyr2__retval,)
 
 
 @cython.embedsignature(True)
@@ -3543,7 +3571,7 @@ def hipblasZsyr2(object handle, object uplo, int n, object alpha, object x, int 
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
-    return _hipblasZsyr2__retval
+    return (_hipblasZsyr2__retval,)
 
 
 @cython.embedsignature(True)
@@ -3634,7 +3662,7 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasStbmv__retval
+    return (_hipblasStbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3651,7 +3679,7 @@ def hipblasDtbmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasDtbmv__retval
+    return (_hipblasDtbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3668,7 +3696,7 @@ def hipblasCtbmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasCtbmv__retval
+    return (_hipblasCtbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3685,7 +3713,7 @@ def hipblasZtbmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasZtbmv__retval
+    return (_hipblasZtbmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3760,7 +3788,7 @@ def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasStbsv__retval
+    return (_hipblasStbsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3777,7 +3805,7 @@ def hipblasDtbsv(object handle, object uplo, object transA, object diag, int n, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasDtbsv__retval
+    return (_hipblasDtbsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3794,7 +3822,7 @@ def hipblasCtbsv(object handle, object uplo, object transA, object diag, int n, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasCtbsv__retval
+    return (_hipblasCtbsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3811,7 +3839,7 @@ def hipblasZtbsv(object handle, object uplo, object transA, object diag, int n, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasZtbsv__retval
+    return (_hipblasZtbsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3883,7 +3911,7 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>DataHandle.from_pyobj(AP)._ptr,
         <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasStpmv__retval
+    return (_hipblasStpmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3900,7 +3928,7 @@ def hipblasDtpmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>DataHandle.from_pyobj(AP)._ptr,
         <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasDtpmv__retval
+    return (_hipblasDtpmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3917,7 +3945,7 @@ def hipblasCtpmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasCtpmv__retval
+    return (_hipblasCtpmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -3934,7 +3962,7 @@ def hipblasZtpmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasZtpmv__retval
+    return (_hipblasZtpmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4000,7 +4028,7 @@ def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>DataHandle.from_pyobj(AP)._ptr,
         <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasStpsv__retval
+    return (_hipblasStpsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4017,7 +4045,7 @@ def hipblasDtpsv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>DataHandle.from_pyobj(AP)._ptr,
         <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasDtpsv__retval
+    return (_hipblasDtpsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4034,7 +4062,7 @@ def hipblasCtpsv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasCtpsv__retval
+    return (_hipblasCtpsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4051,7 +4079,7 @@ def hipblasZtpsv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasZtpsv__retval
+    return (_hipblasZtpsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4118,7 +4146,7 @@ def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasStrmv__retval
+    return (_hipblasStrmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4135,7 +4163,7 @@ def hipblasDtrmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasDtrmv__retval
+    return (_hipblasDtrmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4152,7 +4180,7 @@ def hipblasCtrmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasCtrmv__retval
+    return (_hipblasCtrmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4169,7 +4197,7 @@ def hipblasZtrmv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasZtrmv__retval
+    return (_hipblasZtrmv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4236,7 +4264,7 @@ def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasStrsv__retval
+    return (_hipblasStrsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4253,7 +4281,7 @@ def hipblasDtrsv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasDtrsv__retval
+    return (_hipblasDtrsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4270,7 +4298,7 @@ def hipblasCtrsv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasCtrsv__retval
+    return (_hipblasCtrsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4287,7 +4315,7 @@ def hipblasZtrsv(object handle, object uplo, object transA, object diag, int m, 
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
-    return _hipblasZtrsv__retval
+    return (_hipblasZtrsv__retval,)
 
 
 @cython.embedsignature(True)
@@ -4362,7 +4390,7 @@ def hipblasHgemm(object handle, object transA, object transB, int m, int n, int 
         <chipblas.hipblasHalf *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <chipblas.hipblasHalf *>DataHandle.from_pyobj(beta)._ptr,
         <chipblas.hipblasHalf *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasHgemm__retval
+    return (_hipblasHgemm__retval,)
 
 
 @cython.embedsignature(True)
@@ -4380,7 +4408,7 @@ def hipblasSgemm(object handle, object transA, object transB, int m, int n, int 
         <const float *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasSgemm__retval
+    return (_hipblasSgemm__retval,)
 
 
 @cython.embedsignature(True)
@@ -4398,7 +4426,7 @@ def hipblasDgemm(object handle, object transA, object transB, int m, int n, int 
         <const double *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasDgemm__retval
+    return (_hipblasDgemm__retval,)
 
 
 @cython.embedsignature(True)
@@ -4416,7 +4444,7 @@ def hipblasCgemm(object handle, object transA, object transB, int m, int n, int 
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasCgemm__retval
+    return (_hipblasCgemm__retval,)
 
 
 @cython.embedsignature(True)
@@ -4434,7 +4462,7 @@ def hipblasZgemm(object handle, object transA, object transB, int m, int n, int 
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZgemm__retval
+    return (_hipblasZgemm__retval,)
 
 
 @cython.embedsignature(True)
@@ -4519,7 +4547,7 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasCherk__retval
+    return (_hipblasCherk__retval,)
 
 
 @cython.embedsignature(True)
@@ -4536,7 +4564,7 @@ def hipblasZherk(object handle, object uplo, object transA, int n, int k, object
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZherk__retval
+    return (_hipblasZherk__retval,)
 
 
 @cython.embedsignature(True)
@@ -4633,7 +4661,7 @@ def hipblasCherkx(object handle, object uplo, object transA, int n, int k, objec
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasCherkx__retval
+    return (_hipblasCherkx__retval,)
 
 
 @cython.embedsignature(True)
@@ -4651,7 +4679,7 @@ def hipblasZherkx(object handle, object uplo, object transA, int n, int k, objec
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZherkx__retval
+    return (_hipblasZherkx__retval,)
 
 
 @cython.embedsignature(True)
@@ -4746,7 +4774,7 @@ def hipblasCher2k(object handle, object uplo, object transA, int n, int k, objec
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasCher2k__retval
+    return (_hipblasCher2k__retval,)
 
 
 @cython.embedsignature(True)
@@ -4764,7 +4792,7 @@ def hipblasZher2k(object handle, object uplo, object transA, int n, int k, objec
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZher2k__retval
+    return (_hipblasZher2k__retval,)
 
 
 @cython.embedsignature(True)
@@ -4856,7 +4884,7 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
         <const float *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasSsymm__retval
+    return (_hipblasSsymm__retval,)
 
 
 @cython.embedsignature(True)
@@ -4874,7 +4902,7 @@ def hipblasDsymm(object handle, object side, object uplo, int m, int n, object a
         <const double *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasDsymm__retval
+    return (_hipblasDsymm__retval,)
 
 
 @cython.embedsignature(True)
@@ -4892,7 +4920,7 @@ def hipblasCsymm(object handle, object side, object uplo, int m, int n, object a
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasCsymm__retval
+    return (_hipblasCsymm__retval,)
 
 
 @cython.embedsignature(True)
@@ -4910,7 +4938,7 @@ def hipblasZsymm(object handle, object side, object uplo, int m, int n, object a
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZsymm__retval
+    return (_hipblasZsymm__retval,)
 
 
 @cython.embedsignature(True)
@@ -4998,7 +5026,7 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
         <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasSsyrk__retval
+    return (_hipblasSsyrk__retval,)
 
 
 @cython.embedsignature(True)
@@ -5015,7 +5043,7 @@ def hipblasDsyrk(object handle, object uplo, object transA, int n, int k, object
         <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasDsyrk__retval
+    return (_hipblasDsyrk__retval,)
 
 
 @cython.embedsignature(True)
@@ -5032,7 +5060,7 @@ def hipblasCsyrk(object handle, object uplo, object transA, int n, int k, object
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasCsyrk__retval
+    return (_hipblasCsyrk__retval,)
 
 
 @cython.embedsignature(True)
@@ -5049,7 +5077,7 @@ def hipblasZsyrk(object handle, object uplo, object transA, int n, int k, object
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZsyrk__retval
+    return (_hipblasZsyrk__retval,)
 
 
 @cython.embedsignature(True)
@@ -5143,7 +5171,7 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
         <const float *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasSsyr2k__retval
+    return (_hipblasSsyr2k__retval,)
 
 
 @cython.embedsignature(True)
@@ -5161,7 +5189,7 @@ def hipblasDsyr2k(object handle, object uplo, object transA, int n, int k, objec
         <const double *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasDsyr2k__retval
+    return (_hipblasDsyr2k__retval,)
 
 
 @cython.embedsignature(True)
@@ -5179,7 +5207,7 @@ def hipblasCsyr2k(object handle, object uplo, object transA, int n, int k, objec
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasCsyr2k__retval
+    return (_hipblasCsyr2k__retval,)
 
 
 @cython.embedsignature(True)
@@ -5197,7 +5225,7 @@ def hipblasZsyr2k(object handle, object uplo, object transA, int n, int k, objec
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZsyr2k__retval
+    return (_hipblasZsyr2k__retval,)
 
 
 @cython.embedsignature(True)
@@ -5294,7 +5322,7 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
         <const float *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasSsyrkx__retval
+    return (_hipblasSsyrkx__retval,)
 
 
 @cython.embedsignature(True)
@@ -5312,7 +5340,7 @@ def hipblasDsyrkx(object handle, object uplo, object transA, int n, int k, objec
         <const double *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasDsyrkx__retval
+    return (_hipblasDsyrkx__retval,)
 
 
 @cython.embedsignature(True)
@@ -5330,7 +5358,7 @@ def hipblasCsyrkx(object handle, object uplo, object transA, int n, int k, objec
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasCsyrkx__retval
+    return (_hipblasCsyrkx__retval,)
 
 
 @cython.embedsignature(True)
@@ -5348,7 +5376,7 @@ def hipblasZsyrkx(object handle, object uplo, object transA, int n, int k, objec
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZsyrkx__retval
+    return (_hipblasZsyrkx__retval,)
 
 
 @cython.embedsignature(True)
@@ -5419,7 +5447,7 @@ def hipblasSgeam(object handle, object transA, object transB, int m, int n, obje
         <const float *>DataHandle.from_pyobj(beta)._ptr,
         <const float *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasSgeam__retval
+    return (_hipblasSgeam__retval,)
 
 
 @cython.embedsignature(True)
@@ -5437,7 +5465,7 @@ def hipblasDgeam(object handle, object transA, object transB, int m, int n, obje
         <const double *>DataHandle.from_pyobj(beta)._ptr,
         <const double *>DataHandle.from_pyobj(BP)._ptr,ldb,
         <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasDgeam__retval
+    return (_hipblasDgeam__retval,)
 
 
 @cython.embedsignature(True)
@@ -5455,7 +5483,7 @@ def hipblasCgeam(object handle, object transA, object transB, int m, int n, obje
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasCgeam__retval
+    return (_hipblasCgeam__retval,)
 
 
 @cython.embedsignature(True)
@@ -5473,7 +5501,7 @@ def hipblasZgeam(object handle, object transA, object transB, int m, int n, obje
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZgeam__retval
+    return (_hipblasZgeam__retval,)
 
 
 @cython.embedsignature(True)
@@ -5566,7 +5594,7 @@ def hipblasChemm(object handle, object side, object uplo, int n, int k, object a
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
         hipblasComplex.from_pyobj(beta)._ptr,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasChemm__retval
+    return (_hipblasChemm__retval,)
 
 
 @cython.embedsignature(True)
@@ -5584,7 +5612,7 @@ def hipblasZhemm(object handle, object side, object uplo, int n, int k, object a
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZhemm__retval
+    return (_hipblasZhemm__retval,)
 
 
 @cython.embedsignature(True)
@@ -5698,7 +5726,7 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
         <const float *>DataHandle.from_pyobj(alpha)._ptr,
         <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
-    return _hipblasStrmm__retval
+    return (_hipblasStrmm__retval,)
 
 
 @cython.embedsignature(True)
@@ -5718,7 +5746,7 @@ def hipblasDtrmm(object handle, object side, object uplo, object transA, object 
         <const double *>DataHandle.from_pyobj(alpha)._ptr,
         <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
-    return _hipblasDtrmm__retval
+    return (_hipblasDtrmm__retval,)
 
 
 @cython.embedsignature(True)
@@ -5738,7 +5766,7 @@ def hipblasCtrmm(object handle, object side, object uplo, object transA, object 
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
-    return _hipblasCtrmm__retval
+    return (_hipblasCtrmm__retval,)
 
 
 @cython.embedsignature(True)
@@ -5758,7 +5786,7 @@ def hipblasZtrmm(object handle, object side, object uplo, object transA, object 
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
-    return _hipblasZtrmm__retval
+    return (_hipblasZtrmm__retval,)
 
 
 @cython.embedsignature(True)
@@ -5865,7 +5893,7 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
         <const float *>DataHandle.from_pyobj(alpha)._ptr,
         <float *>DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
-    return _hipblasStrsm__retval
+    return (_hipblasStrsm__retval,)
 
 
 @cython.embedsignature(True)
@@ -5885,7 +5913,7 @@ def hipblasDtrsm(object handle, object side, object uplo, object transA, object 
         <const double *>DataHandle.from_pyobj(alpha)._ptr,
         <double *>DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
-    return _hipblasDtrsm__retval
+    return (_hipblasDtrsm__retval,)
 
 
 @cython.embedsignature(True)
@@ -5905,7 +5933,7 @@ def hipblasCtrsm(object handle, object side, object uplo, object transA, object 
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
-    return _hipblasCtrsm__retval
+    return (_hipblasCtrsm__retval,)
 
 
 @cython.embedsignature(True)
@@ -5925,7 +5953,7 @@ def hipblasZtrsm(object handle, object side, object uplo, object transA, object 
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
-    return _hipblasZtrsm__retval
+    return (_hipblasZtrsm__retval,)
 
 
 @cython.embedsignature(True)
@@ -5975,7 +6003,7 @@ def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>DataHandle.from_pyobj(invA)._ptr,ldinvA))    # fully specified
-    return _hipblasStrtri__retval
+    return (_hipblasStrtri__retval,)
 
 
 @cython.embedsignature(True)
@@ -5990,7 +6018,7 @@ def hipblasDtrtri(object handle, object uplo, object diag, int n, object AP, int
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>DataHandle.from_pyobj(invA)._ptr,ldinvA))    # fully specified
-    return _hipblasDtrtri__retval
+    return (_hipblasDtrtri__retval,)
 
 
 @cython.embedsignature(True)
@@ -6005,7 +6033,7 @@ def hipblasCtrtri(object handle, object uplo, object diag, int n, object AP, int
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(invA)._ptr,ldinvA))    # fully specified
-    return _hipblasCtrtri__retval
+    return (_hipblasCtrtri__retval,)
 
 
 @cython.embedsignature(True)
@@ -6020,7 +6048,7 @@ def hipblasZtrtri(object handle, object uplo, object diag, int n, object AP, int
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(invA)._ptr,ldinvA))    # fully specified
-    return _hipblasZtrtri__retval
+    return (_hipblasZtrtri__retval,)
 
 
 @cython.embedsignature(True)
@@ -6076,7 +6104,7 @@ def hipblasSdgmm(object handle, object side, int m, int n, object AP, int lda, o
         <const float *>DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>DataHandle.from_pyobj(x)._ptr,incx,
         <float *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasSdgmm__retval
+    return (_hipblasSdgmm__retval,)
 
 
 @cython.embedsignature(True)
@@ -6090,7 +6118,7 @@ def hipblasDdgmm(object handle, object side, int m, int n, object AP, int lda, o
         <const double *>DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>DataHandle.from_pyobj(x)._ptr,incx,
         <double *>DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasDdgmm__retval
+    return (_hipblasDdgmm__retval,)
 
 
 @cython.embedsignature(True)
@@ -6104,7 +6132,7 @@ def hipblasCdgmm(object handle, object side, int m, int n, object AP, int lda, o
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasCdgmm__retval
+    return (_hipblasCdgmm__retval,)
 
 
 @cython.embedsignature(True)
@@ -6118,7 +6146,7 @@ def hipblasZdgmm(object handle, object side, int m, int n, object AP, int lda, o
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
-    return _hipblasZdgmm__retval
+    return (_hipblasZdgmm__retval,)
 
 
 @cython.embedsignature(True)
@@ -6180,7 +6208,7 @@ def hipblasSgetrf(object handle, const int n, object A, const int lda, object ip
         <float *>DataHandle.from_pyobj(A)._ptr,lda,
         <int *>DataHandle.from_pyobj(ipiv)._ptr,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasSgetrf__retval
+    return (_hipblasSgetrf__retval,)
 
 
 @cython.embedsignature(True)
@@ -6192,7 +6220,7 @@ def hipblasDgetrf(object handle, const int n, object A, const int lda, object ip
         <double *>DataHandle.from_pyobj(A)._ptr,lda,
         <int *>DataHandle.from_pyobj(ipiv)._ptr,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasDgetrf__retval
+    return (_hipblasDgetrf__retval,)
 
 
 @cython.embedsignature(True)
@@ -6204,7 +6232,7 @@ def hipblasCgetrf(object handle, const int n, object A, const int lda, object ip
         hipblasComplex.from_pyobj(A)._ptr,lda,
         <int *>DataHandle.from_pyobj(ipiv)._ptr,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasCgetrf__retval
+    return (_hipblasCgetrf__retval,)
 
 
 @cython.embedsignature(True)
@@ -6216,7 +6244,7 @@ def hipblasZgetrf(object handle, const int n, object A, const int lda, object ip
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         <int *>DataHandle.from_pyobj(ipiv)._ptr,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasZgetrf__retval
+    return (_hipblasZgetrf__retval,)
 
 
 @cython.embedsignature(True)
@@ -6284,7 +6312,7 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
         <const int *>DataHandle.from_pyobj(ipiv)._ptr,
         <float *>DataHandle.from_pyobj(B)._ptr,ldb,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasSgetrs__retval
+    return (_hipblasSgetrs__retval,)
 
 
 @cython.embedsignature(True)
@@ -6299,7 +6327,7 @@ def hipblasDgetrs(object handle, object trans, const int n, const int nrhs, obje
         <const int *>DataHandle.from_pyobj(ipiv)._ptr,
         <double *>DataHandle.from_pyobj(B)._ptr,ldb,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasDgetrs__retval
+    return (_hipblasDgetrs__retval,)
 
 
 @cython.embedsignature(True)
@@ -6314,7 +6342,7 @@ def hipblasCgetrs(object handle, object trans, const int n, const int nrhs, obje
         <const int *>DataHandle.from_pyobj(ipiv)._ptr,
         hipblasComplex.from_pyobj(B)._ptr,ldb,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasCgetrs__retval
+    return (_hipblasCgetrs__retval,)
 
 
 @cython.embedsignature(True)
@@ -6329,7 +6357,7 @@ def hipblasZgetrs(object handle, object trans, const int n, const int nrhs, obje
         <const int *>DataHandle.from_pyobj(ipiv)._ptr,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasZgetrs__retval
+    return (_hipblasZgetrs__retval,)
 
 
 @cython.embedsignature(True)
@@ -6410,7 +6438,7 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
         <float *>DataHandle.from_pyobj(B)._ptr,ldb,
         <int *>DataHandle.from_pyobj(info)._ptr,
         <int *>DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
-    return _hipblasSgels__retval
+    return (_hipblasSgels__retval,)
 
 
 @cython.embedsignature(True)
@@ -6425,7 +6453,7 @@ def hipblasDgels(object handle, object trans, const int m, const int n, const in
         <double *>DataHandle.from_pyobj(B)._ptr,ldb,
         <int *>DataHandle.from_pyobj(info)._ptr,
         <int *>DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
-    return _hipblasDgels__retval
+    return (_hipblasDgels__retval,)
 
 
 @cython.embedsignature(True)
@@ -6440,7 +6468,7 @@ def hipblasCgels(object handle, object trans, const int m, const int n, const in
         hipblasComplex.from_pyobj(B)._ptr,ldb,
         <int *>DataHandle.from_pyobj(info)._ptr,
         <int *>DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
-    return _hipblasCgels__retval
+    return (_hipblasCgels__retval,)
 
 
 @cython.embedsignature(True)
@@ -6455,7 +6483,7 @@ def hipblasZgels(object handle, object trans, const int m, const int n, const in
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,
         <int *>DataHandle.from_pyobj(info)._ptr,
         <int *>DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
-    return _hipblasZgels__retval
+    return (_hipblasZgels__retval,)
 
 
 @cython.embedsignature(True)
@@ -6523,7 +6551,7 @@ def hipblasSgeqrf(object handle, const int m, const int n, object A, const int l
         <float *>DataHandle.from_pyobj(A)._ptr,lda,
         <float *>DataHandle.from_pyobj(ipiv)._ptr,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasSgeqrf__retval
+    return (_hipblasSgeqrf__retval,)
 
 
 @cython.embedsignature(True)
@@ -6535,7 +6563,7 @@ def hipblasDgeqrf(object handle, const int m, const int n, object A, const int l
         <double *>DataHandle.from_pyobj(A)._ptr,lda,
         <double *>DataHandle.from_pyobj(ipiv)._ptr,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasDgeqrf__retval
+    return (_hipblasDgeqrf__retval,)
 
 
 @cython.embedsignature(True)
@@ -6547,7 +6575,7 @@ def hipblasCgeqrf(object handle, const int m, const int n, object A, const int l
         hipblasComplex.from_pyobj(A)._ptr,lda,
         hipblasComplex.from_pyobj(ipiv)._ptr,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasCgeqrf__retval
+    return (_hipblasCgeqrf__retval,)
 
 
 @cython.embedsignature(True)
@@ -6559,7 +6587,7 @@ def hipblasZgeqrf(object handle, const int m, const int n, object A, const int l
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(ipiv)._ptr,
         <int *>DataHandle.from_pyobj(info)._ptr))    # fully specified
-    return _hipblasZgeqrf__retval
+    return (_hipblasZgeqrf__retval,)
 
 
 @cython.embedsignature(True)
@@ -6666,7 +6694,7 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
         <const void *>DataHandle.from_pyobj(B)._ptr,bType.value,ldb,
         <const void *>DataHandle.from_pyobj(beta)._ptr,
         <void *>DataHandle.from_pyobj(C)._ptr,cType.value,ldc,computeType.value,algo.value))    # fully specified
-    return _hipblasGemmEx__retval
+    return (_hipblasGemmEx__retval,)
 
 
 @cython.embedsignature(True)
@@ -6807,7 +6835,7 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
         <void *>DataHandle.from_pyobj(A)._ptr,lda,
         <void *>DataHandle.from_pyobj(B)._ptr,ldb,
         <const void *>DataHandle.from_pyobj(invA)._ptr,invAsize,computeType.value))    # fully specified
-    return _hipblasTrsmEx__retval
+    return (_hipblasTrsmEx__retval,)
 
 
 @cython.embedsignature(True)
@@ -6865,7 +6893,7 @@ def hipblasAxpyEx(object handle, int n, object alpha, object alphaType, object x
         <const void *>DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
         <const void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,
         <void *>DataHandle.from_pyobj(y)._ptr,yType.value,incy,executionType.value))    # fully specified
-    return _hipblasAxpyEx__retval
+    return (_hipblasAxpyEx__retval,)
 
 
 @cython.embedsignature(True)
@@ -6930,7 +6958,7 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
         <const void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,
         <const void *>DataHandle.from_pyobj(y)._ptr,yType.value,incy,
         <void *>DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
-    return _hipblasDotEx__retval
+    return (_hipblasDotEx__retval,)
 
 
 @cython.embedsignature(True)
@@ -6950,7 +6978,7 @@ def hipblasDotcEx(object handle, int n, object x, object xType, int incx, object
         <const void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,
         <const void *>DataHandle.from_pyobj(y)._ptr,yType.value,incy,
         <void *>DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
-    return _hipblasDotcEx__retval
+    return (_hipblasDotcEx__retval,)
 
 
 @cython.embedsignature(True)
@@ -7001,7 +7029,7 @@ def hipblasNrm2Ex(object handle, int n, object x, object xType, int incx, object
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,
         <void *>DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
-    return _hipblasNrm2Ex__retval
+    return (_hipblasNrm2Ex__retval,)
 
 
 @cython.embedsignature(True)
@@ -7069,7 +7097,7 @@ def hipblasRotEx(object handle, int n, object x, object xType, int incx, object 
         <void *>DataHandle.from_pyobj(y)._ptr,yType.value,incy,
         <const void *>DataHandle.from_pyobj(c)._ptr,
         <const void *>DataHandle.from_pyobj(s)._ptr,csType.value,executionType.value))    # fully specified
-    return _hipblasRotEx__retval
+    return (_hipblasRotEx__retval,)
 
 
 @cython.embedsignature(True)
@@ -7116,7 +7144,7 @@ def hipblasScalEx(object handle, int n, object alpha, object alphaType, object x
         <chipblas.hipblasHandle_t>DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
         <void *>DataHandle.from_pyobj(x)._ptr,xType.value,incx,executionType.value))    # fully specified
-    return _hipblasScalEx__retval
+    return (_hipblasScalEx__retval,)
 
 
 @cython.embedsignature(True)

@@ -196,6 +196,8 @@ cdef class hipDeviceArch_t:
             if ``pyobj`` is an instance of hipDeviceArch_t!
         """
         cdef hipDeviceArch_t wrapper = hipDeviceArch_t.__new__(hipDeviceArch_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipDeviceArch_t):
@@ -204,6 +206,11 @@ cdef class hipDeviceArch_t:
             wrapper._ptr = <chip.hipDeviceArch_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipDeviceArch_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipDeviceArch_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -276,6 +283,8 @@ cdef class hipUUID_t:
             if ``pyobj`` is an instance of hipUUID_t!
         """
         cdef hipUUID_t wrapper = hipUUID_t.__new__(hipUUID_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipUUID_t):
@@ -284,6 +293,11 @@ cdef class hipUUID_t:
             wrapper._ptr = <chip.hipUUID_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipUUID_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipUUID_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -387,6 +401,8 @@ cdef class hipDeviceProp_t:
             if ``pyobj`` is an instance of hipDeviceProp_t!
         """
         cdef hipDeviceProp_t wrapper = hipDeviceProp_t.__new__(hipDeviceProp_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipDeviceProp_t):
@@ -395,6 +411,11 @@ cdef class hipDeviceProp_t:
             wrapper._ptr = <chip.hipDeviceProp_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipDeviceProp_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipDeviceProp_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -1196,6 +1217,8 @@ cdef class hipPointerAttribute_t:
             if ``pyobj`` is an instance of hipPointerAttribute_t!
         """
         cdef hipPointerAttribute_t wrapper = hipPointerAttribute_t.__new__(hipPointerAttribute_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipPointerAttribute_t):
@@ -1204,6 +1227,11 @@ cdef class hipPointerAttribute_t:
             wrapper._ptr = <chip.hipPointerAttribute_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipPointerAttribute_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipPointerAttribute_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -1554,6 +1582,8 @@ cdef class hipDeviceptr_t:
             if ``pyobj`` is an instance of hipDeviceptr_t!
         """
         cdef hipDeviceptr_t wrapper = hipDeviceptr_t.__new__(hipDeviceptr_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipDeviceptr_t):
@@ -1562,6 +1592,11 @@ cdef class hipDeviceptr_t:
             wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -1640,6 +1675,8 @@ cdef class hipChannelFormatDesc:
             if ``pyobj`` is an instance of hipChannelFormatDesc!
         """
         cdef hipChannelFormatDesc wrapper = hipChannelFormatDesc.__new__(hipChannelFormatDesc)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipChannelFormatDesc):
@@ -1648,6 +1685,11 @@ cdef class hipChannelFormatDesc:
             wrapper._ptr = <chip.hipChannelFormatDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipChannelFormatDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipChannelFormatDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -1825,6 +1867,8 @@ cdef class HIP_ARRAY_DESCRIPTOR:
             if ``pyobj`` is an instance of HIP_ARRAY_DESCRIPTOR!
         """
         cdef HIP_ARRAY_DESCRIPTOR wrapper = HIP_ARRAY_DESCRIPTOR.__new__(HIP_ARRAY_DESCRIPTOR)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_ARRAY_DESCRIPTOR):
@@ -1833,6 +1877,11 @@ cdef class HIP_ARRAY_DESCRIPTOR:
             wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -1986,6 +2035,8 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
             if ``pyobj`` is an instance of HIP_ARRAY3D_DESCRIPTOR!
         """
         cdef HIP_ARRAY3D_DESCRIPTOR wrapper = HIP_ARRAY3D_DESCRIPTOR.__new__(HIP_ARRAY3D_DESCRIPTOR)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_ARRAY3D_DESCRIPTOR):
@@ -1994,6 +2045,11 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
             wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -2175,6 +2231,8 @@ cdef class hipArray:
             if ``pyobj`` is an instance of hipArray!
         """
         cdef hipArray wrapper = hipArray.__new__(hipArray)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipArray):
@@ -2183,6 +2241,11 @@ cdef class hipArray:
             wrapper._ptr = <chip.hipArray*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipArray*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipArray*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -2399,6 +2462,8 @@ cdef class hip_Memcpy2D:
             if ``pyobj`` is an instance of hip_Memcpy2D!
         """
         cdef hip_Memcpy2D wrapper = hip_Memcpy2D.__new__(hip_Memcpy2D)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hip_Memcpy2D):
@@ -2407,6 +2472,11 @@ cdef class hip_Memcpy2D:
             wrapper._ptr = <chip.hip_Memcpy2D*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hip_Memcpy2D*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hip_Memcpy2D*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -2652,6 +2722,8 @@ cdef class hipMipmappedArray:
             if ``pyobj`` is an instance of hipMipmappedArray!
         """
         cdef hipMipmappedArray wrapper = hipMipmappedArray.__new__(hipMipmappedArray)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipMipmappedArray):
@@ -2660,6 +2732,11 @@ cdef class hipMipmappedArray:
             wrapper._ptr = <chip.hipMipmappedArray*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipMipmappedArray*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipMipmappedArray*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -2902,6 +2979,8 @@ cdef class HIP_TEXTURE_DESC_st:
             if ``pyobj`` is an instance of HIP_TEXTURE_DESC_st!
         """
         cdef HIP_TEXTURE_DESC_st wrapper = HIP_TEXTURE_DESC_st.__new__(HIP_TEXTURE_DESC_st)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_TEXTURE_DESC_st):
@@ -2910,6 +2989,11 @@ cdef class HIP_TEXTURE_DESC_st:
             wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -3198,6 +3282,8 @@ cdef class hipResourceDesc_union_0_struct_0:
             if ``pyobj`` is an instance of hipResourceDesc_union_0_struct_0!
         """
         cdef hipResourceDesc_union_0_struct_0 wrapper = hipResourceDesc_union_0_struct_0.__new__(hipResourceDesc_union_0_struct_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipResourceDesc_union_0_struct_0):
@@ -3206,6 +3292,11 @@ cdef class hipResourceDesc_union_0_struct_0:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -3301,6 +3392,8 @@ cdef class hipResourceDesc_union_0_struct_1:
             if ``pyobj`` is an instance of hipResourceDesc_union_0_struct_1!
         """
         cdef hipResourceDesc_union_0_struct_1 wrapper = hipResourceDesc_union_0_struct_1.__new__(hipResourceDesc_union_0_struct_1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipResourceDesc_union_0_struct_1):
@@ -3309,6 +3402,11 @@ cdef class hipResourceDesc_union_0_struct_1:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -3404,6 +3502,8 @@ cdef class hipResourceDesc_union_0_struct_2:
             if ``pyobj`` is an instance of hipResourceDesc_union_0_struct_2!
         """
         cdef hipResourceDesc_union_0_struct_2 wrapper = hipResourceDesc_union_0_struct_2.__new__(hipResourceDesc_union_0_struct_2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipResourceDesc_union_0_struct_2):
@@ -3412,6 +3512,11 @@ cdef class hipResourceDesc_union_0_struct_2:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -3528,6 +3633,8 @@ cdef class hipResourceDesc_union_0_struct_3:
             if ``pyobj`` is an instance of hipResourceDesc_union_0_struct_3!
         """
         cdef hipResourceDesc_union_0_struct_3 wrapper = hipResourceDesc_union_0_struct_3.__new__(hipResourceDesc_union_0_struct_3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipResourceDesc_union_0_struct_3):
@@ -3536,6 +3643,11 @@ cdef class hipResourceDesc_union_0_struct_3:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -3680,6 +3792,8 @@ cdef class hipResourceDesc_union_0:
             if ``pyobj`` is an instance of hipResourceDesc_union_0!
         """
         cdef hipResourceDesc_union_0 wrapper = hipResourceDesc_union_0.__new__(hipResourceDesc_union_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipResourceDesc_union_0):
@@ -3688,6 +3802,11 @@ cdef class hipResourceDesc_union_0:
             wrapper._ptr = <chip.hipResourceDesc_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipResourceDesc_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipResourceDesc_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -3811,6 +3930,8 @@ cdef class hipResourceDesc:
             if ``pyobj`` is an instance of hipResourceDesc!
         """
         cdef hipResourceDesc wrapper = hipResourceDesc.__new__(hipResourceDesc)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipResourceDesc):
@@ -3819,6 +3940,11 @@ cdef class hipResourceDesc:
             wrapper._ptr = <chip.hipResourceDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipResourceDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipResourceDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -3937,6 +4063,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
             if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0_struct_0!
         """
         cdef HIP_RESOURCE_DESC_st_union_0_struct_0 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_0.__new__(HIP_RESOURCE_DESC_st_union_0_struct_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0_struct_0):
@@ -3945,6 +4073,11 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -4040,6 +4173,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
             if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0_struct_1!
         """
         cdef HIP_RESOURCE_DESC_st_union_0_struct_1 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_1.__new__(HIP_RESOURCE_DESC_st_union_0_struct_1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0_struct_1):
@@ -4048,6 +4183,11 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -4143,6 +4283,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
             if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0_struct_2!
         """
         cdef HIP_RESOURCE_DESC_st_union_0_struct_2 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_2.__new__(HIP_RESOURCE_DESC_st_union_0_struct_2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0_struct_2):
@@ -4151,6 +4293,11 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -4290,6 +4437,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
             if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0_struct_3!
         """
         cdef HIP_RESOURCE_DESC_st_union_0_struct_3 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_3.__new__(HIP_RESOURCE_DESC_st_union_0_struct_3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0_struct_3):
@@ -4298,6 +4447,11 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -4465,6 +4619,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
             if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0_struct_4!
         """
         cdef HIP_RESOURCE_DESC_st_union_0_struct_4 wrapper = HIP_RESOURCE_DESC_st_union_0_struct_4.__new__(HIP_RESOURCE_DESC_st_union_0_struct_4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0_struct_4):
@@ -4473,6 +4629,11 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -4576,6 +4737,8 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
             if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st_union_0!
         """
         cdef HIP_RESOURCE_DESC_st_union_0 wrapper = HIP_RESOURCE_DESC_st_union_0.__new__(HIP_RESOURCE_DESC_st_union_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_RESOURCE_DESC_st_union_0):
@@ -4584,6 +4747,11 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -4714,6 +4882,8 @@ cdef class HIP_RESOURCE_DESC_st:
             if ``pyobj`` is an instance of HIP_RESOURCE_DESC_st!
         """
         cdef HIP_RESOURCE_DESC_st wrapper = HIP_RESOURCE_DESC_st.__new__(HIP_RESOURCE_DESC_st)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_RESOURCE_DESC_st):
@@ -4722,6 +4892,11 @@ cdef class HIP_RESOURCE_DESC_st:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -4854,6 +5029,8 @@ cdef class hipResourceViewDesc:
             if ``pyobj`` is an instance of hipResourceViewDesc!
         """
         cdef hipResourceViewDesc wrapper = hipResourceViewDesc.__new__(hipResourceViewDesc)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipResourceViewDesc):
@@ -4862,6 +5039,11 @@ cdef class hipResourceViewDesc:
             wrapper._ptr = <chip.hipResourceViewDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipResourceViewDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipResourceViewDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -5071,6 +5253,8 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
             if ``pyobj`` is an instance of HIP_RESOURCE_VIEW_DESC_st!
         """
         cdef HIP_RESOURCE_VIEW_DESC_st wrapper = HIP_RESOURCE_VIEW_DESC_st.__new__(HIP_RESOURCE_VIEW_DESC_st)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_RESOURCE_VIEW_DESC_st):
@@ -5079,6 +5263,11 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
             wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -5303,6 +5492,8 @@ cdef class hipPitchedPtr:
             if ``pyobj`` is an instance of hipPitchedPtr!
         """
         cdef hipPitchedPtr wrapper = hipPitchedPtr.__new__(hipPitchedPtr)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipPitchedPtr):
@@ -5311,6 +5502,11 @@ cdef class hipPitchedPtr:
             wrapper._ptr = <chip.hipPitchedPtr*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipPitchedPtr*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipPitchedPtr*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -5448,6 +5644,8 @@ cdef class hipExtent:
             if ``pyobj`` is an instance of hipExtent!
         """
         cdef hipExtent wrapper = hipExtent.__new__(hipExtent)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExtent):
@@ -5456,6 +5654,11 @@ cdef class hipExtent:
             wrapper._ptr = <chip.hipExtent*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExtent*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExtent*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -5593,6 +5796,8 @@ cdef class hipPos:
             if ``pyobj`` is an instance of hipPos!
         """
         cdef hipPos wrapper = hipPos.__new__(hipPos)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipPos):
@@ -5601,6 +5806,11 @@ cdef class hipPos:
             wrapper._ptr = <chip.hipPos*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipPos*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipPos*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -5738,6 +5948,8 @@ cdef class hipMemcpy3DParms:
             if ``pyobj`` is an instance of hipMemcpy3DParms!
         """
         cdef hipMemcpy3DParms wrapper = hipMemcpy3DParms.__new__(hipMemcpy3DParms)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipMemcpy3DParms):
@@ -5746,6 +5958,11 @@ cdef class hipMemcpy3DParms:
             wrapper._ptr = <chip.hipMemcpy3DParms*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipMemcpy3DParms*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipMemcpy3DParms*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -5892,6 +6109,8 @@ cdef class HIP_MEMCPY3D:
             if ``pyobj`` is an instance of HIP_MEMCPY3D!
         """
         cdef HIP_MEMCPY3D wrapper = HIP_MEMCPY3D.__new__(HIP_MEMCPY3D)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,HIP_MEMCPY3D):
@@ -5900,6 +6119,11 @@ cdef class HIP_MEMCPY3D:
             wrapper._ptr = <chip.HIP_MEMCPY3D*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.HIP_MEMCPY3D*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.HIP_MEMCPY3D*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -6265,6 +6489,8 @@ cdef class uchar1:
             if ``pyobj`` is an instance of uchar1!
         """
         cdef uchar1 wrapper = uchar1.__new__(uchar1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,uchar1):
@@ -6273,6 +6499,11 @@ cdef class uchar1:
             wrapper._ptr = <chip.uchar1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.uchar1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.uchar1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -6341,6 +6572,8 @@ cdef class uchar2:
             if ``pyobj`` is an instance of uchar2!
         """
         cdef uchar2 wrapper = uchar2.__new__(uchar2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,uchar2):
@@ -6349,6 +6582,11 @@ cdef class uchar2:
             wrapper._ptr = <chip.uchar2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.uchar2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.uchar2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -6417,6 +6655,8 @@ cdef class uchar3:
             if ``pyobj`` is an instance of uchar3!
         """
         cdef uchar3 wrapper = uchar3.__new__(uchar3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,uchar3):
@@ -6425,6 +6665,11 @@ cdef class uchar3:
             wrapper._ptr = <chip.uchar3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.uchar3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.uchar3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -6493,6 +6738,8 @@ cdef class uchar4:
             if ``pyobj`` is an instance of uchar4!
         """
         cdef uchar4 wrapper = uchar4.__new__(uchar4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,uchar4):
@@ -6501,6 +6748,11 @@ cdef class uchar4:
             wrapper._ptr = <chip.uchar4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.uchar4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.uchar4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -6569,6 +6821,8 @@ cdef class char1:
             if ``pyobj`` is an instance of char1!
         """
         cdef char1 wrapper = char1.__new__(char1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,char1):
@@ -6577,6 +6831,11 @@ cdef class char1:
             wrapper._ptr = <chip.char1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.char1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.char1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -6645,6 +6904,8 @@ cdef class char2:
             if ``pyobj`` is an instance of char2!
         """
         cdef char2 wrapper = char2.__new__(char2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,char2):
@@ -6653,6 +6914,11 @@ cdef class char2:
             wrapper._ptr = <chip.char2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.char2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.char2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -6721,6 +6987,8 @@ cdef class char3:
             if ``pyobj`` is an instance of char3!
         """
         cdef char3 wrapper = char3.__new__(char3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,char3):
@@ -6729,6 +6997,11 @@ cdef class char3:
             wrapper._ptr = <chip.char3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.char3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.char3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -6797,6 +7070,8 @@ cdef class char4:
             if ``pyobj`` is an instance of char4!
         """
         cdef char4 wrapper = char4.__new__(char4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,char4):
@@ -6805,6 +7080,11 @@ cdef class char4:
             wrapper._ptr = <chip.char4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.char4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.char4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -6873,6 +7153,8 @@ cdef class ushort1:
             if ``pyobj`` is an instance of ushort1!
         """
         cdef ushort1 wrapper = ushort1.__new__(ushort1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ushort1):
@@ -6881,6 +7163,11 @@ cdef class ushort1:
             wrapper._ptr = <chip.ushort1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ushort1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ushort1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -6949,6 +7236,8 @@ cdef class ushort2:
             if ``pyobj`` is an instance of ushort2!
         """
         cdef ushort2 wrapper = ushort2.__new__(ushort2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ushort2):
@@ -6957,6 +7246,11 @@ cdef class ushort2:
             wrapper._ptr = <chip.ushort2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ushort2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ushort2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7025,6 +7319,8 @@ cdef class ushort3:
             if ``pyobj`` is an instance of ushort3!
         """
         cdef ushort3 wrapper = ushort3.__new__(ushort3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ushort3):
@@ -7033,6 +7329,11 @@ cdef class ushort3:
             wrapper._ptr = <chip.ushort3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ushort3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ushort3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7101,6 +7402,8 @@ cdef class ushort4:
             if ``pyobj`` is an instance of ushort4!
         """
         cdef ushort4 wrapper = ushort4.__new__(ushort4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ushort4):
@@ -7109,6 +7412,11 @@ cdef class ushort4:
             wrapper._ptr = <chip.ushort4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ushort4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ushort4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7177,6 +7485,8 @@ cdef class short1:
             if ``pyobj`` is an instance of short1!
         """
         cdef short1 wrapper = short1.__new__(short1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,short1):
@@ -7185,6 +7495,11 @@ cdef class short1:
             wrapper._ptr = <chip.short1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.short1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.short1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7253,6 +7568,8 @@ cdef class short2:
             if ``pyobj`` is an instance of short2!
         """
         cdef short2 wrapper = short2.__new__(short2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,short2):
@@ -7261,6 +7578,11 @@ cdef class short2:
             wrapper._ptr = <chip.short2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.short2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.short2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7329,6 +7651,8 @@ cdef class short3:
             if ``pyobj`` is an instance of short3!
         """
         cdef short3 wrapper = short3.__new__(short3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,short3):
@@ -7337,6 +7661,11 @@ cdef class short3:
             wrapper._ptr = <chip.short3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.short3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.short3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7405,6 +7734,8 @@ cdef class short4:
             if ``pyobj`` is an instance of short4!
         """
         cdef short4 wrapper = short4.__new__(short4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,short4):
@@ -7413,6 +7744,11 @@ cdef class short4:
             wrapper._ptr = <chip.short4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.short4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.short4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7481,6 +7817,8 @@ cdef class uint1:
             if ``pyobj`` is an instance of uint1!
         """
         cdef uint1 wrapper = uint1.__new__(uint1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,uint1):
@@ -7489,6 +7827,11 @@ cdef class uint1:
             wrapper._ptr = <chip.uint1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.uint1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.uint1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7557,6 +7900,8 @@ cdef class uint2:
             if ``pyobj`` is an instance of uint2!
         """
         cdef uint2 wrapper = uint2.__new__(uint2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,uint2):
@@ -7565,6 +7910,11 @@ cdef class uint2:
             wrapper._ptr = <chip.uint2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.uint2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.uint2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7633,6 +7983,8 @@ cdef class uint3:
             if ``pyobj`` is an instance of uint3!
         """
         cdef uint3 wrapper = uint3.__new__(uint3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,uint3):
@@ -7641,6 +7993,11 @@ cdef class uint3:
             wrapper._ptr = <chip.uint3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.uint3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.uint3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7709,6 +8066,8 @@ cdef class uint4:
             if ``pyobj`` is an instance of uint4!
         """
         cdef uint4 wrapper = uint4.__new__(uint4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,uint4):
@@ -7717,6 +8076,11 @@ cdef class uint4:
             wrapper._ptr = <chip.uint4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.uint4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.uint4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7785,6 +8149,8 @@ cdef class int1:
             if ``pyobj`` is an instance of int1!
         """
         cdef int1 wrapper = int1.__new__(int1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,int1):
@@ -7793,6 +8159,11 @@ cdef class int1:
             wrapper._ptr = <chip.int1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.int1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.int1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7861,6 +8232,8 @@ cdef class int2:
             if ``pyobj`` is an instance of int2!
         """
         cdef int2 wrapper = int2.__new__(int2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,int2):
@@ -7869,6 +8242,11 @@ cdef class int2:
             wrapper._ptr = <chip.int2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.int2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.int2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -7937,6 +8315,8 @@ cdef class int3:
             if ``pyobj`` is an instance of int3!
         """
         cdef int3 wrapper = int3.__new__(int3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,int3):
@@ -7945,6 +8325,11 @@ cdef class int3:
             wrapper._ptr = <chip.int3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.int3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.int3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8013,6 +8398,8 @@ cdef class int4:
             if ``pyobj`` is an instance of int4!
         """
         cdef int4 wrapper = int4.__new__(int4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,int4):
@@ -8021,6 +8408,11 @@ cdef class int4:
             wrapper._ptr = <chip.int4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.int4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.int4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8089,6 +8481,8 @@ cdef class ulong1:
             if ``pyobj`` is an instance of ulong1!
         """
         cdef ulong1 wrapper = ulong1.__new__(ulong1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ulong1):
@@ -8097,6 +8491,11 @@ cdef class ulong1:
             wrapper._ptr = <chip.ulong1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ulong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ulong1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8165,6 +8564,8 @@ cdef class ulong2:
             if ``pyobj`` is an instance of ulong2!
         """
         cdef ulong2 wrapper = ulong2.__new__(ulong2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ulong2):
@@ -8173,6 +8574,11 @@ cdef class ulong2:
             wrapper._ptr = <chip.ulong2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ulong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ulong2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8241,6 +8647,8 @@ cdef class ulong3:
             if ``pyobj`` is an instance of ulong3!
         """
         cdef ulong3 wrapper = ulong3.__new__(ulong3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ulong3):
@@ -8249,6 +8657,11 @@ cdef class ulong3:
             wrapper._ptr = <chip.ulong3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ulong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ulong3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8317,6 +8730,8 @@ cdef class ulong4:
             if ``pyobj`` is an instance of ulong4!
         """
         cdef ulong4 wrapper = ulong4.__new__(ulong4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ulong4):
@@ -8325,6 +8740,11 @@ cdef class ulong4:
             wrapper._ptr = <chip.ulong4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ulong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ulong4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8393,6 +8813,8 @@ cdef class long1:
             if ``pyobj`` is an instance of long1!
         """
         cdef long1 wrapper = long1.__new__(long1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,long1):
@@ -8401,6 +8823,11 @@ cdef class long1:
             wrapper._ptr = <chip.long1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.long1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.long1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8469,6 +8896,8 @@ cdef class long2:
             if ``pyobj`` is an instance of long2!
         """
         cdef long2 wrapper = long2.__new__(long2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,long2):
@@ -8477,6 +8906,11 @@ cdef class long2:
             wrapper._ptr = <chip.long2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.long2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.long2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8545,6 +8979,8 @@ cdef class long3:
             if ``pyobj`` is an instance of long3!
         """
         cdef long3 wrapper = long3.__new__(long3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,long3):
@@ -8553,6 +8989,11 @@ cdef class long3:
             wrapper._ptr = <chip.long3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.long3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.long3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8621,6 +9062,8 @@ cdef class long4:
             if ``pyobj`` is an instance of long4!
         """
         cdef long4 wrapper = long4.__new__(long4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,long4):
@@ -8629,6 +9072,11 @@ cdef class long4:
             wrapper._ptr = <chip.long4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.long4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.long4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8697,6 +9145,8 @@ cdef class ulonglong1:
             if ``pyobj`` is an instance of ulonglong1!
         """
         cdef ulonglong1 wrapper = ulonglong1.__new__(ulonglong1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ulonglong1):
@@ -8705,6 +9155,11 @@ cdef class ulonglong1:
             wrapper._ptr = <chip.ulonglong1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ulonglong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ulonglong1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8773,6 +9228,8 @@ cdef class ulonglong2:
             if ``pyobj`` is an instance of ulonglong2!
         """
         cdef ulonglong2 wrapper = ulonglong2.__new__(ulonglong2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ulonglong2):
@@ -8781,6 +9238,11 @@ cdef class ulonglong2:
             wrapper._ptr = <chip.ulonglong2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ulonglong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ulonglong2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8849,6 +9311,8 @@ cdef class ulonglong3:
             if ``pyobj`` is an instance of ulonglong3!
         """
         cdef ulonglong3 wrapper = ulonglong3.__new__(ulonglong3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ulonglong3):
@@ -8857,6 +9321,11 @@ cdef class ulonglong3:
             wrapper._ptr = <chip.ulonglong3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ulonglong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ulonglong3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -8925,6 +9394,8 @@ cdef class ulonglong4:
             if ``pyobj`` is an instance of ulonglong4!
         """
         cdef ulonglong4 wrapper = ulonglong4.__new__(ulonglong4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ulonglong4):
@@ -8933,6 +9404,11 @@ cdef class ulonglong4:
             wrapper._ptr = <chip.ulonglong4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ulonglong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ulonglong4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9001,6 +9477,8 @@ cdef class longlong1:
             if ``pyobj`` is an instance of longlong1!
         """
         cdef longlong1 wrapper = longlong1.__new__(longlong1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,longlong1):
@@ -9009,6 +9487,11 @@ cdef class longlong1:
             wrapper._ptr = <chip.longlong1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.longlong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.longlong1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9077,6 +9560,8 @@ cdef class longlong2:
             if ``pyobj`` is an instance of longlong2!
         """
         cdef longlong2 wrapper = longlong2.__new__(longlong2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,longlong2):
@@ -9085,6 +9570,11 @@ cdef class longlong2:
             wrapper._ptr = <chip.longlong2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.longlong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.longlong2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9153,6 +9643,8 @@ cdef class longlong3:
             if ``pyobj`` is an instance of longlong3!
         """
         cdef longlong3 wrapper = longlong3.__new__(longlong3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,longlong3):
@@ -9161,6 +9653,11 @@ cdef class longlong3:
             wrapper._ptr = <chip.longlong3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.longlong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.longlong3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9229,6 +9726,8 @@ cdef class longlong4:
             if ``pyobj`` is an instance of longlong4!
         """
         cdef longlong4 wrapper = longlong4.__new__(longlong4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,longlong4):
@@ -9237,6 +9736,11 @@ cdef class longlong4:
             wrapper._ptr = <chip.longlong4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.longlong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.longlong4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9305,6 +9809,8 @@ cdef class float1:
             if ``pyobj`` is an instance of float1!
         """
         cdef float1 wrapper = float1.__new__(float1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,float1):
@@ -9313,6 +9819,11 @@ cdef class float1:
             wrapper._ptr = <chip.float1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.float1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.float1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9381,6 +9892,8 @@ cdef class float2:
             if ``pyobj`` is an instance of float2!
         """
         cdef float2 wrapper = float2.__new__(float2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,float2):
@@ -9389,6 +9902,11 @@ cdef class float2:
             wrapper._ptr = <chip.float2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.float2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.float2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9457,6 +9975,8 @@ cdef class float3:
             if ``pyobj`` is an instance of float3!
         """
         cdef float3 wrapper = float3.__new__(float3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,float3):
@@ -9465,6 +9985,11 @@ cdef class float3:
             wrapper._ptr = <chip.float3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.float3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.float3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9533,6 +10058,8 @@ cdef class float4:
             if ``pyobj`` is an instance of float4!
         """
         cdef float4 wrapper = float4.__new__(float4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,float4):
@@ -9541,6 +10068,11 @@ cdef class float4:
             wrapper._ptr = <chip.float4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.float4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.float4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9609,6 +10141,8 @@ cdef class double1:
             if ``pyobj`` is an instance of double1!
         """
         cdef double1 wrapper = double1.__new__(double1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,double1):
@@ -9617,6 +10151,11 @@ cdef class double1:
             wrapper._ptr = <chip.double1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.double1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.double1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9685,6 +10224,8 @@ cdef class double2:
             if ``pyobj`` is an instance of double2!
         """
         cdef double2 wrapper = double2.__new__(double2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,double2):
@@ -9693,6 +10234,11 @@ cdef class double2:
             wrapper._ptr = <chip.double2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.double2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.double2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9761,6 +10307,8 @@ cdef class double3:
             if ``pyobj`` is an instance of double3!
         """
         cdef double3 wrapper = double3.__new__(double3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,double3):
@@ -9769,6 +10317,11 @@ cdef class double3:
             wrapper._ptr = <chip.double3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.double3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.double3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9837,6 +10390,8 @@ cdef class double4:
             if ``pyobj`` is an instance of double4!
         """
         cdef double4 wrapper = double4.__new__(double4)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,double4):
@@ -9845,6 +10400,11 @@ cdef class double4:
             wrapper._ptr = <chip.double4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.double4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.double4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -9922,6 +10482,8 @@ cdef class __hip_texture:
             if ``pyobj`` is an instance of __hip_texture!
         """
         cdef __hip_texture wrapper = __hip_texture.__new__(__hip_texture)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,__hip_texture):
@@ -9930,6 +10492,11 @@ cdef class __hip_texture:
             wrapper._ptr = <chip.__hip_texture*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.__hip_texture*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.__hip_texture*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -10018,6 +10585,8 @@ cdef class textureReference:
             if ``pyobj`` is an instance of textureReference!
         """
         cdef textureReference wrapper = textureReference.__new__(textureReference)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,textureReference):
@@ -10026,6 +10595,11 @@ cdef class textureReference:
             wrapper._ptr = <chip.textureReference*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.textureReference*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.textureReference*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -10291,6 +10865,8 @@ cdef class hipTextureDesc:
             if ``pyobj`` is an instance of hipTextureDesc!
         """
         cdef hipTextureDesc wrapper = hipTextureDesc.__new__(hipTextureDesc)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipTextureDesc):
@@ -10299,6 +10875,11 @@ cdef class hipTextureDesc:
             wrapper._ptr = <chip.hipTextureDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipTextureDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipTextureDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -10531,6 +11112,8 @@ cdef class __hip_surface:
             if ``pyobj`` is an instance of __hip_surface!
         """
         cdef __hip_surface wrapper = __hip_surface.__new__(__hip_surface)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,__hip_surface):
@@ -10539,6 +11122,11 @@ cdef class __hip_surface:
             wrapper._ptr = <chip.__hip_surface*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.__hip_surface*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.__hip_surface*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -10613,6 +11201,8 @@ cdef class surfaceReference:
             if ``pyobj`` is an instance of surfaceReference!
         """
         cdef surfaceReference wrapper = surfaceReference.__new__(surfaceReference)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,surfaceReference):
@@ -10621,6 +11211,11 @@ cdef class surfaceReference:
             wrapper._ptr = <chip.surfaceReference*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.surfaceReference*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.surfaceReference*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -10717,6 +11312,8 @@ cdef class ihipCtx_t:
             if ``pyobj`` is an instance of ihipCtx_t!
         """
         cdef ihipCtx_t wrapper = ihipCtx_t.__new__(ihipCtx_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ihipCtx_t):
@@ -10725,6 +11322,11 @@ cdef class ihipCtx_t:
             wrapper._ptr = <chip.ihipCtx_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ihipCtx_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ihipCtx_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -10801,6 +11403,8 @@ cdef class ihipStream_t:
             if ``pyobj`` is an instance of ihipStream_t!
         """
         cdef ihipStream_t wrapper = ihipStream_t.__new__(ihipStream_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ihipStream_t):
@@ -10809,6 +11413,11 @@ cdef class ihipStream_t:
             wrapper._ptr = <chip.ihipStream_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ihipStream_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ihipStream_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -10883,6 +11492,8 @@ cdef class hipIpcMemHandle_st:
             if ``pyobj`` is an instance of hipIpcMemHandle_st!
         """
         cdef hipIpcMemHandle_st wrapper = hipIpcMemHandle_st.__new__(hipIpcMemHandle_st)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipIpcMemHandle_st):
@@ -10891,6 +11502,11 @@ cdef class hipIpcMemHandle_st:
             wrapper._ptr = <chip.hipIpcMemHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipIpcMemHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipIpcMemHandle_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -10994,6 +11610,8 @@ cdef class hipIpcEventHandle_st:
             if ``pyobj`` is an instance of hipIpcEventHandle_st!
         """
         cdef hipIpcEventHandle_st wrapper = hipIpcEventHandle_st.__new__(hipIpcEventHandle_st)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipIpcEventHandle_st):
@@ -11002,6 +11620,11 @@ cdef class hipIpcEventHandle_st:
             wrapper._ptr = <chip.hipIpcEventHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipIpcEventHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipIpcEventHandle_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -11101,6 +11724,8 @@ cdef class ihipModule_t:
             if ``pyobj`` is an instance of ihipModule_t!
         """
         cdef ihipModule_t wrapper = ihipModule_t.__new__(ihipModule_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ihipModule_t):
@@ -11109,6 +11734,11 @@ cdef class ihipModule_t:
             wrapper._ptr = <chip.ihipModule_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ihipModule_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ihipModule_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -11179,6 +11809,8 @@ cdef class ihipModuleSymbol_t:
             if ``pyobj`` is an instance of ihipModuleSymbol_t!
         """
         cdef ihipModuleSymbol_t wrapper = ihipModuleSymbol_t.__new__(ihipModuleSymbol_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ihipModuleSymbol_t):
@@ -11187,6 +11819,11 @@ cdef class ihipModuleSymbol_t:
             wrapper._ptr = <chip.ihipModuleSymbol_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ihipModuleSymbol_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ihipModuleSymbol_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -11257,6 +11894,8 @@ cdef class ihipMemPoolHandle_t:
             if ``pyobj`` is an instance of ihipMemPoolHandle_t!
         """
         cdef ihipMemPoolHandle_t wrapper = ihipMemPoolHandle_t.__new__(ihipMemPoolHandle_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ihipMemPoolHandle_t):
@@ -11265,6 +11904,11 @@ cdef class ihipMemPoolHandle_t:
             wrapper._ptr = <chip.ihipMemPoolHandle_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ihipMemPoolHandle_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ihipMemPoolHandle_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -11339,6 +11983,8 @@ cdef class hipFuncAttributes:
             if ``pyobj`` is an instance of hipFuncAttributes!
         """
         cdef hipFuncAttributes wrapper = hipFuncAttributes.__new__(hipFuncAttributes)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipFuncAttributes):
@@ -11347,6 +11993,11 @@ cdef class hipFuncAttributes:
             wrapper._ptr = <chip.hipFuncAttributes*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipFuncAttributes*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipFuncAttributes*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -11578,6 +12229,8 @@ cdef class ihipEvent_t:
             if ``pyobj`` is an instance of ihipEvent_t!
         """
         cdef ihipEvent_t wrapper = ihipEvent_t.__new__(ihipEvent_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ihipEvent_t):
@@ -11586,6 +12239,11 @@ cdef class ihipEvent_t:
             wrapper._ptr = <chip.ihipEvent_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ihipEvent_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ihipEvent_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -11702,6 +12360,8 @@ cdef class hipMemLocation:
             if ``pyobj`` is an instance of hipMemLocation!
         """
         cdef hipMemLocation wrapper = hipMemLocation.__new__(hipMemLocation)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipMemLocation):
@@ -11710,6 +12370,11 @@ cdef class hipMemLocation:
             wrapper._ptr = <chip.hipMemLocation*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipMemLocation*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipMemLocation*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -11840,6 +12505,8 @@ cdef class hipMemAccessDesc:
             if ``pyobj`` is an instance of hipMemAccessDesc!
         """
         cdef hipMemAccessDesc wrapper = hipMemAccessDesc.__new__(hipMemAccessDesc)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipMemAccessDesc):
@@ -11848,6 +12515,11 @@ cdef class hipMemAccessDesc:
             wrapper._ptr = <chip.hipMemAccessDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipMemAccessDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipMemAccessDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -11977,6 +12649,8 @@ cdef class hipMemPoolProps:
             if ``pyobj`` is an instance of hipMemPoolProps!
         """
         cdef hipMemPoolProps wrapper = hipMemPoolProps.__new__(hipMemPoolProps)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipMemPoolProps):
@@ -11985,6 +12659,11 @@ cdef class hipMemPoolProps:
             wrapper._ptr = <chip.hipMemPoolProps*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipMemPoolProps*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipMemPoolProps*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -12127,6 +12806,8 @@ cdef class hipMemPoolPtrExportData:
             if ``pyobj`` is an instance of hipMemPoolPtrExportData!
         """
         cdef hipMemPoolPtrExportData wrapper = hipMemPoolPtrExportData.__new__(hipMemPoolPtrExportData)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipMemPoolPtrExportData):
@@ -12135,6 +12816,11 @@ cdef class hipMemPoolPtrExportData:
             wrapper._ptr = <chip.hipMemPoolPtrExportData*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipMemPoolPtrExportData*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipMemPoolPtrExportData*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -12274,6 +12960,8 @@ cdef class dim3:
             if ``pyobj`` is an instance of dim3!
         """
         cdef dim3 wrapper = dim3.__new__(dim3)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,dim3):
@@ -12282,6 +12970,11 @@ cdef class dim3:
             wrapper._ptr = <chip.dim3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.dim3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.dim3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -12419,6 +13112,8 @@ cdef class hipLaunchParams_t:
             if ``pyobj`` is an instance of hipLaunchParams_t!
         """
         cdef hipLaunchParams_t wrapper = hipLaunchParams_t.__new__(hipLaunchParams_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipLaunchParams_t):
@@ -12427,6 +13122,11 @@ cdef class hipLaunchParams_t:
             wrapper._ptr = <chip.hipLaunchParams_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipLaunchParams_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipLaunchParams_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -12559,6 +13259,8 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
             if ``pyobj`` is an instance of hipExternalMemoryHandleDesc_st_union_0_struct_0!
         """
         cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 wrapper = hipExternalMemoryHandleDesc_st_union_0_struct_0.__new__(hipExternalMemoryHandleDesc_st_union_0_struct_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalMemoryHandleDesc_st_union_0_struct_0):
@@ -12567,6 +13269,11 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -12662,6 +13369,8 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
             if ``pyobj`` is an instance of hipExternalMemoryHandleDesc_st_union_0!
         """
         cdef hipExternalMemoryHandleDesc_st_union_0 wrapper = hipExternalMemoryHandleDesc_st_union_0.__new__(hipExternalMemoryHandleDesc_st_union_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalMemoryHandleDesc_st_union_0):
@@ -12670,6 +13379,11 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -12786,6 +13500,8 @@ cdef class hipExternalMemoryHandleDesc_st:
             if ``pyobj`` is an instance of hipExternalMemoryHandleDesc_st!
         """
         cdef hipExternalMemoryHandleDesc_st wrapper = hipExternalMemoryHandleDesc_st.__new__(hipExternalMemoryHandleDesc_st)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalMemoryHandleDesc_st):
@@ -12794,6 +13510,11 @@ cdef class hipExternalMemoryHandleDesc_st:
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -12940,6 +13661,8 @@ cdef class hipExternalMemoryBufferDesc_st:
             if ``pyobj`` is an instance of hipExternalMemoryBufferDesc_st!
         """
         cdef hipExternalMemoryBufferDesc_st wrapper = hipExternalMemoryBufferDesc_st.__new__(hipExternalMemoryBufferDesc_st)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalMemoryBufferDesc_st):
@@ -12948,6 +13671,11 @@ cdef class hipExternalMemoryBufferDesc_st:
             wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -13081,6 +13809,8 @@ cdef class hipExternalMemory_t:
             if ``pyobj`` is an instance of hipExternalMemory_t!
         """
         cdef hipExternalMemory_t wrapper = hipExternalMemory_t.__new__(hipExternalMemory_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalMemory_t):
@@ -13089,6 +13819,11 @@ cdef class hipExternalMemory_t:
             wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -13167,6 +13902,8 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
             if ``pyobj`` is an instance of hipExternalSemaphoreHandleDesc_st_union_0_struct_0!
         """
         cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 wrapper = hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__new__(hipExternalSemaphoreHandleDesc_st_union_0_struct_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreHandleDesc_st_union_0_struct_0):
@@ -13175,6 +13912,11 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -13270,6 +14012,8 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
             if ``pyobj`` is an instance of hipExternalSemaphoreHandleDesc_st_union_0!
         """
         cdef hipExternalSemaphoreHandleDesc_st_union_0 wrapper = hipExternalSemaphoreHandleDesc_st_union_0.__new__(hipExternalSemaphoreHandleDesc_st_union_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreHandleDesc_st_union_0):
@@ -13278,6 +14022,11 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -13394,6 +14143,8 @@ cdef class hipExternalSemaphoreHandleDesc_st:
             if ``pyobj`` is an instance of hipExternalSemaphoreHandleDesc_st!
         """
         cdef hipExternalSemaphoreHandleDesc_st wrapper = hipExternalSemaphoreHandleDesc_st.__new__(hipExternalSemaphoreHandleDesc_st)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreHandleDesc_st):
@@ -13402,6 +14153,11 @@ cdef class hipExternalSemaphoreHandleDesc_st:
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -13530,6 +14286,8 @@ cdef class hipExternalSemaphore_t:
             if ``pyobj`` is an instance of hipExternalSemaphore_t!
         """
         cdef hipExternalSemaphore_t wrapper = hipExternalSemaphore_t.__new__(hipExternalSemaphore_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphore_t):
@@ -13538,6 +14296,11 @@ cdef class hipExternalSemaphore_t:
             wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <void *>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -13610,6 +14373,8 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
             if ``pyobj`` is an instance of hipExternalSemaphoreSignalParams_st_struct_0_struct_0!
         """
         cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 wrapper = hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__new__(hipExternalSemaphoreSignalParams_st_struct_0_struct_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreSignalParams_st_struct_0_struct_0):
@@ -13618,6 +14383,11 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -13727,6 +14497,8 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
             if ``pyobj`` is an instance of hipExternalSemaphoreSignalParams_st_struct_0_struct_1!
         """
         cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 wrapper = hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__new__(hipExternalSemaphoreSignalParams_st_struct_0_struct_1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreSignalParams_st_struct_0_struct_1):
@@ -13735,6 +14507,11 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -13844,6 +14621,8 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
             if ``pyobj`` is an instance of hipExternalSemaphoreSignalParams_st_struct_0!
         """
         cdef hipExternalSemaphoreSignalParams_st_struct_0 wrapper = hipExternalSemaphoreSignalParams_st_struct_0.__new__(hipExternalSemaphoreSignalParams_st_struct_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreSignalParams_st_struct_0):
@@ -13852,6 +14631,11 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -13969,6 +14753,8 @@ cdef class hipExternalSemaphoreSignalParams_st:
             if ``pyobj`` is an instance of hipExternalSemaphoreSignalParams_st!
         """
         cdef hipExternalSemaphoreSignalParams_st wrapper = hipExternalSemaphoreSignalParams_st.__new__(hipExternalSemaphoreSignalParams_st)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreSignalParams_st):
@@ -13977,6 +14763,11 @@ cdef class hipExternalSemaphoreSignalParams_st:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -14101,6 +14892,8 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
             if ``pyobj`` is an instance of hipExternalSemaphoreWaitParams_st_struct_0_struct_0!
         """
         cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 wrapper = hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__new__(hipExternalSemaphoreWaitParams_st_struct_0_struct_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreWaitParams_st_struct_0_struct_0):
@@ -14109,6 +14902,11 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -14218,6 +15016,8 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
             if ``pyobj`` is an instance of hipExternalSemaphoreWaitParams_st_struct_0_struct_1!
         """
         cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 wrapper = hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__new__(hipExternalSemaphoreWaitParams_st_struct_0_struct_1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreWaitParams_st_struct_0_struct_1):
@@ -14226,6 +15026,11 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -14349,6 +15154,8 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
             if ``pyobj`` is an instance of hipExternalSemaphoreWaitParams_st_struct_0!
         """
         cdef hipExternalSemaphoreWaitParams_st_struct_0 wrapper = hipExternalSemaphoreWaitParams_st_struct_0.__new__(hipExternalSemaphoreWaitParams_st_struct_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreWaitParams_st_struct_0):
@@ -14357,6 +15164,11 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -14474,6 +15286,8 @@ cdef class hipExternalSemaphoreWaitParams_st:
             if ``pyobj`` is an instance of hipExternalSemaphoreWaitParams_st!
         """
         cdef hipExternalSemaphoreWaitParams_st wrapper = hipExternalSemaphoreWaitParams_st.__new__(hipExternalSemaphoreWaitParams_st)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipExternalSemaphoreWaitParams_st):
@@ -14482,6 +15296,11 @@ cdef class hipExternalSemaphoreWaitParams_st:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -14614,6 +15433,8 @@ cdef class _hipGraphicsResource:
             if ``pyobj`` is an instance of _hipGraphicsResource!
         """
         cdef _hipGraphicsResource wrapper = _hipGraphicsResource.__new__(_hipGraphicsResource)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,_hipGraphicsResource):
@@ -14622,6 +15443,11 @@ cdef class _hipGraphicsResource:
             wrapper._ptr = <chip._hipGraphicsResource*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip._hipGraphicsResource*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip._hipGraphicsResource*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -14692,6 +15518,8 @@ cdef class ihipGraph:
             if ``pyobj`` is an instance of ihipGraph!
         """
         cdef ihipGraph wrapper = ihipGraph.__new__(ihipGraph)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ihipGraph):
@@ -14700,6 +15528,11 @@ cdef class ihipGraph:
             wrapper._ptr = <chip.ihipGraph*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ihipGraph*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ihipGraph*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -14770,6 +15603,8 @@ cdef class hipGraphNode:
             if ``pyobj`` is an instance of hipGraphNode!
         """
         cdef hipGraphNode wrapper = hipGraphNode.__new__(hipGraphNode)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipGraphNode):
@@ -14778,6 +15613,11 @@ cdef class hipGraphNode:
             wrapper._ptr = <chip.hipGraphNode*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipGraphNode*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipGraphNode*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -14848,6 +15688,8 @@ cdef class hipGraphExec:
             if ``pyobj`` is an instance of hipGraphExec!
         """
         cdef hipGraphExec wrapper = hipGraphExec.__new__(hipGraphExec)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipGraphExec):
@@ -14856,6 +15698,11 @@ cdef class hipGraphExec:
             wrapper._ptr = <chip.hipGraphExec*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipGraphExec*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipGraphExec*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -14926,6 +15773,8 @@ cdef class hipUserObject:
             if ``pyobj`` is an instance of hipUserObject!
         """
         cdef hipUserObject wrapper = hipUserObject.__new__(hipUserObject)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipUserObject):
@@ -14934,6 +15783,11 @@ cdef class hipUserObject:
             wrapper._ptr = <chip.hipUserObject*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipUserObject*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipUserObject*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -15019,6 +15873,8 @@ cdef class hipHostFn_t:
             if ``pyobj`` is an instance of hipHostFn_t!
         """
         cdef hipHostFn_t wrapper = hipHostFn_t.__new__(hipHostFn_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipHostFn_t):
@@ -15027,6 +15883,11 @@ cdef class hipHostFn_t:
             wrapper._ptr = <chip.hipHostFn_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipHostFn_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipHostFn_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -15099,6 +15960,8 @@ cdef class hipHostNodeParams:
             if ``pyobj`` is an instance of hipHostNodeParams!
         """
         cdef hipHostNodeParams wrapper = hipHostNodeParams.__new__(hipHostNodeParams)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipHostNodeParams):
@@ -15107,6 +15970,11 @@ cdef class hipHostNodeParams:
             wrapper._ptr = <chip.hipHostNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipHostNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipHostNodeParams*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -15202,6 +16070,8 @@ cdef class hipKernelNodeParams:
             if ``pyobj`` is an instance of hipKernelNodeParams!
         """
         cdef hipKernelNodeParams wrapper = hipKernelNodeParams.__new__(hipKernelNodeParams)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipKernelNodeParams):
@@ -15210,6 +16080,11 @@ cdef class hipKernelNodeParams:
             wrapper._ptr = <chip.hipKernelNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipKernelNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipKernelNodeParams*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -15333,6 +16208,8 @@ cdef class hipMemsetParams:
             if ``pyobj`` is an instance of hipMemsetParams!
         """
         cdef hipMemsetParams wrapper = hipMemsetParams.__new__(hipMemsetParams)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipMemsetParams):
@@ -15341,6 +16218,11 @@ cdef class hipMemsetParams:
             wrapper._ptr = <chip.hipMemsetParams*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipMemsetParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipMemsetParams*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -15515,6 +16397,8 @@ cdef class hipAccessPolicyWindow:
             if ``pyobj`` is an instance of hipAccessPolicyWindow!
         """
         cdef hipAccessPolicyWindow wrapper = hipAccessPolicyWindow.__new__(hipAccessPolicyWindow)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipAccessPolicyWindow):
@@ -15523,6 +16407,11 @@ cdef class hipAccessPolicyWindow:
             wrapper._ptr = <chip.hipAccessPolicyWindow*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipAccessPolicyWindow*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipAccessPolicyWindow*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -15678,6 +16567,8 @@ cdef class hipKernelNodeAttrValue:
             if ``pyobj`` is an instance of hipKernelNodeAttrValue!
         """
         cdef hipKernelNodeAttrValue wrapper = hipKernelNodeAttrValue.__new__(hipKernelNodeAttrValue)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipKernelNodeAttrValue):
@@ -15686,6 +16577,11 @@ cdef class hipKernelNodeAttrValue:
             wrapper._ptr = <chip.hipKernelNodeAttrValue*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipKernelNodeAttrValue*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipKernelNodeAttrValue*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -15841,6 +16737,8 @@ cdef class hipMemAllocationProp_struct_0:
             if ``pyobj`` is an instance of hipMemAllocationProp_struct_0!
         """
         cdef hipMemAllocationProp_struct_0 wrapper = hipMemAllocationProp_struct_0.__new__(hipMemAllocationProp_struct_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipMemAllocationProp_struct_0):
@@ -15849,6 +16747,11 @@ cdef class hipMemAllocationProp_struct_0:
             wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -15986,6 +16889,8 @@ cdef class hipMemAllocationProp:
             if ``pyobj`` is an instance of hipMemAllocationProp!
         """
         cdef hipMemAllocationProp wrapper = hipMemAllocationProp.__new__(hipMemAllocationProp)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipMemAllocationProp):
@@ -15994,6 +16899,11 @@ cdef class hipMemAllocationProp:
             wrapper._ptr = <chip.hipMemAllocationProp*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipMemAllocationProp*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipMemAllocationProp*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -16131,6 +17041,8 @@ cdef class ihipMemGenericAllocationHandle:
             if ``pyobj`` is an instance of ihipMemGenericAllocationHandle!
         """
         cdef ihipMemGenericAllocationHandle wrapper = ihipMemGenericAllocationHandle.__new__(ihipMemGenericAllocationHandle)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,ihipMemGenericAllocationHandle):
@@ -16139,6 +17051,11 @@ cdef class ihipMemGenericAllocationHandle:
             wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -16228,6 +17145,8 @@ cdef class hipArrayMapInfo_union_0:
             if ``pyobj`` is an instance of hipArrayMapInfo_union_0!
         """
         cdef hipArrayMapInfo_union_0 wrapper = hipArrayMapInfo_union_0.__new__(hipArrayMapInfo_union_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipArrayMapInfo_union_0):
@@ -16236,6 +17155,11 @@ cdef class hipArrayMapInfo_union_0:
             wrapper._ptr = <chip.hipArrayMapInfo_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipArrayMapInfo_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipArrayMapInfo_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -16338,6 +17262,8 @@ cdef class hipArrayMapInfo_union_1_struct_0:
             if ``pyobj`` is an instance of hipArrayMapInfo_union_1_struct_0!
         """
         cdef hipArrayMapInfo_union_1_struct_0 wrapper = hipArrayMapInfo_union_1_struct_0.__new__(hipArrayMapInfo_union_1_struct_0)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipArrayMapInfo_union_1_struct_0):
@@ -16346,6 +17272,11 @@ cdef class hipArrayMapInfo_union_1_struct_0:
             wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -16553,6 +17484,8 @@ cdef class hipArrayMapInfo_union_1_struct_1:
             if ``pyobj`` is an instance of hipArrayMapInfo_union_1_struct_1!
         """
         cdef hipArrayMapInfo_union_1_struct_1 wrapper = hipArrayMapInfo_union_1_struct_1.__new__(hipArrayMapInfo_union_1_struct_1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipArrayMapInfo_union_1_struct_1):
@@ -16561,6 +17494,11 @@ cdef class hipArrayMapInfo_union_1_struct_1:
             wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -16698,6 +17636,8 @@ cdef class hipArrayMapInfo_union_1:
             if ``pyobj`` is an instance of hipArrayMapInfo_union_1!
         """
         cdef hipArrayMapInfo_union_1 wrapper = hipArrayMapInfo_union_1.__new__(hipArrayMapInfo_union_1)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipArrayMapInfo_union_1):
@@ -16706,6 +17646,11 @@ cdef class hipArrayMapInfo_union_1:
             wrapper._ptr = <chip.hipArrayMapInfo_union_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipArrayMapInfo_union_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -16815,6 +17760,8 @@ cdef class hipArrayMapInfo_union_2:
             if ``pyobj`` is an instance of hipArrayMapInfo_union_2!
         """
         cdef hipArrayMapInfo_union_2 wrapper = hipArrayMapInfo_union_2.__new__(hipArrayMapInfo_union_2)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipArrayMapInfo_union_2):
@@ -16823,6 +17770,11 @@ cdef class hipArrayMapInfo_union_2:
             wrapper._ptr = <chip.hipArrayMapInfo_union_2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipArrayMapInfo_union_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipArrayMapInfo_union_2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -16918,6 +17870,8 @@ cdef class hipArrayMapInfo:
             if ``pyobj`` is an instance of hipArrayMapInfo!
         """
         cdef hipArrayMapInfo wrapper = hipArrayMapInfo.__new__(hipArrayMapInfo)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipArrayMapInfo):
@@ -16926,6 +17880,11 @@ cdef class hipArrayMapInfo:
             wrapper._ptr = <chip.hipArrayMapInfo*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipArrayMapInfo*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipArrayMapInfo*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -17129,7 +18088,7 @@ def hipInit(unsigned int flags):
     This API provides control over the timing of the initialization.
     """
     _hipInit__retval = hipError_t(chip.hipInit(flags))    # fully specified
-    return _hipInit__retval
+    return (_hipInit__retval,)
 
 
 @cython.embedsignature(True)
@@ -17200,7 +18159,7 @@ def hipDeviceGetName(char * name, int len, hipDevice_t device):
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
     _hipDeviceGetName__retval = hipError_t(chip.hipDeviceGetName(name,len,device))    # fully specified
-    return _hipDeviceGetName__retval
+    return (_hipDeviceGetName__retval,)
 
 
 @cython.embedsignature(True)
@@ -17215,7 +18174,7 @@ def hipDeviceGetUuid(object uuid, hipDevice_t device):
     """
     _hipDeviceGetUuid__retval = hipError_t(chip.hipDeviceGetUuid(
         hipUUID_t.from_pyobj(uuid)._ptr,device))    # fully specified
-    return _hipDeviceGetUuid__retval
+    return (_hipDeviceGetUuid__retval,)
 
 
 @cython.embedsignature(True)
@@ -17243,7 +18202,7 @@ def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
     _hipDeviceGetPCIBusId__retval = hipError_t(chip.hipDeviceGetPCIBusId(pciBusId,len,device))    # fully specified
-    return _hipDeviceGetPCIBusId__retval
+    return (_hipDeviceGetPCIBusId__retval,)
 
 
 @cython.embedsignature(True)
@@ -17283,7 +18242,7 @@ def hipDeviceSynchronize():
     @see hipSetDevice, hipDeviceReset
     """
     _hipDeviceSynchronize__retval = hipError_t(chip.hipDeviceSynchronize())    # fully specified
-    return _hipDeviceSynchronize__retval
+    return (_hipDeviceSynchronize__retval,)
 
 
 @cython.embedsignature(True)
@@ -17296,7 +18255,7 @@ def hipDeviceReset():
     @see hipDeviceSynchronize
     """
     _hipDeviceReset__retval = hipError_t(chip.hipDeviceReset())    # fully specified
-    return _hipDeviceReset__retval
+    return (_hipDeviceReset__retval,)
 
 
 @cython.embedsignature(True)
@@ -17324,7 +18283,7 @@ def hipSetDevice(int deviceId):
     @see hipGetDevice, hipGetDeviceCount
     """
     _hipSetDevice__retval = hipError_t(chip.hipSetDevice(deviceId))    # fully specified
-    return _hipSetDevice__retval
+    return (_hipSetDevice__retval,)
 
 
 @cython.embedsignature(True)
@@ -17405,7 +18364,7 @@ def hipDeviceSetMemPool(int device, object mem_pool):
     """
     _hipDeviceSetMemPool__retval = hipError_t(chip.hipDeviceSetMemPool(device,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr))    # fully specified
-    return _hipDeviceSetMemPool__retval
+    return (_hipDeviceSetMemPool__retval,)
 
 
 @cython.embedsignature(True)
@@ -17441,7 +18400,7 @@ def hipGetDeviceProperties(object prop, int deviceId):
     """
     _hipGetDeviceProperties__retval = hipError_t(chip.hipGetDeviceProperties(
         hipDeviceProp_t.from_pyobj(prop)._ptr,deviceId))    # fully specified
-    return _hipGetDeviceProperties__retval
+    return (_hipGetDeviceProperties__retval,)
 
 
 @cython.embedsignature(True)
@@ -17455,7 +18414,7 @@ def hipDeviceSetCacheConfig(object cacheConfig):
     if not isinstance(cacheConfig,hipFuncCache_t):
         raise TypeError("argument 'cacheConfig' must be of type 'hipFuncCache_t'")
     _hipDeviceSetCacheConfig__retval = hipError_t(chip.hipDeviceSetCacheConfig(cacheConfig.value))    # fully specified
-    return _hipDeviceSetCacheConfig__retval
+    return (_hipDeviceSetCacheConfig__retval,)
 
 
 @cython.embedsignature(True)
@@ -17496,7 +18455,7 @@ def hipDeviceSetLimit(object limit, int value):
     if not isinstance(limit,hipLimit_t):
         raise TypeError("argument 'limit' must be of type 'hipLimit_t'")
     _hipDeviceSetLimit__retval = hipError_t(chip.hipDeviceSetLimit(limit.value,value))    # fully specified
-    return _hipDeviceSetLimit__retval
+    return (_hipDeviceSetLimit__retval,)
 
 
 @cython.embedsignature(True)
@@ -17534,7 +18493,7 @@ def hipDeviceSetSharedMemConfig(object config):
     if not isinstance(config,hipSharedMemConfig):
         raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
     _hipDeviceSetSharedMemConfig__retval = hipError_t(chip.hipDeviceSetSharedMemConfig(config.value))    # fully specified
-    return _hipDeviceSetSharedMemConfig__retval
+    return (_hipDeviceSetSharedMemConfig__retval,)
 
 
 @cython.embedsignature(True)
@@ -17556,7 +18515,7 @@ def hipSetDeviceFlags(unsigned int flags):
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorSetOnActiveProcess
     """
     _hipSetDeviceFlags__retval = hipError_t(chip.hipSetDeviceFlags(flags))    # fully specified
-    return _hipSetDeviceFlags__retval
+    return (_hipSetDeviceFlags__retval,)
 
 
 @cython.embedsignature(True)
@@ -17612,7 +18571,7 @@ def hipIpcGetMemHandle(object handle, object devPtr):
     _hipIpcGetMemHandle__retval = hipError_t(chip.hipIpcGetMemHandle(
         hipIpcMemHandle_st.from_pyobj(handle)._ptr,
         <void *>DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
-    return _hipIpcGetMemHandle__retval
+    return (_hipIpcGetMemHandle__retval,)
 
 
 @cython.embedsignature(True)
@@ -17664,7 +18623,7 @@ def hipIpcCloseMemHandle(object devPtr):
     """
     _hipIpcCloseMemHandle__retval = hipError_t(chip.hipIpcCloseMemHandle(
         <void *>DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
-    return _hipIpcCloseMemHandle__retval
+    return (_hipIpcCloseMemHandle__retval,)
 
 
 @cython.embedsignature(True)
@@ -17681,7 +18640,7 @@ def hipIpcGetEventHandle(object handle, object event):
     _hipIpcGetEventHandle__retval = hipError_t(chip.hipIpcGetEventHandle(
         hipIpcEventHandle_st.from_pyobj(handle)._ptr,
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
-    return _hipIpcGetEventHandle__retval
+    return (_hipIpcGetEventHandle__retval,)
 
 
 @cython.embedsignature(True)
@@ -17717,7 +18676,7 @@ def hipFuncSetAttribute(object func, object attr, int value):
         raise TypeError("argument 'attr' must be of type 'hipFuncAttribute'")
     _hipFuncSetAttribute__retval = hipError_t(chip.hipFuncSetAttribute(
         <const void *>DataHandle.from_pyobj(func)._ptr,attr.value,value))    # fully specified
-    return _hipFuncSetAttribute__retval
+    return (_hipFuncSetAttribute__retval,)
 
 
 @cython.embedsignature(True)
@@ -17732,7 +18691,7 @@ def hipFuncSetCacheConfig(object func, object config):
         raise TypeError("argument 'config' must be of type 'hipFuncCache_t'")
     _hipFuncSetCacheConfig__retval = hipError_t(chip.hipFuncSetCacheConfig(
         <const void *>DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
-    return _hipFuncSetCacheConfig__retval
+    return (_hipFuncSetCacheConfig__retval,)
 
 
 @cython.embedsignature(True)
@@ -17748,7 +18707,7 @@ def hipFuncSetSharedMemConfig(object func, object config):
         raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
     _hipFuncSetSharedMemConfig__retval = hipError_t(chip.hipFuncSetSharedMemConfig(
         <const void *>DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
-    return _hipFuncSetSharedMemConfig__retval
+    return (_hipFuncSetSharedMemConfig__retval,)
 
 
 @cython.embedsignature(True)
@@ -17767,7 +18726,7 @@ def hipGetLastError():
     @see hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
     """
     _hipGetLastError__retval = hipError_t(chip.hipGetLastError())    # fully specified
-    return _hipGetLastError__retval
+    return (_hipGetLastError__retval,)
 
 
 @cython.embedsignature(True)
@@ -17779,7 +18738,7 @@ def hipPeekAtLastError():
     @see hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
     """
     _hipPeekAtLastError__retval = hipError_t(chip.hipPeekAtLastError())    # fully specified
-    return _hipPeekAtLastError__retval
+    return (_hipPeekAtLastError__retval,)
 
 
 @cython.embedsignature(True)
@@ -17818,7 +18777,7 @@ def hipDrvGetErrorName(object hipError, object errorString):
         raise TypeError("argument 'hipError' must be of type 'hipError_t'")
     _hipDrvGetErrorName__retval = hipError_t(chip.hipDrvGetErrorName(hipError.value,
         <const char **>DataHandle.from_pyobj(errorString)._ptr))    # fully specified
-    return _hipDrvGetErrorName__retval
+    return (_hipDrvGetErrorName__retval,)
 
 
 @cython.embedsignature(True)
@@ -17833,7 +18792,7 @@ def hipDrvGetErrorString(object hipError, object errorString):
         raise TypeError("argument 'hipError' must be of type 'hipError_t'")
     _hipDrvGetErrorString__retval = hipError_t(chip.hipDrvGetErrorString(hipError.value,
         <const char **>DataHandle.from_pyobj(errorString)._ptr))    # fully specified
-    return _hipDrvGetErrorString__retval
+    return (_hipDrvGetErrorString__retval,)
 
 
 @cython.embedsignature(True)
@@ -17925,7 +18884,7 @@ def hipStreamDestroy(object stream):
     """
     _hipStreamDestroy__retval = hipError_t(chip.hipStreamDestroy(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipStreamDestroy__retval
+    return (_hipStreamDestroy__retval,)
 
 
 @cython.embedsignature(True)
@@ -17942,7 +18901,7 @@ def hipStreamQuery(object stream):
     """
     _hipStreamQuery__retval = hipError_t(chip.hipStreamQuery(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipStreamQuery__retval
+    return (_hipStreamQuery__retval,)
 
 
 @cython.embedsignature(True)
@@ -17960,7 +18919,7 @@ def hipStreamSynchronize(object stream):
     """
     _hipStreamSynchronize__retval = hipError_t(chip.hipStreamSynchronize(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipStreamSynchronize__retval
+    return (_hipStreamSynchronize__retval,)
 
 
 @cython.embedsignature(True)
@@ -17981,7 +18940,7 @@ def hipStreamWaitEvent(object stream, object event, unsigned int flags):
     _hipStreamWaitEvent__retval = hipError_t(chip.hipStreamWaitEvent(
         ihipStream_t.from_pyobj(stream)._ptr,
         ihipEvent_t.from_pyobj(event)._ptr,flags))    # fully specified
-    return _hipStreamWaitEvent__retval
+    return (_hipStreamWaitEvent__retval,)
 
 
 @cython.embedsignature(True)
@@ -18091,6 +19050,8 @@ cdef class hipStreamCallback_t:
             if ``pyobj`` is an instance of hipStreamCallback_t!
         """
         cdef hipStreamCallback_t wrapper = hipStreamCallback_t.__new__(hipStreamCallback_t)
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,hipStreamCallback_t):
@@ -18099,6 +19060,11 @@ cdef class hipStreamCallback_t:
             wrapper._ptr = <chip.hipStreamCallback_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipStreamCallback_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <chip.hipStreamCallback_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -18181,7 +19147,7 @@ def hipStreamWaitValue32(object stream, object ptr, uint32_t value, unsigned int
     _hipStreamWaitValue32__retval = hipError_t(chip.hipStreamWaitValue32(
         ihipStream_t.from_pyobj(stream)._ptr,
         <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
-    return _hipStreamWaitValue32__retval
+    return (_hipStreamWaitValue32__retval,)
 
 
 @cython.embedsignature(True)
@@ -18212,7 +19178,7 @@ def hipStreamWaitValue64(object stream, object ptr, uint64_t value, unsigned int
     _hipStreamWaitValue64__retval = hipError_t(chip.hipStreamWaitValue64(
         ihipStream_t.from_pyobj(stream)._ptr,
         <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags,mask))    # fully specified
-    return _hipStreamWaitValue64__retval
+    return (_hipStreamWaitValue64__retval,)
 
 
 @cython.embedsignature(True)
@@ -18233,7 +19199,7 @@ def hipStreamWriteValue32(object stream, object ptr, uint32_t value, unsigned in
     _hipStreamWriteValue32__retval = hipError_t(chip.hipStreamWriteValue32(
         ihipStream_t.from_pyobj(stream)._ptr,
         <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags))    # fully specified
-    return _hipStreamWriteValue32__retval
+    return (_hipStreamWriteValue32__retval,)
 
 
 @cython.embedsignature(True)
@@ -18254,7 +19220,7 @@ def hipStreamWriteValue64(object stream, object ptr, uint64_t value, unsigned in
     _hipStreamWriteValue64__retval = hipError_t(chip.hipStreamWriteValue64(
         ihipStream_t.from_pyobj(stream)._ptr,
         <void *>DataHandle.from_pyobj(ptr)._ptr,value,flags))    # fully specified
-    return _hipStreamWriteValue64__retval
+    return (_hipStreamWriteValue64__retval,)
 
 
 @cython.embedsignature(True)
@@ -18309,7 +19275,7 @@ def hipEventRecord(object event, object stream):
     _hipEventRecord__retval = hipError_t(chip.hipEventRecord(
         ihipEvent_t.from_pyobj(event)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipEventRecord__retval
+    return (_hipEventRecord__retval,)
 
 
 @cython.embedsignature(True)
@@ -18327,7 +19293,7 @@ def hipEventDestroy(object event):
     """
     _hipEventDestroy__retval = hipError_t(chip.hipEventDestroy(
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
-    return _hipEventDestroy__retval
+    return (_hipEventDestroy__retval,)
 
 
 @cython.embedsignature(True)
@@ -18345,7 +19311,7 @@ def hipEventSynchronize(object event):
     """
     _hipEventSynchronize__retval = hipError_t(chip.hipEventSynchronize(
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
-    return _hipEventSynchronize__retval
+    return (_hipEventSynchronize__retval,)
 
 
 @cython.embedsignature(True)
@@ -18393,7 +19359,7 @@ def hipEventQuery(object event):
     """
     _hipEventQuery__retval = hipError_t(chip.hipEventQuery(
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
-    return _hipEventQuery__retval
+    return (_hipEventQuery__retval,)
 
 
 @cython.embedsignature(True)
@@ -18417,7 +19383,7 @@ def hipPointerGetAttributes(object attributes, object ptr):
     _hipPointerGetAttributes__retval = hipError_t(chip.hipPointerGetAttributes(
         hipPointerAttribute_t.from_pyobj(attributes)._ptr,
         <const void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
-    return _hipPointerGetAttributes__retval
+    return (_hipPointerGetAttributes__retval,)
 
 
 @cython.embedsignature(True)
@@ -18436,7 +19402,7 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
     _hipPointerGetAttribute__retval = hipError_t(chip.hipPointerGetAttribute(
         <void *>DataHandle.from_pyobj(data)._ptr,attribute.value,
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
-    return _hipPointerGetAttribute__retval
+    return (_hipPointerGetAttribute__retval,)
 
 
 @cython.embedsignature(True)
@@ -18471,7 +19437,7 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
     _hipImportExternalSemaphore__retval = hipError_t(chip.hipImportExternalSemaphore(
         <chip.hipExternalSemaphore_t*>DataHandle.from_pyobj(extSem_out)._ptr,
         hipExternalSemaphoreHandleDesc_st.from_pyobj(semHandleDesc)._ptr))    # fully specified
-    return _hipImportExternalSemaphore__retval
+    return (_hipImportExternalSemaphore__retval,)
 
 
 @cython.embedsignature(True)
@@ -18488,7 +19454,7 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
         <chip.hipExternalSemaphore_t *>DataHandle.from_pyobj(extSemArray)._ptr,
         hipExternalSemaphoreSignalParams_st.from_pyobj(paramsArray)._ptr,numExtSems,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipSignalExternalSemaphoresAsync__retval
+    return (_hipSignalExternalSemaphoresAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -18505,7 +19471,7 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
         <chip.hipExternalSemaphore_t *>DataHandle.from_pyobj(extSemArray)._ptr,
         hipExternalSemaphoreWaitParams_st.from_pyobj(paramsArray)._ptr,numExtSems,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipWaitExternalSemaphoresAsync__retval
+    return (_hipWaitExternalSemaphoresAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -18517,7 +19483,7 @@ def hipDestroyExternalSemaphore(object extSem):
     """
     _hipDestroyExternalSemaphore__retval = hipError_t(chip.hipDestroyExternalSemaphore(
         <chip.hipExternalSemaphore_t>DataHandle.from_pyobj(extSem)._ptr))    # fully specified
-    return _hipDestroyExternalSemaphore__retval
+    return (_hipDestroyExternalSemaphore__retval,)
 
 
 @cython.embedsignature(True)
@@ -18531,7 +19497,7 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
     _hipImportExternalMemory__retval = hipError_t(chip.hipImportExternalMemory(
         <chip.hipExternalMemory_t*>DataHandle.from_pyobj(extMem_out)._ptr,
         hipExternalMemoryHandleDesc_st.from_pyobj(memHandleDesc)._ptr))    # fully specified
-    return _hipImportExternalMemory__retval
+    return (_hipImportExternalMemory__retval,)
 
 
 @cython.embedsignature(True)
@@ -18560,7 +19526,7 @@ def hipDestroyExternalMemory(object extMem):
     """
     _hipDestroyExternalMemory__retval = hipError_t(chip.hipDestroyExternalMemory(
         <chip.hipExternalMemory_t>DataHandle.from_pyobj(extMem)._ptr))    # fully specified
-    return _hipDestroyExternalMemory__retval
+    return (_hipDestroyExternalMemory__retval,)
 
 
 @cython.embedsignature(True)
@@ -18675,7 +19641,7 @@ def hipMemPrefetchAsync(object dev_ptr, int count, int device, object stream):
     _hipMemPrefetchAsync__retval = hipError_t(chip.hipMemPrefetchAsync(
         <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count,device,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemPrefetchAsync__retval
+    return (_hipMemPrefetchAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -18691,7 +19657,7 @@ def hipMemAdvise(object dev_ptr, int count, object advice, int device):
         raise TypeError("argument 'advice' must be of type 'hipMemoryAdvise'")
     _hipMemAdvise__retval = hipError_t(chip.hipMemAdvise(
         <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count,advice.value,device))    # fully specified
-    return _hipMemAdvise__retval
+    return (_hipMemAdvise__retval,)
 
 
 @cython.embedsignature(True)
@@ -18710,7 +19676,7 @@ def hipMemRangeGetAttribute(object data, int data_size, object attribute, object
     _hipMemRangeGetAttribute__retval = hipError_t(chip.hipMemRangeGetAttribute(
         <void *>DataHandle.from_pyobj(data)._ptr,data_size,attribute.value,
         <const void *>DataHandle.from_pyobj(dev_ptr)._ptr,count))    # fully specified
-    return _hipMemRangeGetAttribute__retval
+    return (_hipMemRangeGetAttribute__retval,)
 
 
 @cython.embedsignature(True)
@@ -18749,7 +19715,7 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, int length, unsigned 
     _hipStreamAttachMemAsync__retval = hipError_t(chip.hipStreamAttachMemAsync(
         ihipStream_t.from_pyobj(stream)._ptr,
         <void *>DataHandle.from_pyobj(dev_ptr)._ptr,length,flags))    # fully specified
-    return _hipStreamAttachMemAsync__retval
+    return (_hipStreamAttachMemAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -18803,7 +19769,7 @@ def hipFreeAsync(object dev_ptr, object stream):
     _hipFreeAsync__retval = hipError_t(chip.hipFreeAsync(
         <void *>DataHandle.from_pyobj(dev_ptr)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipFreeAsync__retval
+    return (_hipFreeAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -18828,7 +19794,7 @@ def hipMemPoolTrimTo(object mem_pool, int min_bytes_to_hold):
     """
     _hipMemPoolTrimTo__retval = hipError_t(chip.hipMemPoolTrimTo(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,min_bytes_to_hold))    # fully specified
-    return _hipMemPoolTrimTo__retval
+    return (_hipMemPoolTrimTo__retval,)
 
 
 @cython.embedsignature(True)
@@ -18868,7 +19834,7 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
     _hipMemPoolSetAttribute__retval = hipError_t(chip.hipMemPoolSetAttribute(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,attr.value,
         <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
-    return _hipMemPoolSetAttribute__retval
+    return (_hipMemPoolSetAttribute__retval,)
 
 
 @cython.embedsignature(True)
@@ -18908,7 +19874,7 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
     _hipMemPoolGetAttribute__retval = hipError_t(chip.hipMemPoolGetAttribute(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,attr.value,
         <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
-    return _hipMemPoolGetAttribute__retval
+    return (_hipMemPoolGetAttribute__retval,)
 
 
 @cython.embedsignature(True)
@@ -18926,7 +19892,7 @@ def hipMemPoolSetAccess(object mem_pool, object desc_list, int count):
     _hipMemPoolSetAccess__retval = hipError_t(chip.hipMemPoolSetAccess(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
         hipMemAccessDesc.from_pyobj(desc_list)._ptr,count))    # fully specified
-    return _hipMemPoolSetAccess__retval
+    return (_hipMemPoolSetAccess__retval,)
 
 
 @cython.embedsignature(True)
@@ -18990,7 +19956,7 @@ def hipMemPoolDestroy(object mem_pool):
     """
     _hipMemPoolDestroy__retval = hipError_t(chip.hipMemPoolDestroy(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr))    # fully specified
-    return _hipMemPoolDestroy__retval
+    return (_hipMemPoolDestroy__retval,)
 
 
 @cython.embedsignature(True)
@@ -19049,7 +20015,7 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
     _hipMemPoolExportToShareableHandle__retval = hipError_t(chip.hipMemPoolExportToShareableHandle(
         <void *>DataHandle.from_pyobj(shared_handle)._ptr,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,handle_type.value,flags))    # fully specified
-    return _hipMemPoolExportToShareableHandle__retval
+    return (_hipMemPoolExportToShareableHandle__retval,)
 
 
 @cython.embedsignature(True)
@@ -19092,7 +20058,7 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
     _hipMemPoolExportPointer__retval = hipError_t(chip.hipMemPoolExportPointer(
         hipMemPoolPtrExportData.from_pyobj(export_data)._ptr,
         <void *>DataHandle.from_pyobj(dev_ptr)._ptr))    # fully specified
-    return _hipMemPoolExportPointer__retval
+    return (_hipMemPoolExportPointer__retval,)
 
 
 @cython.embedsignature(True)
@@ -19200,7 +20166,7 @@ def hipHostRegister(object hostPtr, int sizeBytes, unsigned int flags):
     """
     _hipHostRegister__retval = hipError_t(chip.hipHostRegister(
         <void *>DataHandle.from_pyobj(hostPtr)._ptr,sizeBytes,flags))    # fully specified
-    return _hipHostRegister__retval
+    return (_hipHostRegister__retval,)
 
 
 @cython.embedsignature(True)
@@ -19212,7 +20178,7 @@ def hipHostUnregister(object hostPtr):
     """
     _hipHostUnregister__retval = hipError_t(chip.hipHostUnregister(
         <void *>DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
-    return _hipHostUnregister__retval
+    return (_hipHostUnregister__retval,)
 
 
 @cython.embedsignature(True)
@@ -19275,7 +20241,7 @@ def hipFree(object ptr):
     """
     _hipFree__retval = hipError_t(chip.hipFree(
         <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
-    return _hipFree__retval
+    return (_hipFree__retval,)
 
 
 @cython.embedsignature(True)
@@ -19289,7 +20255,7 @@ def hipFreeHost(object ptr):
     """
     _hipFreeHost__retval = hipError_t(chip.hipFreeHost(
         <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
-    return _hipFreeHost__retval
+    return (_hipFreeHost__retval,)
 
 
 @cython.embedsignature(True)
@@ -19306,7 +20272,7 @@ def hipHostFree(object ptr):
     """
     _hipHostFree__retval = hipError_t(chip.hipHostFree(
         <void *>DataHandle.from_pyobj(ptr)._ptr))    # fully specified
-    return _hipHostFree__retval
+    return (_hipHostFree__retval,)
 
 
 @cython.embedsignature(True)
@@ -19340,7 +20306,7 @@ def hipMemcpy(object dst, object src, int sizeBytes, object kind):
     _hipMemcpy__retval = hipError_t(chip.hipMemcpy(
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
-    return _hipMemcpy__retval
+    return (_hipMemcpy__retval,)
 
 
 @cython.embedsignature(True)
@@ -19353,7 +20319,7 @@ def hipMemcpyWithStream(object dst, object src, int sizeBytes, object kind, obje
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyWithStream__retval
+    return (_hipMemcpyWithStream__retval,)
 
 
 @cython.embedsignature(True)
@@ -19374,7 +20340,7 @@ def hipMemcpyHtoD(object dst, object src, int sizeBytes):
     _hipMemcpyHtoD__retval = hipError_t(chip.hipMemcpyHtoD(
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
         <void *>DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
-    return _hipMemcpyHtoD__retval
+    return (_hipMemcpyHtoD__retval,)
 
 
 @cython.embedsignature(True)
@@ -19395,7 +20361,7 @@ def hipMemcpyDtoH(object dst, object src, int sizeBytes):
     _hipMemcpyDtoH__retval = hipError_t(chip.hipMemcpyDtoH(
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
-    return _hipMemcpyDtoH__retval
+    return (_hipMemcpyDtoH__retval,)
 
 
 @cython.embedsignature(True)
@@ -19416,7 +20382,7 @@ def hipMemcpyDtoD(object dst, object src, int sizeBytes):
     _hipMemcpyDtoD__retval = hipError_t(chip.hipMemcpyDtoD(
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
-    return _hipMemcpyDtoD__retval
+    return (_hipMemcpyDtoD__retval,)
 
 
 @cython.embedsignature(True)
@@ -19438,7 +20404,7 @@ def hipMemcpyHtoDAsync(object dst, object src, int sizeBytes, object stream):
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
         <void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyHtoDAsync__retval
+    return (_hipMemcpyHtoDAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -19460,7 +20426,7 @@ def hipMemcpyDtoHAsync(object dst, object src, int sizeBytes, object stream):
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyDtoHAsync__retval
+    return (_hipMemcpyDtoHAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -19482,7 +20448,7 @@ def hipMemcpyDtoDAsync(object dst, object src, int sizeBytes, object stream):
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyDtoDAsync__retval
+    return (_hipMemcpyDtoDAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -19552,7 +20518,7 @@ def hipMemcpyToSymbol(object symbol, object src, int sizeBytes, int offset, obje
     _hipMemcpyToSymbol__retval = hipError_t(chip.hipMemcpyToSymbol(
         <const void *>DataHandle.from_pyobj(symbol)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
-    return _hipMemcpyToSymbol__retval
+    return (_hipMemcpyToSymbol__retval,)
 
 
 @cython.embedsignature(True)
@@ -19572,7 +20538,7 @@ def hipMemcpyToSymbolAsync(object symbol, object src, int sizeBytes, int offset,
         <const void *>DataHandle.from_pyobj(symbol)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyToSymbolAsync__retval
+    return (_hipMemcpyToSymbolAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -19590,7 +20556,7 @@ def hipMemcpyFromSymbol(object dst, object symbol, int sizeBytes, int offset, ob
     _hipMemcpyFromSymbol__retval = hipError_t(chip.hipMemcpyFromSymbol(
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
-    return _hipMemcpyFromSymbol__retval
+    return (_hipMemcpyFromSymbol__retval,)
 
 
 @cython.embedsignature(True)
@@ -19610,7 +20576,7 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, int sizeBytes, int offse
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyFromSymbolAsync__retval
+    return (_hipMemcpyFromSymbolAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -19643,7 +20609,7 @@ def hipMemcpyAsync(object dst, object src, int sizeBytes, object kind, object st
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyAsync__retval
+    return (_hipMemcpyAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -19657,7 +20623,7 @@ def hipMemset(object dst, int value, int sizeBytes):
     """
     _hipMemset__retval = hipError_t(chip.hipMemset(
         <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
-    return _hipMemset__retval
+    return (_hipMemset__retval,)
 
 
 @cython.embedsignature(True)
@@ -19671,7 +20637,7 @@ def hipMemsetD8(object dest, unsigned char value, int count):
     """
     _hipMemsetD8__retval = hipError_t(chip.hipMemsetD8(
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
-    return _hipMemsetD8__retval
+    return (_hipMemsetD8__retval,)
 
 
 @cython.embedsignature(True)
@@ -19691,7 +20657,7 @@ def hipMemsetD8Async(object dest, unsigned char value, int count, object stream)
     _hipMemsetD8Async__retval = hipError_t(chip.hipMemsetD8Async(
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemsetD8Async__retval
+    return (_hipMemsetD8Async__retval,)
 
 
 @cython.embedsignature(True)
@@ -19705,7 +20671,7 @@ def hipMemsetD16(object dest, unsigned short value, int count):
     """
     _hipMemsetD16__retval = hipError_t(chip.hipMemsetD16(
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
-    return _hipMemsetD16__retval
+    return (_hipMemsetD16__retval,)
 
 
 @cython.embedsignature(True)
@@ -19725,7 +20691,7 @@ def hipMemsetD16Async(object dest, unsigned short value, int count, object strea
     _hipMemsetD16Async__retval = hipError_t(chip.hipMemsetD16Async(
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemsetD16Async__retval
+    return (_hipMemsetD16Async__retval,)
 
 
 @cython.embedsignature(True)
@@ -19739,7 +20705,7 @@ def hipMemsetD32(object dest, int value, int count):
     """
     _hipMemsetD32__retval = hipError_t(chip.hipMemsetD32(
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
-    return _hipMemsetD32__retval
+    return (_hipMemsetD32__retval,)
 
 
 @cython.embedsignature(True)
@@ -19759,7 +20725,7 @@ def hipMemsetAsync(object dst, int value, int sizeBytes, object stream):
     _hipMemsetAsync__retval = hipError_t(chip.hipMemsetAsync(
         <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemsetAsync__retval
+    return (_hipMemsetAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -19779,7 +20745,7 @@ def hipMemsetD32Async(object dst, int value, int count, object stream):
     _hipMemsetD32Async__retval = hipError_t(chip.hipMemsetD32Async(
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dst)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemsetD32Async__retval
+    return (_hipMemsetD32Async__retval,)
 
 
 @cython.embedsignature(True)
@@ -19794,7 +20760,7 @@ def hipMemset2D(object dst, int pitch, int value, int width, int height):
     """
     _hipMemset2D__retval = hipError_t(chip.hipMemset2D(
         <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
-    return _hipMemset2D__retval
+    return (_hipMemset2D__retval,)
 
 
 @cython.embedsignature(True)
@@ -19811,7 +20777,7 @@ def hipMemset2DAsync(object dst, int pitch, int value, int width, int height, ob
     _hipMemset2DAsync__retval = hipError_t(chip.hipMemset2DAsync(
         <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemset2DAsync__retval
+    return (_hipMemset2DAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -19893,7 +20859,7 @@ def hipArrayDestroy(object array):
     """
     _hipArrayDestroy__retval = hipError_t(chip.hipArrayDestroy(
         hipArray.from_pyobj(array)._ptr))    # fully specified
-    return _hipArrayDestroy__retval
+    return (_hipArrayDestroy__retval,)
 
 
 @cython.embedsignature(True)
@@ -19921,7 +20887,7 @@ def hipFreeArray(object array):
     """
     _hipFreeArray__retval = hipError_t(chip.hipFreeArray(
         hipArray.from_pyobj(array)._ptr))    # fully specified
-    return _hipFreeArray__retval
+    return (_hipFreeArray__retval,)
 
 
 @cython.embedsignature(True)
@@ -19932,7 +20898,7 @@ def hipFreeMipmappedArray(object mipmappedArray):
     """
     _hipFreeMipmappedArray__retval = hipError_t(chip.hipFreeMipmappedArray(
         hipMipmappedArray.from_pyobj(mipmappedArray)._ptr))    # fully specified
-    return _hipFreeMipmappedArray__retval
+    return (_hipFreeMipmappedArray__retval,)
 
 
 @cython.embedsignature(True)
@@ -19995,7 +20961,7 @@ def hipMemcpy2D(object dst, int dpitch, object src, int spitch, int width, int h
     _hipMemcpy2D__retval = hipError_t(chip.hipMemcpy2D(
         <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
         <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
-    return _hipMemcpy2D__retval
+    return (_hipMemcpy2D__retval,)
 
 
 @cython.embedsignature(True)
@@ -20009,7 +20975,7 @@ def hipMemcpyParam2D(object pCopy):
     """
     _hipMemcpyParam2D__retval = hipError_t(chip.hipMemcpyParam2D(
         hip_Memcpy2D.from_pyobj(pCopy)._ptr))    # fully specified
-    return _hipMemcpyParam2D__retval
+    return (_hipMemcpyParam2D__retval,)
 
 
 @cython.embedsignature(True)
@@ -20025,7 +20991,7 @@ def hipMemcpyParam2DAsync(object pCopy, object stream):
     _hipMemcpyParam2DAsync__retval = hipError_t(chip.hipMemcpyParam2DAsync(
         hip_Memcpy2D.from_pyobj(pCopy)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyParam2DAsync__retval
+    return (_hipMemcpyParam2DAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -20050,7 +21016,7 @@ def hipMemcpy2DAsync(object dst, int dpitch, object src, int spitch, int width, 
         <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
         <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpy2DAsync__retval
+    return (_hipMemcpy2DAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -20074,7 +21040,7 @@ def hipMemcpy2DToArray(object dst, int wOffset, int hOffset, object src, int spi
     _hipMemcpy2DToArray__retval = hipError_t(chip.hipMemcpy2DToArray(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
         <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
-    return _hipMemcpy2DToArray__retval
+    return (_hipMemcpy2DToArray__retval,)
 
 
 @cython.embedsignature(True)
@@ -20100,7 +21066,7 @@ def hipMemcpy2DToArrayAsync(object dst, int wOffset, int hOffset, object src, in
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
         <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpy2DToArrayAsync__retval
+    return (_hipMemcpy2DToArrayAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -20122,7 +21088,7 @@ def hipMemcpyToArray(object dst, int wOffset, int hOffset, object src, int count
     _hipMemcpyToArray__retval = hipError_t(chip.hipMemcpyToArray(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
         <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
-    return _hipMemcpyToArray__retval
+    return (_hipMemcpyToArray__retval,)
 
 
 @cython.embedsignature(True)
@@ -20144,7 +21110,7 @@ def hipMemcpyFromArray(object dst, object srcArray, int wOffset, int hOffset, in
     _hipMemcpyFromArray__retval = hipError_t(chip.hipMemcpyFromArray(
         <void *>DataHandle.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(srcArray)._ptr,wOffset,hOffset,count,kind.value))    # fully specified
-    return _hipMemcpyFromArray__retval
+    return (_hipMemcpyFromArray__retval,)
 
 
 @cython.embedsignature(True)
@@ -20168,7 +21134,7 @@ def hipMemcpy2DFromArray(object dst, int dpitch, object src, int wOffset, int hO
     _hipMemcpy2DFromArray__retval = hipError_t(chip.hipMemcpy2DFromArray(
         <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value))    # fully specified
-    return _hipMemcpy2DFromArray__retval
+    return (_hipMemcpy2DFromArray__retval,)
 
 
 @cython.embedsignature(True)
@@ -20194,7 +21160,7 @@ def hipMemcpy2DFromArrayAsync(object dst, int dpitch, object src, int wOffset, i
         <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpy2DFromArrayAsync__retval
+    return (_hipMemcpy2DFromArrayAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -20212,7 +21178,7 @@ def hipMemcpyAtoH(object dst, object srcArray, int srcOffset, int count):
     _hipMemcpyAtoH__retval = hipError_t(chip.hipMemcpyAtoH(
         <void *>DataHandle.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(srcArray)._ptr,srcOffset,count))    # fully specified
-    return _hipMemcpyAtoH__retval
+    return (_hipMemcpyAtoH__retval,)
 
 
 @cython.embedsignature(True)
@@ -20230,7 +21196,7 @@ def hipMemcpyHtoA(object dstArray, int dstOffset, object srcHost, int count):
     _hipMemcpyHtoA__retval = hipError_t(chip.hipMemcpyHtoA(
         hipArray.from_pyobj(dstArray)._ptr,dstOffset,
         <const void *>DataHandle.from_pyobj(srcHost)._ptr,count))    # fully specified
-    return _hipMemcpyHtoA__retval
+    return (_hipMemcpyHtoA__retval,)
 
 
 @cython.embedsignature(True)
@@ -20244,7 +21210,7 @@ def hipMemcpy3D(object p):
     """
     _hipMemcpy3D__retval = hipError_t(chip.hipMemcpy3D(
         hipMemcpy3DParms.from_pyobj(p)._ptr))    # fully specified
-    return _hipMemcpy3D__retval
+    return (_hipMemcpy3D__retval,)
 
 
 @cython.embedsignature(True)
@@ -20260,7 +21226,7 @@ def hipMemcpy3DAsync(object p, object stream):
     _hipMemcpy3DAsync__retval = hipError_t(chip.hipMemcpy3DAsync(
         hipMemcpy3DParms.from_pyobj(p)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpy3DAsync__retval
+    return (_hipMemcpy3DAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -20274,7 +21240,7 @@ def hipDrvMemcpy3D(object pCopy):
     """
     _hipDrvMemcpy3D__retval = hipError_t(chip.hipDrvMemcpy3D(
         HIP_MEMCPY3D.from_pyobj(pCopy)._ptr))    # fully specified
-    return _hipDrvMemcpy3D__retval
+    return (_hipDrvMemcpy3D__retval,)
 
 
 @cython.embedsignature(True)
@@ -20290,7 +21256,7 @@ def hipDrvMemcpy3DAsync(object pCopy, object stream):
     _hipDrvMemcpy3DAsync__retval = hipError_t(chip.hipDrvMemcpy3DAsync(
         HIP_MEMCPY3D.from_pyobj(pCopy)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipDrvMemcpy3DAsync__retval
+    return (_hipDrvMemcpy3DAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -20332,7 +21298,7 @@ def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
     @returns #hipErrorPeerAccessAlreadyEnabled if peer access is already enabled for this device.
     """
     _hipDeviceEnablePeerAccess__retval = hipError_t(chip.hipDeviceEnablePeerAccess(peerDeviceId,flags))    # fully specified
-    return _hipDeviceEnablePeerAccess__retval
+    return (_hipDeviceEnablePeerAccess__retval,)
 
 
 @cython.embedsignature(True)
@@ -20345,7 +21311,7 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
     @returns #hipSuccess, #hipErrorPeerAccessNotEnabled
     """
     _hipDeviceDisablePeerAccess__retval = hipError_t(chip.hipDeviceDisablePeerAccess(peerDeviceId))    # fully specified
-    return _hipDeviceDisablePeerAccess__retval
+    return (_hipDeviceDisablePeerAccess__retval,)
 
 
 @cython.embedsignature(True)
@@ -20378,7 +21344,7 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, int 
     _hipMemcpyPeer__retval = hipError_t(chip.hipMemcpyPeer(
         <void *>DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
         <const void *>DataHandle.from_pyobj(src)._ptr,srcDeviceId,sizeBytes))    # fully specified
-    return _hipMemcpyPeer__retval
+    return (_hipMemcpyPeer__retval,)
 
 
 @cython.embedsignature(True)
@@ -20396,7 +21362,7 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, i
         <void *>DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
         <const void *>DataHandle.from_pyobj(src)._ptr,srcDevice,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyPeerAsync__retval
+    return (_hipMemcpyPeerAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -20434,7 +21400,7 @@ def hipCtxDestroy(object ctx):
     """
     _hipCtxDestroy__retval = hipError_t(chip.hipCtxDestroy(
         ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
-    return _hipCtxDestroy__retval
+    return (_hipCtxDestroy__retval,)
 
 
 @cython.embedsignature(True)
@@ -20460,7 +21426,7 @@ def hipCtxPushCurrent(object ctx):
     """
     _hipCtxPushCurrent__retval = hipError_t(chip.hipCtxPushCurrent(
         ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
-    return _hipCtxPushCurrent__retval
+    return (_hipCtxPushCurrent__retval,)
 
 
 @cython.embedsignature(True)
@@ -20473,7 +21439,7 @@ def hipCtxSetCurrent(object ctx):
     """
     _hipCtxSetCurrent__retval = hipError_t(chip.hipCtxSetCurrent(
         ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
-    return _hipCtxSetCurrent__retval
+    return (_hipCtxSetCurrent__retval,)
 
 
 @cython.embedsignature(True)
@@ -20550,7 +21516,7 @@ def hipCtxSetCacheConfig(object cacheConfig):
     if not isinstance(cacheConfig,hipFuncCache_t):
         raise TypeError("argument 'cacheConfig' must be of type 'hipFuncCache_t'")
     _hipCtxSetCacheConfig__retval = hipError_t(chip.hipCtxSetCacheConfig(cacheConfig.value))    # fully specified
-    return _hipCtxSetCacheConfig__retval
+    return (_hipCtxSetCacheConfig__retval,)
 
 
 @cython.embedsignature(True)
@@ -20566,7 +21532,7 @@ def hipCtxSetSharedMemConfig(object config):
     if not isinstance(config,hipSharedMemConfig):
         raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
     _hipCtxSetSharedMemConfig__retval = hipError_t(chip.hipCtxSetSharedMemConfig(config.value))    # fully specified
-    return _hipCtxSetSharedMemConfig__retval
+    return (_hipCtxSetSharedMemConfig__retval,)
 
 
 @cython.embedsignature(True)
@@ -20594,7 +21560,7 @@ def hipCtxSynchronize():
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxGetDevice
     """
     _hipCtxSynchronize__retval = hipError_t(chip.hipCtxSynchronize())    # fully specified
-    return _hipCtxSynchronize__retval
+    return (_hipCtxSynchronize__retval,)
 
 
 @cython.embedsignature(True)
@@ -20627,7 +21593,7 @@ def hipCtxEnablePeerAccess(object peerCtx, unsigned int flags):
     """
     _hipCtxEnablePeerAccess__retval = hipError_t(chip.hipCtxEnablePeerAccess(
         ihipCtx_t.from_pyobj(peerCtx)._ptr,flags))    # fully specified
-    return _hipCtxEnablePeerAccess__retval
+    return (_hipCtxEnablePeerAccess__retval,)
 
 
 @cython.embedsignature(True)
@@ -20645,7 +21611,7 @@ def hipCtxDisablePeerAccess(object peerCtx):
     """
     _hipCtxDisablePeerAccess__retval = hipError_t(chip.hipCtxDisablePeerAccess(
         ihipCtx_t.from_pyobj(peerCtx)._ptr))    # fully specified
-    return _hipCtxDisablePeerAccess__retval
+    return (_hipCtxDisablePeerAccess__retval,)
 
 
 @cython.embedsignature(True)
@@ -20676,7 +21642,7 @@ def hipDevicePrimaryCtxRelease(hipDevice_t dev):
     HIP/HCC path.
     """
     _hipDevicePrimaryCtxRelease__retval = hipError_t(chip.hipDevicePrimaryCtxRelease(dev))    # fully specified
-    return _hipDevicePrimaryCtxRelease__retval
+    return (_hipDevicePrimaryCtxRelease__retval,)
 
 
 @cython.embedsignature(True)
@@ -20702,7 +21668,7 @@ def hipDevicePrimaryCtxReset(hipDevice_t dev):
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     _hipDevicePrimaryCtxReset__retval = hipError_t(chip.hipDevicePrimaryCtxReset(dev))    # fully specified
-    return _hipDevicePrimaryCtxReset__retval
+    return (_hipDevicePrimaryCtxReset__retval,)
 
 
 @cython.embedsignature(True)
@@ -20715,7 +21681,7 @@ def hipDevicePrimaryCtxSetFlags(hipDevice_t dev, unsigned int flags):
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     _hipDevicePrimaryCtxSetFlags__retval = hipError_t(chip.hipDevicePrimaryCtxSetFlags(dev,flags))    # fully specified
-    return _hipDevicePrimaryCtxSetFlags__retval
+    return (_hipDevicePrimaryCtxSetFlags__retval,)
 
 
 @cython.embedsignature(True)
@@ -20745,7 +21711,7 @@ def hipModuleUnload(object module):
     """
     _hipModuleUnload__retval = hipError_t(chip.hipModuleUnload(
         ihipModule_t.from_pyobj(module)._ptr))    # fully specified
-    return _hipModuleUnload__retval
+    return (_hipModuleUnload__retval,)
 
 
 @cython.embedsignature(True)
@@ -20773,7 +21739,7 @@ def hipFuncGetAttributes(object attr, object func):
     _hipFuncGetAttributes__retval = hipError_t(chip.hipFuncGetAttributes(
         hipFuncAttributes.from_pyobj(attr)._ptr,
         <const void *>DataHandle.from_pyobj(func)._ptr))    # fully specified
-    return _hipFuncGetAttributes__retval
+    return (_hipFuncGetAttributes__retval,)
 
 
 @cython.embedsignature(True)
@@ -20869,7 +21835,7 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
         ihipStream_t.from_pyobj(stream)._ptr,
         <void **>DataHandle.from_pyobj(kernelParams)._ptr,
         <void **>DataHandle.from_pyobj(extra)._ptr))    # fully specified
-    return _hipModuleLaunchKernel__retval
+    return (_hipModuleLaunchKernel__retval,)
 
 
 @cython.embedsignature(True)
@@ -20901,7 +21867,7 @@ def hipLaunchCooperativeKernelMultiDevice(object launchParamsList, int numDevice
     """
     _hipLaunchCooperativeKernelMultiDevice__retval = hipError_t(chip.hipLaunchCooperativeKernelMultiDevice(
         hipLaunchParams_t.from_pyobj(launchParamsList)._ptr,numDevices,flags))    # fully specified
-    return _hipLaunchCooperativeKernelMultiDevice__retval
+    return (_hipLaunchCooperativeKernelMultiDevice__retval,)
 
 
 @cython.embedsignature(True)
@@ -20915,7 +21881,7 @@ def hipExtLaunchMultiKernelMultiDevice(object launchParamsList, int numDevices, 
     """
     _hipExtLaunchMultiKernelMultiDevice__retval = hipError_t(chip.hipExtLaunchMultiKernelMultiDevice(
         hipLaunchParams_t.from_pyobj(launchParamsList)._ptr,numDevices,flags))    # fully specified
-    return _hipExtLaunchMultiKernelMultiDevice__retval
+    return (_hipExtLaunchMultiKernelMultiDevice__retval,)
 
 
 @cython.embedsignature(True)
@@ -21045,7 +22011,7 @@ def hipProfilerStart():
     @warning : hipProfilerStart API is under development.
     """
     _hipProfilerStart__retval = hipError_t(chip.hipProfilerStart())    # fully specified
-    return _hipProfilerStart__retval
+    return (_hipProfilerStart__retval,)
 
 
 @cython.embedsignature(True)
@@ -21055,7 +22021,7 @@ def hipProfilerStop():
     @warning : hipProfilerStop API is under development.
     """
     _hipProfilerStop__retval = hipError_t(chip.hipProfilerStop())    # fully specified
-    return _hipProfilerStop__retval
+    return (_hipProfilerStop__retval,)
 
 
 @cython.embedsignature(True)
@@ -21089,7 +22055,7 @@ def hipSetupArgument(object arg, int size, int offset):
     """
     _hipSetupArgument__retval = hipError_t(chip.hipSetupArgument(
         <const void *>DataHandle.from_pyobj(arg)._ptr,size,offset))    # fully specified
-    return _hipSetupArgument__retval
+    return (_hipSetupArgument__retval,)
 
 
 @cython.embedsignature(True)
@@ -21100,7 +22066,7 @@ def hipLaunchByPtr(object func):
     """
     _hipLaunchByPtr__retval = hipError_t(chip.hipLaunchByPtr(
         <const void *>DataHandle.from_pyobj(func)._ptr))    # fully specified
-    return _hipLaunchByPtr__retval
+    return (_hipLaunchByPtr__retval,)
 
 
 @cython.embedsignature(True)
@@ -21139,7 +22105,7 @@ def hipDrvMemcpy2DUnaligned(object pCopy):
     """
     _hipDrvMemcpy2DUnaligned__retval = hipError_t(chip.hipDrvMemcpy2DUnaligned(
         hip_Memcpy2D.from_pyobj(pCopy)._ptr))    # fully specified
-    return _hipDrvMemcpy2DUnaligned__retval
+    return (_hipDrvMemcpy2DUnaligned__retval,)
 
 
 @cython.embedsignature(True)
@@ -21175,7 +22141,7 @@ def hipBindTextureToMipmappedArray(object tex, object mipmappedArray, object des
         textureReference.from_pyobj(tex)._ptr,
         hipMipmappedArray.from_pyobj(mipmappedArray)._ptr,
         hipChannelFormatDesc.from_pyobj(desc)._ptr))    # fully specified
-    return _hipBindTextureToMipmappedArray__retval
+    return (_hipBindTextureToMipmappedArray__retval,)
 
 
 @cython.embedsignature(True)
@@ -21205,7 +22171,7 @@ def hipDestroyTextureObject(object textureObject):
     """
     _hipDestroyTextureObject__retval = hipError_t(chip.hipDestroyTextureObject(
         __hip_texture.from_pyobj(textureObject)._ptr))    # fully specified
-    return _hipDestroyTextureObject__retval
+    return (_hipDestroyTextureObject__retval,)
 
 
 @cython.embedsignature(True)
@@ -21218,7 +22184,7 @@ def hipGetChannelDesc(object desc, object array):
     _hipGetChannelDesc__retval = hipError_t(chip.hipGetChannelDesc(
         hipChannelFormatDesc.from_pyobj(desc)._ptr,
         hipArray.from_pyobj(array)._ptr))    # fully specified
-    return _hipGetChannelDesc__retval
+    return (_hipGetChannelDesc__retval,)
 
 
 @cython.embedsignature(True)
@@ -21231,7 +22197,7 @@ def hipGetTextureObjectResourceDesc(object pResDesc, object textureObject):
     _hipGetTextureObjectResourceDesc__retval = hipError_t(chip.hipGetTextureObjectResourceDesc(
         hipResourceDesc.from_pyobj(pResDesc)._ptr,
         __hip_texture.from_pyobj(textureObject)._ptr))    # fully specified
-    return _hipGetTextureObjectResourceDesc__retval
+    return (_hipGetTextureObjectResourceDesc__retval,)
 
 
 @cython.embedsignature(True)
@@ -21244,7 +22210,7 @@ def hipGetTextureObjectResourceViewDesc(object pResViewDesc, object textureObjec
     _hipGetTextureObjectResourceViewDesc__retval = hipError_t(chip.hipGetTextureObjectResourceViewDesc(
         hipResourceViewDesc.from_pyobj(pResViewDesc)._ptr,
         __hip_texture.from_pyobj(textureObject)._ptr))    # fully specified
-    return _hipGetTextureObjectResourceViewDesc__retval
+    return (_hipGetTextureObjectResourceViewDesc__retval,)
 
 
 @cython.embedsignature(True)
@@ -21257,7 +22223,7 @@ def hipGetTextureObjectTextureDesc(object pTexDesc, object textureObject):
     _hipGetTextureObjectTextureDesc__retval = hipError_t(chip.hipGetTextureObjectTextureDesc(
         hipTextureDesc.from_pyobj(pTexDesc)._ptr,
         __hip_texture.from_pyobj(textureObject)._ptr))    # fully specified
-    return _hipGetTextureObjectTextureDesc__retval
+    return (_hipGetTextureObjectTextureDesc__retval,)
 
 
 @cython.embedsignature(True)
@@ -21285,7 +22251,7 @@ def hipTexObjectDestroy(object texObject):
     """
     _hipTexObjectDestroy__retval = hipError_t(chip.hipTexObjectDestroy(
         __hip_texture.from_pyobj(texObject)._ptr))    # fully specified
-    return _hipTexObjectDestroy__retval
+    return (_hipTexObjectDestroy__retval,)
 
 
 @cython.embedsignature(True)
@@ -21298,7 +22264,7 @@ def hipTexObjectGetResourceDesc(object pResDesc, object texObject):
     _hipTexObjectGetResourceDesc__retval = hipError_t(chip.hipTexObjectGetResourceDesc(
         HIP_RESOURCE_DESC_st.from_pyobj(pResDesc)._ptr,
         __hip_texture.from_pyobj(texObject)._ptr))    # fully specified
-    return _hipTexObjectGetResourceDesc__retval
+    return (_hipTexObjectGetResourceDesc__retval,)
 
 
 @cython.embedsignature(True)
@@ -21311,7 +22277,7 @@ def hipTexObjectGetResourceViewDesc(object pResViewDesc, object texObject):
     _hipTexObjectGetResourceViewDesc__retval = hipError_t(chip.hipTexObjectGetResourceViewDesc(
         HIP_RESOURCE_VIEW_DESC_st.from_pyobj(pResViewDesc)._ptr,
         __hip_texture.from_pyobj(texObject)._ptr))    # fully specified
-    return _hipTexObjectGetResourceViewDesc__retval
+    return (_hipTexObjectGetResourceViewDesc__retval,)
 
 
 @cython.embedsignature(True)
@@ -21324,7 +22290,7 @@ def hipTexObjectGetTextureDesc(object pTexDesc, object texObject):
     _hipTexObjectGetTextureDesc__retval = hipError_t(chip.hipTexObjectGetTextureDesc(
         HIP_TEXTURE_DESC_st.from_pyobj(pTexDesc)._ptr,
         __hip_texture.from_pyobj(texObject)._ptr))    # fully specified
-    return _hipTexObjectGetTextureDesc__retval
+    return (_hipTexObjectGetTextureDesc__retval,)
 
 
 @cython.embedsignature(True)
@@ -21352,7 +22318,7 @@ def hipTexRefSetAddressMode(object texRef, int dim, object am):
         raise TypeError("argument 'am' must be of type 'hipTextureAddressMode'")
     _hipTexRefSetAddressMode__retval = hipError_t(chip.hipTexRefSetAddressMode(
         textureReference.from_pyobj(texRef)._ptr,dim,am.value))    # fully specified
-    return _hipTexRefSetAddressMode__retval
+    return (_hipTexRefSetAddressMode__retval,)
 
 
 @cython.embedsignature(True)
@@ -21362,7 +22328,7 @@ def hipTexRefSetArray(object tex, object array, unsigned int flags):
     _hipTexRefSetArray__retval = hipError_t(chip.hipTexRefSetArray(
         textureReference.from_pyobj(tex)._ptr,
         hipArray.from_pyobj(array)._ptr,flags))    # fully specified
-    return _hipTexRefSetArray__retval
+    return (_hipTexRefSetArray__retval,)
 
 
 @cython.embedsignature(True)
@@ -21373,7 +22339,7 @@ def hipTexRefSetFilterMode(object texRef, object fm):
         raise TypeError("argument 'fm' must be of type 'hipTextureFilterMode'")
     _hipTexRefSetFilterMode__retval = hipError_t(chip.hipTexRefSetFilterMode(
         textureReference.from_pyobj(texRef)._ptr,fm.value))    # fully specified
-    return _hipTexRefSetFilterMode__retval
+    return (_hipTexRefSetFilterMode__retval,)
 
 
 @cython.embedsignature(True)
@@ -21382,7 +22348,7 @@ def hipTexRefSetFlags(object texRef, unsigned int Flags):
     """
     _hipTexRefSetFlags__retval = hipError_t(chip.hipTexRefSetFlags(
         textureReference.from_pyobj(texRef)._ptr,Flags))    # fully specified
-    return _hipTexRefSetFlags__retval
+    return (_hipTexRefSetFlags__retval,)
 
 
 @cython.embedsignature(True)
@@ -21393,7 +22359,7 @@ def hipTexRefSetFormat(object texRef, object fmt, int NumPackedComponents):
         raise TypeError("argument 'fmt' must be of type 'hipArray_Format'")
     _hipTexRefSetFormat__retval = hipError_t(chip.hipTexRefSetFormat(
         textureReference.from_pyobj(texRef)._ptr,fmt.value,NumPackedComponents))    # fully specified
-    return _hipTexRefSetFormat__retval
+    return (_hipTexRefSetFormat__retval,)
 
 
 @cython.embedsignature(True)
@@ -21428,7 +22394,7 @@ def hipBindTextureToArray(object tex, object array, object desc):
         textureReference.from_pyobj(tex)._ptr,
         hipArray.from_pyobj(array)._ptr,
         hipChannelFormatDesc.from_pyobj(desc)._ptr))    # fully specified
-    return _hipBindTextureToArray__retval
+    return (_hipBindTextureToArray__retval,)
 
 
 @cython.embedsignature(True)
@@ -21447,7 +22413,7 @@ def hipUnbindTexture(object tex):
     """
     _hipUnbindTexture__retval = hipError_t(chip.hipUnbindTexture(
         textureReference.from_pyobj(tex)._ptr))    # fully specified
-    return _hipUnbindTexture__retval
+    return (_hipUnbindTexture__retval,)
 
 
 @cython.embedsignature(True)
@@ -21572,7 +22538,7 @@ def hipTexRefSetAddress2D(object texRef, object desc, object dptr, int Pitch):
         textureReference.from_pyobj(texRef)._ptr,
         HIP_ARRAY_DESCRIPTOR.from_pyobj(desc)._ptr,
         <chip.hipDeviceptr_t>DataHandle.from_pyobj(dptr)._ptr,Pitch))    # fully specified
-    return _hipTexRefSetAddress2D__retval
+    return (_hipTexRefSetAddress2D__retval,)
 
 
 @cython.embedsignature(True)
@@ -21581,7 +22547,7 @@ def hipTexRefSetMaxAnisotropy(object texRef, unsigned int maxAniso):
     """
     _hipTexRefSetMaxAnisotropy__retval = hipError_t(chip.hipTexRefSetMaxAnisotropy(
         textureReference.from_pyobj(texRef)._ptr,maxAniso))    # fully specified
-    return _hipTexRefSetMaxAnisotropy__retval
+    return (_hipTexRefSetMaxAnisotropy__retval,)
 
 
 @cython.embedsignature(True)
@@ -21602,7 +22568,7 @@ def hipTexRefSetMipmapFilterMode(object texRef, object fm):
         raise TypeError("argument 'fm' must be of type 'hipTextureFilterMode'")
     _hipTexRefSetMipmapFilterMode__retval = hipError_t(chip.hipTexRefSetMipmapFilterMode(
         textureReference.from_pyobj(texRef)._ptr,fm.value))    # fully specified
-    return _hipTexRefSetMipmapFilterMode__retval
+    return (_hipTexRefSetMipmapFilterMode__retval,)
 
 
 @cython.embedsignature(True)
@@ -21611,7 +22577,7 @@ def hipTexRefSetMipmapLevelBias(object texRef, float bias):
     """
     _hipTexRefSetMipmapLevelBias__retval = hipError_t(chip.hipTexRefSetMipmapLevelBias(
         textureReference.from_pyobj(texRef)._ptr,bias))    # fully specified
-    return _hipTexRefSetMipmapLevelBias__retval
+    return (_hipTexRefSetMipmapLevelBias__retval,)
 
 
 @cython.embedsignature(True)
@@ -21620,7 +22586,7 @@ def hipTexRefSetMipmapLevelClamp(object texRef, float minMipMapLevelClamp, float
     """
     _hipTexRefSetMipmapLevelClamp__retval = hipError_t(chip.hipTexRefSetMipmapLevelClamp(
         textureReference.from_pyobj(texRef)._ptr,minMipMapLevelClamp,maxMipMapLevelClamp))    # fully specified
-    return _hipTexRefSetMipmapLevelClamp__retval
+    return (_hipTexRefSetMipmapLevelClamp__retval,)
 
 
 @cython.embedsignature(True)
@@ -21630,7 +22596,7 @@ def hipTexRefSetMipmappedArray(object texRef, object mipmappedArray, unsigned in
     _hipTexRefSetMipmappedArray__retval = hipError_t(chip.hipTexRefSetMipmappedArray(
         textureReference.from_pyobj(texRef)._ptr,
         hipMipmappedArray.from_pyobj(mipmappedArray)._ptr,Flags))    # fully specified
-    return _hipTexRefSetMipmappedArray__retval
+    return (_hipTexRefSetMipmappedArray__retval,)
 
 
 @cython.embedsignature(True)
@@ -21652,7 +22618,7 @@ def hipMipmappedArrayDestroy(object hMipmappedArray):
     """
     _hipMipmappedArrayDestroy__retval = hipError_t(chip.hipMipmappedArrayDestroy(
         hipMipmappedArray.from_pyobj(hMipmappedArray)._ptr))    # fully specified
-    return _hipMipmappedArrayDestroy__retval
+    return (_hipMipmappedArrayDestroy__retval,)
 
 
 @cython.embedsignature(True)
@@ -21697,7 +22663,7 @@ def hipGetStreamDeviceId(object stream):
     """
     cdef int _hipGetStreamDeviceId__retval = chip.hipGetStreamDeviceId(
         ihipStream_t.from_pyobj(stream)._ptr)    # fully specified
-    return _hipGetStreamDeviceId__retval
+    return (_hipGetStreamDeviceId__retval,)
 
 
 @cython.embedsignature(True)
@@ -21714,7 +22680,7 @@ def hipStreamBeginCapture(object stream, object mode):
         raise TypeError("argument 'mode' must be of type 'hipStreamCaptureMode'")
     _hipStreamBeginCapture__retval = hipError_t(chip.hipStreamBeginCapture(
         ihipStream_t.from_pyobj(stream)._ptr,mode.value))    # fully specified
-    return _hipStreamBeginCapture__retval
+    return (_hipStreamBeginCapture__retval,)
 
 
 @cython.embedsignature(True)
@@ -21840,7 +22806,7 @@ def hipGraphDestroy(object graph):
     """
     _hipGraphDestroy__retval = hipError_t(chip.hipGraphDestroy(
         ihipGraph.from_pyobj(graph)._ptr))    # fully specified
-    return _hipGraphDestroy__retval
+    return (_hipGraphDestroy__retval,)
 
 
 @cython.embedsignature(True)
@@ -22012,7 +22978,7 @@ def hipGraphDestroyNode(object node):
     """
     _hipGraphDestroyNode__retval = hipError_t(chip.hipGraphDestroyNode(
         hipGraphNode.from_pyobj(node)._ptr))    # fully specified
-    return _hipGraphDestroyNode__retval
+    return (_hipGraphDestroyNode__retval,)
 
 
 @cython.embedsignature(True)
@@ -22095,7 +23061,7 @@ def hipGraphLaunch(object graphExec, object stream):
     _hipGraphLaunch__retval = hipError_t(chip.hipGraphLaunch(
         hipGraphExec.from_pyobj(graphExec)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipGraphLaunch__retval
+    return (_hipGraphLaunch__retval,)
 
 
 @cython.embedsignature(True)
@@ -22110,7 +23076,7 @@ def hipGraphUpload(object graphExec, object stream):
     _hipGraphUpload__retval = hipError_t(chip.hipGraphUpload(
         hipGraphExec.from_pyobj(graphExec)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipGraphUpload__retval
+    return (_hipGraphUpload__retval,)
 
 
 @cython.embedsignature(True)
@@ -22123,7 +23089,7 @@ def hipGraphExecDestroy(object graphExec):
     """
     _hipGraphExecDestroy__retval = hipError_t(chip.hipGraphExecDestroy(
         hipGraphExec.from_pyobj(graphExec)._ptr))    # fully specified
-    return _hipGraphExecDestroy__retval
+    return (_hipGraphExecDestroy__retval,)
 
 
 @cython.embedsignature(True)
@@ -22178,7 +23144,7 @@ def hipGraphKernelNodeGetParams(object node, object pNodeParams):
     _hipGraphKernelNodeGetParams__retval = hipError_t(chip.hipGraphKernelNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
         hipKernelNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphKernelNodeGetParams__retval
+    return (_hipGraphKernelNodeGetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22193,7 +23159,7 @@ def hipGraphKernelNodeSetParams(object node, object pNodeParams):
     _hipGraphKernelNodeSetParams__retval = hipError_t(chip.hipGraphKernelNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
         hipKernelNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphKernelNodeSetParams__retval
+    return (_hipGraphKernelNodeSetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22210,7 +23176,7 @@ def hipGraphExecKernelNodeSetParams(object hGraphExec, object node, object pNode
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
         hipKernelNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphExecKernelNodeSetParams__retval
+    return (_hipGraphExecKernelNodeSetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22245,7 +23211,7 @@ def hipGraphMemcpyNodeGetParams(object node, object pNodeParams):
     _hipGraphMemcpyNodeGetParams__retval = hipError_t(chip.hipGraphMemcpyNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
         hipMemcpy3DParms.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphMemcpyNodeGetParams__retval
+    return (_hipGraphMemcpyNodeGetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22260,7 +23226,7 @@ def hipGraphMemcpyNodeSetParams(object node, object pNodeParams):
     _hipGraphMemcpyNodeSetParams__retval = hipError_t(chip.hipGraphMemcpyNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
         hipMemcpy3DParms.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphMemcpyNodeSetParams__retval
+    return (_hipGraphMemcpyNodeSetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22278,7 +23244,7 @@ def hipGraphKernelNodeSetAttribute(object hNode, object attr, object value):
     _hipGraphKernelNodeSetAttribute__retval = hipError_t(chip.hipGraphKernelNodeSetAttribute(
         hipGraphNode.from_pyobj(hNode)._ptr,attr.value,
         hipKernelNodeAttrValue.from_pyobj(value)._ptr))    # fully specified
-    return _hipGraphKernelNodeSetAttribute__retval
+    return (_hipGraphKernelNodeSetAttribute__retval,)
 
 
 @cython.embedsignature(True)
@@ -22296,7 +23262,7 @@ def hipGraphKernelNodeGetAttribute(object hNode, object attr, object value):
     _hipGraphKernelNodeGetAttribute__retval = hipError_t(chip.hipGraphKernelNodeGetAttribute(
         hipGraphNode.from_pyobj(hNode)._ptr,attr.value,
         hipKernelNodeAttrValue.from_pyobj(value)._ptr))    # fully specified
-    return _hipGraphKernelNodeGetAttribute__retval
+    return (_hipGraphKernelNodeGetAttribute__retval,)
 
 
 @cython.embedsignature(True)
@@ -22313,7 +23279,7 @@ def hipGraphExecMemcpyNodeSetParams(object hGraphExec, object node, object pNode
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
         hipMemcpy3DParms.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphExecMemcpyNodeSetParams__retval
+    return (_hipGraphExecMemcpyNodeSetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22360,7 +23326,7 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, int count
         hipGraphNode.from_pyobj(node)._ptr,
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
-    return _hipGraphMemcpyNodeSetParams1D__retval
+    return (_hipGraphMemcpyNodeSetParams1D__retval,)
 
 
 @cython.embedsignature(True)
@@ -22384,7 +23350,7 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
         hipGraphNode.from_pyobj(node)._ptr,
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
-    return _hipGraphExecMemcpyNodeSetParams1D__retval
+    return (_hipGraphExecMemcpyNodeSetParams1D__retval,)
 
 
 @cython.embedsignature(True)
@@ -22433,7 +23399,7 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
         hipGraphNode.from_pyobj(node)._ptr,
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
-    return _hipGraphMemcpyNodeSetParamsFromSymbol__retval
+    return (_hipGraphMemcpyNodeSetParamsFromSymbol__retval,)
 
 
 @cython.embedsignature(True)
@@ -22458,7 +23424,7 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
         hipGraphNode.from_pyobj(node)._ptr,
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(symbol)._ptr,count,offset,kind.value))    # fully specified
-    return _hipGraphExecMemcpyNodeSetParamsFromSymbol__retval
+    return (_hipGraphExecMemcpyNodeSetParamsFromSymbol__retval,)
 
 
 @cython.embedsignature(True)
@@ -22507,7 +23473,7 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
         hipGraphNode.from_pyobj(node)._ptr,
         <const void *>DataHandle.from_pyobj(symbol)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
-    return _hipGraphMemcpyNodeSetParamsToSymbol__retval
+    return (_hipGraphMemcpyNodeSetParamsToSymbol__retval,)
 
 
 @cython.embedsignature(True)
@@ -22532,7 +23498,7 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
         hipGraphNode.from_pyobj(node)._ptr,
         <const void *>DataHandle.from_pyobj(symbol)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,count,offset,kind.value))    # fully specified
-    return _hipGraphExecMemcpyNodeSetParamsToSymbol__retval
+    return (_hipGraphExecMemcpyNodeSetParamsToSymbol__retval,)
 
 
 @cython.embedsignature(True)
@@ -22567,7 +23533,7 @@ def hipGraphMemsetNodeGetParams(object node, object pNodeParams):
     _hipGraphMemsetNodeGetParams__retval = hipError_t(chip.hipGraphMemsetNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
         hipMemsetParams.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphMemsetNodeGetParams__retval
+    return (_hipGraphMemsetNodeGetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22582,7 +23548,7 @@ def hipGraphMemsetNodeSetParams(object node, object pNodeParams):
     _hipGraphMemsetNodeSetParams__retval = hipError_t(chip.hipGraphMemsetNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
         hipMemsetParams.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphMemsetNodeSetParams__retval
+    return (_hipGraphMemsetNodeSetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22599,7 +23565,7 @@ def hipGraphExecMemsetNodeSetParams(object hGraphExec, object node, object pNode
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
         hipMemsetParams.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphExecMemsetNodeSetParams__retval
+    return (_hipGraphExecMemsetNodeSetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22634,7 +23600,7 @@ def hipGraphHostNodeGetParams(object node, object pNodeParams):
     _hipGraphHostNodeGetParams__retval = hipError_t(chip.hipGraphHostNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
         hipHostNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphHostNodeGetParams__retval
+    return (_hipGraphHostNodeGetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22649,7 +23615,7 @@ def hipGraphHostNodeSetParams(object node, object pNodeParams):
     _hipGraphHostNodeSetParams__retval = hipError_t(chip.hipGraphHostNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
         hipHostNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphHostNodeSetParams__retval
+    return (_hipGraphHostNodeSetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22666,7 +23632,7 @@ def hipGraphExecHostNodeSetParams(object hGraphExec, object node, object pNodePa
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
         hipHostNodeParams.from_pyobj(pNodeParams)._ptr))    # fully specified
-    return _hipGraphExecHostNodeSetParams__retval
+    return (_hipGraphExecHostNodeSetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22718,7 +23684,7 @@ def hipGraphExecChildGraphNodeSetParams(object hGraphExec, object node, object c
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
         ihipGraph.from_pyobj(childGraph)._ptr))    # fully specified
-    return _hipGraphExecChildGraphNodeSetParams__retval
+    return (_hipGraphExecChildGraphNodeSetParams__retval,)
 
 
 @cython.embedsignature(True)
@@ -22786,7 +23752,7 @@ def hipGraphEventRecordNodeSetEvent(object node, object event):
     _hipGraphEventRecordNodeSetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeSetEvent(
         hipGraphNode.from_pyobj(node)._ptr,
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
-    return _hipGraphEventRecordNodeSetEvent__retval
+    return (_hipGraphEventRecordNodeSetEvent__retval,)
 
 
 @cython.embedsignature(True)
@@ -22803,7 +23769,7 @@ def hipGraphExecEventRecordNodeSetEvent(object hGraphExec, object hNode, object 
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(hNode)._ptr,
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
-    return _hipGraphExecEventRecordNodeSetEvent__retval
+    return (_hipGraphExecEventRecordNodeSetEvent__retval,)
 
 
 @cython.embedsignature(True)
@@ -22853,7 +23819,7 @@ def hipGraphEventWaitNodeSetEvent(object node, object event):
     _hipGraphEventWaitNodeSetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeSetEvent(
         hipGraphNode.from_pyobj(node)._ptr,
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
-    return _hipGraphEventWaitNodeSetEvent__retval
+    return (_hipGraphEventWaitNodeSetEvent__retval,)
 
 
 @cython.embedsignature(True)
@@ -22870,7 +23836,7 @@ def hipGraphExecEventWaitNodeSetEvent(object hGraphExec, object hNode, object ev
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(hNode)._ptr,
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
-    return _hipGraphExecEventWaitNodeSetEvent__retval
+    return (_hipGraphExecEventWaitNodeSetEvent__retval,)
 
 
 @cython.embedsignature(True)
@@ -22887,7 +23853,7 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
         raise TypeError("argument 'attr' must be of type 'hipGraphMemAttributeType'")
     _hipDeviceGetGraphMemAttribute__retval = hipError_t(chip.hipDeviceGetGraphMemAttribute(device,attr.value,
         <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
-    return _hipDeviceGetGraphMemAttribute__retval
+    return (_hipDeviceGetGraphMemAttribute__retval,)
 
 
 @cython.embedsignature(True)
@@ -22904,7 +23870,7 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
         raise TypeError("argument 'attr' must be of type 'hipGraphMemAttributeType'")
     _hipDeviceSetGraphMemAttribute__retval = hipError_t(chip.hipDeviceSetGraphMemAttribute(device,attr.value,
         <void *>DataHandle.from_pyobj(value)._ptr))    # fully specified
-    return _hipDeviceSetGraphMemAttribute__retval
+    return (_hipDeviceSetGraphMemAttribute__retval,)
 
 
 @cython.embedsignature(True)
@@ -22915,7 +23881,7 @@ def hipDeviceGraphMemTrim(int device):
     it is still open to changes and may have outstanding issues.
     """
     _hipDeviceGraphMemTrim__retval = hipError_t(chip.hipDeviceGraphMemTrim(device))    # fully specified
-    return _hipDeviceGraphMemTrim__retval
+    return (_hipDeviceGraphMemTrim__retval,)
 
 
 @cython.embedsignature(True)
@@ -22944,7 +23910,7 @@ def hipUserObjectRelease(object object, unsigned int count):
     """
     _hipUserObjectRelease__retval = hipError_t(chip.hipUserObjectRelease(
         hipUserObject.from_pyobj(object)._ptr,count))    # fully specified
-    return _hipUserObjectRelease__retval
+    return (_hipUserObjectRelease__retval,)
 
 
 @cython.embedsignature(True)
@@ -22958,7 +23924,7 @@ def hipUserObjectRetain(object object, unsigned int count):
     """
     _hipUserObjectRetain__retval = hipError_t(chip.hipUserObjectRetain(
         hipUserObject.from_pyobj(object)._ptr,count))    # fully specified
-    return _hipUserObjectRetain__retval
+    return (_hipUserObjectRetain__retval,)
 
 
 @cython.embedsignature(True)
@@ -22975,7 +23941,7 @@ def hipGraphRetainUserObject(object graph, object object, unsigned int count, un
     _hipGraphRetainUserObject__retval = hipError_t(chip.hipGraphRetainUserObject(
         ihipGraph.from_pyobj(graph)._ptr,
         hipUserObject.from_pyobj(object)._ptr,count,flags))    # fully specified
-    return _hipGraphRetainUserObject__retval
+    return (_hipGraphRetainUserObject__retval,)
 
 
 @cython.embedsignature(True)
@@ -22991,7 +23957,7 @@ def hipGraphReleaseUserObject(object graph, object object, unsigned int count):
     _hipGraphReleaseUserObject__retval = hipError_t(chip.hipGraphReleaseUserObject(
         ihipGraph.from_pyobj(graph)._ptr,
         hipUserObject.from_pyobj(object)._ptr,count))    # fully specified
-    return _hipGraphReleaseUserObject__retval
+    return (_hipGraphReleaseUserObject__retval,)
 
 
 @cython.embedsignature(True)
@@ -23005,7 +23971,7 @@ def hipMemAddressFree(object devPtr, int size):
     """
     _hipMemAddressFree__retval = hipError_t(chip.hipMemAddressFree(
         <void *>DataHandle.from_pyobj(devPtr)._ptr,size))    # fully specified
-    return _hipMemAddressFree__retval
+    return (_hipMemAddressFree__retval,)
 
 
 @cython.embedsignature(True)
@@ -23060,7 +24026,7 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
     _hipMemExportToShareableHandle__retval = hipError_t(chip.hipMemExportToShareableHandle(
         <void *>DataHandle.from_pyobj(shareableHandle)._ptr,
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr,handleType.value,flags))    # fully specified
-    return _hipMemExportToShareableHandle__retval
+    return (_hipMemExportToShareableHandle__retval,)
 
 
 @cython.embedsignature(True)
@@ -23110,7 +24076,7 @@ def hipMemGetAllocationPropertiesFromHandle(object prop, object handle):
     _hipMemGetAllocationPropertiesFromHandle__retval = hipError_t(chip.hipMemGetAllocationPropertiesFromHandle(
         hipMemAllocationProp.from_pyobj(prop)._ptr,
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr))    # fully specified
-    return _hipMemGetAllocationPropertiesFromHandle__retval
+    return (_hipMemGetAllocationPropertiesFromHandle__retval,)
 
 
 @cython.embedsignature(True)
@@ -23146,7 +24112,7 @@ def hipMemMap(object ptr, int size, int offset, object handle, unsigned long lon
     _hipMemMap__retval = hipError_t(chip.hipMemMap(
         <void *>DataHandle.from_pyobj(ptr)._ptr,size,offset,
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr,flags))    # fully specified
-    return _hipMemMap__retval
+    return (_hipMemMap__retval,)
 
 
 @cython.embedsignature(True)
@@ -23162,7 +24128,7 @@ def hipMemMapArrayAsync(object mapInfoList, unsigned int count, object stream):
     _hipMemMapArrayAsync__retval = hipError_t(chip.hipMemMapArrayAsync(
         hipArrayMapInfo.from_pyobj(mapInfoList)._ptr,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemMapArrayAsync__retval
+    return (_hipMemMapArrayAsync__retval,)
 
 
 @cython.embedsignature(True)
@@ -23175,7 +24141,7 @@ def hipMemRelease(object handle):
     """
     _hipMemRelease__retval = hipError_t(chip.hipMemRelease(
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr))    # fully specified
-    return _hipMemRelease__retval
+    return (_hipMemRelease__retval,)
 
 
 @cython.embedsignature(True)
@@ -23207,7 +24173,7 @@ def hipMemSetAccess(object ptr, int size, object desc, int count):
     _hipMemSetAccess__retval = hipError_t(chip.hipMemSetAccess(
         <void *>DataHandle.from_pyobj(ptr)._ptr,size,
         hipMemAccessDesc.from_pyobj(desc)._ptr,count))    # fully specified
-    return _hipMemSetAccess__retval
+    return (_hipMemSetAccess__retval,)
 
 
 @cython.embedsignature(True)
@@ -23221,7 +24187,7 @@ def hipMemUnmap(object ptr, int size):
     """
     _hipMemUnmap__retval = hipError_t(chip.hipMemUnmap(
         <void *>DataHandle.from_pyobj(ptr)._ptr,size))    # fully specified
-    return _hipMemUnmap__retval
+    return (_hipMemUnmap__retval,)
 
 
 @cython.embedsignature(True)
@@ -23302,7 +24268,7 @@ def hipGraphicsUnregisterResource(object resource):
     """
     _hipGraphicsUnregisterResource__retval = hipError_t(chip.hipGraphicsUnregisterResource(
         _hipGraphicsResource.from_pyobj(resource)._ptr))    # fully specified
-    return _hipGraphicsUnregisterResource__retval
+    return (_hipGraphicsUnregisterResource__retval,)
 
 
 @cython.embedsignature(True)
@@ -23314,7 +24280,7 @@ def hipMemcpy_spt(object dst, object src, int sizeBytes, object kind):
     _hipMemcpy_spt__retval = hipError_t(chip.hipMemcpy_spt(
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
-    return _hipMemcpy_spt__retval
+    return (_hipMemcpy_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23326,7 +24292,7 @@ def hipMemcpyToSymbol_spt(object symbol, object src, int sizeBytes, int offset, 
     _hipMemcpyToSymbol_spt__retval = hipError_t(chip.hipMemcpyToSymbol_spt(
         <const void *>DataHandle.from_pyobj(symbol)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
-    return _hipMemcpyToSymbol_spt__retval
+    return (_hipMemcpyToSymbol_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23338,7 +24304,7 @@ def hipMemcpyFromSymbol_spt(object dst, object symbol, int sizeBytes, int offset
     _hipMemcpyFromSymbol_spt__retval = hipError_t(chip.hipMemcpyFromSymbol_spt(
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
-    return _hipMemcpyFromSymbol_spt__retval
+    return (_hipMemcpyFromSymbol_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23350,7 +24316,7 @@ def hipMemcpy2D_spt(object dst, int dpitch, object src, int spitch, int width, i
     _hipMemcpy2D_spt__retval = hipError_t(chip.hipMemcpy2D_spt(
         <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
         <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
-    return _hipMemcpy2D_spt__retval
+    return (_hipMemcpy2D_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23362,7 +24328,7 @@ def hipMemcpy2DFromArray_spt(object dst, int dpitch, object src, int wOffset, in
     _hipMemcpy2DFromArray_spt__retval = hipError_t(chip.hipMemcpy2DFromArray_spt(
         <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value))    # fully specified
-    return _hipMemcpy2DFromArray_spt__retval
+    return (_hipMemcpy2DFromArray_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23371,7 +24337,7 @@ def hipMemcpy3D_spt(object p):
     """
     _hipMemcpy3D_spt__retval = hipError_t(chip.hipMemcpy3D_spt(
         hipMemcpy3DParms.from_pyobj(p)._ptr))    # fully specified
-    return _hipMemcpy3D_spt__retval
+    return (_hipMemcpy3D_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23380,7 +24346,7 @@ def hipMemset_spt(object dst, int value, int sizeBytes):
     """
     _hipMemset_spt__retval = hipError_t(chip.hipMemset_spt(
         <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
-    return _hipMemset_spt__retval
+    return (_hipMemset_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23390,7 +24356,7 @@ def hipMemsetAsync_spt(object dst, int value, int sizeBytes, object stream):
     _hipMemsetAsync_spt__retval = hipError_t(chip.hipMemsetAsync_spt(
         <void *>DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemsetAsync_spt__retval
+    return (_hipMemsetAsync_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23399,7 +24365,7 @@ def hipMemset2D_spt(object dst, int pitch, int value, int width, int height):
     """
     _hipMemset2D_spt__retval = hipError_t(chip.hipMemset2D_spt(
         <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
-    return _hipMemset2D_spt__retval
+    return (_hipMemset2D_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23409,7 +24375,7 @@ def hipMemset2DAsync_spt(object dst, int pitch, int value, int width, int height
     _hipMemset2DAsync_spt__retval = hipError_t(chip.hipMemset2DAsync_spt(
         <void *>DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemset2DAsync_spt__retval
+    return (_hipMemset2DAsync_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23434,7 +24400,7 @@ def hipMemcpyAsync_spt(object dst, object src, int sizeBytes, object kind, objec
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyAsync_spt__retval
+    return (_hipMemcpyAsync_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23444,7 +24410,7 @@ def hipMemcpy3DAsync_spt(object p, object stream):
     _hipMemcpy3DAsync_spt__retval = hipError_t(chip.hipMemcpy3DAsync_spt(
         hipMemcpy3DParms.from_pyobj(p)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpy3DAsync_spt__retval
+    return (_hipMemcpy3DAsync_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23457,7 +24423,7 @@ def hipMemcpy2DAsync_spt(object dst, int dpitch, object src, int spitch, int wid
         <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
         <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpy2DAsync_spt__retval
+    return (_hipMemcpy2DAsync_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23470,7 +24436,7 @@ def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, int sizeBytes, int o
         <void *>DataHandle.from_pyobj(dst)._ptr,
         <const void *>DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyFromSymbolAsync_spt__retval
+    return (_hipMemcpyFromSymbolAsync_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23483,7 +24449,7 @@ def hipMemcpyToSymbolAsync_spt(object symbol, object src, int sizeBytes, int off
         <const void *>DataHandle.from_pyobj(symbol)._ptr,
         <const void *>DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpyToSymbolAsync_spt__retval
+    return (_hipMemcpyToSymbolAsync_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23495,7 +24461,7 @@ def hipMemcpyFromArray_spt(object dst, object src, int wOffsetSrc, int hOffset, 
     _hipMemcpyFromArray_spt__retval = hipError_t(chip.hipMemcpyFromArray_spt(
         <void *>DataHandle.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(src)._ptr,wOffsetSrc,hOffset,count,kind.value))    # fully specified
-    return _hipMemcpyFromArray_spt__retval
+    return (_hipMemcpyFromArray_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23507,7 +24473,7 @@ def hipMemcpy2DToArray_spt(object dst, int wOffset, int hOffset, object src, int
     _hipMemcpy2DToArray_spt__retval = hipError_t(chip.hipMemcpy2DToArray_spt(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
         <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
-    return _hipMemcpy2DToArray_spt__retval
+    return (_hipMemcpy2DToArray_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23520,7 +24486,7 @@ def hipMemcpy2DFromArrayAsync_spt(object dst, int dpitch, object src, int wOffse
         <void *>DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffsetSrc,hOffsetSrc,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpy2DFromArrayAsync_spt__retval
+    return (_hipMemcpy2DFromArrayAsync_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23533,7 +24499,7 @@ def hipMemcpy2DToArrayAsync_spt(object dst, int wOffset, int hOffset, object src
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
         <const void *>DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipMemcpy2DToArrayAsync_spt__retval
+    return (_hipMemcpy2DToArrayAsync_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23542,7 +24508,7 @@ def hipStreamQuery_spt(object stream):
     """
     _hipStreamQuery_spt__retval = hipError_t(chip.hipStreamQuery_spt(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipStreamQuery_spt__retval
+    return (_hipStreamQuery_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23551,7 +24517,7 @@ def hipStreamSynchronize_spt(object stream):
     """
     _hipStreamSynchronize_spt__retval = hipError_t(chip.hipStreamSynchronize_spt(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipStreamSynchronize_spt__retval
+    return (_hipStreamSynchronize_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23571,7 +24537,7 @@ def hipStreamWaitEvent_spt(object stream, object event, unsigned int flags):
     _hipStreamWaitEvent_spt__retval = hipError_t(chip.hipStreamWaitEvent_spt(
         ihipStream_t.from_pyobj(stream)._ptr,
         ihipEvent_t.from_pyobj(event)._ptr,flags))    # fully specified
-    return _hipStreamWaitEvent_spt__retval
+    return (_hipStreamWaitEvent_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23597,7 +24563,7 @@ def hipEventRecord_spt(object event, object stream):
     _hipEventRecord_spt__retval = hipError_t(chip.hipEventRecord_spt(
         ihipEvent_t.from_pyobj(event)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipEventRecord_spt__retval
+    return (_hipEventRecord_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23619,7 +24585,7 @@ def hipGraphLaunch_spt(object graphExec, object stream):
     _hipGraphLaunch_spt__retval = hipError_t(chip.hipGraphLaunch_spt(
         hipGraphExec.from_pyobj(graphExec)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return _hipGraphLaunch_spt__retval
+    return (_hipGraphLaunch_spt__retval,)
 
 
 @cython.embedsignature(True)
@@ -23630,7 +24596,7 @@ def hipStreamBeginCapture_spt(object stream, object mode):
         raise TypeError("argument 'mode' must be of type 'hipStreamCaptureMode'")
     _hipStreamBeginCapture_spt__retval = hipError_t(chip.hipStreamBeginCapture_spt(
         ihipStream_t.from_pyobj(stream)._ptr,mode.value))    # fully specified
-    return _hipStreamBeginCapture_spt__retval
+    return (_hipStreamBeginCapture_spt__retval,)
 
 
 @cython.embedsignature(True)
