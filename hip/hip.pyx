@@ -15846,7 +15846,7 @@ cdef class hipHostFn_t:
         self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipHostFn_t from_ptr(chip.hipHostFn_t* ptr, bint owner=False):
+    cdef hipHostFn_t from_ptr(chip.hipHostFn_t ptr, bint owner=False):
         """Factory function to create ``hipHostFn_t`` objects from
         given ``chip.hipHostFn_t`` pointer.
         """
@@ -15880,14 +15880,14 @@ cdef class hipHostFn_t:
         elif isinstance(pyobj,hipHostFn_t):
             return pyobj
         elif isinstance(pyobj,int):
-            wrapper._ptr = <chip.hipHostFn_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+            wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipHostFn_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(pyobj.value)
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
             ptr_as_int = cuda_array_interface["data"][0]
-            wrapper._ptr = <chip.hipHostFn_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
+            wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -15897,7 +15897,7 @@ cdef class hipHostFn_t:
             if err == -1:
                 raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
             wrapper._py_buffer_acquired = True
-            wrapper._ptr = <chip.hipHostFn_t*>wrapper._py_buffer.buf
+            wrapper._ptr = <chip.hipHostFn_t>wrapper._py_buffer.buf
         else:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper
@@ -19023,7 +19023,7 @@ cdef class hipStreamCallback_t:
         self._py_buffer_acquired = False
 
     @staticmethod
-    cdef hipStreamCallback_t from_ptr(chip.hipStreamCallback_t* ptr, bint owner=False):
+    cdef hipStreamCallback_t from_ptr(chip.hipStreamCallback_t ptr, bint owner=False):
         """Factory function to create ``hipStreamCallback_t`` objects from
         given ``chip.hipStreamCallback_t`` pointer.
         """
@@ -19057,14 +19057,14 @@ cdef class hipStreamCallback_t:
         elif isinstance(pyobj,hipStreamCallback_t):
             return pyobj
         elif isinstance(pyobj,int):
-            wrapper._ptr = <chip.hipStreamCallback_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
+            wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipStreamCallback_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(pyobj.value)
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
             ptr_as_int = cuda_array_interface["data"][0]
-            wrapper._ptr = <chip.hipStreamCallback_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
+            wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
                 wrapper.ptr,
@@ -19074,7 +19074,7 @@ cdef class hipStreamCallback_t:
             if err == -1:
                 raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
             wrapper._py_buffer_acquired = True
-            wrapper._ptr = <chip.hipStreamCallback_t*>wrapper._py_buffer.buf
+            wrapper._ptr = <chip.hipStreamCallback_t>wrapper._py_buffer.buf
         else:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper
@@ -19098,7 +19098,7 @@ cdef class hipStreamCallback_t:
 
 
 @cython.embedsignature(True)
-def hipStreamAddCallback(object stream, object userData, unsigned int flags):
+def hipStreamAddCallback(object stream, object callback, object userData, unsigned int flags):
     """@brief Adds a callback to be called on the host after all currently enqueued
     items in the stream have completed.  For each
     hipStreamAddCallback call, a callback will be executed exactly once.
@@ -19111,7 +19111,12 @@ def hipStreamAddCallback(object stream, object userData, unsigned int flags):
     @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamQuery, hipStreamSynchronize,
     hipStreamWaitEvent, hipStreamDestroy, hipStreamCreateWithPriority
     """
-    pass
+    _hipStreamAddCallback__retval = hipError_t(chip.hipStreamAddCallback(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        hipStreamCallback_t.from_pyobj(callback)._ptr,
+        <void *>DataHandle.from_pyobj(userData)._ptr,flags))    # fully specified
+    return (_hipStreamAddCallback__retval,)
+
 
 @cython.embedsignature(True)
 def hipStreamWaitValue32(object stream, object ptr, uint32_t value, unsigned int flags, uint32_t mask):
@@ -22085,7 +22090,7 @@ def hipLaunchKernel(object function_address, object args, int sharedMemBytes, ob
     pass
 
 @cython.embedsignature(True)
-def hipLaunchHostFunc(object stream, object userData):
+def hipLaunchHostFunc(object stream, object fn, object userData):
     """@brief Enqueues a host function call in a stream.
     @param [in] stream - stream to enqueue work to.
     @param [in] fn - function to call once operations enqueued preceeding are complete.
@@ -22095,7 +22100,12 @@ def hipLaunchHostFunc(object stream, object userData):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    pass
+    _hipLaunchHostFunc__retval = hipError_t(chip.hipLaunchHostFunc(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        hipHostFn_t.from_pyobj(fn)._ptr,
+        <void *>DataHandle.from_pyobj(userData)._ptr))    # fully specified
+    return (_hipLaunchHostFunc__retval,)
+
 
 @cython.embedsignature(True)
 def hipDrvMemcpy2DUnaligned(object pCopy):
@@ -23885,7 +23895,7 @@ def hipDeviceGraphMemTrim(int device):
 
 
 @cython.embedsignature(True)
-def hipUserObjectCreate(object ptr, unsigned int initialRefcount, unsigned int flags):
+def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount, unsigned int flags):
     """@brief Create an instance of userObject to manage lifetime of a resource.
     @param [out] object_out - pointer to instace of userobj.
     @param [in] ptr - pointer to pass to destroy function.
@@ -23897,7 +23907,11 @@ def hipUserObjectCreate(object ptr, unsigned int initialRefcount, unsigned int f
     it is still open to changes and may have outstanding issues.
     """
     object_out = hipUserObject.from_ptr(NULL)
-    pass
+    _hipUserObjectCreate__retval = hipError_t(chip.hipUserObjectCreate(&object_out._ptr,
+        <void *>DataHandle.from_pyobj(ptr)._ptr,
+        hipHostFn_t.from_pyobj(destroy)._ptr,initialRefcount,flags))    # fully specified
+    return (_hipUserObjectCreate__retval,object_out)
+
 
 @cython.embedsignature(True)
 def hipUserObjectRelease(object object, unsigned int count):
@@ -24551,10 +24565,15 @@ def hipStreamGetFlags_spt(object stream):
 
 
 @cython.embedsignature(True)
-def hipStreamAddCallback_spt(object stream, object userData, unsigned int flags):
+def hipStreamAddCallback_spt(object stream, object callback, object userData, unsigned int flags):
     """
     """
-    pass
+    _hipStreamAddCallback_spt__retval = hipError_t(chip.hipStreamAddCallback_spt(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        hipStreamCallback_t.from_pyobj(callback)._ptr,
+        <void *>DataHandle.from_pyobj(userData)._ptr,flags))    # fully specified
+    return (_hipStreamAddCallback_spt__retval,)
+
 
 @cython.embedsignature(True)
 def hipEventRecord_spt(object event, object stream):
@@ -24645,7 +24664,11 @@ def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
 
 
 @cython.embedsignature(True)
-def hipLaunchHostFunc_spt(object stream, object userData):
+def hipLaunchHostFunc_spt(object stream, object fn, object userData):
     """
     """
-    pass
+    _hipLaunchHostFunc_spt__retval = hipError_t(chip.hipLaunchHostFunc_spt(
+        ihipStream_t.from_pyobj(stream)._ptr,
+        hipHostFn_t.from_pyobj(fn)._ptr,
+        <void *>DataHandle.from_pyobj(userData)._ptr))    # fully specified
+    return (_hipLaunchHostFunc_spt__retval,)

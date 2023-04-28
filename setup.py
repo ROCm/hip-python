@@ -98,26 +98,33 @@ def generate_hiprtc_package_files():
     def hiprtc_ptr_parm_intent(parm: Parm):
         """
         """
-        if (
-            parm.is_pointer_to_record(degree=2)
-            or parm.is_pointer_to_enum(degree=1)
-            or (
-                parm.is_pointer_to_basic_type(degree=1)
-                and not parm.is_pointer_to_char(degree=1)
-            )
-        ):
+        out_parms = (
+            ("hiprtcVersion","major"),
+            ("hiprtcVersion","minor"),
+            ("hiprtcCreateProgram","prog"),
+            ("hiprtcGetLoweredName","lowered_name"), # rank == 1
+            ("hiprtcGetProgramLogSize","logSizeRet"),
+            ("hiprtcGetCodeSize","codeSizeRet"),
+            ("hiprtcLinkCreate","hip_link_state_ptr"),
+            ("hiprtcLinkComplete","bin_out"), # rank == 1
+            ("hiprtcLinkComplete","size_out"),
+        )
+        inout_parms = ( # these buffers must be allocated by user
+            ("hiprtcGetCode","code"),
+            ("hiprtcGetProgramLog","log"),
+            ("hiprtcGetBitcode","bitcode"),
+        )
+        if (parm.parent.name, parm.name) in out_parms:
             return PointerParamIntent.OUT
-        if parm.is_pointer_to_void(degree=2):
-            if parm.name in ["devPtr","ptr","dev_ptr","data"]:
-                return PointerParamIntent.OUT
+        if (parm.parent.name, parm.name) in inout_parms:
+            return PointerParamIntent.INOUT
         return PointerParamIntent.IN
 
     def hiprtc_ptr_rank(node: Node):
         """Actual rank of the variables underlying pointer indirections."""
         if isinstance(node, Parm):
             if (
-                node.is_pointer_to_basic_type(degree=1)
-                or node.is_pointer_to_enum(degree=1)
+                node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1)
                 or node.is_pointer_to_record(degree=1)
                 or node.is_pointer_to_record(degree=2)
             ):
@@ -133,6 +140,8 @@ def generate_hiprtc_package_files():
         runtime_linking=HIP_PYTHON_SETUP_RUNTIME_LINKING,
         dll="libhiprtc.so",
         node_filter=hiprtc_node_filter,
+        ptr_parm_intent=hiprtc_ptr_parm_intent,
+        ptr_rank=hiprtc_ptr_rank,
         cflags=hip_platform.cflags,
     )
     if HIP_PYTHON_SETUP_GENERATE:

@@ -509,6 +509,15 @@ class Typed:
 
         return self._is_pointer_to_kind(TypeKind.ENUM,degree)
 
+    def is_pointer_to_function_proto(self,degree: int = 1):
+        """If this is a void pointer of the given degree.
+        Note:
+            Does not check for any const modifiers.
+        """
+        from clang.cindex import TypeKind
+
+        return self._is_pointer_to_kind(TypeKind.FUNCTIONPROTO,degree)
+
     @property
     def is_any_pointer(self):
         """If this is any form of pointer, i.e. the outer most type layer must be a pointer."""

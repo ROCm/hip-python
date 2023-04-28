@@ -1706,13 +1706,13 @@ cdef class hipUserObject:
 
 
 cdef class hipHostFn_t:
-    cdef chip.hipHostFn_t* _ptr
+    cdef chip.hipHostFn_t _ptr
     cdef bint ptr_owner
     cdef Py_buffer _py_buffer
     cdef bint _py_buffer_acquired
 
     @staticmethod
-    cdef hipHostFn_t from_ptr(chip.hipHostFn_t* ptr, bint owner=*)
+    cdef hipHostFn_t from_ptr(chip.hipHostFn_t ptr, bint owner=*)
     @staticmethod
     cdef hipHostFn_t from_pyobj(object pyobj)
 
@@ -1938,13 +1938,13 @@ cdef class hipArrayMapInfo:
 
 
 cdef class hipStreamCallback_t:
-    cdef chip.hipStreamCallback_t* _ptr
+    cdef chip.hipStreamCallback_t _ptr
     cdef bint ptr_owner
     cdef Py_buffer _py_buffer
     cdef bint _py_buffer_acquired
 
     @staticmethod
-    cdef hipStreamCallback_t from_ptr(chip.hipStreamCallback_t* ptr, bint owner=*)
+    cdef hipStreamCallback_t from_ptr(chip.hipStreamCallback_t ptr, bint owner=*)
     @staticmethod
     cdef hipStreamCallback_t from_pyobj(object pyobj)
 
