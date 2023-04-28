@@ -8,7 +8,7 @@ cimport cpython.buffer
 import cython
 import ctypes
 import enum
-from hip._util.datahandle cimport DataHandle
+cimport hip._util.types
 
 from . cimport chip
 cdef class hipDeviceArch_t:

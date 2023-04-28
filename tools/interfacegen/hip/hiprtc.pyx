@@ -8,7 +8,7 @@ cimport cpython.buffer
 import cython
 import ctypes
 import enum
-from hip._util.datahandle cimport DataHandle
+cimport hip._util.types
 
 from . cimport chiprtc
 class hiprtcResult(enum.IntEnum):
@@ -290,7 +290,7 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
     """
     _hiprtcCompileProgram__retval = hiprtcResult(chiprtc.hiprtcCompileProgram(
         _hiprtcProgram.from_pyobj(prog)._ptr,numOptions,
-        <const char **>DataHandle.from_pyobj(options)._ptr))    # fully specified
+        <const char **>hip._util.types.ListOfStr.from_pyobj(options)._ptr))    # fully specified
     return (_hiprtcCompileProgram__retval,)
 
 
@@ -312,8 +312,8 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
     """
     prog = _hiprtcProgram.from_ptr(NULL)
     _hiprtcCreateProgram__retval = hiprtcResult(chiprtc.hiprtcCreateProgram(&prog._ptr,src,name,numHeaders,
-        <const char **>DataHandle.from_pyobj(headers)._ptr,
-        <const char **>DataHandle.from_pyobj(includeNames)._ptr))    # fully specified
+        <const char **>hip._util.types.ListOfStr.from_pyobj(headers)._ptr,
+        <const char **>hip._util.types.ListOfStr.from_pyobj(includeNames)._ptr))    # fully specified
     return (_hiprtcCreateProgram__retval,prog)
 
 
@@ -326,7 +326,7 @@ def hiprtcDestroyProgram(object prog):
     @see hiprtcResult
     """
     _hiprtcDestroyProgram__retval = hiprtcResult(chiprtc.hiprtcDestroyProgram(
-        <chiprtc.hiprtcProgram*>DataHandle.from_pyobj(prog)._ptr))    # fully specified
+        <chiprtc.hiprtcProgram*>hip._util.types.DataHandle.from_pyobj(prog)._ptr))    # fully specified
     return (_hiprtcDestroyProgram__retval,)
 
 
@@ -359,7 +359,7 @@ def hiprtcGetProgramLog(object prog, object log):
     """
     _hiprtcGetProgramLog__retval = hiprtcResult(chiprtc.hiprtcGetProgramLog(
         _hiprtcProgram.from_pyobj(prog)._ptr,
-        <char *>DataHandle.from_pyobj(log)._ptr))    # fully specified
+        <char *>hip._util.types.DataHandle.from_pyobj(log)._ptr))    # fully specified
     return (_hiprtcGetProgramLog__retval,)
 
 
@@ -387,7 +387,7 @@ def hiprtcGetCode(object prog, object code):
     """
     _hiprtcGetCode__retval = hiprtcResult(chiprtc.hiprtcGetCode(
         _hiprtcProgram.from_pyobj(prog)._ptr,
-        <char *>DataHandle.from_pyobj(code)._ptr))    # fully specified
+        <char *>hip._util.types.DataHandle.from_pyobj(code)._ptr))    # fully specified
     return (_hiprtcGetCode__retval,)
 
 
@@ -415,7 +415,7 @@ def hiprtcGetBitcode(object prog, object bitcode):
     """
     _hiprtcGetBitcode__retval = hiprtcResult(chiprtc.hiprtcGetBitcode(
         _hiprtcProgram.from_pyobj(prog)._ptr,
-        <char *>DataHandle.from_pyobj(bitcode)._ptr))    # fully specified
+        <char *>hip._util.types.DataHandle.from_pyobj(bitcode)._ptr))    # fully specified
     return (_hiprtcGetBitcode__retval,)
 
 
@@ -429,7 +429,7 @@ def hiprtcGetBitcodeSize(object prog, object bitcode_size):
     """
     _hiprtcGetBitcodeSize__retval = hiprtcResult(chiprtc.hiprtcGetBitcodeSize(
         _hiprtcProgram.from_pyobj(prog)._ptr,
-        <int *>DataHandle.from_pyobj(bitcode_size)._ptr))    # fully specified
+        <int *>hip._util.types.DataHandle.from_pyobj(bitcode_size)._ptr))    # fully specified
     return (_hiprtcGetBitcodeSize__retval,)
 
 
@@ -443,8 +443,8 @@ def hiprtcLinkCreate(unsigned int num_options, object option_ptr, object option_
     """
     hip_link_state_ptr = ihiprtcLinkState.from_ptr(NULL)
     _hiprtcLinkCreate__retval = hiprtcResult(chiprtc.hiprtcLinkCreate(num_options,
-        <chiprtc.hiprtcJIT_option *>DataHandle.from_pyobj(option_ptr)._ptr,
-        <void **>DataHandle.from_pyobj(option_vals_pptr)._ptr,&hip_link_state_ptr._ptr))    # fully specified
+        <chiprtc.hiprtcJIT_option *>hip._util.types.DataHandle.from_pyobj(option_ptr)._ptr,
+        <void **>hip._util.types.DataHandle.from_pyobj(option_vals_pptr)._ptr,&hip_link_state_ptr._ptr))    # fully specified
     return (_hiprtcLinkCreate__retval,hip_link_state_ptr)
 
 
@@ -463,8 +463,8 @@ def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * fil
         raise TypeError("argument 'input_type' must be of type 'hiprtcJITInputType'")
     _hiprtcLinkAddFile__retval = hiprtcResult(chiprtc.hiprtcLinkAddFile(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr,input_type.value,file_path,num_options,
-        <chiprtc.hiprtcJIT_option *>DataHandle.from_pyobj(options_ptr)._ptr,
-        <void **>DataHandle.from_pyobj(option_values)._ptr))    # fully specified
+        <chiprtc.hiprtcJIT_option *>hip._util.types.DataHandle.from_pyobj(options_ptr)._ptr,
+        <void **>hip._util.types.DataHandle.from_pyobj(option_values)._ptr))    # fully specified
     return (_hiprtcLinkAddFile__retval,)
 
 
@@ -483,9 +483,9 @@ def hiprtcLinkAddData(object hip_link_state, object input_type, object image, in
         raise TypeError("argument 'input_type' must be of type 'hiprtcJITInputType'")
     _hiprtcLinkAddData__retval = hiprtcResult(chiprtc.hiprtcLinkAddData(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr,input_type.value,
-        <void *>DataHandle.from_pyobj(image)._ptr,image_size,name,num_options,
-        <chiprtc.hiprtcJIT_option *>DataHandle.from_pyobj(options_ptr)._ptr,
-        <void **>DataHandle.from_pyobj(option_values)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(image)._ptr,image_size,name,num_options,
+        <chiprtc.hiprtcJIT_option *>hip._util.types.DataHandle.from_pyobj(options_ptr)._ptr,
+        <void **>hip._util.types.DataHandle.from_pyobj(option_values)._ptr))    # fully specified
     return (_hiprtcLinkAddData__retval,)
 
 
@@ -499,7 +499,7 @@ def hiprtcLinkComplete(object hip_link_state):
     @return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
     @see hiprtcResult
     """
-    bin_out = DataHandle.from_ptr(NULL)
+    bin_out = hip._util.types.DataHandle.from_ptr(NULL)
     cdef int size_out
     _hiprtcLinkComplete__retval = hiprtcResult(chiprtc.hiprtcLinkComplete(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr,

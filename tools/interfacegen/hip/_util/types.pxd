@@ -3,7 +3,6 @@
 __author__ = "AMD_AUTHOR"
 
 cdef class DataHandle:
-    # intended use: <target>._ptr
     cdef void* _ptr
     cdef Py_buffer _py_buffer
     cdef bint _py_buffer_acquired
@@ -13,3 +12,7 @@ cdef class DataHandle:
 
     @staticmethod
     cdef DataHandle from_pyobj(object pyobj)
+
+cdef class ListOfStr(DataHandle):
+    cdef bint _owner
+    cdef size_t _num_entries
