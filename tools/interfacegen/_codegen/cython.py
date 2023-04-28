@@ -720,9 +720,7 @@ class FunctionMixin(CythonMixin, Typed):
         global c_interface_funptr_name_template
         return c_interface_funptr_name_template.format(name=self.cython_name)
 
-    def render_cython_lazy_loader_def(
-        self, lib_handle: str = "__lib_handle", modifiers="nogil"
-    ):
+    def render_cython_lazy_loader_def(self,modifiers="nogil"):
         from . import tree
 
         assert isinstance(self, tree.Function)
@@ -733,11 +731,8 @@ class FunctionMixin(CythonMixin, Typed):
         return f"""\
 cdef void* {funptr_name} = NULL
 {self.render_cython_lazy_loader_decl(modifiers).strip()}:
-    global {lib_handle}
     global {funptr_name}
-    if {funptr_name} == NULL:
-        with gil:
-            {funptr_name} = loader.load_symbol({lib_handle}, "{self.name}")
+    __init_symbol(&{funptr_name},"{self.name}")
     return (<{typename} (*)({parm_types}) nogil> {funptr_name})({parm_names})
 """
 
@@ -1058,17 +1053,30 @@ class CythonBackend:
     def create_cython_lazy_loader_defs(self, dll: str):
         # TODO: Add compiler? switch to switch between MS and Linux loaders
         # TODO: Add compiler? switch to switch between HIP and CUDA backends?
-        # Should be possible to implement this via the renamer and generating multiple modules
+        # Might be possible to implement this via the renamer and generating multiple modules
+        result = []
         lib_handle = "_lib_handle"
-        result = f"""\
-cimport hip._util.posixloader as loader
-cdef void* {lib_handle} = loader.open_library(\"{dll}\")
-""".splitlines(
-            keepends=True
-        )
+        result.append(textwrap.dedent(f"""\
+            cimport hip._util.posixloader as loader
+            cdef void* {lib_handle} = NULL
+            
+            cdef void __init() nogil:
+                global {lib_handle}
+                if {lib_handle} == NULL:
+                    with gil:
+                        {lib_handle} = loader.open_library(\"{dll}\")
+
+            cdef void __init_symbol(void** result, const char* name) nogil:
+                global {lib_handle}
+                if {lib_handle} == NULL:
+                    __init()
+                if result[0] == NULL:
+                    with gil:
+                        result[0] = loader.load_symbol({lib_handle}, name) 
+            """))
         for node in self._walk_filtered_nodes():
             if isinstance(node, FunctionMixin):
-                result.append(node.render_cython_lazy_loader_def(lib_handle=lib_handle))
+                result.append("\n"+node.render_cython_lazy_loader_def())
         return result
 
     def render_c_interface_decl_part(self, runtime_linking: bool = False):
@@ -1080,7 +1088,7 @@ cdef void* {lib_handle} = loader.open_library(\"{dll}\")
         self, runtime_linking: bool = False, dll: str = None
     ):
         """Returns the Cython bindings file content for the given headers."""
-        nl = "\n\n"
+        nl = "\n"
         if runtime_linking:
             if dll is None:
                 raise ValueError(
