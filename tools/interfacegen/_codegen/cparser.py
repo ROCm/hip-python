@@ -6,7 +6,6 @@ import enum
 
 import clang.cindex
 
-
 def walk_cursors(root: clang.cindex.Cursor, postorder=False):
     """Yields a triple of cursor, level, parents per traversed cursor.
 
@@ -39,7 +38,7 @@ class CParser:
     """Parser for C APIs."""
 
     def __init__(
-        self, filename: str, append_cflags: list[str] = [], unsaved_files=None
+        self, filename: str, append_cflags: list = [], unsaved_files=None
     ):
         """Parse the specified file.
 
@@ -148,9 +147,6 @@ class TypeHandler:
                 value >= TypeHandler.TypeCategory.BASIC.value
                 and value < TypeHandler.TypeCategory.RECORD.value
             )
-
-    def __init__(self, clang_type: clang.cindex.Type):
-        self.clang_type = clang_type
 
     @staticmethod
     def is_void_type(type_kind: clang.cindex.TypeKind):
@@ -318,6 +314,30 @@ class TypeHandler:
     def is_typedef_type(type_kind: clang.cindex.TypeKind):
         return type_kind == clang.cindex.TypeKind.TYPEDEF
 
+    def __init__(self, clang_type: clang.cindex.Type):
+        self.clang_type = clang_type
+
+    def create_from_layer(self,layer: int,
+                          canonical: bool = False):
+        """Create a new TypeHandler instance from the specified layer.
+
+        Args:
+            layer (int): If you specify '-1', you get the last layer.
+            canonical (bool, optional): Use the canonical type for the walk.
+
+        Raises:
+            ValueError: If the specified layer is smaller '-1',
+
+        Returns:
+            _type_: _description_
+        """
+        layers = list(self.walk_clang_type_layers(canonical=canonical))
+        if layer >= len(layers):
+            raise ValueError("argument 'layer' was chosen larger than the number of available layers")
+        elif layer < -1:
+            raise ValueError("argument 'layer' must be chosen greater than '-1'")
+        return TypeHandler(layers[layer])
+
     def walk_clang_type_layers(self, postorder=False, canonical=False):
         """Walks through the constitutents of a Clang type.
 
@@ -396,6 +416,22 @@ class TypeHandler:
         for clang_type in self.walk_clang_type_layers(postorder, canonical):
             yield clang_type.kind
 
+    def const_qualifiers(
+        self, postorder = False, canonical=False
+    ):
+        """Yields a flag per type layer that constitute this type if 
+        the layer is const qualified.
+
+        Args:
+            postorder (bool, optional): Post-order walk. Defaults to False.
+            canonical (bool, optional): Use the canonical type for the walk.
+
+        Yields:
+            bool: Per type layer, yields a flag indicating if ``const`` is specified for this layer.
+        """
+        for clang_type in self.walk_clang_type_layers(postorder, canonical):
+            yield clang_type.is_const_qualified()
+
     @staticmethod
     def categorize_clang_type_kind(
         type_kind: clang.cindex.TypeKind,
@@ -467,7 +503,6 @@ class TypeHandler:
     def is_canonical_const_qualified(self):
         """Returns if the canonical (=fully resolved) type is const qualified."""
         return self.clang_type.get_canonical().is_const_qualified()
-
 
 class Analysis:
     """Collection of routines for analyzing the contents of a C translation unit."""

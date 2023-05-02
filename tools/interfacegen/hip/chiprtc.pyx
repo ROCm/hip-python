@@ -7,7 +7,7 @@ cimport hip._util.posixloader as loader
 cdef void* _lib_handle = loader.open_library("libhiprtc.so")
 
 
-cdef void* hiprtcGetErrorString_funptr = NULL
+cdef void* _hiprtcGetErrorString__funptr = NULL
 # @brief Returns text string message to explain the error which occurred
 # @param [in] result  code to convert to string.
 # @return  const char pointer to the NULL-terminated error string
@@ -16,27 +16,27 @@ cdef void* hiprtcGetErrorString_funptr = NULL
 # @see hiprtcResult
 cdef const char * hiprtcGetErrorString(hiprtcResult result) nogil:
     global _lib_handle
-    global hiprtcGetErrorString_funptr
-    if hiprtcGetErrorString_funptr == NULL:
+    global _hiprtcGetErrorString__funptr
+    if _hiprtcGetErrorString__funptr == NULL:
         with gil:
-            hiprtcGetErrorString_funptr = loader.load_symbol(_lib_handle, "hiprtcGetErrorString")
-    return (<const char * (*)(hiprtcResult) nogil> hiprtcGetErrorString_funptr)(result)
+            _hiprtcGetErrorString__funptr = loader.load_symbol(_lib_handle, "hiprtcGetErrorString")
+    return (<const char * (*)(hiprtcResult) nogil> _hiprtcGetErrorString__funptr)(result)
 
 
-cdef void* hiprtcVersion_funptr = NULL
+cdef void* _hiprtcVersion__funptr = NULL
 # @brief Sets the parameters as major and minor version.
 # @param [out] major  HIP Runtime Compilation major version.
 # @param [out] minor  HIP Runtime Compilation minor version.
 cdef hiprtcResult hiprtcVersion(int * major,int * minor) nogil:
     global _lib_handle
-    global hiprtcVersion_funptr
-    if hiprtcVersion_funptr == NULL:
+    global _hiprtcVersion__funptr
+    if _hiprtcVersion__funptr == NULL:
         with gil:
-            hiprtcVersion_funptr = loader.load_symbol(_lib_handle, "hiprtcVersion")
-    return (<hiprtcResult (*)(int *,int *) nogil> hiprtcVersion_funptr)(major,minor)
+            _hiprtcVersion__funptr = loader.load_symbol(_lib_handle, "hiprtcVersion")
+    return (<hiprtcResult (*)(int *,int *) nogil> _hiprtcVersion__funptr)(major,minor)
 
 
-cdef void* hiprtcAddNameExpression_funptr = NULL
+cdef void* _hiprtcAddNameExpression__funptr = NULL
 # @brief Adds the given name exprssion to the runtime compilation program.
 # @param [in] prog  runtime compilation program instance.
 # @param [in] name_expression  const char pointer to the name expression.
@@ -45,14 +45,14 @@ cdef void* hiprtcAddNameExpression_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcAddNameExpression(hiprtcProgram prog,const char * name_expression) nogil:
     global _lib_handle
-    global hiprtcAddNameExpression_funptr
-    if hiprtcAddNameExpression_funptr == NULL:
+    global _hiprtcAddNameExpression__funptr
+    if _hiprtcAddNameExpression__funptr == NULL:
         with gil:
-            hiprtcAddNameExpression_funptr = loader.load_symbol(_lib_handle, "hiprtcAddNameExpression")
-    return (<hiprtcResult (*)(hiprtcProgram,const char *) nogil> hiprtcAddNameExpression_funptr)(prog,name_expression)
+            _hiprtcAddNameExpression__funptr = loader.load_symbol(_lib_handle, "hiprtcAddNameExpression")
+    return (<hiprtcResult (*)(hiprtcProgram,const char *) nogil> _hiprtcAddNameExpression__funptr)(prog,name_expression)
 
 
-cdef void* hiprtcCompileProgram_funptr = NULL
+cdef void* _hiprtcCompileProgram__funptr = NULL
 # @brief Compiles the given runtime compilation program.
 # @param [in] prog  runtime compilation program instance.
 # @param [in] numOptions  number of compiler options.
@@ -63,14 +63,14 @@ cdef void* hiprtcCompileProgram_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcCompileProgram(hiprtcProgram prog,int numOptions,const char ** options) nogil:
     global _lib_handle
-    global hiprtcCompileProgram_funptr
-    if hiprtcCompileProgram_funptr == NULL:
+    global _hiprtcCompileProgram__funptr
+    if _hiprtcCompileProgram__funptr == NULL:
         with gil:
-            hiprtcCompileProgram_funptr = loader.load_symbol(_lib_handle, "hiprtcCompileProgram")
-    return (<hiprtcResult (*)(hiprtcProgram,int,const char **) nogil> hiprtcCompileProgram_funptr)(prog,numOptions,options)
+            _hiprtcCompileProgram__funptr = loader.load_symbol(_lib_handle, "hiprtcCompileProgram")
+    return (<hiprtcResult (*)(hiprtcProgram,int,const char **) nogil> _hiprtcCompileProgram__funptr)(prog,numOptions,options)
 
 
-cdef void* hiprtcCreateProgram_funptr = NULL
+cdef void* _hiprtcCreateProgram__funptr = NULL
 # @brief Creates an instance of hiprtcProgram with the given input parameters,
 # and sets the output hiprtcProgram prog with it.
 # @param [in, out] prog  runtime compilation program instance.
@@ -86,14 +86,14 @@ cdef void* hiprtcCreateProgram_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcCreateProgram(hiprtcProgram* prog,const char * src,const char * name,int numHeaders,const char ** headers,const char ** includeNames) nogil:
     global _lib_handle
-    global hiprtcCreateProgram_funptr
-    if hiprtcCreateProgram_funptr == NULL:
+    global _hiprtcCreateProgram__funptr
+    if _hiprtcCreateProgram__funptr == NULL:
         with gil:
-            hiprtcCreateProgram_funptr = loader.load_symbol(_lib_handle, "hiprtcCreateProgram")
-    return (<hiprtcResult (*)(hiprtcProgram*,const char *,const char *,int,const char **,const char **) nogil> hiprtcCreateProgram_funptr)(prog,src,name,numHeaders,headers,includeNames)
+            _hiprtcCreateProgram__funptr = loader.load_symbol(_lib_handle, "hiprtcCreateProgram")
+    return (<hiprtcResult (*)(hiprtcProgram*,const char *,const char *,int,const char **,const char **) nogil> _hiprtcCreateProgram__funptr)(prog,src,name,numHeaders,headers,includeNames)
 
 
-cdef void* hiprtcDestroyProgram_funptr = NULL
+cdef void* _hiprtcDestroyProgram__funptr = NULL
 # @brief Destroys an instance of given hiprtcProgram.
 # @param [in] prog  runtime compilation program instance.
 # @return HIPRTC_SUCCESS
@@ -101,14 +101,14 @@ cdef void* hiprtcDestroyProgram_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcDestroyProgram(hiprtcProgram* prog) nogil:
     global _lib_handle
-    global hiprtcDestroyProgram_funptr
-    if hiprtcDestroyProgram_funptr == NULL:
+    global _hiprtcDestroyProgram__funptr
+    if _hiprtcDestroyProgram__funptr == NULL:
         with gil:
-            hiprtcDestroyProgram_funptr = loader.load_symbol(_lib_handle, "hiprtcDestroyProgram")
-    return (<hiprtcResult (*)(hiprtcProgram*) nogil> hiprtcDestroyProgram_funptr)(prog)
+            _hiprtcDestroyProgram__funptr = loader.load_symbol(_lib_handle, "hiprtcDestroyProgram")
+    return (<hiprtcResult (*)(hiprtcProgram*) nogil> _hiprtcDestroyProgram__funptr)(prog)
 
 
-cdef void* hiprtcGetLoweredName_funptr = NULL
+cdef void* _hiprtcGetLoweredName__funptr = NULL
 # @brief Gets the lowered (mangled) name from an instance of hiprtcProgram with the given input parameters,
 # and sets the output lowered_name with it.
 # @param [in] prog  runtime compilation program instance.
@@ -121,14 +121,14 @@ cdef void* hiprtcGetLoweredName_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcGetLoweredName(hiprtcProgram prog,const char * name_expression,const char ** lowered_name) nogil:
     global _lib_handle
-    global hiprtcGetLoweredName_funptr
-    if hiprtcGetLoweredName_funptr == NULL:
+    global _hiprtcGetLoweredName__funptr
+    if _hiprtcGetLoweredName__funptr == NULL:
         with gil:
-            hiprtcGetLoweredName_funptr = loader.load_symbol(_lib_handle, "hiprtcGetLoweredName")
-    return (<hiprtcResult (*)(hiprtcProgram,const char *,const char **) nogil> hiprtcGetLoweredName_funptr)(prog,name_expression,lowered_name)
+            _hiprtcGetLoweredName__funptr = loader.load_symbol(_lib_handle, "hiprtcGetLoweredName")
+    return (<hiprtcResult (*)(hiprtcProgram,const char *,const char **) nogil> _hiprtcGetLoweredName__funptr)(prog,name_expression,lowered_name)
 
 
-cdef void* hiprtcGetProgramLog_funptr = NULL
+cdef void* _hiprtcGetProgramLog__funptr = NULL
 # @brief Gets the log generated by the runtime compilation program instance.
 # @param [in] prog  runtime compilation program instance.
 # @param [out] log  memory pointer to the generated log.
@@ -136,14 +136,14 @@ cdef void* hiprtcGetProgramLog_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcGetProgramLog(hiprtcProgram prog,char * log) nogil:
     global _lib_handle
-    global hiprtcGetProgramLog_funptr
-    if hiprtcGetProgramLog_funptr == NULL:
+    global _hiprtcGetProgramLog__funptr
+    if _hiprtcGetProgramLog__funptr == NULL:
         with gil:
-            hiprtcGetProgramLog_funptr = loader.load_symbol(_lib_handle, "hiprtcGetProgramLog")
-    return (<hiprtcResult (*)(hiprtcProgram,char *) nogil> hiprtcGetProgramLog_funptr)(prog,log)
+            _hiprtcGetProgramLog__funptr = loader.load_symbol(_lib_handle, "hiprtcGetProgramLog")
+    return (<hiprtcResult (*)(hiprtcProgram,char *) nogil> _hiprtcGetProgramLog__funptr)(prog,log)
 
 
-cdef void* hiprtcGetProgramLogSize_funptr = NULL
+cdef void* _hiprtcGetProgramLogSize__funptr = NULL
 # @brief Gets the size of log generated by the runtime compilation program instance.
 # @param [in] prog  runtime compilation program instance.
 # @param [out] logSizeRet  size of generated log.
@@ -151,14 +151,14 @@ cdef void* hiprtcGetProgramLogSize_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcGetProgramLogSize(hiprtcProgram prog,int * logSizeRet) nogil:
     global _lib_handle
-    global hiprtcGetProgramLogSize_funptr
-    if hiprtcGetProgramLogSize_funptr == NULL:
+    global _hiprtcGetProgramLogSize__funptr
+    if _hiprtcGetProgramLogSize__funptr == NULL:
         with gil:
-            hiprtcGetProgramLogSize_funptr = loader.load_symbol(_lib_handle, "hiprtcGetProgramLogSize")
-    return (<hiprtcResult (*)(hiprtcProgram,int *) nogil> hiprtcGetProgramLogSize_funptr)(prog,logSizeRet)
+            _hiprtcGetProgramLogSize__funptr = loader.load_symbol(_lib_handle, "hiprtcGetProgramLogSize")
+    return (<hiprtcResult (*)(hiprtcProgram,int *) nogil> _hiprtcGetProgramLogSize__funptr)(prog,logSizeRet)
 
 
-cdef void* hiprtcGetCode_funptr = NULL
+cdef void* _hiprtcGetCode__funptr = NULL
 # @brief Gets the pointer of compilation binary by the runtime compilation program instance.
 # @param [in] prog  runtime compilation program instance.
 # @param [out] code  char pointer to binary.
@@ -166,14 +166,14 @@ cdef void* hiprtcGetCode_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcGetCode(hiprtcProgram prog,char * code) nogil:
     global _lib_handle
-    global hiprtcGetCode_funptr
-    if hiprtcGetCode_funptr == NULL:
+    global _hiprtcGetCode__funptr
+    if _hiprtcGetCode__funptr == NULL:
         with gil:
-            hiprtcGetCode_funptr = loader.load_symbol(_lib_handle, "hiprtcGetCode")
-    return (<hiprtcResult (*)(hiprtcProgram,char *) nogil> hiprtcGetCode_funptr)(prog,code)
+            _hiprtcGetCode__funptr = loader.load_symbol(_lib_handle, "hiprtcGetCode")
+    return (<hiprtcResult (*)(hiprtcProgram,char *) nogil> _hiprtcGetCode__funptr)(prog,code)
 
 
-cdef void* hiprtcGetCodeSize_funptr = NULL
+cdef void* _hiprtcGetCodeSize__funptr = NULL
 # @brief Gets the size of compilation binary by the runtime compilation program instance.
 # @param [in] prog  runtime compilation program instance.
 # @param [out] code  the size of binary.
@@ -181,14 +181,14 @@ cdef void* hiprtcGetCodeSize_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcGetCodeSize(hiprtcProgram prog,int * codeSizeRet) nogil:
     global _lib_handle
-    global hiprtcGetCodeSize_funptr
-    if hiprtcGetCodeSize_funptr == NULL:
+    global _hiprtcGetCodeSize__funptr
+    if _hiprtcGetCodeSize__funptr == NULL:
         with gil:
-            hiprtcGetCodeSize_funptr = loader.load_symbol(_lib_handle, "hiprtcGetCodeSize")
-    return (<hiprtcResult (*)(hiprtcProgram,int *) nogil> hiprtcGetCodeSize_funptr)(prog,codeSizeRet)
+            _hiprtcGetCodeSize__funptr = loader.load_symbol(_lib_handle, "hiprtcGetCodeSize")
+    return (<hiprtcResult (*)(hiprtcProgram,int *) nogil> _hiprtcGetCodeSize__funptr)(prog,codeSizeRet)
 
 
-cdef void* hiprtcGetBitcode_funptr = NULL
+cdef void* _hiprtcGetBitcode__funptr = NULL
 # @brief Gets the pointer of compiled bitcode by the runtime compilation program instance.
 # @param [in] prog  runtime compilation program instance.
 # @param [out] code  char pointer to bitcode.
@@ -196,14 +196,14 @@ cdef void* hiprtcGetBitcode_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcGetBitcode(hiprtcProgram prog,char * bitcode) nogil:
     global _lib_handle
-    global hiprtcGetBitcode_funptr
-    if hiprtcGetBitcode_funptr == NULL:
+    global _hiprtcGetBitcode__funptr
+    if _hiprtcGetBitcode__funptr == NULL:
         with gil:
-            hiprtcGetBitcode_funptr = loader.load_symbol(_lib_handle, "hiprtcGetBitcode")
-    return (<hiprtcResult (*)(hiprtcProgram,char *) nogil> hiprtcGetBitcode_funptr)(prog,bitcode)
+            _hiprtcGetBitcode__funptr = loader.load_symbol(_lib_handle, "hiprtcGetBitcode")
+    return (<hiprtcResult (*)(hiprtcProgram,char *) nogil> _hiprtcGetBitcode__funptr)(prog,bitcode)
 
 
-cdef void* hiprtcGetBitcodeSize_funptr = NULL
+cdef void* _hiprtcGetBitcodeSize__funptr = NULL
 # @brief Gets the size of compiled bitcode by the runtime compilation program instance.
 # @param [in] prog  runtime compilation program instance.
 # @param [out] code  the size of bitcode.
@@ -211,14 +211,14 @@ cdef void* hiprtcGetBitcodeSize_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcGetBitcodeSize(hiprtcProgram prog,int * bitcode_size) nogil:
     global _lib_handle
-    global hiprtcGetBitcodeSize_funptr
-    if hiprtcGetBitcodeSize_funptr == NULL:
+    global _hiprtcGetBitcodeSize__funptr
+    if _hiprtcGetBitcodeSize__funptr == NULL:
         with gil:
-            hiprtcGetBitcodeSize_funptr = loader.load_symbol(_lib_handle, "hiprtcGetBitcodeSize")
-    return (<hiprtcResult (*)(hiprtcProgram,int *) nogil> hiprtcGetBitcodeSize_funptr)(prog,bitcode_size)
+            _hiprtcGetBitcodeSize__funptr = loader.load_symbol(_lib_handle, "hiprtcGetBitcodeSize")
+    return (<hiprtcResult (*)(hiprtcProgram,int *) nogil> _hiprtcGetBitcodeSize__funptr)(prog,bitcode_size)
 
 
-cdef void* hiprtcLinkCreate_funptr = NULL
+cdef void* _hiprtcLinkCreate__funptr = NULL
 # @brief Creates the link instance via hiprtc APIs.
 # @param [in] hip_jit_options
 # @param [out] hiprtc link state instance
@@ -226,14 +226,14 @@ cdef void* hiprtcLinkCreate_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcLinkCreate(unsigned int num_options,hiprtcJIT_option * option_ptr,void ** option_vals_pptr,hiprtcLinkState* hip_link_state_ptr) nogil:
     global _lib_handle
-    global hiprtcLinkCreate_funptr
-    if hiprtcLinkCreate_funptr == NULL:
+    global _hiprtcLinkCreate__funptr
+    if _hiprtcLinkCreate__funptr == NULL:
         with gil:
-            hiprtcLinkCreate_funptr = loader.load_symbol(_lib_handle, "hiprtcLinkCreate")
-    return (<hiprtcResult (*)(unsigned int,hiprtcJIT_option *,void **,hiprtcLinkState*) nogil> hiprtcLinkCreate_funptr)(num_options,option_ptr,option_vals_pptr,hip_link_state_ptr)
+            _hiprtcLinkCreate__funptr = loader.load_symbol(_lib_handle, "hiprtcLinkCreate")
+    return (<hiprtcResult (*)(unsigned int,hiprtcJIT_option *,void **,hiprtcLinkState*) nogil> _hiprtcLinkCreate__funptr)(num_options,option_ptr,option_vals_pptr,hip_link_state_ptr)
 
 
-cdef void* hiprtcLinkAddFile_funptr = NULL
+cdef void* _hiprtcLinkAddFile__funptr = NULL
 # @brief Adds a file with bit code to be linked with options
 # @param [in] hiprtc link state, jit input type, file path,
 # option reated parameters.
@@ -244,14 +244,14 @@ cdef void* hiprtcLinkAddFile_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcLinkAddFile(hiprtcLinkState hip_link_state,hiprtcJITInputType input_type,const char * file_path,unsigned int num_options,hiprtcJIT_option * options_ptr,void ** option_values) nogil:
     global _lib_handle
-    global hiprtcLinkAddFile_funptr
-    if hiprtcLinkAddFile_funptr == NULL:
+    global _hiprtcLinkAddFile__funptr
+    if _hiprtcLinkAddFile__funptr == NULL:
         with gil:
-            hiprtcLinkAddFile_funptr = loader.load_symbol(_lib_handle, "hiprtcLinkAddFile")
-    return (<hiprtcResult (*)(hiprtcLinkState,hiprtcJITInputType,const char *,unsigned int,hiprtcJIT_option *,void **) nogil> hiprtcLinkAddFile_funptr)(hip_link_state,input_type,file_path,num_options,options_ptr,option_values)
+            _hiprtcLinkAddFile__funptr = loader.load_symbol(_lib_handle, "hiprtcLinkAddFile")
+    return (<hiprtcResult (*)(hiprtcLinkState,hiprtcJITInputType,const char *,unsigned int,hiprtcJIT_option *,void **) nogil> _hiprtcLinkAddFile__funptr)(hip_link_state,input_type,file_path,num_options,options_ptr,option_values)
 
 
-cdef void* hiprtcLinkAddData_funptr = NULL
+cdef void* _hiprtcLinkAddData__funptr = NULL
 # @brief Completes the linking of the given program.
 # @param [in] hiprtc link state, jit input type, image_ptr ,
 # option reated parameters.
@@ -262,14 +262,14 @@ cdef void* hiprtcLinkAddData_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcLinkAddData(hiprtcLinkState hip_link_state,hiprtcJITInputType input_type,void * image,int image_size,const char * name,unsigned int num_options,hiprtcJIT_option * options_ptr,void ** option_values) nogil:
     global _lib_handle
-    global hiprtcLinkAddData_funptr
-    if hiprtcLinkAddData_funptr == NULL:
+    global _hiprtcLinkAddData__funptr
+    if _hiprtcLinkAddData__funptr == NULL:
         with gil:
-            hiprtcLinkAddData_funptr = loader.load_symbol(_lib_handle, "hiprtcLinkAddData")
-    return (<hiprtcResult (*)(hiprtcLinkState,hiprtcJITInputType,void *,int,const char *,unsigned int,hiprtcJIT_option *,void **) nogil> hiprtcLinkAddData_funptr)(hip_link_state,input_type,image,image_size,name,num_options,options_ptr,option_values)
+            _hiprtcLinkAddData__funptr = loader.load_symbol(_lib_handle, "hiprtcLinkAddData")
+    return (<hiprtcResult (*)(hiprtcLinkState,hiprtcJITInputType,void *,int,const char *,unsigned int,hiprtcJIT_option *,void **) nogil> _hiprtcLinkAddData__funptr)(hip_link_state,input_type,image,image_size,name,num_options,options_ptr,option_values)
 
 
-cdef void* hiprtcLinkComplete_funptr = NULL
+cdef void* _hiprtcLinkComplete__funptr = NULL
 # @brief Completes the linking of the given program.
 # @param [in] hiprtc link state instance
 # @param [out] linked_binary, linked_binary_size.
@@ -279,14 +279,14 @@ cdef void* hiprtcLinkComplete_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcLinkComplete(hiprtcLinkState hip_link_state,void ** bin_out,int * size_out) nogil:
     global _lib_handle
-    global hiprtcLinkComplete_funptr
-    if hiprtcLinkComplete_funptr == NULL:
+    global _hiprtcLinkComplete__funptr
+    if _hiprtcLinkComplete__funptr == NULL:
         with gil:
-            hiprtcLinkComplete_funptr = loader.load_symbol(_lib_handle, "hiprtcLinkComplete")
-    return (<hiprtcResult (*)(hiprtcLinkState,void **,int *) nogil> hiprtcLinkComplete_funptr)(hip_link_state,bin_out,size_out)
+            _hiprtcLinkComplete__funptr = loader.load_symbol(_lib_handle, "hiprtcLinkComplete")
+    return (<hiprtcResult (*)(hiprtcLinkState,void **,int *) nogil> _hiprtcLinkComplete__funptr)(hip_link_state,bin_out,size_out)
 
 
-cdef void* hiprtcLinkDestroy_funptr = NULL
+cdef void* _hiprtcLinkDestroy__funptr = NULL
 # @brief Deletes the link instance via hiprtc APIs.
 # @param [in] hiprtc link state instance
 # @param [out] code  the size of binary.
@@ -296,8 +296,8 @@ cdef void* hiprtcLinkDestroy_funptr = NULL
 # @see hiprtcResult
 cdef hiprtcResult hiprtcLinkDestroy(hiprtcLinkState hip_link_state) nogil:
     global _lib_handle
-    global hiprtcLinkDestroy_funptr
-    if hiprtcLinkDestroy_funptr == NULL:
+    global _hiprtcLinkDestroy__funptr
+    if _hiprtcLinkDestroy__funptr == NULL:
         with gil:
-            hiprtcLinkDestroy_funptr = loader.load_symbol(_lib_handle, "hiprtcLinkDestroy")
-    return (<hiprtcResult (*)(hiprtcLinkState) nogil> hiprtcLinkDestroy_funptr)(hip_link_state)
+            _hiprtcLinkDestroy__funptr = loader.load_symbol(_lib_handle, "hiprtcLinkDestroy")
+    return (<hiprtcResult (*)(hiprtcLinkState) nogil> _hiprtcLinkDestroy__funptr)(hip_link_state)
