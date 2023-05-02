@@ -12,6 +12,10 @@ cdef extern from "hipblas/hipblas.h":
 
     cdef int hipblasVersionPatch
 
+    ctypedef short __int16_t
+
+    ctypedef unsigned short __uint16_t
+
     ctypedef void * hipblasHandle_t
 
     ctypedef uint16_t hipblasHalf

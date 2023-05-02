@@ -9,7 +9,11 @@ cdef extern from "hip/hip_runtime_api.h":
 
     cdef int HIP_VERSION_PATCH
 
+    cdef char* HIP_VERSION_GITHASH
+
     cdef int HIP_VERSION_BUILD_ID
+
+    cdef char* HIP_VERSION_BUILD_NAME
 
     cdef int HIP_VERSION
 
