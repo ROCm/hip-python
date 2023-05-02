@@ -189,7 +189,7 @@ cdef class {{name}}:
     cdef {{name}} new():
         \"""Factory function to create {{name}} objects with
         newly allocated {{cname}}\"""
-        cdef {{cptr_type}} ptr;
+        cdef {{cptr_type}} ptr
         {{name}}.__allocate(&ptr)
         return {{name}}.from_ptr(ptr, owner=True)
     
@@ -333,7 +333,7 @@ class Typed:
         from . import tree
 
         assert isinstance(self, tree.Typed)
-        return self.global_typename(self.sep, self.renamer)
+        return self.global_typename(self.sep, self.renamer,prefer_canonical=True)
 
     @property
     def has_array_rank(self):
@@ -364,7 +364,7 @@ class FieldMixin(CythonMixin, Typed):
         from . import tree
 
         assert isinstance(self, tree.Field)
-        typename = self.global_typename(self.sep, self.renamer)
+        typename = self.global_typename(self.sep, self.renamer, prefer_canonical=True)
         name = self._cython_and_c_name(self.name)
         return f"{typename} {name}"
 
@@ -375,7 +375,7 @@ class FieldMixin(CythonMixin, Typed):
         attr = self.renamer(self.name)
         template = Cython.Tempita.Template(wrapper_class_property_template)
         return template.substitute(
-            typename=self.global_typename(self.sep, self.renamer),
+            typename=self.global_typename(self.sep, self.renamer, prefer_canonical=True),
             attr=attr,
             is_basic_type=(
                 self.is_basic_type

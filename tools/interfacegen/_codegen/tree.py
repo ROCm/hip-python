@@ -279,10 +279,23 @@ class Typed:
                 f"typename '{searched_canonical_typename}' is no part of '{canonical_type_to_modify}'"
             )
 
-    def global_typename(self, sep: str, renamer: callable = lambda name: name):
+    def global_typename(self, sep: str, renamer: callable = lambda name: name, prefer_canonical:bool = False):
+        """_summary_
+
+        Args:
+            sep (str): _description_
+            renamer (_type_, optional): _description_. Defaults to lambdaname:name.
+            prefer_canonical (bool, optional): If the canonical name should be preferred.
+
+        Raises:
+            ValueError: _description_
+
+        Returns:
+            _type_: _description_
+        """
         if sep == None:
             raise ValueError("sep may not be None")
-        if self.typeref is not None:
+        if self.typeref is not None and not prefer_canonical:
             searched_typename = self.typeref.cursor.type.get_canonical().spelling
             repl_typename = renamer(self.typeref.global_name(sep))
         else:
@@ -292,8 +305,8 @@ class Typed:
             self._type_handler, searched_typename, repl_typename
         )
 
-    def typename(self, renamer: callable = lambda name: name):
-        if self.typeref is not None:
+    def typename(self, renamer: callable = lambda name: name, prefer_canonical:bool = False):
+        if self.typeref is not None and not prefer_canonical:
             searched_typename = self.typeref.cursor.type.get_canonical().spelling
             repl_typename = renamer(self.typeref.name)
         else:
@@ -908,6 +921,12 @@ class Parm(Node, Typed, *__ParmMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
+
+    @property
+    def parm_index(self):
+        """Index of the parameter in the argument list."""
+        assert self.parent != None
+        return self._index(cls=Parm)
 
 
 class Function(Node, Typed, *__FunctionMixin):
