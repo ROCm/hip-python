@@ -15,4 +15,3 @@ cdef class DataHandle:
 
 cdef class ListOfBytes(DataHandle):
     cdef bint _owner
-    cdef size_t _num_entries

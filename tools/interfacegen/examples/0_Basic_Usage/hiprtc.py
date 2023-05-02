@@ -19,6 +19,7 @@ extern "C" __global__ void set(int *a) {
 """
 
 prog = hip_check(hiprtc.hiprtcCreateProgram(source, b'set', 0, [], []))
+print(f"{hex(prog.ptr)=}")
 
 #props = hip.hipDeviceProp_t()
 #hip_check(hip.hipGetDeviceProperties(props,0))
@@ -29,10 +30,10 @@ print(f"Compiling kernel for {arch}")
 
 hip_check(hiprtc.hiprtcCompileProgram(prog, 1, [f'--offload-arch={arch}'.encode()]))
 code_size = hip_check(hiprtc.hiprtcGetCodeSize(prog))
-#print(code_size)
-#code = bytearray(code_size)
-#hip_check(hiprtc.hiprtcGetCode(prog,code))
-#print(code)
+print(code_size)
+code = bytearray(code_size)
+hip_check(hiprtc.hiprtcGetCode(prog,code))
+print(code)
 #module = hip_check(hip.hipModuleLoadData(code))
 #kernel = hip_check(hip.hipModuleGetFunction(module, 'set'))
 #ptr = hip.hipMalloc(4)
