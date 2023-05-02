@@ -94,7 +94,6 @@ cdef class ListOfBytes(DataHandle):
 
     def __cinit__(self):
         self._owner = False
-        self._num_entries = 0 # only carries valid data if _owner is True
 
     @staticmethod
     cdef ListOfBytes from_ptr(void* ptr):
