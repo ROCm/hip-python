@@ -132,10 +132,9 @@ cdef class ListOfBytes(DataHandle):
             wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value)
-        elif isinstance(pyobj,(list,tuple)):
+        elif isinstance(pyobj,(tuple,list)):
             wrapper._owner = True
-            wrapper._num_entries = len(pyobj) # zero length is allowed
-            wrapper._ptr = libc.stdlib.malloc(wrapper._num_entries)
+            wrapper._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(const char*))
             for i,entry in enumerate(pyobj):
                 if not isinstance(entry,bytes):
                     raise ValueError("elements of list/tuple input must be of type 'bytes'")
