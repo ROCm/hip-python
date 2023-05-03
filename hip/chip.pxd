@@ -47,6 +47,12 @@ cdef extern from "hip/hip_runtime_api.h":
 
     cdef int HIP_TEXTURE_OBJECT_SIZE_DWORD
 
+    cdef unsigned long int HIP_LAUNCH_PARAM_BUFFER_POINTER
+
+    cdef unsigned long int HIP_LAUNCH_PARAM_BUFFER_SIZE
+
+    cdef unsigned long int HIP_LAUNCH_PARAM_END
+
     cdef int hipIpcMemLazyEnablePeerAccess
 
     cdef int HIP_IPC_HANDLE_SIZE

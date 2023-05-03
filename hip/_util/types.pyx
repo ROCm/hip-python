@@ -20,6 +20,41 @@ cdef class DataHandle:
         cdef DataHandle wrapper = DataHandle.__new__(DataHandle)
         wrapper._ptr = ptr
         return wrapper
+    
+    cdef void init_from_pyobj(self, object pyobj):
+        """
+        NOTE:
+            If ``pyobj`` is an instance of DataHandle, only the pointer is copied.
+            Releasing an acquired Py_buffer handles is still an obligation of the original object.
+        """
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+       
+        self._py_buffer_acquired = False
+        if pyobj is None:
+            self._ptr = NULL
+        elif isinstance(pyobj,DataHandle):
+            self._ptr = (<DataHandle>pyobj)._ptr
+        elif isinstance(pyobj,int):
+            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
+        elif isinstance(pyobj,ctypes.c_void_p):
+            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            self._ptr = cpython.long.PyLong_AsVoidPtr(ptr_as_int)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            err = cpython.buffer.PyObject_GetBuffer( 
+                pyobj, 
+                &self._py_buffer, 
+                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
+            )
+            if err == -1:
+                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
+            self._py_buffer_acquired = True
+            self._ptr = self._py_buffer.buf
+        else:
+            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
 
     @staticmethod
     cdef DataHandle from_pyobj(object pyobj):
@@ -37,34 +72,13 @@ cdef class DataHandle:
             if ``pyobj`` is an instance of DataHandle.
         """
         cdef DataHandle wrapper = DataHandle.__new__(DataHandle)
-        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
         
-        if pyobj is None:
-            wrapper._ptr = NULL
-        elif isinstance(pyobj,DataHandle):
+        if isinstance(pyobj,DataHandle):
             return pyobj
-        elif isinstance(pyobj,int):
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
-        elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value)
-        elif cuda_array_interface != None:
-            if not "data" in cuda_array_interface:
-                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
-            ptr_as_int = cuda_array_interface["data"][0]
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(ptr_as_int)
-        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
-            err = cpython.buffer.PyObject_GetBuffer( 
-                pyobj, 
-                &wrapper._py_buffer, 
-                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
-            )
-            if err == -1:
-                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
-            wrapper._py_buffer_acquired = True
-            wrapper._ptr = wrapper._py_buffer.buf
         else:
-            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
-        return wrapper
+            wrapper = DataHandle.__new__(DataHandle)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
 
     def __dealloc__(self):
         if self._py_buffer_acquired is True:
@@ -86,8 +100,8 @@ cdef class DataHandle:
         """"Data pointer as ``ctypes.c_void_p``."""
         return ctypes.c_void_p(self.ptr)
     
-    def __init__(self):
-        raise RuntimeError("not expected to be instantiated from Python")
+    def __init__(self,object pyobj):
+        DataHandle.init_from_pyobj(self,pyobj)
 
 cdef class ListOfBytes(DataHandle):
     # members declared in declaration part ``types.pxd``
@@ -100,6 +114,32 @@ cdef class ListOfBytes(DataHandle):
         cdef ListOfBytes wrapper = ListOfBytes.__new__(ListOfBytes)
         wrapper._ptr = ptr
         return wrapper
+
+    cdef void init_from_pyobj(self, object pyobj):
+        """
+        NOTE:
+            If ``pyobj`` is an instance of ListOfBytes, only the pointer is copied.
+            Releasing an acquired Py_buffer and temporary memory are still obligations 
+            of the original object.
+        """
+        cdef const char* entry_as_cstr = NULL
+
+        self._py_buffer_acquired = False
+        self._owner = False
+        if isinstance(pyobj,ListOfBytes):
+            self._ptr = (<ListOfBytes>pyobj)._ptr
+        elif isinstance(pyobj,(tuple,list)):
+            self._owner = True
+            self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(const char*))
+            for i,entry in enumerate(pyobj):
+                if not isinstance(entry,bytes):
+                    raise ValueError("elements of list/tuple input must be of type 'bytes'")
+                entry_as_cstr = entry # assumes pyobj/pyobj's entries won't be garbage collected
+                # More details: https://cython.readthedocs.io/en/latest/src/tutorial/strings.html
+                (<const char**>self._ptr)[i] = entry_as_cstr
+        else:
+            self._owner = False
+            generic_handle = DataHandle.init_from_pyobj(self,pyobj)
 
     @staticmethod
     cdef ListOfBytes from_pyobj(object pyobj):
@@ -120,48 +160,17 @@ cdef class ListOfBytes(DataHandle):
             collected before the deletion of this object.
         """
         cdef ListOfBytes wrapper = ListOfBytes.__new__(ListOfBytes)
-        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
-        cdef const char* entry_as_cstr = NULL
-
-        if pyobj is None:
-            wrapper._ptr = NULL
-        elif isinstance(pyobj,ListOfBytes):
+        
+        if isinstance(pyobj,ListOfBytes):
             return pyobj
-        elif isinstance(pyobj,int):
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
-        elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value)
-        elif isinstance(pyobj,(tuple,list)):
-            wrapper._owner = True
-            wrapper._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(const char*))
-            for i,entry in enumerate(pyobj):
-                if not isinstance(entry,bytes):
-                    raise ValueError("elements of list/tuple input must be of type 'bytes'")
-                entry_as_cstr = entry # assumes pyobj/pyobj's entries won't be garbage collected
-                # More details: https://cython.readthedocs.io/en/latest/src/tutorial/strings.html
-                (<const char**>wrapper._ptr)[i] = entry_as_cstr
-        elif cuda_array_interface != None:
-            if not "data" in cuda_array_interface:
-                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
-            ptr_as_int = cuda_array_interface["data"][0]
-            wrapper._ptr = cpython.long.PyLong_AsVoidPtr(ptr_as_int)
-        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
-            err = cpython.buffer.PyObject_GetBuffer( 
-                pyobj, 
-                &wrapper._py_buffer, 
-                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
-            )
-            if err == -1:
-                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
-            wrapper._py_buffer_acquired = True
-            wrapper._ptr = wrapper._py_buffer.buf
         else:
-            raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
-        return wrapper
+            wrapper = ListOfBytes.__new__(ListOfBytes)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
 
     def __dealloc__(self):
         if self._owner:
             libc.stdlib.free(self._ptr)
 
-    def __init__(self):
-        raise RuntimeError("not expected to be instantiated from Python")
+    def __init__(self,object pyobj):
+        ListOfBytes.init_from_pyobj(self,pyobj)

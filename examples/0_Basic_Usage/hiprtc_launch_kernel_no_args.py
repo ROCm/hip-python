@@ -55,3 +55,5 @@ hip_check(
         extra=None,
     )
 )
+
+hip_check(hip.hipModuleUnload(module))
