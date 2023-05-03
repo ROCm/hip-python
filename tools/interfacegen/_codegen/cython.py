@@ -1,5 +1,7 @@
 # AMD_COPYRIGHT
 
+# TODO typedef to basic type must be replaced by basic type
+
 __author__ = "AMD_AUTHOR"
 
 import sys
@@ -42,23 +44,31 @@ def DEFAULT_MACRO_TYPE(node):  # backend-specific
 def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm):
     return "hip._util.types.DataHandle"
 
-default_c_interface_preamble = """\
+default_c_interface_decl_preamble = """\
 # AMD_COPYRIGHT
 from libc.stdint cimport *
+ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 """
 
-default_python_interface_preamble = """\
+default_c_interface_impl_preamble = """\
 # AMD_COPYRIGHT
-# c imports
+"""
+
+default_python_interface_decl_preamble = """\
+# AMD_COPYRIGHT
 from libc cimport stdlib
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer
-# python imports
+cimport hip._util.types
+ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
+"""
+
+default_python_interface_impl_preamble = """\
+# AMD_COPYRIGHT
 import cython
 import ctypes
 import enum
-cimport hip._util.types
 """
 
 # Note: wrapper_class_decl_template must declare all ``@staticmethod`` ``cdef`` functions
@@ -333,7 +343,8 @@ class Typed:
         from . import tree
 
         assert isinstance(self, tree.Typed)
-        return self.global_typename(self.sep, self.renamer,prefer_canonical=True)
+        return self.global_typename(self.sep, self.renamer,
+               prefer_canonical=True)
 
     @property
     def has_array_rank(self):
@@ -360,6 +371,7 @@ class FieldMixin(CythonMixin, Typed):
         CythonMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
 
+    @property
     def cython_repr(self):
         from . import tree
 
@@ -375,7 +387,8 @@ class FieldMixin(CythonMixin, Typed):
         attr = self.renamer(self.name)
         template = Cython.Tempita.Template(wrapper_class_property_template)
         return template.substitute(
-            typename=self.global_typename(self.sep, self.renamer, prefer_canonical=True),
+            typename=self.global_typename(self.sep, self.renamer, 
+                     prefer_canonical=True),
             attr=attr,
             is_basic_type=(
                 self.is_basic_type
@@ -422,7 +435,7 @@ class RecordMixin(CythonMixin):
         fields = list(self.fields)
         if len(fields):
             result += textwrap.indent(
-                "\n".join([field.cython_repr() for field in fields]), indent
+                "\n".join([field.cython_repr for field in fields]), indent
             )
         else:
             result += f"{indent}pass"
@@ -598,7 +611,7 @@ class FunctionPointerMixin(CythonMixin):
         from . import tree
 
         assert isinstance(self, tree.FunctionPointer)
-        parm_types = ",".join(self.global_parm_types(self.sep, self.renamer))
+        parm_types = ",".join(self.global_parm_types(self.sep, self.renamer, prefer_canonical=True))
         underlying_type_name = self.renamer(self.canonical_result_typename)
         typename = self.cython_global_name  # might be AnonymousFunctionPointer
         return f"ctypedef {underlying_type_name} (*{typename}) ({parm_types})"
@@ -728,7 +741,7 @@ class FunctionMixin(CythonMixin, Typed):
         assert isinstance(self, tree.Function)
         typename = self.cython_global_typename
         name = self.cython_name
-        parm_decls = ",".join([arg.cython_repr for arg in self.parms])
+        parm_decls = ",".join([parm.cython_repr for parm in self.parms])
         return f"""\
 {self._raw_comment_as_python_comment().rstrip()}
 {modifiers_front}{typename} {name}({parm_decls}){modifiers}
@@ -747,9 +760,9 @@ class FunctionMixin(CythonMixin, Typed):
 
         assert isinstance(self, tree.Function)
         funptr_name = self.cython_funptr_name
-        parm_types = ",".join(self.global_parm_types(self.sep, self.renamer))
+        parm_types = ",".join(self.global_parm_types(self.sep, self.renamer, prefer_canonical=True))
         parm_names = ",".join(self.parm_names(self.renamer))
-        typename = self.global_typename(self.sep, self.renamer)
+        typename = self.global_typename(self.sep, self.renamer, prefer_canonical=True)
         return f"""\
 cdef void* {funptr_name} = NULL
 {self.render_cython_lazy_loader_decl(modifiers).strip()}:
@@ -779,7 +792,7 @@ cdef void* {funptr_name} = NULL
                 f"\n{indent*2}<{cprefix}{parm_typename}>{handler_name}.from_pyobj({parm_name})._ptr"
             )
 
-        def emit_data_handle_for_void_basic_enum_type_(parm: tree.Parm):
+        def emit_data_handle_for_void_basic_enum_type_(parm: tree.Parm, cprefix: str):
             parm_typename = (
                 parm.cython_global_typename
                 if parm.has_typeref
@@ -788,7 +801,7 @@ cdef void* {funptr_name} = NULL
             emit_datahandle_(
                 parm_typename,
                 parm,
-                cprefix=cprefix if parm.has_typeref else "",
+                cprefix=cprefix if not parm.is_innermost_canonical_type_layer_of_basic_type_or_void else "",
             )
 
         def handle_out_ptr_parm(parm: tree.Parm):
@@ -844,7 +857,7 @@ cdef void* {funptr_name} = NULL
                 or parm.is_pointer_to_basic_type(degree=-1)
                 or parm.is_pointer_to_enum(degree=-1)
             ):
-                emit_data_handle_for_void_basic_enum_type_(parm)
+                emit_data_handle_for_void_basic_enum_type_(parm,cprefix)
             elif (
                 parm.is_pointer_to_record(degree=1)
                 or parm.is_pointer_to_function_proto(degree=1)
@@ -855,7 +868,7 @@ cdef void* {funptr_name} = NULL
                     f"\n{indent*2}{parm_typename}.from_pyobj({parm_name})._ptr"
                 )
             else:
-                emit_data_handle_for_void_basic_enum_type_(parm)
+                emit_data_handle_for_void_basic_enum_type_(parm,cprefix)
 
         for parm in self.parms:
             parm_name = parm.cython_name
@@ -1225,16 +1238,18 @@ class CythonPackageGenerator:
                                             Defaults to `lambda parm: cython.Intent.ANY`.
             cflags (list(str), optional): Flags to pass to the C parser.
         """
-        global default_c_interface_preamble
-        global default_python_interface_preamble
+        global default_c_interface_decl_preamble
+        global default_python_interface_decl_preamble
         self.pkg_name = pkg_name
         self.include_dir = include_dir
         self.header = header
         self.runtime_linking = runtime_linking
         self.dll = dll
         self.cflags = cflags
-        self.c_interface_preamble = default_c_interface_preamble
-        self.python_interface_preamble = default_python_interface_preamble
+        self.c_interface_decl_preamble = default_c_interface_decl_preamble
+        self.c_interface_impl_preamble = default_c_interface_impl_preamble
+        self.python_interface_decl_preamble = default_python_interface_decl_preamble
+        self.python_interface_impl_preamble = default_python_interface_impl_preamble
 
         if isinstance(header, str):
             filename = header
@@ -1273,33 +1288,32 @@ class CythonPackageGenerator:
         Args:
             pkg_name (str): Name of the package that should be generated. Influences filesnames.
         """
-        c_interface_preamble = self.c_interface_preamble + "\n"
-        python_interface_preamble = (
-            self.python_interface_preamble + f"\nfrom . cimport c{self.pkg_name}\n"
+        python_interface_decl_preamble = (
+            self.python_interface_decl_preamble + f"\nfrom . cimport c{self.pkg_name}\n"
         )
 
         with open(f"{output_dir}/c{self.pkg_name}.pxd", "w") as outfile:
-            outfile.write(c_interface_preamble)
+            outfile.write(self.c_interface_decl_preamble)
             outfile.write(
                 self.backend.render_c_interface_decl_part(
                     runtime_linking=self.runtime_linking
                 )
             )
         with open(f"{output_dir}/c{self.pkg_name}.pyx", "w") as outfile:
-            outfile.write(c_interface_preamble)
+            outfile.write(self.c_interface_impl_preamble)
             outfile.write(
                 self.backend.render_c_interface_impl_part(
                     runtime_linking=self.runtime_linking, dll=self.dll
                 )
             )
         with open(f"{output_dir}/{self.pkg_name}.pxd", "w") as outfile:
-            outfile.write(python_interface_preamble)
+            outfile.write(python_interface_decl_preamble)
             outfile.write(
                 self.backend.render_python_interface_decl_part(f"c{self.pkg_name}")
             )
 
         with open(f"{output_dir}/{self.pkg_name}.pyx", "w") as outfile:
-            outfile.write(python_interface_preamble)
+            outfile.write(self.python_interface_impl_preamble)
             outfile.write(
                 self.backend.render_python_interface_impl_part(f"c{self.pkg_name}")
             )
