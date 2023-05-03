@@ -60,31 +60,54 @@ class HipPlatform(enum.IntEnum):
     def cflags(self):
         return ["-D", f"__HIP_PLATFORM_{self.name}__"]
 
-
 hip_platform = HipPlatform.from_string(HIP_PLATFORM)
-
 
 def get_bool_environ_var(env_var, default):
     return os.environ.get(env_var, default).lower() in ("true", "1", "t", "y", "yes")
 
 
-HIP_PYTHON_SETUP_GENERATE = get_bool_environ_var("HIP_PYTHON_SETUP_GENERATE", "true")
-HIP_PYTHON_SETUP_BUILD = get_bool_environ_var("HIP_PYTHON_SETUP_BUILD", "true")
-HIP_PYTHON_SETUP_RUNTIME_LINKING = get_bool_environ_var(
-    "HIP_PYTHON_SETUP_RUNTIME_LINKING", "true"
+HIP_PYTHON_GENERATE = get_bool_environ_var("HIP_PYTHON_GENERATE", "true")
+HIP_PYTHON_BUILD = get_bool_environ_var("HIP_PYTHON_BUILD", "true")
+HIP_PYTHON_RUNTIME_LINKING = get_bool_environ_var(
+    "HIP_PYTHON_RUNTIME_LINKING", "true"
 )
-HIP_PYTHON_SETUP_VERBOSE = get_bool_environ_var("HIP_PYTHON_SETUP_VERBOSE", "true")
+HIP_PYTHON_VERBOSE = get_bool_environ_var("HIP_PYTHON_VERBOSE", "true")
 
-if HIP_PYTHON_SETUP_VERBOSE:
+GENERATOR_ARGS = hip_platform.cflags
+
+if HIP_PYTHON_GENERATE:
+    HIP_PYTHON_CLANG_RES_DIR = os.environ.get("HIP_PYTHON_CLANG_RES_DIR", None)
+    if not HIP_PYTHON_CLANG_RES_DIR:
+        raise RuntimeError(textwrap.dedent("""\
+            Environment variable HIP_PYTHON_CLANG_RES_DIR is not set.
+            
+            Hint: If `clang` is installed and in the PATH, you can 
+            run `clang -print-resource-dir` to obtain the path to
+            the resource directory.
+    
+            Hint: If you have the HIP SDK installed, you have `amdclang` installed in
+            `ROCM_PATH/bin/`. You can use it to run the above command too.
+            
+            Hint: If you have the HIP SDK installed, the last include folder listed in ``hipconfig --cpp_config``
+            points to the `amdclang` compiler's resource dir too.
+            """))
+
+    GENERATOR_ARGS += ["-resource-dir",HIP_PYTHON_CLANG_RES_DIR]
+
+if HIP_PYTHON_VERBOSE:
     print("Environment variables:")
     print(f"{ROCM_PATH=}")
     print(f"{HIP_PLATFORM=}")
-    print(f"{HIP_PYTHON_SETUP_GENERATE=}")
-    print(f"{HIP_PYTHON_SETUP_BUILD=}")
-    print(f"{HIP_PYTHON_SETUP_RUNTIME_LINKING=}")
-    print(f"{HIP_PYTHON_SETUP_VERBOSE=}")
+    print(f"{HIP_PYTHON_CLANG_RES_DIR=}")
+    print(f"{HIP_PYTHON_GENERATE=}")
+    print(f"{HIP_PYTHON_BUILD=}")
+    print(f"{HIP_PYTHON_RUNTIME_LINKING=}")
+    print(f"{HIP_PYTHON_VERBOSE=}")
 
 def generate_hiprtc_package_files():
+    global HIP_PYTHON_GENERATE
+    global GENERATE_ARGS
+    
     # hiprtc
     def hiprtc_node_filter(node: Node):
         if isinstance(node, MacroDefinition):
@@ -147,18 +170,21 @@ def generate_hiprtc_package_files():
         "hiprtc",
         rocm_inc,
         "hip/hiprtc.h",
-        runtime_linking=HIP_PYTHON_SETUP_RUNTIME_LINKING,
+        runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
         dll="libhiprtc.so",
         node_filter=hiprtc_node_filter,
         ptr_parm_intent=hiprtc_ptr_parm_intent,
         ptr_rank=hiprtc_ptr_rank,
         ptr_complicated_type_handler=hiprtc_ptr_complicated_type_handler,
-        cflags=hip_platform.cflags,
+        cflags=GENERATOR_ARGS,
     )
-    if HIP_PYTHON_SETUP_GENERATE:
+    if HIP_PYTHON_GENERATE:
         generator.write_package_files(output_dir="hip")
 
 def generate_hip_package_files():
+    global HIP_PYTHON_GENERATE
+    global GENERATE_ARGS
+
     # hip
     hip_str_macros = (
         "HIP_VERSION_GITHASH",
@@ -315,15 +341,15 @@ def generate_hip_package_files():
         "hip",
         rocm_inc,
         "hip/hip_runtime_api.h",
-        runtime_linking=HIP_PYTHON_SETUP_RUNTIME_LINKING,
+        runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
         dll="libamdhip64.so",
         node_filter=hip_node_filter,
         ptr_parm_intent=hip_ptr_parm_intent,
         ptr_rank=hip_ptr_rank,
         macro_type=hip_macro_type,
-        cflags=hip_platform.cflags,
+        cflags=GENERATOR_ARGS,
     )
-    if HIP_PYTHON_SETUP_GENERATE:
+    if HIP_PYTHON_GENERATE:
         generator.write_package_files(output_dir="hip")
 
     HIP_VERSION_MAJOR = 0
@@ -360,6 +386,9 @@ def generate_hip_package_files():
 
 # hipblas
 def generate_hipblas_package_files():
+    global HIP_PYTHON_GENERATE
+    global GENERATE_ARGS
+
     def hipblas_node_filter(node: Node):
         if node.name in ("__int16_t","__uint16_t"):
             return True
@@ -433,22 +462,22 @@ def generate_hipblas_package_files():
         "hipblas",
         rocm_inc,
         "hipblas/hipblas.h",
-        runtime_linking=HIP_PYTHON_SETUP_RUNTIME_LINKING,
+        runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
         dll="libhipblas.so",
         node_filter=hipblas_node_filter,
         ptr_parm_intent=hipblas_ptr_parm_intent,
         ptr_rank=hipblas_ptr_rank,
-        cflags=hip_platform.cflags,
+        cflags=GENERATOR_ARGS,
     )
-    generator.c_interface_preamble += textwrap.dedent("""\
+    generator.c_interface_decl_preamble += textwrap.dedent("""\
     from .chip cimport hipStream_t
     """)
-    generator.python_interface_preamble += textwrap.dedent("""\
+    generator.python_interface_decl_preamble += textwrap.dedent("""\
     #ctypedef int16_t __int16_t
     #ctypedef uint16_t __uint16_t
     from .hip cimport ihipStream_t
     """)
-    if HIP_PYTHON_SETUP_GENERATE:
+    if HIP_PYTHON_GENERATE:
         generator.write_package_files(output_dir="hip")
 
 
@@ -457,11 +486,11 @@ generate_hipblas_package_files()
 HIP_VERSION_NAME = generate_hip_package_files()
 
 # Build Cython packages
-if HIP_PYTHON_SETUP_BUILD:
+if HIP_PYTHON_BUILD:
     from setuptools import setup, Extension
     from Cython.Build import cythonize
 
-    if HIP_PYTHON_SETUP_RUNTIME_LINKING:
+    if HIP_PYTHON_RUNTIME_LINKING:
         libraries = []
         library_dirs = []
     else:
@@ -492,7 +521,7 @@ if HIP_PYTHON_SETUP_BUILD:
         ("hip.hip", ["./hip/hip.pyx"]),
         ("hip.hipblas", ["./hip/hipblas.pyx"]),
     ]
-    if HIP_PYTHON_SETUP_RUNTIME_LINKING:
+    if HIP_PYTHON_RUNTIME_LINKING:
         cython_module_sources.insert(
             0, ("hip._util.posixloader", ["./hip/_util/posixloader.pyx"])
         )
