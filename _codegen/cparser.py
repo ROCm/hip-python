@@ -107,7 +107,8 @@ class CParser:
 
 class TypeHandler:
     class TypeCategory(enum.IntEnum):
-        UNCategorized = -1
+        INVALID = -2
+        UNCATEGORIZED = -1
         VOID = 0
         BASIC = 10  # basic datatype
         BOOL = BASIC + 1
@@ -147,6 +148,10 @@ class TypeHandler:
                 value >= TypeHandler.TypeCategory.BASIC.value
                 and value < TypeHandler.TypeCategory.RECORD.value
             )
+
+    @staticmethod
+    def is_invalid_type(type_kind: clang.cindex.TypeKind):
+        return type_kind == clang.cindex.TypeKind.INVALID
 
     @staticmethod
     def is_void_type(type_kind: clang.cindex.TypeKind):
@@ -353,7 +358,9 @@ class TypeHandler:
         def descend_(clang_type: clang.cindex.TypeKind):
             nonlocal postorder
             type_kind = clang_type.kind
-            if TypeHandler.is_void_type(type_kind) or TypeHandler.is_basic_datatype(
+            if TypeHandler.is_invalid_type(type_kind):
+                yield clang_type
+            elif TypeHandler.is_void_type(type_kind) or TypeHandler.is_basic_datatype(
                 type_kind
             ):
                 yield clang_type
@@ -444,7 +451,9 @@ class TypeHandler:
         subdivide_basic_types (bool,optional): If basic datatypes should be further categorized into
                                                the categories: bool, char, int, float. Defaults to false
         """
-        if TypeHandler.is_void_type(type_kind):
+        if TypeHandler.is_invalid_type(type_kind):
+            result = TypeHandler.TypeCategory.INVALID
+        elif TypeHandler.is_void_type(type_kind):
             result = TypeHandler.TypeCategory.VOID
         elif not subdivide_basic_types and TypeHandler.is_basic_datatype(type_kind):
             result = TypeHandler.TypeCategory.BASIC
@@ -500,6 +509,14 @@ class TypeHandler:
                 subdivide_basic_types=subdivide_basic_types,
             )
 
+    def is_innermost_canonical_type_layer_of_basic_type_or_void(self):
+        """If the innermost type layer is of basic type or void type.
+        """
+        return list(self.categorized_type_layer_kinds())[-1] in (
+            TypeHandler.TypeCategory.BASIC,
+            TypeHandler.TypeCategory.VOID,
+        )
+
     def is_canonical_const_qualified(self):
         """Returns if the canonical (=fully resolved) type is const qualified."""
         return self.clang_type.get_canonical().is_const_qualified()
@@ -517,7 +534,6 @@ class Analysis:
             "Canonical Type Layer Kinds (Categorized)",
             "Canonical Type Layer Kinds (Categorized, Const)",
             "Canonical Type Layer Kinds (Categorized, Const, Finer)",
-            "Cython C Typename",
         ]
 
     @staticmethod
@@ -567,7 +583,6 @@ class Analysis:
             f"[{categorized_canonical_type_layer_kinds}]",
             f"[{categorized_canonical_type_layer_kinds_w_const}]",
             f"[{categorized_canonical_type_layer_kinds_finer_w_const}]",
-            f"{typehandler.get_canonical_cython_type_name()}",
         ]
 
     @staticmethod
@@ -673,7 +688,7 @@ class Analysis:
                             result += f"{sep}{cursor.spelling}"
 
                             result += sep + sep.join(
-                                Analysis._type_handler_part(cursor.type)
+                                Analysis._type_analysis_part(cursor.type)
                             )
                             result += "\n"
         return result
@@ -752,7 +767,7 @@ class Analysis:
                             result += f"{sep}{cursor.spelling}"
 
                             result += sep + sep.join(
-                                Analysis._type_handler_part(clang_type)
+                                Analysis._type_analysis_part(clang_type)
                             )
                             result += "\n"
         return result
