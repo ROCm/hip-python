@@ -1,14 +1,10 @@
 # AMD_COPYRIGHT
-# c imports
 from libc cimport stdlib
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer
-# python imports
-import cython
-import ctypes
-import enum
 cimport hip._util.types
+ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 
 from . cimport chip
 cdef class hipDeviceArch_t:

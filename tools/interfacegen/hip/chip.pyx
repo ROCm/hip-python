@@ -1,6 +1,4 @@
 # AMD_COPYRIGHT
-from libc.stdint cimport *
-
 cimport hip._util.posixloader as loader
 cdef void* _lib_handle = NULL
 
@@ -78,10 +76,10 @@ cdef void* _hipDeviceGet__funptr = NULL
 # @param [out] device
 # @param [in] ordinal
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceGet(hipDevice_t * device,int ordinal) nogil:
+cdef hipError_t hipDeviceGet(int * device,int ordinal) nogil:
     global _hipDeviceGet__funptr
     __init_symbol(&_hipDeviceGet__funptr,"hipDeviceGet")
-    return (<hipError_t (*)(hipDevice_t *,int) nogil> _hipDeviceGet__funptr)(device,ordinal)
+    return (<hipError_t (*)(int *,int) nogil> _hipDeviceGet__funptr)(device,ordinal)
 
 
 cdef void* _hipDeviceComputeCapability__funptr = NULL
@@ -90,10 +88,10 @@ cdef void* _hipDeviceComputeCapability__funptr = NULL
 # @param [out] minor
 # @param [in] device
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceComputeCapability(int * major,int * minor,hipDevice_t device) nogil:
+cdef hipError_t hipDeviceComputeCapability(int * major,int * minor,int device) nogil:
     global _hipDeviceComputeCapability__funptr
     __init_symbol(&_hipDeviceComputeCapability__funptr,"hipDeviceComputeCapability")
-    return (<hipError_t (*)(int *,int *,hipDevice_t) nogil> _hipDeviceComputeCapability__funptr)(major,minor,device)
+    return (<hipError_t (*)(int *,int *,int) nogil> _hipDeviceComputeCapability__funptr)(major,minor,device)
 
 
 cdef void* _hipDeviceGetName__funptr = NULL
@@ -102,10 +100,10 @@ cdef void* _hipDeviceGetName__funptr = NULL
 # @param [in] len
 # @param [in] device
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceGetName(char * name,int len,hipDevice_t device) nogil:
+cdef hipError_t hipDeviceGetName(char * name,int len,int device) nogil:
     global _hipDeviceGetName__funptr
     __init_symbol(&_hipDeviceGetName__funptr,"hipDeviceGetName")
-    return (<hipError_t (*)(char *,int,hipDevice_t) nogil> _hipDeviceGetName__funptr)(name,len,device)
+    return (<hipError_t (*)(char *,int,int) nogil> _hipDeviceGetName__funptr)(name,len,device)
 
 
 cdef void* _hipDeviceGetUuid__funptr = NULL
@@ -116,10 +114,10 @@ cdef void* _hipDeviceGetUuid__funptr = NULL
 # it is still open to changes and may have outstanding issues.
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotInitialized,
 # #hipErrorDeinitialized
-cdef hipError_t hipDeviceGetUuid(hipUUID_t * uuid,hipDevice_t device) nogil:
+cdef hipError_t hipDeviceGetUuid(hipUUID_t * uuid,int device) nogil:
     global _hipDeviceGetUuid__funptr
     __init_symbol(&_hipDeviceGetUuid__funptr,"hipDeviceGetUuid")
-    return (<hipError_t (*)(hipUUID_t *,hipDevice_t) nogil> _hipDeviceGetUuid__funptr)(uuid,device)
+    return (<hipError_t (*)(hipUUID_t *,int) nogil> _hipDeviceGetUuid__funptr)(uuid,device)
 
 
 cdef void* _hipDeviceGetP2PAttribute__funptr = NULL
@@ -163,10 +161,10 @@ cdef void* _hipDeviceTotalMem__funptr = NULL
 # @param [out] bytes
 # @param [in] device
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceTotalMem(int * bytes,hipDevice_t device) nogil:
+cdef hipError_t hipDeviceTotalMem(unsigned long * bytes,int device) nogil:
     global _hipDeviceTotalMem__funptr
     __init_symbol(&_hipDeviceTotalMem__funptr,"hipDeviceTotalMem")
-    return (<hipError_t (*)(int *,hipDevice_t) nogil> _hipDeviceTotalMem__funptr)(bytes,device)
+    return (<hipError_t (*)(unsigned long *,int) nogil> _hipDeviceTotalMem__funptr)(bytes,device)
 
 
 cdef void* _hipDeviceSynchronize__funptr = NULL
@@ -364,10 +362,10 @@ cdef void* _hipDeviceGetLimit__funptr = NULL
 # @param [in]  limit
 # @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
 # Note: Currently, only hipLimitMallocHeapSize is available
-cdef hipError_t hipDeviceGetLimit(int * pValue,hipLimit_t limit) nogil:
+cdef hipError_t hipDeviceGetLimit(unsigned long * pValue,hipLimit_t limit) nogil:
     global _hipDeviceGetLimit__funptr
     __init_symbol(&_hipDeviceGetLimit__funptr,"hipDeviceGetLimit")
-    return (<hipError_t (*)(int *,hipLimit_t) nogil> _hipDeviceGetLimit__funptr)(pValue,limit)
+    return (<hipError_t (*)(unsigned long *,hipLimit_t) nogil> _hipDeviceGetLimit__funptr)(pValue,limit)
 
 
 cdef void* _hipDeviceSetLimit__funptr = NULL
@@ -375,10 +373,10 @@ cdef void* _hipDeviceSetLimit__funptr = NULL
 # @param [in] limit
 # @param [in] value
 # @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
-cdef hipError_t hipDeviceSetLimit(hipLimit_t limit,int value) nogil:
+cdef hipError_t hipDeviceSetLimit(hipLimit_t limit,unsigned long value) nogil:
     global _hipDeviceSetLimit__funptr
     __init_symbol(&_hipDeviceSetLimit__funptr,"hipDeviceSetLimit")
-    return (<hipError_t (*)(hipLimit_t,int) nogil> _hipDeviceSetLimit__funptr)(limit,value)
+    return (<hipError_t (*)(hipLimit_t,unsigned long) nogil> _hipDeviceSetLimit__funptr)(limit,value)
 
 
 cdef void* _hipDeviceGetSharedMemConfig__funptr = NULL
@@ -456,10 +454,10 @@ cdef void* _hipExtGetLinkTypeAndHopCount__funptr = NULL
 # @param [out] hopcount Returns the hop count between the two devices
 # Queries and returns the HSA link type and the hop count between the two specified devices.
 # @returns #hipSuccess, #hipInvalidDevice, #hipErrorRuntimeOther
-cdef hipError_t hipExtGetLinkTypeAndHopCount(int device1,int device2,uint32_t * linktype,uint32_t * hopcount) nogil:
+cdef hipError_t hipExtGetLinkTypeAndHopCount(int device1,int device2,unsigned int * linktype,unsigned int * hopcount) nogil:
     global _hipExtGetLinkTypeAndHopCount__funptr
     __init_symbol(&_hipExtGetLinkTypeAndHopCount__funptr,"hipExtGetLinkTypeAndHopCount")
-    return (<hipError_t (*)(int,int,uint32_t *,uint32_t *) nogil> _hipExtGetLinkTypeAndHopCount__funptr)(device1,device2,linktype,hopcount)
+    return (<hipError_t (*)(int,int,unsigned int *,unsigned int *) nogil> _hipExtGetLinkTypeAndHopCount__funptr)(device1,device2,linktype,hopcount)
 
 
 cdef void* _hipIpcGetMemHandle__funptr = NULL
@@ -870,10 +868,10 @@ cdef void* _hipExtStreamCreateWithCUMask__funptr = NULL
 # stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
 # To release the memory used by the stream, application must call hipStreamDestroy.
 # @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-cdef hipError_t hipExtStreamCreateWithCUMask(hipStream_t* stream,uint32_t cuMaskSize,uint32_t * cuMask) nogil:
+cdef hipError_t hipExtStreamCreateWithCUMask(hipStream_t* stream,unsigned int cuMaskSize,const unsigned int * cuMask) nogil:
     global _hipExtStreamCreateWithCUMask__funptr
     __init_symbol(&_hipExtStreamCreateWithCUMask__funptr,"hipExtStreamCreateWithCUMask")
-    return (<hipError_t (*)(hipStream_t*,uint32_t,uint32_t *) nogil> _hipExtStreamCreateWithCUMask__funptr)(stream,cuMaskSize,cuMask)
+    return (<hipError_t (*)(hipStream_t*,unsigned int,const unsigned int *) nogil> _hipExtStreamCreateWithCUMask__funptr)(stream,cuMaskSize,cuMask)
 
 
 cdef void* _hipExtStreamGetCUMask__funptr = NULL
@@ -885,10 +883,10 @@ cdef void* _hipExtStreamGetCUMask__funptr = NULL
 # each active bit represents one active CU
 # @return #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
 # @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-cdef hipError_t hipExtStreamGetCUMask(hipStream_t stream,uint32_t cuMaskSize,uint32_t * cuMask) nogil:
+cdef hipError_t hipExtStreamGetCUMask(hipStream_t stream,unsigned int cuMaskSize,unsigned int * cuMask) nogil:
     global _hipExtStreamGetCUMask__funptr
     __init_symbol(&_hipExtStreamGetCUMask__funptr,"hipExtStreamGetCUMask")
-    return (<hipError_t (*)(hipStream_t,uint32_t,uint32_t *) nogil> _hipExtStreamGetCUMask__funptr)(stream,cuMaskSize,cuMask)
+    return (<hipError_t (*)(hipStream_t,unsigned int,unsigned int *) nogil> _hipExtStreamGetCUMask__funptr)(stream,cuMaskSize,cuMask)
 
 
 cdef void* _hipStreamAddCallback__funptr = NULL
@@ -938,10 +936,10 @@ cdef void* _hipStreamWaitValue32__funptr = NULL
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWaitValue64, hipStreamWriteValue64,
 # hipStreamWriteValue32, hipDeviceGetAttribute
-cdef hipError_t hipStreamWaitValue32(hipStream_t stream,void * ptr,uint32_t value,unsigned int flags,uint32_t mask) nogil:
+cdef hipError_t hipStreamWaitValue32(hipStream_t stream,void * ptr,unsigned int value,unsigned int flags,unsigned int mask) nogil:
     global _hipStreamWaitValue32__funptr
     __init_symbol(&_hipStreamWaitValue32__funptr,"hipStreamWaitValue32")
-    return (<hipError_t (*)(hipStream_t,void *,uint32_t,unsigned int,uint32_t) nogil> _hipStreamWaitValue32__funptr)(stream,ptr,value,flags,mask)
+    return (<hipError_t (*)(hipStream_t,void *,unsigned int,unsigned int,unsigned int) nogil> _hipStreamWaitValue32__funptr)(stream,ptr,value,flags,mask)
 
 
 cdef void* _hipStreamWaitValue64__funptr = NULL
@@ -967,10 +965,10 @@ cdef void* _hipStreamWaitValue64__funptr = NULL
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWaitValue32, hipStreamWriteValue64,
 # hipStreamWriteValue32, hipDeviceGetAttribute
-cdef hipError_t hipStreamWaitValue64(hipStream_t stream,void * ptr,uint64_t value,unsigned int flags,uint64_t mask) nogil:
+cdef hipError_t hipStreamWaitValue64(hipStream_t stream,void * ptr,unsigned long value,unsigned int flags,unsigned long mask) nogil:
     global _hipStreamWaitValue64__funptr
     __init_symbol(&_hipStreamWaitValue64__funptr,"hipStreamWaitValue64")
-    return (<hipError_t (*)(hipStream_t,void *,uint64_t,unsigned int,uint64_t) nogil> _hipStreamWaitValue64__funptr)(stream,ptr,value,flags,mask)
+    return (<hipError_t (*)(hipStream_t,void *,unsigned long,unsigned int,unsigned long) nogil> _hipStreamWaitValue64__funptr)(stream,ptr,value,flags,mask)
 
 
 cdef void* _hipStreamWriteValue32__funptr = NULL
@@ -986,10 +984,10 @@ cdef void* _hipStreamWriteValue32__funptr = NULL
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
 # hipStreamWaitValue64
-cdef hipError_t hipStreamWriteValue32(hipStream_t stream,void * ptr,uint32_t value,unsigned int flags) nogil:
+cdef hipError_t hipStreamWriteValue32(hipStream_t stream,void * ptr,unsigned int value,unsigned int flags) nogil:
     global _hipStreamWriteValue32__funptr
     __init_symbol(&_hipStreamWriteValue32__funptr,"hipStreamWriteValue32")
-    return (<hipError_t (*)(hipStream_t,void *,uint32_t,unsigned int) nogil> _hipStreamWriteValue32__funptr)(stream,ptr,value,flags)
+    return (<hipError_t (*)(hipStream_t,void *,unsigned int,unsigned int) nogil> _hipStreamWriteValue32__funptr)(stream,ptr,value,flags)
 
 
 cdef void* _hipStreamWriteValue64__funptr = NULL
@@ -1005,10 +1003,10 @@ cdef void* _hipStreamWriteValue64__funptr = NULL
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
 # hipStreamWaitValue64
-cdef hipError_t hipStreamWriteValue64(hipStream_t stream,void * ptr,uint64_t value,unsigned int flags) nogil:
+cdef hipError_t hipStreamWriteValue64(hipStream_t stream,void * ptr,unsigned long value,unsigned int flags) nogil:
     global _hipStreamWriteValue64__funptr
     __init_symbol(&_hipStreamWriteValue64__funptr,"hipStreamWriteValue64")
-    return (<hipError_t (*)(hipStream_t,void *,uint64_t,unsigned int) nogil> _hipStreamWriteValue64__funptr)(stream,ptr,value,flags)
+    return (<hipError_t (*)(hipStream_t,void *,unsigned long,unsigned int) nogil> _hipStreamWriteValue64__funptr)(stream,ptr,value,flags)
 
 
 cdef void* _hipEventCreateWithFlags__funptr = NULL
@@ -1170,10 +1168,10 @@ cdef void* _hipPointerGetAttribute__funptr = NULL
 # @beta This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 # @see hipPointerGetAttributes
-cdef hipError_t hipPointerGetAttribute(void * data,hipPointer_attribute attribute,hipDeviceptr_t ptr) nogil:
+cdef hipError_t hipPointerGetAttribute(void * data,hipPointer_attribute attribute,void * ptr) nogil:
     global _hipPointerGetAttribute__funptr
     __init_symbol(&_hipPointerGetAttribute__funptr,"hipPointerGetAttribute")
-    return (<hipError_t (*)(void *,hipPointer_attribute,hipDeviceptr_t) nogil> _hipPointerGetAttribute__funptr)(data,attribute,ptr)
+    return (<hipError_t (*)(void *,hipPointer_attribute,void *) nogil> _hipPointerGetAttribute__funptr)(data,attribute,ptr)
 
 
 cdef void* _hipDrvPointerGetAttributes__funptr = NULL
@@ -1187,10 +1185,10 @@ cdef void* _hipDrvPointerGetAttributes__funptr = NULL
 # @beta This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 # @see hipPointerGetAttribute
-cdef hipError_t hipDrvPointerGetAttributes(unsigned int numAttributes,hipPointer_attribute * attributes,void ** data,hipDeviceptr_t ptr) nogil:
+cdef hipError_t hipDrvPointerGetAttributes(unsigned int numAttributes,hipPointer_attribute * attributes,void ** data,void * ptr) nogil:
     global _hipDrvPointerGetAttributes__funptr
     __init_symbol(&_hipDrvPointerGetAttributes__funptr,"hipDrvPointerGetAttributes")
-    return (<hipError_t (*)(unsigned int,hipPointer_attribute *,void **,hipDeviceptr_t) nogil> _hipDrvPointerGetAttributes__funptr)(numAttributes,attributes,data,ptr)
+    return (<hipError_t (*)(unsigned int,hipPointer_attribute *,void **,void *) nogil> _hipDrvPointerGetAttributes__funptr)(numAttributes,attributes,data,ptr)
 
 
 cdef void* _hipImportExternalSemaphore__funptr = NULL
@@ -1199,10 +1197,10 @@ cdef void* _hipImportExternalSemaphore__funptr = NULL
 # @param[in] semHandleDesc Semaphore import handle descriptor
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipImportExternalSemaphore(hipExternalSemaphore_t* extSem_out,hipExternalSemaphoreHandleDesc_st * semHandleDesc) nogil:
+cdef hipError_t hipImportExternalSemaphore(void ** extSem_out,hipExternalSemaphoreHandleDesc_st * semHandleDesc) nogil:
     global _hipImportExternalSemaphore__funptr
     __init_symbol(&_hipImportExternalSemaphore__funptr,"hipImportExternalSemaphore")
-    return (<hipError_t (*)(hipExternalSemaphore_t*,hipExternalSemaphoreHandleDesc_st *) nogil> _hipImportExternalSemaphore__funptr)(extSem_out,semHandleDesc)
+    return (<hipError_t (*)(void **,hipExternalSemaphoreHandleDesc_st *) nogil> _hipImportExternalSemaphore__funptr)(extSem_out,semHandleDesc)
 
 
 cdef void* _hipSignalExternalSemaphoresAsync__funptr = NULL
@@ -1213,10 +1211,10 @@ cdef void* _hipSignalExternalSemaphoresAsync__funptr = NULL
 # @param[in] stream Stream to enqueue the wait operations in
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipSignalExternalSemaphoresAsync(hipExternalSemaphore_t * extSemArray,hipExternalSemaphoreSignalParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil:
+cdef hipError_t hipSignalExternalSemaphoresAsync(void *const * extSemArray,hipExternalSemaphoreSignalParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil:
     global _hipSignalExternalSemaphoresAsync__funptr
     __init_symbol(&_hipSignalExternalSemaphoresAsync__funptr,"hipSignalExternalSemaphoresAsync")
-    return (<hipError_t (*)(hipExternalSemaphore_t *,hipExternalSemaphoreSignalParams_st *,unsigned int,hipStream_t) nogil> _hipSignalExternalSemaphoresAsync__funptr)(extSemArray,paramsArray,numExtSems,stream)
+    return (<hipError_t (*)(void *const *,hipExternalSemaphoreSignalParams_st *,unsigned int,hipStream_t) nogil> _hipSignalExternalSemaphoresAsync__funptr)(extSemArray,paramsArray,numExtSems,stream)
 
 
 cdef void* _hipWaitExternalSemaphoresAsync__funptr = NULL
@@ -1227,10 +1225,10 @@ cdef void* _hipWaitExternalSemaphoresAsync__funptr = NULL
 # @param[in] stream Stream to enqueue the wait operations in
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipWaitExternalSemaphoresAsync(hipExternalSemaphore_t * extSemArray,hipExternalSemaphoreWaitParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil:
+cdef hipError_t hipWaitExternalSemaphoresAsync(void *const * extSemArray,hipExternalSemaphoreWaitParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil:
     global _hipWaitExternalSemaphoresAsync__funptr
     __init_symbol(&_hipWaitExternalSemaphoresAsync__funptr,"hipWaitExternalSemaphoresAsync")
-    return (<hipError_t (*)(hipExternalSemaphore_t *,hipExternalSemaphoreWaitParams_st *,unsigned int,hipStream_t) nogil> _hipWaitExternalSemaphoresAsync__funptr)(extSemArray,paramsArray,numExtSems,stream)
+    return (<hipError_t (*)(void *const *,hipExternalSemaphoreWaitParams_st *,unsigned int,hipStream_t) nogil> _hipWaitExternalSemaphoresAsync__funptr)(extSemArray,paramsArray,numExtSems,stream)
 
 
 cdef void* _hipDestroyExternalSemaphore__funptr = NULL
@@ -1238,10 +1236,10 @@ cdef void* _hipDestroyExternalSemaphore__funptr = NULL
 # @param[in] extSem handle to an external memory object
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipDestroyExternalSemaphore(hipExternalSemaphore_t extSem) nogil:
+cdef hipError_t hipDestroyExternalSemaphore(void * extSem) nogil:
     global _hipDestroyExternalSemaphore__funptr
     __init_symbol(&_hipDestroyExternalSemaphore__funptr,"hipDestroyExternalSemaphore")
-    return (<hipError_t (*)(hipExternalSemaphore_t) nogil> _hipDestroyExternalSemaphore__funptr)(extSem)
+    return (<hipError_t (*)(void *) nogil> _hipDestroyExternalSemaphore__funptr)(extSem)
 
 
 cdef void* _hipImportExternalMemory__funptr = NULL
@@ -1250,10 +1248,10 @@ cdef void* _hipImportExternalMemory__funptr = NULL
 # @param[in]  memHandleDesc Memory import handle descriptor
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipImportExternalMemory(hipExternalMemory_t* extMem_out,hipExternalMemoryHandleDesc_st * memHandleDesc) nogil:
+cdef hipError_t hipImportExternalMemory(void ** extMem_out,hipExternalMemoryHandleDesc_st * memHandleDesc) nogil:
     global _hipImportExternalMemory__funptr
     __init_symbol(&_hipImportExternalMemory__funptr,"hipImportExternalMemory")
-    return (<hipError_t (*)(hipExternalMemory_t*,hipExternalMemoryHandleDesc_st *) nogil> _hipImportExternalMemory__funptr)(extMem_out,memHandleDesc)
+    return (<hipError_t (*)(void **,hipExternalMemoryHandleDesc_st *) nogil> _hipImportExternalMemory__funptr)(extMem_out,memHandleDesc)
 
 
 cdef void* _hipExternalMemoryGetMappedBuffer__funptr = NULL
@@ -1263,10 +1261,10 @@ cdef void* _hipExternalMemoryGetMappedBuffer__funptr = NULL
 # @param[in]  bufferDesc  Buffer descriptor
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipExternalMemoryGetMappedBuffer(void ** devPtr,hipExternalMemory_t extMem,hipExternalMemoryBufferDesc_st * bufferDesc) nogil:
+cdef hipError_t hipExternalMemoryGetMappedBuffer(void ** devPtr,void * extMem,hipExternalMemoryBufferDesc_st * bufferDesc) nogil:
     global _hipExternalMemoryGetMappedBuffer__funptr
     __init_symbol(&_hipExternalMemoryGetMappedBuffer__funptr,"hipExternalMemoryGetMappedBuffer")
-    return (<hipError_t (*)(void **,hipExternalMemory_t,hipExternalMemoryBufferDesc_st *) nogil> _hipExternalMemoryGetMappedBuffer__funptr)(devPtr,extMem,bufferDesc)
+    return (<hipError_t (*)(void **,void *,hipExternalMemoryBufferDesc_st *) nogil> _hipExternalMemoryGetMappedBuffer__funptr)(devPtr,extMem,bufferDesc)
 
 
 cdef void* _hipDestroyExternalMemory__funptr = NULL
@@ -1274,10 +1272,10 @@ cdef void* _hipDestroyExternalMemory__funptr = NULL
 # @param[in] extMem  External memory object to be destroyed
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipDestroyExternalMemory(hipExternalMemory_t extMem) nogil:
+cdef hipError_t hipDestroyExternalMemory(void * extMem) nogil:
     global _hipDestroyExternalMemory__funptr
     __init_symbol(&_hipDestroyExternalMemory__funptr,"hipDestroyExternalMemory")
-    return (<hipError_t (*)(hipExternalMemory_t) nogil> _hipDestroyExternalMemory__funptr)(extMem)
+    return (<hipError_t (*)(void *) nogil> _hipDestroyExternalMemory__funptr)(extMem)
 
 
 cdef void* _hipMalloc__funptr = NULL
@@ -1288,10 +1286,10 @@ cdef void* _hipMalloc__funptr = NULL
 # @return #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
 # @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
 # hipHostFree, hipHostMalloc
-cdef hipError_t hipMalloc(void ** ptr,int size) nogil:
+cdef hipError_t hipMalloc(void ** ptr,unsigned long size) nogil:
     global _hipMalloc__funptr
     __init_symbol(&_hipMalloc__funptr,"hipMalloc")
-    return (<hipError_t (*)(void **,int) nogil> _hipMalloc__funptr)(ptr,size)
+    return (<hipError_t (*)(void **,unsigned long) nogil> _hipMalloc__funptr)(ptr,size)
 
 
 cdef void* _hipExtMallocWithFlags__funptr = NULL
@@ -1303,10 +1301,10 @@ cdef void* _hipExtMallocWithFlags__funptr = NULL
 # @return #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
 # @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
 # hipHostFree, hipHostMalloc
-cdef hipError_t hipExtMallocWithFlags(void ** ptr,int sizeBytes,unsigned int flags) nogil:
+cdef hipError_t hipExtMallocWithFlags(void ** ptr,unsigned long sizeBytes,unsigned int flags) nogil:
     global _hipExtMallocWithFlags__funptr
     __init_symbol(&_hipExtMallocWithFlags__funptr,"hipExtMallocWithFlags")
-    return (<hipError_t (*)(void **,int,unsigned int) nogil> _hipExtMallocWithFlags__funptr)(ptr,sizeBytes,flags)
+    return (<hipError_t (*)(void **,unsigned long,unsigned int) nogil> _hipExtMallocWithFlags__funptr)(ptr,sizeBytes,flags)
 
 
 cdef void* _hipMallocHost__funptr = NULL
@@ -1316,10 +1314,10 @@ cdef void* _hipMallocHost__funptr = NULL
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @deprecated use hipHostMalloc() instead
-cdef hipError_t hipMallocHost(void ** ptr,int size) nogil:
+cdef hipError_t hipMallocHost(void ** ptr,unsigned long size) nogil:
     global _hipMallocHost__funptr
     __init_symbol(&_hipMallocHost__funptr,"hipMallocHost")
-    return (<hipError_t (*)(void **,int) nogil> _hipMallocHost__funptr)(ptr,size)
+    return (<hipError_t (*)(void **,unsigned long) nogil> _hipMallocHost__funptr)(ptr,size)
 
 
 cdef void* _hipMemAllocHost__funptr = NULL
@@ -1329,10 +1327,10 @@ cdef void* _hipMemAllocHost__funptr = NULL
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @deprecated use hipHostMalloc() instead
-cdef hipError_t hipMemAllocHost(void ** ptr,int size) nogil:
+cdef hipError_t hipMemAllocHost(void ** ptr,unsigned long size) nogil:
     global _hipMemAllocHost__funptr
     __init_symbol(&_hipMemAllocHost__funptr,"hipMemAllocHost")
-    return (<hipError_t (*)(void **,int) nogil> _hipMemAllocHost__funptr)(ptr,size)
+    return (<hipError_t (*)(void **,unsigned long) nogil> _hipMemAllocHost__funptr)(ptr,size)
 
 
 cdef void* _hipHostMalloc__funptr = NULL
@@ -1343,10 +1341,10 @@ cdef void* _hipHostMalloc__funptr = NULL
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @see hipSetDeviceFlags, hipHostFree
-cdef hipError_t hipHostMalloc(void ** ptr,int size,unsigned int flags) nogil:
+cdef hipError_t hipHostMalloc(void ** ptr,unsigned long size,unsigned int flags) nogil:
     global _hipHostMalloc__funptr
     __init_symbol(&_hipHostMalloc__funptr,"hipHostMalloc")
-    return (<hipError_t (*)(void **,int,unsigned int) nogil> _hipHostMalloc__funptr)(ptr,size,flags)
+    return (<hipError_t (*)(void **,unsigned long,unsigned int) nogil> _hipHostMalloc__funptr)(ptr,size,flags)
 
 
 cdef void* _hipMallocManaged__funptr = NULL
@@ -1362,10 +1360,10 @@ cdef void* _hipMallocManaged__funptr = NULL
 # @param [in]  flags   - must be either hipMemAttachGlobal or hipMemAttachHost
 # (defaults to hipMemAttachGlobal)
 # @returns #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
-cdef hipError_t hipMallocManaged(void ** dev_ptr,int size,unsigned int flags) nogil:
+cdef hipError_t hipMallocManaged(void ** dev_ptr,unsigned long size,unsigned int flags) nogil:
     global _hipMallocManaged__funptr
     __init_symbol(&_hipMallocManaged__funptr,"hipMallocManaged")
-    return (<hipError_t (*)(void **,int,unsigned int) nogil> _hipMallocManaged__funptr)(dev_ptr,size,flags)
+    return (<hipError_t (*)(void **,unsigned long,unsigned int) nogil> _hipMallocManaged__funptr)(dev_ptr,size,flags)
 
 
 cdef void* _hipMemPrefetchAsync__funptr = NULL
@@ -1375,10 +1373,10 @@ cdef void* _hipMemPrefetchAsync__funptr = NULL
 # @param [in] device   destination device to prefetch to
 # @param [in] stream   stream to enqueue prefetch operation
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemPrefetchAsync(const void * dev_ptr,int count,int device,hipStream_t stream) nogil:
+cdef hipError_t hipMemPrefetchAsync(const void * dev_ptr,unsigned long count,int device,hipStream_t stream) nogil:
     global _hipMemPrefetchAsync__funptr
     __init_symbol(&_hipMemPrefetchAsync__funptr,"hipMemPrefetchAsync")
-    return (<hipError_t (*)(const void *,int,int,hipStream_t) nogil> _hipMemPrefetchAsync__funptr)(dev_ptr,count,device,stream)
+    return (<hipError_t (*)(const void *,unsigned long,int,hipStream_t) nogil> _hipMemPrefetchAsync__funptr)(dev_ptr,count,device,stream)
 
 
 cdef void* _hipMemAdvise__funptr = NULL
@@ -1388,10 +1386,10 @@ cdef void* _hipMemAdvise__funptr = NULL
 # @param [in] advice   advice to be applied for the specified memory range
 # @param [in] device   device to apply the advice for
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemAdvise(const void * dev_ptr,int count,hipMemoryAdvise advice,int device) nogil:
+cdef hipError_t hipMemAdvise(const void * dev_ptr,unsigned long count,hipMemoryAdvise advice,int device) nogil:
     global _hipMemAdvise__funptr
     __init_symbol(&_hipMemAdvise__funptr,"hipMemAdvise")
-    return (<hipError_t (*)(const void *,int,hipMemoryAdvise,int) nogil> _hipMemAdvise__funptr)(dev_ptr,count,advice,device)
+    return (<hipError_t (*)(const void *,unsigned long,hipMemoryAdvise,int) nogil> _hipMemAdvise__funptr)(dev_ptr,count,advice,device)
 
 
 cdef void* _hipMemRangeGetAttribute__funptr = NULL
@@ -1403,10 +1401,10 @@ cdef void* _hipMemRangeGetAttribute__funptr = NULL
 # @param [in] dev_ptr    start of the range to query
 # @param [in] count      size of the range to query
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemRangeGetAttribute(void * data,int data_size,hipMemRangeAttribute attribute,const void * dev_ptr,int count) nogil:
+cdef hipError_t hipMemRangeGetAttribute(void * data,unsigned long data_size,hipMemRangeAttribute attribute,const void * dev_ptr,unsigned long count) nogil:
     global _hipMemRangeGetAttribute__funptr
     __init_symbol(&_hipMemRangeGetAttribute__funptr,"hipMemRangeGetAttribute")
-    return (<hipError_t (*)(void *,int,hipMemRangeAttribute,const void *,int) nogil> _hipMemRangeGetAttribute__funptr)(data,data_size,attribute,dev_ptr,count)
+    return (<hipError_t (*)(void *,unsigned long,hipMemRangeAttribute,const void *,unsigned long) nogil> _hipMemRangeGetAttribute__funptr)(data,data_size,attribute,dev_ptr,count)
 
 
 cdef void* _hipMemRangeGetAttributes__funptr = NULL
@@ -1420,10 +1418,10 @@ cdef void* _hipMemRangeGetAttributes__funptr = NULL
 # @param [in] dev_ptr      start of the range to query
 # @param [in] count        size of the range to query
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemRangeGetAttributes(void ** data,int * data_sizes,hipMemRangeAttribute * attributes,int num_attributes,const void * dev_ptr,int count) nogil:
+cdef hipError_t hipMemRangeGetAttributes(void ** data,unsigned long * data_sizes,hipMemRangeAttribute * attributes,unsigned long num_attributes,const void * dev_ptr,unsigned long count) nogil:
     global _hipMemRangeGetAttributes__funptr
     __init_symbol(&_hipMemRangeGetAttributes__funptr,"hipMemRangeGetAttributes")
-    return (<hipError_t (*)(void **,int *,hipMemRangeAttribute *,int,const void *,int) nogil> _hipMemRangeGetAttributes__funptr)(data,data_sizes,attributes,num_attributes,dev_ptr,count)
+    return (<hipError_t (*)(void **,unsigned long *,hipMemRangeAttribute *,unsigned long,const void *,unsigned long) nogil> _hipMemRangeGetAttributes__funptr)(data,data_sizes,attributes,num_attributes,dev_ptr,count)
 
 
 cdef void* _hipStreamAttachMemAsync__funptr = NULL
@@ -1435,10 +1433,10 @@ cdef void* _hipStreamAttachMemAsync__funptr = NULL
 # @param [in] flags      - must be one of hipMemAttachGlobal, hipMemAttachHost or
 # hipMemAttachSingle (defaults to hipMemAttachSingle)
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipStreamAttachMemAsync(hipStream_t stream,void * dev_ptr,int length,unsigned int flags) nogil:
+cdef hipError_t hipStreamAttachMemAsync(hipStream_t stream,void * dev_ptr,unsigned long length,unsigned int flags) nogil:
     global _hipStreamAttachMemAsync__funptr
     __init_symbol(&_hipStreamAttachMemAsync__funptr,"hipStreamAttachMemAsync")
-    return (<hipError_t (*)(hipStream_t,void *,int,unsigned int) nogil> _hipStreamAttachMemAsync__funptr)(stream,dev_ptr,length,flags)
+    return (<hipError_t (*)(hipStream_t,void *,unsigned long,unsigned int) nogil> _hipStreamAttachMemAsync__funptr)(stream,dev_ptr,length,flags)
 
 
 cdef void* _hipMallocAsync__funptr = NULL
@@ -1463,10 +1461,10 @@ cdef void* _hipMallocAsync__funptr = NULL
 # hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMallocAsync(void ** dev_ptr,int size,hipStream_t stream) nogil:
+cdef hipError_t hipMallocAsync(void ** dev_ptr,unsigned long size,hipStream_t stream) nogil:
     global _hipMallocAsync__funptr
     __init_symbol(&_hipMallocAsync__funptr,"hipMallocAsync")
-    return (<hipError_t (*)(void **,int,hipStream_t) nogil> _hipMallocAsync__funptr)(dev_ptr,size,stream)
+    return (<hipError_t (*)(void **,unsigned long,hipStream_t) nogil> _hipMallocAsync__funptr)(dev_ptr,size,stream)
 
 
 cdef void* _hipFreeAsync__funptr = NULL
@@ -1508,10 +1506,10 @@ cdef void* _hipMemPoolTrimTo__funptr = NULL
 # hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemPoolTrimTo(hipMemPool_t mem_pool,int min_bytes_to_hold) nogil:
+cdef hipError_t hipMemPoolTrimTo(hipMemPool_t mem_pool,unsigned long min_bytes_to_hold) nogil:
     global _hipMemPoolTrimTo__funptr
     __init_symbol(&_hipMemPoolTrimTo__funptr,"hipMemPoolTrimTo")
-    return (<hipError_t (*)(hipMemPool_t,int) nogil> _hipMemPoolTrimTo__funptr)(mem_pool,min_bytes_to_hold)
+    return (<hipError_t (*)(hipMemPool_t,unsigned long) nogil> _hipMemPoolTrimTo__funptr)(mem_pool,min_bytes_to_hold)
 
 
 cdef void* _hipMemPoolSetAttribute__funptr = NULL
@@ -1596,10 +1594,10 @@ cdef void* _hipMemPoolSetAccess__funptr = NULL
 # hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolGetAccess
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemPoolSetAccess(hipMemPool_t mem_pool,hipMemAccessDesc * desc_list,int count) nogil:
+cdef hipError_t hipMemPoolSetAccess(hipMemPool_t mem_pool,hipMemAccessDesc * desc_list,unsigned long count) nogil:
     global _hipMemPoolSetAccess__funptr
     __init_symbol(&_hipMemPoolSetAccess__funptr,"hipMemPoolSetAccess")
-    return (<hipError_t (*)(hipMemPool_t,hipMemAccessDesc *,int) nogil> _hipMemPoolSetAccess__funptr)(mem_pool,desc_list,count)
+    return (<hipError_t (*)(hipMemPool_t,hipMemAccessDesc *,unsigned long) nogil> _hipMemPoolSetAccess__funptr)(mem_pool,desc_list,count)
 
 
 cdef void* _hipMemPoolGetAccess__funptr = NULL
@@ -1682,10 +1680,10 @@ cdef void* _hipMallocFromPoolAsync__funptr = NULL
 # hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess,
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMallocFromPoolAsync(void ** dev_ptr,int size,hipMemPool_t mem_pool,hipStream_t stream) nogil:
+cdef hipError_t hipMallocFromPoolAsync(void ** dev_ptr,unsigned long size,hipMemPool_t mem_pool,hipStream_t stream) nogil:
     global _hipMallocFromPoolAsync__funptr
     __init_symbol(&_hipMallocFromPoolAsync__funptr,"hipMallocFromPoolAsync")
-    return (<hipError_t (*)(void **,int,hipMemPool_t,hipStream_t) nogil> _hipMallocFromPoolAsync__funptr)(dev_ptr,size,mem_pool,stream)
+    return (<hipError_t (*)(void **,unsigned long,hipMemPool_t,hipStream_t) nogil> _hipMallocFromPoolAsync__funptr)(dev_ptr,size,mem_pool,stream)
 
 
 cdef void* _hipMemPoolExportToShareableHandle__funptr = NULL
@@ -1781,10 +1779,10 @@ cdef void* _hipHostAlloc__funptr = NULL
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @deprecated use hipHostMalloc() instead
-cdef hipError_t hipHostAlloc(void ** ptr,int size,unsigned int flags) nogil:
+cdef hipError_t hipHostAlloc(void ** ptr,unsigned long size,unsigned int flags) nogil:
     global _hipHostAlloc__funptr
     __init_symbol(&_hipHostAlloc__funptr,"hipHostAlloc")
-    return (<hipError_t (*)(void **,int,unsigned int) nogil> _hipHostAlloc__funptr)(ptr,size,flags)
+    return (<hipError_t (*)(void **,unsigned long,unsigned int) nogil> _hipHostAlloc__funptr)(ptr,size,flags)
 
 
 cdef void* _hipHostGetDevicePointer__funptr = NULL
@@ -1838,10 +1836,10 @@ cdef void* _hipHostRegister__funptr = NULL
 # region.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @see hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
-cdef hipError_t hipHostRegister(void * hostPtr,int sizeBytes,unsigned int flags) nogil:
+cdef hipError_t hipHostRegister(void * hostPtr,unsigned long sizeBytes,unsigned int flags) nogil:
     global _hipHostRegister__funptr
     __init_symbol(&_hipHostRegister__funptr,"hipHostRegister")
-    return (<hipError_t (*)(void *,int,unsigned int) nogil> _hipHostRegister__funptr)(hostPtr,sizeBytes,flags)
+    return (<hipError_t (*)(void *,unsigned long,unsigned int) nogil> _hipHostRegister__funptr)(hostPtr,sizeBytes,flags)
 
 
 cdef void* _hipHostUnregister__funptr = NULL
@@ -1868,10 +1866,10 @@ cdef void* _hipMallocPitch__funptr = NULL
 # @return Error code
 # @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
 # hipMalloc3DArray, hipHostMalloc
-cdef hipError_t hipMallocPitch(void ** ptr,int * pitch,int width,int height) nogil:
+cdef hipError_t hipMallocPitch(void ** ptr,unsigned long * pitch,unsigned long width,unsigned long height) nogil:
     global _hipMallocPitch__funptr
     __init_symbol(&_hipMallocPitch__funptr,"hipMallocPitch")
-    return (<hipError_t (*)(void **,int *,int,int) nogil> _hipMallocPitch__funptr)(ptr,pitch,width,height)
+    return (<hipError_t (*)(void **,unsigned long *,unsigned long,unsigned long) nogil> _hipMallocPitch__funptr)(ptr,pitch,width,height)
 
 
 cdef void* _hipMemAllocPitch__funptr = NULL
@@ -1890,10 +1888,10 @@ cdef void* _hipMemAllocPitch__funptr = NULL
 # @return Error code
 # @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
 # hipMalloc3DArray, hipHostMalloc
-cdef hipError_t hipMemAllocPitch(hipDeviceptr_t* dptr,int * pitch,int widthInBytes,int height,unsigned int elementSizeBytes) nogil:
+cdef hipError_t hipMemAllocPitch(void ** dptr,unsigned long * pitch,unsigned long widthInBytes,unsigned long height,unsigned int elementSizeBytes) nogil:
     global _hipMemAllocPitch__funptr
     __init_symbol(&_hipMemAllocPitch__funptr,"hipMemAllocPitch")
-    return (<hipError_t (*)(hipDeviceptr_t*,int *,int,int,unsigned int) nogil> _hipMemAllocPitch__funptr)(dptr,pitch,widthInBytes,height,elementSizeBytes)
+    return (<hipError_t (*)(void **,unsigned long *,unsigned long,unsigned long,unsigned int) nogil> _hipMemAllocPitch__funptr)(dptr,pitch,widthInBytes,height,elementSizeBytes)
 
 
 cdef void* _hipFree__funptr = NULL
@@ -1965,17 +1963,17 @@ cdef void* _hipMemcpy__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpy(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpy(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind) nogil:
     global _hipMemcpy__funptr
     __init_symbol(&_hipMemcpy__funptr,"hipMemcpy")
-    return (<hipError_t (*)(void *,const void *,int,hipMemcpyKind) nogil> _hipMemcpy__funptr)(dst,src,sizeBytes,kind)
+    return (<hipError_t (*)(void *,const void *,unsigned long,hipMemcpyKind) nogil> _hipMemcpy__funptr)(dst,src,sizeBytes,kind)
 
 
 cdef void* _hipMemcpyWithStream__funptr = NULL
-cdef hipError_t hipMemcpyWithStream(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyWithStream(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyWithStream__funptr
     __init_symbol(&_hipMemcpyWithStream__funptr,"hipMemcpyWithStream")
-    return (<hipError_t (*)(void *,const void *,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyWithStream__funptr)(dst,src,sizeBytes,kind,stream)
+    return (<hipError_t (*)(void *,const void *,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyWithStream__funptr)(dst,src,sizeBytes,kind,stream)
 
 
 cdef void* _hipMemcpyHtoD__funptr = NULL
@@ -1991,10 +1989,10 @@ cdef void* _hipMemcpyHtoD__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyHtoD(hipDeviceptr_t dst,void * src,int sizeBytes) nogil:
+cdef hipError_t hipMemcpyHtoD(void * dst,void * src,unsigned long sizeBytes) nogil:
     global _hipMemcpyHtoD__funptr
     __init_symbol(&_hipMemcpyHtoD__funptr,"hipMemcpyHtoD")
-    return (<hipError_t (*)(hipDeviceptr_t,void *,int) nogil> _hipMemcpyHtoD__funptr)(dst,src,sizeBytes)
+    return (<hipError_t (*)(void *,void *,unsigned long) nogil> _hipMemcpyHtoD__funptr)(dst,src,sizeBytes)
 
 
 cdef void* _hipMemcpyDtoH__funptr = NULL
@@ -2010,10 +2008,10 @@ cdef void* _hipMemcpyDtoH__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoH(void * dst,hipDeviceptr_t src,int sizeBytes) nogil:
+cdef hipError_t hipMemcpyDtoH(void * dst,void * src,unsigned long sizeBytes) nogil:
     global _hipMemcpyDtoH__funptr
     __init_symbol(&_hipMemcpyDtoH__funptr,"hipMemcpyDtoH")
-    return (<hipError_t (*)(void *,hipDeviceptr_t,int) nogil> _hipMemcpyDtoH__funptr)(dst,src,sizeBytes)
+    return (<hipError_t (*)(void *,void *,unsigned long) nogil> _hipMemcpyDtoH__funptr)(dst,src,sizeBytes)
 
 
 cdef void* _hipMemcpyDtoD__funptr = NULL
@@ -2029,10 +2027,10 @@ cdef void* _hipMemcpyDtoD__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoD(hipDeviceptr_t dst,hipDeviceptr_t src,int sizeBytes) nogil:
+cdef hipError_t hipMemcpyDtoD(void * dst,void * src,unsigned long sizeBytes) nogil:
     global _hipMemcpyDtoD__funptr
     __init_symbol(&_hipMemcpyDtoD__funptr,"hipMemcpyDtoD")
-    return (<hipError_t (*)(hipDeviceptr_t,hipDeviceptr_t,int) nogil> _hipMemcpyDtoD__funptr)(dst,src,sizeBytes)
+    return (<hipError_t (*)(void *,void *,unsigned long) nogil> _hipMemcpyDtoD__funptr)(dst,src,sizeBytes)
 
 
 cdef void* _hipMemcpyHtoDAsync__funptr = NULL
@@ -2048,10 +2046,10 @@ cdef void* _hipMemcpyHtoDAsync__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyHtoDAsync(hipDeviceptr_t dst,void * src,int sizeBytes,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyHtoDAsync(void * dst,void * src,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemcpyHtoDAsync__funptr
     __init_symbol(&_hipMemcpyHtoDAsync__funptr,"hipMemcpyHtoDAsync")
-    return (<hipError_t (*)(hipDeviceptr_t,void *,int,hipStream_t) nogil> _hipMemcpyHtoDAsync__funptr)(dst,src,sizeBytes,stream)
+    return (<hipError_t (*)(void *,void *,unsigned long,hipStream_t) nogil> _hipMemcpyHtoDAsync__funptr)(dst,src,sizeBytes,stream)
 
 
 cdef void* _hipMemcpyDtoHAsync__funptr = NULL
@@ -2067,10 +2065,10 @@ cdef void* _hipMemcpyDtoHAsync__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoHAsync(void * dst,hipDeviceptr_t src,int sizeBytes,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyDtoHAsync(void * dst,void * src,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemcpyDtoHAsync__funptr
     __init_symbol(&_hipMemcpyDtoHAsync__funptr,"hipMemcpyDtoHAsync")
-    return (<hipError_t (*)(void *,hipDeviceptr_t,int,hipStream_t) nogil> _hipMemcpyDtoHAsync__funptr)(dst,src,sizeBytes,stream)
+    return (<hipError_t (*)(void *,void *,unsigned long,hipStream_t) nogil> _hipMemcpyDtoHAsync__funptr)(dst,src,sizeBytes,stream)
 
 
 cdef void* _hipMemcpyDtoDAsync__funptr = NULL
@@ -2086,10 +2084,10 @@ cdef void* _hipMemcpyDtoDAsync__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoDAsync(hipDeviceptr_t dst,hipDeviceptr_t src,int sizeBytes,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyDtoDAsync(void * dst,void * src,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemcpyDtoDAsync__funptr
     __init_symbol(&_hipMemcpyDtoDAsync__funptr,"hipMemcpyDtoDAsync")
-    return (<hipError_t (*)(hipDeviceptr_t,hipDeviceptr_t,int,hipStream_t) nogil> _hipMemcpyDtoDAsync__funptr)(dst,src,sizeBytes,stream)
+    return (<hipError_t (*)(void *,void *,unsigned long,hipStream_t) nogil> _hipMemcpyDtoDAsync__funptr)(dst,src,sizeBytes,stream)
 
 
 cdef void* _hipModuleGetGlobal__funptr = NULL
@@ -2102,10 +2100,10 @@ cdef void* _hipModuleGetGlobal__funptr = NULL
 # @param[in]   hmod  Module to retrieve global from
 # @param[in]   name  Name of global to retrieve
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
-cdef hipError_t hipModuleGetGlobal(hipDeviceptr_t* dptr,int * bytes,hipModule_t hmod,const char * name) nogil:
+cdef hipError_t hipModuleGetGlobal(void ** dptr,unsigned long * bytes,hipModule_t hmod,const char * name) nogil:
     global _hipModuleGetGlobal__funptr
     __init_symbol(&_hipModuleGetGlobal__funptr,"hipModuleGetGlobal")
-    return (<hipError_t (*)(hipDeviceptr_t*,int *,hipModule_t,const char *) nogil> _hipModuleGetGlobal__funptr)(dptr,bytes,hmod,name)
+    return (<hipError_t (*)(void **,unsigned long *,hipModule_t,const char *) nogil> _hipModuleGetGlobal__funptr)(dptr,bytes,hmod,name)
 
 
 cdef void* _hipGetSymbolAddress__funptr = NULL
@@ -2124,10 +2122,10 @@ cdef void* _hipGetSymbolSize__funptr = NULL
 # @param[in]   symbol  pointer to the device symbole
 # @param[out]  size  pointer to the size
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipGetSymbolSize(int * size,const void * symbol) nogil:
+cdef hipError_t hipGetSymbolSize(unsigned long * size,const void * symbol) nogil:
     global _hipGetSymbolSize__funptr
     __init_symbol(&_hipGetSymbolSize__funptr,"hipGetSymbolSize")
-    return (<hipError_t (*)(int *,const void *) nogil> _hipGetSymbolSize__funptr)(size,symbol)
+    return (<hipError_t (*)(unsigned long *,const void *) nogil> _hipGetSymbolSize__funptr)(size,symbol)
 
 
 cdef void* _hipMemcpyToSymbol__funptr = NULL
@@ -2144,10 +2142,10 @@ cdef void* _hipMemcpyToSymbol__funptr = NULL
 # @param[in]   offset  offset in bytes from start of symbole
 # @param[in]   kind  type of memory transfer
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyToSymbol(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpyToSymbol(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipMemcpyToSymbol__funptr
     __init_symbol(&_hipMemcpyToSymbol__funptr,"hipMemcpyToSymbol")
-    return (<hipError_t (*)(const void *,const void *,int,int,hipMemcpyKind) nogil> _hipMemcpyToSymbol__funptr)(symbol,src,sizeBytes,offset,kind)
+    return (<hipError_t (*)(const void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyToSymbol__funptr)(symbol,src,sizeBytes,offset,kind)
 
 
 cdef void* _hipMemcpyToSymbolAsync__funptr = NULL
@@ -2159,10 +2157,10 @@ cdef void* _hipMemcpyToSymbolAsync__funptr = NULL
 # @param[in]   kind  type of memory transfer
 # @param[in]   stream  stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyToSymbolAsync(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyToSymbolAsync(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyToSymbolAsync__funptr
     __init_symbol(&_hipMemcpyToSymbolAsync__funptr,"hipMemcpyToSymbolAsync")
-    return (<hipError_t (*)(const void *,const void *,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyToSymbolAsync__funptr)(symbol,src,sizeBytes,offset,kind,stream)
+    return (<hipError_t (*)(const void *,const void *,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyToSymbolAsync__funptr)(symbol,src,sizeBytes,offset,kind,stream)
 
 
 cdef void* _hipMemcpyFromSymbol__funptr = NULL
@@ -2173,10 +2171,10 @@ cdef void* _hipMemcpyFromSymbol__funptr = NULL
 # @param[in]   offset  offset in bytes from the start of symbole
 # @param[in]   kind  type of memory transfer
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyFromSymbol(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpyFromSymbol(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipMemcpyFromSymbol__funptr
     __init_symbol(&_hipMemcpyFromSymbol__funptr,"hipMemcpyFromSymbol")
-    return (<hipError_t (*)(void *,const void *,int,int,hipMemcpyKind) nogil> _hipMemcpyFromSymbol__funptr)(dst,symbol,sizeBytes,offset,kind)
+    return (<hipError_t (*)(void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyFromSymbol__funptr)(dst,symbol,sizeBytes,offset,kind)
 
 
 cdef void* _hipMemcpyFromSymbolAsync__funptr = NULL
@@ -2188,10 +2186,10 @@ cdef void* _hipMemcpyFromSymbolAsync__funptr = NULL
 # @param[in]   kind  type of memory transfer
 # @param[in]   stream  stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyFromSymbolAsync(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyFromSymbolAsync(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyFromSymbolAsync__funptr
     __init_symbol(&_hipMemcpyFromSymbolAsync__funptr,"hipMemcpyFromSymbolAsync")
-    return (<hipError_t (*)(void *,const void *,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyFromSymbolAsync__funptr)(dst,symbol,sizeBytes,offset,kind,stream)
+    return (<hipError_t (*)(void *,const void *,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyFromSymbolAsync__funptr)(dst,symbol,sizeBytes,offset,kind,stream)
 
 
 cdef void* _hipMemcpyAsync__funptr = NULL
@@ -2216,10 +2214,10 @@ cdef void* _hipMemcpyAsync__funptr = NULL
 # hipMemcpyFromSymbol, hipMemcpy2DAsync, hipMemcpyToArrayAsync, hipMemcpy2DToArrayAsync,
 # hipMemcpyFromArrayAsync, hipMemcpy2DFromArrayAsync, hipMemcpyToSymbolAsync,
 # hipMemcpyFromSymbolAsync
-cdef hipError_t hipMemcpyAsync(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyAsync(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyAsync__funptr
     __init_symbol(&_hipMemcpyAsync__funptr,"hipMemcpyAsync")
-    return (<hipError_t (*)(void *,const void *,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyAsync__funptr)(dst,src,sizeBytes,kind,stream)
+    return (<hipError_t (*)(void *,const void *,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyAsync__funptr)(dst,src,sizeBytes,kind,stream)
 
 
 cdef void* _hipMemset__funptr = NULL
@@ -2229,10 +2227,10 @@ cdef void* _hipMemset__funptr = NULL
 # @param[in]  constant value to be set
 # @param[in]  sizeBytes Data size in bytes
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemset(void * dst,int value,int sizeBytes) nogil:
+cdef hipError_t hipMemset(void * dst,int value,unsigned long sizeBytes) nogil:
     global _hipMemset__funptr
     __init_symbol(&_hipMemset__funptr,"hipMemset")
-    return (<hipError_t (*)(void *,int,int) nogil> _hipMemset__funptr)(dst,value,sizeBytes)
+    return (<hipError_t (*)(void *,int,unsigned long) nogil> _hipMemset__funptr)(dst,value,sizeBytes)
 
 
 cdef void* _hipMemsetD8__funptr = NULL
@@ -2242,10 +2240,10 @@ cdef void* _hipMemsetD8__funptr = NULL
 # @param[in]  constant value to be set
 # @param[in]  number of values to be set
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD8(hipDeviceptr_t dest,unsigned char value,int count) nogil:
+cdef hipError_t hipMemsetD8(void * dest,unsigned char value,unsigned long count) nogil:
     global _hipMemsetD8__funptr
     __init_symbol(&_hipMemsetD8__funptr,"hipMemsetD8")
-    return (<hipError_t (*)(hipDeviceptr_t,unsigned char,int) nogil> _hipMemsetD8__funptr)(dest,value,count)
+    return (<hipError_t (*)(void *,unsigned char,unsigned long) nogil> _hipMemsetD8__funptr)(dest,value,count)
 
 
 cdef void* _hipMemsetD8Async__funptr = NULL
@@ -2260,10 +2258,10 @@ cdef void* _hipMemsetD8Async__funptr = NULL
 # @param[in]  number of values to be set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD8Async(hipDeviceptr_t dest,unsigned char value,int count,hipStream_t stream) nogil:
+cdef hipError_t hipMemsetD8Async(void * dest,unsigned char value,unsigned long count,hipStream_t stream) nogil:
     global _hipMemsetD8Async__funptr
     __init_symbol(&_hipMemsetD8Async__funptr,"hipMemsetD8Async")
-    return (<hipError_t (*)(hipDeviceptr_t,unsigned char,int,hipStream_t) nogil> _hipMemsetD8Async__funptr)(dest,value,count,stream)
+    return (<hipError_t (*)(void *,unsigned char,unsigned long,hipStream_t) nogil> _hipMemsetD8Async__funptr)(dest,value,count,stream)
 
 
 cdef void* _hipMemsetD16__funptr = NULL
@@ -2273,10 +2271,10 @@ cdef void* _hipMemsetD16__funptr = NULL
 # @param[in]  constant value to be set
 # @param[in]  number of values to be set
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD16(hipDeviceptr_t dest,unsigned short value,int count) nogil:
+cdef hipError_t hipMemsetD16(void * dest,unsigned short value,unsigned long count) nogil:
     global _hipMemsetD16__funptr
     __init_symbol(&_hipMemsetD16__funptr,"hipMemsetD16")
-    return (<hipError_t (*)(hipDeviceptr_t,unsigned short,int) nogil> _hipMemsetD16__funptr)(dest,value,count)
+    return (<hipError_t (*)(void *,unsigned short,unsigned long) nogil> _hipMemsetD16__funptr)(dest,value,count)
 
 
 cdef void* _hipMemsetD16Async__funptr = NULL
@@ -2291,10 +2289,10 @@ cdef void* _hipMemsetD16Async__funptr = NULL
 # @param[in]  number of values to be set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD16Async(hipDeviceptr_t dest,unsigned short value,int count,hipStream_t stream) nogil:
+cdef hipError_t hipMemsetD16Async(void * dest,unsigned short value,unsigned long count,hipStream_t stream) nogil:
     global _hipMemsetD16Async__funptr
     __init_symbol(&_hipMemsetD16Async__funptr,"hipMemsetD16Async")
-    return (<hipError_t (*)(hipDeviceptr_t,unsigned short,int,hipStream_t) nogil> _hipMemsetD16Async__funptr)(dest,value,count,stream)
+    return (<hipError_t (*)(void *,unsigned short,unsigned long,hipStream_t) nogil> _hipMemsetD16Async__funptr)(dest,value,count,stream)
 
 
 cdef void* _hipMemsetD32__funptr = NULL
@@ -2304,10 +2302,10 @@ cdef void* _hipMemsetD32__funptr = NULL
 # @param[in]  constant value to be set
 # @param[in]  number of values to be set
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD32(hipDeviceptr_t dest,int value,int count) nogil:
+cdef hipError_t hipMemsetD32(void * dest,int value,unsigned long count) nogil:
     global _hipMemsetD32__funptr
     __init_symbol(&_hipMemsetD32__funptr,"hipMemsetD32")
-    return (<hipError_t (*)(hipDeviceptr_t,int,int) nogil> _hipMemsetD32__funptr)(dest,value,count)
+    return (<hipError_t (*)(void *,int,unsigned long) nogil> _hipMemsetD32__funptr)(dest,value,count)
 
 
 cdef void* _hipMemsetAsync__funptr = NULL
@@ -2322,10 +2320,10 @@ cdef void* _hipMemsetAsync__funptr = NULL
 # @param[in]  sizeBytes - Size in bytes to set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemsetAsync(void * dst,int value,int sizeBytes,hipStream_t stream) nogil:
+cdef hipError_t hipMemsetAsync(void * dst,int value,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemsetAsync__funptr
     __init_symbol(&_hipMemsetAsync__funptr,"hipMemsetAsync")
-    return (<hipError_t (*)(void *,int,int,hipStream_t) nogil> _hipMemsetAsync__funptr)(dst,value,sizeBytes,stream)
+    return (<hipError_t (*)(void *,int,unsigned long,hipStream_t) nogil> _hipMemsetAsync__funptr)(dst,value,sizeBytes,stream)
 
 
 cdef void* _hipMemsetD32Async__funptr = NULL
@@ -2340,10 +2338,10 @@ cdef void* _hipMemsetD32Async__funptr = NULL
 # @param[in]  count - number of values to be set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemsetD32Async(hipDeviceptr_t dst,int value,int count,hipStream_t stream) nogil:
+cdef hipError_t hipMemsetD32Async(void * dst,int value,unsigned long count,hipStream_t stream) nogil:
     global _hipMemsetD32Async__funptr
     __init_symbol(&_hipMemsetD32Async__funptr,"hipMemsetD32Async")
-    return (<hipError_t (*)(hipDeviceptr_t,int,int,hipStream_t) nogil> _hipMemsetD32Async__funptr)(dst,value,count,stream)
+    return (<hipError_t (*)(void *,int,unsigned long,hipStream_t) nogil> _hipMemsetD32Async__funptr)(dst,value,count,stream)
 
 
 cdef void* _hipMemset2D__funptr = NULL
@@ -2354,10 +2352,10 @@ cdef void* _hipMemset2D__funptr = NULL
 # @param[in]  width
 # @param[in]  height
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemset2D(void * dst,int pitch,int value,int width,int height) nogil:
+cdef hipError_t hipMemset2D(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height) nogil:
     global _hipMemset2D__funptr
     __init_symbol(&_hipMemset2D__funptr,"hipMemset2D")
-    return (<hipError_t (*)(void *,int,int,int,int) nogil> _hipMemset2D__funptr)(dst,pitch,value,width,height)
+    return (<hipError_t (*)(void *,unsigned long,int,unsigned long,unsigned long) nogil> _hipMemset2D__funptr)(dst,pitch,value,width,height)
 
 
 cdef void* _hipMemset2DAsync__funptr = NULL
@@ -2369,10 +2367,10 @@ cdef void* _hipMemset2DAsync__funptr = NULL
 # @param[in]  height
 # @param[in]  stream
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemset2DAsync(void * dst,int pitch,int value,int width,int height,hipStream_t stream) nogil:
+cdef hipError_t hipMemset2DAsync(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height,hipStream_t stream) nogil:
     global _hipMemset2DAsync__funptr
     __init_symbol(&_hipMemset2DAsync__funptr,"hipMemset2DAsync")
-    return (<hipError_t (*)(void *,int,int,int,int,hipStream_t) nogil> _hipMemset2DAsync__funptr)(dst,pitch,value,width,height,stream)
+    return (<hipError_t (*)(void *,unsigned long,int,unsigned long,unsigned long,hipStream_t) nogil> _hipMemset2DAsync__funptr)(dst,pitch,value,width,height,stream)
 
 
 cdef void* _hipMemset3D__funptr = NULL
@@ -2407,17 +2405,17 @@ cdef void* _hipMemGetInfo__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @warning On HCC, the free memory only accounts for memory allocated by this process and may be
 # optimistic.
-cdef hipError_t hipMemGetInfo(int * free,int * total) nogil:
+cdef hipError_t hipMemGetInfo(unsigned long * free,unsigned long * total) nogil:
     global _hipMemGetInfo__funptr
     __init_symbol(&_hipMemGetInfo__funptr,"hipMemGetInfo")
-    return (<hipError_t (*)(int *,int *) nogil> _hipMemGetInfo__funptr)(free,total)
+    return (<hipError_t (*)(unsigned long *,unsigned long *) nogil> _hipMemGetInfo__funptr)(free,total)
 
 
 cdef void* _hipMemPtrGetInfo__funptr = NULL
-cdef hipError_t hipMemPtrGetInfo(void * ptr,int * size) nogil:
+cdef hipError_t hipMemPtrGetInfo(void * ptr,unsigned long * size) nogil:
     global _hipMemPtrGetInfo__funptr
     __init_symbol(&_hipMemPtrGetInfo__funptr,"hipMemPtrGetInfo")
-    return (<hipError_t (*)(void *,int *) nogil> _hipMemPtrGetInfo__funptr)(ptr,size)
+    return (<hipError_t (*)(void *,unsigned long *) nogil> _hipMemPtrGetInfo__funptr)(ptr,size)
 
 
 cdef void* _hipMallocArray__funptr = NULL
@@ -2429,10 +2427,10 @@ cdef void* _hipMallocArray__funptr = NULL
 # @param[in]   flags  Requested properties of allocated array
 # @return      #hipSuccess, #hipErrorOutOfMemory
 # @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
-cdef hipError_t hipMallocArray(hipArray ** array,hipChannelFormatDesc * desc,int width,int height,unsigned int flags) nogil:
+cdef hipError_t hipMallocArray(hipArray ** array,hipChannelFormatDesc * desc,unsigned long width,unsigned long height,unsigned int flags) nogil:
     global _hipMallocArray__funptr
     __init_symbol(&_hipMallocArray__funptr,"hipMallocArray")
-    return (<hipError_t (*)(hipArray **,hipChannelFormatDesc *,int,int,unsigned int) nogil> _hipMallocArray__funptr)(array,desc,width,height,flags)
+    return (<hipError_t (*)(hipArray **,hipChannelFormatDesc *,unsigned long,unsigned long,unsigned int) nogil> _hipMallocArray__funptr)(array,desc,width,height,flags)
 
 
 cdef void* _hipArrayCreate__funptr = NULL
@@ -2537,10 +2535,10 @@ cdef void* _hipMemcpy2D__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2D(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpy2D(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2D__funptr
     __init_symbol(&_hipMemcpy2D__funptr,"hipMemcpy2D")
-    return (<hipError_t (*)(void *,int,const void *,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2D__funptr)(dst,dpitch,src,spitch,width,height,kind)
+    return (<hipError_t (*)(void *,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2D__funptr)(dst,dpitch,src,spitch,width,height,kind)
 
 
 cdef void* _hipMemcpyParam2D__funptr = NULL
@@ -2584,10 +2582,10 @@ cdef void* _hipMemcpy2DAsync__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DAsync(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpy2DAsync(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DAsync__funptr
     __init_symbol(&_hipMemcpy2DAsync__funptr,"hipMemcpy2DAsync")
-    return (<hipError_t (*)(void *,int,const void *,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DAsync__funptr)(dst,dpitch,src,spitch,width,height,kind,stream)
+    return (<hipError_t (*)(void *,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DAsync__funptr)(dst,dpitch,src,spitch,width,height,kind,stream)
 
 
 cdef void* _hipMemcpy2DToArray__funptr = NULL
@@ -2604,10 +2602,10 @@ cdef void* _hipMemcpy2DToArray__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DToArray(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpy2DToArray(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2DToArray__funptr
     __init_symbol(&_hipMemcpy2DToArray__funptr,"hipMemcpy2DToArray")
-    return (<hipError_t (*)(hipArray *,int,int,const void *,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2DToArray__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind)
+    return (<hipError_t (*)(hipArray *,unsigned long,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2DToArray__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind)
 
 
 cdef void* _hipMemcpy2DToArrayAsync__funptr = NULL
@@ -2625,10 +2623,10 @@ cdef void* _hipMemcpy2DToArrayAsync__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DToArrayAsync(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpy2DToArrayAsync(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DToArrayAsync__funptr
     __init_symbol(&_hipMemcpy2DToArrayAsync__funptr,"hipMemcpy2DToArrayAsync")
-    return (<hipError_t (*)(hipArray *,int,int,const void *,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DToArrayAsync__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind,stream)
+    return (<hipError_t (*)(hipArray *,unsigned long,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DToArrayAsync__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind,stream)
 
 
 cdef void* _hipMemcpyToArray__funptr = NULL
@@ -2643,10 +2641,10 @@ cdef void* _hipMemcpyToArray__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyToArray(hipArray * dst,int wOffset,int hOffset,const void * src,int count,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpyToArray(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipMemcpyToArray__funptr
     __init_symbol(&_hipMemcpyToArray__funptr,"hipMemcpyToArray")
-    return (<hipError_t (*)(hipArray *,int,int,const void *,int,hipMemcpyKind) nogil> _hipMemcpyToArray__funptr)(dst,wOffset,hOffset,src,count,kind)
+    return (<hipError_t (*)(hipArray *,unsigned long,unsigned long,const void *,unsigned long,hipMemcpyKind) nogil> _hipMemcpyToArray__funptr)(dst,wOffset,hOffset,src,count,kind)
 
 
 cdef void* _hipMemcpyFromArray__funptr = NULL
@@ -2661,10 +2659,10 @@ cdef void* _hipMemcpyFromArray__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyFromArray(void * dst,hipArray_const_t srcArray,int wOffset,int hOffset,int count,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpyFromArray(void * dst,hipArray_const_t srcArray,unsigned long wOffset,unsigned long hOffset,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipMemcpyFromArray__funptr
     __init_symbol(&_hipMemcpyFromArray__funptr,"hipMemcpyFromArray")
-    return (<hipError_t (*)(void *,hipArray_const_t,int,int,int,hipMemcpyKind) nogil> _hipMemcpyFromArray__funptr)(dst,srcArray,wOffset,hOffset,count,kind)
+    return (<hipError_t (*)(void *,hipArray_const_t,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyFromArray__funptr)(dst,srcArray,wOffset,hOffset,count,kind)
 
 
 cdef void* _hipMemcpy2DFromArray__funptr = NULL
@@ -2681,10 +2679,10 @@ cdef void* _hipMemcpy2DFromArray__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DFromArray(void * dst,int dpitch,hipArray_const_t src,int wOffset,int hOffset,int width,int height,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpy2DFromArray(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffset,unsigned long hOffset,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2DFromArray__funptr
     __init_symbol(&_hipMemcpy2DFromArray__funptr,"hipMemcpy2DFromArray")
-    return (<hipError_t (*)(void *,int,hipArray_const_t,int,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2DFromArray__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind)
+    return (<hipError_t (*)(void *,unsigned long,hipArray_const_t,unsigned long,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2DFromArray__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind)
 
 
 cdef void* _hipMemcpy2DFromArrayAsync__funptr = NULL
@@ -2702,10 +2700,10 @@ cdef void* _hipMemcpy2DFromArrayAsync__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DFromArrayAsync(void * dst,int dpitch,hipArray_const_t src,int wOffset,int hOffset,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpy2DFromArrayAsync(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffset,unsigned long hOffset,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DFromArrayAsync__funptr
     __init_symbol(&_hipMemcpy2DFromArrayAsync__funptr,"hipMemcpy2DFromArrayAsync")
-    return (<hipError_t (*)(void *,int,hipArray_const_t,int,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DFromArrayAsync__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind,stream)
+    return (<hipError_t (*)(void *,unsigned long,hipArray_const_t,unsigned long,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DFromArrayAsync__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind,stream)
 
 
 cdef void* _hipMemcpyAtoH__funptr = NULL
@@ -2718,10 +2716,10 @@ cdef void* _hipMemcpyAtoH__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyAtoH(void * dst,hipArray * srcArray,int srcOffset,int count) nogil:
+cdef hipError_t hipMemcpyAtoH(void * dst,hipArray * srcArray,unsigned long srcOffset,unsigned long count) nogil:
     global _hipMemcpyAtoH__funptr
     __init_symbol(&_hipMemcpyAtoH__funptr,"hipMemcpyAtoH")
-    return (<hipError_t (*)(void *,hipArray *,int,int) nogil> _hipMemcpyAtoH__funptr)(dst,srcArray,srcOffset,count)
+    return (<hipError_t (*)(void *,hipArray *,unsigned long,unsigned long) nogil> _hipMemcpyAtoH__funptr)(dst,srcArray,srcOffset,count)
 
 
 cdef void* _hipMemcpyHtoA__funptr = NULL
@@ -2734,10 +2732,10 @@ cdef void* _hipMemcpyHtoA__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyHtoA(hipArray * dstArray,int dstOffset,const void * srcHost,int count) nogil:
+cdef hipError_t hipMemcpyHtoA(hipArray * dstArray,unsigned long dstOffset,const void * srcHost,unsigned long count) nogil:
     global _hipMemcpyHtoA__funptr
     __init_symbol(&_hipMemcpyHtoA__funptr,"hipMemcpyHtoA")
-    return (<hipError_t (*)(hipArray *,int,const void *,int) nogil> _hipMemcpyHtoA__funptr)(dstArray,dstOffset,srcHost,count)
+    return (<hipError_t (*)(hipArray *,unsigned long,const void *,unsigned long) nogil> _hipMemcpyHtoA__funptr)(dstArray,dstOffset,srcHost,count)
 
 
 cdef void* _hipMemcpy3D__funptr = NULL
@@ -2856,10 +2854,10 @@ cdef void* _hipMemGetAddressRange__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidDevicePointer
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipMemGetAddressRange(hipDeviceptr_t* pbase,int * psize,hipDeviceptr_t dptr) nogil:
+cdef hipError_t hipMemGetAddressRange(void ** pbase,unsigned long * psize,void * dptr) nogil:
     global _hipMemGetAddressRange__funptr
     __init_symbol(&_hipMemGetAddressRange__funptr,"hipMemGetAddressRange")
-    return (<hipError_t (*)(hipDeviceptr_t*,int *,hipDeviceptr_t) nogil> _hipMemGetAddressRange__funptr)(pbase,psize,dptr)
+    return (<hipError_t (*)(void **,unsigned long *,void *) nogil> _hipMemGetAddressRange__funptr)(pbase,psize,dptr)
 
 
 cdef void* _hipMemcpyPeer__funptr = NULL
@@ -2870,10 +2868,10 @@ cdef void* _hipMemcpyPeer__funptr = NULL
 # @param [in] srcDeviceId - Source device
 # @param [in] sizeBytes - Size of memory copy in bytes
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
-cdef hipError_t hipMemcpyPeer(void * dst,int dstDeviceId,const void * src,int srcDeviceId,int sizeBytes) nogil:
+cdef hipError_t hipMemcpyPeer(void * dst,int dstDeviceId,const void * src,int srcDeviceId,unsigned long sizeBytes) nogil:
     global _hipMemcpyPeer__funptr
     __init_symbol(&_hipMemcpyPeer__funptr,"hipMemcpyPeer")
-    return (<hipError_t (*)(void *,int,const void *,int,int) nogil> _hipMemcpyPeer__funptr)(dst,dstDeviceId,src,srcDeviceId,sizeBytes)
+    return (<hipError_t (*)(void *,int,const void *,int,unsigned long) nogil> _hipMemcpyPeer__funptr)(dst,dstDeviceId,src,srcDeviceId,sizeBytes)
 
 
 cdef void* _hipMemcpyPeerAsync__funptr = NULL
@@ -2885,10 +2883,10 @@ cdef void* _hipMemcpyPeerAsync__funptr = NULL
 # @param [in] sizeBytes - Size of memory copy in bytes
 # @param [in] stream - Stream identifier
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
-cdef hipError_t hipMemcpyPeerAsync(void * dst,int dstDeviceId,const void * src,int srcDevice,int sizeBytes,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyPeerAsync(void * dst,int dstDeviceId,const void * src,int srcDevice,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemcpyPeerAsync__funptr
     __init_symbol(&_hipMemcpyPeerAsync__funptr,"hipMemcpyPeerAsync")
-    return (<hipError_t (*)(void *,int,const void *,int,int,hipStream_t) nogil> _hipMemcpyPeerAsync__funptr)(dst,dstDeviceId,src,srcDevice,sizeBytes,stream)
+    return (<hipError_t (*)(void *,int,const void *,int,unsigned long,hipStream_t) nogil> _hipMemcpyPeerAsync__funptr)(dst,dstDeviceId,src,srcDevice,sizeBytes,stream)
 
 
 cdef void* _hipCtxCreate__funptr = NULL
@@ -2909,10 +2907,10 @@ cdef void* _hipCtxCreate__funptr = NULL
 # @return #hipSuccess
 # @see hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
 # hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipCtxCreate(hipCtx_t* ctx,unsigned int flags,hipDevice_t device) nogil:
+cdef hipError_t hipCtxCreate(hipCtx_t* ctx,unsigned int flags,int device) nogil:
     global _hipCtxCreate__funptr
     __init_symbol(&_hipCtxCreate__funptr,"hipCtxCreate")
-    return (<hipError_t (*)(hipCtx_t*,unsigned int,hipDevice_t) nogil> _hipCtxCreate__funptr)(ctx,flags,device)
+    return (<hipError_t (*)(hipCtx_t*,unsigned int,int) nogil> _hipCtxCreate__funptr)(ctx,flags,device)
 
 
 cdef void* _hipCtxDestroy__funptr = NULL
@@ -2981,10 +2979,10 @@ cdef void* _hipCtxGetDevice__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidContext
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
-cdef hipError_t hipCtxGetDevice(hipDevice_t * device) nogil:
+cdef hipError_t hipCtxGetDevice(int * device) nogil:
     global _hipCtxGetDevice__funptr
     __init_symbol(&_hipCtxGetDevice__funptr,"hipCtxGetDevice")
-    return (<hipError_t (*)(hipDevice_t *) nogil> _hipCtxGetDevice__funptr)(device)
+    return (<hipError_t (*)(int *) nogil> _hipCtxGetDevice__funptr)(device)
 
 
 cdef void* _hipCtxGetApiVersion__funptr = NULL
@@ -3131,10 +3129,10 @@ cdef void* _hipDevicePrimaryCtxGetState__funptr = NULL
 # @returns #hipSuccess
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxGetState(hipDevice_t dev,unsigned int * flags,int * active) nogil:
+cdef hipError_t hipDevicePrimaryCtxGetState(int dev,unsigned int * flags,int * active) nogil:
     global _hipDevicePrimaryCtxGetState__funptr
     __init_symbol(&_hipDevicePrimaryCtxGetState__funptr,"hipDevicePrimaryCtxGetState")
-    return (<hipError_t (*)(hipDevice_t,unsigned int *,int *) nogil> _hipDevicePrimaryCtxGetState__funptr)(dev,flags,active)
+    return (<hipError_t (*)(int,unsigned int *,int *) nogil> _hipDevicePrimaryCtxGetState__funptr)(dev,flags,active)
 
 
 cdef void* _hipDevicePrimaryCtxRelease__funptr = NULL
@@ -3145,10 +3143,10 @@ cdef void* _hipDevicePrimaryCtxRelease__funptr = NULL
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 # @warning This function return #hipSuccess though doesn't release the primaryCtx by design on
 # HIP/HCC path.
-cdef hipError_t hipDevicePrimaryCtxRelease(hipDevice_t dev) nogil:
+cdef hipError_t hipDevicePrimaryCtxRelease(int dev) nogil:
     global _hipDevicePrimaryCtxRelease__funptr
     __init_symbol(&_hipDevicePrimaryCtxRelease__funptr,"hipDevicePrimaryCtxRelease")
-    return (<hipError_t (*)(hipDevice_t) nogil> _hipDevicePrimaryCtxRelease__funptr)(dev)
+    return (<hipError_t (*)(int) nogil> _hipDevicePrimaryCtxRelease__funptr)(dev)
 
 
 cdef void* _hipDevicePrimaryCtxRetain__funptr = NULL
@@ -3158,10 +3156,10 @@ cdef void* _hipDevicePrimaryCtxRetain__funptr = NULL
 # @returns #hipSuccess
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxRetain(hipCtx_t* pctx,hipDevice_t dev) nogil:
+cdef hipError_t hipDevicePrimaryCtxRetain(hipCtx_t* pctx,int dev) nogil:
     global _hipDevicePrimaryCtxRetain__funptr
     __init_symbol(&_hipDevicePrimaryCtxRetain__funptr,"hipDevicePrimaryCtxRetain")
-    return (<hipError_t (*)(hipCtx_t*,hipDevice_t) nogil> _hipDevicePrimaryCtxRetain__funptr)(pctx,dev)
+    return (<hipError_t (*)(hipCtx_t*,int) nogil> _hipDevicePrimaryCtxRetain__funptr)(pctx,dev)
 
 
 cdef void* _hipDevicePrimaryCtxReset__funptr = NULL
@@ -3170,10 +3168,10 @@ cdef void* _hipDevicePrimaryCtxReset__funptr = NULL
 # @returns #hipSuccess
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxReset(hipDevice_t dev) nogil:
+cdef hipError_t hipDevicePrimaryCtxReset(int dev) nogil:
     global _hipDevicePrimaryCtxReset__funptr
     __init_symbol(&_hipDevicePrimaryCtxReset__funptr,"hipDevicePrimaryCtxReset")
-    return (<hipError_t (*)(hipDevice_t) nogil> _hipDevicePrimaryCtxReset__funptr)(dev)
+    return (<hipError_t (*)(int) nogil> _hipDevicePrimaryCtxReset__funptr)(dev)
 
 
 cdef void* _hipDevicePrimaryCtxSetFlags__funptr = NULL
@@ -3183,10 +3181,10 @@ cdef void* _hipDevicePrimaryCtxSetFlags__funptr = NULL
 # @returns #hipSuccess, #hipErrorContextAlreadyInUse
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxSetFlags(hipDevice_t dev,unsigned int flags) nogil:
+cdef hipError_t hipDevicePrimaryCtxSetFlags(int dev,unsigned int flags) nogil:
     global _hipDevicePrimaryCtxSetFlags__funptr
     __init_symbol(&_hipDevicePrimaryCtxSetFlags__funptr,"hipDevicePrimaryCtxSetFlags")
-    return (<hipError_t (*)(hipDevice_t,unsigned int) nogil> _hipDevicePrimaryCtxSetFlags__funptr)(dev,flags)
+    return (<hipError_t (*)(int,unsigned int) nogil> _hipDevicePrimaryCtxSetFlags__funptr)(dev,flags)
 
 
 cdef void* _hipModuleLoad__funptr = NULL
@@ -3381,10 +3379,10 @@ cdef void* _hipModuleOccupancyMaxPotentialBlockSize__funptr = NULL
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-cdef hipError_t hipModuleOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,hipFunction_t f,int dynSharedMemPerBlk,int blockSizeLimit) nogil:
+cdef hipError_t hipModuleOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,hipFunction_t f,unsigned long dynSharedMemPerBlk,int blockSizeLimit) nogil:
     global _hipModuleOccupancyMaxPotentialBlockSize__funptr
     __init_symbol(&_hipModuleOccupancyMaxPotentialBlockSize__funptr,"hipModuleOccupancyMaxPotentialBlockSize")
-    return (<hipError_t (*)(int *,int *,hipFunction_t,int,int) nogil> _hipModuleOccupancyMaxPotentialBlockSize__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit)
+    return (<hipError_t (*)(int *,int *,hipFunction_t,unsigned long,int) nogil> _hipModuleOccupancyMaxPotentialBlockSize__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit)
 
 
 cdef void* _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr = NULL
@@ -3398,10 +3396,10 @@ cdef void* _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr = NULL
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-cdef hipError_t hipModuleOccupancyMaxPotentialBlockSizeWithFlags(int * gridSize,int * blockSize,hipFunction_t f,int dynSharedMemPerBlk,int blockSizeLimit,unsigned int flags) nogil:
+cdef hipError_t hipModuleOccupancyMaxPotentialBlockSizeWithFlags(int * gridSize,int * blockSize,hipFunction_t f,unsigned long dynSharedMemPerBlk,int blockSizeLimit,unsigned int flags) nogil:
     global _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr
     __init_symbol(&_hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr,"hipModuleOccupancyMaxPotentialBlockSizeWithFlags")
-    return (<hipError_t (*)(int *,int *,hipFunction_t,int,int,unsigned int) nogil> _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit,flags)
+    return (<hipError_t (*)(int *,int *,hipFunction_t,unsigned long,int,unsigned int) nogil> _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit,flags)
 
 
 cdef void* _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr = NULL
@@ -3410,10 +3408,10 @@ cdef void* _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr = NULL
 # @param [in]  func             Kernel function (hipFunction) for which occupancy is calulated
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
-cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,hipFunction_t f,int blockSize,int dynSharedMemPerBlk) nogil:
+cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,hipFunction_t f,int blockSize,unsigned long dynSharedMemPerBlk) nogil:
     global _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr
     __init_symbol(&_hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr,"hipModuleOccupancyMaxActiveBlocksPerMultiprocessor")
-    return (<hipError_t (*)(int *,hipFunction_t,int,int) nogil> _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk)
+    return (<hipError_t (*)(int *,hipFunction_t,int,unsigned long) nogil> _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk)
 
 
 cdef void* _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr = NULL
@@ -3423,10 +3421,10 @@ cdef void* _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr 
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
 # @param [in]  flags            Extra flags for occupancy calculation (only default supported)
-cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,hipFunction_t f,int blockSize,int dynSharedMemPerBlk,unsigned int flags) nogil:
+cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,hipFunction_t f,int blockSize,unsigned long dynSharedMemPerBlk,unsigned int flags) nogil:
     global _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr
     __init_symbol(&_hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr,"hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags")
-    return (<hipError_t (*)(int *,hipFunction_t,int,int,unsigned int) nogil> _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk,flags)
+    return (<hipError_t (*)(int *,hipFunction_t,int,unsigned long,unsigned int) nogil> _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk,flags)
 
 
 cdef void* _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr = NULL
@@ -3435,10 +3433,10 @@ cdef void* _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr = NULL
 # @param [in]  func             Kernel function for which occupancy is calulated
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
-cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,const void * f,int blockSize,int dynSharedMemPerBlk) nogil:
+cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,const void * f,int blockSize,unsigned long dynSharedMemPerBlk) nogil:
     global _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr
     __init_symbol(&_hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr,"hipOccupancyMaxActiveBlocksPerMultiprocessor")
-    return (<hipError_t (*)(int *,const void *,int,int) nogil> _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk)
+    return (<hipError_t (*)(int *,const void *,int,unsigned long) nogil> _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk)
 
 
 cdef void* _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr = NULL
@@ -3448,10 +3446,10 @@ cdef void* _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr = NULL
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
 # @param [in]  flags            Extra flags for occupancy calculation (currently ignored)
-cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,const void * f,int blockSize,int dynSharedMemPerBlk,unsigned int flags) nogil:
+cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,const void * f,int blockSize,unsigned long dynSharedMemPerBlk,unsigned int flags) nogil:
     global _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr
     __init_symbol(&_hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr,"hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags")
-    return (<hipError_t (*)(int *,const void *,int,int,unsigned int) nogil> _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk,flags)
+    return (<hipError_t (*)(int *,const void *,int,unsigned long,unsigned int) nogil> _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk,flags)
 
 
 cdef void* _hipOccupancyMaxPotentialBlockSize__funptr = NULL
@@ -3464,10 +3462,10 @@ cdef void* _hipOccupancyMaxPotentialBlockSize__funptr = NULL
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-cdef hipError_t hipOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,const void * f,int dynSharedMemPerBlk,int blockSizeLimit) nogil:
+cdef hipError_t hipOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,const void * f,unsigned long dynSharedMemPerBlk,int blockSizeLimit) nogil:
     global _hipOccupancyMaxPotentialBlockSize__funptr
     __init_symbol(&_hipOccupancyMaxPotentialBlockSize__funptr,"hipOccupancyMaxPotentialBlockSize")
-    return (<hipError_t (*)(int *,int *,const void *,int,int) nogil> _hipOccupancyMaxPotentialBlockSize__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit)
+    return (<hipError_t (*)(int *,int *,const void *,unsigned long,int) nogil> _hipOccupancyMaxPotentialBlockSize__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit)
 
 
 cdef void* _hipProfilerStart__funptr = NULL
@@ -3507,10 +3505,10 @@ cdef void* _hipConfigureCall__funptr = NULL
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
-cdef hipError_t hipConfigureCall(dim3 gridDim,dim3 blockDim,int sharedMem,hipStream_t stream) nogil:
+cdef hipError_t hipConfigureCall(dim3 gridDim,dim3 blockDim,unsigned long sharedMem,hipStream_t stream) nogil:
     global _hipConfigureCall__funptr
     __init_symbol(&_hipConfigureCall__funptr,"hipConfigureCall")
-    return (<hipError_t (*)(dim3,dim3,int,hipStream_t) nogil> _hipConfigureCall__funptr)(gridDim,blockDim,sharedMem,stream)
+    return (<hipError_t (*)(dim3,dim3,unsigned long,hipStream_t) nogil> _hipConfigureCall__funptr)(gridDim,blockDim,sharedMem,stream)
 
 
 cdef void* _hipSetupArgument__funptr = NULL
@@ -3519,10 +3517,10 @@ cdef void* _hipSetupArgument__funptr = NULL
 # @param [in] arg    Pointer the argument in host memory.
 # @param [in] size   Size of the argument.
 # @param [in] offset Offset of the argument on the argument stack.
-cdef hipError_t hipSetupArgument(const void * arg,int size,int offset) nogil:
+cdef hipError_t hipSetupArgument(const void * arg,unsigned long size,unsigned long offset) nogil:
     global _hipSetupArgument__funptr
     __init_symbol(&_hipSetupArgument__funptr,"hipSetupArgument")
-    return (<hipError_t (*)(const void *,int,int) nogil> _hipSetupArgument__funptr)(arg,size,offset)
+    return (<hipError_t (*)(const void *,unsigned long,unsigned long) nogil> _hipSetupArgument__funptr)(arg,size,offset)
 
 
 cdef void* _hipLaunchByPtr__funptr = NULL
@@ -3546,10 +3544,10 @@ cdef void* _hipLaunchKernel__funptr = NULL
 # @param [in] stream - Stream where the kernel should be dispatched.  May be 0, in which case th
 # default stream is used with associated synchronization rules.
 # @returns #hipSuccess, #hipErrorInvalidValue, hipInvalidDevice
-cdef hipError_t hipLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,int sharedMemBytes,hipStream_t stream) nogil:
+cdef hipError_t hipLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,unsigned long sharedMemBytes,hipStream_t stream) nogil:
     global _hipLaunchKernel__funptr
     __init_symbol(&_hipLaunchKernel__funptr,"hipLaunchKernel")
-    return (<hipError_t (*)(const void *,dim3,dim3,void **,int,hipStream_t) nogil> _hipLaunchKernel__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream)
+    return (<hipError_t (*)(const void *,dim3,dim3,void **,unsigned long,hipStream_t) nogil> _hipLaunchKernel__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream)
 
 
 cdef void* _hipLaunchHostFunc__funptr = NULL
@@ -3594,10 +3592,10 @@ cdef void* _hipExtLaunchKernel__funptr = NULL
 # @param [in] flags. The value of hipExtAnyOrderLaunch, signifies if kernel can be
 # launched in any order.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
-cdef hipError_t hipExtLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,int sharedMemBytes,hipStream_t stream,hipEvent_t startEvent,hipEvent_t stopEvent,int flags) nogil:
+cdef hipError_t hipExtLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,unsigned long sharedMemBytes,hipStream_t stream,hipEvent_t startEvent,hipEvent_t stopEvent,int flags) nogil:
     global _hipExtLaunchKernel__funptr
     __init_symbol(&_hipExtLaunchKernel__funptr,"hipExtLaunchKernel")
-    return (<hipError_t (*)(const void *,dim3,dim3,void **,int,hipStream_t,hipEvent_t,hipEvent_t,int) nogil> _hipExtLaunchKernel__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream,startEvent,stopEvent,flags)
+    return (<hipError_t (*)(const void *,dim3,dim3,void **,unsigned long,hipStream_t,hipEvent_t,hipEvent_t,int) nogil> _hipExtLaunchKernel__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream,startEvent,stopEvent,flags)
 
 
 cdef void* _hipBindTextureToMipmappedArray__funptr = NULL
@@ -3788,17 +3786,17 @@ cdef hipError_t hipTexRefSetFormat(textureReference * texRef,hipArray_Format fmt
 
 
 cdef void* _hipBindTexture__funptr = NULL
-cdef hipError_t hipBindTexture(int * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,int size) nogil:
+cdef hipError_t hipBindTexture(unsigned long * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,unsigned long size) nogil:
     global _hipBindTexture__funptr
     __init_symbol(&_hipBindTexture__funptr,"hipBindTexture")
-    return (<hipError_t (*)(int *,textureReference *,const void *,hipChannelFormatDesc *,int) nogil> _hipBindTexture__funptr)(offset,tex,devPtr,desc,size)
+    return (<hipError_t (*)(unsigned long *,textureReference *,const void *,hipChannelFormatDesc *,unsigned long) nogil> _hipBindTexture__funptr)(offset,tex,devPtr,desc,size)
 
 
 cdef void* _hipBindTexture2D__funptr = NULL
-cdef hipError_t hipBindTexture2D(int * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,int width,int height,int pitch) nogil:
+cdef hipError_t hipBindTexture2D(unsigned long * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,unsigned long width,unsigned long height,unsigned long pitch) nogil:
     global _hipBindTexture2D__funptr
     __init_symbol(&_hipBindTexture2D__funptr,"hipBindTexture2D")
-    return (<hipError_t (*)(int *,textureReference *,const void *,hipChannelFormatDesc *,int,int,int) nogil> _hipBindTexture2D__funptr)(offset,tex,devPtr,desc,width,height,pitch)
+    return (<hipError_t (*)(unsigned long *,textureReference *,const void *,hipChannelFormatDesc *,unsigned long,unsigned long,unsigned long) nogil> _hipBindTexture2D__funptr)(offset,tex,devPtr,desc,width,height,pitch)
 
 
 cdef void* _hipBindTextureToArray__funptr = NULL
@@ -3809,10 +3807,10 @@ cdef hipError_t hipBindTextureToArray(textureReference * tex,hipArray_const_t ar
 
 
 cdef void* _hipGetTextureAlignmentOffset__funptr = NULL
-cdef hipError_t hipGetTextureAlignmentOffset(int * offset,textureReference * texref) nogil:
+cdef hipError_t hipGetTextureAlignmentOffset(unsigned long * offset,textureReference * texref) nogil:
     global _hipGetTextureAlignmentOffset__funptr
     __init_symbol(&_hipGetTextureAlignmentOffset__funptr,"hipGetTextureAlignmentOffset")
-    return (<hipError_t (*)(int *,textureReference *) nogil> _hipGetTextureAlignmentOffset__funptr)(offset,texref)
+    return (<hipError_t (*)(unsigned long *,textureReference *) nogil> _hipGetTextureAlignmentOffset__funptr)(offset,texref)
 
 
 cdef void* _hipUnbindTexture__funptr = NULL
@@ -3823,10 +3821,10 @@ cdef hipError_t hipUnbindTexture(textureReference * tex) nogil:
 
 
 cdef void* _hipTexRefGetAddress__funptr = NULL
-cdef hipError_t hipTexRefGetAddress(hipDeviceptr_t* dev_ptr,textureReference * texRef) nogil:
+cdef hipError_t hipTexRefGetAddress(void ** dev_ptr,textureReference * texRef) nogil:
     global _hipTexRefGetAddress__funptr
     __init_symbol(&_hipTexRefGetAddress__funptr,"hipTexRefGetAddress")
-    return (<hipError_t (*)(hipDeviceptr_t*,textureReference *) nogil> _hipTexRefGetAddress__funptr)(dev_ptr,texRef)
+    return (<hipError_t (*)(void **,textureReference *) nogil> _hipTexRefGetAddress__funptr)(dev_ptr,texRef)
 
 
 cdef void* _hipTexRefGetAddressMode__funptr = NULL
@@ -3893,17 +3891,17 @@ cdef hipError_t hipTexRefGetMipMappedArray(hipMipmappedArray_t* pArray,textureRe
 
 
 cdef void* _hipTexRefSetAddress__funptr = NULL
-cdef hipError_t hipTexRefSetAddress(int * ByteOffset,textureReference * texRef,hipDeviceptr_t dptr,int bytes) nogil:
+cdef hipError_t hipTexRefSetAddress(unsigned long * ByteOffset,textureReference * texRef,void * dptr,unsigned long bytes) nogil:
     global _hipTexRefSetAddress__funptr
     __init_symbol(&_hipTexRefSetAddress__funptr,"hipTexRefSetAddress")
-    return (<hipError_t (*)(int *,textureReference *,hipDeviceptr_t,int) nogil> _hipTexRefSetAddress__funptr)(ByteOffset,texRef,dptr,bytes)
+    return (<hipError_t (*)(unsigned long *,textureReference *,void *,unsigned long) nogil> _hipTexRefSetAddress__funptr)(ByteOffset,texRef,dptr,bytes)
 
 
 cdef void* _hipTexRefSetAddress2D__funptr = NULL
-cdef hipError_t hipTexRefSetAddress2D(textureReference * texRef,HIP_ARRAY_DESCRIPTOR * desc,hipDeviceptr_t dptr,int Pitch) nogil:
+cdef hipError_t hipTexRefSetAddress2D(textureReference * texRef,HIP_ARRAY_DESCRIPTOR * desc,void * dptr,unsigned long Pitch) nogil:
     global _hipTexRefSetAddress2D__funptr
     __init_symbol(&_hipTexRefSetAddress2D__funptr,"hipTexRefSetAddress2D")
-    return (<hipError_t (*)(textureReference *,HIP_ARRAY_DESCRIPTOR *,hipDeviceptr_t,int) nogil> _hipTexRefSetAddress2D__funptr)(texRef,desc,dptr,Pitch)
+    return (<hipError_t (*)(textureReference *,HIP_ARRAY_DESCRIPTOR *,void *,unsigned long) nogil> _hipTexRefSetAddress2D__funptr)(texRef,desc,dptr,Pitch)
 
 
 cdef void* _hipTexRefSetMaxAnisotropy__funptr = NULL
@@ -3977,10 +3975,10 @@ cdef void* _hipApiName__funptr = NULL
 # @defgroup Callback Callback Activity APIs
 # @{
 # This section describes the callback/Activity of HIP runtime API.
-cdef const char * hipApiName(uint32_t id) nogil:
+cdef const char * hipApiName(unsigned int id) nogil:
     global _hipApiName__funptr
     __init_symbol(&_hipApiName__funptr,"hipApiName")
-    return (<const char * (*)(uint32_t) nogil> _hipApiName__funptr)(id)
+    return (<const char * (*)(unsigned int) nogil> _hipApiName__funptr)(id)
 
 
 cdef void* _hipKernelNameRef__funptr = NULL
@@ -4056,10 +4054,10 @@ cdef void* _hipStreamGetCaptureInfo_v2__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipStreamGetCaptureInfo_v2(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,int * numDependencies_out) nogil:
+cdef hipError_t hipStreamGetCaptureInfo_v2(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,unsigned long * numDependencies_out) nogil:
     global _hipStreamGetCaptureInfo_v2__funptr
     __init_symbol(&_hipStreamGetCaptureInfo_v2__funptr,"hipStreamGetCaptureInfo_v2")
-    return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *,hipGraph_t*,hipGraphNode_t **,int *) nogil> _hipStreamGetCaptureInfo_v2__funptr)(stream,captureStatus_out,id_out,graph_out,dependencies_out,numDependencies_out)
+    return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *,hipGraph_t*,hipGraphNode_t **,unsigned long *) nogil> _hipStreamGetCaptureInfo_v2__funptr)(stream,captureStatus_out,id_out,graph_out,dependencies_out,numDependencies_out)
 
 
 cdef void* _hipStreamIsCapturing__funptr = NULL
@@ -4083,10 +4081,10 @@ cdef void* _hipStreamUpdateCaptureDependencies__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorIllegalState
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipStreamUpdateCaptureDependencies(hipStream_t stream,hipGraphNode_t* dependencies,int numDependencies,unsigned int flags) nogil:
+cdef hipError_t hipStreamUpdateCaptureDependencies(hipStream_t stream,hipGraphNode_t* dependencies,unsigned long numDependencies,unsigned int flags) nogil:
     global _hipStreamUpdateCaptureDependencies__funptr
     __init_symbol(&_hipStreamUpdateCaptureDependencies__funptr,"hipStreamUpdateCaptureDependencies")
-    return (<hipError_t (*)(hipStream_t,hipGraphNode_t*,int,unsigned int) nogil> _hipStreamUpdateCaptureDependencies__funptr)(stream,dependencies,numDependencies,flags)
+    return (<hipError_t (*)(hipStream_t,hipGraphNode_t*,unsigned long,unsigned int) nogil> _hipStreamUpdateCaptureDependencies__funptr)(stream,dependencies,numDependencies,flags)
 
 
 cdef void* _hipThreadExchangeStreamCaptureMode__funptr = NULL
@@ -4135,10 +4133,10 @@ cdef void* _hipGraphAddDependencies__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,int numDependencies) nogil:
+cdef hipError_t hipGraphAddDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,unsigned long numDependencies) nogil:
     global _hipGraphAddDependencies__funptr
     __init_symbol(&_hipGraphAddDependencies__funptr,"hipGraphAddDependencies")
-    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t *,hipGraphNode_t *,int) nogil> _hipGraphAddDependencies__funptr)(graph,from_,to,numDependencies)
+    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t *,hipGraphNode_t *,unsigned long) nogil> _hipGraphAddDependencies__funptr)(graph,from_,to,numDependencies)
 
 
 cdef void* _hipGraphRemoveDependencies__funptr = NULL
@@ -4150,10 +4148,10 @@ cdef void* _hipGraphRemoveDependencies__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphRemoveDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,int numDependencies) nogil:
+cdef hipError_t hipGraphRemoveDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,unsigned long numDependencies) nogil:
     global _hipGraphRemoveDependencies__funptr
     __init_symbol(&_hipGraphRemoveDependencies__funptr,"hipGraphRemoveDependencies")
-    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t *,hipGraphNode_t *,int) nogil> _hipGraphRemoveDependencies__funptr)(graph,from_,to,numDependencies)
+    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t *,hipGraphNode_t *,unsigned long) nogil> _hipGraphRemoveDependencies__funptr)(graph,from_,to,numDependencies)
 
 
 cdef void* _hipGraphGetEdges__funptr = NULL
@@ -4169,10 +4167,10 @@ cdef void* _hipGraphGetEdges__funptr = NULL
 # edges actually returned will be written to numEdges
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphGetEdges(hipGraph_t graph,hipGraphNode_t* from_,hipGraphNode_t* to,int * numEdges) nogil:
+cdef hipError_t hipGraphGetEdges(hipGraph_t graph,hipGraphNode_t* from_,hipGraphNode_t* to,unsigned long * numEdges) nogil:
     global _hipGraphGetEdges__funptr
     __init_symbol(&_hipGraphGetEdges__funptr,"hipGraphGetEdges")
-    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,hipGraphNode_t*,int *) nogil> _hipGraphGetEdges__funptr)(graph,from_,to,numEdges)
+    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,hipGraphNode_t*,unsigned long *) nogil> _hipGraphGetEdges__funptr)(graph,from_,to,numEdges)
 
 
 cdef void* _hipGraphGetNodes__funptr = NULL
@@ -4187,10 +4185,10 @@ cdef void* _hipGraphGetNodes__funptr = NULL
 # obtained will be returned in numNodes.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphGetNodes(hipGraph_t graph,hipGraphNode_t* nodes,int * numNodes) nogil:
+cdef hipError_t hipGraphGetNodes(hipGraph_t graph,hipGraphNode_t* nodes,unsigned long * numNodes) nogil:
     global _hipGraphGetNodes__funptr
     __init_symbol(&_hipGraphGetNodes__funptr,"hipGraphGetNodes")
-    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,int *) nogil> _hipGraphGetNodes__funptr)(graph,nodes,numNodes)
+    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,unsigned long *) nogil> _hipGraphGetNodes__funptr)(graph,nodes,numNodes)
 
 
 cdef void* _hipGraphGetRootNodes__funptr = NULL
@@ -4205,10 +4203,10 @@ cdef void* _hipGraphGetRootNodes__funptr = NULL
 # and the number of nodes actually obtained will be returned in pNumRootNodes.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphGetRootNodes(hipGraph_t graph,hipGraphNode_t* pRootNodes,int * pNumRootNodes) nogil:
+cdef hipError_t hipGraphGetRootNodes(hipGraph_t graph,hipGraphNode_t* pRootNodes,unsigned long * pNumRootNodes) nogil:
     global _hipGraphGetRootNodes__funptr
     __init_symbol(&_hipGraphGetRootNodes__funptr,"hipGraphGetRootNodes")
-    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,int *) nogil> _hipGraphGetRootNodes__funptr)(graph,pRootNodes,pNumRootNodes)
+    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,unsigned long *) nogil> _hipGraphGetRootNodes__funptr)(graph,pRootNodes,pNumRootNodes)
 
 
 cdef void* _hipGraphNodeGetDependencies__funptr = NULL
@@ -4223,10 +4221,10 @@ cdef void* _hipGraphNodeGetDependencies__funptr = NULL
 # to NULL, and the number of nodes actually obtained will be returned in pNumDependencies.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphNodeGetDependencies(hipGraphNode_t node,hipGraphNode_t* pDependencies,int * pNumDependencies) nogil:
+cdef hipError_t hipGraphNodeGetDependencies(hipGraphNode_t node,hipGraphNode_t* pDependencies,unsigned long * pNumDependencies) nogil:
     global _hipGraphNodeGetDependencies__funptr
     __init_symbol(&_hipGraphNodeGetDependencies__funptr,"hipGraphNodeGetDependencies")
-    return (<hipError_t (*)(hipGraphNode_t,hipGraphNode_t*,int *) nogil> _hipGraphNodeGetDependencies__funptr)(node,pDependencies,pNumDependencies)
+    return (<hipError_t (*)(hipGraphNode_t,hipGraphNode_t*,unsigned long *) nogil> _hipGraphNodeGetDependencies__funptr)(node,pDependencies,pNumDependencies)
 
 
 cdef void* _hipGraphNodeGetDependentNodes__funptr = NULL
@@ -4242,10 +4240,10 @@ cdef void* _hipGraphNodeGetDependentNodes__funptr = NULL
 # in pNumDependentNodes.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphNodeGetDependentNodes(hipGraphNode_t node,hipGraphNode_t* pDependentNodes,int * pNumDependentNodes) nogil:
+cdef hipError_t hipGraphNodeGetDependentNodes(hipGraphNode_t node,hipGraphNode_t* pDependentNodes,unsigned long * pNumDependentNodes) nogil:
     global _hipGraphNodeGetDependentNodes__funptr
     __init_symbol(&_hipGraphNodeGetDependentNodes__funptr,"hipGraphNodeGetDependentNodes")
-    return (<hipError_t (*)(hipGraphNode_t,hipGraphNode_t*,int *) nogil> _hipGraphNodeGetDependentNodes__funptr)(node,pDependentNodes,pNumDependentNodes)
+    return (<hipError_t (*)(hipGraphNode_t,hipGraphNode_t*,unsigned long *) nogil> _hipGraphNodeGetDependentNodes__funptr)(node,pDependentNodes,pNumDependentNodes)
 
 
 cdef void* _hipGraphNodeGetType__funptr = NULL
@@ -4311,10 +4309,10 @@ cdef void* _hipGraphInstantiate__funptr = NULL
 # @returns #hipSuccess, #hipErrorOutOfMemory
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphInstantiate(hipGraphExec_t* pGraphExec,hipGraph_t graph,hipGraphNode_t* pErrorNode,char * pLogBuffer,int bufferSize) nogil:
+cdef hipError_t hipGraphInstantiate(hipGraphExec_t* pGraphExec,hipGraph_t graph,hipGraphNode_t* pErrorNode,char * pLogBuffer,unsigned long bufferSize) nogil:
     global _hipGraphInstantiate__funptr
     __init_symbol(&_hipGraphInstantiate__funptr,"hipGraphInstantiate")
-    return (<hipError_t (*)(hipGraphExec_t*,hipGraph_t,hipGraphNode_t*,char *,int) nogil> _hipGraphInstantiate__funptr)(pGraphExec,graph,pErrorNode,pLogBuffer,bufferSize)
+    return (<hipError_t (*)(hipGraphExec_t*,hipGraph_t,hipGraphNode_t*,char *,unsigned long) nogil> _hipGraphInstantiate__funptr)(pGraphExec,graph,pErrorNode,pLogBuffer,bufferSize)
 
 
 cdef void* _hipGraphInstantiateWithFlags__funptr = NULL
@@ -4395,10 +4393,10 @@ cdef void* _hipGraphAddKernelNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddKernelNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipKernelNodeParams * pNodeParams) nogil:
+cdef hipError_t hipGraphAddKernelNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipKernelNodeParams * pNodeParams) nogil:
     global _hipGraphAddKernelNode__funptr
     __init_symbol(&_hipGraphAddKernelNode__funptr,"hipGraphAddKernelNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipKernelNodeParams *) nogil> _hipGraphAddKernelNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pNodeParams)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipKernelNodeParams *) nogil> _hipGraphAddKernelNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pNodeParams)
 
 
 cdef void* _hipGraphKernelNodeGetParams__funptr = NULL
@@ -4451,10 +4449,10 @@ cdef void* _hipGraphAddMemcpyNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipMemcpy3DParms * pCopyParams) nogil:
+cdef hipError_t hipGraphAddMemcpyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipMemcpy3DParms * pCopyParams) nogil:
     global _hipGraphAddMemcpyNode__funptr
     __init_symbol(&_hipGraphAddMemcpyNode__funptr,"hipGraphAddMemcpyNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipMemcpy3DParms *) nogil> _hipGraphAddMemcpyNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pCopyParams)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipMemcpy3DParms *) nogil> _hipGraphAddMemcpyNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pCopyParams)
 
 
 cdef void* _hipGraphMemcpyNodeGetParams__funptr = NULL
@@ -4538,10 +4536,10 @@ cdef void* _hipGraphAddMemcpyNode1D__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNode1D(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,void * dst,const void * src,int count,hipMemcpyKind kind) nogil:
+cdef hipError_t hipGraphAddMemcpyNode1D(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,void * dst,const void * src,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipGraphAddMemcpyNode1D__funptr
     __init_symbol(&_hipGraphAddMemcpyNode1D__funptr,"hipGraphAddMemcpyNode1D")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,void *,const void *,int,hipMemcpyKind) nogil> _hipGraphAddMemcpyNode1D__funptr)(pGraphNode,graph,pDependencies,numDependencies,dst,src,count,kind)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,void *,const void *,unsigned long,hipMemcpyKind) nogil> _hipGraphAddMemcpyNode1D__funptr)(pGraphNode,graph,pDependencies,numDependencies,dst,src,count,kind)
 
 
 cdef void* _hipGraphMemcpyNodeSetParams1D__funptr = NULL
@@ -4554,10 +4552,10 @@ cdef void* _hipGraphMemcpyNodeSetParams1D__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphMemcpyNodeSetParams1D(hipGraphNode_t node,void * dst,const void * src,int count,hipMemcpyKind kind) nogil:
+cdef hipError_t hipGraphMemcpyNodeSetParams1D(hipGraphNode_t node,void * dst,const void * src,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipGraphMemcpyNodeSetParams1D__funptr
     __init_symbol(&_hipGraphMemcpyNodeSetParams1D__funptr,"hipGraphMemcpyNodeSetParams1D")
-    return (<hipError_t (*)(hipGraphNode_t,void *,const void *,int,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParams1D__funptr)(node,dst,src,count,kind)
+    return (<hipError_t (*)(hipGraphNode_t,void *,const void *,unsigned long,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParams1D__funptr)(node,dst,src,count,kind)
 
 
 cdef void* _hipGraphExecMemcpyNodeSetParams1D__funptr = NULL
@@ -4572,10 +4570,10 @@ cdef void* _hipGraphExecMemcpyNodeSetParams1D__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphExecMemcpyNodeSetParams1D(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * src,int count,hipMemcpyKind kind) nogil:
+cdef hipError_t hipGraphExecMemcpyNodeSetParams1D(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * src,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipGraphExecMemcpyNodeSetParams1D__funptr
     __init_symbol(&_hipGraphExecMemcpyNodeSetParams1D__funptr,"hipGraphExecMemcpyNodeSetParams1D")
-    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,void *,const void *,int,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParams1D__funptr)(hGraphExec,node,dst,src,count,kind)
+    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,void *,const void *,unsigned long,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParams1D__funptr)(hGraphExec,node,dst,src,count,kind)
 
 
 cdef void* _hipGraphAddMemcpyNodeFromSymbol__funptr = NULL
@@ -4592,10 +4590,10 @@ cdef void* _hipGraphAddMemcpyNodeFromSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNodeFromSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,void * dst,const void * symbol,int count,int offset,hipMemcpyKind kind) nogil:
+cdef hipError_t hipGraphAddMemcpyNodeFromSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,void * dst,const void * symbol,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphAddMemcpyNodeFromSymbol__funptr
     __init_symbol(&_hipGraphAddMemcpyNodeFromSymbol__funptr,"hipGraphAddMemcpyNodeFromSymbol")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphAddMemcpyNodeFromSymbol__funptr)(pGraphNode,graph,pDependencies,numDependencies,dst,symbol,count,offset,kind)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphAddMemcpyNodeFromSymbol__funptr)(pGraphNode,graph,pDependencies,numDependencies,dst,symbol,count,offset,kind)
 
 
 cdef void* _hipGraphMemcpyNodeSetParamsFromSymbol__funptr = NULL
@@ -4609,10 +4607,10 @@ cdef void* _hipGraphMemcpyNodeSetParamsFromSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphMemcpyNodeSetParamsFromSymbol(hipGraphNode_t node,void * dst,const void * symbol,int count,int offset,hipMemcpyKind kind) nogil:
+cdef hipError_t hipGraphMemcpyNodeSetParamsFromSymbol(hipGraphNode_t node,void * dst,const void * symbol,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphMemcpyNodeSetParamsFromSymbol__funptr
     __init_symbol(&_hipGraphMemcpyNodeSetParamsFromSymbol__funptr,"hipGraphMemcpyNodeSetParamsFromSymbol")
-    return (<hipError_t (*)(hipGraphNode_t,void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParamsFromSymbol__funptr)(node,dst,symbol,count,offset,kind)
+    return (<hipError_t (*)(hipGraphNode_t,void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParamsFromSymbol__funptr)(node,dst,symbol,count,offset,kind)
 
 
 cdef void* _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr = NULL
@@ -4628,10 +4626,10 @@ cdef void* _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphExecMemcpyNodeSetParamsFromSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * symbol,int count,int offset,hipMemcpyKind kind) nogil:
+cdef hipError_t hipGraphExecMemcpyNodeSetParamsFromSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * symbol,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr
     __init_symbol(&_hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr,"hipGraphExecMemcpyNodeSetParamsFromSymbol")
-    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr)(hGraphExec,node,dst,symbol,count,offset,kind)
+    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr)(hGraphExec,node,dst,symbol,count,offset,kind)
 
 
 cdef void* _hipGraphAddMemcpyNodeToSymbol__funptr = NULL
@@ -4648,10 +4646,10 @@ cdef void* _hipGraphAddMemcpyNodeToSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNodeToSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,const void * symbol,const void * src,int count,int offset,hipMemcpyKind kind) nogil:
+cdef hipError_t hipGraphAddMemcpyNodeToSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,const void * symbol,const void * src,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphAddMemcpyNodeToSymbol__funptr
     __init_symbol(&_hipGraphAddMemcpyNodeToSymbol__funptr,"hipGraphAddMemcpyNodeToSymbol")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,const void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphAddMemcpyNodeToSymbol__funptr)(pGraphNode,graph,pDependencies,numDependencies,symbol,src,count,offset,kind)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,const void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphAddMemcpyNodeToSymbol__funptr)(pGraphNode,graph,pDependencies,numDependencies,symbol,src,count,offset,kind)
 
 
 cdef void* _hipGraphMemcpyNodeSetParamsToSymbol__funptr = NULL
@@ -4665,10 +4663,10 @@ cdef void* _hipGraphMemcpyNodeSetParamsToSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphMemcpyNodeSetParamsToSymbol(hipGraphNode_t node,const void * symbol,const void * src,int count,int offset,hipMemcpyKind kind) nogil:
+cdef hipError_t hipGraphMemcpyNodeSetParamsToSymbol(hipGraphNode_t node,const void * symbol,const void * src,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphMemcpyNodeSetParamsToSymbol__funptr
     __init_symbol(&_hipGraphMemcpyNodeSetParamsToSymbol__funptr,"hipGraphMemcpyNodeSetParamsToSymbol")
-    return (<hipError_t (*)(hipGraphNode_t,const void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParamsToSymbol__funptr)(node,symbol,src,count,offset,kind)
+    return (<hipError_t (*)(hipGraphNode_t,const void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParamsToSymbol__funptr)(node,symbol,src,count,offset,kind)
 
 
 cdef void* _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr = NULL
@@ -4684,10 +4682,10 @@ cdef void* _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphExecMemcpyNodeSetParamsToSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,const void * symbol,const void * src,int count,int offset,hipMemcpyKind kind) nogil:
+cdef hipError_t hipGraphExecMemcpyNodeSetParamsToSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,const void * symbol,const void * src,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr
     __init_symbol(&_hipGraphExecMemcpyNodeSetParamsToSymbol__funptr,"hipGraphExecMemcpyNodeSetParamsToSymbol")
-    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,const void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr)(hGraphExec,node,symbol,src,count,offset,kind)
+    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,const void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr)(hGraphExec,node,symbol,src,count,offset,kind)
 
 
 cdef void* _hipGraphAddMemsetNode__funptr = NULL
@@ -4700,10 +4698,10 @@ cdef void* _hipGraphAddMemsetNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemsetNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipMemsetParams * pMemsetParams) nogil:
+cdef hipError_t hipGraphAddMemsetNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipMemsetParams * pMemsetParams) nogil:
     global _hipGraphAddMemsetNode__funptr
     __init_symbol(&_hipGraphAddMemsetNode__funptr,"hipGraphAddMemsetNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipMemsetParams *) nogil> _hipGraphAddMemsetNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pMemsetParams)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipMemsetParams *) nogil> _hipGraphAddMemsetNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pMemsetParams)
 
 
 cdef void* _hipGraphMemsetNodeGetParams__funptr = NULL
@@ -4756,10 +4754,10 @@ cdef void* _hipGraphAddHostNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddHostNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipHostNodeParams * pNodeParams) nogil:
+cdef hipError_t hipGraphAddHostNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipHostNodeParams * pNodeParams) nogil:
     global _hipGraphAddHostNode__funptr
     __init_symbol(&_hipGraphAddHostNode__funptr,"hipGraphAddHostNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipHostNodeParams *) nogil> _hipGraphAddHostNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pNodeParams)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipHostNodeParams *) nogil> _hipGraphAddHostNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pNodeParams)
 
 
 cdef void* _hipGraphHostNodeGetParams__funptr = NULL
@@ -4812,10 +4810,10 @@ cdef void* _hipGraphAddChildGraphNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddChildGraphNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipGraph_t childGraph) nogil:
+cdef hipError_t hipGraphAddChildGraphNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipGraph_t childGraph) nogil:
     global _hipGraphAddChildGraphNode__funptr
     __init_symbol(&_hipGraphAddChildGraphNode__funptr,"hipGraphAddChildGraphNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipGraph_t) nogil> _hipGraphAddChildGraphNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,childGraph)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipGraph_t) nogil> _hipGraphAddChildGraphNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,childGraph)
 
 
 cdef void* _hipGraphChildGraphNodeGetGraph__funptr = NULL
@@ -4854,10 +4852,10 @@ cdef void* _hipGraphAddEmptyNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddEmptyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies) nogil:
+cdef hipError_t hipGraphAddEmptyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies) nogil:
     global _hipGraphAddEmptyNode__funptr
     __init_symbol(&_hipGraphAddEmptyNode__funptr,"hipGraphAddEmptyNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int) nogil> _hipGraphAddEmptyNode__funptr)(pGraphNode,graph,pDependencies,numDependencies)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long) nogil> _hipGraphAddEmptyNode__funptr)(pGraphNode,graph,pDependencies,numDependencies)
 
 
 cdef void* _hipGraphAddEventRecordNode__funptr = NULL
@@ -4870,10 +4868,10 @@ cdef void* _hipGraphAddEventRecordNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddEventRecordNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipEvent_t event) nogil:
+cdef hipError_t hipGraphAddEventRecordNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipEvent_t event) nogil:
     global _hipGraphAddEventRecordNode__funptr
     __init_symbol(&_hipGraphAddEventRecordNode__funptr,"hipGraphAddEventRecordNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipEvent_t) nogil> _hipGraphAddEventRecordNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,event)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipEvent_t) nogil> _hipGraphAddEventRecordNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,event)
 
 
 cdef void* _hipGraphEventRecordNodeGetEvent__funptr = NULL
@@ -4926,10 +4924,10 @@ cdef void* _hipGraphAddEventWaitNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddEventWaitNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipEvent_t event) nogil:
+cdef hipError_t hipGraphAddEventWaitNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipEvent_t event) nogil:
     global _hipGraphAddEventWaitNode__funptr
     __init_symbol(&_hipGraphAddEventWaitNode__funptr,"hipGraphAddEventWaitNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipEvent_t) nogil> _hipGraphAddEventWaitNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,event)
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipEvent_t) nogil> _hipGraphAddEventWaitNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,event)
 
 
 cdef void* _hipGraphEventWaitNodeGetEvent__funptr = NULL
@@ -5089,10 +5087,10 @@ cdef void* _hipMemAddressFree__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemAddressFree(void * devPtr,int size) nogil:
+cdef hipError_t hipMemAddressFree(void * devPtr,unsigned long size) nogil:
     global _hipMemAddressFree__funptr
     __init_symbol(&_hipMemAddressFree__funptr,"hipMemAddressFree")
-    return (<hipError_t (*)(void *,int) nogil> _hipMemAddressFree__funptr)(devPtr,size)
+    return (<hipError_t (*)(void *,unsigned long) nogil> _hipMemAddressFree__funptr)(devPtr,size)
 
 
 cdef void* _hipMemAddressReserve__funptr = NULL
@@ -5105,10 +5103,10 @@ cdef void* _hipMemAddressReserve__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemAddressReserve(void ** ptr,int size,int alignment,void * addr,unsigned long long flags) nogil:
+cdef hipError_t hipMemAddressReserve(void ** ptr,unsigned long size,unsigned long alignment,void * addr,unsigned long long flags) nogil:
     global _hipMemAddressReserve__funptr
     __init_symbol(&_hipMemAddressReserve__funptr,"hipMemAddressReserve")
-    return (<hipError_t (*)(void **,int,int,void *,unsigned long long) nogil> _hipMemAddressReserve__funptr)(ptr,size,alignment,addr,flags)
+    return (<hipError_t (*)(void **,unsigned long,unsigned long,void *,unsigned long long) nogil> _hipMemAddressReserve__funptr)(ptr,size,alignment,addr,flags)
 
 
 cdef void* _hipMemCreate__funptr = NULL
@@ -5120,10 +5118,10 @@ cdef void* _hipMemCreate__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemCreate(hipMemGenericAllocationHandle_t* handle,int size,hipMemAllocationProp * prop,unsigned long long flags) nogil:
+cdef hipError_t hipMemCreate(hipMemGenericAllocationHandle_t* handle,unsigned long size,hipMemAllocationProp * prop,unsigned long long flags) nogil:
     global _hipMemCreate__funptr
     __init_symbol(&_hipMemCreate__funptr,"hipMemCreate")
-    return (<hipError_t (*)(hipMemGenericAllocationHandle_t*,int,hipMemAllocationProp *,unsigned long long) nogil> _hipMemCreate__funptr)(handle,size,prop,flags)
+    return (<hipError_t (*)(hipMemGenericAllocationHandle_t*,unsigned long,hipMemAllocationProp *,unsigned long long) nogil> _hipMemCreate__funptr)(handle,size,prop,flags)
 
 
 cdef void* _hipMemExportToShareableHandle__funptr = NULL
@@ -5163,10 +5161,10 @@ cdef void* _hipMemGetAllocationGranularity__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemGetAllocationGranularity(int * granularity,hipMemAllocationProp * prop,hipMemAllocationGranularity_flags option) nogil:
+cdef hipError_t hipMemGetAllocationGranularity(unsigned long * granularity,hipMemAllocationProp * prop,hipMemAllocationGranularity_flags option) nogil:
     global _hipMemGetAllocationGranularity__funptr
     __init_symbol(&_hipMemGetAllocationGranularity__funptr,"hipMemGetAllocationGranularity")
-    return (<hipError_t (*)(int *,hipMemAllocationProp *,hipMemAllocationGranularity_flags) nogil> _hipMemGetAllocationGranularity__funptr)(granularity,prop,option)
+    return (<hipError_t (*)(unsigned long *,hipMemAllocationProp *,hipMemAllocationGranularity_flags) nogil> _hipMemGetAllocationGranularity__funptr)(granularity,prop,option)
 
 
 cdef void* _hipMemGetAllocationPropertiesFromHandle__funptr = NULL
@@ -5206,10 +5204,10 @@ cdef void* _hipMemMap__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemMap(void * ptr,int size,int offset,hipMemGenericAllocationHandle_t handle,unsigned long long flags) nogil:
+cdef hipError_t hipMemMap(void * ptr,unsigned long size,unsigned long offset,hipMemGenericAllocationHandle_t handle,unsigned long long flags) nogil:
     global _hipMemMap__funptr
     __init_symbol(&_hipMemMap__funptr,"hipMemMap")
-    return (<hipError_t (*)(void *,int,int,hipMemGenericAllocationHandle_t,unsigned long long) nogil> _hipMemMap__funptr)(ptr,size,offset,handle,flags)
+    return (<hipError_t (*)(void *,unsigned long,unsigned long,hipMemGenericAllocationHandle_t,unsigned long long) nogil> _hipMemMap__funptr)(ptr,size,offset,handle,flags)
 
 
 cdef void* _hipMemMapArrayAsync__funptr = NULL
@@ -5260,10 +5258,10 @@ cdef void* _hipMemSetAccess__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemSetAccess(void * ptr,int size,hipMemAccessDesc * desc,int count) nogil:
+cdef hipError_t hipMemSetAccess(void * ptr,unsigned long size,hipMemAccessDesc * desc,unsigned long count) nogil:
     global _hipMemSetAccess__funptr
     __init_symbol(&_hipMemSetAccess__funptr,"hipMemSetAccess")
-    return (<hipError_t (*)(void *,int,hipMemAccessDesc *,int) nogil> _hipMemSetAccess__funptr)(ptr,size,desc,count)
+    return (<hipError_t (*)(void *,unsigned long,hipMemAccessDesc *,unsigned long) nogil> _hipMemSetAccess__funptr)(ptr,size,desc,count)
 
 
 cdef void* _hipMemUnmap__funptr = NULL
@@ -5273,10 +5271,10 @@ cdef void* _hipMemUnmap__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemUnmap(void * ptr,int size) nogil:
+cdef hipError_t hipMemUnmap(void * ptr,unsigned long size) nogil:
     global _hipMemUnmap__funptr
     __init_symbol(&_hipMemUnmap__funptr,"hipMemUnmap")
-    return (<hipError_t (*)(void *,int) nogil> _hipMemUnmap__funptr)(ptr,size)
+    return (<hipError_t (*)(void *,unsigned long) nogil> _hipMemUnmap__funptr)(ptr,size)
 
 
 cdef void* _hipGLGetDevices__funptr = NULL
@@ -5287,17 +5285,17 @@ cdef hipError_t hipGLGetDevices(unsigned int * pHipDeviceCount,int * pHipDevices
 
 
 cdef void* _hipGraphicsGLRegisterBuffer__funptr = NULL
-cdef hipError_t hipGraphicsGLRegisterBuffer(_hipGraphicsResource ** resource,GLuint buffer,unsigned int flags) nogil:
+cdef hipError_t hipGraphicsGLRegisterBuffer(_hipGraphicsResource ** resource,unsigned int buffer,unsigned int flags) nogil:
     global _hipGraphicsGLRegisterBuffer__funptr
     __init_symbol(&_hipGraphicsGLRegisterBuffer__funptr,"hipGraphicsGLRegisterBuffer")
-    return (<hipError_t (*)(_hipGraphicsResource **,GLuint,unsigned int) nogil> _hipGraphicsGLRegisterBuffer__funptr)(resource,buffer,flags)
+    return (<hipError_t (*)(_hipGraphicsResource **,unsigned int,unsigned int) nogil> _hipGraphicsGLRegisterBuffer__funptr)(resource,buffer,flags)
 
 
 cdef void* _hipGraphicsGLRegisterImage__funptr = NULL
-cdef hipError_t hipGraphicsGLRegisterImage(_hipGraphicsResource ** resource,GLuint image,GLenum target,unsigned int flags) nogil:
+cdef hipError_t hipGraphicsGLRegisterImage(_hipGraphicsResource ** resource,unsigned int image,unsigned int target,unsigned int flags) nogil:
     global _hipGraphicsGLRegisterImage__funptr
     __init_symbol(&_hipGraphicsGLRegisterImage__funptr,"hipGraphicsGLRegisterImage")
-    return (<hipError_t (*)(_hipGraphicsResource **,GLuint,GLenum,unsigned int) nogil> _hipGraphicsGLRegisterImage__funptr)(resource,image,target,flags)
+    return (<hipError_t (*)(_hipGraphicsResource **,unsigned int,unsigned int,unsigned int) nogil> _hipGraphicsGLRegisterImage__funptr)(resource,image,target,flags)
 
 
 cdef void* _hipGraphicsMapResources__funptr = NULL
@@ -5315,10 +5313,10 @@ cdef hipError_t hipGraphicsSubResourceGetMappedArray(hipArray_t* array,hipGraphi
 
 
 cdef void* _hipGraphicsResourceGetMappedPointer__funptr = NULL
-cdef hipError_t hipGraphicsResourceGetMappedPointer(void ** devPtr,int * size,hipGraphicsResource_t resource) nogil:
+cdef hipError_t hipGraphicsResourceGetMappedPointer(void ** devPtr,unsigned long * size,hipGraphicsResource_t resource) nogil:
     global _hipGraphicsResourceGetMappedPointer__funptr
     __init_symbol(&_hipGraphicsResourceGetMappedPointer__funptr,"hipGraphicsResourceGetMappedPointer")
-    return (<hipError_t (*)(void **,int *,hipGraphicsResource_t) nogil> _hipGraphicsResourceGetMappedPointer__funptr)(devPtr,size,resource)
+    return (<hipError_t (*)(void **,unsigned long *,hipGraphicsResource_t) nogil> _hipGraphicsResourceGetMappedPointer__funptr)(devPtr,size,resource)
 
 
 cdef void* _hipGraphicsUnmapResources__funptr = NULL
@@ -5336,38 +5334,38 @@ cdef hipError_t hipGraphicsUnregisterResource(hipGraphicsResource_t resource) no
 
 
 cdef void* _hipMemcpy_spt__funptr = NULL
-cdef hipError_t hipMemcpy_spt(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpy_spt(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind) nogil:
     global _hipMemcpy_spt__funptr
     __init_symbol(&_hipMemcpy_spt__funptr,"hipMemcpy_spt")
-    return (<hipError_t (*)(void *,const void *,int,hipMemcpyKind) nogil> _hipMemcpy_spt__funptr)(dst,src,sizeBytes,kind)
+    return (<hipError_t (*)(void *,const void *,unsigned long,hipMemcpyKind) nogil> _hipMemcpy_spt__funptr)(dst,src,sizeBytes,kind)
 
 
 cdef void* _hipMemcpyToSymbol_spt__funptr = NULL
-cdef hipError_t hipMemcpyToSymbol_spt(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpyToSymbol_spt(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipMemcpyToSymbol_spt__funptr
     __init_symbol(&_hipMemcpyToSymbol_spt__funptr,"hipMemcpyToSymbol_spt")
-    return (<hipError_t (*)(const void *,const void *,int,int,hipMemcpyKind) nogil> _hipMemcpyToSymbol_spt__funptr)(symbol,src,sizeBytes,offset,kind)
+    return (<hipError_t (*)(const void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyToSymbol_spt__funptr)(symbol,src,sizeBytes,offset,kind)
 
 
 cdef void* _hipMemcpyFromSymbol_spt__funptr = NULL
-cdef hipError_t hipMemcpyFromSymbol_spt(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpyFromSymbol_spt(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipMemcpyFromSymbol_spt__funptr
     __init_symbol(&_hipMemcpyFromSymbol_spt__funptr,"hipMemcpyFromSymbol_spt")
-    return (<hipError_t (*)(void *,const void *,int,int,hipMemcpyKind) nogil> _hipMemcpyFromSymbol_spt__funptr)(dst,symbol,sizeBytes,offset,kind)
+    return (<hipError_t (*)(void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyFromSymbol_spt__funptr)(dst,symbol,sizeBytes,offset,kind)
 
 
 cdef void* _hipMemcpy2D_spt__funptr = NULL
-cdef hipError_t hipMemcpy2D_spt(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpy2D_spt(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2D_spt__funptr
     __init_symbol(&_hipMemcpy2D_spt__funptr,"hipMemcpy2D_spt")
-    return (<hipError_t (*)(void *,int,const void *,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2D_spt__funptr)(dst,dpitch,src,spitch,width,height,kind)
+    return (<hipError_t (*)(void *,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2D_spt__funptr)(dst,dpitch,src,spitch,width,height,kind)
 
 
 cdef void* _hipMemcpy2DFromArray_spt__funptr = NULL
-cdef hipError_t hipMemcpy2DFromArray_spt(void * dst,int dpitch,hipArray_const_t src,int wOffset,int hOffset,int width,int height,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpy2DFromArray_spt(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffset,unsigned long hOffset,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2DFromArray_spt__funptr
     __init_symbol(&_hipMemcpy2DFromArray_spt__funptr,"hipMemcpy2DFromArray_spt")
-    return (<hipError_t (*)(void *,int,hipArray_const_t,int,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2DFromArray_spt__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind)
+    return (<hipError_t (*)(void *,unsigned long,hipArray_const_t,unsigned long,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2DFromArray_spt__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind)
 
 
 cdef void* _hipMemcpy3D_spt__funptr = NULL
@@ -5378,31 +5376,31 @@ cdef hipError_t hipMemcpy3D_spt(hipMemcpy3DParms * p) nogil:
 
 
 cdef void* _hipMemset_spt__funptr = NULL
-cdef hipError_t hipMemset_spt(void * dst,int value,int sizeBytes) nogil:
+cdef hipError_t hipMemset_spt(void * dst,int value,unsigned long sizeBytes) nogil:
     global _hipMemset_spt__funptr
     __init_symbol(&_hipMemset_spt__funptr,"hipMemset_spt")
-    return (<hipError_t (*)(void *,int,int) nogil> _hipMemset_spt__funptr)(dst,value,sizeBytes)
+    return (<hipError_t (*)(void *,int,unsigned long) nogil> _hipMemset_spt__funptr)(dst,value,sizeBytes)
 
 
 cdef void* _hipMemsetAsync_spt__funptr = NULL
-cdef hipError_t hipMemsetAsync_spt(void * dst,int value,int sizeBytes,hipStream_t stream) nogil:
+cdef hipError_t hipMemsetAsync_spt(void * dst,int value,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemsetAsync_spt__funptr
     __init_symbol(&_hipMemsetAsync_spt__funptr,"hipMemsetAsync_spt")
-    return (<hipError_t (*)(void *,int,int,hipStream_t) nogil> _hipMemsetAsync_spt__funptr)(dst,value,sizeBytes,stream)
+    return (<hipError_t (*)(void *,int,unsigned long,hipStream_t) nogil> _hipMemsetAsync_spt__funptr)(dst,value,sizeBytes,stream)
 
 
 cdef void* _hipMemset2D_spt__funptr = NULL
-cdef hipError_t hipMemset2D_spt(void * dst,int pitch,int value,int width,int height) nogil:
+cdef hipError_t hipMemset2D_spt(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height) nogil:
     global _hipMemset2D_spt__funptr
     __init_symbol(&_hipMemset2D_spt__funptr,"hipMemset2D_spt")
-    return (<hipError_t (*)(void *,int,int,int,int) nogil> _hipMemset2D_spt__funptr)(dst,pitch,value,width,height)
+    return (<hipError_t (*)(void *,unsigned long,int,unsigned long,unsigned long) nogil> _hipMemset2D_spt__funptr)(dst,pitch,value,width,height)
 
 
 cdef void* _hipMemset2DAsync_spt__funptr = NULL
-cdef hipError_t hipMemset2DAsync_spt(void * dst,int pitch,int value,int width,int height,hipStream_t stream) nogil:
+cdef hipError_t hipMemset2DAsync_spt(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height,hipStream_t stream) nogil:
     global _hipMemset2DAsync_spt__funptr
     __init_symbol(&_hipMemset2DAsync_spt__funptr,"hipMemset2DAsync_spt")
-    return (<hipError_t (*)(void *,int,int,int,int,hipStream_t) nogil> _hipMemset2DAsync_spt__funptr)(dst,pitch,value,width,height,stream)
+    return (<hipError_t (*)(void *,unsigned long,int,unsigned long,unsigned long,hipStream_t) nogil> _hipMemset2DAsync_spt__funptr)(dst,pitch,value,width,height,stream)
 
 
 cdef void* _hipMemset3DAsync_spt__funptr = NULL
@@ -5420,10 +5418,10 @@ cdef hipError_t hipMemset3D_spt(hipPitchedPtr pitchedDevPtr,int value,hipExtent 
 
 
 cdef void* _hipMemcpyAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpyAsync_spt(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyAsync_spt(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyAsync_spt__funptr
     __init_symbol(&_hipMemcpyAsync_spt__funptr,"hipMemcpyAsync_spt")
-    return (<hipError_t (*)(void *,const void *,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyAsync_spt__funptr)(dst,src,sizeBytes,kind,stream)
+    return (<hipError_t (*)(void *,const void *,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyAsync_spt__funptr)(dst,src,sizeBytes,kind,stream)
 
 
 cdef void* _hipMemcpy3DAsync_spt__funptr = NULL
@@ -5434,52 +5432,52 @@ cdef hipError_t hipMemcpy3DAsync_spt(hipMemcpy3DParms * p,hipStream_t stream) no
 
 
 cdef void* _hipMemcpy2DAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpy2DAsync_spt(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpy2DAsync_spt(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DAsync_spt__funptr
     __init_symbol(&_hipMemcpy2DAsync_spt__funptr,"hipMemcpy2DAsync_spt")
-    return (<hipError_t (*)(void *,int,const void *,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DAsync_spt__funptr)(dst,dpitch,src,spitch,width,height,kind,stream)
+    return (<hipError_t (*)(void *,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DAsync_spt__funptr)(dst,dpitch,src,spitch,width,height,kind,stream)
 
 
 cdef void* _hipMemcpyFromSymbolAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpyFromSymbolAsync_spt(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyFromSymbolAsync_spt(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyFromSymbolAsync_spt__funptr
     __init_symbol(&_hipMemcpyFromSymbolAsync_spt__funptr,"hipMemcpyFromSymbolAsync_spt")
-    return (<hipError_t (*)(void *,const void *,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyFromSymbolAsync_spt__funptr)(dst,symbol,sizeBytes,offset,kind,stream)
+    return (<hipError_t (*)(void *,const void *,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyFromSymbolAsync_spt__funptr)(dst,symbol,sizeBytes,offset,kind,stream)
 
 
 cdef void* _hipMemcpyToSymbolAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpyToSymbolAsync_spt(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpyToSymbolAsync_spt(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyToSymbolAsync_spt__funptr
     __init_symbol(&_hipMemcpyToSymbolAsync_spt__funptr,"hipMemcpyToSymbolAsync_spt")
-    return (<hipError_t (*)(const void *,const void *,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyToSymbolAsync_spt__funptr)(symbol,src,sizeBytes,offset,kind,stream)
+    return (<hipError_t (*)(const void *,const void *,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyToSymbolAsync_spt__funptr)(symbol,src,sizeBytes,offset,kind,stream)
 
 
 cdef void* _hipMemcpyFromArray_spt__funptr = NULL
-cdef hipError_t hipMemcpyFromArray_spt(void * dst,hipArray_const_t src,int wOffsetSrc,int hOffset,int count,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpyFromArray_spt(void * dst,hipArray_const_t src,unsigned long wOffsetSrc,unsigned long hOffset,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipMemcpyFromArray_spt__funptr
     __init_symbol(&_hipMemcpyFromArray_spt__funptr,"hipMemcpyFromArray_spt")
-    return (<hipError_t (*)(void *,hipArray_const_t,int,int,int,hipMemcpyKind) nogil> _hipMemcpyFromArray_spt__funptr)(dst,src,wOffsetSrc,hOffset,count,kind)
+    return (<hipError_t (*)(void *,hipArray_const_t,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyFromArray_spt__funptr)(dst,src,wOffsetSrc,hOffset,count,kind)
 
 
 cdef void* _hipMemcpy2DToArray_spt__funptr = NULL
-cdef hipError_t hipMemcpy2DToArray_spt(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil:
+cdef hipError_t hipMemcpy2DToArray_spt(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2DToArray_spt__funptr
     __init_symbol(&_hipMemcpy2DToArray_spt__funptr,"hipMemcpy2DToArray_spt")
-    return (<hipError_t (*)(hipArray *,int,int,const void *,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2DToArray_spt__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind)
+    return (<hipError_t (*)(hipArray *,unsigned long,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2DToArray_spt__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind)
 
 
 cdef void* _hipMemcpy2DFromArrayAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpy2DFromArrayAsync_spt(void * dst,int dpitch,hipArray_const_t src,int wOffsetSrc,int hOffsetSrc,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpy2DFromArrayAsync_spt(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffsetSrc,unsigned long hOffsetSrc,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DFromArrayAsync_spt__funptr
     __init_symbol(&_hipMemcpy2DFromArrayAsync_spt__funptr,"hipMemcpy2DFromArrayAsync_spt")
-    return (<hipError_t (*)(void *,int,hipArray_const_t,int,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DFromArrayAsync_spt__funptr)(dst,dpitch,src,wOffsetSrc,hOffsetSrc,width,height,kind,stream)
+    return (<hipError_t (*)(void *,unsigned long,hipArray_const_t,unsigned long,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DFromArrayAsync_spt__funptr)(dst,dpitch,src,wOffsetSrc,hOffsetSrc,width,height,kind,stream)
 
 
 cdef void* _hipMemcpy2DToArrayAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpy2DToArrayAsync_spt(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
+cdef hipError_t hipMemcpy2DToArrayAsync_spt(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DToArrayAsync_spt__funptr
     __init_symbol(&_hipMemcpy2DToArrayAsync_spt__funptr,"hipMemcpy2DToArrayAsync_spt")
-    return (<hipError_t (*)(hipArray *,int,int,const void *,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DToArrayAsync_spt__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind,stream)
+    return (<hipError_t (*)(hipArray *,unsigned long,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DToArrayAsync_spt__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind,stream)
 
 
 cdef void* _hipStreamQuery_spt__funptr = NULL
@@ -5532,17 +5530,17 @@ cdef hipError_t hipEventRecord_spt(hipEvent_t event,hipStream_t stream) nogil:
 
 
 cdef void* _hipLaunchCooperativeKernel_spt__funptr = NULL
-cdef hipError_t hipLaunchCooperativeKernel_spt(const void * f,dim3 gridDim,dim3 blockDim,void ** kernelParams,uint32_t sharedMemBytes,hipStream_t hStream) nogil:
+cdef hipError_t hipLaunchCooperativeKernel_spt(const void * f,dim3 gridDim,dim3 blockDim,void ** kernelParams,unsigned int sharedMemBytes,hipStream_t hStream) nogil:
     global _hipLaunchCooperativeKernel_spt__funptr
     __init_symbol(&_hipLaunchCooperativeKernel_spt__funptr,"hipLaunchCooperativeKernel_spt")
-    return (<hipError_t (*)(const void *,dim3,dim3,void **,uint32_t,hipStream_t) nogil> _hipLaunchCooperativeKernel_spt__funptr)(f,gridDim,blockDim,kernelParams,sharedMemBytes,hStream)
+    return (<hipError_t (*)(const void *,dim3,dim3,void **,unsigned int,hipStream_t) nogil> _hipLaunchCooperativeKernel_spt__funptr)(f,gridDim,blockDim,kernelParams,sharedMemBytes,hStream)
 
 
 cdef void* _hipLaunchKernel_spt__funptr = NULL
-cdef hipError_t hipLaunchKernel_spt(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,int sharedMemBytes,hipStream_t stream) nogil:
+cdef hipError_t hipLaunchKernel_spt(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,unsigned long sharedMemBytes,hipStream_t stream) nogil:
     global _hipLaunchKernel_spt__funptr
     __init_symbol(&_hipLaunchKernel_spt__funptr,"hipLaunchKernel_spt")
-    return (<hipError_t (*)(const void *,dim3,dim3,void **,int,hipStream_t) nogil> _hipLaunchKernel_spt__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream)
+    return (<hipError_t (*)(const void *,dim3,dim3,void **,unsigned long,hipStream_t) nogil> _hipLaunchKernel_spt__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream)
 
 
 cdef void* _hipGraphLaunch_spt__funptr = NULL
@@ -5581,10 +5579,10 @@ cdef hipError_t hipStreamGetCaptureInfo_spt(hipStream_t stream,hipStreamCaptureS
 
 
 cdef void* _hipStreamGetCaptureInfo_v2_spt__funptr = NULL
-cdef hipError_t hipStreamGetCaptureInfo_v2_spt(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,int * numDependencies_out) nogil:
+cdef hipError_t hipStreamGetCaptureInfo_v2_spt(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,unsigned long * numDependencies_out) nogil:
     global _hipStreamGetCaptureInfo_v2_spt__funptr
     __init_symbol(&_hipStreamGetCaptureInfo_v2_spt__funptr,"hipStreamGetCaptureInfo_v2_spt")
-    return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *,hipGraph_t*,hipGraphNode_t **,int *) nogil> _hipStreamGetCaptureInfo_v2_spt__funptr)(stream,captureStatus_out,id_out,graph_out,dependencies_out,numDependencies_out)
+    return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *,hipGraph_t*,hipGraphNode_t **,unsigned long *) nogil> _hipStreamGetCaptureInfo_v2_spt__funptr)(stream,captureStatus_out,id_out,graph_out,dependencies_out,numDependencies_out)
 
 
 cdef void* _hipLaunchHostFunc_spt__funptr = NULL

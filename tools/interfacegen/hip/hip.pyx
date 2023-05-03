@@ -1,16 +1,7 @@
 # AMD_COPYRIGHT
-# c imports
-from libc cimport stdlib
-from libc.stdint cimport *
-cimport cpython.long
-cimport cpython.buffer
-# python imports
 import cython
 import ctypes
 import enum
-cimport hip._util.types
-
-from . cimport chip
 HIP_VERSION_MAJOR = chip.HIP_VERSION_MAJOR
 
 HIP_VERSION_MINOR = chip.HIP_VERSION_MINOR
@@ -331,7 +322,7 @@ cdef class hipUUID_t:
     cdef hipUUID_t new():
         """Factory function to create hipUUID_t objects with
         newly allocated chip.hipUUID_t"""
-        cdef chip.hipUUID_t* ptr;
+        cdef chip.hipUUID_t* ptr
         hipUUID_t.__allocate(&ptr)
         return hipUUID_t.from_ptr(ptr, owner=True)
     
@@ -449,7 +440,7 @@ cdef class hipDeviceProp_t:
     cdef hipDeviceProp_t new():
         """Factory function to create hipDeviceProp_t objects with
         newly allocated chip.hipDeviceProp_t"""
-        cdef chip.hipDeviceProp_t* ptr;
+        cdef chip.hipDeviceProp_t* ptr
         hipDeviceProp_t.__allocate(&ptr)
         return hipDeviceProp_t.from_ptr(ptr, owner=True)
     
@@ -481,7 +472,7 @@ cdef class hipDeviceProp_t:
         """Get value ``totalGlobalMem`` of ``self._ptr[i]``.
         """
         return self._ptr[i].totalGlobalMem
-    def set_totalGlobalMem(self, i, int value):
+    def set_totalGlobalMem(self, i, unsigned long value):
         """Set value ``totalGlobalMem`` of ``self._ptr[i]``.
         """
         self._ptr[i].totalGlobalMem = value
@@ -489,13 +480,13 @@ cdef class hipDeviceProp_t:
     def totalGlobalMem(self):
         return self.get_totalGlobalMem(0)
     @totalGlobalMem.setter
-    def totalGlobalMem(self, int value):
+    def totalGlobalMem(self, unsigned long value):
         self.set_totalGlobalMem(0,value)
     def get_sharedMemPerBlock(self, i):
         """Get value ``sharedMemPerBlock`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sharedMemPerBlock
-    def set_sharedMemPerBlock(self, i, int value):
+    def set_sharedMemPerBlock(self, i, unsigned long value):
         """Set value ``sharedMemPerBlock`` of ``self._ptr[i]``.
         """
         self._ptr[i].sharedMemPerBlock = value
@@ -503,7 +494,7 @@ cdef class hipDeviceProp_t:
     def sharedMemPerBlock(self):
         return self.get_sharedMemPerBlock(0)
     @sharedMemPerBlock.setter
-    def sharedMemPerBlock(self, int value):
+    def sharedMemPerBlock(self, unsigned long value):
         self.set_sharedMemPerBlock(0,value)
     def get_regsPerBlock(self, i):
         """Get value ``regsPerBlock`` of ``self._ptr[i]``.
@@ -609,7 +600,7 @@ cdef class hipDeviceProp_t:
         """Get value ``totalConstMem`` of ``self._ptr[i]``.
         """
         return self._ptr[i].totalConstMem
-    def set_totalConstMem(self, i, int value):
+    def set_totalConstMem(self, i, unsigned long value):
         """Set value ``totalConstMem`` of ``self._ptr[i]``.
         """
         self._ptr[i].totalConstMem = value
@@ -617,7 +608,7 @@ cdef class hipDeviceProp_t:
     def totalConstMem(self):
         return self.get_totalConstMem(0)
     @totalConstMem.setter
-    def totalConstMem(self, int value):
+    def totalConstMem(self, unsigned long value):
         self.set_totalConstMem(0,value)
     def get_major(self, i):
         """Get value ``major`` of ``self._ptr[i]``.
@@ -784,7 +775,7 @@ cdef class hipDeviceProp_t:
         """Get value ``maxSharedMemoryPerMultiProcessor`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxSharedMemoryPerMultiProcessor
-    def set_maxSharedMemoryPerMultiProcessor(self, i, int value):
+    def set_maxSharedMemoryPerMultiProcessor(self, i, unsigned long value):
         """Set value ``maxSharedMemoryPerMultiProcessor`` of ``self._ptr[i]``.
         """
         self._ptr[i].maxSharedMemoryPerMultiProcessor = value
@@ -792,7 +783,7 @@ cdef class hipDeviceProp_t:
     def maxSharedMemoryPerMultiProcessor(self):
         return self.get_maxSharedMemoryPerMultiProcessor(0)
     @maxSharedMemoryPerMultiProcessor.setter
-    def maxSharedMemoryPerMultiProcessor(self, int value):
+    def maxSharedMemoryPerMultiProcessor(self, unsigned long value):
         self.set_maxSharedMemoryPerMultiProcessor(0,value)
     def get_isMultiGpuBoard(self, i):
         """Get value ``isMultiGpuBoard`` of ``self._ptr[i]``.
@@ -934,7 +925,7 @@ cdef class hipDeviceProp_t:
         """Get value ``memPitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].memPitch
-    def set_memPitch(self, i, int value):
+    def set_memPitch(self, i, unsigned long value):
         """Set value ``memPitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].memPitch = value
@@ -942,13 +933,13 @@ cdef class hipDeviceProp_t:
     def memPitch(self):
         return self.get_memPitch(0)
     @memPitch.setter
-    def memPitch(self, int value):
+    def memPitch(self, unsigned long value):
         self.set_memPitch(0,value)
     def get_textureAlignment(self, i):
         """Get value ``textureAlignment`` of ``self._ptr[i]``.
         """
         return self._ptr[i].textureAlignment
-    def set_textureAlignment(self, i, int value):
+    def set_textureAlignment(self, i, unsigned long value):
         """Set value ``textureAlignment`` of ``self._ptr[i]``.
         """
         self._ptr[i].textureAlignment = value
@@ -956,13 +947,13 @@ cdef class hipDeviceProp_t:
     def textureAlignment(self):
         return self.get_textureAlignment(0)
     @textureAlignment.setter
-    def textureAlignment(self, int value):
+    def textureAlignment(self, unsigned long value):
         self.set_textureAlignment(0,value)
     def get_texturePitchAlignment(self, i):
         """Get value ``texturePitchAlignment`` of ``self._ptr[i]``.
         """
         return self._ptr[i].texturePitchAlignment
-    def set_texturePitchAlignment(self, i, int value):
+    def set_texturePitchAlignment(self, i, unsigned long value):
         """Set value ``texturePitchAlignment`` of ``self._ptr[i]``.
         """
         self._ptr[i].texturePitchAlignment = value
@@ -970,7 +961,7 @@ cdef class hipDeviceProp_t:
     def texturePitchAlignment(self):
         return self.get_texturePitchAlignment(0)
     @texturePitchAlignment.setter
-    def texturePitchAlignment(self, int value):
+    def texturePitchAlignment(self, unsigned long value):
         self.set_texturePitchAlignment(0,value)
     def get_kernelExecTimeoutEnabled(self, i):
         """Get value ``kernelExecTimeoutEnabled`` of ``self._ptr[i]``.
@@ -1265,7 +1256,7 @@ cdef class hipPointerAttribute_t:
     cdef hipPointerAttribute_t new():
         """Factory function to create hipPointerAttribute_t objects with
         newly allocated chip.hipPointerAttribute_t"""
-        cdef chip.hipPointerAttribute_t* ptr;
+        cdef chip.hipPointerAttribute_t* ptr
         hipPointerAttribute_t.__allocate(&ptr)
         return hipPointerAttribute_t.from_ptr(ptr, owner=True)
     
@@ -1723,7 +1714,7 @@ cdef class hipChannelFormatDesc:
     cdef hipChannelFormatDesc new():
         """Factory function to create hipChannelFormatDesc objects with
         newly allocated chip.hipChannelFormatDesc"""
-        cdef chip.hipChannelFormatDesc* ptr;
+        cdef chip.hipChannelFormatDesc* ptr
         hipChannelFormatDesc.__allocate(&ptr)
         return hipChannelFormatDesc.from_ptr(ptr, owner=True)
     
@@ -1915,7 +1906,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     cdef HIP_ARRAY_DESCRIPTOR new():
         """Factory function to create HIP_ARRAY_DESCRIPTOR objects with
         newly allocated chip.HIP_ARRAY_DESCRIPTOR"""
-        cdef chip.HIP_ARRAY_DESCRIPTOR* ptr;
+        cdef chip.HIP_ARRAY_DESCRIPTOR* ptr
         HIP_ARRAY_DESCRIPTOR.__allocate(&ptr)
         return HIP_ARRAY_DESCRIPTOR.from_ptr(ptr, owner=True)
     
@@ -1939,7 +1930,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
         """Get value ``Width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Width
-    def set_Width(self, i, int value):
+    def set_Width(self, i, unsigned long value):
         """Set value ``Width`` of ``self._ptr[i]``.
         """
         self._ptr[i].Width = value
@@ -1947,13 +1938,13 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     def Width(self):
         return self.get_Width(0)
     @Width.setter
-    def Width(self, int value):
+    def Width(self, unsigned long value):
         self.set_Width(0,value)
     def get_Height(self, i):
         """Get value ``Height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Height
-    def set_Height(self, i, int value):
+    def set_Height(self, i, unsigned long value):
         """Set value ``Height`` of ``self._ptr[i]``.
         """
         self._ptr[i].Height = value
@@ -1961,7 +1952,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     def Height(self):
         return self.get_Height(0)
     @Height.setter
-    def Height(self, int value):
+    def Height(self, unsigned long value):
         self.set_Height(0,value)
     def get_Format(self, i):
         """Get value of ``Format`` of ``self._ptr[i]``.
@@ -2083,7 +2074,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     cdef HIP_ARRAY3D_DESCRIPTOR new():
         """Factory function to create HIP_ARRAY3D_DESCRIPTOR objects with
         newly allocated chip.HIP_ARRAY3D_DESCRIPTOR"""
-        cdef chip.HIP_ARRAY3D_DESCRIPTOR* ptr;
+        cdef chip.HIP_ARRAY3D_DESCRIPTOR* ptr
         HIP_ARRAY3D_DESCRIPTOR.__allocate(&ptr)
         return HIP_ARRAY3D_DESCRIPTOR.from_ptr(ptr, owner=True)
     
@@ -2107,7 +2098,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         """Get value ``Width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Width
-    def set_Width(self, i, int value):
+    def set_Width(self, i, unsigned long value):
         """Set value ``Width`` of ``self._ptr[i]``.
         """
         self._ptr[i].Width = value
@@ -2115,13 +2106,13 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     def Width(self):
         return self.get_Width(0)
     @Width.setter
-    def Width(self, int value):
+    def Width(self, unsigned long value):
         self.set_Width(0,value)
     def get_Height(self, i):
         """Get value ``Height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Height
-    def set_Height(self, i, int value):
+    def set_Height(self, i, unsigned long value):
         """Set value ``Height`` of ``self._ptr[i]``.
         """
         self._ptr[i].Height = value
@@ -2129,13 +2120,13 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     def Height(self):
         return self.get_Height(0)
     @Height.setter
-    def Height(self, int value):
+    def Height(self, unsigned long value):
         self.set_Height(0,value)
     def get_Depth(self, i):
         """Get value ``Depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Depth
-    def set_Depth(self, i, int value):
+    def set_Depth(self, i, unsigned long value):
         """Set value ``Depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].Depth = value
@@ -2143,7 +2134,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     def Depth(self):
         return self.get_Depth(0)
     @Depth.setter
-    def Depth(self, int value):
+    def Depth(self, unsigned long value):
         self.set_Depth(0,value)
     def get_Format(self, i):
         """Get value of ``Format`` of ``self._ptr[i]``.
@@ -2279,7 +2270,7 @@ cdef class hipArray:
     cdef hipArray new():
         """Factory function to create hipArray objects with
         newly allocated chip.hipArray"""
-        cdef chip.hipArray* ptr;
+        cdef chip.hipArray* ptr
         hipArray.__allocate(&ptr)
         return hipArray.from_ptr(ptr, owner=True)
     
@@ -2396,7 +2387,7 @@ cdef class hipArray:
         """Get value ``isDrv`` of ``self._ptr[i]``.
         """
         return self._ptr[i].isDrv
-    def set_isDrv(self, i, int value):
+    def set_isDrv(self, i, _Bool value):
         """Set value ``isDrv`` of ``self._ptr[i]``.
         """
         self._ptr[i].isDrv = value
@@ -2404,7 +2395,7 @@ cdef class hipArray:
     def isDrv(self):
         return self.get_isDrv(0)
     @isDrv.setter
-    def isDrv(self, int value):
+    def isDrv(self, _Bool value):
         self.set_isDrv(0,value)
     def get_textureType(self, i):
         """Get value ``textureType`` of ``self._ptr[i]``.
@@ -2510,7 +2501,7 @@ cdef class hip_Memcpy2D:
     cdef hip_Memcpy2D new():
         """Factory function to create hip_Memcpy2D objects with
         newly allocated chip.hip_Memcpy2D"""
-        cdef chip.hip_Memcpy2D* ptr;
+        cdef chip.hip_Memcpy2D* ptr
         hip_Memcpy2D.__allocate(&ptr)
         return hip_Memcpy2D.from_ptr(ptr, owner=True)
     
@@ -2534,7 +2525,7 @@ cdef class hip_Memcpy2D:
         """Get value ``srcXInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcXInBytes
-    def set_srcXInBytes(self, i, int value):
+    def set_srcXInBytes(self, i, unsigned long value):
         """Set value ``srcXInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcXInBytes = value
@@ -2542,13 +2533,13 @@ cdef class hip_Memcpy2D:
     def srcXInBytes(self):
         return self.get_srcXInBytes(0)
     @srcXInBytes.setter
-    def srcXInBytes(self, int value):
+    def srcXInBytes(self, unsigned long value):
         self.set_srcXInBytes(0,value)
     def get_srcY(self, i):
         """Get value ``srcY`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcY
-    def set_srcY(self, i, int value):
+    def set_srcY(self, i, unsigned long value):
         """Set value ``srcY`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcY = value
@@ -2556,7 +2547,7 @@ cdef class hip_Memcpy2D:
     def srcY(self):
         return self.get_srcY(0)
     @srcY.setter
-    def srcY(self, int value):
+    def srcY(self, unsigned long value):
         self.set_srcY(0,value)
     def get_srcMemoryType(self, i):
         """Get value of ``srcMemoryType`` of ``self._ptr[i]``.
@@ -2578,7 +2569,7 @@ cdef class hip_Memcpy2D:
         """Get value ``srcPitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].srcPitch
-    def set_srcPitch(self, i, int value):
+    def set_srcPitch(self, i, unsigned long value):
         """Set value ``srcPitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].srcPitch = value
@@ -2586,13 +2577,13 @@ cdef class hip_Memcpy2D:
     def srcPitch(self):
         return self.get_srcPitch(0)
     @srcPitch.setter
-    def srcPitch(self, int value):
+    def srcPitch(self, unsigned long value):
         self.set_srcPitch(0,value)
     def get_dstXInBytes(self, i):
         """Get value ``dstXInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstXInBytes
-    def set_dstXInBytes(self, i, int value):
+    def set_dstXInBytes(self, i, unsigned long value):
         """Set value ``dstXInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstXInBytes = value
@@ -2600,13 +2591,13 @@ cdef class hip_Memcpy2D:
     def dstXInBytes(self):
         return self.get_dstXInBytes(0)
     @dstXInBytes.setter
-    def dstXInBytes(self, int value):
+    def dstXInBytes(self, unsigned long value):
         self.set_dstXInBytes(0,value)
     def get_dstY(self, i):
         """Get value ``dstY`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstY
-    def set_dstY(self, i, int value):
+    def set_dstY(self, i, unsigned long value):
         """Set value ``dstY`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstY = value
@@ -2614,7 +2605,7 @@ cdef class hip_Memcpy2D:
     def dstY(self):
         return self.get_dstY(0)
     @dstY.setter
-    def dstY(self, int value):
+    def dstY(self, unsigned long value):
         self.set_dstY(0,value)
     def get_dstMemoryType(self, i):
         """Get value of ``dstMemoryType`` of ``self._ptr[i]``.
@@ -2636,7 +2627,7 @@ cdef class hip_Memcpy2D:
         """Get value ``dstPitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].dstPitch
-    def set_dstPitch(self, i, int value):
+    def set_dstPitch(self, i, unsigned long value):
         """Set value ``dstPitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].dstPitch = value
@@ -2644,13 +2635,13 @@ cdef class hip_Memcpy2D:
     def dstPitch(self):
         return self.get_dstPitch(0)
     @dstPitch.setter
-    def dstPitch(self, int value):
+    def dstPitch(self, unsigned long value):
         self.set_dstPitch(0,value)
     def get_WidthInBytes(self, i):
         """Get value ``WidthInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].WidthInBytes
-    def set_WidthInBytes(self, i, int value):
+    def set_WidthInBytes(self, i, unsigned long value):
         """Set value ``WidthInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].WidthInBytes = value
@@ -2658,13 +2649,13 @@ cdef class hip_Memcpy2D:
     def WidthInBytes(self):
         return self.get_WidthInBytes(0)
     @WidthInBytes.setter
-    def WidthInBytes(self, int value):
+    def WidthInBytes(self, unsigned long value):
         self.set_WidthInBytes(0,value)
     def get_Height(self, i):
         """Get value ``Height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].Height
-    def set_Height(self, i, int value):
+    def set_Height(self, i, unsigned long value):
         """Set value ``Height`` of ``self._ptr[i]``.
         """
         self._ptr[i].Height = value
@@ -2672,7 +2663,7 @@ cdef class hip_Memcpy2D:
     def Height(self):
         return self.get_Height(0)
     @Height.setter
-    def Height(self, int value):
+    def Height(self, unsigned long value):
         self.set_Height(0,value)
 
 
@@ -2770,7 +2761,7 @@ cdef class hipMipmappedArray:
     cdef hipMipmappedArray new():
         """Factory function to create hipMipmappedArray objects with
         newly allocated chip.hipMipmappedArray"""
-        cdef chip.hipMipmappedArray* ptr;
+        cdef chip.hipMipmappedArray* ptr
         hipMipmappedArray.__allocate(&ptr)
         return hipMipmappedArray.from_ptr(ptr, owner=True)
     
@@ -3027,7 +3018,7 @@ cdef class HIP_TEXTURE_DESC_st:
     cdef HIP_TEXTURE_DESC_st new():
         """Factory function to create HIP_TEXTURE_DESC_st objects with
         newly allocated chip.HIP_TEXTURE_DESC_st"""
-        cdef chip.HIP_TEXTURE_DESC_st* ptr;
+        cdef chip.HIP_TEXTURE_DESC_st* ptr
         HIP_TEXTURE_DESC_st.__allocate(&ptr)
         return HIP_TEXTURE_DESC_st.from_ptr(ptr, owner=True)
     
@@ -3330,7 +3321,7 @@ cdef class hipResourceDesc_union_0_struct_0:
     cdef hipResourceDesc_union_0_struct_0 new():
         """Factory function to create hipResourceDesc_union_0_struct_0 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_0"""
-        cdef chip.hipResourceDesc_union_0_struct_0* ptr;
+        cdef chip.hipResourceDesc_union_0_struct_0* ptr
         hipResourceDesc_union_0_struct_0.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_0.from_ptr(ptr, owner=True)
     
@@ -3440,7 +3431,7 @@ cdef class hipResourceDesc_union_0_struct_1:
     cdef hipResourceDesc_union_0_struct_1 new():
         """Factory function to create hipResourceDesc_union_0_struct_1 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_1"""
-        cdef chip.hipResourceDesc_union_0_struct_1* ptr;
+        cdef chip.hipResourceDesc_union_0_struct_1* ptr
         hipResourceDesc_union_0_struct_1.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_1.from_ptr(ptr, owner=True)
     
@@ -3550,7 +3541,7 @@ cdef class hipResourceDesc_union_0_struct_2:
     cdef hipResourceDesc_union_0_struct_2 new():
         """Factory function to create hipResourceDesc_union_0_struct_2 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_2"""
-        cdef chip.hipResourceDesc_union_0_struct_2* ptr;
+        cdef chip.hipResourceDesc_union_0_struct_2* ptr
         hipResourceDesc_union_0_struct_2.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_2.from_ptr(ptr, owner=True)
     
@@ -3581,7 +3572,7 @@ cdef class hipResourceDesc_union_0_struct_2:
         """Get value ``sizeInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sizeInBytes
-    def set_sizeInBytes(self, i, int value):
+    def set_sizeInBytes(self, i, unsigned long value):
         """Set value ``sizeInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].sizeInBytes = value
@@ -3589,7 +3580,7 @@ cdef class hipResourceDesc_union_0_struct_2:
     def sizeInBytes(self):
         return self.get_sizeInBytes(0)
     @sizeInBytes.setter
-    def sizeInBytes(self, int value):
+    def sizeInBytes(self, unsigned long value):
         self.set_sizeInBytes(0,value)
 
 
@@ -3681,7 +3672,7 @@ cdef class hipResourceDesc_union_0_struct_3:
     cdef hipResourceDesc_union_0_struct_3 new():
         """Factory function to create hipResourceDesc_union_0_struct_3 objects with
         newly allocated chip.hipResourceDesc_union_0_struct_3"""
-        cdef chip.hipResourceDesc_union_0_struct_3* ptr;
+        cdef chip.hipResourceDesc_union_0_struct_3* ptr
         hipResourceDesc_union_0_struct_3.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_3.from_ptr(ptr, owner=True)
     
@@ -3712,7 +3703,7 @@ cdef class hipResourceDesc_union_0_struct_3:
         """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
-    def set_width(self, i, int value):
+    def set_width(self, i, unsigned long value):
         """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
@@ -3720,13 +3711,13 @@ cdef class hipResourceDesc_union_0_struct_3:
     def width(self):
         return self.get_width(0)
     @width.setter
-    def width(self, int value):
+    def width(self, unsigned long value):
         self.set_width(0,value)
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
-    def set_height(self, i, int value):
+    def set_height(self, i, unsigned long value):
         """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
@@ -3734,13 +3725,13 @@ cdef class hipResourceDesc_union_0_struct_3:
     def height(self):
         return self.get_height(0)
     @height.setter
-    def height(self, int value):
+    def height(self, unsigned long value):
         self.set_height(0,value)
     def get_pitchInBytes(self, i):
         """Get value ``pitchInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pitchInBytes
-    def set_pitchInBytes(self, i, int value):
+    def set_pitchInBytes(self, i, unsigned long value):
         """Set value ``pitchInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].pitchInBytes = value
@@ -3748,7 +3739,7 @@ cdef class hipResourceDesc_union_0_struct_3:
     def pitchInBytes(self):
         return self.get_pitchInBytes(0)
     @pitchInBytes.setter
-    def pitchInBytes(self, int value):
+    def pitchInBytes(self, unsigned long value):
         self.set_pitchInBytes(0,value)
 
 
@@ -3840,7 +3831,7 @@ cdef class hipResourceDesc_union_0:
     cdef hipResourceDesc_union_0 new():
         """Factory function to create hipResourceDesc_union_0 objects with
         newly allocated chip.hipResourceDesc_union_0"""
-        cdef chip.hipResourceDesc_union_0* ptr;
+        cdef chip.hipResourceDesc_union_0* ptr
         hipResourceDesc_union_0.__allocate(&ptr)
         return hipResourceDesc_union_0.from_ptr(ptr, owner=True)
     
@@ -3978,7 +3969,7 @@ cdef class hipResourceDesc:
     cdef hipResourceDesc new():
         """Factory function to create hipResourceDesc objects with
         newly allocated chip.hipResourceDesc"""
-        cdef chip.hipResourceDesc* ptr;
+        cdef chip.hipResourceDesc* ptr
         hipResourceDesc.__allocate(&ptr)
         return hipResourceDesc.from_ptr(ptr, owner=True)
     
@@ -4111,7 +4102,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
     cdef HIP_RESOURCE_DESC_st_union_0_struct_0 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_0 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_0"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_0* ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_0* ptr
         HIP_RESOURCE_DESC_st_union_0_struct_0.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_0.from_ptr(ptr, owner=True)
     
@@ -4221,7 +4212,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
     cdef HIP_RESOURCE_DESC_st_union_0_struct_1 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_1 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_1"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_1* ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_1* ptr
         HIP_RESOURCE_DESC_st_union_0_struct_1.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_1.from_ptr(ptr, owner=True)
     
@@ -4331,7 +4322,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     cdef HIP_RESOURCE_DESC_st_union_0_struct_2 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_2 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_2"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_2* ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_2* ptr
         HIP_RESOURCE_DESC_st_union_0_struct_2.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_2.from_ptr(ptr, owner=True)
     
@@ -4385,7 +4376,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
         """Get value ``sizeInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sizeInBytes
-    def set_sizeInBytes(self, i, int value):
+    def set_sizeInBytes(self, i, unsigned long value):
         """Set value ``sizeInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].sizeInBytes = value
@@ -4393,7 +4384,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     def sizeInBytes(self):
         return self.get_sizeInBytes(0)
     @sizeInBytes.setter
-    def sizeInBytes(self, int value):
+    def sizeInBytes(self, unsigned long value):
         self.set_sizeInBytes(0,value)
 
 
@@ -4485,7 +4476,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     cdef HIP_RESOURCE_DESC_st_union_0_struct_3 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_3 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_3"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_3* ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_3* ptr
         HIP_RESOURCE_DESC_st_union_0_struct_3.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_3.from_ptr(ptr, owner=True)
     
@@ -4539,7 +4530,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
-    def set_width(self, i, int value):
+    def set_width(self, i, unsigned long value):
         """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
@@ -4547,13 +4538,13 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     def width(self):
         return self.get_width(0)
     @width.setter
-    def width(self, int value):
+    def width(self, unsigned long value):
         self.set_width(0,value)
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
-    def set_height(self, i, int value):
+    def set_height(self, i, unsigned long value):
         """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
@@ -4561,13 +4552,13 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     def height(self):
         return self.get_height(0)
     @height.setter
-    def height(self, int value):
+    def height(self, unsigned long value):
         self.set_height(0,value)
     def get_pitchInBytes(self, i):
         """Get value ``pitchInBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pitchInBytes
-    def set_pitchInBytes(self, i, int value):
+    def set_pitchInBytes(self, i, unsigned long value):
         """Set value ``pitchInBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].pitchInBytes = value
@@ -4575,7 +4566,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     def pitchInBytes(self):
         return self.get_pitchInBytes(0)
     @pitchInBytes.setter
-    def pitchInBytes(self, int value):
+    def pitchInBytes(self, unsigned long value):
         self.set_pitchInBytes(0,value)
 
 
@@ -4667,7 +4658,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
     cdef HIP_RESOURCE_DESC_st_union_0_struct_4 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0_struct_4 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0_struct_4"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_4* ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_4* ptr
         HIP_RESOURCE_DESC_st_union_0_struct_4.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_4.from_ptr(ptr, owner=True)
     
@@ -4785,7 +4776,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
     cdef HIP_RESOURCE_DESC_st_union_0 new():
         """Factory function to create HIP_RESOURCE_DESC_st_union_0 objects with
         newly allocated chip.HIP_RESOURCE_DESC_st_union_0"""
-        cdef chip.HIP_RESOURCE_DESC_st_union_0* ptr;
+        cdef chip.HIP_RESOURCE_DESC_st_union_0* ptr
         HIP_RESOURCE_DESC_st_union_0.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0.from_ptr(ptr, owner=True)
     
@@ -4930,7 +4921,7 @@ cdef class HIP_RESOURCE_DESC_st:
     cdef HIP_RESOURCE_DESC_st new():
         """Factory function to create HIP_RESOURCE_DESC_st objects with
         newly allocated chip.HIP_RESOURCE_DESC_st"""
-        cdef chip.HIP_RESOURCE_DESC_st* ptr;
+        cdef chip.HIP_RESOURCE_DESC_st* ptr
         HIP_RESOURCE_DESC_st.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st.from_ptr(ptr, owner=True)
     
@@ -5077,7 +5068,7 @@ cdef class hipResourceViewDesc:
     cdef hipResourceViewDesc new():
         """Factory function to create hipResourceViewDesc objects with
         newly allocated chip.hipResourceViewDesc"""
-        cdef chip.hipResourceViewDesc* ptr;
+        cdef chip.hipResourceViewDesc* ptr
         hipResourceViewDesc.__allocate(&ptr)
         return hipResourceViewDesc.from_ptr(ptr, owner=True)
     
@@ -5117,7 +5108,7 @@ cdef class hipResourceViewDesc:
         """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
-    def set_width(self, i, int value):
+    def set_width(self, i, unsigned long value):
         """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
@@ -5125,13 +5116,13 @@ cdef class hipResourceViewDesc:
     def width(self):
         return self.get_width(0)
     @width.setter
-    def width(self, int value):
+    def width(self, unsigned long value):
         self.set_width(0,value)
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
-    def set_height(self, i, int value):
+    def set_height(self, i, unsigned long value):
         """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
@@ -5139,13 +5130,13 @@ cdef class hipResourceViewDesc:
     def height(self):
         return self.get_height(0)
     @height.setter
-    def height(self, int value):
+    def height(self, unsigned long value):
         self.set_height(0,value)
     def get_depth(self, i):
         """Get value ``depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].depth
-    def set_depth(self, i, int value):
+    def set_depth(self, i, unsigned long value):
         """Set value ``depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].depth = value
@@ -5153,7 +5144,7 @@ cdef class hipResourceViewDesc:
     def depth(self):
         return self.get_depth(0)
     @depth.setter
-    def depth(self, int value):
+    def depth(self, unsigned long value):
         self.set_depth(0,value)
     def get_firstMipmapLevel(self, i):
         """Get value ``firstMipmapLevel`` of ``self._ptr[i]``.
@@ -5301,7 +5292,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     cdef HIP_RESOURCE_VIEW_DESC_st new():
         """Factory function to create HIP_RESOURCE_VIEW_DESC_st objects with
         newly allocated chip.HIP_RESOURCE_VIEW_DESC_st"""
-        cdef chip.HIP_RESOURCE_VIEW_DESC_st* ptr;
+        cdef chip.HIP_RESOURCE_VIEW_DESC_st* ptr
         HIP_RESOURCE_VIEW_DESC_st.__allocate(&ptr)
         return HIP_RESOURCE_VIEW_DESC_st.from_ptr(ptr, owner=True)
     
@@ -5341,7 +5332,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
-    def set_width(self, i, int value):
+    def set_width(self, i, unsigned long value):
         """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
@@ -5349,13 +5340,13 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     def width(self):
         return self.get_width(0)
     @width.setter
-    def width(self, int value):
+    def width(self, unsigned long value):
         self.set_width(0,value)
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
-    def set_height(self, i, int value):
+    def set_height(self, i, unsigned long value):
         """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
@@ -5363,13 +5354,13 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     def height(self):
         return self.get_height(0)
     @height.setter
-    def height(self, int value):
+    def height(self, unsigned long value):
         self.set_height(0,value)
     def get_depth(self, i):
         """Get value ``depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].depth
-    def set_depth(self, i, int value):
+    def set_depth(self, i, unsigned long value):
         """Set value ``depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].depth = value
@@ -5377,7 +5368,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     def depth(self):
         return self.get_depth(0)
     @depth.setter
-    def depth(self, int value):
+    def depth(self, unsigned long value):
         self.set_depth(0,value)
     def get_firstMipmapLevel(self, i):
         """Get value ``firstMipmapLevel`` of ``self._ptr[i]``.
@@ -5540,7 +5531,7 @@ cdef class hipPitchedPtr:
     cdef hipPitchedPtr new():
         """Factory function to create hipPitchedPtr objects with
         newly allocated chip.hipPitchedPtr"""
-        cdef chip.hipPitchedPtr* ptr;
+        cdef chip.hipPitchedPtr* ptr
         hipPitchedPtr.__allocate(&ptr)
         return hipPitchedPtr.from_ptr(ptr, owner=True)
     
@@ -5564,7 +5555,7 @@ cdef class hipPitchedPtr:
         """Get value ``pitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pitch
-    def set_pitch(self, i, int value):
+    def set_pitch(self, i, unsigned long value):
         """Set value ``pitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].pitch = value
@@ -5572,13 +5563,13 @@ cdef class hipPitchedPtr:
     def pitch(self):
         return self.get_pitch(0)
     @pitch.setter
-    def pitch(self, int value):
+    def pitch(self, unsigned long value):
         self.set_pitch(0,value)
     def get_xsize(self, i):
         """Get value ``xsize`` of ``self._ptr[i]``.
         """
         return self._ptr[i].xsize
-    def set_xsize(self, i, int value):
+    def set_xsize(self, i, unsigned long value):
         """Set value ``xsize`` of ``self._ptr[i]``.
         """
         self._ptr[i].xsize = value
@@ -5586,13 +5577,13 @@ cdef class hipPitchedPtr:
     def xsize(self):
         return self.get_xsize(0)
     @xsize.setter
-    def xsize(self, int value):
+    def xsize(self, unsigned long value):
         self.set_xsize(0,value)
     def get_ysize(self, i):
         """Get value ``ysize`` of ``self._ptr[i]``.
         """
         return self._ptr[i].ysize
-    def set_ysize(self, i, int value):
+    def set_ysize(self, i, unsigned long value):
         """Set value ``ysize`` of ``self._ptr[i]``.
         """
         self._ptr[i].ysize = value
@@ -5600,7 +5591,7 @@ cdef class hipPitchedPtr:
     def ysize(self):
         return self.get_ysize(0)
     @ysize.setter
-    def ysize(self, int value):
+    def ysize(self, unsigned long value):
         self.set_ysize(0,value)
 
 
@@ -5692,7 +5683,7 @@ cdef class hipExtent:
     cdef hipExtent new():
         """Factory function to create hipExtent objects with
         newly allocated chip.hipExtent"""
-        cdef chip.hipExtent* ptr;
+        cdef chip.hipExtent* ptr
         hipExtent.__allocate(&ptr)
         return hipExtent.from_ptr(ptr, owner=True)
     
@@ -5716,7 +5707,7 @@ cdef class hipExtent:
         """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
-    def set_width(self, i, int value):
+    def set_width(self, i, unsigned long value):
         """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
@@ -5724,13 +5715,13 @@ cdef class hipExtent:
     def width(self):
         return self.get_width(0)
     @width.setter
-    def width(self, int value):
+    def width(self, unsigned long value):
         self.set_width(0,value)
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
-    def set_height(self, i, int value):
+    def set_height(self, i, unsigned long value):
         """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
@@ -5738,13 +5729,13 @@ cdef class hipExtent:
     def height(self):
         return self.get_height(0)
     @height.setter
-    def height(self, int value):
+    def height(self, unsigned long value):
         self.set_height(0,value)
     def get_depth(self, i):
         """Get value ``depth`` of ``self._ptr[i]``.
         """
         return self._ptr[i].depth
-    def set_depth(self, i, int value):
+    def set_depth(self, i, unsigned long value):
         """Set value ``depth`` of ``self._ptr[i]``.
         """
         self._ptr[i].depth = value
@@ -5752,7 +5743,7 @@ cdef class hipExtent:
     def depth(self):
         return self.get_depth(0)
     @depth.setter
-    def depth(self, int value):
+    def depth(self, unsigned long value):
         self.set_depth(0,value)
 
 
@@ -5844,7 +5835,7 @@ cdef class hipPos:
     cdef hipPos new():
         """Factory function to create hipPos objects with
         newly allocated chip.hipPos"""
-        cdef chip.hipPos* ptr;
+        cdef chip.hipPos* ptr
         hipPos.__allocate(&ptr)
         return hipPos.from_ptr(ptr, owner=True)
     
@@ -5868,7 +5859,7 @@ cdef class hipPos:
         """Get value ``x`` of ``self._ptr[i]``.
         """
         return self._ptr[i].x
-    def set_x(self, i, int value):
+    def set_x(self, i, unsigned long value):
         """Set value ``x`` of ``self._ptr[i]``.
         """
         self._ptr[i].x = value
@@ -5876,13 +5867,13 @@ cdef class hipPos:
     def x(self):
         return self.get_x(0)
     @x.setter
-    def x(self, int value):
+    def x(self, unsigned long value):
         self.set_x(0,value)
     def get_y(self, i):
         """Get value ``y`` of ``self._ptr[i]``.
         """
         return self._ptr[i].y
-    def set_y(self, i, int value):
+    def set_y(self, i, unsigned long value):
         """Set value ``y`` of ``self._ptr[i]``.
         """
         self._ptr[i].y = value
@@ -5890,13 +5881,13 @@ cdef class hipPos:
     def y(self):
         return self.get_y(0)
     @y.setter
-    def y(self, int value):
+    def y(self, unsigned long value):
         self.set_y(0,value)
     def get_z(self, i):
         """Get value ``z`` of ``self._ptr[i]``.
         """
         return self._ptr[i].z
-    def set_z(self, i, int value):
+    def set_z(self, i, unsigned long value):
         """Set value ``z`` of ``self._ptr[i]``.
         """
         self._ptr[i].z = value
@@ -5904,7 +5895,7 @@ cdef class hipPos:
     def z(self):
         return self.get_z(0)
     @z.setter
-    def z(self, int value):
+    def z(self, unsigned long value):
         self.set_z(0,value)
 
 
@@ -5996,7 +5987,7 @@ cdef class hipMemcpy3DParms:
     cdef hipMemcpy3DParms new():
         """Factory function to create hipMemcpy3DParms objects with
         newly allocated chip.hipMemcpy3DParms"""
-        cdef chip.hipMemcpy3DParms* ptr;
+        cdef chip.hipMemcpy3DParms* ptr
         hipMemcpy3DParms.__allocate(&ptr)
         return hipMemcpy3DParms.from_ptr(ptr, owner=True)
     
@@ -6157,7 +6148,7 @@ cdef class HIP_MEMCPY3D:
     cdef HIP_MEMCPY3D new():
         """Factory function to create HIP_MEMCPY3D objects with
         newly allocated chip.HIP_MEMCPY3D"""
-        cdef chip.HIP_MEMCPY3D* ptr;
+        cdef chip.HIP_MEMCPY3D* ptr
         HIP_MEMCPY3D.__allocate(&ptr)
         return HIP_MEMCPY3D.from_ptr(ptr, owner=True)
     
@@ -10633,7 +10624,7 @@ cdef class textureReference:
     cdef textureReference new():
         """Factory function to create textureReference objects with
         newly allocated chip.textureReference"""
-        cdef chip.textureReference* ptr;
+        cdef chip.textureReference* ptr
         textureReference.__allocate(&ptr)
         return textureReference.from_ptr(ptr, owner=True)
     
@@ -10913,7 +10904,7 @@ cdef class hipTextureDesc:
     cdef hipTextureDesc new():
         """Factory function to create hipTextureDesc objects with
         newly allocated chip.hipTextureDesc"""
-        cdef chip.hipTextureDesc* ptr;
+        cdef chip.hipTextureDesc* ptr
         hipTextureDesc.__allocate(&ptr)
         return hipTextureDesc.from_ptr(ptr, owner=True)
     
@@ -11249,7 +11240,7 @@ cdef class surfaceReference:
     cdef surfaceReference new():
         """Factory function to create surfaceReference objects with
         newly allocated chip.surfaceReference"""
-        cdef chip.surfaceReference* ptr;
+        cdef chip.surfaceReference* ptr
         surfaceReference.__allocate(&ptr)
         return surfaceReference.from_ptr(ptr, owner=True)
     
@@ -11540,7 +11531,7 @@ cdef class hipIpcMemHandle_st:
     cdef hipIpcMemHandle_st new():
         """Factory function to create hipIpcMemHandle_st objects with
         newly allocated chip.hipIpcMemHandle_st"""
-        cdef chip.hipIpcMemHandle_st* ptr;
+        cdef chip.hipIpcMemHandle_st* ptr
         hipIpcMemHandle_st.__allocate(&ptr)
         return hipIpcMemHandle_st.from_ptr(ptr, owner=True)
     
@@ -11658,7 +11649,7 @@ cdef class hipIpcEventHandle_st:
     cdef hipIpcEventHandle_st new():
         """Factory function to create hipIpcEventHandle_st objects with
         newly allocated chip.hipIpcEventHandle_st"""
-        cdef chip.hipIpcEventHandle_st* ptr;
+        cdef chip.hipIpcEventHandle_st* ptr
         hipIpcEventHandle_st.__allocate(&ptr)
         return hipIpcEventHandle_st.from_ptr(ptr, owner=True)
     
@@ -12031,7 +12022,7 @@ cdef class hipFuncAttributes:
     cdef hipFuncAttributes new():
         """Factory function to create hipFuncAttributes objects with
         newly allocated chip.hipFuncAttributes"""
-        cdef chip.hipFuncAttributes* ptr;
+        cdef chip.hipFuncAttributes* ptr
         hipFuncAttributes.__allocate(&ptr)
         return hipFuncAttributes.from_ptr(ptr, owner=True)
     
@@ -12083,7 +12074,7 @@ cdef class hipFuncAttributes:
         """Get value ``constSizeBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].constSizeBytes
-    def set_constSizeBytes(self, i, int value):
+    def set_constSizeBytes(self, i, unsigned long value):
         """Set value ``constSizeBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].constSizeBytes = value
@@ -12091,13 +12082,13 @@ cdef class hipFuncAttributes:
     def constSizeBytes(self):
         return self.get_constSizeBytes(0)
     @constSizeBytes.setter
-    def constSizeBytes(self, int value):
+    def constSizeBytes(self, unsigned long value):
         self.set_constSizeBytes(0,value)
     def get_localSizeBytes(self, i):
         """Get value ``localSizeBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].localSizeBytes
-    def set_localSizeBytes(self, i, int value):
+    def set_localSizeBytes(self, i, unsigned long value):
         """Set value ``localSizeBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].localSizeBytes = value
@@ -12105,7 +12096,7 @@ cdef class hipFuncAttributes:
     def localSizeBytes(self):
         return self.get_localSizeBytes(0)
     @localSizeBytes.setter
-    def localSizeBytes(self, int value):
+    def localSizeBytes(self, unsigned long value):
         self.set_localSizeBytes(0,value)
     def get_maxDynamicSharedSizeBytes(self, i):
         """Get value ``maxDynamicSharedSizeBytes`` of ``self._ptr[i]``.
@@ -12181,7 +12172,7 @@ cdef class hipFuncAttributes:
         """Get value ``sharedSizeBytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sharedSizeBytes
-    def set_sharedSizeBytes(self, i, int value):
+    def set_sharedSizeBytes(self, i, unsigned long value):
         """Set value ``sharedSizeBytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].sharedSizeBytes = value
@@ -12189,7 +12180,7 @@ cdef class hipFuncAttributes:
     def sharedSizeBytes(self):
         return self.get_sharedSizeBytes(0)
     @sharedSizeBytes.setter
-    def sharedSizeBytes(self, int value):
+    def sharedSizeBytes(self, unsigned long value):
         self.set_sharedSizeBytes(0,value)
 
 
@@ -12408,7 +12399,7 @@ cdef class hipMemLocation:
     cdef hipMemLocation new():
         """Factory function to create hipMemLocation objects with
         newly allocated chip.hipMemLocation"""
-        cdef chip.hipMemLocation* ptr;
+        cdef chip.hipMemLocation* ptr
         hipMemLocation.__allocate(&ptr)
         return hipMemLocation.from_ptr(ptr, owner=True)
     
@@ -12553,7 +12544,7 @@ cdef class hipMemAccessDesc:
     cdef hipMemAccessDesc new():
         """Factory function to create hipMemAccessDesc objects with
         newly allocated chip.hipMemAccessDesc"""
-        cdef chip.hipMemAccessDesc* ptr;
+        cdef chip.hipMemAccessDesc* ptr
         hipMemAccessDesc.__allocate(&ptr)
         return hipMemAccessDesc.from_ptr(ptr, owner=True)
     
@@ -12697,7 +12688,7 @@ cdef class hipMemPoolProps:
     cdef hipMemPoolProps new():
         """Factory function to create hipMemPoolProps objects with
         newly allocated chip.hipMemPoolProps"""
-        cdef chip.hipMemPoolProps* ptr;
+        cdef chip.hipMemPoolProps* ptr
         hipMemPoolProps.__allocate(&ptr)
         return hipMemPoolProps.from_ptr(ptr, owner=True)
     
@@ -12854,7 +12845,7 @@ cdef class hipMemPoolPtrExportData:
     cdef hipMemPoolPtrExportData new():
         """Factory function to create hipMemPoolPtrExportData objects with
         newly allocated chip.hipMemPoolPtrExportData"""
-        cdef chip.hipMemPoolPtrExportData* ptr;
+        cdef chip.hipMemPoolPtrExportData* ptr
         hipMemPoolPtrExportData.__allocate(&ptr)
         return hipMemPoolPtrExportData.from_ptr(ptr, owner=True)
     
@@ -13008,7 +12999,7 @@ cdef class dim3:
     cdef dim3 new():
         """Factory function to create dim3 objects with
         newly allocated chip.dim3"""
-        cdef chip.dim3* ptr;
+        cdef chip.dim3* ptr
         dim3.__allocate(&ptr)
         return dim3.from_ptr(ptr, owner=True)
     
@@ -13032,7 +13023,7 @@ cdef class dim3:
         """Get value ``x`` of ``self._ptr[i]``.
         """
         return self._ptr[i].x
-    def set_x(self, i, uint32_t value):
+    def set_x(self, i, unsigned int value):
         """Set value ``x`` of ``self._ptr[i]``.
         """
         self._ptr[i].x = value
@@ -13040,13 +13031,13 @@ cdef class dim3:
     def x(self):
         return self.get_x(0)
     @x.setter
-    def x(self, uint32_t value):
+    def x(self, unsigned int value):
         self.set_x(0,value)
     def get_y(self, i):
         """Get value ``y`` of ``self._ptr[i]``.
         """
         return self._ptr[i].y
-    def set_y(self, i, uint32_t value):
+    def set_y(self, i, unsigned int value):
         """Set value ``y`` of ``self._ptr[i]``.
         """
         self._ptr[i].y = value
@@ -13054,13 +13045,13 @@ cdef class dim3:
     def y(self):
         return self.get_y(0)
     @y.setter
-    def y(self, uint32_t value):
+    def y(self, unsigned int value):
         self.set_y(0,value)
     def get_z(self, i):
         """Get value ``z`` of ``self._ptr[i]``.
         """
         return self._ptr[i].z
-    def set_z(self, i, uint32_t value):
+    def set_z(self, i, unsigned int value):
         """Set value ``z`` of ``self._ptr[i]``.
         """
         self._ptr[i].z = value
@@ -13068,7 +13059,7 @@ cdef class dim3:
     def z(self):
         return self.get_z(0)
     @z.setter
-    def z(self, uint32_t value):
+    def z(self, unsigned int value):
         self.set_z(0,value)
 
 
@@ -13160,7 +13151,7 @@ cdef class hipLaunchParams_t:
     cdef hipLaunchParams_t new():
         """Factory function to create hipLaunchParams_t objects with
         newly allocated chip.hipLaunchParams_t"""
-        cdef chip.hipLaunchParams_t* ptr;
+        cdef chip.hipLaunchParams_t* ptr
         hipLaunchParams_t.__allocate(&ptr)
         return hipLaunchParams_t.from_ptr(ptr, owner=True)
     
@@ -13198,7 +13189,7 @@ cdef class hipLaunchParams_t:
         """Get value ``sharedMem`` of ``self._ptr[i]``.
         """
         return self._ptr[i].sharedMem
-    def set_sharedMem(self, i, int value):
+    def set_sharedMem(self, i, unsigned long value):
         """Set value ``sharedMem`` of ``self._ptr[i]``.
         """
         self._ptr[i].sharedMem = value
@@ -13206,7 +13197,7 @@ cdef class hipLaunchParams_t:
     def sharedMem(self):
         return self.get_sharedMem(0)
     @sharedMem.setter
-    def sharedMem(self, int value):
+    def sharedMem(self, unsigned long value):
         self.set_sharedMem(0,value)
 
 
@@ -13307,7 +13298,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     cdef hipExternalMemoryHandleDesc_st_union_0_struct_0 new():
         """Factory function to create hipExternalMemoryHandleDesc_st_union_0_struct_0 objects with
         newly allocated chip.hipExternalMemoryHandleDesc_st_union_0_struct_0"""
-        cdef chip.hipExternalMemoryHandleDesc_st_union_0_struct_0* ptr;
+        cdef chip.hipExternalMemoryHandleDesc_st_union_0_struct_0* ptr
         hipExternalMemoryHandleDesc_st_union_0_struct_0.__allocate(&ptr)
         return hipExternalMemoryHandleDesc_st_union_0_struct_0.from_ptr(ptr, owner=True)
     
@@ -13417,7 +13408,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
     cdef hipExternalMemoryHandleDesc_st_union_0 new():
         """Factory function to create hipExternalMemoryHandleDesc_st_union_0 objects with
         newly allocated chip.hipExternalMemoryHandleDesc_st_union_0"""
-        cdef chip.hipExternalMemoryHandleDesc_st_union_0* ptr;
+        cdef chip.hipExternalMemoryHandleDesc_st_union_0* ptr
         hipExternalMemoryHandleDesc_st_union_0.__allocate(&ptr)
         return hipExternalMemoryHandleDesc_st_union_0.from_ptr(ptr, owner=True)
     
@@ -13548,7 +13539,7 @@ cdef class hipExternalMemoryHandleDesc_st:
     cdef hipExternalMemoryHandleDesc_st new():
         """Factory function to create hipExternalMemoryHandleDesc_st objects with
         newly allocated chip.hipExternalMemoryHandleDesc_st"""
-        cdef chip.hipExternalMemoryHandleDesc_st* ptr;
+        cdef chip.hipExternalMemoryHandleDesc_st* ptr
         hipExternalMemoryHandleDesc_st.__allocate(&ptr)
         return hipExternalMemoryHandleDesc_st.from_ptr(ptr, owner=True)
     
@@ -13709,7 +13700,7 @@ cdef class hipExternalMemoryBufferDesc_st:
     cdef hipExternalMemoryBufferDesc_st new():
         """Factory function to create hipExternalMemoryBufferDesc_st objects with
         newly allocated chip.hipExternalMemoryBufferDesc_st"""
-        cdef chip.hipExternalMemoryBufferDesc_st* ptr;
+        cdef chip.hipExternalMemoryBufferDesc_st* ptr
         hipExternalMemoryBufferDesc_st.__allocate(&ptr)
         return hipExternalMemoryBufferDesc_st.from_ptr(ptr, owner=True)
     
@@ -13950,7 +13941,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     cdef hipExternalSemaphoreHandleDesc_st_union_0_struct_0 new():
         """Factory function to create hipExternalSemaphoreHandleDesc_st_union_0_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0"""
-        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0* ptr;
+        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0* ptr
         hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreHandleDesc_st_union_0_struct_0.from_ptr(ptr, owner=True)
     
@@ -14060,7 +14051,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
     cdef hipExternalSemaphoreHandleDesc_st_union_0 new():
         """Factory function to create hipExternalSemaphoreHandleDesc_st_union_0 objects with
         newly allocated chip.hipExternalSemaphoreHandleDesc_st_union_0"""
-        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0* ptr;
+        cdef chip.hipExternalSemaphoreHandleDesc_st_union_0* ptr
         hipExternalSemaphoreHandleDesc_st_union_0.__allocate(&ptr)
         return hipExternalSemaphoreHandleDesc_st_union_0.from_ptr(ptr, owner=True)
     
@@ -14191,7 +14182,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
     cdef hipExternalSemaphoreHandleDesc_st new():
         """Factory function to create hipExternalSemaphoreHandleDesc_st objects with
         newly allocated chip.hipExternalSemaphoreHandleDesc_st"""
-        cdef chip.hipExternalSemaphoreHandleDesc_st* ptr;
+        cdef chip.hipExternalSemaphoreHandleDesc_st* ptr
         hipExternalSemaphoreHandleDesc_st.__allocate(&ptr)
         return hipExternalSemaphoreHandleDesc_st.from_ptr(ptr, owner=True)
     
@@ -14421,7 +14412,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
     cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_0 new():
         """Factory function to create hipExternalSemaphoreSignalParams_st_struct_0_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0"""
-        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0* ptr;
+        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0* ptr
         hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_0.from_ptr(ptr, owner=True)
     
@@ -14545,7 +14536,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
     cdef hipExternalSemaphoreSignalParams_st_struct_0_struct_1 new():
         """Factory function to create hipExternalSemaphoreSignalParams_st_struct_0_struct_1 objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1"""
-        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1* ptr;
+        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1* ptr
         hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_1.from_ptr(ptr, owner=True)
     
@@ -14669,7 +14660,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
     cdef hipExternalSemaphoreSignalParams_st_struct_0 new():
         """Factory function to create hipExternalSemaphoreSignalParams_st_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st_struct_0"""
-        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0* ptr;
+        cdef chip.hipExternalSemaphoreSignalParams_st_struct_0* ptr
         hipExternalSemaphoreSignalParams_st_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st_struct_0.from_ptr(ptr, owner=True)
     
@@ -14801,7 +14792,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
     cdef hipExternalSemaphoreSignalParams_st new():
         """Factory function to create hipExternalSemaphoreSignalParams_st objects with
         newly allocated chip.hipExternalSemaphoreSignalParams_st"""
-        cdef chip.hipExternalSemaphoreSignalParams_st* ptr;
+        cdef chip.hipExternalSemaphoreSignalParams_st* ptr
         hipExternalSemaphoreSignalParams_st.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st.from_ptr(ptr, owner=True)
     
@@ -14940,7 +14931,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
     cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_0 new():
         """Factory function to create hipExternalSemaphoreWaitParams_st_struct_0_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0"""
-        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0* ptr;
+        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0* ptr
         hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_0.from_ptr(ptr, owner=True)
     
@@ -15064,7 +15055,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
     cdef hipExternalSemaphoreWaitParams_st_struct_0_struct_1 new():
         """Factory function to create hipExternalSemaphoreWaitParams_st_struct_0_struct_1 objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1"""
-        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1* ptr;
+        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1* ptr
         hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_1.from_ptr(ptr, owner=True)
     
@@ -15202,7 +15193,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
     cdef hipExternalSemaphoreWaitParams_st_struct_0 new():
         """Factory function to create hipExternalSemaphoreWaitParams_st_struct_0 objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st_struct_0"""
-        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0* ptr;
+        cdef chip.hipExternalSemaphoreWaitParams_st_struct_0* ptr
         hipExternalSemaphoreWaitParams_st_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st_struct_0.from_ptr(ptr, owner=True)
     
@@ -15334,7 +15325,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
     cdef hipExternalSemaphoreWaitParams_st new():
         """Factory function to create hipExternalSemaphoreWaitParams_st objects with
         newly allocated chip.hipExternalSemaphoreWaitParams_st"""
-        cdef chip.hipExternalSemaphoreWaitParams_st* ptr;
+        cdef chip.hipExternalSemaphoreWaitParams_st* ptr
         hipExternalSemaphoreWaitParams_st.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st.from_ptr(ptr, owner=True)
     
@@ -16008,7 +15999,7 @@ cdef class hipHostNodeParams:
     cdef hipHostNodeParams new():
         """Factory function to create hipHostNodeParams objects with
         newly allocated chip.hipHostNodeParams"""
-        cdef chip.hipHostNodeParams* ptr;
+        cdef chip.hipHostNodeParams* ptr
         hipHostNodeParams.__allocate(&ptr)
         return hipHostNodeParams.from_ptr(ptr, owner=True)
     
@@ -16118,7 +16109,7 @@ cdef class hipKernelNodeParams:
     cdef hipKernelNodeParams new():
         """Factory function to create hipKernelNodeParams objects with
         newly allocated chip.hipKernelNodeParams"""
-        cdef chip.hipKernelNodeParams* ptr;
+        cdef chip.hipKernelNodeParams* ptr
         hipKernelNodeParams.__allocate(&ptr)
         return hipKernelNodeParams.from_ptr(ptr, owner=True)
     
@@ -16256,7 +16247,7 @@ cdef class hipMemsetParams:
     cdef hipMemsetParams new():
         """Factory function to create hipMemsetParams objects with
         newly allocated chip.hipMemsetParams"""
-        cdef chip.hipMemsetParams* ptr;
+        cdef chip.hipMemsetParams* ptr
         hipMemsetParams.__allocate(&ptr)
         return hipMemsetParams.from_ptr(ptr, owner=True)
     
@@ -16294,7 +16285,7 @@ cdef class hipMemsetParams:
         """Get value ``height`` of ``self._ptr[i]``.
         """
         return self._ptr[i].height
-    def set_height(self, i, int value):
+    def set_height(self, i, unsigned long value):
         """Set value ``height`` of ``self._ptr[i]``.
         """
         self._ptr[i].height = value
@@ -16302,13 +16293,13 @@ cdef class hipMemsetParams:
     def height(self):
         return self.get_height(0)
     @height.setter
-    def height(self, int value):
+    def height(self, unsigned long value):
         self.set_height(0,value)
     def get_pitch(self, i):
         """Get value ``pitch`` of ``self._ptr[i]``.
         """
         return self._ptr[i].pitch
-    def set_pitch(self, i, int value):
+    def set_pitch(self, i, unsigned long value):
         """Set value ``pitch`` of ``self._ptr[i]``.
         """
         self._ptr[i].pitch = value
@@ -16316,7 +16307,7 @@ cdef class hipMemsetParams:
     def pitch(self):
         return self.get_pitch(0)
     @pitch.setter
-    def pitch(self, int value):
+    def pitch(self, unsigned long value):
         self.set_pitch(0,value)
     def get_value(self, i):
         """Get value ``value`` of ``self._ptr[i]``.
@@ -16336,7 +16327,7 @@ cdef class hipMemsetParams:
         """Get value ``width`` of ``self._ptr[i]``.
         """
         return self._ptr[i].width
-    def set_width(self, i, int value):
+    def set_width(self, i, unsigned long value):
         """Set value ``width`` of ``self._ptr[i]``.
         """
         self._ptr[i].width = value
@@ -16344,7 +16335,7 @@ cdef class hipMemsetParams:
     def width(self):
         return self.get_width(0)
     @width.setter
-    def width(self, int value):
+    def width(self, unsigned long value):
         self.set_width(0,value)
 
 
@@ -16445,7 +16436,7 @@ cdef class hipAccessPolicyWindow:
     cdef hipAccessPolicyWindow new():
         """Factory function to create hipAccessPolicyWindow objects with
         newly allocated chip.hipAccessPolicyWindow"""
-        cdef chip.hipAccessPolicyWindow* ptr;
+        cdef chip.hipAccessPolicyWindow* ptr
         hipAccessPolicyWindow.__allocate(&ptr)
         return hipAccessPolicyWindow.from_ptr(ptr, owner=True)
     
@@ -16515,7 +16506,7 @@ cdef class hipAccessPolicyWindow:
         """Get value ``num_bytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].num_bytes
-    def set_num_bytes(self, i, int value):
+    def set_num_bytes(self, i, unsigned long value):
         """Set value ``num_bytes`` of ``self._ptr[i]``.
         """
         self._ptr[i].num_bytes = value
@@ -16523,7 +16514,7 @@ cdef class hipAccessPolicyWindow:
     def num_bytes(self):
         return self.get_num_bytes(0)
     @num_bytes.setter
-    def num_bytes(self, int value):
+    def num_bytes(self, unsigned long value):
         self.set_num_bytes(0,value)
 
 
@@ -16615,7 +16606,7 @@ cdef class hipKernelNodeAttrValue:
     cdef hipKernelNodeAttrValue new():
         """Factory function to create hipKernelNodeAttrValue objects with
         newly allocated chip.hipKernelNodeAttrValue"""
-        cdef chip.hipKernelNodeAttrValue* ptr;
+        cdef chip.hipKernelNodeAttrValue* ptr
         hipKernelNodeAttrValue.__allocate(&ptr)
         return hipKernelNodeAttrValue.from_ptr(ptr, owner=True)
     
@@ -16785,7 +16776,7 @@ cdef class hipMemAllocationProp_struct_0:
     cdef hipMemAllocationProp_struct_0 new():
         """Factory function to create hipMemAllocationProp_struct_0 objects with
         newly allocated chip.hipMemAllocationProp_struct_0"""
-        cdef chip.hipMemAllocationProp_struct_0* ptr;
+        cdef chip.hipMemAllocationProp_struct_0* ptr
         hipMemAllocationProp_struct_0.__allocate(&ptr)
         return hipMemAllocationProp_struct_0.from_ptr(ptr, owner=True)
     
@@ -16937,7 +16928,7 @@ cdef class hipMemAllocationProp:
     cdef hipMemAllocationProp new():
         """Factory function to create hipMemAllocationProp objects with
         newly allocated chip.hipMemAllocationProp"""
-        cdef chip.hipMemAllocationProp* ptr;
+        cdef chip.hipMemAllocationProp* ptr
         hipMemAllocationProp.__allocate(&ptr)
         return hipMemAllocationProp.from_ptr(ptr, owner=True)
     
@@ -17193,7 +17184,7 @@ cdef class hipArrayMapInfo_union_0:
     cdef hipArrayMapInfo_union_0 new():
         """Factory function to create hipArrayMapInfo_union_0 objects with
         newly allocated chip.hipArrayMapInfo_union_0"""
-        cdef chip.hipArrayMapInfo_union_0* ptr;
+        cdef chip.hipArrayMapInfo_union_0* ptr
         hipArrayMapInfo_union_0.__allocate(&ptr)
         return hipArrayMapInfo_union_0.from_ptr(ptr, owner=True)
     
@@ -17310,7 +17301,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     cdef hipArrayMapInfo_union_1_struct_0 new():
         """Factory function to create hipArrayMapInfo_union_1_struct_0 objects with
         newly allocated chip.hipArrayMapInfo_union_1_struct_0"""
-        cdef chip.hipArrayMapInfo_union_1_struct_0* ptr;
+        cdef chip.hipArrayMapInfo_union_1_struct_0* ptr
         hipArrayMapInfo_union_1_struct_0.__allocate(&ptr)
         return hipArrayMapInfo_union_1_struct_0.from_ptr(ptr, owner=True)
     
@@ -17532,7 +17523,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
     cdef hipArrayMapInfo_union_1_struct_1 new():
         """Factory function to create hipArrayMapInfo_union_1_struct_1 objects with
         newly allocated chip.hipArrayMapInfo_union_1_struct_1"""
-        cdef chip.hipArrayMapInfo_union_1_struct_1* ptr;
+        cdef chip.hipArrayMapInfo_union_1_struct_1* ptr
         hipArrayMapInfo_union_1_struct_1.__allocate(&ptr)
         return hipArrayMapInfo_union_1_struct_1.from_ptr(ptr, owner=True)
     
@@ -17684,7 +17675,7 @@ cdef class hipArrayMapInfo_union_1:
     cdef hipArrayMapInfo_union_1 new():
         """Factory function to create hipArrayMapInfo_union_1 objects with
         newly allocated chip.hipArrayMapInfo_union_1"""
-        cdef chip.hipArrayMapInfo_union_1* ptr;
+        cdef chip.hipArrayMapInfo_union_1* ptr
         hipArrayMapInfo_union_1.__allocate(&ptr)
         return hipArrayMapInfo_union_1.from_ptr(ptr, owner=True)
     
@@ -17808,7 +17799,7 @@ cdef class hipArrayMapInfo_union_2:
     cdef hipArrayMapInfo_union_2 new():
         """Factory function to create hipArrayMapInfo_union_2 objects with
         newly allocated chip.hipArrayMapInfo_union_2"""
-        cdef chip.hipArrayMapInfo_union_2* ptr;
+        cdef chip.hipArrayMapInfo_union_2* ptr
         hipArrayMapInfo_union_2.__allocate(&ptr)
         return hipArrayMapInfo_union_2.from_ptr(ptr, owner=True)
     
@@ -17918,7 +17909,7 @@ cdef class hipArrayMapInfo:
     cdef hipArrayMapInfo new():
         """Factory function to create hipArrayMapInfo objects with
         newly allocated chip.hipArrayMapInfo"""
-        cdef chip.hipArrayMapInfo* ptr;
+        cdef chip.hipArrayMapInfo* ptr
         hipArrayMapInfo.__allocate(&ptr)
         return hipArrayMapInfo.from_ptr(ptr, owner=True)
     
@@ -18137,7 +18128,7 @@ def hipDeviceGet(int ordinal):
 
 
 @cython.embedsignature(True)
-def hipDeviceComputeCapability(hipDevice_t device):
+def hipDeviceComputeCapability(int device):
     """@brief Returns the compute capability of the device
     @param [out] major
     @param [out] minor
@@ -18151,7 +18142,7 @@ def hipDeviceComputeCapability(hipDevice_t device):
 
 
 @cython.embedsignature(True)
-def hipDeviceGetName(char * name, int len, hipDevice_t device):
+def hipDeviceGetName(char * name, int len, int device):
     """@brief Returns an identifer string for the device.
     @param [out] name
     @param [in] len
@@ -18163,7 +18154,7 @@ def hipDeviceGetName(char * name, int len, hipDevice_t device):
 
 
 @cython.embedsignature(True)
-def hipDeviceGetUuid(object uuid, hipDevice_t device):
+def hipDeviceGetUuid(object uuid, int device):
     """@brief Returns an UUID for the device.[BETA]
     @param [out] uuid
     @param [in] device
@@ -18218,13 +18209,13 @@ def hipDeviceGetByPCIBusId(const char * pciBusId):
 
 
 @cython.embedsignature(True)
-def hipDeviceTotalMem(hipDevice_t device):
+def hipDeviceTotalMem(int device):
     """@brief Returns the total amount of memory on the device.
     @param [out] bytes
     @param [in] device
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
-    cdef int bytes
+    cdef unsigned long bytes
     _hipDeviceTotalMem__retval = hipError_t(chip.hipDeviceTotalMem(&bytes,device))    # fully specified
     return (_hipDeviceTotalMem__retval,bytes)
 
@@ -18438,7 +18429,7 @@ def hipDeviceGetLimit(object limit):
     @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
     Note: Currently, only hipLimitMallocHeapSize is available
     """
-    cdef int pValue
+    cdef unsigned long pValue
     if not isinstance(limit,hipLimit_t):
         raise TypeError("argument 'limit' must be of type 'hipLimit_t'")
     _hipDeviceGetLimit__retval = hipError_t(chip.hipDeviceGetLimit(&pValue,limit.value))    # fully specified
@@ -18446,7 +18437,7 @@ def hipDeviceGetLimit(object limit):
 
 
 @cython.embedsignature(True)
-def hipDeviceSetLimit(object limit, int value):
+def hipDeviceSetLimit(object limit, unsigned long value):
     """@brief Set Resource limits of current device
     @param [in] limit
     @param [in] value
@@ -18976,7 +18967,7 @@ def hipStreamGetPriority(object stream):
 
 
 @cython.embedsignature(True)
-def hipExtStreamCreateWithCUMask(uint32_t cuMaskSize):
+def hipExtStreamCreateWithCUMask(unsigned int cuMaskSize):
     """@brief Create an asynchronous stream with the specified CU mask.
     @param[in, out] stream Pointer to new stream
     @param[in ] cuMaskSize Size of CU mask bit array passed in.
@@ -18998,7 +18989,7 @@ def hipExtStreamCreateWithCUMask(uint32_t cuMaskSize):
 
 
 @cython.embedsignature(True)
-def hipExtStreamGetCUMask(object stream, uint32_t cuMaskSize):
+def hipExtStreamGetCUMask(object stream, unsigned int cuMaskSize):
     """@brief Get CU mask associated with an asynchronous stream
     @param[in] stream stream to be queried
     @param[in] cuMaskSize number of the block of memories (uint32_t *) allocated by user
@@ -19119,7 +19110,7 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
 
 
 @cython.embedsignature(True)
-def hipStreamWaitValue32(object stream, object ptr, uint32_t value, unsigned int flags, uint32_t mask):
+def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned int flags, unsigned int mask):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -19156,7 +19147,7 @@ def hipStreamWaitValue32(object stream, object ptr, uint32_t value, unsigned int
 
 
 @cython.embedsignature(True)
-def hipStreamWaitValue64(object stream, object ptr, uint64_t value, unsigned int flags, uint64_t mask):
+def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigned int flags, unsigned long mask):
     """@brief Enqueues a wait command to the stream.[BETA]
     @param [in] stream - Stream identifier
     @param [in] ptr    - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
@@ -19187,7 +19178,7 @@ def hipStreamWaitValue64(object stream, object ptr, uint64_t value, unsigned int
 
 
 @cython.embedsignature(True)
-def hipStreamWriteValue32(object stream, object ptr, uint32_t value, unsigned int flags):
+def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigned int flags):
     """@brief Enqueues a write command to the stream.[BETA]
     @param [in] stream - Stream identifier
     @param [in] ptr    - Pointer to a GPU accessible memory object
@@ -19208,7 +19199,7 @@ def hipStreamWriteValue32(object stream, object ptr, uint32_t value, unsigned in
 
 
 @cython.embedsignature(True)
-def hipStreamWriteValue64(object stream, object ptr, uint64_t value, unsigned int flags):
+def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsigned int flags):
     """@brief Enqueues a write command to the stream.[BETA]
     @param [in] stream - Stream identifier
     @param [in] ptr    - Pointer to a GPU accessible memory object
@@ -19406,7 +19397,7 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
         raise TypeError("argument 'attribute' must be of type 'hipPointer_attribute'")
     _hipPointerGetAttribute__retval = hipError_t(chip.hipPointerGetAttribute(
         <void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,attribute.value,
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipPointerGetAttribute__retval,)
 
 
@@ -19427,7 +19418,7 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
     data = hip._util.types.DataHandle.from_ptr(NULL)
     _hipDrvPointerGetAttributes__retval = hipError_t(chip.hipDrvPointerGetAttributes(numAttributes,&attributes,
         <void **>&data._ptr,
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
     return (_hipDrvPointerGetAttributes__retval,hipPointer_attribute(attributes),data)
 
 
@@ -19440,7 +19431,7 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
     @see
     """
     _hipImportExternalSemaphore__retval = hipError_t(chip.hipImportExternalSemaphore(
-        <chip.hipExternalSemaphore_t*>hip._util.types.DataHandle.from_pyobj(extSem_out)._ptr,
+        <void **>hip._util.types.DataHandle.from_pyobj(extSem_out)._ptr,
         hipExternalSemaphoreHandleDesc_st.from_pyobj(semHandleDesc)._ptr))    # fully specified
     return (_hipImportExternalSemaphore__retval,)
 
@@ -19456,7 +19447,7 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
     @see
     """
     _hipSignalExternalSemaphoresAsync__retval = hipError_t(chip.hipSignalExternalSemaphoresAsync(
-        <chip.hipExternalSemaphore_t *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
+        <void *const *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
         hipExternalSemaphoreSignalParams_st.from_pyobj(paramsArray)._ptr,numExtSems,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipSignalExternalSemaphoresAsync__retval,)
@@ -19473,7 +19464,7 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
     @see
     """
     _hipWaitExternalSemaphoresAsync__retval = hipError_t(chip.hipWaitExternalSemaphoresAsync(
-        <chip.hipExternalSemaphore_t *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
+        <void *const *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
         hipExternalSemaphoreWaitParams_st.from_pyobj(paramsArray)._ptr,numExtSems,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipWaitExternalSemaphoresAsync__retval,)
@@ -19487,7 +19478,7 @@ def hipDestroyExternalSemaphore(object extSem):
     @see
     """
     _hipDestroyExternalSemaphore__retval = hipError_t(chip.hipDestroyExternalSemaphore(
-        <chip.hipExternalSemaphore_t>hip._util.types.DataHandle.from_pyobj(extSem)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(extSem)._ptr))    # fully specified
     return (_hipDestroyExternalSemaphore__retval,)
 
 
@@ -19500,7 +19491,7 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
     @see
     """
     _hipImportExternalMemory__retval = hipError_t(chip.hipImportExternalMemory(
-        <chip.hipExternalMemory_t*>hip._util.types.DataHandle.from_pyobj(extMem_out)._ptr,
+        <void **>hip._util.types.DataHandle.from_pyobj(extMem_out)._ptr,
         hipExternalMemoryHandleDesc_st.from_pyobj(memHandleDesc)._ptr))    # fully specified
     return (_hipImportExternalMemory__retval,)
 
@@ -19517,7 +19508,7 @@ def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipExternalMemoryGetMappedBuffer__retval = hipError_t(chip.hipExternalMemoryGetMappedBuffer(
         <void **>&devPtr._ptr,
-        <chip.hipExternalMemory_t>hip._util.types.DataHandle.from_pyobj(extMem)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(extMem)._ptr,
         hipExternalMemoryBufferDesc_st.from_pyobj(bufferDesc)._ptr))    # fully specified
     return (_hipExternalMemoryGetMappedBuffer__retval,devPtr)
 
@@ -19530,12 +19521,12 @@ def hipDestroyExternalMemory(object extMem):
     @see
     """
     _hipDestroyExternalMemory__retval = hipError_t(chip.hipDestroyExternalMemory(
-        <chip.hipExternalMemory_t>hip._util.types.DataHandle.from_pyobj(extMem)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(extMem)._ptr))    # fully specified
     return (_hipDestroyExternalMemory__retval,)
 
 
 @cython.embedsignature(True)
-def hipMalloc(int size):
+def hipMalloc(unsigned long size):
     """@brief Allocate memory on the default accelerator
     @param[out] ptr Pointer to the allocated memory
     @param[in]  size Requested memory size
@@ -19551,7 +19542,7 @@ def hipMalloc(int size):
 
 
 @cython.embedsignature(True)
-def hipExtMallocWithFlags(int sizeBytes, unsigned int flags):
+def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
     """@brief Allocate memory on the default accelerator
     @param[out] ptr Pointer to the allocated memory
     @param[in]  size Requested memory size
@@ -19568,7 +19559,7 @@ def hipExtMallocWithFlags(int sizeBytes, unsigned int flags):
 
 
 @cython.embedsignature(True)
-def hipMallocHost(int size):
+def hipMallocHost(unsigned long size):
     """@brief Allocate pinned host memory [Deprecated]
     @param[out] ptr Pointer to the allocated host pinned memory
     @param[in]  size Requested memory size
@@ -19583,7 +19574,7 @@ def hipMallocHost(int size):
 
 
 @cython.embedsignature(True)
-def hipMemAllocHost(int size):
+def hipMemAllocHost(unsigned long size):
     """@brief Allocate pinned host memory [Deprecated]
     @param[out] ptr Pointer to the allocated host pinned memory
     @param[in]  size Requested memory size
@@ -19598,7 +19589,7 @@ def hipMemAllocHost(int size):
 
 
 @cython.embedsignature(True)
-def hipHostMalloc(int size, unsigned int flags):
+def hipHostMalloc(unsigned long size, unsigned int flags):
     """@brief Allocate device accessible page locked host memory
     @param[out] ptr Pointer to the allocated host pinned memory
     @param[in]  size Requested memory size
@@ -19614,7 +19605,7 @@ def hipHostMalloc(int size, unsigned int flags):
 
 
 @cython.embedsignature(True)
-def hipMallocManaged(int size, unsigned int flags):
+def hipMallocManaged(unsigned long size, unsigned int flags):
     """-------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
     @addtogroup MemoryM Managed Memory
@@ -19635,7 +19626,7 @@ def hipMallocManaged(int size, unsigned int flags):
 
 
 @cython.embedsignature(True)
-def hipMemPrefetchAsync(object dev_ptr, int count, int device, object stream):
+def hipMemPrefetchAsync(object dev_ptr, unsigned long count, int device, object stream):
     """@brief Prefetches memory to the specified destination device using HIP.
     @param [in] dev_ptr  pointer to be prefetched
     @param [in] count    size in bytes for prefetching
@@ -19650,7 +19641,7 @@ def hipMemPrefetchAsync(object dev_ptr, int count, int device, object stream):
 
 
 @cython.embedsignature(True)
-def hipMemAdvise(object dev_ptr, int count, object advice, int device):
+def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device):
     """@brief Advise about the usage of a given memory range to HIP.
     @param [in] dev_ptr  pointer to memory to set the advice for
     @param [in] count    size in bytes of the memory range
@@ -19666,7 +19657,7 @@ def hipMemAdvise(object dev_ptr, int count, object advice, int device):
 
 
 @cython.embedsignature(True)
-def hipMemRangeGetAttribute(object data, int data_size, object attribute, object dev_ptr, int count):
+def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribute, object dev_ptr, unsigned long count):
     """@brief Query an attribute of a given memory range in HIP.
     @param [in,out] data   a pointer to a memory location where the result of each
     attribute query will be written to
@@ -19685,7 +19676,7 @@ def hipMemRangeGetAttribute(object data, int data_size, object attribute, object
 
 
 @cython.embedsignature(True)
-def hipMemRangeGetAttributes(int num_attributes, object dev_ptr, int count):
+def hipMemRangeGetAttributes(unsigned long num_attributes, object dev_ptr, unsigned long count):
     """@brief Query attributes of a given memory range in HIP.
     @param [in,out] data     a two-dimensional array containing pointers to memory locations
     where the result of each attribute query will be written to
@@ -19698,7 +19689,7 @@ def hipMemRangeGetAttributes(int num_attributes, object dev_ptr, int count):
     @returns #hipSuccess, #hipErrorInvalidValue
     """
     data = hip._util.types.DataHandle.from_ptr(NULL)
-    cdef int data_sizes
+    cdef unsigned long data_sizes
     cdef chip.hipMemRangeAttribute attributes
     _hipMemRangeGetAttributes__retval = hipError_t(chip.hipMemRangeGetAttributes(
         <void **>&data._ptr,&data_sizes,&attributes,num_attributes,
@@ -19707,7 +19698,7 @@ def hipMemRangeGetAttributes(int num_attributes, object dev_ptr, int count):
 
 
 @cython.embedsignature(True)
-def hipStreamAttachMemAsync(object stream, object dev_ptr, int length, unsigned int flags):
+def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length, unsigned int flags):
     """@brief Attach memory to a stream asynchronously in HIP.
     @param [in] stream     - stream in which to enqueue the attach operation
     @param [in] dev_ptr    - pointer to memory (must be a pointer to managed memory or
@@ -19724,7 +19715,7 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, int length, unsigned 
 
 
 @cython.embedsignature(True)
-def hipMallocAsync(int size, object stream):
+def hipMallocAsync(unsigned long size, object stream):
     """@brief Allocates memory with stream ordered semantics
     Inserts a memory allocation operation into @p stream.
     A pointer to the allocated memory is returned immediately in *dptr.
@@ -19778,7 +19769,7 @@ def hipFreeAsync(object dev_ptr, object stream):
 
 
 @cython.embedsignature(True)
-def hipMemPoolTrimTo(object mem_pool, int min_bytes_to_hold):
+def hipMemPoolTrimTo(object mem_pool, unsigned long min_bytes_to_hold):
     """@brief Releases freed memory back to the OS
     Releases memory back to the OS until the pool contains fewer than @p min_bytes_to_keep
     reserved bytes, or there is no more memory that the allocator can safely release.
@@ -19883,7 +19874,7 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
 
 
 @cython.embedsignature(True)
-def hipMemPoolSetAccess(object mem_pool, object desc_list, int count):
+def hipMemPoolSetAccess(object mem_pool, object desc_list, unsigned long count):
     """@brief Controls visibility of the specified pool between devices
     @param [in] mem_pool   Memory pool for acccess change
     @param [in] desc_list  Array of access descriptors. Each descriptor instructs the access to enable for a single gpu
@@ -19965,7 +19956,7 @@ def hipMemPoolDestroy(object mem_pool):
 
 
 @cython.embedsignature(True)
-def hipMallocFromPoolAsync(int size, object mem_pool, object stream):
+def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
     """@brief Allocates memory from a specified pool with stream ordered semantics.
     Inserts an allocation operation into @p stream.
     A pointer to the allocated memory is returned immediately in @p dev_ptr.
@@ -20096,7 +20087,7 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
 
 
 @cython.embedsignature(True)
-def hipHostAlloc(int size, unsigned int flags):
+def hipHostAlloc(unsigned long size, unsigned int flags):
     """@brief Allocate device accessible page locked host memory [Deprecated]
     @param[out] ptr Pointer to the allocated host pinned memory
     @param[in]  size Requested memory size
@@ -20142,7 +20133,7 @@ def hipHostGetFlags(object hostPtr):
 
 
 @cython.embedsignature(True)
-def hipHostRegister(object hostPtr, int sizeBytes, unsigned int flags):
+def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags):
     """@brief Register host memory so it can be accessed from the current device.
     @param[out] hostPtr Pointer to host memory to be registered.
     @param[in] sizeBytes size of the host memory
@@ -20187,7 +20178,7 @@ def hipHostUnregister(object hostPtr):
 
 
 @cython.embedsignature(True)
-def hipMallocPitch(int width, int height):
+def hipMallocPitch(unsigned long width, unsigned long height):
     """Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
     The change in width size due to padding will be returned in *pitch.
@@ -20202,14 +20193,14 @@ def hipMallocPitch(int width, int height):
     hipMalloc3DArray, hipHostMalloc
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
-    cdef int pitch
+    cdef unsigned long pitch
     _hipMallocPitch__retval = hipError_t(chip.hipMallocPitch(
         <void **>&ptr._ptr,&pitch,width,height))    # fully specified
     return (_hipMallocPitch__retval,ptr,pitch)
 
 
 @cython.embedsignature(True)
-def hipMemAllocPitch(object dptr, int widthInBytes, int height, unsigned int elementSizeBytes):
+def hipMemAllocPitch(object dptr, unsigned long widthInBytes, unsigned long height, unsigned int elementSizeBytes):
     """Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
     The change in width size due to padding will be returned in *pitch.
@@ -20226,9 +20217,9 @@ def hipMemAllocPitch(object dptr, int widthInBytes, int height, unsigned int ele
     @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
     hipMalloc3DArray, hipHostMalloc
     """
-    cdef int pitch
+    cdef unsigned long pitch
     _hipMemAllocPitch__retval = hipError_t(chip.hipMemAllocPitch(
-        <chip.hipDeviceptr_t*>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,&pitch,widthInBytes,height,elementSizeBytes))    # fully specified
+        <void **>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,&pitch,widthInBytes,height,elementSizeBytes))    # fully specified
     return (_hipMemAllocPitch__retval,pitch)
 
 
@@ -20281,7 +20272,7 @@ def hipHostFree(object ptr):
 
 
 @cython.embedsignature(True)
-def hipMemcpy(object dst, object src, int sizeBytes, object kind):
+def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
     """@brief Copy data from src to dst.
     It supports memory from host to device,
     device to host, device to device and host to host
@@ -20315,7 +20306,7 @@ def hipMemcpy(object dst, object src, int sizeBytes, object kind):
 
 
 @cython.embedsignature(True)
-def hipMemcpyWithStream(object dst, object src, int sizeBytes, object kind, object stream):
+def hipMemcpyWithStream(object dst, object src, unsigned long sizeBytes, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -20328,7 +20319,7 @@ def hipMemcpyWithStream(object dst, object src, int sizeBytes, object kind, obje
 
 
 @cython.embedsignature(True)
-def hipMemcpyHtoD(object dst, object src, int sizeBytes):
+def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
     """@brief Copy data from Host to Device
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -20343,13 +20334,13 @@ def hipMemcpyHtoD(object dst, object src, int sizeBytes):
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
     _hipMemcpyHtoD__retval = hipError_t(chip.hipMemcpyHtoD(
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
     return (_hipMemcpyHtoD__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemcpyDtoH(object dst, object src, int sizeBytes):
+def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
     """@brief Copy data from Device to Host
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -20365,12 +20356,12 @@ def hipMemcpyDtoH(object dst, object src, int sizeBytes):
     """
     _hipMemcpyDtoH__retval = hipError_t(chip.hipMemcpyDtoH(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
     return (_hipMemcpyDtoH__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemcpyDtoD(object dst, object src, int sizeBytes):
+def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
     """@brief Copy data from Device to Device
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -20385,13 +20376,13 @@ def hipMemcpyDtoD(object dst, object src, int sizeBytes):
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
     _hipMemcpyDtoD__retval = hipError_t(chip.hipMemcpyDtoD(
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes))    # fully specified
     return (_hipMemcpyDtoD__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemcpyHtoDAsync(object dst, object src, int sizeBytes, object stream):
+def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object stream):
     """@brief Copy data from Host to Device asynchronously
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -20406,14 +20397,14 @@ def hipMemcpyHtoDAsync(object dst, object src, int sizeBytes, object stream):
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
     _hipMemcpyHtoDAsync__retval = hipError_t(chip.hipMemcpyHtoDAsync(
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyHtoDAsync__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemcpyDtoHAsync(object dst, object src, int sizeBytes, object stream):
+def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object stream):
     """@brief Copy data from Device to Host asynchronously
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -20429,13 +20420,13 @@ def hipMemcpyDtoHAsync(object dst, object src, int sizeBytes, object stream):
     """
     _hipMemcpyDtoHAsync__retval = hipError_t(chip.hipMemcpyDtoHAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyDtoHAsync__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemcpyDtoDAsync(object dst, object src, int sizeBytes, object stream):
+def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object stream):
     """@brief Copy data from Device to Device asynchronously
     @param[out]  dst Data being copy to
     @param[in]   src Data being copy from
@@ -20450,8 +20441,8 @@ def hipMemcpyDtoDAsync(object dst, object src, int sizeBytes, object stream):
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
     _hipMemcpyDtoDAsync__retval = hipError_t(chip.hipMemcpyDtoDAsync(
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemcpyDtoDAsync__retval,)
 
@@ -20468,9 +20459,9 @@ def hipModuleGetGlobal(object dptr, object hmod, const char * name):
     @param[in]   name  Name of global to retrieve
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
     """
-    cdef int bytes
+    cdef unsigned long bytes
     _hipModuleGetGlobal__retval = hipError_t(chip.hipModuleGetGlobal(
-        <chip.hipDeviceptr_t*>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,&bytes,
+        <void **>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,&bytes,
         ihipModule_t.from_pyobj(hmod)._ptr,name))    # fully specified
     return (_hipModuleGetGlobal__retval,bytes)
 
@@ -20496,14 +20487,14 @@ def hipGetSymbolSize(object symbol):
     @param[out]  size  pointer to the size
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    cdef int size
+    cdef unsigned long size
     _hipGetSymbolSize__retval = hipError_t(chip.hipGetSymbolSize(&size,
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr))    # fully specified
     return (_hipGetSymbolSize__retval,size)
 
 
 @cython.embedsignature(True)
-def hipMemcpyToSymbol(object symbol, object src, int sizeBytes, int offset, object kind):
+def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind):
     """@brief Copies data to the given symbol on the device.
     Symbol HIP APIs allow a kernel to define a device-side data symbol which can be accessed on
     the host side. The symbol can be in __constant or device space.
@@ -20527,7 +20518,7 @@ def hipMemcpyToSymbol(object symbol, object src, int sizeBytes, int offset, obje
 
 
 @cython.embedsignature(True)
-def hipMemcpyToSymbolAsync(object symbol, object src, int sizeBytes, int offset, object kind, object stream):
+def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
     """@brief Copies data to the given symbol on the device asynchronously.
     @param[out]  symbol  pointer to the device symbole
     @param[in]   src  pointer to the source address
@@ -20547,7 +20538,7 @@ def hipMemcpyToSymbolAsync(object symbol, object src, int sizeBytes, int offset,
 
 
 @cython.embedsignature(True)
-def hipMemcpyFromSymbol(object dst, object symbol, int sizeBytes, int offset, object kind):
+def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind):
     """@brief Copies data from the given symbol on the device.
     @param[out]  dptr  Returns pointer to destinition memory address
     @param[in]   symbol  pointer to the symbole address on the device
@@ -20565,7 +20556,7 @@ def hipMemcpyFromSymbol(object dst, object symbol, int sizeBytes, int offset, ob
 
 
 @cython.embedsignature(True)
-def hipMemcpyFromSymbolAsync(object dst, object symbol, int sizeBytes, int offset, object kind, object stream):
+def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
     """@brief Copies data from the given symbol on the device asynchronously.
     @param[out]  dptr  Returns pointer to destinition memory address
     @param[in]   symbol  pointer to the symbole address on the device
@@ -20585,7 +20576,7 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, int sizeBytes, int offse
 
 
 @cython.embedsignature(True)
-def hipMemcpyAsync(object dst, object src, int sizeBytes, object kind, object stream):
+def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind, object stream):
     """@brief Copy data from src to dst asynchronously.
     @warning If host or dest are not pinned, the memory copy will be performed synchronously.  For
     best performance, use hipHostMalloc to allocate host memory that is transferred asynchronously.
@@ -20618,7 +20609,7 @@ def hipMemcpyAsync(object dst, object src, int sizeBytes, object kind, object st
 
 
 @cython.embedsignature(True)
-def hipMemset(object dst, int value, int sizeBytes):
+def hipMemset(object dst, int value, unsigned long sizeBytes):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     byte value value.
     @param[out] dst Data being filled
@@ -20632,7 +20623,7 @@ def hipMemset(object dst, int value, int sizeBytes):
 
 
 @cython.embedsignature(True)
-def hipMemsetD8(object dest, unsigned char value, int count):
+def hipMemsetD8(object dest, unsigned char value, unsigned long count):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     byte value value.
     @param[out] dst Data ptr to be filled
@@ -20641,12 +20632,12 @@ def hipMemsetD8(object dest, unsigned char value, int count):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD8__retval = hipError_t(chip.hipMemsetD8(
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
     return (_hipMemsetD8__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemsetD8Async(object dest, unsigned char value, int count, object stream):
+def hipMemsetD8Async(object dest, unsigned char value, unsigned long count, object stream):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     byte value value.
     hipMemsetD8Async() is asynchronous with respect to the host, so the call may return before the
@@ -20660,13 +20651,13 @@ def hipMemsetD8Async(object dest, unsigned char value, int count, object stream)
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD8Async__retval = hipError_t(chip.hipMemsetD8Async(
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
+        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetD8Async__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemsetD16(object dest, unsigned short value, int count):
+def hipMemsetD16(object dest, unsigned short value, unsigned long count):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     short value value.
     @param[out] dst Data ptr to be filled
@@ -20675,12 +20666,12 @@ def hipMemsetD16(object dest, unsigned short value, int count):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD16__retval = hipError_t(chip.hipMemsetD16(
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
     return (_hipMemsetD16__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemsetD16Async(object dest, unsigned short value, int count, object stream):
+def hipMemsetD16Async(object dest, unsigned short value, unsigned long count, object stream):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
     short value value.
     hipMemsetD16Async() is asynchronous with respect to the host, so the call may return before the
@@ -20694,13 +20685,13 @@ def hipMemsetD16Async(object dest, unsigned short value, int count, object strea
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD16Async__retval = hipError_t(chip.hipMemsetD16Async(
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
+        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetD16Async__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemsetD32(object dest, int value, int count):
+def hipMemsetD32(object dest, int value, unsigned long count):
     """@brief Fills the memory area pointed to by dest with the constant integer
     value for specified number of times.
     @param[out] dst Data being filled
@@ -20709,12 +20700,12 @@ def hipMemsetD32(object dest, int value, int count):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD32__retval = hipError_t(chip.hipMemsetD32(
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
     return (_hipMemsetD32__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemsetAsync(object dst, int value, int sizeBytes, object stream):
+def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream):
     """@brief Fills the first sizeBytes bytes of the memory area pointed to by dev with the constant
     byte value value.
     hipMemsetAsync() is asynchronous with respect to the host, so the call may return before the
@@ -20734,7 +20725,7 @@ def hipMemsetAsync(object dst, int value, int sizeBytes, object stream):
 
 
 @cython.embedsignature(True)
-def hipMemsetD32Async(object dst, int value, int count, object stream):
+def hipMemsetD32Async(object dst, int value, unsigned long count, object stream):
     """@brief Fills the memory area pointed to by dev with the constant integer
     value for specified number of times.
     hipMemsetD32Async() is asynchronous with respect to the host, so the call may return before the
@@ -20748,13 +20739,13 @@ def hipMemsetD32Async(object dst, int value, int count, object stream):
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemsetD32Async__retval = hipError_t(chip.hipMemsetD32Async(
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,count,
+        <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,count,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_hipMemsetD32Async__retval,)
 
 
 @cython.embedsignature(True)
-def hipMemset2D(object dst, int pitch, int value, int width, int height):
+def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width, unsigned long height):
     """@brief Fills the memory area pointed to by dst with the constant value.
     @param[out] dst Pointer to device memory
     @param[in]  pitch - data size in bytes
@@ -20769,7 +20760,7 @@ def hipMemset2D(object dst, int pitch, int value, int width, int height):
 
 
 @cython.embedsignature(True)
-def hipMemset2DAsync(object dst, int pitch, int value, int width, int height, object stream):
+def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long width, unsigned long height, object stream):
     """@brief Fills asynchronously the memory area pointed to by dst with the constant value.
     @param[in]  dst Pointer to device memory
     @param[in]  pitch - data size in bytes
@@ -20815,8 +20806,8 @@ def hipMemGetInfo():
     @warning On HCC, the free memory only accounts for memory allocated by this process and may be
     optimistic.
     """
-    cdef int free
-    cdef int total
+    cdef unsigned long free
+    cdef unsigned long total
     _hipMemGetInfo__retval = hipError_t(chip.hipMemGetInfo(&free,&total))    # fully specified
     return (_hipMemGetInfo__retval,free,total)
 
@@ -20825,14 +20816,14 @@ def hipMemGetInfo():
 def hipMemPtrGetInfo(object ptr):
     """
     """
-    cdef int size
+    cdef unsigned long size
     _hipMemPtrGetInfo__retval = hipError_t(chip.hipMemPtrGetInfo(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,&size))    # fully specified
     return (_hipMemPtrGetInfo__retval,size)
 
 
 @cython.embedsignature(True)
-def hipMallocArray(object desc, int width, int height, unsigned int flags):
+def hipMallocArray(object desc, unsigned long width, unsigned long height, unsigned int flags):
     """@brief Allocate an array on the device.
     @param[out]  array  Pointer to allocated array in device memory
     @param[in]   desc   Requested channel format
@@ -20947,7 +20938,7 @@ def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
 
 
 @cython.embedsignature(True)
-def hipMemcpy2D(object dst, int dpitch, object src, int spitch, int width, int height, object kind):
+def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst    Destination memory address
     @param[in]   dpitch Pitch of destination memory
@@ -21000,7 +20991,7 @@ def hipMemcpyParam2DAsync(object pCopy, object stream):
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DAsync(object dst, int dpitch, object src, int spitch, int width, int height, object kind, object stream):
+def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
     """@brief Copies data between host and device.
     @param[in]   dst    Destination memory address
     @param[in]   dpitch Pitch of destination memory
@@ -21025,7 +21016,7 @@ def hipMemcpy2DAsync(object dst, int dpitch, object src, int spitch, int width, 
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DToArray(object dst, int wOffset, int hOffset, object src, int spitch, int width, int height, object kind):
+def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst     Destination memory address
     @param[in]   wOffset Destination starting X offset
@@ -21049,7 +21040,7 @@ def hipMemcpy2DToArray(object dst, int wOffset, int hOffset, object src, int spi
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DToArrayAsync(object dst, int wOffset, int hOffset, object src, int spitch, int width, int height, object kind, object stream):
+def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
     """@brief Copies data between host and device.
     @param[in]   dst     Destination memory address
     @param[in]   wOffset Destination starting X offset
@@ -21075,7 +21066,7 @@ def hipMemcpy2DToArrayAsync(object dst, int wOffset, int hOffset, object src, in
 
 
 @cython.embedsignature(True)
-def hipMemcpyToArray(object dst, int wOffset, int hOffset, object src, int count, object kind):
+def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long count, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst     Destination memory address
     @param[in]   wOffset Destination starting X offset
@@ -21097,7 +21088,7 @@ def hipMemcpyToArray(object dst, int wOffset, int hOffset, object src, int count
 
 
 @cython.embedsignature(True)
-def hipMemcpyFromArray(object dst, object srcArray, int wOffset, int hOffset, int count, object kind):
+def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsigned long hOffset, unsigned long count, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst       Destination memory address
     @param[in]   srcArray  Source memory address
@@ -21119,7 +21110,7 @@ def hipMemcpyFromArray(object dst, object srcArray, int wOffset, int hOffset, in
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DFromArray(object dst, int dpitch, object src, int wOffset, int hOffset, int width, int height, object kind):
+def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned long wOffset, unsigned long hOffset, unsigned long width, unsigned long height, object kind):
     """@brief Copies data between host and device.
     @param[in]   dst       Destination memory address
     @param[in]   dpitch    Pitch of destination memory
@@ -21143,7 +21134,7 @@ def hipMemcpy2DFromArray(object dst, int dpitch, object src, int wOffset, int hO
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DFromArrayAsync(object dst, int dpitch, object src, int wOffset, int hOffset, int width, int height, object kind, object stream):
+def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsigned long wOffset, unsigned long hOffset, unsigned long width, unsigned long height, object kind, object stream):
     """@brief Copies data between host and device asynchronously.
     @param[in]   dst       Destination memory address
     @param[in]   dpitch    Pitch of destination memory
@@ -21169,7 +21160,7 @@ def hipMemcpy2DFromArrayAsync(object dst, int dpitch, object src, int wOffset, i
 
 
 @cython.embedsignature(True)
-def hipMemcpyAtoH(object dst, object srcArray, int srcOffset, int count):
+def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned long count):
     """@brief Copies data between host and device.
     @param[in]   dst       Destination memory address
     @param[in]   srcArray  Source array
@@ -21187,7 +21178,7 @@ def hipMemcpyAtoH(object dst, object srcArray, int srcOffset, int count):
 
 
 @cython.embedsignature(True)
-def hipMemcpyHtoA(object dstArray, int dstOffset, object srcHost, int count):
+def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsigned long count):
     """@brief Copies data between host and device.
     @param[in]   dstArray   Destination memory address
     @param[in]   dstOffset  Offset in bytes of destination array
@@ -21329,15 +21320,15 @@ def hipMemGetAddressRange(object pbase, object dptr):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    cdef int psize
+    cdef unsigned long psize
     _hipMemGetAddressRange__retval = hipError_t(chip.hipMemGetAddressRange(
-        <chip.hipDeviceptr_t*>hip._util.types.DataHandle.from_pyobj(pbase)._ptr,&psize,
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dptr)._ptr))    # fully specified
+        <void **>hip._util.types.DataHandle.from_pyobj(pbase)._ptr,&psize,
+        <void *>hip._util.types.DataHandle.from_pyobj(dptr)._ptr))    # fully specified
     return (_hipMemGetAddressRange__retval,psize)
 
 
 @cython.embedsignature(True)
-def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, int sizeBytes):
+def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsigned long sizeBytes):
     """@brief Copies memory from one device to memory on another device.
     @param [out] dst - Destination device pointer.
     @param [in] dstDeviceId - Destination device
@@ -21353,7 +21344,7 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, int 
 
 
 @cython.embedsignature(True)
-def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, int sizeBytes, object stream):
+def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, unsigned long sizeBytes, object stream):
     """@brief Copies memory from one device to memory on another device.
     @param [out] dst - Destination device pointer.
     @param [in] dstDevice - Destination device
@@ -21371,7 +21362,7 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, i
 
 
 @cython.embedsignature(True)
-def hipCtxCreate(unsigned int flags, hipDevice_t device):
+def hipCtxCreate(unsigned int flags, int device):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -21620,7 +21611,7 @@ def hipCtxDisablePeerAccess(object peerCtx):
 
 
 @cython.embedsignature(True)
-def hipDevicePrimaryCtxGetState(hipDevice_t dev):
+def hipDevicePrimaryCtxGetState(int dev):
     """@}
     @brief Get the state of the primary context.
     @param [in] Device to get primary context flags for
@@ -21637,7 +21628,7 @@ def hipDevicePrimaryCtxGetState(hipDevice_t dev):
 
 
 @cython.embedsignature(True)
-def hipDevicePrimaryCtxRelease(hipDevice_t dev):
+def hipDevicePrimaryCtxRelease(int dev):
     """@brief Release the primary context on the GPU.
     @param [in] Device which primary context is released
     @returns #hipSuccess
@@ -21651,7 +21642,7 @@ def hipDevicePrimaryCtxRelease(hipDevice_t dev):
 
 
 @cython.embedsignature(True)
-def hipDevicePrimaryCtxRetain(hipDevice_t dev):
+def hipDevicePrimaryCtxRetain(int dev):
     """@brief Retain the primary context on the GPU.
     @param [out] Returned context handle of the new context
     @param [in] Device which primary context is released
@@ -21665,7 +21656,7 @@ def hipDevicePrimaryCtxRetain(hipDevice_t dev):
 
 
 @cython.embedsignature(True)
-def hipDevicePrimaryCtxReset(hipDevice_t dev):
+def hipDevicePrimaryCtxReset(int dev):
     """@brief Resets the primary context on the GPU.
     @param [in] Device which primary context is reset
     @returns #hipSuccess
@@ -21677,7 +21668,7 @@ def hipDevicePrimaryCtxReset(hipDevice_t dev):
 
 
 @cython.embedsignature(True)
-def hipDevicePrimaryCtxSetFlags(hipDevice_t dev, unsigned int flags):
+def hipDevicePrimaryCtxSetFlags(int dev, unsigned int flags):
     """@brief Set flags for the primary context.
     @param [in] Device for which the primary context flags are set
     @param [in] New flags for the device
@@ -21890,7 +21881,7 @@ def hipExtLaunchMultiKernelMultiDevice(object launchParamsList, int numDevices, 
 
 
 @cython.embedsignature(True)
-def hipModuleOccupancyMaxPotentialBlockSize(object f, int dynSharedMemPerBlk, int blockSizeLimit):
+def hipModuleOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk, int blockSizeLimit):
     """@}
     @defgroup Occupancy Occupancy
     @{
@@ -21913,7 +21904,7 @@ def hipModuleOccupancyMaxPotentialBlockSize(object f, int dynSharedMemPerBlk, in
 
 
 @cython.embedsignature(True)
-def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, int dynSharedMemPerBlk, int blockSizeLimit, unsigned int flags):
+def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, unsigned long dynSharedMemPerBlk, int blockSizeLimit, unsigned int flags):
     """@brief determine the grid and block sizes to achieves maximum occupancy for a kernel
     @param [out] gridSize           minimum grid size for maximum potential occupancy
     @param [out] blockSize          block size for maximum potential occupancy
@@ -21933,7 +21924,7 @@ def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, int dynSharedMemP
 
 
 @cython.embedsignature(True)
-def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, int dynSharedMemPerBlk):
+def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsigned long dynSharedMemPerBlk):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  func             Kernel function (hipFunction) for which occupancy is calulated
@@ -21947,7 +21938,7 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, 
 
 
 @cython.embedsignature(True)
-def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
+def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSize, unsigned long dynSharedMemPerBlk, unsigned int flags):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  f                Kernel function(hipFunction_t) for which occupancy is calulated
@@ -21962,7 +21953,7 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int bl
 
 
 @cython.embedsignature(True)
-def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, int dynSharedMemPerBlk):
+def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsigned long dynSharedMemPerBlk):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  func             Kernel function for which occupancy is calulated
@@ -21976,7 +21967,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, int dy
 
 
 @cython.embedsignature(True)
-def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSize, int dynSharedMemPerBlk, unsigned int flags):
+def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSize, unsigned long dynSharedMemPerBlk, unsigned int flags):
     """@brief Returns occupancy for a device function.
     @param [out] numBlocks        Returned occupancy
     @param [in]  f                Kernel function for which occupancy is calulated
@@ -21991,7 +21982,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSiz
 
 
 @cython.embedsignature(True)
-def hipOccupancyMaxPotentialBlockSize(object f, int dynSharedMemPerBlk, int blockSizeLimit):
+def hipOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk, int blockSizeLimit):
     """@brief determine the grid and block sizes to achieves maximum occupancy for a kernel
     @param [out] gridSize           minimum grid size for maximum potential occupancy
     @param [out] blockSize          block size for maximum potential occupancy
@@ -22030,7 +22021,7 @@ def hipProfilerStop():
 
 
 @cython.embedsignature(True)
-def hipConfigureCall(int sharedMem, object stream):
+def hipConfigureCall(unsigned long sharedMem, object stream):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -22051,7 +22042,7 @@ def hipConfigureCall(int sharedMem, object stream):
     pass
 
 @cython.embedsignature(True)
-def hipSetupArgument(object arg, int size, int offset):
+def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
     """@brief Set a kernel argument.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     @param [in] arg    Pointer the argument in host memory.
@@ -22075,7 +22066,7 @@ def hipLaunchByPtr(object func):
 
 
 @cython.embedsignature(True)
-def hipLaunchKernel(object function_address, object args, int sharedMemBytes, object stream):
+def hipLaunchKernel(object function_address, object args, unsigned long sharedMemBytes, object stream):
     """@brief C compliant kernel launch API
     @param [in] function_address - kernel stub function pointer.
     @param [in] numBlocks - number of blocks
@@ -22119,7 +22110,7 @@ def hipDrvMemcpy2DUnaligned(object pCopy):
 
 
 @cython.embedsignature(True)
-def hipExtLaunchKernel(object function_address, object args, int sharedMemBytes, object stream, object startEvent, object stopEvent, int flags):
+def hipExtLaunchKernel(object function_address, object args, unsigned long sharedMemBytes, object stream, object startEvent, object stopEvent, int flags):
     """@brief Launches kernel from the pointer address, with arguments and shared memory on stream.
     @param [in] function_address pointer to the Kernel to launch.
     @param [in] numBlocks number of blocks.
@@ -22373,10 +22364,10 @@ def hipTexRefSetFormat(object texRef, object fmt, int NumPackedComponents):
 
 
 @cython.embedsignature(True)
-def hipBindTexture(object tex, object devPtr, object desc, int size):
+def hipBindTexture(object tex, object devPtr, object desc, unsigned long size):
     """
     """
-    cdef int offset
+    cdef unsigned long offset
     _hipBindTexture__retval = hipError_t(chip.hipBindTexture(&offset,
         textureReference.from_pyobj(tex)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr,
@@ -22385,10 +22376,10 @@ def hipBindTexture(object tex, object devPtr, object desc, int size):
 
 
 @cython.embedsignature(True)
-def hipBindTexture2D(object tex, object devPtr, object desc, int width, int height, int pitch):
+def hipBindTexture2D(object tex, object devPtr, object desc, unsigned long width, unsigned long height, unsigned long pitch):
     """
     """
-    cdef int offset
+    cdef unsigned long offset
     _hipBindTexture2D__retval = hipError_t(chip.hipBindTexture2D(&offset,
         textureReference.from_pyobj(tex)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr,
@@ -22411,7 +22402,7 @@ def hipBindTextureToArray(object tex, object array, object desc):
 def hipGetTextureAlignmentOffset(object texref):
     """
     """
-    cdef int offset
+    cdef unsigned long offset
     _hipGetTextureAlignmentOffset__retval = hipError_t(chip.hipGetTextureAlignmentOffset(&offset,
         textureReference.from_pyobj(texref)._ptr))    # fully specified
     return (_hipGetTextureAlignmentOffset__retval,offset)
@@ -22530,24 +22521,24 @@ def hipTexRefGetMipMappedArray(object texRef):
 
 
 @cython.embedsignature(True)
-def hipTexRefSetAddress(object texRef, object dptr, int bytes):
+def hipTexRefSetAddress(object texRef, object dptr, unsigned long bytes):
     """
     """
-    cdef int ByteOffset
+    cdef unsigned long ByteOffset
     _hipTexRefSetAddress__retval = hipError_t(chip.hipTexRefSetAddress(&ByteOffset,
         textureReference.from_pyobj(texRef)._ptr,
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,bytes))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,bytes))    # fully specified
     return (_hipTexRefSetAddress__retval,ByteOffset)
 
 
 @cython.embedsignature(True)
-def hipTexRefSetAddress2D(object texRef, object desc, object dptr, int Pitch):
+def hipTexRefSetAddress2D(object texRef, object desc, object dptr, unsigned long Pitch):
     """
     """
     _hipTexRefSetAddress2D__retval = hipError_t(chip.hipTexRefSetAddress2D(
         textureReference.from_pyobj(texRef)._ptr,
         HIP_ARRAY_DESCRIPTOR.from_pyobj(desc)._ptr,
-        <chip.hipDeviceptr_t>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,Pitch))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,Pitch))    # fully specified
     return (_hipTexRefSetAddress2D__retval,)
 
 
@@ -22642,7 +22633,7 @@ def hipMipmappedArrayGetLevel(object hMipMappedArray, unsigned int level):
 
 
 @cython.embedsignature(True)
-def hipApiName(uint32_t id):
+def hipApiName(unsigned int id):
     """@defgroup Callback Callback Activity APIs
     @{
     This section describes the callback/Activity of HIP runtime API.
@@ -22741,7 +22732,7 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
     cdef chip.hipStreamCaptureStatus captureStatus_out
     cdef unsigned long long id_out
     graph_out = ihipGraph.from_ptr(NULL)
-    cdef int numDependencies_out
+    cdef unsigned long numDependencies_out
     _hipStreamGetCaptureInfo_v2__retval = hipError_t(chip.hipStreamGetCaptureInfo_v2(
         ihipStream_t.from_pyobj(stream)._ptr,&captureStatus_out,&id_out,&graph_out._ptr,
         <chip.hipGraphNode_t **>hip._util.types.DataHandle.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified
@@ -22764,7 +22755,7 @@ def hipStreamIsCapturing(object stream):
 
 
 @cython.embedsignature(True)
-def hipStreamUpdateCaptureDependencies(object stream, int numDependencies, unsigned int flags):
+def hipStreamUpdateCaptureDependencies(object stream, unsigned long numDependencies, unsigned int flags):
     """@brief Update the set of dependencies in a capturing stream
     @param [in] stream - Stream under capture.
     @param [in] dependencies - pointer to an array of nodes to Add/Replace.
@@ -22820,7 +22811,7 @@ def hipGraphDestroy(object graph):
 
 
 @cython.embedsignature(True)
-def hipGraphAddDependencies(object graph, int numDependencies):
+def hipGraphAddDependencies(object graph, unsigned long numDependencies):
     """@brief Adds dependency edges to a graph.
     @param [in] graph - instance of the graph to add dependencies.
     @param [in] from - pointer to the graph nodes with dependenties to add from.
@@ -22838,7 +22829,7 @@ def hipGraphAddDependencies(object graph, int numDependencies):
 
 
 @cython.embedsignature(True)
-def hipGraphRemoveDependencies(object graph, int numDependencies):
+def hipGraphRemoveDependencies(object graph, unsigned long numDependencies):
     """@brief Removes dependency edges from a graph.
     @param [in] graph - instance of the graph to remove dependencies.
     @param [in] from - Array of nodes that provide the dependencies.
@@ -22872,7 +22863,7 @@ def hipGraphGetEdges(object graph):
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
-    cdef int numEdges
+    cdef unsigned long numEdges
     _hipGraphGetEdges__retval = hipError_t(chip.hipGraphGetEdges(
         ihipGraph.from_pyobj(graph)._ptr,&from_._ptr,&to._ptr,&numEdges))    # fully specified
     return (_hipGraphGetEdges__retval,from_,to,numEdges)
@@ -22893,7 +22884,7 @@ def hipGraphGetNodes(object graph):
     it is still open to changes and may have outstanding issues.
     """
     nodes = hipGraphNode.from_ptr(NULL)
-    cdef int numNodes
+    cdef unsigned long numNodes
     _hipGraphGetNodes__retval = hipError_t(chip.hipGraphGetNodes(
         ihipGraph.from_pyobj(graph)._ptr,&nodes._ptr,&numNodes))    # fully specified
     return (_hipGraphGetNodes__retval,nodes,numNodes)
@@ -22914,7 +22905,7 @@ def hipGraphGetRootNodes(object graph):
     it is still open to changes and may have outstanding issues.
     """
     pRootNodes = hipGraphNode.from_ptr(NULL)
-    cdef int pNumRootNodes
+    cdef unsigned long pNumRootNodes
     _hipGraphGetRootNodes__retval = hipError_t(chip.hipGraphGetRootNodes(
         ihipGraph.from_pyobj(graph)._ptr,&pRootNodes._ptr,&pNumRootNodes))    # fully specified
     return (_hipGraphGetRootNodes__retval,pRootNodes,pNumRootNodes)
@@ -22935,7 +22926,7 @@ def hipGraphNodeGetDependencies(object node):
     it is still open to changes and may have outstanding issues.
     """
     pDependencies = hipGraphNode.from_ptr(NULL)
-    cdef int pNumDependencies
+    cdef unsigned long pNumDependencies
     _hipGraphNodeGetDependencies__retval = hipError_t(chip.hipGraphNodeGetDependencies(
         hipGraphNode.from_pyobj(node)._ptr,&pDependencies._ptr,&pNumDependencies))    # fully specified
     return (_hipGraphNodeGetDependencies__retval,pDependencies,pNumDependencies)
@@ -22957,7 +22948,7 @@ def hipGraphNodeGetDependentNodes(object node):
     it is still open to changes and may have outstanding issues.
     """
     pDependentNodes = hipGraphNode.from_ptr(NULL)
-    cdef int pNumDependentNodes
+    cdef unsigned long pNumDependentNodes
     _hipGraphNodeGetDependentNodes__retval = hipError_t(chip.hipGraphNodeGetDependentNodes(
         hipGraphNode.from_pyobj(node)._ptr,&pDependentNodes._ptr,&pNumDependentNodes))    # fully specified
     return (_hipGraphNodeGetDependentNodes__retval,pDependentNodes,pNumDependentNodes)
@@ -23024,7 +23015,7 @@ def hipGraphNodeFindInClone(object originalNode, object clonedGraph):
 
 
 @cython.embedsignature(True)
-def hipGraphInstantiate(object graph, char * pLogBuffer, int bufferSize):
+def hipGraphInstantiate(object graph, char * pLogBuffer, unsigned long bufferSize):
     """@brief Creates an executable graph from a graph
     @param [out] pGraphExec - pointer to instantiated executable graph that is created.
     @param [in] graph - instance of graph to instantiate.
@@ -23123,7 +23114,7 @@ def hipGraphExecUpdate(object hGraphExec, object hGraph):
 
 
 @cython.embedsignature(True)
-def hipGraphAddKernelNode(object graph, int numDependencies, object pNodeParams):
+def hipGraphAddKernelNode(object graph, unsigned long numDependencies, object pNodeParams):
     """@brief Creates a kernel execution node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -23190,7 +23181,7 @@ def hipGraphExecKernelNodeSetParams(object hGraphExec, object node, object pNode
 
 
 @cython.embedsignature(True)
-def hipGraphAddMemcpyNode(object graph, int numDependencies, object pCopyParams):
+def hipGraphAddMemcpyNode(object graph, unsigned long numDependencies, object pCopyParams):
     """@brief Creates a memcpy node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -23293,7 +23284,7 @@ def hipGraphExecMemcpyNodeSetParams(object hGraphExec, object node, object pNode
 
 
 @cython.embedsignature(True)
-def hipGraphAddMemcpyNode1D(object graph, int numDependencies, object dst, object src, int count, object kind):
+def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object dst, object src, unsigned long count, object kind):
     """@brief Creates a 1D memcpy node and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -23319,7 +23310,7 @@ def hipGraphAddMemcpyNode1D(object graph, int numDependencies, object dst, objec
 
 
 @cython.embedsignature(True)
-def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, int count, object kind):
+def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned long count, object kind):
     """@brief Sets a memcpy node's parameters to perform a 1-dimensional copy.
     @param [in] node - instance of the node to set parameters to.
     @param [in] dst - pointer to memory address to the destination.
@@ -23340,7 +23331,7 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, int count
 
 
 @cython.embedsignature(True)
-def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst, object src, int count, object kind):
+def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst, object src, unsigned long count, object kind):
     """@brief Sets the parameters for a memcpy node in the given graphExec to perform a 1-dimensional
     copy.
     @param [in] hGraphExec - instance of the executable graph with the node.
@@ -23364,7 +23355,7 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
 
 
 @cython.embedsignature(True)
-def hipGraphAddMemcpyNodeFromSymbol(object graph, int numDependencies, object dst, object symbol, int count, int offset, object kind):
+def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies, object dst, object symbol, unsigned long count, unsigned long offset, object kind):
     """@brief Creates a memcpy node to copy from a symbol on the device and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -23391,7 +23382,7 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, int numDependencies, object ds
 
 
 @cython.embedsignature(True)
-def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol, int count, int offset, object kind):
+def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol, unsigned long count, unsigned long offset, object kind):
     """@brief Sets a memcpy node's parameters to copy from a symbol on the device.
     @param [in] node - instance of the node to set parameters to.
     @param [in] dst - pointer to memory address to the destination.
@@ -23413,7 +23404,7 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
 
 
 @cython.embedsignature(True)
-def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, object dst, object symbol, int count, int offset, object kind):
+def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, object dst, object symbol, unsigned long count, unsigned long offset, object kind):
     """@brief Sets the parameters for a memcpy node in the given graphExec to copy from a symbol on the
     device.
     @param [in] hGraphExec - instance of the executable graph with the node.
@@ -23438,7 +23429,7 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
 
 
 @cython.embedsignature(True)
-def hipGraphAddMemcpyNodeToSymbol(object graph, int numDependencies, object symbol, object src, int count, int offset, object kind):
+def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, object symbol, object src, unsigned long count, unsigned long offset, object kind):
     """@brief Creates a memcpy node to copy to a symbol on the device and adds it to a graph.
     @param [out] pGraphNode - pointer to graph node to create.
     @param [in] graph - instance of graph to add the created node.
@@ -23465,7 +23456,7 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, int numDependencies, object symb
 
 
 @cython.embedsignature(True)
-def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, int count, int offset, object kind):
+def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, unsigned long count, unsigned long offset, object kind):
     """@brief Sets a memcpy node's parameters to copy to a symbol on the device.
     @param [in] node - instance of the node to set parameters to.
     @param [in] symbol - Device symbol address.
@@ -23487,7 +23478,7 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
 
 
 @cython.embedsignature(True)
-def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, object symbol, object src, int count, int offset, object kind):
+def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, object symbol, object src, unsigned long count, unsigned long offset, object kind):
     """@brief Sets the parameters for a memcpy node in the given graphExec to copy to a symbol on the
     device.
     @param [in] hGraphExec - instance of the executable graph with the node.
@@ -23512,7 +23503,7 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
 
 
 @cython.embedsignature(True)
-def hipGraphAddMemsetNode(object graph, int numDependencies, object pMemsetParams):
+def hipGraphAddMemsetNode(object graph, unsigned long numDependencies, object pMemsetParams):
     """@brief Creates a memset node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -23579,7 +23570,7 @@ def hipGraphExecMemsetNodeSetParams(object hGraphExec, object node, object pNode
 
 
 @cython.embedsignature(True)
-def hipGraphAddHostNode(object graph, int numDependencies, object pNodeParams):
+def hipGraphAddHostNode(object graph, unsigned long numDependencies, object pNodeParams):
     """@brief Creates a host execution node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -23646,7 +23637,7 @@ def hipGraphExecHostNodeSetParams(object hGraphExec, object node, object pNodePa
 
 
 @cython.embedsignature(True)
-def hipGraphAddChildGraphNode(object graph, int numDependencies, object childGraph):
+def hipGraphAddChildGraphNode(object graph, unsigned long numDependencies, object childGraph):
     """@brief Creates a child graph node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create.
     @param [in] graph - instance of the graph to add the created node.
@@ -23698,7 +23689,7 @@ def hipGraphExecChildGraphNodeSetParams(object hGraphExec, object node, object c
 
 
 @cython.embedsignature(True)
-def hipGraphAddEmptyNode(object graph, int numDependencies):
+def hipGraphAddEmptyNode(object graph, unsigned long numDependencies):
     """@brief Creates an empty node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node is add to.
@@ -23716,7 +23707,7 @@ def hipGraphAddEmptyNode(object graph, int numDependencies):
 
 
 @cython.embedsignature(True)
-def hipGraphAddEventRecordNode(object graph, int numDependencies, object event):
+def hipGraphAddEventRecordNode(object graph, unsigned long numDependencies, object event):
     """@brief Creates an event record node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node to be added.
@@ -23783,7 +23774,7 @@ def hipGraphExecEventRecordNodeSetEvent(object hGraphExec, object hNode, object 
 
 
 @cython.embedsignature(True)
-def hipGraphAddEventWaitNode(object graph, int numDependencies, object event):
+def hipGraphAddEventWaitNode(object graph, unsigned long numDependencies, object event):
     """@brief Creates an event wait node and adds it to a graph.
     @param [out] pGraphNode - pointer to the graph node to create and add to the graph.
     @param [in] graph - instane of the graph the node to be added.
@@ -23975,7 +23966,7 @@ def hipGraphReleaseUserObject(object graph, object object, unsigned int count):
 
 
 @cython.embedsignature(True)
-def hipMemAddressFree(object devPtr, int size):
+def hipMemAddressFree(object devPtr, unsigned long size):
     """@brief Frees an address range reservation made via hipMemAddressReserve
     @param [in] devPtr - starting address of the range.
     @param [in] size - size of the range.
@@ -23989,7 +23980,7 @@ def hipMemAddressFree(object devPtr, int size):
 
 
 @cython.embedsignature(True)
-def hipMemAddressReserve(int size, int alignment, object addr, unsigned long long flags):
+def hipMemAddressReserve(unsigned long size, unsigned long alignment, object addr, unsigned long long flags):
     """@brief Reserves an address range
     @param [out] ptr - starting address of the reserved range.
     @param [in] size - size of the reservation.
@@ -24008,7 +23999,7 @@ def hipMemAddressReserve(int size, int alignment, object addr, unsigned long lon
 
 
 @cython.embedsignature(True)
-def hipMemCreate(int size, object prop, unsigned long long flags):
+def hipMemCreate(unsigned long size, object prop, unsigned long long flags):
     """@brief Creates a memory allocation described by the properties and size
     @param [out] handle - value of the returned handle.
     @param [in] size - size of the allocation.
@@ -24070,7 +24061,7 @@ def hipMemGetAllocationGranularity(object prop, object option):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    cdef int granularity
+    cdef unsigned long granularity
     if not isinstance(option,hipMemAllocationGranularity_flags):
         raise TypeError("argument 'option' must be of type 'hipMemAllocationGranularity_flags'")
     _hipMemGetAllocationGranularity__retval = hipError_t(chip.hipMemGetAllocationGranularity(&granularity,
@@ -24112,7 +24103,7 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
 
 
 @cython.embedsignature(True)
-def hipMemMap(object ptr, int size, int offset, object handle, unsigned long long flags):
+def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handle, unsigned long long flags):
     """@brief Maps an allocation handle to a reserved virtual address range.
     @param [in] ptr - address where the memory will be mapped.
     @param [in] size - size of the mapping.
@@ -24174,7 +24165,7 @@ def hipMemRetainAllocationHandle(object addr):
 
 
 @cython.embedsignature(True)
-def hipMemSetAccess(object ptr, int size, object desc, int count):
+def hipMemSetAccess(object ptr, unsigned long size, object desc, unsigned long count):
     """@brief Set the access flags for each location specified in desc for the given virtual address range.
     @param [in] ptr - starting address of the virtual address range.
     @param [in] size - size of the range.
@@ -24191,7 +24182,7 @@ def hipMemSetAccess(object ptr, int size, object desc, int count):
 
 
 @cython.embedsignature(True)
-def hipMemUnmap(object ptr, int size):
+def hipMemUnmap(object ptr, unsigned long size):
     """@brief Unmap memory allocation of a given address range.
     @param [in] ptr - starting address of the range to unmap.
     @param [in] size - size of the virtual address range.
@@ -24217,7 +24208,7 @@ def hipGLGetDevices(unsigned int hipDeviceCount, object deviceList):
 
 
 @cython.embedsignature(True)
-def hipGraphicsGLRegisterBuffer(GLuint buffer, unsigned int flags):
+def hipGraphicsGLRegisterBuffer(unsigned int buffer, unsigned int flags):
     """
     """
     resource = _hipGraphicsResource.from_ptr(NULL)
@@ -24226,7 +24217,7 @@ def hipGraphicsGLRegisterBuffer(GLuint buffer, unsigned int flags):
 
 
 @cython.embedsignature(True)
-def hipGraphicsGLRegisterImage(GLuint image, GLenum target, unsigned int flags):
+def hipGraphicsGLRegisterImage(unsigned int image, unsigned int target, unsigned int flags):
     """
     """
     resource = _hipGraphicsResource.from_ptr(NULL)
@@ -24259,7 +24250,7 @@ def hipGraphicsResourceGetMappedPointer(object resource):
     """
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
-    cdef int size
+    cdef unsigned long size
     _hipGraphicsResourceGetMappedPointer__retval = hipError_t(chip.hipGraphicsResourceGetMappedPointer(
         <void **>&devPtr._ptr,&size,
         _hipGraphicsResource.from_pyobj(resource)._ptr))    # fully specified
@@ -24286,7 +24277,7 @@ def hipGraphicsUnregisterResource(object resource):
 
 
 @cython.embedsignature(True)
-def hipMemcpy_spt(object dst, object src, int sizeBytes, object kind):
+def hipMemcpy_spt(object dst, object src, unsigned long sizeBytes, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24298,7 +24289,7 @@ def hipMemcpy_spt(object dst, object src, int sizeBytes, object kind):
 
 
 @cython.embedsignature(True)
-def hipMemcpyToSymbol_spt(object symbol, object src, int sizeBytes, int offset, object kind):
+def hipMemcpyToSymbol_spt(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24310,7 +24301,7 @@ def hipMemcpyToSymbol_spt(object symbol, object src, int sizeBytes, int offset, 
 
 
 @cython.embedsignature(True)
-def hipMemcpyFromSymbol_spt(object dst, object symbol, int sizeBytes, int offset, object kind):
+def hipMemcpyFromSymbol_spt(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24322,7 +24313,7 @@ def hipMemcpyFromSymbol_spt(object dst, object symbol, int sizeBytes, int offset
 
 
 @cython.embedsignature(True)
-def hipMemcpy2D_spt(object dst, int dpitch, object src, int spitch, int width, int height, object kind):
+def hipMemcpy2D_spt(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24334,7 +24325,7 @@ def hipMemcpy2D_spt(object dst, int dpitch, object src, int spitch, int width, i
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DFromArray_spt(object dst, int dpitch, object src, int wOffset, int hOffset, int width, int height, object kind):
+def hipMemcpy2DFromArray_spt(object dst, unsigned long dpitch, object src, unsigned long wOffset, unsigned long hOffset, unsigned long width, unsigned long height, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24355,7 +24346,7 @@ def hipMemcpy3D_spt(object p):
 
 
 @cython.embedsignature(True)
-def hipMemset_spt(object dst, int value, int sizeBytes):
+def hipMemset_spt(object dst, int value, unsigned long sizeBytes):
     """
     """
     _hipMemset_spt__retval = hipError_t(chip.hipMemset_spt(
@@ -24364,7 +24355,7 @@ def hipMemset_spt(object dst, int value, int sizeBytes):
 
 
 @cython.embedsignature(True)
-def hipMemsetAsync_spt(object dst, int value, int sizeBytes, object stream):
+def hipMemsetAsync_spt(object dst, int value, unsigned long sizeBytes, object stream):
     """
     """
     _hipMemsetAsync_spt__retval = hipError_t(chip.hipMemsetAsync_spt(
@@ -24374,7 +24365,7 @@ def hipMemsetAsync_spt(object dst, int value, int sizeBytes, object stream):
 
 
 @cython.embedsignature(True)
-def hipMemset2D_spt(object dst, int pitch, int value, int width, int height):
+def hipMemset2D_spt(object dst, unsigned long pitch, int value, unsigned long width, unsigned long height):
     """
     """
     _hipMemset2D_spt__retval = hipError_t(chip.hipMemset2D_spt(
@@ -24383,7 +24374,7 @@ def hipMemset2D_spt(object dst, int pitch, int value, int width, int height):
 
 
 @cython.embedsignature(True)
-def hipMemset2DAsync_spt(object dst, int pitch, int value, int width, int height, object stream):
+def hipMemset2DAsync_spt(object dst, unsigned long pitch, int value, unsigned long width, unsigned long height, object stream):
     """
     """
     _hipMemset2DAsync_spt__retval = hipError_t(chip.hipMemset2DAsync_spt(
@@ -24405,7 +24396,7 @@ def hipMemset3D_spt(int value):
     pass
 
 @cython.embedsignature(True)
-def hipMemcpyAsync_spt(object dst, object src, int sizeBytes, object kind, object stream):
+def hipMemcpyAsync_spt(object dst, object src, unsigned long sizeBytes, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24428,7 +24419,7 @@ def hipMemcpy3DAsync_spt(object p, object stream):
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DAsync_spt(object dst, int dpitch, object src, int spitch, int width, int height, object kind, object stream):
+def hipMemcpy2DAsync_spt(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24441,7 +24432,7 @@ def hipMemcpy2DAsync_spt(object dst, int dpitch, object src, int spitch, int wid
 
 
 @cython.embedsignature(True)
-def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, int sizeBytes, int offset, object kind, object stream):
+def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24454,7 +24445,7 @@ def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, int sizeBytes, int o
 
 
 @cython.embedsignature(True)
-def hipMemcpyToSymbolAsync_spt(object symbol, object src, int sizeBytes, int offset, object kind, object stream):
+def hipMemcpyToSymbolAsync_spt(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24467,7 +24458,7 @@ def hipMemcpyToSymbolAsync_spt(object symbol, object src, int sizeBytes, int off
 
 
 @cython.embedsignature(True)
-def hipMemcpyFromArray_spt(object dst, object src, int wOffsetSrc, int hOffset, int count, object kind):
+def hipMemcpyFromArray_spt(object dst, object src, unsigned long wOffsetSrc, unsigned long hOffset, unsigned long count, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24479,7 +24470,7 @@ def hipMemcpyFromArray_spt(object dst, object src, int wOffsetSrc, int hOffset, 
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DToArray_spt(object dst, int wOffset, int hOffset, object src, int spitch, int width, int height, object kind):
+def hipMemcpy2DToArray_spt(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24491,7 +24482,7 @@ def hipMemcpy2DToArray_spt(object dst, int wOffset, int hOffset, object src, int
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DFromArrayAsync_spt(object dst, int dpitch, object src, int wOffsetSrc, int hOffsetSrc, int width, int height, object kind, object stream):
+def hipMemcpy2DFromArrayAsync_spt(object dst, unsigned long dpitch, object src, unsigned long wOffsetSrc, unsigned long hOffsetSrc, unsigned long width, unsigned long height, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24504,7 +24495,7 @@ def hipMemcpy2DFromArrayAsync_spt(object dst, int dpitch, object src, int wOffse
 
 
 @cython.embedsignature(True)
-def hipMemcpy2DToArrayAsync_spt(object dst, int wOffset, int hOffset, object src, int spitch, int width, int height, object kind, object stream):
+def hipMemcpy2DToArrayAsync_spt(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
     """
     """
     if not isinstance(kind,hipMemcpyKind):
@@ -24586,13 +24577,13 @@ def hipEventRecord_spt(object event, object stream):
 
 
 @cython.embedsignature(True)
-def hipLaunchCooperativeKernel_spt(object f, object kernelParams, uint32_t sharedMemBytes, object hStream):
+def hipLaunchCooperativeKernel_spt(object f, object kernelParams, unsigned int sharedMemBytes, object hStream):
     """
     """
     pass
 
 @cython.embedsignature(True)
-def hipLaunchKernel_spt(object function_address, object args, int sharedMemBytes, object stream):
+def hipLaunchKernel_spt(object function_address, object args, unsigned long sharedMemBytes, object stream):
     """
     """
     pass
@@ -24656,7 +24647,7 @@ def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
     cdef chip.hipStreamCaptureStatus captureStatus_out
     cdef unsigned long long id_out
     graph_out = ihipGraph.from_ptr(NULL)
-    cdef int numDependencies_out
+    cdef unsigned long numDependencies_out
     _hipStreamGetCaptureInfo_v2_spt__retval = hipError_t(chip.hipStreamGetCaptureInfo_v2_spt(
         ihipStream_t.from_pyobj(stream)._ptr,&captureStatus_out,&id_out,&graph_out._ptr,
         <chip.hipGraphNode_t **>hip._util.types.DataHandle.from_pyobj(dependencies_out)._ptr,&numDependencies_out))    # fully specified

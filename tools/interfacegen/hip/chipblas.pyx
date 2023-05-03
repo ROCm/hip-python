@@ -1,7 +1,4 @@
 # AMD_COPYRIGHT
-from libc.stdint cimport *
-from .chip cimport hipStream_t
-
 cimport hip._util.posixloader as loader
 cdef void* _lib_handle = NULL
 
@@ -22,66 +19,66 @@ cdef void __init_symbol(void** result, const char* name) nogil:
 
 cdef void* _hipblasCreate__funptr = NULL
 # ! \brief Create hipblas handle. */
-cdef hipblasStatus_t hipblasCreate(hipblasHandle_t* handle) nogil:
+cdef hipblasStatus_t hipblasCreate(void ** handle) nogil:
     global _hipblasCreate__funptr
     __init_symbol(&_hipblasCreate__funptr,"hipblasCreate")
-    return (<hipblasStatus_t (*)(hipblasHandle_t*) nogil> _hipblasCreate__funptr)(handle)
+    return (<hipblasStatus_t (*)(void **) nogil> _hipblasCreate__funptr)(handle)
 
 
 cdef void* _hipblasDestroy__funptr = NULL
 # ! \brief Destroys the library context created using hipblasCreate() */
-cdef hipblasStatus_t hipblasDestroy(hipblasHandle_t handle) nogil:
+cdef hipblasStatus_t hipblasDestroy(void * handle) nogil:
     global _hipblasDestroy__funptr
     __init_symbol(&_hipblasDestroy__funptr,"hipblasDestroy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t) nogil> _hipblasDestroy__funptr)(handle)
+    return (<hipblasStatus_t (*)(void *) nogil> _hipblasDestroy__funptr)(handle)
 
 
 cdef void* _hipblasSetStream__funptr = NULL
 # ! \brief Set stream for handle */
-cdef hipblasStatus_t hipblasSetStream(hipblasHandle_t handle,hipStream_t streamId) nogil:
+cdef hipblasStatus_t hipblasSetStream(void * handle,hipStream_t streamId) nogil:
     global _hipblasSetStream__funptr
     __init_symbol(&_hipblasSetStream__funptr,"hipblasSetStream")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipStream_t) nogil> _hipblasSetStream__funptr)(handle,streamId)
+    return (<hipblasStatus_t (*)(void *,hipStream_t) nogil> _hipblasSetStream__funptr)(handle,streamId)
 
 
 cdef void* _hipblasGetStream__funptr = NULL
 # ! \brief Get stream[0] for handle */
-cdef hipblasStatus_t hipblasGetStream(hipblasHandle_t handle,hipStream_t* streamId) nogil:
+cdef hipblasStatus_t hipblasGetStream(void * handle,hipStream_t* streamId) nogil:
     global _hipblasGetStream__funptr
     __init_symbol(&_hipblasGetStream__funptr,"hipblasGetStream")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipStream_t*) nogil> _hipblasGetStream__funptr)(handle,streamId)
+    return (<hipblasStatus_t (*)(void *,hipStream_t*) nogil> _hipblasGetStream__funptr)(handle,streamId)
 
 
 cdef void* _hipblasSetPointerMode__funptr = NULL
 # ! \brief Set hipblas pointer mode */
-cdef hipblasStatus_t hipblasSetPointerMode(hipblasHandle_t handle,hipblasPointerMode_t mode) nogil:
+cdef hipblasStatus_t hipblasSetPointerMode(void * handle,hipblasPointerMode_t mode) nogil:
     global _hipblasSetPointerMode__funptr
     __init_symbol(&_hipblasSetPointerMode__funptr,"hipblasSetPointerMode")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasPointerMode_t) nogil> _hipblasSetPointerMode__funptr)(handle,mode)
+    return (<hipblasStatus_t (*)(void *,hipblasPointerMode_t) nogil> _hipblasSetPointerMode__funptr)(handle,mode)
 
 
 cdef void* _hipblasGetPointerMode__funptr = NULL
 # ! \brief Get hipblas pointer mode */
-cdef hipblasStatus_t hipblasGetPointerMode(hipblasHandle_t handle,hipblasPointerMode_t * mode) nogil:
+cdef hipblasStatus_t hipblasGetPointerMode(void * handle,hipblasPointerMode_t * mode) nogil:
     global _hipblasGetPointerMode__funptr
     __init_symbol(&_hipblasGetPointerMode__funptr,"hipblasGetPointerMode")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasPointerMode_t *) nogil> _hipblasGetPointerMode__funptr)(handle,mode)
+    return (<hipblasStatus_t (*)(void *,hipblasPointerMode_t *) nogil> _hipblasGetPointerMode__funptr)(handle,mode)
 
 
 cdef void* _hipblasSetInt8Datatype__funptr = NULL
 # ! \brief Set hipblas int8 Datatype */
-cdef hipblasStatus_t hipblasSetInt8Datatype(hipblasHandle_t handle,hipblasInt8Datatype_t int8Type) nogil:
+cdef hipblasStatus_t hipblasSetInt8Datatype(void * handle,hipblasInt8Datatype_t int8Type) nogil:
     global _hipblasSetInt8Datatype__funptr
     __init_symbol(&_hipblasSetInt8Datatype__funptr,"hipblasSetInt8Datatype")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasInt8Datatype_t) nogil> _hipblasSetInt8Datatype__funptr)(handle,int8Type)
+    return (<hipblasStatus_t (*)(void *,hipblasInt8Datatype_t) nogil> _hipblasSetInt8Datatype__funptr)(handle,int8Type)
 
 
 cdef void* _hipblasGetInt8Datatype__funptr = NULL
 # ! \brief Get hipblas int8 Datatype*/
-cdef hipblasStatus_t hipblasGetInt8Datatype(hipblasHandle_t handle,hipblasInt8Datatype_t * int8Type) nogil:
+cdef hipblasStatus_t hipblasGetInt8Datatype(void * handle,hipblasInt8Datatype_t * int8Type) nogil:
     global _hipblasGetInt8Datatype__funptr
     __init_symbol(&_hipblasGetInt8Datatype__funptr,"hipblasGetInt8Datatype")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasInt8Datatype_t *) nogil> _hipblasGetInt8Datatype__funptr)(handle,int8Type)
+    return (<hipblasStatus_t (*)(void *,hipblasInt8Datatype_t *) nogil> _hipblasGetInt8Datatype__funptr)(handle,int8Type)
 
 
 cdef void* _hipblasSetVector__funptr = NULL
@@ -310,18 +307,18 @@ cdef hipblasStatus_t hipblasGetMatrixAsync(int rows,int cols,int elemSize,const 
 
 cdef void* _hipblasSetAtomicsMode__funptr = NULL
 # ! \brief Set hipblasSetAtomicsMode*/
-cdef hipblasStatus_t hipblasSetAtomicsMode(hipblasHandle_t handle,hipblasAtomicsMode_t atomics_mode) nogil:
+cdef hipblasStatus_t hipblasSetAtomicsMode(void * handle,hipblasAtomicsMode_t atomics_mode) nogil:
     global _hipblasSetAtomicsMode__funptr
     __init_symbol(&_hipblasSetAtomicsMode__funptr,"hipblasSetAtomicsMode")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasAtomicsMode_t) nogil> _hipblasSetAtomicsMode__funptr)(handle,atomics_mode)
+    return (<hipblasStatus_t (*)(void *,hipblasAtomicsMode_t) nogil> _hipblasSetAtomicsMode__funptr)(handle,atomics_mode)
 
 
 cdef void* _hipblasGetAtomicsMode__funptr = NULL
 # ! \brief Get hipblasSetAtomicsMode*/
-cdef hipblasStatus_t hipblasGetAtomicsMode(hipblasHandle_t handle,hipblasAtomicsMode_t * atomics_mode) nogil:
+cdef hipblasStatus_t hipblasGetAtomicsMode(void * handle,hipblasAtomicsMode_t * atomics_mode) nogil:
     global _hipblasGetAtomicsMode__funptr
     __init_symbol(&_hipblasGetAtomicsMode__funptr,"hipblasGetAtomicsMode")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasAtomicsMode_t *) nogil> _hipblasGetAtomicsMode__funptr)(handle,atomics_mode)
+    return (<hipblasStatus_t (*)(void *,hipblasAtomicsMode_t *) nogil> _hipblasGetAtomicsMode__funptr)(handle,atomics_mode)
 
 
 cdef void* _hipblasIsamax__funptr = NULL
@@ -349,31 +346,31 @@ cdef void* _hipblasIsamax__funptr = NULL
 #     result
 #               device pointer or host pointer to store the amax index.
 #               return is 0.0 if n, incx<=0.
-cdef hipblasStatus_t hipblasIsamax(hipblasHandle_t handle,int n,const float * x,int incx,int * result) nogil:
+cdef hipblasStatus_t hipblasIsamax(void * handle,int n,const float * x,int incx,int * result) nogil:
     global _hipblasIsamax__funptr
     __init_symbol(&_hipblasIsamax__funptr,"hipblasIsamax")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,int *) nogil> _hipblasIsamax__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,const float *,int,int *) nogil> _hipblasIsamax__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasIdamax__funptr = NULL
-cdef hipblasStatus_t hipblasIdamax(hipblasHandle_t handle,int n,const double * x,int incx,int * result) nogil:
+cdef hipblasStatus_t hipblasIdamax(void * handle,int n,const double * x,int incx,int * result) nogil:
     global _hipblasIdamax__funptr
     __init_symbol(&_hipblasIdamax__funptr,"hipblasIdamax")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,int *) nogil> _hipblasIdamax__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,const double *,int,int *) nogil> _hipblasIdamax__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasIcamax__funptr = NULL
-cdef hipblasStatus_t hipblasIcamax(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,int * result) nogil:
+cdef hipblasStatus_t hipblasIcamax(void * handle,int n,hipblasComplex * x,int incx,int * result) nogil:
     global _hipblasIcamax__funptr
     __init_symbol(&_hipblasIcamax__funptr,"hipblasIcamax")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,int *) nogil> _hipblasIcamax__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,int,int *) nogil> _hipblasIcamax__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasIzamax__funptr = NULL
-cdef hipblasStatus_t hipblasIzamax(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,int * result) nogil:
+cdef hipblasStatus_t hipblasIzamax(void * handle,int n,hipblasDoubleComplex * x,int incx,int * result) nogil:
     global _hipblasIzamax__funptr
     __init_symbol(&_hipblasIzamax__funptr,"hipblasIzamax")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,int *) nogil> _hipblasIzamax__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,int,int *) nogil> _hipblasIzamax__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasIsamin__funptr = NULL
@@ -401,31 +398,31 @@ cdef void* _hipblasIsamin__funptr = NULL
 #     result
 #               device pointer or host pointer to store the amin index.
 #               return is 0.0 if n, incx<=0.
-cdef hipblasStatus_t hipblasIsamin(hipblasHandle_t handle,int n,const float * x,int incx,int * result) nogil:
+cdef hipblasStatus_t hipblasIsamin(void * handle,int n,const float * x,int incx,int * result) nogil:
     global _hipblasIsamin__funptr
     __init_symbol(&_hipblasIsamin__funptr,"hipblasIsamin")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,int *) nogil> _hipblasIsamin__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,const float *,int,int *) nogil> _hipblasIsamin__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasIdamin__funptr = NULL
-cdef hipblasStatus_t hipblasIdamin(hipblasHandle_t handle,int n,const double * x,int incx,int * result) nogil:
+cdef hipblasStatus_t hipblasIdamin(void * handle,int n,const double * x,int incx,int * result) nogil:
     global _hipblasIdamin__funptr
     __init_symbol(&_hipblasIdamin__funptr,"hipblasIdamin")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,int *) nogil> _hipblasIdamin__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,const double *,int,int *) nogil> _hipblasIdamin__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasIcamin__funptr = NULL
-cdef hipblasStatus_t hipblasIcamin(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,int * result) nogil:
+cdef hipblasStatus_t hipblasIcamin(void * handle,int n,hipblasComplex * x,int incx,int * result) nogil:
     global _hipblasIcamin__funptr
     __init_symbol(&_hipblasIcamin__funptr,"hipblasIcamin")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,int *) nogil> _hipblasIcamin__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,int,int *) nogil> _hipblasIcamin__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasIzamin__funptr = NULL
-cdef hipblasStatus_t hipblasIzamin(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,int * result) nogil:
+cdef hipblasStatus_t hipblasIzamin(void * handle,int n,hipblasDoubleComplex * x,int incx,int * result) nogil:
     global _hipblasIzamin__funptr
     __init_symbol(&_hipblasIzamin__funptr,"hipblasIzamin")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,int *) nogil> _hipblasIzamin__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,int,int *) nogil> _hipblasIzamin__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasSasum__funptr = NULL
@@ -455,31 +452,31 @@ cdef void* _hipblasSasum__funptr = NULL
 #               device pointer or host pointer to store the asum product.
 #               return is 0.0 if n <= 0.
 #
-cdef hipblasStatus_t hipblasSasum(hipblasHandle_t handle,int n,const float * x,int incx,float * result) nogil:
+cdef hipblasStatus_t hipblasSasum(void * handle,int n,const float * x,int incx,float * result) nogil:
     global _hipblasSasum__funptr
     __init_symbol(&_hipblasSasum__funptr,"hipblasSasum")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,float *) nogil> _hipblasSasum__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,const float *,int,float *) nogil> _hipblasSasum__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasDasum__funptr = NULL
-cdef hipblasStatus_t hipblasDasum(hipblasHandle_t handle,int n,const double * x,int incx,double * result) nogil:
+cdef hipblasStatus_t hipblasDasum(void * handle,int n,const double * x,int incx,double * result) nogil:
     global _hipblasDasum__funptr
     __init_symbol(&_hipblasDasum__funptr,"hipblasDasum")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,double *) nogil> _hipblasDasum__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,const double *,int,double *) nogil> _hipblasDasum__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasScasum__funptr = NULL
-cdef hipblasStatus_t hipblasScasum(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,float * result) nogil:
+cdef hipblasStatus_t hipblasScasum(void * handle,int n,hipblasComplex * x,int incx,float * result) nogil:
     global _hipblasScasum__funptr
     __init_symbol(&_hipblasScasum__funptr,"hipblasScasum")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,float *) nogil> _hipblasScasum__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,int,float *) nogil> _hipblasScasum__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasDzasum__funptr = NULL
-cdef hipblasStatus_t hipblasDzasum(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,double * result) nogil:
+cdef hipblasStatus_t hipblasDzasum(void * handle,int n,hipblasDoubleComplex * x,int incx,double * result) nogil:
     global _hipblasDzasum__funptr
     __init_symbol(&_hipblasDzasum__funptr,"hipblasDzasum")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,double *) nogil> _hipblasDzasum__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,int,double *) nogil> _hipblasDzasum__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasHaxpy__funptr = NULL
@@ -513,38 +510,38 @@ cdef void* _hipblasHaxpy__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y.
 #
-cdef hipblasStatus_t hipblasHaxpy(hipblasHandle_t handle,int n,hipblasHalf * alpha,hipblasHalf * x,int incx,hipblasHalf * y,int incy) nogil:
+cdef hipblasStatus_t hipblasHaxpy(void * handle,int n,const unsigned short * alpha,const unsigned short * x,int incx,unsigned short * y,int incy) nogil:
     global _hipblasHaxpy__funptr
     __init_symbol(&_hipblasHaxpy__funptr,"hipblasHaxpy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasHalf *,hipblasHalf *,int,hipblasHalf *,int) nogil> _hipblasHaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,const unsigned short *,const unsigned short *,int,unsigned short *,int) nogil> _hipblasHaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
 
 
 cdef void* _hipblasSaxpy__funptr = NULL
-cdef hipblasStatus_t hipblasSaxpy(hipblasHandle_t handle,int n,const float * alpha,const float * x,int incx,float * y,int incy) nogil:
+cdef hipblasStatus_t hipblasSaxpy(void * handle,int n,const float * alpha,const float * x,int incx,float * y,int incy) nogil:
     global _hipblasSaxpy__funptr
     __init_symbol(&_hipblasSaxpy__funptr,"hipblasSaxpy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,const float *,int,float *,int) nogil> _hipblasSaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,const float *,const float *,int,float *,int) nogil> _hipblasSaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
 
 
 cdef void* _hipblasDaxpy__funptr = NULL
-cdef hipblasStatus_t hipblasDaxpy(hipblasHandle_t handle,int n,const double * alpha,const double * x,int incx,double * y,int incy) nogil:
+cdef hipblasStatus_t hipblasDaxpy(void * handle,int n,const double * alpha,const double * x,int incx,double * y,int incy) nogil:
     global _hipblasDaxpy__funptr
     __init_symbol(&_hipblasDaxpy__funptr,"hipblasDaxpy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,const double *,int,double *,int) nogil> _hipblasDaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,const double *,const double *,int,double *,int) nogil> _hipblasDaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
 
 
 cdef void* _hipblasCaxpy__funptr = NULL
-cdef hipblasStatus_t hipblasCaxpy(hipblasHandle_t handle,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasCaxpy(void * handle,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy) nogil:
     global _hipblasCaxpy__funptr
     __init_symbol(&_hipblasCaxpy__funptr,"hipblasCaxpy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
 
 
 cdef void* _hipblasZaxpy__funptr = NULL
-cdef hipblasStatus_t hipblasZaxpy(hipblasHandle_t handle,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasZaxpy(void * handle,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy) nogil:
     global _hipblasZaxpy__funptr
     __init_symbol(&_hipblasZaxpy__funptr,"hipblasZaxpy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZaxpy__funptr)(handle,n,alpha,x,incx,y,incy)
 
 
 cdef void* _hipblasScopy__funptr = NULL
@@ -576,31 +573,31 @@ cdef void* _hipblasScopy__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y.
 #
-cdef hipblasStatus_t hipblasScopy(hipblasHandle_t handle,int n,const float * x,int incx,float * y,int incy) nogil:
+cdef hipblasStatus_t hipblasScopy(void * handle,int n,const float * x,int incx,float * y,int incy) nogil:
     global _hipblasScopy__funptr
     __init_symbol(&_hipblasScopy__funptr,"hipblasScopy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,float *,int) nogil> _hipblasScopy__funptr)(handle,n,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,const float *,int,float *,int) nogil> _hipblasScopy__funptr)(handle,n,x,incx,y,incy)
 
 
 cdef void* _hipblasDcopy__funptr = NULL
-cdef hipblasStatus_t hipblasDcopy(hipblasHandle_t handle,int n,const double * x,int incx,double * y,int incy) nogil:
+cdef hipblasStatus_t hipblasDcopy(void * handle,int n,const double * x,int incx,double * y,int incy) nogil:
     global _hipblasDcopy__funptr
     __init_symbol(&_hipblasDcopy__funptr,"hipblasDcopy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,double *,int) nogil> _hipblasDcopy__funptr)(handle,n,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,const double *,int,double *,int) nogil> _hipblasDcopy__funptr)(handle,n,x,incx,y,incy)
 
 
 cdef void* _hipblasCcopy__funptr = NULL
-cdef hipblasStatus_t hipblasCcopy(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasCcopy(void * handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy) nogil:
     global _hipblasCcopy__funptr
     __init_symbol(&_hipblasCcopy__funptr,"hipblasCcopy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCcopy__funptr)(handle,n,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCcopy__funptr)(handle,n,x,incx,y,incy)
 
 
 cdef void* _hipblasZcopy__funptr = NULL
-cdef hipblasStatus_t hipblasZcopy(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasZcopy(void * handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy) nogil:
     global _hipblasZcopy__funptr
     __init_symbol(&_hipblasZcopy__funptr,"hipblasZcopy")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZcopy__funptr)(handle,n,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZcopy__funptr)(handle,n,x,incx,y,incy)
 
 
 cdef void* _hipblasHdot__funptr = NULL
@@ -640,59 +637,59 @@ cdef void* _hipblasHdot__funptr = NULL
 #               device pointer or host pointer to store the dot product.
 #               return is 0.0 if n <= 0.
 #
-cdef hipblasStatus_t hipblasHdot(hipblasHandle_t handle,int n,hipblasHalf * x,int incx,hipblasHalf * y,int incy,hipblasHalf * result) nogil:
+cdef hipblasStatus_t hipblasHdot(void * handle,int n,const unsigned short * x,int incx,const unsigned short * y,int incy,unsigned short * result) nogil:
     global _hipblasHdot__funptr
     __init_symbol(&_hipblasHdot__funptr,"hipblasHdot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasHalf *,int,hipblasHalf *,int,hipblasHalf *) nogil> _hipblasHdot__funptr)(handle,n,x,incx,y,incy,result)
+    return (<hipblasStatus_t (*)(void *,int,const unsigned short *,int,const unsigned short *,int,unsigned short *) nogil> _hipblasHdot__funptr)(handle,n,x,incx,y,incy,result)
 
 
 cdef void* _hipblasBfdot__funptr = NULL
-cdef hipblasStatus_t hipblasBfdot(hipblasHandle_t handle,int n,hipblasBfloat16 * x,int incx,hipblasBfloat16 * y,int incy,hipblasBfloat16 * result) nogil:
+cdef hipblasStatus_t hipblasBfdot(void * handle,int n,hipblasBfloat16 * x,int incx,hipblasBfloat16 * y,int incy,hipblasBfloat16 * result) nogil:
     global _hipblasBfdot__funptr
     __init_symbol(&_hipblasBfdot__funptr,"hipblasBfdot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasBfloat16 *,int,hipblasBfloat16 *,int,hipblasBfloat16 *) nogil> _hipblasBfdot__funptr)(handle,n,x,incx,y,incy,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasBfloat16 *,int,hipblasBfloat16 *,int,hipblasBfloat16 *) nogil> _hipblasBfdot__funptr)(handle,n,x,incx,y,incy,result)
 
 
 cdef void* _hipblasSdot__funptr = NULL
-cdef hipblasStatus_t hipblasSdot(hipblasHandle_t handle,int n,const float * x,int incx,const float * y,int incy,float * result) nogil:
+cdef hipblasStatus_t hipblasSdot(void * handle,int n,const float * x,int incx,const float * y,int incy,float * result) nogil:
     global _hipblasSdot__funptr
     __init_symbol(&_hipblasSdot__funptr,"hipblasSdot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,const float *,int,float *) nogil> _hipblasSdot__funptr)(handle,n,x,incx,y,incy,result)
+    return (<hipblasStatus_t (*)(void *,int,const float *,int,const float *,int,float *) nogil> _hipblasSdot__funptr)(handle,n,x,incx,y,incy,result)
 
 
 cdef void* _hipblasDdot__funptr = NULL
-cdef hipblasStatus_t hipblasDdot(hipblasHandle_t handle,int n,const double * x,int incx,const double * y,int incy,double * result) nogil:
+cdef hipblasStatus_t hipblasDdot(void * handle,int n,const double * x,int incx,const double * y,int incy,double * result) nogil:
     global _hipblasDdot__funptr
     __init_symbol(&_hipblasDdot__funptr,"hipblasDdot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,const double *,int,double *) nogil> _hipblasDdot__funptr)(handle,n,x,incx,y,incy,result)
+    return (<hipblasStatus_t (*)(void *,int,const double *,int,const double *,int,double *) nogil> _hipblasDdot__funptr)(handle,n,x,incx,y,incy,result)
 
 
 cdef void* _hipblasCdotc__funptr = NULL
-cdef hipblasStatus_t hipblasCdotc(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * result) nogil:
+cdef hipblasStatus_t hipblasCdotc(void * handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * result) nogil:
     global _hipblasCdotc__funptr
     __init_symbol(&_hipblasCdotc__funptr,"hipblasCdotc")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasCdotc__funptr)(handle,n,x,incx,y,incy,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasCdotc__funptr)(handle,n,x,incx,y,incy,result)
 
 
 cdef void* _hipblasCdotu__funptr = NULL
-cdef hipblasStatus_t hipblasCdotu(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * result) nogil:
+cdef hipblasStatus_t hipblasCdotu(void * handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * result) nogil:
     global _hipblasCdotu__funptr
     __init_symbol(&_hipblasCdotu__funptr,"hipblasCdotu")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasCdotu__funptr)(handle,n,x,incx,y,incy,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasCdotu__funptr)(handle,n,x,incx,y,incy,result)
 
 
 cdef void* _hipblasZdotc__funptr = NULL
-cdef hipblasStatus_t hipblasZdotc(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * result) nogil:
+cdef hipblasStatus_t hipblasZdotc(void * handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * result) nogil:
     global _hipblasZdotc__funptr
     __init_symbol(&_hipblasZdotc__funptr,"hipblasZdotc")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZdotc__funptr)(handle,n,x,incx,y,incy,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZdotc__funptr)(handle,n,x,incx,y,incy,result)
 
 
 cdef void* _hipblasZdotu__funptr = NULL
-cdef hipblasStatus_t hipblasZdotu(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * result) nogil:
+cdef hipblasStatus_t hipblasZdotu(void * handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * result) nogil:
     global _hipblasZdotu__funptr
     __init_symbol(&_hipblasZdotu__funptr,"hipblasZdotu")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZdotu__funptr)(handle,n,x,incx,y,incy,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZdotu__funptr)(handle,n,x,incx,y,incy,result)
 
 
 cdef void* _hipblasSnrm2__funptr = NULL
@@ -723,31 +720,31 @@ cdef void* _hipblasSnrm2__funptr = NULL
 #     result
 #               device pointer or host pointer to store the nrm2 product.
 #               return is 0.0 if n, incx<=0.
-cdef hipblasStatus_t hipblasSnrm2(hipblasHandle_t handle,int n,const float * x,int incx,float * result) nogil:
+cdef hipblasStatus_t hipblasSnrm2(void * handle,int n,const float * x,int incx,float * result) nogil:
     global _hipblasSnrm2__funptr
     __init_symbol(&_hipblasSnrm2__funptr,"hipblasSnrm2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,int,float *) nogil> _hipblasSnrm2__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,const float *,int,float *) nogil> _hipblasSnrm2__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasDnrm2__funptr = NULL
-cdef hipblasStatus_t hipblasDnrm2(hipblasHandle_t handle,int n,const double * x,int incx,double * result) nogil:
+cdef hipblasStatus_t hipblasDnrm2(void * handle,int n,const double * x,int incx,double * result) nogil:
     global _hipblasDnrm2__funptr
     __init_symbol(&_hipblasDnrm2__funptr,"hipblasDnrm2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,int,double *) nogil> _hipblasDnrm2__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,const double *,int,double *) nogil> _hipblasDnrm2__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasScnrm2__funptr = NULL
-cdef hipblasStatus_t hipblasScnrm2(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,float * result) nogil:
+cdef hipblasStatus_t hipblasScnrm2(void * handle,int n,hipblasComplex * x,int incx,float * result) nogil:
     global _hipblasScnrm2__funptr
     __init_symbol(&_hipblasScnrm2__funptr,"hipblasScnrm2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,float *) nogil> _hipblasScnrm2__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,int,float *) nogil> _hipblasScnrm2__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasDznrm2__funptr = NULL
-cdef hipblasStatus_t hipblasDznrm2(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,double * result) nogil:
+cdef hipblasStatus_t hipblasDznrm2(void * handle,int n,hipblasDoubleComplex * x,int incx,double * result) nogil:
     global _hipblasDznrm2__funptr
     __init_symbol(&_hipblasDznrm2__funptr,"hipblasDznrm2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,double *) nogil> _hipblasDznrm2__funptr)(handle,n,x,incx,result)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,int,double *) nogil> _hipblasDznrm2__funptr)(handle,n,x,incx,result)
 
 
 cdef void* _hipblasSrot__funptr = NULL
@@ -782,45 +779,45 @@ cdef void* _hipblasSrot__funptr = NULL
 #     @param[in]
 #     s       device pointer or host pointer storing scalar sine component of the rotation matrix.
 #
-cdef hipblasStatus_t hipblasSrot(hipblasHandle_t handle,int n,float * x,int incx,float * y,int incy,const float * c,const float * s) nogil:
+cdef hipblasStatus_t hipblasSrot(void * handle,int n,float * x,int incx,float * y,int incy,const float * c,const float * s) nogil:
     global _hipblasSrot__funptr
     __init_symbol(&_hipblasSrot__funptr,"hipblasSrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,float *,int,float *,int,const float *,const float *) nogil> _hipblasSrot__funptr)(handle,n,x,incx,y,incy,c,s)
+    return (<hipblasStatus_t (*)(void *,int,float *,int,float *,int,const float *,const float *) nogil> _hipblasSrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
 cdef void* _hipblasDrot__funptr = NULL
-cdef hipblasStatus_t hipblasDrot(hipblasHandle_t handle,int n,double * x,int incx,double * y,int incy,const double * c,const double * s) nogil:
+cdef hipblasStatus_t hipblasDrot(void * handle,int n,double * x,int incx,double * y,int incy,const double * c,const double * s) nogil:
     global _hipblasDrot__funptr
     __init_symbol(&_hipblasDrot__funptr,"hipblasDrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,double *,int,double *,int,const double *,const double *) nogil> _hipblasDrot__funptr)(handle,n,x,incx,y,incy,c,s)
+    return (<hipblasStatus_t (*)(void *,int,double *,int,double *,int,const double *,const double *) nogil> _hipblasDrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
 cdef void* _hipblasCrot__funptr = NULL
-cdef hipblasStatus_t hipblasCrot(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,const float * c,hipblasComplex * s) nogil:
+cdef hipblasStatus_t hipblasCrot(void * handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,const float * c,hipblasComplex * s) nogil:
     global _hipblasCrot__funptr
     __init_symbol(&_hipblasCrot__funptr,"hipblasCrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *) nogil> _hipblasCrot__funptr)(handle,n,x,incx,y,incy,c,s)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *) nogil> _hipblasCrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
 cdef void* _hipblasCsrot__funptr = NULL
-cdef hipblasStatus_t hipblasCsrot(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,const float * c,const float * s) nogil:
+cdef hipblasStatus_t hipblasCsrot(void * handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy,const float * c,const float * s) nogil:
     global _hipblasCsrot__funptr
     __init_symbol(&_hipblasCsrot__funptr,"hipblasCsrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int,const float *,const float *) nogil> _hipblasCsrot__funptr)(handle,n,x,incx,y,incy,c,s)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,int,hipblasComplex *,int,const float *,const float *) nogil> _hipblasCsrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
 cdef void* _hipblasZrot__funptr = NULL
-cdef hipblasStatus_t hipblasZrot(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,const double * c,hipblasDoubleComplex * s) nogil:
+cdef hipblasStatus_t hipblasZrot(void * handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,const double * c,hipblasDoubleComplex * s) nogil:
     global _hipblasZrot__funptr
     __init_symbol(&_hipblasZrot__funptr,"hipblasZrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *) nogil> _hipblasZrot__funptr)(handle,n,x,incx,y,incy,c,s)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *) nogil> _hipblasZrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
 cdef void* _hipblasZdrot__funptr = NULL
-cdef hipblasStatus_t hipblasZdrot(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,const double * c,const double * s) nogil:
+cdef hipblasStatus_t hipblasZdrot(void * handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,const double * c,const double * s) nogil:
     global _hipblasZdrot__funptr
     __init_symbol(&_hipblasZdrot__funptr,"hipblasZdrot")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,const double *) nogil> _hipblasZdrot__funptr)(handle,n,x,incx,y,incy,c,s)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,const double *) nogil> _hipblasZdrot__funptr)(handle,n,x,incx,y,incy,c,s)
 
 
 cdef void* _hipblasSrotg__funptr = NULL
@@ -848,31 +845,31 @@ cdef void* _hipblasSrotg__funptr = NULL
 #     @param[inout]
 #     s       device pointer or host pointer sine element of Givens rotation.
 #
-cdef hipblasStatus_t hipblasSrotg(hipblasHandle_t handle,float * a,float * b,float * c,float * s) nogil:
+cdef hipblasStatus_t hipblasSrotg(void * handle,float * a,float * b,float * c,float * s) nogil:
     global _hipblasSrotg__funptr
     __init_symbol(&_hipblasSrotg__funptr,"hipblasSrotg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,float *,float *,float *,float *) nogil> _hipblasSrotg__funptr)(handle,a,b,c,s)
+    return (<hipblasStatus_t (*)(void *,float *,float *,float *,float *) nogil> _hipblasSrotg__funptr)(handle,a,b,c,s)
 
 
 cdef void* _hipblasDrotg__funptr = NULL
-cdef hipblasStatus_t hipblasDrotg(hipblasHandle_t handle,double * a,double * b,double * c,double * s) nogil:
+cdef hipblasStatus_t hipblasDrotg(void * handle,double * a,double * b,double * c,double * s) nogil:
     global _hipblasDrotg__funptr
     __init_symbol(&_hipblasDrotg__funptr,"hipblasDrotg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,double *,double *,double *,double *) nogil> _hipblasDrotg__funptr)(handle,a,b,c,s)
+    return (<hipblasStatus_t (*)(void *,double *,double *,double *,double *) nogil> _hipblasDrotg__funptr)(handle,a,b,c,s)
 
 
 cdef void* _hipblasCrotg__funptr = NULL
-cdef hipblasStatus_t hipblasCrotg(hipblasHandle_t handle,hipblasComplex * a,hipblasComplex * b,float * c,hipblasComplex * s) nogil:
+cdef hipblasStatus_t hipblasCrotg(void * handle,hipblasComplex * a,hipblasComplex * b,float * c,hipblasComplex * s) nogil:
     global _hipblasCrotg__funptr
     __init_symbol(&_hipblasCrotg__funptr,"hipblasCrotg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasComplex *,hipblasComplex *,float *,hipblasComplex *) nogil> _hipblasCrotg__funptr)(handle,a,b,c,s)
+    return (<hipblasStatus_t (*)(void *,hipblasComplex *,hipblasComplex *,float *,hipblasComplex *) nogil> _hipblasCrotg__funptr)(handle,a,b,c,s)
 
 
 cdef void* _hipblasZrotg__funptr = NULL
-cdef hipblasStatus_t hipblasZrotg(hipblasHandle_t handle,hipblasDoubleComplex * a,hipblasDoubleComplex * b,double * c,hipblasDoubleComplex * s) nogil:
+cdef hipblasStatus_t hipblasZrotg(void * handle,hipblasDoubleComplex * a,hipblasDoubleComplex * b,double * c,hipblasDoubleComplex * s) nogil:
     global _hipblasZrotg__funptr
     __init_symbol(&_hipblasZrotg__funptr,"hipblasZrotg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasDoubleComplex *,hipblasDoubleComplex *,double *,hipblasDoubleComplex *) nogil> _hipblasZrotg__funptr)(handle,a,b,c,s)
+    return (<hipblasStatus_t (*)(void *,hipblasDoubleComplex *,hipblasDoubleComplex *,double *,hipblasDoubleComplex *) nogil> _hipblasZrotg__funptr)(handle,a,b,c,s)
 
 
 cdef void* _hipblasSrotm__funptr = NULL
@@ -915,17 +912,17 @@ cdef void* _hipblasSrotm__funptr = NULL
 #             flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
 #             param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
 #
-cdef hipblasStatus_t hipblasSrotm(hipblasHandle_t handle,int n,float * x,int incx,float * y,int incy,const float * param) nogil:
+cdef hipblasStatus_t hipblasSrotm(void * handle,int n,float * x,int incx,float * y,int incy,const float * param) nogil:
     global _hipblasSrotm__funptr
     __init_symbol(&_hipblasSrotm__funptr,"hipblasSrotm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,float *,int,float *,int,const float *) nogil> _hipblasSrotm__funptr)(handle,n,x,incx,y,incy,param)
+    return (<hipblasStatus_t (*)(void *,int,float *,int,float *,int,const float *) nogil> _hipblasSrotm__funptr)(handle,n,x,incx,y,incy,param)
 
 
 cdef void* _hipblasDrotm__funptr = NULL
-cdef hipblasStatus_t hipblasDrotm(hipblasHandle_t handle,int n,double * x,int incx,double * y,int incy,const double * param) nogil:
+cdef hipblasStatus_t hipblasDrotm(void * handle,int n,double * x,int incx,double * y,int incy,const double * param) nogil:
     global _hipblasDrotm__funptr
     __init_symbol(&_hipblasDrotm__funptr,"hipblasDrotm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,double *,int,double *,int,const double *) nogil> _hipblasDrotm__funptr)(handle,n,x,incx,y,incy,param)
+    return (<hipblasStatus_t (*)(void *,int,double *,int,double *,int,const double *) nogil> _hipblasDrotm__funptr)(handle,n,x,incx,y,incy,param)
 
 
 cdef void* _hipblasSrotmg__funptr = NULL
@@ -966,17 +963,17 @@ cdef void* _hipblasSrotmg__funptr = NULL
 #             flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
 #             param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
 #
-cdef hipblasStatus_t hipblasSrotmg(hipblasHandle_t handle,float * d1,float * d2,float * x1,const float * y1,float * param) nogil:
+cdef hipblasStatus_t hipblasSrotmg(void * handle,float * d1,float * d2,float * x1,const float * y1,float * param) nogil:
     global _hipblasSrotmg__funptr
     __init_symbol(&_hipblasSrotmg__funptr,"hipblasSrotmg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,float *,float *,float *,const float *,float *) nogil> _hipblasSrotmg__funptr)(handle,d1,d2,x1,y1,param)
+    return (<hipblasStatus_t (*)(void *,float *,float *,float *,const float *,float *) nogil> _hipblasSrotmg__funptr)(handle,d1,d2,x1,y1,param)
 
 
 cdef void* _hipblasDrotmg__funptr = NULL
-cdef hipblasStatus_t hipblasDrotmg(hipblasHandle_t handle,double * d1,double * d2,double * x1,const double * y1,double * param) nogil:
+cdef hipblasStatus_t hipblasDrotmg(void * handle,double * d1,double * d2,double * x1,const double * y1,double * param) nogil:
     global _hipblasDrotmg__funptr
     __init_symbol(&_hipblasDrotmg__funptr,"hipblasDrotmg")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,double *,double *,double *,const double *,double *) nogil> _hipblasDrotmg__funptr)(handle,d1,d2,x1,y1,param)
+    return (<hipblasStatus_t (*)(void *,double *,double *,double *,const double *,double *) nogil> _hipblasDrotmg__funptr)(handle,d1,d2,x1,y1,param)
 
 
 cdef void* _hipblasSscal__funptr = NULL
@@ -1006,45 +1003,45 @@ cdef void* _hipblasSscal__funptr = NULL
 #               specifies the increment for the elements of x.
 # 
 #
-cdef hipblasStatus_t hipblasSscal(hipblasHandle_t handle,int n,const float * alpha,float * x,int incx) nogil:
+cdef hipblasStatus_t hipblasSscal(void * handle,int n,const float * alpha,float * x,int incx) nogil:
     global _hipblasSscal__funptr
     __init_symbol(&_hipblasSscal__funptr,"hipblasSscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,float *,int) nogil> _hipblasSscal__funptr)(handle,n,alpha,x,incx)
+    return (<hipblasStatus_t (*)(void *,int,const float *,float *,int) nogil> _hipblasSscal__funptr)(handle,n,alpha,x,incx)
 
 
 cdef void* _hipblasDscal__funptr = NULL
-cdef hipblasStatus_t hipblasDscal(hipblasHandle_t handle,int n,const double * alpha,double * x,int incx) nogil:
+cdef hipblasStatus_t hipblasDscal(void * handle,int n,const double * alpha,double * x,int incx) nogil:
     global _hipblasDscal__funptr
     __init_symbol(&_hipblasDscal__funptr,"hipblasDscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,double *,int) nogil> _hipblasDscal__funptr)(handle,n,alpha,x,incx)
+    return (<hipblasStatus_t (*)(void *,int,const double *,double *,int) nogil> _hipblasDscal__funptr)(handle,n,alpha,x,incx)
 
 
 cdef void* _hipblasCscal__funptr = NULL
-cdef hipblasStatus_t hipblasCscal(hipblasHandle_t handle,int n,hipblasComplex * alpha,hipblasComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasCscal(void * handle,int n,hipblasComplex * alpha,hipblasComplex * x,int incx) nogil:
     global _hipblasCscal__funptr
     __init_symbol(&_hipblasCscal__funptr,"hipblasCscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCscal__funptr)(handle,n,alpha,x,incx)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCscal__funptr)(handle,n,alpha,x,incx)
 
 
 cdef void* _hipblasCsscal__funptr = NULL
-cdef hipblasStatus_t hipblasCsscal(hipblasHandle_t handle,int n,const float * alpha,hipblasComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasCsscal(void * handle,int n,const float * alpha,hipblasComplex * x,int incx) nogil:
     global _hipblasCsscal__funptr
     __init_symbol(&_hipblasCsscal__funptr,"hipblasCsscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const float *,hipblasComplex *,int) nogil> _hipblasCsscal__funptr)(handle,n,alpha,x,incx)
+    return (<hipblasStatus_t (*)(void *,int,const float *,hipblasComplex *,int) nogil> _hipblasCsscal__funptr)(handle,n,alpha,x,incx)
 
 
 cdef void* _hipblasZscal__funptr = NULL
-cdef hipblasStatus_t hipblasZscal(hipblasHandle_t handle,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasZscal(void * handle,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx) nogil:
     global _hipblasZscal__funptr
     __init_symbol(&_hipblasZscal__funptr,"hipblasZscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZscal__funptr)(handle,n,alpha,x,incx)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZscal__funptr)(handle,n,alpha,x,incx)
 
 
 cdef void* _hipblasZdscal__funptr = NULL
-cdef hipblasStatus_t hipblasZdscal(hipblasHandle_t handle,int n,const double * alpha,hipblasDoubleComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasZdscal(void * handle,int n,const double * alpha,hipblasDoubleComplex * x,int incx) nogil:
     global _hipblasZdscal__funptr
     __init_symbol(&_hipblasZdscal__funptr,"hipblasZdscal")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZdscal__funptr)(handle,n,alpha,x,incx)
+    return (<hipblasStatus_t (*)(void *,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZdscal__funptr)(handle,n,alpha,x,incx)
 
 
 cdef void* _hipblasSswap__funptr = NULL
@@ -1076,31 +1073,31 @@ cdef void* _hipblasSswap__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y.
 #
-cdef hipblasStatus_t hipblasSswap(hipblasHandle_t handle,int n,float * x,int incx,float * y,int incy) nogil:
+cdef hipblasStatus_t hipblasSswap(void * handle,int n,float * x,int incx,float * y,int incy) nogil:
     global _hipblasSswap__funptr
     __init_symbol(&_hipblasSswap__funptr,"hipblasSswap")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,float *,int,float *,int) nogil> _hipblasSswap__funptr)(handle,n,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,float *,int,float *,int) nogil> _hipblasSswap__funptr)(handle,n,x,incx,y,incy)
 
 
 cdef void* _hipblasDswap__funptr = NULL
-cdef hipblasStatus_t hipblasDswap(hipblasHandle_t handle,int n,double * x,int incx,double * y,int incy) nogil:
+cdef hipblasStatus_t hipblasDswap(void * handle,int n,double * x,int incx,double * y,int incy) nogil:
     global _hipblasDswap__funptr
     __init_symbol(&_hipblasDswap__funptr,"hipblasDswap")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,double *,int,double *,int) nogil> _hipblasDswap__funptr)(handle,n,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,double *,int,double *,int) nogil> _hipblasDswap__funptr)(handle,n,x,incx,y,incy)
 
 
 cdef void* _hipblasCswap__funptr = NULL
-cdef hipblasStatus_t hipblasCswap(hipblasHandle_t handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasCswap(void * handle,int n,hipblasComplex * x,int incx,hipblasComplex * y,int incy) nogil:
     global _hipblasCswap__funptr
     __init_symbol(&_hipblasCswap__funptr,"hipblasCswap")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCswap__funptr)(handle,n,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCswap__funptr)(handle,n,x,incx,y,incy)
 
 
 cdef void* _hipblasZswap__funptr = NULL
-cdef hipblasStatus_t hipblasZswap(hipblasHandle_t handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasZswap(void * handle,int n,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy) nogil:
     global _hipblasZswap__funptr
     __init_symbol(&_hipblasZswap__funptr,"hipblasZswap")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZswap__funptr)(handle,n,x,incx,y,incy)
+    return (<hipblasStatus_t (*)(void *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZswap__funptr)(handle,n,x,incx,y,incy)
 
 
 cdef void* _hipblasSgbmv__funptr = NULL
@@ -1173,31 +1170,31 @@ cdef void* _hipblasSgbmv__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y.
 #
-cdef hipblasStatus_t hipblasSgbmv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,int kl,int ku,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
+cdef hipblasStatus_t hipblasSgbmv(void * handle,hipblasOperation_t trans,int m,int n,int kl,int ku,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _hipblasSgbmv__funptr
     __init_symbol(&_hipblasSgbmv__funptr,"hipblasSgbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,int,int,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasDgbmv__funptr = NULL
-cdef hipblasStatus_t hipblasDgbmv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,int kl,int ku,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
+cdef hipblasStatus_t hipblasDgbmv(void * handle,hipblasOperation_t trans,int m,int n,int kl,int ku,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
     global _hipblasDgbmv__funptr
     __init_symbol(&_hipblasDgbmv__funptr,"hipblasDgbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,int,int,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasCgbmv__funptr = NULL
-cdef hipblasStatus_t hipblasCgbmv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,int kl,int ku,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasCgbmv(void * handle,hipblasOperation_t trans,int m,int n,int kl,int ku,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _hipblasCgbmv__funptr
     __init_symbol(&_hipblasCgbmv__funptr,"hipblasCgbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,int,int,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasZgbmv__funptr = NULL
-cdef hipblasStatus_t hipblasZgbmv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,int kl,int ku,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasZgbmv(void * handle,hipblasOperation_t trans,int m,int n,int kl,int ku,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _hipblasZgbmv__funptr
     __init_symbol(&_hipblasZgbmv__funptr,"hipblasZgbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,int,int,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZgbmv__funptr)(handle,trans,m,n,kl,ku,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasSgemv__funptr = NULL
@@ -1249,31 +1246,31 @@ cdef void* _hipblasSgemv__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y.
 #
-cdef hipblasStatus_t hipblasSgemv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
+cdef hipblasStatus_t hipblasSgemv(void * handle,hipblasOperation_t trans,int m,int n,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _hipblasSgemv__funptr
     __init_symbol(&_hipblasSgemv__funptr,"hipblasSgemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasDgemv__funptr = NULL
-cdef hipblasStatus_t hipblasDgemv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
+cdef hipblasStatus_t hipblasDgemv(void * handle,hipblasOperation_t trans,int m,int n,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
     global _hipblasDgemv__funptr
     __init_symbol(&_hipblasDgemv__funptr,"hipblasDgemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasCgemv__funptr = NULL
-cdef hipblasStatus_t hipblasCgemv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasCgemv(void * handle,hipblasOperation_t trans,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _hipblasCgemv__funptr
     __init_symbol(&_hipblasCgemv__funptr,"hipblasCgemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasZgemv__funptr = NULL
-cdef hipblasStatus_t hipblasZgemv(hipblasHandle_t handle,hipblasOperation_t trans,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasZgemv(void * handle,hipblasOperation_t trans,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _hipblasZgemv__funptr
     __init_symbol(&_hipblasZgemv__funptr,"hipblasZgemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZgemv__funptr)(handle,trans,m,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasSger__funptr = NULL
@@ -1320,45 +1317,45 @@ cdef void* _hipblasSger__funptr = NULL
 #     lda       [int]
 #               specifies the leading dimension of A.
 #
-cdef hipblasStatus_t hipblasSger(hipblasHandle_t handle,int m,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasSger(void * handle,int m,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP,int lda) nogil:
     global _hipblasSger__funptr
     __init_symbol(&_hipblasSger__funptr,"hipblasSger")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,const float *,const float *,int,const float *,int,float *,int) nogil> _hipblasSger__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,int,int,const float *,const float *,int,const float *,int,float *,int) nogil> _hipblasSger__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasDger__funptr = NULL
-cdef hipblasStatus_t hipblasDger(hipblasHandle_t handle,int m,int n,const double * alpha,const double * x,int incx,const double * y,int incy,double * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasDger(void * handle,int m,int n,const double * alpha,const double * x,int incx,const double * y,int incy,double * AP,int lda) nogil:
     global _hipblasDger__funptr
     __init_symbol(&_hipblasDger__funptr,"hipblasDger")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,const double *,const double *,int,const double *,int,double *,int) nogil> _hipblasDger__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,int,int,const double *,const double *,int,const double *,int,double *,int) nogil> _hipblasDger__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasCgeru__funptr = NULL
-cdef hipblasStatus_t hipblasCgeru(hipblasHandle_t handle,int m,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasCgeru(void * handle,int m,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
     global _hipblasCgeru__funptr
     __init_symbol(&_hipblasCgeru__funptr,"hipblasCgeru")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCgeru__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCgeru__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasCgerc__funptr = NULL
-cdef hipblasStatus_t hipblasCgerc(hipblasHandle_t handle,int m,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasCgerc(void * handle,int m,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
     global _hipblasCgerc__funptr
     __init_symbol(&_hipblasCgerc__funptr,"hipblasCgerc")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCgerc__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCgerc__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasZgeru__funptr = NULL
-cdef hipblasStatus_t hipblasZgeru(hipblasHandle_t handle,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasZgeru(void * handle,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
     global _hipblasZgeru__funptr
     __init_symbol(&_hipblasZgeru__funptr,"hipblasZgeru")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZgeru__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZgeru__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasZgerc__funptr = NULL
-cdef hipblasStatus_t hipblasZgerc(hipblasHandle_t handle,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasZgerc(void * handle,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
     global _hipblasZgerc__funptr
     __init_symbol(&_hipblasZgerc__funptr,"hipblasZgerc")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZgerc__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZgerc__funptr)(handle,m,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasChbmv__funptr = NULL
@@ -1437,17 +1434,17 @@ cdef void* _hipblasChbmv__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y.
 #
-cdef hipblasStatus_t hipblasChbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasChbmv(void * handle,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _hipblasChbmv__funptr
     __init_symbol(&_hipblasChbmv__funptr,"hipblasChbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasZhbmv__funptr = NULL
-cdef hipblasStatus_t hipblasZhbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasZhbmv(void * handle,hipblasFillMode_t uplo,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _hipblasZhbmv__funptr
     __init_symbol(&_hipblasZhbmv__funptr,"hipblasZhbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasChemv__funptr = NULL
@@ -1505,17 +1502,17 @@ cdef void* _hipblasChemv__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y.
 #
-cdef hipblasStatus_t hipblasChemv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasChemv(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _hipblasChemv__funptr
     __init_symbol(&_hipblasChemv__funptr,"hipblasChemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChemv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChemv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasZhemv__funptr = NULL
-cdef hipblasStatus_t hipblasZhemv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasZhemv(void * handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _hipblasZhemv__funptr
     __init_symbol(&_hipblasZhemv__funptr,"hipblasZhemv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhemv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhemv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasCher__funptr = NULL
@@ -1566,17 +1563,17 @@ cdef void* _hipblasCher__funptr = NULL
 #     @param[in]
 #     lda       [int]
 #               specifies the leading dimension of A. Must be at least max(1, n).
-cdef hipblasStatus_t hipblasCher(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex * x,int incx,hipblasComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasCher(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex * x,int incx,hipblasComplex * AP,int lda) nogil:
     global _hipblasCher__funptr
     __init_symbol(&_hipblasCher__funptr,"hipblasCher")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCher__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCher__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
 cdef void* _hipblasZher__funptr = NULL
-cdef hipblasStatus_t hipblasZher(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasZher(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP,int lda) nogil:
     global _hipblasZher__funptr
     __init_symbol(&_hipblasZher__funptr,"hipblasZher")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZher__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZher__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
 cdef void* _hipblasCher2__funptr = NULL
@@ -1632,17 +1629,17 @@ cdef void* _hipblasCher2__funptr = NULL
 #     @param[in]
 #     lda       [int]
 #               specifies the leading dimension of A. Must be at least max(lda, 1).
-cdef hipblasStatus_t hipblasCher2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasCher2(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
     global _hipblasCher2__funptr
     __init_symbol(&_hipblasCher2__funptr,"hipblasCher2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCher2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCher2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasZher2__funptr = NULL
-cdef hipblasStatus_t hipblasZher2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasZher2(void * handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
     global _hipblasZher2__funptr
     __init_symbol(&_hipblasZher2__funptr,"hipblasZher2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZher2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZher2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasChpmv__funptr = NULL
@@ -1712,17 +1709,17 @@ cdef void* _hipblasChpmv__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y.
 #
-cdef hipblasStatus_t hipblasChpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasChpmv(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _hipblasChpmv__funptr
     __init_symbol(&_hipblasChpmv__funptr,"hipblasChpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChpmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChpmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasZhpmv__funptr = NULL
-cdef hipblasStatus_t hipblasZhpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasZhpmv(void * handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _hipblasZhpmv__funptr
     __init_symbol(&_hipblasZhpmv__funptr,"hipblasZhpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhpmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhpmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasChpr__funptr = NULL
@@ -1786,17 +1783,17 @@ cdef void* _hipblasChpr__funptr = NULL
 #                         (4,-9) (5,-3) (6,0)
 #             Note that the imaginary part of the diagonal elements are not accessed and are assumed
 #             to be 0.
-cdef hipblasStatus_t hipblasChpr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex * x,int incx,hipblasComplex * AP) nogil:
+cdef hipblasStatus_t hipblasChpr(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,hipblasComplex * x,int incx,hipblasComplex * AP) nogil:
     global _hipblasChpr__funptr
     __init_symbol(&_hipblasChpr__funptr,"hipblasChpr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasChpr__funptr)(handle,uplo,n,alpha,x,incx,AP)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasChpr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
 cdef void* _hipblasZhpr__funptr = NULL
-cdef hipblasStatus_t hipblasZhpr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP) nogil:
+cdef hipblasStatus_t hipblasZhpr(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP) nogil:
     global _hipblasZhpr__funptr
     __init_symbol(&_hipblasZhpr__funptr,"hipblasZhpr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZhpr__funptr)(handle,uplo,n,alpha,x,incx,AP)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZhpr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
 cdef void* _hipblasChpr2__funptr = NULL
@@ -1865,17 +1862,17 @@ cdef void* _hipblasChpr2__funptr = NULL
 #                         (4,-9) (5,-3) (6,0)
 #             Note that the imaginary part of the diagonal elements are not accessed and are assumed
 #             to be 0.
-cdef hipblasStatus_t hipblasChpr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP) nogil:
+cdef hipblasStatus_t hipblasChpr2(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP) nogil:
     global _hipblasChpr2__funptr
     __init_symbol(&_hipblasChpr2__funptr,"hipblasChpr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasChpr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasChpr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
 
 
 cdef void* _hipblasZhpr2__funptr = NULL
-cdef hipblasStatus_t hipblasZhpr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP) nogil:
+cdef hipblasStatus_t hipblasZhpr2(void * handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP) nogil:
     global _hipblasZhpr2__funptr
     __init_symbol(&_hipblasZhpr2__funptr,"hipblasZhpr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZhpr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZhpr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
 
 
 cdef void* _hipblasSsbmv__funptr = NULL
@@ -1927,17 +1924,17 @@ cdef void* _hipblasSsbmv__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y
 #
-cdef hipblasStatus_t hipblasSsbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,int k,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
+cdef hipblasStatus_t hipblasSsbmv(void * handle,hipblasFillMode_t uplo,int n,int k,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _hipblasSsbmv__funptr
     __init_symbol(&_hipblasSsbmv__funptr,"hipblasSsbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasDsbmv__funptr = NULL
-cdef hipblasStatus_t hipblasDsbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,int k,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
+cdef hipblasStatus_t hipblasDsbmv(void * handle,hipblasFillMode_t uplo,int n,int k,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
     global _hipblasDsbmv__funptr
     __init_symbol(&_hipblasDsbmv__funptr,"hipblasDsbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsbmv__funptr)(handle,uplo,n,k,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasSspmv__funptr = NULL
@@ -1983,17 +1980,17 @@ cdef void* _hipblasSspmv__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y
 #
-cdef hipblasStatus_t hipblasSspmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * AP,const float * x,int incx,const float * beta,float * y,int incy) nogil:
+cdef hipblasStatus_t hipblasSspmv(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * AP,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _hipblasSspmv__funptr
     __init_symbol(&_hipblasSspmv__funptr,"hipblasSspmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,const float *,int,const float *,float *,int) nogil> _hipblasSspmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,const float *,const float *,int,const float *,float *,int) nogil> _hipblasSspmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasDspmv__funptr = NULL
-cdef hipblasStatus_t hipblasDspmv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * AP,const double * x,int incx,const double * beta,double * y,int incy) nogil:
+cdef hipblasStatus_t hipblasDspmv(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * AP,const double * x,int incx,const double * beta,double * y,int incy) nogil:
     global _hipblasDspmv__funptr
     __init_symbol(&_hipblasDspmv__funptr,"hipblasDspmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,const double *,int,const double *,double *,int) nogil> _hipblasDspmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,const double *,const double *,int,const double *,double *,int) nogil> _hipblasDspmv__funptr)(handle,uplo,n,alpha,AP,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasSspr__funptr = NULL
@@ -2057,31 +2054,31 @@ cdef void* _hipblasSspr__funptr = NULL
 #                         2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 #                         3 6 8 9
 #                         4 7 9 0
-cdef hipblasStatus_t hipblasSspr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,float * AP) nogil:
+cdef hipblasStatus_t hipblasSspr(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,float * AP) nogil:
     global _hipblasSspr__funptr
     __init_symbol(&_hipblasSspr__funptr,"hipblasSspr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,float *) nogil> _hipblasSspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,const float *,int,float *) nogil> _hipblasSspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
 cdef void* _hipblasDspr__funptr = NULL
-cdef hipblasStatus_t hipblasDspr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,double * AP) nogil:
+cdef hipblasStatus_t hipblasDspr(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,double * AP) nogil:
     global _hipblasDspr__funptr
     __init_symbol(&_hipblasDspr__funptr,"hipblasDspr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,double *) nogil> _hipblasDspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,const double *,int,double *) nogil> _hipblasDspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
 cdef void* _hipblasCspr__funptr = NULL
-cdef hipblasStatus_t hipblasCspr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * AP) nogil:
+cdef hipblasStatus_t hipblasCspr(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * AP) nogil:
     global _hipblasCspr__funptr
     __init_symbol(&_hipblasCspr__funptr,"hipblasCspr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasCspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *) nogil> _hipblasCspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
 cdef void* _hipblasZspr__funptr = NULL
-cdef hipblasStatus_t hipblasZspr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP) nogil:
+cdef hipblasStatus_t hipblasZspr(void * handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP) nogil:
     global _hipblasZspr__funptr
     __init_symbol(&_hipblasZspr__funptr,"hipblasZspr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *) nogil> _hipblasZspr__funptr)(handle,uplo,n,alpha,x,incx,AP)
 
 
 cdef void* _hipblasSspr2__funptr = NULL
@@ -2150,17 +2147,17 @@ cdef void* _hipblasSspr2__funptr = NULL
 #                         2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 #                         3 6 8 9
 #                         4 7 9 0
-cdef hipblasStatus_t hipblasSspr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP) nogil:
+cdef hipblasStatus_t hipblasSspr2(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP) nogil:
     global _hipblasSspr2__funptr
     __init_symbol(&_hipblasSspr2__funptr,"hipblasSspr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,float *) nogil> _hipblasSspr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,float *) nogil> _hipblasSspr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
 
 
 cdef void* _hipblasDspr2__funptr = NULL
-cdef hipblasStatus_t hipblasDspr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,const double * y,int incy,double * AP) nogil:
+cdef hipblasStatus_t hipblasDspr2(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,const double * y,int incy,double * AP) nogil:
     global _hipblasDspr2__funptr
     __init_symbol(&_hipblasDspr2__funptr,"hipblasDspr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,double *) nogil> _hipblasDspr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,double *) nogil> _hipblasDspr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP)
 
 
 cdef void* _hipblasSsymv__funptr = NULL
@@ -2209,31 +2206,31 @@ cdef void* _hipblasSsymv__funptr = NULL
 #     incy      [int]
 #               specifies the increment for the elements of y
 #
-cdef hipblasStatus_t hipblasSsymv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
+cdef hipblasStatus_t hipblasSsymv(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * AP,int lda,const float * x,int incx,const float * beta,float * y,int incy) nogil:
     global _hipblasSsymv__funptr
     __init_symbol(&_hipblasSsymv__funptr,"hipblasSsymv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasDsymv__funptr = NULL
-cdef hipblasStatus_t hipblasDsymv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
+cdef hipblasStatus_t hipblasDsymv(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * AP,int lda,const double * x,int incx,const double * beta,double * y,int incy) nogil:
     global _hipblasDsymv__funptr
     __init_symbol(&_hipblasDsymv__funptr,"hipblasDsymv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasCsymv__funptr = NULL
-cdef hipblasStatus_t hipblasCsymv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasCsymv(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * beta,hipblasComplex * y,int incy) nogil:
     global _hipblasCsymv__funptr
     __init_symbol(&_hipblasCsymv__funptr,"hipblasCsymv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasZsymv__funptr = NULL
-cdef hipblasStatus_t hipblasZsymv(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
+cdef hipblasStatus_t hipblasZsymv(void * handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * beta,hipblasDoubleComplex * y,int incy) nogil:
     global _hipblasZsymv__funptr
     __init_symbol(&_hipblasZsymv__funptr,"hipblasZsymv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsymv__funptr)(handle,uplo,n,alpha,AP,lda,x,incx,beta,y,incy)
 
 
 cdef void* _hipblasSsyr__funptr = NULL
@@ -2277,31 +2274,31 @@ cdef void* _hipblasSsyr__funptr = NULL
 #     lda       [int]
 #               specifies the leading dimension of A.
 #
-cdef hipblasStatus_t hipblasSsyr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,float * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasSsyr(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,float * AP,int lda) nogil:
     global _hipblasSsyr__funptr
     __init_symbol(&_hipblasSsyr__funptr,"hipblasSsyr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,float *,int) nogil> _hipblasSsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,const float *,int,float *,int) nogil> _hipblasSsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
 cdef void* _hipblasDsyr__funptr = NULL
-cdef hipblasStatus_t hipblasDsyr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,double * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasDsyr(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,double * AP,int lda) nogil:
     global _hipblasDsyr__funptr
     __init_symbol(&_hipblasDsyr__funptr,"hipblasDsyr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,double *,int) nogil> _hipblasDsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,const double *,int,double *,int) nogil> _hipblasDsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
 cdef void* _hipblasCsyr__funptr = NULL
-cdef hipblasStatus_t hipblasCsyr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasCsyr(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * AP,int lda) nogil:
     global _hipblasCsyr__funptr
     __init_symbol(&_hipblasCsyr__funptr,"hipblasCsyr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
 cdef void* _hipblasZsyr__funptr = NULL
-cdef hipblasStatus_t hipblasZsyr(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasZsyr(void * handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * AP,int lda) nogil:
     global _hipblasZsyr__funptr
     __init_symbol(&_hipblasZsyr__funptr,"hipblasZsyr")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZsyr__funptr)(handle,uplo,n,alpha,x,incx,AP,lda)
 
 
 cdef void* _hipblasSsyr2__funptr = NULL
@@ -2350,31 +2347,31 @@ cdef void* _hipblasSsyr2__funptr = NULL
 #     lda       [int]
 #               specifies the leading dimension of A.
 #
-cdef hipblasStatus_t hipblasSsyr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasSsyr2(void * handle,hipblasFillMode_t uplo,int n,const float * alpha,const float * x,int incx,const float * y,int incy,float * AP,int lda) nogil:
     global _hipblasSsyr2__funptr
     __init_symbol(&_hipblasSsyr2__funptr,"hipblasSsyr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,float *,int) nogil> _hipblasSsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const float *,const float *,int,const float *,int,float *,int) nogil> _hipblasSsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasDsyr2__funptr = NULL
-cdef hipblasStatus_t hipblasDsyr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,const double * y,int incy,double * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasDsyr2(void * handle,hipblasFillMode_t uplo,int n,const double * alpha,const double * x,int incx,const double * y,int incy,double * AP,int lda) nogil:
     global _hipblasDsyr2__funptr
     __init_symbol(&_hipblasDsyr2__funptr,"hipblasDsyr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,double *,int) nogil> _hipblasDsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,const double *,const double *,int,const double *,int,double *,int) nogil> _hipblasDsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasCsyr2__funptr = NULL
-cdef hipblasStatus_t hipblasCsyr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasCsyr2(void * handle,hipblasFillMode_t uplo,int n,hipblasComplex * alpha,hipblasComplex * x,int incx,hipblasComplex * y,int incy,hipblasComplex * AP,int lda) nogil:
     global _hipblasCsyr2__funptr
     __init_symbol(&_hipblasCsyr2__funptr,"hipblasCsyr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasZsyr2__funptr = NULL
-cdef hipblasStatus_t hipblasZsyr2(hipblasHandle_t handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
+cdef hipblasStatus_t hipblasZsyr2(void * handle,hipblasFillMode_t uplo,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * y,int incy,hipblasDoubleComplex * AP,int lda) nogil:
     global _hipblasZsyr2__funptr
     __init_symbol(&_hipblasZsyr2__funptr,"hipblasZsyr2")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZsyr2__funptr)(handle,uplo,n,alpha,x,incx,y,incy,AP,lda)
 
 
 cdef void* _hipblasStbmv__funptr = NULL
@@ -2454,31 +2451,31 @@ cdef void* _hipblasStbmv__funptr = NULL
 #     incx      [int]
 #               specifies the increment for the elements of x.
 #
-cdef hipblasStatus_t hipblasStbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,const float * AP,int lda,float * x,int incx) nogil:
+cdef hipblasStatus_t hipblasStbmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,const float * AP,int lda,float * x,int incx) nogil:
     global _hipblasStbmv__funptr
     __init_symbol(&_hipblasStbmv__funptr,"hipblasStbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,int,float *,int) nogil> _hipblasStbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,int,float *,int) nogil> _hipblasStbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
 
 
 cdef void* _hipblasDtbmv__funptr = NULL
-cdef hipblasStatus_t hipblasDtbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,const double * AP,int lda,double * x,int incx) nogil:
+cdef hipblasStatus_t hipblasDtbmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,const double * AP,int lda,double * x,int incx) nogil:
     global _hipblasDtbmv__funptr
     __init_symbol(&_hipblasDtbmv__funptr,"hipblasDtbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,int,double *,int) nogil> _hipblasDtbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,int,double *,int) nogil> _hipblasDtbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
 
 
 cdef void* _hipblasCtbmv__funptr = NULL
-cdef hipblasStatus_t hipblasCtbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasCtbmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
     global _hipblasCtbmv__funptr
     __init_symbol(&_hipblasCtbmv__funptr,"hipblasCtbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
 
 
 cdef void* _hipblasZtbmv__funptr = NULL
-cdef hipblasStatus_t hipblasZtbmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasZtbmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int k,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
     global _hipblasZtbmv__funptr
     __init_symbol(&_hipblasZtbmv__funptr,"hipblasZtbmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtbmv__funptr)(handle,uplo,transA,diag,m,k,AP,lda,x,incx)
 
 
 cdef void* _hipblasStbsv__funptr = NULL
@@ -2542,31 +2539,31 @@ cdef void* _hipblasStbsv__funptr = NULL
 #     incx      [int]
 #               specifies the increment for the elements of x.
 #
-cdef hipblasStatus_t hipblasStbsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,const float * AP,int lda,float * x,int incx) nogil:
+cdef hipblasStatus_t hipblasStbsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,const float * AP,int lda,float * x,int incx) nogil:
     global _hipblasStbsv__funptr
     __init_symbol(&_hipblasStbsv__funptr,"hipblasStbsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,int,float *,int) nogil> _hipblasStbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,int,float *,int) nogil> _hipblasStbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
 
 
 cdef void* _hipblasDtbsv__funptr = NULL
-cdef hipblasStatus_t hipblasDtbsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,const double * AP,int lda,double * x,int incx) nogil:
+cdef hipblasStatus_t hipblasDtbsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,const double * AP,int lda,double * x,int incx) nogil:
     global _hipblasDtbsv__funptr
     __init_symbol(&_hipblasDtbsv__funptr,"hipblasDtbsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,int,double *,int) nogil> _hipblasDtbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,int,double *,int) nogil> _hipblasDtbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
 
 
 cdef void* _hipblasCtbsv__funptr = NULL
-cdef hipblasStatus_t hipblasCtbsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasCtbsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
     global _hipblasCtbsv__funptr
     __init_symbol(&_hipblasCtbsv__funptr,"hipblasCtbsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
 
 
 cdef void* _hipblasZtbsv__funptr = NULL
-cdef hipblasStatus_t hipblasZtbsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasZtbsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int n,int k,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
     global _hipblasZtbsv__funptr
     __init_symbol(&_hipblasZtbsv__funptr,"hipblasZtbsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtbsv__funptr)(handle,uplo,transA,diag,n,k,AP,lda,x,incx)
 
 
 cdef void* _hipblasStpmv__funptr = NULL
@@ -2627,31 +2624,31 @@ cdef void* _hipblasStpmv__funptr = NULL
 #     incx    [int]
 #             specifies the increment for the elements of x. incx must not be zero.
 #
-cdef hipblasStatus_t hipblasStpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,float * x,int incx) nogil:
+cdef hipblasStatus_t hipblasStpmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,float * x,int incx) nogil:
     global _hipblasStpmv__funptr
     __init_symbol(&_hipblasStpmv__funptr,"hipblasStpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,float *,int) nogil> _hipblasStpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,float *,int) nogil> _hipblasStpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
 cdef void* _hipblasDtpmv__funptr = NULL
-cdef hipblasStatus_t hipblasDtpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,double * x,int incx) nogil:
+cdef hipblasStatus_t hipblasDtpmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,double * x,int incx) nogil:
     global _hipblasDtpmv__funptr
     __init_symbol(&_hipblasDtpmv__funptr,"hipblasDtpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,double *,int) nogil> _hipblasDtpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,double *,int) nogil> _hipblasDtpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
 cdef void* _hipblasCtpmv__funptr = NULL
-cdef hipblasStatus_t hipblasCtpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,hipblasComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasCtpmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,hipblasComplex * x,int incx) nogil:
     global _hipblasCtpmv__funptr
     __init_symbol(&_hipblasCtpmv__funptr,"hipblasCtpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCtpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCtpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
 cdef void* _hipblasZtpmv__funptr = NULL
-cdef hipblasStatus_t hipblasZtpmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,hipblasDoubleComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasZtpmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,hipblasDoubleComplex * x,int incx) nogil:
     global _hipblasZtpmv__funptr
     __init_symbol(&_hipblasZtpmv__funptr,"hipblasZtpmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZtpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZtpmv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
 cdef void* _hipblasStpsv__funptr = NULL
@@ -2706,31 +2703,31 @@ cdef void* _hipblasStpsv__funptr = NULL
 #     incx      [int]
 #               specifies the increment for the elements of x.
 #
-cdef hipblasStatus_t hipblasStpsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,float * x,int incx) nogil:
+cdef hipblasStatus_t hipblasStpsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,float * x,int incx) nogil:
     global _hipblasStpsv__funptr
     __init_symbol(&_hipblasStpsv__funptr,"hipblasStpsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,float *,int) nogil> _hipblasStpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,float *,int) nogil> _hipblasStpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
 cdef void* _hipblasDtpsv__funptr = NULL
-cdef hipblasStatus_t hipblasDtpsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,double * x,int incx) nogil:
+cdef hipblasStatus_t hipblasDtpsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,double * x,int incx) nogil:
     global _hipblasDtpsv__funptr
     __init_symbol(&_hipblasDtpsv__funptr,"hipblasDtpsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,double *,int) nogil> _hipblasDtpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,double *,int) nogil> _hipblasDtpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
 cdef void* _hipblasCtpsv__funptr = NULL
-cdef hipblasStatus_t hipblasCtpsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,hipblasComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasCtpsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,hipblasComplex * x,int incx) nogil:
     global _hipblasCtpsv__funptr
     __init_symbol(&_hipblasCtpsv__funptr,"hipblasCtpsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCtpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCtpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
 cdef void* _hipblasZtpsv__funptr = NULL
-cdef hipblasStatus_t hipblasZtpsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,hipblasDoubleComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasZtpsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,hipblasDoubleComplex * x,int incx) nogil:
     global _hipblasZtpsv__funptr
     __init_symbol(&_hipblasZtpsv__funptr,"hipblasZtpsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZtpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZtpsv__funptr)(handle,uplo,transA,diag,m,AP,x,incx)
 
 
 cdef void* _hipblasStrmv__funptr = NULL
@@ -2786,31 +2783,31 @@ cdef void* _hipblasStrmv__funptr = NULL
 #     incx      [int]
 #               specifies the increment for the elements of x.
 #
-cdef hipblasStatus_t hipblasStrmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,int lda,float * x,int incx) nogil:
+cdef hipblasStatus_t hipblasStrmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,int lda,float * x,int incx) nogil:
     global _hipblasStrmv__funptr
     __init_symbol(&_hipblasStrmv__funptr,"hipblasStrmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> _hipblasStrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> _hipblasStrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
 cdef void* _hipblasDtrmv__funptr = NULL
-cdef hipblasStatus_t hipblasDtrmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,int lda,double * x,int incx) nogil:
+cdef hipblasStatus_t hipblasDtrmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,int lda,double * x,int incx) nogil:
     global _hipblasDtrmv__funptr
     __init_symbol(&_hipblasDtrmv__funptr,"hipblasDtrmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> _hipblasDtrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> _hipblasDtrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
 cdef void* _hipblasCtrmv__funptr = NULL
-cdef hipblasStatus_t hipblasCtrmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasCtrmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
     global _hipblasCtrmv__funptr
     __init_symbol(&_hipblasCtrmv__funptr,"hipblasCtrmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
 cdef void* _hipblasZtrmv__funptr = NULL
-cdef hipblasStatus_t hipblasZtrmv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasZtrmv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
     global _hipblasZtrmv__funptr
     __init_symbol(&_hipblasZtrmv__funptr,"hipblasZtrmv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrmv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
 cdef void* _hipblasStrsv__funptr = NULL
@@ -2866,31 +2863,31 @@ cdef void* _hipblasStrsv__funptr = NULL
 #     incx      [int]
 #               specifies the increment for the elements of x.
 #
-cdef hipblasStatus_t hipblasStrsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,int lda,float * x,int incx) nogil:
+cdef hipblasStatus_t hipblasStrsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const float * AP,int lda,float * x,int incx) nogil:
     global _hipblasStrsv__funptr
     __init_symbol(&_hipblasStrsv__funptr,"hipblasStrsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> _hipblasStrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> _hipblasStrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
 cdef void* _hipblasDtrsv__funptr = NULL
-cdef hipblasStatus_t hipblasDtrsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,int lda,double * x,int incx) nogil:
+cdef hipblasStatus_t hipblasDtrsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,const double * AP,int lda,double * x,int incx) nogil:
     global _hipblasDtrsv__funptr
     __init_symbol(&_hipblasDtrsv__funptr,"hipblasDtrsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> _hipblasDtrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> _hipblasDtrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
 cdef void* _hipblasCtrsv__funptr = NULL
-cdef hipblasStatus_t hipblasCtrsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasCtrsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasComplex * AP,int lda,hipblasComplex * x,int incx) nogil:
     global _hipblasCtrsv__funptr
     __init_symbol(&_hipblasCtrsv__funptr,"hipblasCtrsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
 cdef void* _hipblasZtrsv__funptr = NULL
-cdef hipblasStatus_t hipblasZtrsv(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
+cdef hipblasStatus_t hipblasZtrsv(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx) nogil:
     global _hipblasZtrsv__funptr
     __init_symbol(&_hipblasZtrsv__funptr,"hipblasZtrsv")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrsv__funptr)(handle,uplo,transA,diag,m,AP,lda,x,incx)
 
 
 cdef void* _hipblasHgemm__funptr = NULL
@@ -2953,38 +2950,38 @@ cdef void* _hipblasHgemm__funptr = NULL
 #     ldc       [int]
 #               specifies the leading dimension of C.
 #
-cdef hipblasStatus_t hipblasHgemm(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,hipblasHalf * alpha,hipblasHalf * AP,int lda,hipblasHalf * BP,int ldb,hipblasHalf * beta,hipblasHalf * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasHgemm(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const unsigned short * alpha,const unsigned short * AP,int lda,const unsigned short * BP,int ldb,const unsigned short * beta,unsigned short * CP,int ldc) nogil:
     global _hipblasHgemm__funptr
     __init_symbol(&_hipblasHgemm__funptr,"hipblasHgemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasHalf *,hipblasHalf *,int,hipblasHalf *,int,hipblasHalf *,hipblasHalf *,int) nogil> _hipblasHgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,hipblasOperation_t,int,int,int,const unsigned short *,const unsigned short *,int,const unsigned short *,int,const unsigned short *,unsigned short *,int) nogil> _hipblasHgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasSgemm__funptr = NULL
-cdef hipblasStatus_t hipblasSgemm(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasSgemm(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _hipblasSgemm__funptr
     __init_symbol(&_hipblasSgemm__funptr,"hipblasSgemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,hipblasOperation_t,int,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasDgemm__funptr = NULL
-cdef hipblasStatus_t hipblasDgemm(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasDgemm(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
     global _hipblasDgemm__funptr
     __init_symbol(&_hipblasDgemm__funptr,"hipblasDgemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,hipblasOperation_t,int,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasCgemm__funptr = NULL
-cdef hipblasStatus_t hipblasCgemm(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasCgemm(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCgemm__funptr
     __init_symbol(&_hipblasCgemm__funptr,"hipblasCgemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasZgemm__funptr = NULL
-cdef hipblasStatus_t hipblasZgemm(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZgemm(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZgemm__funptr
     __init_symbol(&_hipblasZgemm__funptr,"hipblasZgemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,hipblasOperation_t,int,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZgemm__funptr)(handle,transA,transB,m,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasCherk__funptr = NULL
@@ -3058,17 +3055,17 @@ cdef void* _hipblasCherk__funptr = NULL
 #     ldc    [int]
 #            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 #
-cdef hipblasStatus_t hipblasCherk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,hipblasComplex * AP,int lda,const float * beta,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasCherk(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,hipblasComplex * AP,int lda,const float * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCherk__funptr
     __init_symbol(&_hipblasCherk__funptr,"hipblasCherk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> _hipblasCherk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> _hipblasCherk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
 cdef void* _hipblasZherk__funptr = NULL
-cdef hipblasStatus_t hipblasZherk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,hipblasDoubleComplex * AP,int lda,const double * beta,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZherk(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,hipblasDoubleComplex * AP,int lda,const double * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZherk__funptr
     __init_symbol(&_hipblasZherk__funptr,"hipblasZherk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZherk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZherk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
 cdef void* _hipblasCherkx__funptr = NULL
@@ -3153,17 +3150,17 @@ cdef void* _hipblasCherkx__funptr = NULL
 #     ldc    [int]
 #            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 #
-cdef hipblasStatus_t hipblasCherkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,const float * beta,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasCherkx(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,const float * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCherkx__funptr
     __init_symbol(&_hipblasCherkx__funptr,"hipblasCherkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> _hipblasCherkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> _hipblasCherkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasZherkx__funptr = NULL
-cdef hipblasStatus_t hipblasZherkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,const double * beta,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZherkx(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,const double * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZherkx__funptr
     __init_symbol(&_hipblasZherkx__funptr,"hipblasZherkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZherkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZherkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasCher2k__funptr = NULL
@@ -3246,17 +3243,17 @@ cdef void* _hipblasCher2k__funptr = NULL
 #     ldc    [int]
 #            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 #
-cdef hipblasStatus_t hipblasCher2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,const float * beta,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasCher2k(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,const float * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCher2k__funptr
     __init_symbol(&_hipblasCher2k__funptr,"hipblasCher2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> _hipblasCher2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,const float *,hipblasComplex *,int) nogil> _hipblasCher2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasZher2k__funptr = NULL
-cdef hipblasStatus_t hipblasZher2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,const double * beta,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZher2k(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,const double * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZher2k__funptr
     __init_symbol(&_hipblasZher2k__funptr,"hipblasZher2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZher2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,const double *,hipblasDoubleComplex *,int) nogil> _hipblasZher2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasSsymm__funptr = NULL
@@ -3336,31 +3333,31 @@ cdef void* _hipblasSsymm__funptr = NULL
 #     ldc    [int]
 #            ldc specifies the first dimension of C. ldc >= max( 1, m )
 #
-cdef hipblasStatus_t hipblasSsymm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasSsymm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _hipblasSsymm__funptr
     __init_symbol(&_hipblasSsymm__funptr,"hipblasSsymm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasDsymm__funptr = NULL
-cdef hipblasStatus_t hipblasDsymm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasDsymm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
     global _hipblasDsymm__funptr
     __init_symbol(&_hipblasDsymm__funptr,"hipblasDsymm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasCsymm__funptr = NULL
-cdef hipblasStatus_t hipblasCsymm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasCsymm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCsymm__funptr
     __init_symbol(&_hipblasCsymm__funptr,"hipblasCsymm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasZsymm__funptr = NULL
-cdef hipblasStatus_t hipblasZsymm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZsymm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZsymm__funptr
     __init_symbol(&_hipblasZsymm__funptr,"hipblasZsymm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsymm__funptr)(handle,side,uplo,m,n,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasSsyrk__funptr = NULL
@@ -3437,31 +3434,31 @@ cdef void* _hipblasSsyrk__funptr = NULL
 #     ldc    [int]
 #            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 #
-cdef hipblasStatus_t hipblasSsyrk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * beta,float * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasSsyrk(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * beta,float * CP,int ldc) nogil:
     global _hipblasSsyrk__funptr
     __init_symbol(&_hipblasSsyrk__funptr,"hipblasSsyrk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,float *,int) nogil> _hipblasSsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,float *,int) nogil> _hipblasSsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
 cdef void* _hipblasDsyrk__funptr = NULL
-cdef hipblasStatus_t hipblasDsyrk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,const double * AP,int lda,const double * beta,double * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasDsyrk(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,const double * AP,int lda,const double * beta,double * CP,int ldc) nogil:
     global _hipblasDsyrk__funptr
     __init_symbol(&_hipblasDsyrk__funptr,"hipblasDsyrk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,double *,int) nogil> _hipblasDsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,double *,int) nogil> _hipblasDsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
 cdef void* _hipblasCsyrk__funptr = NULL
-cdef hipblasStatus_t hipblasCsyrk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasCsyrk(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCsyrk__funptr
     __init_symbol(&_hipblasCsyrk__funptr,"hipblasCsyrk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
 cdef void* _hipblasZsyrk__funptr = NULL
-cdef hipblasStatus_t hipblasZsyrk(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZsyrk(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZsyrk__funptr
     __init_symbol(&_hipblasZsyrk__funptr,"hipblasZsyrk")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsyrk__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,beta,CP,ldc)
 
 
 cdef void* _hipblasSsyr2k__funptr = NULL
@@ -3543,31 +3540,31 @@ cdef void* _hipblasSsyr2k__funptr = NULL
 #     ldc    [int]
 #            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 #
-cdef hipblasStatus_t hipblasSsyr2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasSsyr2k(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _hipblasSsyr2k__funptr
     __init_symbol(&_hipblasSsyr2k__funptr,"hipblasSsyr2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasDsyr2k__funptr = NULL
-cdef hipblasStatus_t hipblasDsyr2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasDsyr2k(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
     global _hipblasDsyr2k__funptr
     __init_symbol(&_hipblasDsyr2k__funptr,"hipblasDsyr2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasCsyr2k__funptr = NULL
-cdef hipblasStatus_t hipblasCsyr2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasCsyr2k(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCsyr2k__funptr
     __init_symbol(&_hipblasCsyr2k__funptr,"hipblasCsyr2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasZsyr2k__funptr = NULL
-cdef hipblasStatus_t hipblasZsyr2k(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZsyr2k(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZsyr2k__funptr
     __init_symbol(&_hipblasZsyr2k__funptr,"hipblasZsyr2k")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsyr2k__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasSsyrkx__funptr = NULL
@@ -3652,31 +3649,31 @@ cdef void* _hipblasSsyrkx__funptr = NULL
 #     ldc    [int]
 #            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 #
-cdef hipblasStatus_t hipblasSsyrkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasSsyrkx(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const float * alpha,const float * AP,int lda,const float * BP,int ldb,const float * beta,float * CP,int ldc) nogil:
     global _hipblasSsyrkx__funptr
     __init_symbol(&_hipblasSsyrkx__funptr,"hipblasSsyrkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,int,const float *,float *,int) nogil> _hipblasSsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasDsyrkx__funptr = NULL
-cdef hipblasStatus_t hipblasDsyrkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasDsyrkx(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,const double * alpha,const double * AP,int lda,const double * BP,int ldb,const double * beta,double * CP,int ldc) nogil:
     global _hipblasDsyrkx__funptr
     __init_symbol(&_hipblasDsyrkx__funptr,"hipblasDsyrkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,int,const double *,double *,int) nogil> _hipblasDsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasCsyrkx__funptr = NULL
-cdef hipblasStatus_t hipblasCsyrkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasCsyrkx(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCsyrkx__funptr
     __init_symbol(&_hipblasCsyrkx__funptr,"hipblasCsyrkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasCsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasZsyrkx__funptr = NULL
-cdef hipblasStatus_t hipblasZsyrkx(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZsyrkx(void * handle,hipblasFillMode_t uplo,hipblasOperation_t transA,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZsyrkx__funptr
     __init_symbol(&_hipblasZsyrkx__funptr,"hipblasZsyrkx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZsyrkx__funptr)(handle,uplo,transA,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasSgeam__funptr = NULL
@@ -3735,31 +3732,31 @@ cdef void* _hipblasSgeam__funptr = NULL
 #     ldc       [int]
 #               specifies the leading dimension of C.
 #
-cdef hipblasStatus_t hipblasSgeam(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,const float * alpha,const float * AP,int lda,const float * beta,const float * BP,int ldb,float * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasSgeam(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,const float * alpha,const float * AP,int lda,const float * beta,const float * BP,int ldb,float * CP,int ldc) nogil:
     global _hipblasSgeam__funptr
     __init_symbol(&_hipblasSgeam__funptr,"hipblasSgeam")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,const float *,int,float *,int) nogil> _hipblasSgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,hipblasOperation_t,int,int,const float *,const float *,int,const float *,const float *,int,float *,int) nogil> _hipblasSgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
 
 
 cdef void* _hipblasDgeam__funptr = NULL
-cdef hipblasStatus_t hipblasDgeam(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,const double * alpha,const double * AP,int lda,const double * beta,const double * BP,int ldb,double * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasDgeam(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,const double * alpha,const double * AP,int lda,const double * beta,const double * BP,int ldb,double * CP,int ldc) nogil:
     global _hipblasDgeam__funptr
     __init_symbol(&_hipblasDgeam__funptr,"hipblasDgeam")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,const double *,int,double *,int) nogil> _hipblasDgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,hipblasOperation_t,int,int,const double *,const double *,int,const double *,const double *,int,double *,int) nogil> _hipblasDgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
 
 
 cdef void* _hipblasCgeam__funptr = NULL
-cdef hipblasStatus_t hipblasCgeam(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * beta,hipblasComplex * BP,int ldb,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasCgeam(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * beta,hipblasComplex * BP,int ldb,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCgeam__funptr
     __init_symbol(&_hipblasCgeam__funptr,"hipblasCgeam")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,hipblasOperation_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
 
 
 cdef void* _hipblasZgeam__funptr = NULL
-cdef hipblasStatus_t hipblasZgeam(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * beta,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZgeam(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * beta,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZgeam__funptr
     __init_symbol(&_hipblasZgeam__funptr,"hipblasZgeam")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,hipblasOperation_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZgeam__funptr)(handle,transA,transB,m,n,alpha,AP,lda,beta,BP,ldb,CP,ldc)
 
 
 cdef void* _hipblasChemm__funptr = NULL
@@ -3840,17 +3837,17 @@ cdef void* _hipblasChemm__funptr = NULL
 #     ldc    [int]
 #            ldc specifies the first dimension of C. ldc >= max( 1, m )
 #
-cdef hipblasStatus_t hipblasChemm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasChemm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int n,int k,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb,hipblasComplex * beta,hipblasComplex * CP,int ldc) nogil:
     global _hipblasChemm__funptr
     __init_symbol(&_hipblasChemm__funptr,"hipblasChemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChemm__funptr)(handle,side,uplo,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,hipblasComplex *,int) nogil> _hipblasChemm__funptr)(handle,side,uplo,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasZhemm__funptr = NULL
-cdef hipblasStatus_t hipblasZhemm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZhemm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,int n,int k,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb,hipblasDoubleComplex * beta,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZhemm__funptr
     __init_symbol(&_hipblasZhemm__funptr,"hipblasZhemm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhemm__funptr)(handle,side,uplo,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int) nogil> _hipblasZhemm__funptr)(handle,side,uplo,n,k,alpha,AP,lda,BP,ldb,beta,CP,ldc)
 
 
 cdef void* _hipblasStrmm__funptr = NULL
@@ -3950,31 +3947,31 @@ cdef void* _hipblasStrmm__funptr = NULL
 #     ldb    [int]
 #            ldb specifies the first dimension of B. ldb >= max( 1, m ).
 #
-cdef hipblasStatus_t hipblasStrmm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float * AP,int lda,float * BP,int ldb) nogil:
+cdef hipblasStatus_t hipblasStrmm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,const float * AP,int lda,float * BP,int ldb) nogil:
     global _hipblasStrmm__funptr
     __init_symbol(&_hipblasStrmm__funptr,"hipblasStrmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,const float *,int,float *,int) nogil> _hipblasStrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,const float *,int,float *,int) nogil> _hipblasStrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
 cdef void* _hipblasDtrmm__funptr = NULL
-cdef hipblasStatus_t hipblasDtrmm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,const double * AP,int lda,double * BP,int ldb) nogil:
+cdef hipblasStatus_t hipblasDtrmm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,const double * AP,int lda,double * BP,int ldb) nogil:
     global _hipblasDtrmm__funptr
     __init_symbol(&_hipblasDtrmm__funptr,"hipblasDtrmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,const double *,int,double *,int) nogil> _hipblasDtrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,const double *,int,double *,int) nogil> _hipblasDtrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
 cdef void* _hipblasCtrmm__funptr = NULL
-cdef hipblasStatus_t hipblasCtrmm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb) nogil:
+cdef hipblasStatus_t hipblasCtrmm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb) nogil:
     global _hipblasCtrmm__funptr
     __init_symbol(&_hipblasCtrmm__funptr,"hipblasCtrmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
 cdef void* _hipblasZtrmm__funptr = NULL
-cdef hipblasStatus_t hipblasZtrmm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb) nogil:
+cdef hipblasStatus_t hipblasZtrmm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb) nogil:
     global _hipblasZtrmm__funptr
     __init_symbol(&_hipblasZtrmm__funptr,"hipblasZtrmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrmm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
 cdef void* _hipblasStrsm__funptr = NULL
@@ -4067,31 +4064,31 @@ cdef void* _hipblasStrsm__funptr = NULL
 #     ldb    [int]
 #            ldb specifies the first dimension of B. ldb >= max( 1, m ).
 #
-cdef hipblasStatus_t hipblasStrsm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,float * AP,int lda,float * BP,int ldb) nogil:
+cdef hipblasStatus_t hipblasStrsm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const float * alpha,float * AP,int lda,float * BP,int ldb) nogil:
     global _hipblasStrsm__funptr
     __init_symbol(&_hipblasStrsm__funptr,"hipblasStrsm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,float *,int,float *,int) nogil> _hipblasStrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const float *,float *,int,float *,int) nogil> _hipblasStrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
 cdef void* _hipblasDtrsm__funptr = NULL
-cdef hipblasStatus_t hipblasDtrsm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,double * AP,int lda,double * BP,int ldb) nogil:
+cdef hipblasStatus_t hipblasDtrsm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const double * alpha,double * AP,int lda,double * BP,int ldb) nogil:
     global _hipblasDtrsm__funptr
     __init_symbol(&_hipblasDtrsm__funptr,"hipblasDtrsm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,double *,int,double *,int) nogil> _hipblasDtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const double *,double *,int,double *,int) nogil> _hipblasDtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
 cdef void* _hipblasCtrsm__funptr = NULL
-cdef hipblasStatus_t hipblasCtrsm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb) nogil:
+cdef hipblasStatus_t hipblasCtrsm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasComplex * alpha,hipblasComplex * AP,int lda,hipblasComplex * BP,int ldb) nogil:
     global _hipblasCtrsm__funptr
     __init_symbol(&_hipblasCtrsm__funptr,"hipblasCtrsm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasComplex *,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
 cdef void* _hipblasZtrsm__funptr = NULL
-cdef hipblasStatus_t hipblasZtrsm(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb) nogil:
+cdef hipblasStatus_t hipblasZtrsm(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,hipblasDoubleComplex * alpha,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * BP,int ldb) nogil:
     global _hipblasZtrsm__funptr
     __init_symbol(&_hipblasZtrsm__funptr,"hipblasZtrsm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,hipblasDoubleComplex *,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrsm__funptr)(handle,side,uplo,transA,diag,m,n,alpha,AP,lda,BP,ldb)
 
 
 cdef void* _hipblasStrtri__funptr = NULL
@@ -4132,31 +4129,31 @@ cdef void* _hipblasStrtri__funptr = NULL
 #     ldinvA    [int]
 #               specifies the leading dimension of invA.
 #
-cdef hipblasStatus_t hipblasStrtri(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,const float * AP,int lda,float * invA,int ldinvA) nogil:
+cdef hipblasStatus_t hipblasStrtri(void * handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,const float * AP,int lda,float * invA,int ldinvA) nogil:
     global _hipblasStrtri__funptr
     __init_symbol(&_hipblasStrtri__funptr,"hipblasStrtri")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> _hipblasStrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasDiagType_t,int,const float *,int,float *,int) nogil> _hipblasStrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
 
 
 cdef void* _hipblasDtrtri__funptr = NULL
-cdef hipblasStatus_t hipblasDtrtri(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,const double * AP,int lda,double * invA,int ldinvA) nogil:
+cdef hipblasStatus_t hipblasDtrtri(void * handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,const double * AP,int lda,double * invA,int ldinvA) nogil:
     global _hipblasDtrtri__funptr
     __init_symbol(&_hipblasDtrtri__funptr,"hipblasDtrtri")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> _hipblasDtrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasDiagType_t,int,const double *,int,double *,int) nogil> _hipblasDtrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
 
 
 cdef void* _hipblasCtrtri__funptr = NULL
-cdef hipblasStatus_t hipblasCtrtri(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,hipblasComplex * AP,int lda,hipblasComplex * invA,int ldinvA) nogil:
+cdef hipblasStatus_t hipblasCtrtri(void * handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,hipblasComplex * AP,int lda,hipblasComplex * invA,int ldinvA) nogil:
     global _hipblasCtrtri__funptr
     __init_symbol(&_hipblasCtrtri__funptr,"hipblasCtrtri")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasDiagType_t,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCtrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
 
 
 cdef void* _hipblasZtrtri__funptr = NULL
-cdef hipblasStatus_t hipblasZtrtri(hipblasHandle_t handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * invA,int ldinvA) nogil:
+cdef hipblasStatus_t hipblasZtrtri(void * handle,hipblasFillMode_t uplo,hipblasDiagType_t diag,int n,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * invA,int ldinvA) nogil:
     global _hipblasZtrtri__funptr
     __init_symbol(&_hipblasZtrtri__funptr,"hipblasZtrtri")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasFillMode_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
+    return (<hipblasStatus_t (*)(void *,hipblasFillMode_t,hipblasDiagType_t,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZtrtri__funptr)(handle,uplo,diag,n,AP,lda,invA,ldinvA)
 
 
 cdef void* _hipblasSdgmm__funptr = NULL
@@ -4204,31 +4201,31 @@ cdef void* _hipblasSdgmm__funptr = NULL
 #     ldc       [int]
 #               specifies the leading dimension of C.
 #
-cdef hipblasStatus_t hipblasSdgmm(hipblasHandle_t handle,hipblasSideMode_t side,int m,int n,const float * AP,int lda,const float * x,int incx,float * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasSdgmm(void * handle,hipblasSideMode_t side,int m,int n,const float * AP,int lda,const float * x,int incx,float * CP,int ldc) nogil:
     global _hipblasSdgmm__funptr
     __init_symbol(&_hipblasSdgmm__funptr,"hipblasSdgmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,const float *,int,const float *,int,float *,int) nogil> _hipblasSdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,int,int,const float *,int,const float *,int,float *,int) nogil> _hipblasSdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
 
 
 cdef void* _hipblasDdgmm__funptr = NULL
-cdef hipblasStatus_t hipblasDdgmm(hipblasHandle_t handle,hipblasSideMode_t side,int m,int n,const double * AP,int lda,const double * x,int incx,double * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasDdgmm(void * handle,hipblasSideMode_t side,int m,int n,const double * AP,int lda,const double * x,int incx,double * CP,int ldc) nogil:
     global _hipblasDdgmm__funptr
     __init_symbol(&_hipblasDdgmm__funptr,"hipblasDdgmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,const double *,int,const double *,int,double *,int) nogil> _hipblasDdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,int,int,const double *,int,const double *,int,double *,int) nogil> _hipblasDdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
 
 
 cdef void* _hipblasCdgmm__funptr = NULL
-cdef hipblasStatus_t hipblasCdgmm(hipblasHandle_t handle,hipblasSideMode_t side,int m,int n,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasCdgmm(void * handle,hipblasSideMode_t side,int m,int n,hipblasComplex * AP,int lda,hipblasComplex * x,int incx,hipblasComplex * CP,int ldc) nogil:
     global _hipblasCdgmm__funptr
     __init_symbol(&_hipblasCdgmm__funptr,"hipblasCdgmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,int,int,hipblasComplex *,int,hipblasComplex *,int,hipblasComplex *,int) nogil> _hipblasCdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
 
 
 cdef void* _hipblasZdgmm__funptr = NULL
-cdef hipblasStatus_t hipblasZdgmm(hipblasHandle_t handle,hipblasSideMode_t side,int m,int n,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * CP,int ldc) nogil:
+cdef hipblasStatus_t hipblasZdgmm(void * handle,hipblasSideMode_t side,int m,int n,hipblasDoubleComplex * AP,int lda,hipblasDoubleComplex * x,int incx,hipblasDoubleComplex * CP,int ldc) nogil:
     global _hipblasZdgmm__funptr
     __init_symbol(&_hipblasZdgmm__funptr,"hipblasZdgmm")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,int,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int,hipblasDoubleComplex *,int) nogil> _hipblasZdgmm__funptr)(handle,side,m,n,AP,lda,x,incx,CP,ldc)
 
 
 cdef void* _hipblasSgetrf__funptr = NULL
@@ -4283,31 +4280,31 @@ cdef void* _hipblasSgetrf__funptr = NULL
 #     info      pointer to a int on the GPU.\n
 #               If info = 0, successful exit.
 #               If info = j > 0, U is singular. U[j,j] is the first zero pivot.
-cdef hipblasStatus_t hipblasSgetrf(hipblasHandle_t handle,const int n,float * A,const int lda,int * ipiv,int * info) nogil:
+cdef hipblasStatus_t hipblasSgetrf(void * handle,const int n,float * A,const int lda,int * ipiv,int * info) nogil:
     global _hipblasSgetrf__funptr
     __init_symbol(&_hipblasSgetrf__funptr,"hipblasSgetrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,float *,const int,int *,int *) nogil> _hipblasSgetrf__funptr)(handle,n,A,lda,ipiv,info)
+    return (<hipblasStatus_t (*)(void *,const int,float *,const int,int *,int *) nogil> _hipblasSgetrf__funptr)(handle,n,A,lda,ipiv,info)
 
 
 cdef void* _hipblasDgetrf__funptr = NULL
-cdef hipblasStatus_t hipblasDgetrf(hipblasHandle_t handle,const int n,double * A,const int lda,int * ipiv,int * info) nogil:
+cdef hipblasStatus_t hipblasDgetrf(void * handle,const int n,double * A,const int lda,int * ipiv,int * info) nogil:
     global _hipblasDgetrf__funptr
     __init_symbol(&_hipblasDgetrf__funptr,"hipblasDgetrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,double *,const int,int *,int *) nogil> _hipblasDgetrf__funptr)(handle,n,A,lda,ipiv,info)
+    return (<hipblasStatus_t (*)(void *,const int,double *,const int,int *,int *) nogil> _hipblasDgetrf__funptr)(handle,n,A,lda,ipiv,info)
 
 
 cdef void* _hipblasCgetrf__funptr = NULL
-cdef hipblasStatus_t hipblasCgetrf(hipblasHandle_t handle,const int n,hipblasComplex * A,const int lda,int * ipiv,int * info) nogil:
+cdef hipblasStatus_t hipblasCgetrf(void * handle,const int n,hipblasComplex * A,const int lda,int * ipiv,int * info) nogil:
     global _hipblasCgetrf__funptr
     __init_symbol(&_hipblasCgetrf__funptr,"hipblasCgetrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,hipblasComplex *,const int,int *,int *) nogil> _hipblasCgetrf__funptr)(handle,n,A,lda,ipiv,info)
+    return (<hipblasStatus_t (*)(void *,const int,hipblasComplex *,const int,int *,int *) nogil> _hipblasCgetrf__funptr)(handle,n,A,lda,ipiv,info)
 
 
 cdef void* _hipblasZgetrf__funptr = NULL
-cdef hipblasStatus_t hipblasZgetrf(hipblasHandle_t handle,const int n,hipblasDoubleComplex * A,const int lda,int * ipiv,int * info) nogil:
+cdef hipblasStatus_t hipblasZgetrf(void * handle,const int n,hipblasDoubleComplex * A,const int lda,int * ipiv,int * info) nogil:
     global _hipblasZgetrf__funptr
     __init_symbol(&_hipblasZgetrf__funptr,"hipblasZgetrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,hipblasDoubleComplex *,const int,int *,int *) nogil> _hipblasZgetrf__funptr)(handle,n,A,lda,ipiv,info)
+    return (<hipblasStatus_t (*)(void *,const int,hipblasDoubleComplex *,const int,int *,int *) nogil> _hipblasZgetrf__funptr)(handle,n,A,lda,ipiv,info)
 
 
 cdef void* _hipblasSgetrs__funptr = NULL
@@ -4365,31 +4362,31 @@ cdef void* _hipblasSgetrs__funptr = NULL
 #     info      pointer to a int on the host.\n
 #               If info = 0, successful exit.
 #               If info = j < 0, the j-th argument is invalid.
-cdef hipblasStatus_t hipblasSgetrs(hipblasHandle_t handle,hipblasOperation_t trans,const int n,const int nrhs,float * A,const int lda,const int * ipiv,float * B,const int ldb,int * info) nogil:
+cdef hipblasStatus_t hipblasSgetrs(void * handle,hipblasOperation_t trans,const int n,const int nrhs,float * A,const int lda,const int * ipiv,float * B,const int ldb,int * info) nogil:
     global _hipblasSgetrs__funptr
     __init_symbol(&_hipblasSgetrs__funptr,"hipblasSgetrs")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,float *,const int,const int *,float *,const int,int *) nogil> _hipblasSgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,const int,const int,float *,const int,const int *,float *,const int,int *) nogil> _hipblasSgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
 
 
 cdef void* _hipblasDgetrs__funptr = NULL
-cdef hipblasStatus_t hipblasDgetrs(hipblasHandle_t handle,hipblasOperation_t trans,const int n,const int nrhs,double * A,const int lda,const int * ipiv,double * B,const int ldb,int * info) nogil:
+cdef hipblasStatus_t hipblasDgetrs(void * handle,hipblasOperation_t trans,const int n,const int nrhs,double * A,const int lda,const int * ipiv,double * B,const int ldb,int * info) nogil:
     global _hipblasDgetrs__funptr
     __init_symbol(&_hipblasDgetrs__funptr,"hipblasDgetrs")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,double *,const int,const int *,double *,const int,int *) nogil> _hipblasDgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,const int,const int,double *,const int,const int *,double *,const int,int *) nogil> _hipblasDgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
 
 
 cdef void* _hipblasCgetrs__funptr = NULL
-cdef hipblasStatus_t hipblasCgetrs(hipblasHandle_t handle,hipblasOperation_t trans,const int n,const int nrhs,hipblasComplex * A,const int lda,const int * ipiv,hipblasComplex * B,const int ldb,int * info) nogil:
+cdef hipblasStatus_t hipblasCgetrs(void * handle,hipblasOperation_t trans,const int n,const int nrhs,hipblasComplex * A,const int lda,const int * ipiv,hipblasComplex * B,const int ldb,int * info) nogil:
     global _hipblasCgetrs__funptr
     __init_symbol(&_hipblasCgetrs__funptr,"hipblasCgetrs")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,hipblasComplex *,const int,const int *,hipblasComplex *,const int,int *) nogil> _hipblasCgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,const int,const int,hipblasComplex *,const int,const int *,hipblasComplex *,const int,int *) nogil> _hipblasCgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
 
 
 cdef void* _hipblasZgetrs__funptr = NULL
-cdef hipblasStatus_t hipblasZgetrs(hipblasHandle_t handle,hipblasOperation_t trans,const int n,const int nrhs,hipblasDoubleComplex * A,const int lda,const int * ipiv,hipblasDoubleComplex * B,const int ldb,int * info) nogil:
+cdef hipblasStatus_t hipblasZgetrs(void * handle,hipblasOperation_t trans,const int n,const int nrhs,hipblasDoubleComplex * A,const int lda,const int * ipiv,hipblasDoubleComplex * B,const int ldb,int * info) nogil:
     global _hipblasZgetrs__funptr
     __init_symbol(&_hipblasZgetrs__funptr,"hipblasZgetrs")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,hipblasDoubleComplex *,const int,const int *,hipblasDoubleComplex *,const int,int *) nogil> _hipblasZgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,const int,const int,hipblasDoubleComplex *,const int,const int *,hipblasDoubleComplex *,const int,int *) nogil> _hipblasZgetrs__funptr)(handle,trans,n,nrhs,A,lda,ipiv,B,ldb,info)
 
 
 cdef void* _hipblasSgels__funptr = NULL
@@ -4460,31 +4457,31 @@ cdef void* _hipblasSgels__funptr = NULL
 #                 If info = 0, successful exit.
 #                 If info = i > 0, the solution could not be computed because input matrix A is
 #                 rank deficient; the i-th diagonal element of its triangular factor is zero.
-cdef hipblasStatus_t hipblasSgels(hipblasHandle_t handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,float * A,const int lda,float * B,const int ldb,int * info,int * deviceInfo) nogil:
+cdef hipblasStatus_t hipblasSgels(void * handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,float * A,const int lda,float * B,const int ldb,int * info,int * deviceInfo) nogil:
     global _hipblasSgels__funptr
     __init_symbol(&_hipblasSgels__funptr,"hipblasSgels")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,float *,const int,float *,const int,int *,int *) nogil> _hipblasSgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,const int,const int,const int,float *,const int,float *,const int,int *,int *) nogil> _hipblasSgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
 
 
 cdef void* _hipblasDgels__funptr = NULL
-cdef hipblasStatus_t hipblasDgels(hipblasHandle_t handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,double * A,const int lda,double * B,const int ldb,int * info,int * deviceInfo) nogil:
+cdef hipblasStatus_t hipblasDgels(void * handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,double * A,const int lda,double * B,const int ldb,int * info,int * deviceInfo) nogil:
     global _hipblasDgels__funptr
     __init_symbol(&_hipblasDgels__funptr,"hipblasDgels")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,double *,const int,double *,const int,int *,int *) nogil> _hipblasDgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,const int,const int,const int,double *,const int,double *,const int,int *,int *) nogil> _hipblasDgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
 
 
 cdef void* _hipblasCgels__funptr = NULL
-cdef hipblasStatus_t hipblasCgels(hipblasHandle_t handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,hipblasComplex * A,const int lda,hipblasComplex * B,const int ldb,int * info,int * deviceInfo) nogil:
+cdef hipblasStatus_t hipblasCgels(void * handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,hipblasComplex * A,const int lda,hipblasComplex * B,const int ldb,int * info,int * deviceInfo) nogil:
     global _hipblasCgels__funptr
     __init_symbol(&_hipblasCgels__funptr,"hipblasCgels")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,hipblasComplex *,const int,hipblasComplex *,const int,int *,int *) nogil> _hipblasCgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,const int,const int,const int,hipblasComplex *,const int,hipblasComplex *,const int,int *,int *) nogil> _hipblasCgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
 
 
 cdef void* _hipblasZgels__funptr = NULL
-cdef hipblasStatus_t hipblasZgels(hipblasHandle_t handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,hipblasDoubleComplex * A,const int lda,hipblasDoubleComplex * B,const int ldb,int * info,int * deviceInfo) nogil:
+cdef hipblasStatus_t hipblasZgels(void * handle,hipblasOperation_t trans,const int m,const int n,const int nrhs,hipblasDoubleComplex * A,const int lda,hipblasDoubleComplex * B,const int ldb,int * info,int * deviceInfo) nogil:
     global _hipblasZgels__funptr
     __init_symbol(&_hipblasZgels__funptr,"hipblasZgels")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,const int,const int,const int,hipblasDoubleComplex *,const int,hipblasDoubleComplex *,const int,int *,int *) nogil> _hipblasZgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,const int,const int,const int,hipblasDoubleComplex *,const int,hipblasDoubleComplex *,const int,int *,int *) nogil> _hipblasZgels__funptr)(handle,trans,m,n,nrhs,A,lda,B,ldb,info,deviceInfo)
 
 
 cdef void* _hipblasSgeqrf__funptr = NULL
@@ -4546,31 +4543,31 @@ cdef void* _hipblasSgeqrf__funptr = NULL
 #               If info = 0, successful exit.
 #               If info = j < 0, the j-th argument is invalid.
 #
-cdef hipblasStatus_t hipblasSgeqrf(hipblasHandle_t handle,const int m,const int n,float * A,const int lda,float * ipiv,int * info) nogil:
+cdef hipblasStatus_t hipblasSgeqrf(void * handle,const int m,const int n,float * A,const int lda,float * ipiv,int * info) nogil:
     global _hipblasSgeqrf__funptr
     __init_symbol(&_hipblasSgeqrf__funptr,"hipblasSgeqrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,float *,const int,float *,int *) nogil> _hipblasSgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
+    return (<hipblasStatus_t (*)(void *,const int,const int,float *,const int,float *,int *) nogil> _hipblasSgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
 
 
 cdef void* _hipblasDgeqrf__funptr = NULL
-cdef hipblasStatus_t hipblasDgeqrf(hipblasHandle_t handle,const int m,const int n,double * A,const int lda,double * ipiv,int * info) nogil:
+cdef hipblasStatus_t hipblasDgeqrf(void * handle,const int m,const int n,double * A,const int lda,double * ipiv,int * info) nogil:
     global _hipblasDgeqrf__funptr
     __init_symbol(&_hipblasDgeqrf__funptr,"hipblasDgeqrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,double *,const int,double *,int *) nogil> _hipblasDgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
+    return (<hipblasStatus_t (*)(void *,const int,const int,double *,const int,double *,int *) nogil> _hipblasDgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
 
 
 cdef void* _hipblasCgeqrf__funptr = NULL
-cdef hipblasStatus_t hipblasCgeqrf(hipblasHandle_t handle,const int m,const int n,hipblasComplex * A,const int lda,hipblasComplex * ipiv,int * info) nogil:
+cdef hipblasStatus_t hipblasCgeqrf(void * handle,const int m,const int n,hipblasComplex * A,const int lda,hipblasComplex * ipiv,int * info) nogil:
     global _hipblasCgeqrf__funptr
     __init_symbol(&_hipblasCgeqrf__funptr,"hipblasCgeqrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,hipblasComplex *,const int,hipblasComplex *,int *) nogil> _hipblasCgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
+    return (<hipblasStatus_t (*)(void *,const int,const int,hipblasComplex *,const int,hipblasComplex *,int *) nogil> _hipblasCgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
 
 
 cdef void* _hipblasZgeqrf__funptr = NULL
-cdef hipblasStatus_t hipblasZgeqrf(hipblasHandle_t handle,const int m,const int n,hipblasDoubleComplex * A,const int lda,hipblasDoubleComplex * ipiv,int * info) nogil:
+cdef hipblasStatus_t hipblasZgeqrf(void * handle,const int m,const int n,hipblasDoubleComplex * A,const int lda,hipblasDoubleComplex * ipiv,int * info) nogil:
     global _hipblasZgeqrf__funptr
     __init_symbol(&_hipblasZgeqrf__funptr,"hipblasZgeqrf")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,const int,const int,hipblasDoubleComplex *,const int,hipblasDoubleComplex *,int *) nogil> _hipblasZgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
+    return (<hipblasStatus_t (*)(void *,const int,const int,hipblasDoubleComplex *,const int,hipblasDoubleComplex *,int *) nogil> _hipblasZgeqrf__funptr)(handle,m,n,A,lda,ipiv,info)
 
 
 cdef void* _hipblasGemmEx__funptr = NULL
@@ -4655,10 +4652,10 @@ cdef void* _hipblasGemmEx__funptr = NULL
 #     algo      [hipblasGemmAlgo_t]
 #               enumerant specifying the algorithm type.
 #
-cdef hipblasStatus_t hipblasGemmEx(hipblasHandle_t handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const void * alpha,const void * A,hipblasDatatype_t aType,int lda,const void * B,hipblasDatatype_t bType,int ldb,const void * beta,void * C,hipblasDatatype_t cType,int ldc,hipblasDatatype_t computeType,hipblasGemmAlgo_t algo) nogil:
+cdef hipblasStatus_t hipblasGemmEx(void * handle,hipblasOperation_t transA,hipblasOperation_t transB,int m,int n,int k,const void * alpha,const void * A,hipblasDatatype_t aType,int lda,const void * B,hipblasDatatype_t bType,int ldb,const void * beta,void * C,hipblasDatatype_t cType,int ldc,hipblasDatatype_t computeType,hipblasGemmAlgo_t algo) nogil:
     global _hipblasGemmEx__funptr
     __init_symbol(&_hipblasGemmEx__funptr,"hipblasGemmEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasOperation_t,hipblasOperation_t,int,int,int,const void *,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,const void *,void *,hipblasDatatype_t,int,hipblasDatatype_t,hipblasGemmAlgo_t) nogil> _hipblasGemmEx__funptr)(handle,transA,transB,m,n,k,alpha,A,aType,lda,B,bType,ldb,beta,C,cType,ldc,computeType,algo)
+    return (<hipblasStatus_t (*)(void *,hipblasOperation_t,hipblasOperation_t,int,int,int,const void *,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,const void *,void *,hipblasDatatype_t,int,hipblasDatatype_t,hipblasGemmAlgo_t) nogil> _hipblasGemmEx__funptr)(handle,transA,transB,m,n,k,alpha,A,aType,lda,B,bType,ldb,beta,C,cType,ldc,computeType,algo)
 
 
 cdef void* _hipblasTrsmEx__funptr = NULL
@@ -4782,10 +4779,10 @@ cdef void* _hipblasTrsmEx__funptr = NULL
 #     computeType [hipblasDatatype_t]
 #             specifies the datatype of computation
 #
-cdef hipblasStatus_t hipblasTrsmEx(hipblasHandle_t handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const void * alpha,void * A,int lda,void * B,int ldb,const void * invA,int invAsize,hipblasDatatype_t computeType) nogil:
+cdef hipblasStatus_t hipblasTrsmEx(void * handle,hipblasSideMode_t side,hipblasFillMode_t uplo,hipblasOperation_t transA,hipblasDiagType_t diag,int m,int n,const void * alpha,void * A,int lda,void * B,int ldb,const void * invA,int invAsize,hipblasDatatype_t computeType) nogil:
     global _hipblasTrsmEx__funptr
     __init_symbol(&_hipblasTrsmEx__funptr,"hipblasTrsmEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const void *,void *,int,void *,int,const void *,int,hipblasDatatype_t) nogil> _hipblasTrsmEx__funptr)(handle,side,uplo,transA,diag,m,n,alpha,A,lda,B,ldb,invA,invAsize,computeType)
+    return (<hipblasStatus_t (*)(void *,hipblasSideMode_t,hipblasFillMode_t,hipblasOperation_t,hipblasDiagType_t,int,int,const void *,void *,int,void *,int,const void *,int,hipblasDatatype_t) nogil> _hipblasTrsmEx__funptr)(handle,side,uplo,transA,diag,m,n,alpha,A,lda,B,ldb,invA,invAsize,computeType)
 
 
 cdef void* _hipblasAxpyEx__funptr = NULL
@@ -4829,10 +4826,10 @@ cdef void* _hipblasAxpyEx__funptr = NULL
 #     executionType [hipblasDatatype_t]
 #                   specifies the datatype of computation.
 #
-cdef hipblasStatus_t hipblasAxpyEx(hipblasHandle_t handle,int n,const void * alpha,hipblasDatatype_t alphaType,const void * x,hipblasDatatype_t xType,int incx,void * y,hipblasDatatype_t yType,int incy,hipblasDatatype_t executionType) nogil:
+cdef hipblasStatus_t hipblasAxpyEx(void * handle,int n,const void * alpha,hipblasDatatype_t alphaType,const void * x,hipblasDatatype_t xType,int incx,void * y,hipblasDatatype_t yType,int incy,hipblasDatatype_t executionType) nogil:
     global _hipblasAxpyEx__funptr
     __init_symbol(&_hipblasAxpyEx__funptr,"hipblasAxpyEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,int,hipblasDatatype_t) nogil> _hipblasAxpyEx__funptr)(handle,n,alpha,alphaType,x,xType,incx,y,yType,incy,executionType)
+    return (<hipblasStatus_t (*)(void *,int,const void *,hipblasDatatype_t,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,int,hipblasDatatype_t) nogil> _hipblasAxpyEx__funptr)(handle,n,alpha,alphaType,x,xType,incx,y,yType,incy,executionType)
 
 
 cdef void* _hipblasDotEx__funptr = NULL
@@ -4883,17 +4880,17 @@ cdef void* _hipblasDotEx__funptr = NULL
 #     executionType [hipblasDatatype_t]
 #                   specifies the datatype of computation.
 #
-cdef hipblasStatus_t hipblasDotEx(hipblasHandle_t handle,int n,const void * x,hipblasDatatype_t xType,int incx,const void * y,hipblasDatatype_t yType,int incy,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
+cdef hipblasStatus_t hipblasDotEx(void * handle,int n,const void * x,hipblasDatatype_t xType,int incx,const void * y,hipblasDatatype_t yType,int incy,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _hipblasDotEx__funptr
     __init_symbol(&_hipblasDotEx__funptr,"hipblasDotEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasDotEx__funptr)(handle,n,x,xType,incx,y,yType,incy,result,resultType,executionType)
+    return (<hipblasStatus_t (*)(void *,int,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasDotEx__funptr)(handle,n,x,xType,incx,y,yType,incy,result,resultType,executionType)
 
 
 cdef void* _hipblasDotcEx__funptr = NULL
-cdef hipblasStatus_t hipblasDotcEx(hipblasHandle_t handle,int n,const void * x,hipblasDatatype_t xType,int incx,const void * y,hipblasDatatype_t yType,int incy,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
+cdef hipblasStatus_t hipblasDotcEx(void * handle,int n,const void * x,hipblasDatatype_t xType,int incx,const void * y,hipblasDatatype_t yType,int incy,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _hipblasDotcEx__funptr
     __init_symbol(&_hipblasDotcEx__funptr,"hipblasDotcEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasDotcEx__funptr)(handle,n,x,xType,incx,y,yType,incy,result,resultType,executionType)
+    return (<hipblasStatus_t (*)(void *,int,const void *,hipblasDatatype_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasDotcEx__funptr)(handle,n,x,xType,incx,y,yType,incy,result,resultType,executionType)
 
 
 cdef void* _hipblasNrm2Ex__funptr = NULL
@@ -4932,10 +4929,10 @@ cdef void* _hipblasNrm2Ex__funptr = NULL
 #     @param[in]
 #     executionType [hipblasDatatype_t]
 #                   specifies the datatype of computation.
-cdef hipblasStatus_t hipblasNrm2Ex(hipblasHandle_t handle,int n,const void * x,hipblasDatatype_t xType,int incx,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
+cdef hipblasStatus_t hipblasNrm2Ex(void * handle,int n,const void * x,hipblasDatatype_t xType,int incx,void * result,hipblasDatatype_t resultType,hipblasDatatype_t executionType) nogil:
     global _hipblasNrm2Ex__funptr
     __init_symbol(&_hipblasNrm2Ex__funptr,"hipblasNrm2Ex")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasNrm2Ex__funptr)(handle,n,x,xType,incx,result,resultType,executionType)
+    return (<hipblasStatus_t (*)(void *,int,const void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasNrm2Ex__funptr)(handle,n,x,xType,incx,result,resultType,executionType)
 
 
 cdef void* _hipblasRotEx__funptr = NULL
@@ -4988,10 +4985,10 @@ cdef void* _hipblasRotEx__funptr = NULL
 #     executionType [hipblasDatatype_t]
 #                    specifies the datatype of computation.
 #
-cdef hipblasStatus_t hipblasRotEx(hipblasHandle_t handle,int n,void * x,hipblasDatatype_t xType,int incx,void * y,hipblasDatatype_t yType,int incy,const void * c,const void * s,hipblasDatatype_t csType,hipblasDatatype_t executionType) nogil:
+cdef hipblasStatus_t hipblasRotEx(void * handle,int n,void * x,hipblasDatatype_t xType,int incx,void * y,hipblasDatatype_t yType,int incy,const void * c,const void * s,hipblasDatatype_t csType,hipblasDatatype_t executionType) nogil:
     global _hipblasRotEx__funptr
     __init_symbol(&_hipblasRotEx__funptr,"hipblasRotEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,int,const void *,const void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasRotEx__funptr)(handle,n,x,xType,incx,y,yType,incy,c,s,csType,executionType)
+    return (<hipblasStatus_t (*)(void *,int,void *,hipblasDatatype_t,int,void *,hipblasDatatype_t,int,const void *,const void *,hipblasDatatype_t,hipblasDatatype_t) nogil> _hipblasRotEx__funptr)(handle,n,x,xType,incx,y,yType,incy,c,s,csType,executionType)
 
 
 cdef void* _hipblasScalEx__funptr = NULL
@@ -5027,10 +5024,10 @@ cdef void* _hipblasScalEx__funptr = NULL
 #     executionType [hipblasDatatype_t]
 #                    specifies the datatype of computation.
 #
-cdef hipblasStatus_t hipblasScalEx(hipblasHandle_t handle,int n,const void * alpha,hipblasDatatype_t alphaType,void * x,hipblasDatatype_t xType,int incx,hipblasDatatype_t executionType) nogil:
+cdef hipblasStatus_t hipblasScalEx(void * handle,int n,const void * alpha,hipblasDatatype_t alphaType,void * x,hipblasDatatype_t xType,int incx,hipblasDatatype_t executionType) nogil:
     global _hipblasScalEx__funptr
     __init_symbol(&_hipblasScalEx__funptr,"hipblasScalEx")
-    return (<hipblasStatus_t (*)(hipblasHandle_t,int,const void *,hipblasDatatype_t,void *,hipblasDatatype_t,int,hipblasDatatype_t) nogil> _hipblasScalEx__funptr)(handle,n,alpha,alphaType,x,xType,incx,executionType)
+    return (<hipblasStatus_t (*)(void *,int,const void *,hipblasDatatype_t,void *,hipblasDatatype_t,int,hipblasDatatype_t) nogil> _hipblasScalEx__funptr)(handle,n,alpha,alphaType,x,xType,incx,executionType)
 
 
 cdef void* _hipblasStatusToString__funptr = NULL

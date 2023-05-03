@@ -1,19 +1,7 @@
 # AMD_COPYRIGHT
-# c imports
-from libc cimport stdlib
-from libc.stdint cimport *
-cimport cpython.long
-cimport cpython.buffer
-# python imports
 import cython
 import ctypes
 import enum
-cimport hip._util.types
-#ctypedef int16_t __int16_t
-#ctypedef uint16_t __uint16_t
-from .hip cimport ihipStream_t
-
-from . cimport chipblas
 hipblasVersionMajor = chipblas.hipblasVersionMajor
 
 hipblaseVersionMinor = chipblas.hipblaseVersionMinor
@@ -193,7 +181,7 @@ cdef class hipblasBfloat16:
     cdef hipblasBfloat16 new():
         """Factory function to create hipblasBfloat16 objects with
         newly allocated chipblas.hipblasBfloat16"""
-        cdef chipblas.hipblasBfloat16* ptr;
+        cdef chipblas.hipblasBfloat16* ptr
         hipblasBfloat16.__allocate(&ptr)
         return hipblasBfloat16.from_ptr(ptr, owner=True)
     
@@ -217,7 +205,7 @@ cdef class hipblasBfloat16:
         """Get value ``data`` of ``self._ptr[i]``.
         """
         return self._ptr[i].data
-    def set_data(self, i, uint16_t value):
+    def set_data(self, i, unsigned short value):
         """Set value ``data`` of ``self._ptr[i]``.
         """
         self._ptr[i].data = value
@@ -225,7 +213,7 @@ cdef class hipblasBfloat16:
     def data(self):
         return self.get_data(0)
     @data.setter
-    def data(self, uint16_t value):
+    def data(self, unsigned short value):
         self.set_data(0,value)
 
 
@@ -317,7 +305,7 @@ cdef class hipblasComplex:
     cdef hipblasComplex new():
         """Factory function to create hipblasComplex objects with
         newly allocated chipblas.hipblasComplex"""
-        cdef chipblas.hipblasComplex* ptr;
+        cdef chipblas.hipblasComplex* ptr
         hipblasComplex.__allocate(&ptr)
         return hipblasComplex.from_ptr(ptr, owner=True)
     
@@ -455,7 +443,7 @@ cdef class hipblasDoubleComplex:
     cdef hipblasDoubleComplex new():
         """Factory function to create hipblasDoubleComplex objects with
         newly allocated chipblas.hipblasDoubleComplex"""
-        cdef chipblas.hipblasDoubleComplex* ptr;
+        cdef chipblas.hipblasDoubleComplex* ptr
         hipblasDoubleComplex.__allocate(&ptr)
         return hipblasDoubleComplex.from_ptr(ptr, owner=True)
     
@@ -587,7 +575,7 @@ def hipblasDestroy(object handle):
     """! \brief Destroys the library context created using hipblasCreate() */
     """
     _hipblasDestroy__retval = hipblasStatus_t(chipblas.hipblasDestroy(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr))    # fully specified
     return (_hipblasDestroy__retval,)
 
 
@@ -596,7 +584,7 @@ def hipblasSetStream(object handle, object streamId):
     """! \brief Set stream for handle */
     """
     _hipblasSetStream__retval = hipblasStatus_t(chipblas.hipblasSetStream(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         ihipStream_t.from_pyobj(streamId)._ptr))    # fully specified
     return (_hipblasSetStream__retval,)
 
@@ -606,7 +594,7 @@ def hipblasGetStream(object handle, object streamId):
     """! \brief Get stream[0] for handle */
     """
     _hipblasGetStream__retval = hipblasStatus_t(chipblas.hipblasGetStream(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <chipblas.hipStream_t*>hip._util.types.DataHandle.from_pyobj(streamId)._ptr))    # fully specified
     return (_hipblasGetStream__retval,)
 
@@ -618,7 +606,7 @@ def hipblasSetPointerMode(object handle, object mode):
     if not isinstance(mode,hipblasPointerMode_t):
         raise TypeError("argument 'mode' must be of type 'hipblasPointerMode_t'")
     _hipblasSetPointerMode__retval = hipblasStatus_t(chipblas.hipblasSetPointerMode(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mode.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mode.value))    # fully specified
     return (_hipblasSetPointerMode__retval,)
 
 
@@ -627,7 +615,7 @@ def hipblasGetPointerMode(object handle, object mode):
     """! \brief Get hipblas pointer mode */
     """
     _hipblasGetPointerMode__retval = hipblasStatus_t(chipblas.hipblasGetPointerMode(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <chipblas.hipblasPointerMode_t *>hip._util.types.DataHandle.from_pyobj(mode)._ptr))    # fully specified
     return (_hipblasGetPointerMode__retval,)
 
@@ -639,7 +627,7 @@ def hipblasSetInt8Datatype(object handle, object int8Type):
     if not isinstance(int8Type,hipblasInt8Datatype_t):
         raise TypeError("argument 'int8Type' must be of type 'hipblasInt8Datatype_t'")
     _hipblasSetInt8Datatype__retval = hipblasStatus_t(chipblas.hipblasSetInt8Datatype(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,int8Type.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,int8Type.value))    # fully specified
     return (_hipblasSetInt8Datatype__retval,)
 
 
@@ -648,7 +636,7 @@ def hipblasGetInt8Datatype(object handle, object int8Type):
     """! \brief Get hipblas int8 Datatype*/
     """
     _hipblasGetInt8Datatype__retval = hipblasStatus_t(chipblas.hipblasGetInt8Datatype(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <chipblas.hipblasInt8Datatype_t *>hip._util.types.DataHandle.from_pyobj(int8Type)._ptr))    # fully specified
     return (_hipblasGetInt8Datatype__retval,)
 
@@ -904,7 +892,7 @@ def hipblasSetAtomicsMode(object handle, object atomics_mode):
     if not isinstance(atomics_mode,hipblasAtomicsMode_t):
         raise TypeError("argument 'atomics_mode' must be of type 'hipblasAtomicsMode_t'")
     _hipblasSetAtomicsMode__retval = hipblasStatus_t(chipblas.hipblasSetAtomicsMode(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,atomics_mode.value))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,atomics_mode.value))    # fully specified
     return (_hipblasSetAtomicsMode__retval,)
 
 
@@ -913,7 +901,7 @@ def hipblasGetAtomicsMode(object handle, object atomics_mode):
     """! \brief Get hipblasSetAtomicsMode*/
     """
     _hipblasGetAtomicsMode__retval = hipblasStatus_t(chipblas.hipblasGetAtomicsMode(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <chipblas.hipblasAtomicsMode_t *>hip._util.types.DataHandle.from_pyobj(atomics_mode)._ptr))    # fully specified
     return (_hipblasGetAtomicsMode__retval,)
 
@@ -946,7 +934,7 @@ def hipblasIsamax(object handle, int n, object x, int incx, object result):
                   return is 0.0 if n, incx<=0.
     """
     _hipblasIsamax__retval = hipblasStatus_t(chipblas.hipblasIsamax(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsamax__retval,)
@@ -957,7 +945,7 @@ def hipblasIdamax(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasIdamax__retval = hipblasStatus_t(chipblas.hipblasIdamax(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdamax__retval,)
@@ -968,7 +956,7 @@ def hipblasIcamax(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasIcamax__retval = hipblasStatus_t(chipblas.hipblasIcamax(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcamax__retval,)
@@ -979,7 +967,7 @@ def hipblasIzamax(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasIzamax__retval = hipblasStatus_t(chipblas.hipblasIzamax(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzamax__retval,)
@@ -1013,7 +1001,7 @@ def hipblasIsamin(object handle, int n, object x, int incx, object result):
                   return is 0.0 if n, incx<=0.
     """
     _hipblasIsamin__retval = hipblasStatus_t(chipblas.hipblasIsamin(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsamin__retval,)
@@ -1024,7 +1012,7 @@ def hipblasIdamin(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasIdamin__retval = hipblasStatus_t(chipblas.hipblasIdamin(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdamin__retval,)
@@ -1035,7 +1023,7 @@ def hipblasIcamin(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasIcamin__retval = hipblasStatus_t(chipblas.hipblasIcamin(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcamin__retval,)
@@ -1046,7 +1034,7 @@ def hipblasIzamin(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasIzamin__retval = hipblasStatus_t(chipblas.hipblasIzamin(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzamin__retval,)
@@ -1081,7 +1069,7 @@ def hipblasSasum(object handle, int n, object x, int incx, object result):
                   return is 0.0 if n <= 0.
     """
     _hipblasSasum__retval = hipblasStatus_t(chipblas.hipblasSasum(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSasum__retval,)
@@ -1092,7 +1080,7 @@ def hipblasDasum(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasDasum__retval = hipblasStatus_t(chipblas.hipblasDasum(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDasum__retval,)
@@ -1103,7 +1091,7 @@ def hipblasScasum(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasScasum__retval = hipblasStatus_t(chipblas.hipblasScasum(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasScasum__retval,)
@@ -1114,7 +1102,7 @@ def hipblasDzasum(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasDzasum__retval = hipblasStatus_t(chipblas.hipblasDzasum(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDzasum__retval,)
@@ -1153,10 +1141,10 @@ def hipblasHaxpy(object handle, int n, object alpha, object x, int incx, object 
                   specifies the increment for the elements of y.
     """
     _hipblasHaxpy__retval = hipblasStatus_t(chipblas.hipblasHaxpy(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <unsigned short *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasHaxpy__retval,)
 
 
@@ -1165,7 +1153,7 @@ def hipblasSaxpy(object handle, int n, object alpha, object x, int incx, object 
     """
     """
     _hipblasSaxpy__retval = hipblasStatus_t(chipblas.hipblasSaxpy(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
@@ -1177,7 +1165,7 @@ def hipblasDaxpy(object handle, int n, object alpha, object x, int incx, object 
     """
     """
     _hipblasDaxpy__retval = hipblasStatus_t(chipblas.hipblasDaxpy(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
@@ -1189,7 +1177,7 @@ def hipblasCaxpy(object handle, int n, object alpha, object x, int incx, object 
     """
     """
     _hipblasCaxpy__retval = hipblasStatus_t(chipblas.hipblasCaxpy(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
@@ -1201,7 +1189,7 @@ def hipblasZaxpy(object handle, int n, object alpha, object x, int incx, object 
     """
     """
     _hipblasZaxpy__retval = hipblasStatus_t(chipblas.hipblasZaxpy(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
@@ -1239,7 +1227,7 @@ def hipblasScopy(object handle, int n, object x, int incx, object y, int incy):
                   specifies the increment for the elements of y.
     """
     _hipblasScopy__retval = hipblasStatus_t(chipblas.hipblasScopy(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasScopy__retval,)
@@ -1250,7 +1238,7 @@ def hipblasDcopy(object handle, int n, object x, int incx, object y, int incy):
     """
     """
     _hipblasDcopy__retval = hipblasStatus_t(chipblas.hipblasDcopy(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasDcopy__retval,)
@@ -1261,7 +1249,7 @@ def hipblasCcopy(object handle, int n, object x, int incx, object y, int incy):
     """
     """
     _hipblasCcopy__retval = hipblasStatus_t(chipblas.hipblasCcopy(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasCcopy__retval,)
@@ -1272,7 +1260,7 @@ def hipblasZcopy(object handle, int n, object x, int incx, object y, int incy):
     """
     """
     _hipblasZcopy__retval = hipblasStatus_t(chipblas.hipblasZcopy(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasZcopy__retval,)
@@ -1317,10 +1305,10 @@ def hipblasHdot(object handle, int n, object x, int incx, object y, int incy, ob
                   return is 0.0 if n <= 0.
     """
     _hipblasHdot__retval = hipblasStatus_t(chipblas.hipblasHdot(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
+        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
+        <unsigned short *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasHdot__retval,)
 
 
@@ -1329,7 +1317,7 @@ def hipblasBfdot(object handle, int n, object x, int incx, object y, int incy, o
     """
     """
     _hipblasBfdot__retval = hipblasStatus_t(chipblas.hipblasBfdot(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasBfloat16.from_pyobj(x)._ptr,incx,
         hipblasBfloat16.from_pyobj(y)._ptr,incy,
         hipblasBfloat16.from_pyobj(result)._ptr))    # fully specified
@@ -1341,7 +1329,7 @@ def hipblasSdot(object handle, int n, object x, int incx, object y, int incy, ob
     """
     """
     _hipblasSdot__retval = hipblasStatus_t(chipblas.hipblasSdot(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
         <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
@@ -1353,7 +1341,7 @@ def hipblasDdot(object handle, int n, object x, int incx, object y, int incy, ob
     """
     """
     _hipblasDdot__retval = hipblasStatus_t(chipblas.hipblasDdot(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
         <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
@@ -1365,7 +1353,7 @@ def hipblasCdotc(object handle, int n, object x, int incx, object y, int incy, o
     """
     """
     _hipblasCdotc__retval = hipblasStatus_t(chipblas.hipblasCdotc(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(result)._ptr))    # fully specified
@@ -1377,7 +1365,7 @@ def hipblasCdotu(object handle, int n, object x, int incx, object y, int incy, o
     """
     """
     _hipblasCdotu__retval = hipblasStatus_t(chipblas.hipblasCdotu(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         hipblasComplex.from_pyobj(result)._ptr))    # fully specified
@@ -1389,7 +1377,7 @@ def hipblasZdotc(object handle, int n, object x, int incx, object y, int incy, o
     """
     """
     _hipblasZdotc__retval = hipblasStatus_t(chipblas.hipblasZdotc(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
@@ -1401,7 +1389,7 @@ def hipblasZdotu(object handle, int n, object x, int incx, object y, int incy, o
     """
     """
     _hipblasZdotu__retval = hipblasStatus_t(chipblas.hipblasZdotu(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         hipblasDoubleComplex.from_pyobj(result)._ptr))    # fully specified
@@ -1439,7 +1427,7 @@ def hipblasSnrm2(object handle, int n, object x, int incx, object result):
                   return is 0.0 if n, incx<=0.
     """
     _hipblasSnrm2__retval = hipblasStatus_t(chipblas.hipblasSnrm2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasSnrm2__retval,)
@@ -1450,7 +1438,7 @@ def hipblasDnrm2(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasDnrm2__retval = hipblasStatus_t(chipblas.hipblasDnrm2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDnrm2__retval,)
@@ -1461,7 +1449,7 @@ def hipblasScnrm2(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasScnrm2__retval = hipblasStatus_t(chipblas.hipblasScnrm2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasScnrm2__retval,)
@@ -1472,7 +1460,7 @@ def hipblasDznrm2(object handle, int n, object x, int incx, object result):
     """
     """
     _hipblasDznrm2__retval = hipblasStatus_t(chipblas.hipblasDznrm2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasDznrm2__retval,)
@@ -1512,7 +1500,7 @@ def hipblasSrot(object handle, int n, object x, int incx, object y, int incy, ob
         s       device pointer or host pointer storing scalar sine component of the rotation matrix.
     """
     _hipblasSrot__retval = hipblasStatus_t(chipblas.hipblasSrot(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
         <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -1525,7 +1513,7 @@ def hipblasDrot(object handle, int n, object x, int incx, object y, int incy, ob
     """
     """
     _hipblasDrot__retval = hipblasStatus_t(chipblas.hipblasDrot(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
         <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -1538,7 +1526,7 @@ def hipblasCrot(object handle, int n, object x, int incx, object y, int incy, ob
     """
     """
     _hipblasCrot__retval = hipblasStatus_t(chipblas.hipblasCrot(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -1551,7 +1539,7 @@ def hipblasCsrot(object handle, int n, object x, int incx, object y, int incy, o
     """
     """
     _hipblasCsrot__retval = hipblasStatus_t(chipblas.hipblasCsrot(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
         <const float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -1564,7 +1552,7 @@ def hipblasZrot(object handle, int n, object x, int incx, object y, int incy, ob
     """
     """
     _hipblasZrot__retval = hipblasStatus_t(chipblas.hipblasZrot(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -1577,7 +1565,7 @@ def hipblasZdrot(object handle, int n, object x, int incx, object y, int incy, o
     """
     """
     _hipblasZdrot__retval = hipblasStatus_t(chipblas.hipblasZdrot(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
         <const double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -1612,7 +1600,7 @@ def hipblasSrotg(object handle, object a, object b, object c, object s):
         s       device pointer or host pointer sine element of Givens rotation.
     """
     _hipblasSrotg__retval = hipblasStatus_t(chipblas.hipblasSrotg(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(a)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(b)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -1625,7 +1613,7 @@ def hipblasDrotg(object handle, object a, object b, object c, object s):
     """
     """
     _hipblasDrotg__retval = hipblasStatus_t(chipblas.hipblasDrotg(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(a)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(b)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -1638,7 +1626,7 @@ def hipblasCrotg(object handle, object a, object b, object c, object s):
     """
     """
     _hipblasCrotg__retval = hipblasStatus_t(chipblas.hipblasCrotg(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         hipblasComplex.from_pyobj(a)._ptr,
         hipblasComplex.from_pyobj(b)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -1651,7 +1639,7 @@ def hipblasZrotg(object handle, object a, object b, object c, object s):
     """
     """
     _hipblasZrotg__retval = hipblasStatus_t(chipblas.hipblasZrotg(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         hipblasDoubleComplex.from_pyobj(a)._ptr,
         hipblasDoubleComplex.from_pyobj(b)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -1701,7 +1689,7 @@ def hipblasSrotm(object handle, int n, object x, int incx, object y, int incy, o
                 param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
     """
     _hipblasSrotm__retval = hipblasStatus_t(chipblas.hipblasSrotm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
         <const float *>hip._util.types.DataHandle.from_pyobj(param)._ptr))    # fully specified
@@ -1713,7 +1701,7 @@ def hipblasDrotm(object handle, int n, object x, int incx, object y, int incy, o
     """
     """
     _hipblasDrotm__retval = hipblasStatus_t(chipblas.hipblasDrotm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
         <const double *>hip._util.types.DataHandle.from_pyobj(param)._ptr))    # fully specified
@@ -1760,7 +1748,7 @@ def hipblasSrotmg(object handle, object d1, object d2, object x1, object y1, obj
                 param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
     """
     _hipblasSrotmg__retval = hipblasStatus_t(chipblas.hipblasSrotmg(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(d1)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(d2)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(x1)._ptr,
@@ -1774,7 +1762,7 @@ def hipblasDrotmg(object handle, object d1, object d2, object x1, object y1, obj
     """
     """
     _hipblasDrotmg__retval = hipblasStatus_t(chipblas.hipblasDrotmg(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(d1)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(d2)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(x1)._ptr,
@@ -1811,7 +1799,7 @@ def hipblasSscal(object handle, int n, object alpha, object x, int incx):
                   specifies the increment for the elements of x.
     """
     _hipblasSscal__retval = hipblasStatus_t(chipblas.hipblasSscal(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasSscal__retval,)
@@ -1822,7 +1810,7 @@ def hipblasDscal(object handle, int n, object alpha, object x, int incx):
     """
     """
     _hipblasDscal__retval = hipblasStatus_t(chipblas.hipblasDscal(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDscal__retval,)
@@ -1833,7 +1821,7 @@ def hipblasCscal(object handle, int n, object alpha, object x, int incx):
     """
     """
     _hipblasCscal__retval = hipblasStatus_t(chipblas.hipblasCscal(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCscal__retval,)
@@ -1844,7 +1832,7 @@ def hipblasCsscal(object handle, int n, object alpha, object x, int incx):
     """
     """
     _hipblasCsscal__retval = hipblasStatus_t(chipblas.hipblasCsscal(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCsscal__retval,)
@@ -1855,7 +1843,7 @@ def hipblasZscal(object handle, int n, object alpha, object x, int incx):
     """
     """
     _hipblasZscal__retval = hipblasStatus_t(chipblas.hipblasZscal(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZscal__retval,)
@@ -1866,7 +1854,7 @@ def hipblasZdscal(object handle, int n, object alpha, object x, int incx):
     """
     """
     _hipblasZdscal__retval = hipblasStatus_t(chipblas.hipblasZdscal(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZdscal__retval,)
@@ -1903,7 +1891,7 @@ def hipblasSswap(object handle, int n, object x, int incx, object y, int incy):
                   specifies the increment for the elements of y.
     """
     _hipblasSswap__retval = hipblasStatus_t(chipblas.hipblasSswap(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasSswap__retval,)
@@ -1914,7 +1902,7 @@ def hipblasDswap(object handle, int n, object x, int incx, object y, int incy):
     """
     """
     _hipblasDswap__retval = hipblasStatus_t(chipblas.hipblasDswap(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasDswap__retval,)
@@ -1925,7 +1913,7 @@ def hipblasCswap(object handle, int n, object x, int incx, object y, int incy):
     """
     """
     _hipblasCswap__retval = hipblasStatus_t(chipblas.hipblasCswap(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasCswap__retval,)
@@ -1936,7 +1924,7 @@ def hipblasZswap(object handle, int n, object x, int incx, object y, int incy):
     """
     """
     _hipblasZswap__retval = hipblasStatus_t(chipblas.hipblasZswap(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy))    # fully specified
     return (_hipblasZswap__retval,)
@@ -2016,7 +2004,7 @@ def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasSgbmv__retval = hipblasStatus_t(chipblas.hipblasSgbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -2032,7 +2020,7 @@ def hipblasDgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasDgbmv__retval = hipblasStatus_t(chipblas.hipblasDgbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -2048,7 +2036,7 @@ def hipblasCgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasCgbmv__retval = hipblasStatus_t(chipblas.hipblasCgbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -2064,7 +2052,7 @@ def hipblasZgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasZgbmv__retval = hipblasStatus_t(chipblas.hipblasZgbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -2126,7 +2114,7 @@ def hipblasSgemv(object handle, object trans, int m, int n, object alpha, object
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasSgemv__retval = hipblasStatus_t(chipblas.hipblasSgemv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -2142,7 +2130,7 @@ def hipblasDgemv(object handle, object trans, int m, int n, object alpha, object
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasDgemv__retval = hipblasStatus_t(chipblas.hipblasDgemv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -2158,7 +2146,7 @@ def hipblasCgemv(object handle, object trans, int m, int n, object alpha, object
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasCgemv__retval = hipblasStatus_t(chipblas.hipblasCgemv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -2174,7 +2162,7 @@ def hipblasZgemv(object handle, object trans, int m, int n, object alpha, object
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasZgemv__retval = hipblasStatus_t(chipblas.hipblasZgemv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -2229,7 +2217,7 @@ def hipblasSger(object handle, int m, int n, object alpha, object x, int incx, o
                   specifies the leading dimension of A.
     """
     _hipblasSger__retval = hipblasStatus_t(chipblas.hipblasSger(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
@@ -2242,7 +2230,7 @@ def hipblasDger(object handle, int m, int n, object alpha, object x, int incx, o
     """
     """
     _hipblasDger__retval = hipblasStatus_t(chipblas.hipblasDger(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
@@ -2255,7 +2243,7 @@ def hipblasCgeru(object handle, int m, int n, object alpha, object x, int incx, 
     """
     """
     _hipblasCgeru__retval = hipblasStatus_t(chipblas.hipblasCgeru(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
@@ -2268,7 +2256,7 @@ def hipblasCgerc(object handle, int m, int n, object alpha, object x, int incx, 
     """
     """
     _hipblasCgerc__retval = hipblasStatus_t(chipblas.hipblasCgerc(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
@@ -2281,7 +2269,7 @@ def hipblasZgeru(object handle, int m, int n, object alpha, object x, int incx, 
     """
     """
     _hipblasZgeru__retval = hipblasStatus_t(chipblas.hipblasZgeru(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
@@ -2294,7 +2282,7 @@ def hipblasZgerc(object handle, int m, int n, object alpha, object x, int incx, 
     """
     """
     _hipblasZgerc__retval = hipblasStatus_t(chipblas.hipblasZgerc(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
@@ -2382,7 +2370,7 @@ def hipblasChbmv(object handle, object uplo, int n, int k, object alpha, object 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasChbmv__retval = hipblasStatus_t(chipblas.hipblasChbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -2398,7 +2386,7 @@ def hipblasZhbmv(object handle, object uplo, int n, int k, object alpha, object 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZhbmv__retval = hipblasStatus_t(chipblas.hipblasZhbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -2466,7 +2454,7 @@ def hipblasChemv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasChemv__retval = hipblasStatus_t(chipblas.hipblasChemv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -2482,7 +2470,7 @@ def hipblasZhemv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZhemv__retval = hipblasStatus_t(chipblas.hipblasZhemv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -2544,7 +2532,7 @@ def hipblasCher(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasCher__retval = hipblasStatus_t(chipblas.hipblasCher(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
@@ -2558,7 +2546,7 @@ def hipblasZher(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZher__retval = hipblasStatus_t(chipblas.hipblasZher(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
@@ -2623,7 +2611,7 @@ def hipblasCher2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasCher2__retval = hipblasStatus_t(chipblas.hipblasCher2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
@@ -2638,7 +2626,7 @@ def hipblasZher2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZher2__retval = hipblasStatus_t(chipblas.hipblasZher2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
@@ -2717,7 +2705,7 @@ def hipblasChpmv(object handle, object uplo, int n, object alpha, object AP, obj
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasChpmv__retval = hipblasStatus_t(chipblas.hipblasChpmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -2733,7 +2721,7 @@ def hipblasZhpmv(object handle, object uplo, int n, object alpha, object AP, obj
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZhpmv__retval = hipblasStatus_t(chipblas.hipblasZhpmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -2808,7 +2796,7 @@ def hipblasChpr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasChpr__retval = hipblasStatus_t(chipblas.hipblasChpr(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr))    # fully specified
@@ -2822,7 +2810,7 @@ def hipblasZhpr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZhpr__retval = hipblasStatus_t(chipblas.hipblasZhpr(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr))    # fully specified
@@ -2900,7 +2888,7 @@ def hipblasChpr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasChpr2__retval = hipblasStatus_t(chipblas.hipblasChpr2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
@@ -2915,7 +2903,7 @@ def hipblasZhpr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZhpr2__retval = hipblasStatus_t(chipblas.hipblasZhpr2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
@@ -2976,7 +2964,7 @@ def hipblasSsbmv(object handle, object uplo, int n, int k, object alpha, object 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasSsbmv__retval = hipblasStatus_t(chipblas.hipblasSsbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -2992,7 +2980,7 @@ def hipblasDsbmv(object handle, object uplo, int n, int k, object alpha, object 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasDsbmv__retval = hipblasStatus_t(chipblas.hipblasDsbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -3048,7 +3036,7 @@ def hipblasSspmv(object handle, object uplo, int n, object alpha, object AP, obj
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasSspmv__retval = hipblasStatus_t(chipblas.hipblasSspmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -3064,7 +3052,7 @@ def hipblasDspmv(object handle, object uplo, int n, object alpha, object AP, obj
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasDspmv__retval = hipblasStatus_t(chipblas.hipblasDspmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -3139,7 +3127,7 @@ def hipblasSspr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasSspr__retval = hipblasStatus_t(chipblas.hipblasSspr(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr))    # fully specified
@@ -3153,7 +3141,7 @@ def hipblasDspr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasDspr__retval = hipblasStatus_t(chipblas.hipblasDspr(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr))    # fully specified
@@ -3167,7 +3155,7 @@ def hipblasCspr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasCspr__retval = hipblasStatus_t(chipblas.hipblasCspr(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr))    # fully specified
@@ -3181,7 +3169,7 @@ def hipblasZspr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZspr__retval = hipblasStatus_t(chipblas.hipblasZspr(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr))    # fully specified
@@ -3259,7 +3247,7 @@ def hipblasSspr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasSspr2__retval = hipblasStatus_t(chipblas.hipblasSspr2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
@@ -3274,7 +3262,7 @@ def hipblasDspr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasDspr2__retval = hipblasStatus_t(chipblas.hipblasDspr2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
@@ -3332,7 +3320,7 @@ def hipblasSsymv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasSsymv__retval = hipblasStatus_t(chipblas.hipblasSsymv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -3348,7 +3336,7 @@ def hipblasDsymv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasDsymv__retval = hipblasStatus_t(chipblas.hipblasDsymv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -3364,7 +3352,7 @@ def hipblasCsymv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasCsymv__retval = hipblasStatus_t(chipblas.hipblasCsymv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
@@ -3380,7 +3368,7 @@ def hipblasZsymv(object handle, object uplo, int n, object alpha, object AP, int
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZsymv__retval = hipblasStatus_t(chipblas.hipblasZsymv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
@@ -3434,7 +3422,7 @@ def hipblasSsyr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasSsyr__retval = hipblasStatus_t(chipblas.hipblasSsyr(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
@@ -3448,7 +3436,7 @@ def hipblasDsyr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasDsyr__retval = hipblasStatus_t(chipblas.hipblasDsyr(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda))    # fully specified
@@ -3462,7 +3450,7 @@ def hipblasCsyr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasCsyr__retval = hipblasStatus_t(chipblas.hipblasCsyr(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(AP)._ptr,lda))    # fully specified
@@ -3476,7 +3464,7 @@ def hipblasZsyr(object handle, object uplo, int n, object alpha, object x, int i
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZsyr__retval = hipblasStatus_t(chipblas.hipblasZsyr(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda))    # fully specified
@@ -3533,7 +3521,7 @@ def hipblasSsyr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasSsyr2__retval = hipblasStatus_t(chipblas.hipblasSsyr2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
@@ -3548,7 +3536,7 @@ def hipblasDsyr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasDsyr2__retval = hipblasStatus_t(chipblas.hipblasDsyr2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,incy,
@@ -3563,7 +3551,7 @@ def hipblasCsyr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasCsyr2__retval = hipblasStatus_t(chipblas.hipblasCsyr2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(y)._ptr,incy,
@@ -3578,7 +3566,7 @@ def hipblasZsyr2(object handle, object uplo, int n, object alpha, object x, int 
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZsyr2__retval = hipblasStatus_t(chipblas.hipblasZsyr2(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(y)._ptr,incy,
@@ -3671,7 +3659,7 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStbmv__retval = hipblasStatus_t(chipblas.hipblasStbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStbmv__retval,)
@@ -3688,7 +3676,7 @@ def hipblasDtbmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtbmv__retval = hipblasStatus_t(chipblas.hipblasDtbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtbmv__retval,)
@@ -3705,7 +3693,7 @@ def hipblasCtbmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtbmv__retval = hipblasStatus_t(chipblas.hipblasCtbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtbmv__retval,)
@@ -3722,7 +3710,7 @@ def hipblasZtbmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtbmv__retval = hipblasStatus_t(chipblas.hipblasZtbmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtbmv__retval,)
@@ -3797,7 +3785,7 @@ def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStbsv__retval = hipblasStatus_t(chipblas.hipblasStbsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStbsv__retval,)
@@ -3814,7 +3802,7 @@ def hipblasDtbsv(object handle, object uplo, object transA, object diag, int n, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtbsv__retval = hipblasStatus_t(chipblas.hipblasDtbsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtbsv__retval,)
@@ -3831,7 +3819,7 @@ def hipblasCtbsv(object handle, object uplo, object transA, object diag, int n, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtbsv__retval = hipblasStatus_t(chipblas.hipblasCtbsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtbsv__retval,)
@@ -3848,7 +3836,7 @@ def hipblasZtbsv(object handle, object uplo, object transA, object diag, int n, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtbsv__retval = hipblasStatus_t(chipblas.hipblasZtbsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtbsv__retval,)
@@ -3920,7 +3908,7 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStpmv__retval = hipblasStatus_t(chipblas.hipblasStpmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStpmv__retval,)
@@ -3937,7 +3925,7 @@ def hipblasDtpmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtpmv__retval = hipblasStatus_t(chipblas.hipblasDtpmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtpmv__retval,)
@@ -3954,7 +3942,7 @@ def hipblasCtpmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtpmv__retval = hipblasStatus_t(chipblas.hipblasCtpmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtpmv__retval,)
@@ -3971,7 +3959,7 @@ def hipblasZtpmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtpmv__retval = hipblasStatus_t(chipblas.hipblasZtpmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtpmv__retval,)
@@ -4037,7 +4025,7 @@ def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStpsv__retval = hipblasStatus_t(chipblas.hipblasStpsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStpsv__retval,)
@@ -4054,7 +4042,7 @@ def hipblasDtpsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtpsv__retval = hipblasStatus_t(chipblas.hipblasDtpsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtpsv__retval,)
@@ -4071,7 +4059,7 @@ def hipblasCtpsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtpsv__retval = hipblasStatus_t(chipblas.hipblasCtpsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtpsv__retval,)
@@ -4088,7 +4076,7 @@ def hipblasZtpsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtpsv__retval = hipblasStatus_t(chipblas.hipblasZtpsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtpsv__retval,)
@@ -4155,7 +4143,7 @@ def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStrmv__retval = hipblasStatus_t(chipblas.hipblasStrmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStrmv__retval,)
@@ -4172,7 +4160,7 @@ def hipblasDtrmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtrmv__retval = hipblasStatus_t(chipblas.hipblasDtrmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtrmv__retval,)
@@ -4189,7 +4177,7 @@ def hipblasCtrmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtrmv__retval = hipblasStatus_t(chipblas.hipblasCtrmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtrmv__retval,)
@@ -4206,7 +4194,7 @@ def hipblasZtrmv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtrmv__retval = hipblasStatus_t(chipblas.hipblasZtrmv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtrmv__retval,)
@@ -4273,7 +4261,7 @@ def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStrsv__retval = hipblasStatus_t(chipblas.hipblasStrsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasStrsv__retval,)
@@ -4290,7 +4278,7 @@ def hipblasDtrsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtrsv__retval = hipblasStatus_t(chipblas.hipblasDtrsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasDtrsv__retval,)
@@ -4307,7 +4295,7 @@ def hipblasCtrsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtrsv__retval = hipblasStatus_t(chipblas.hipblasCtrsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasCtrsv__retval,)
@@ -4324,7 +4312,7 @@ def hipblasZtrsv(object handle, object uplo, object transA, object diag, int m, 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtrsv__retval = hipblasStatus_t(chipblas.hipblasZtrsv(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx))    # fully specified
     return (_hipblasZtrsv__retval,)
@@ -4396,12 +4384,12 @@ def hipblasHgemm(object handle, object transA, object transB, int m, int n, int 
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasHgemm__retval = hipblasStatus_t(chipblas.hipblasHgemm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
-        <chipblas.hipblasHalf *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
+        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
+        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
+        <const unsigned short *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
+        <unsigned short *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
     return (_hipblasHgemm__retval,)
 
 
@@ -4414,7 +4402,7 @@ def hipblasSgemm(object handle, object transA, object transB, int m, int n, int 
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasSgemm__retval = hipblasStatus_t(chipblas.hipblasSgemm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
@@ -4432,7 +4420,7 @@ def hipblasDgemm(object handle, object transA, object transB, int m, int n, int 
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasDgemm__retval = hipblasStatus_t(chipblas.hipblasDgemm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
@@ -4450,7 +4438,7 @@ def hipblasCgemm(object handle, object transA, object transB, int m, int n, int 
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasCgemm__retval = hipblasStatus_t(chipblas.hipblasCgemm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -4468,7 +4456,7 @@ def hipblasZgemm(object handle, object transA, object transB, int m, int n, int 
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasZgemm__retval = hipblasStatus_t(chipblas.hipblasZgemm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -4554,7 +4542,7 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCherk__retval = hipblasStatus_t(chipblas.hipblasCherk(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
@@ -4571,7 +4559,7 @@ def hipblasZherk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZherk__retval = hipblasStatus_t(chipblas.hipblasZherk(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
@@ -4667,7 +4655,7 @@ def hipblasCherkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCherkx__retval = hipblasStatus_t(chipblas.hipblasCherkx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -4685,7 +4673,7 @@ def hipblasZherkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZherkx__retval = hipblasStatus_t(chipblas.hipblasZherkx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -4780,7 +4768,7 @@ def hipblasCher2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCher2k__retval = hipblasStatus_t(chipblas.hipblasCher2k(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -4798,7 +4786,7 @@ def hipblasZher2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZher2k__retval = hipblasStatus_t(chipblas.hipblasZher2k(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -4890,7 +4878,7 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasSsymm__retval = hipblasStatus_t(chipblas.hipblasSsymm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
@@ -4908,7 +4896,7 @@ def hipblasDsymm(object handle, object side, object uplo, int m, int n, object a
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasDsymm__retval = hipblasStatus_t(chipblas.hipblasDsymm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
@@ -4926,7 +4914,7 @@ def hipblasCsymm(object handle, object side, object uplo, int m, int n, object a
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasCsymm__retval = hipblasStatus_t(chipblas.hipblasCsymm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -4944,7 +4932,7 @@ def hipblasZsymm(object handle, object side, object uplo, int m, int n, object a
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZsymm__retval = hipblasStatus_t(chipblas.hipblasZsymm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -5033,7 +5021,7 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasSsyrk__retval = hipblasStatus_t(chipblas.hipblasSsyrk(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
@@ -5050,7 +5038,7 @@ def hipblasDsyrk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasDsyrk__retval = hipblasStatus_t(chipblas.hipblasDsyrk(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
@@ -5067,7 +5055,7 @@ def hipblasCsyrk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCsyrk__retval = hipblasStatus_t(chipblas.hipblasCsyrk(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(beta)._ptr,
@@ -5084,7 +5072,7 @@ def hipblasZsyrk(object handle, object uplo, object transA, int n, int k, object
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZsyrk__retval = hipblasStatus_t(chipblas.hipblasZsyrk(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
@@ -5177,7 +5165,7 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasSsyr2k__retval = hipblasStatus_t(chipblas.hipblasSsyr2k(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
@@ -5195,7 +5183,7 @@ def hipblasDsyr2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasDsyr2k__retval = hipblasStatus_t(chipblas.hipblasDsyr2k(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
@@ -5213,7 +5201,7 @@ def hipblasCsyr2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCsyr2k__retval = hipblasStatus_t(chipblas.hipblasCsyr2k(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -5231,7 +5219,7 @@ def hipblasZsyr2k(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZsyr2k__retval = hipblasStatus_t(chipblas.hipblasZsyr2k(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -5328,7 +5316,7 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasSsyrkx__retval = hipblasStatus_t(chipblas.hipblasSsyrkx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
@@ -5346,7 +5334,7 @@ def hipblasDsyrkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasDsyrkx__retval = hipblasStatus_t(chipblas.hipblasDsyrkx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb,
@@ -5364,7 +5352,7 @@ def hipblasCsyrkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasCsyrkx__retval = hipblasStatus_t(chipblas.hipblasCsyrkx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -5382,7 +5370,7 @@ def hipblasZsyrkx(object handle, object uplo, object transA, int n, int k, objec
     if not isinstance(transA,hipblasOperation_t):
         raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
     _hipblasZsyrkx__retval = hipblasStatus_t(chipblas.hipblasZsyrkx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -5453,7 +5441,7 @@ def hipblasSgeam(object handle, object transA, object transB, int m, int n, obje
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasSgeam__retval = hipblasStatus_t(chipblas.hipblasSgeam(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
@@ -5471,7 +5459,7 @@ def hipblasDgeam(object handle, object transA, object transB, int m, int n, obje
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasDgeam__retval = hipblasStatus_t(chipblas.hipblasDgeam(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(beta)._ptr,
@@ -5489,7 +5477,7 @@ def hipblasCgeam(object handle, object transA, object transB, int m, int n, obje
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasCgeam__retval = hipblasStatus_t(chipblas.hipblasCgeam(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(beta)._ptr,
@@ -5507,7 +5495,7 @@ def hipblasZgeam(object handle, object transA, object transB, int m, int n, obje
     if not isinstance(transB,hipblasOperation_t):
         raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
     _hipblasZgeam__retval = hipblasStatus_t(chipblas.hipblasZgeam(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(beta)._ptr,
@@ -5600,7 +5588,7 @@ def hipblasChemm(object handle, object side, object uplo, int n, int k, object a
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasChemm__retval = hipblasStatus_t(chipblas.hipblasChemm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb,
@@ -5618,7 +5606,7 @@ def hipblasZhemm(object handle, object side, object uplo, int n, int k, object a
     if not isinstance(uplo,hipblasFillMode_t):
         raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
     _hipblasZhemm__retval = hipblasStatus_t(chipblas.hipblasZhemm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb,
@@ -5734,7 +5722,7 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStrmm__retval = hipblasStatus_t(chipblas.hipblasStrmm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -5754,7 +5742,7 @@ def hipblasDtrmm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtrmm__retval = hipblasStatus_t(chipblas.hipblasDtrmm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -5774,7 +5762,7 @@ def hipblasCtrmm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtrmm__retval = hipblasStatus_t(chipblas.hipblasCtrmm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -5794,7 +5782,7 @@ def hipblasZtrmm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtrmm__retval = hipblasStatus_t(chipblas.hipblasZtrmm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -5901,7 +5889,7 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStrsm__retval = hipblasStatus_t(chipblas.hipblasStrsm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -5921,7 +5909,7 @@ def hipblasDtrsm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtrsm__retval = hipblasStatus_t(chipblas.hipblasDtrsm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -5941,7 +5929,7 @@ def hipblasCtrsm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtrsm__retval = hipblasStatus_t(chipblas.hipblasCtrsm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -5961,7 +5949,7 @@ def hipblasZtrsm(object handle, object side, object uplo, object transA, object 
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtrsm__retval = hipblasStatus_t(chipblas.hipblasZtrsm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(BP)._ptr,ldb))    # fully specified
@@ -6012,7 +6000,7 @@ def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasStrtri__retval = hipblasStatus_t(chipblas.hipblasStrtri(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(invA)._ptr,ldinvA))    # fully specified
     return (_hipblasStrtri__retval,)
@@ -6027,7 +6015,7 @@ def hipblasDtrtri(object handle, object uplo, object diag, int n, object AP, int
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasDtrtri__retval = hipblasStatus_t(chipblas.hipblasDtrtri(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(invA)._ptr,ldinvA))    # fully specified
     return (_hipblasDtrtri__retval,)
@@ -6042,7 +6030,7 @@ def hipblasCtrtri(object handle, object uplo, object diag, int n, object AP, int
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasCtrtri__retval = hipblasStatus_t(chipblas.hipblasCtrtri(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(invA)._ptr,ldinvA))    # fully specified
     return (_hipblasCtrtri__retval,)
@@ -6057,7 +6045,7 @@ def hipblasZtrtri(object handle, object uplo, object diag, int n, object AP, int
     if not isinstance(diag,hipblasDiagType_t):
         raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
     _hipblasZtrtri__retval = hipblasStatus_t(chipblas.hipblasZtrtri(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(invA)._ptr,ldinvA))    # fully specified
     return (_hipblasZtrtri__retval,)
@@ -6112,7 +6100,7 @@ def hipblasSdgmm(object handle, object side, int m, int n, object AP, int lda, o
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
     _hipblasSdgmm__retval = hipblasStatus_t(chipblas.hipblasSdgmm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <float *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
@@ -6126,7 +6114,7 @@ def hipblasDdgmm(object handle, object side, int m, int n, object AP, int lda, o
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
     _hipblasDdgmm__retval = hipblasStatus_t(chipblas.hipblasDdgmm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
         <double *>hip._util.types.DataHandle.from_pyobj(CP)._ptr,ldc))    # fully specified
@@ -6140,7 +6128,7 @@ def hipblasCdgmm(object handle, object side, int m, int n, object AP, int lda, o
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
     _hipblasCdgmm__retval = hipblasStatus_t(chipblas.hipblasCdgmm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
         hipblasComplex.from_pyobj(x)._ptr,incx,
         hipblasComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
@@ -6154,7 +6142,7 @@ def hipblasZdgmm(object handle, object side, int m, int n, object AP, int lda, o
     if not isinstance(side,hipblasSideMode_t):
         raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
     _hipblasZdgmm__retval = hipblasStatus_t(chipblas.hipblasZdgmm(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
         hipblasDoubleComplex.from_pyobj(CP)._ptr,ldc))    # fully specified
@@ -6216,7 +6204,7 @@ def hipblasSgetrf(object handle, const int n, object A, const int lda, object ip
                   If info = j > 0, U is singular. U[j,j] is the first zero pivot.
     """
     _hipblasSgetrf__retval = hipblasStatus_t(chipblas.hipblasSgetrf(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
@@ -6228,7 +6216,7 @@ def hipblasDgetrf(object handle, const int n, object A, const int lda, object ip
     """
     """
     _hipblasDgetrf__retval = hipblasStatus_t(chipblas.hipblasDgetrf(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
@@ -6240,7 +6228,7 @@ def hipblasCgetrf(object handle, const int n, object A, const int lda, object ip
     """
     """
     _hipblasCgetrf__retval = hipblasStatus_t(chipblas.hipblasCgetrf(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
@@ -6252,7 +6240,7 @@ def hipblasZgetrf(object handle, const int n, object A, const int lda, object ip
     """
     """
     _hipblasZgetrf__retval = hipblasStatus_t(chipblas.hipblasZgetrf(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
@@ -6319,7 +6307,7 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasSgetrs__retval = hipblasStatus_t(chipblas.hipblasSgetrs(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
@@ -6334,7 +6322,7 @@ def hipblasDgetrs(object handle, object trans, const int n, const int nrhs, obje
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasDgetrs__retval = hipblasStatus_t(chipblas.hipblasDgetrs(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
@@ -6349,7 +6337,7 @@ def hipblasCgetrs(object handle, object trans, const int n, const int nrhs, obje
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasCgetrs__retval = hipblasStatus_t(chipblas.hipblasCgetrs(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
         hipblasComplex.from_pyobj(B)._ptr,ldb,
@@ -6364,7 +6352,7 @@ def hipblasZgetrs(object handle, object trans, const int n, const int nrhs, obje
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasZgetrs__retval = hipblasStatus_t(chipblas.hipblasZgetrs(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,
@@ -6445,7 +6433,7 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasSgels__retval = hipblasStatus_t(chipblas.hipblasSgels(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
@@ -6460,7 +6448,7 @@ def hipblasDgels(object handle, object trans, const int m, const int n, const in
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasDgels__retval = hipblasStatus_t(chipblas.hipblasDgels(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
@@ -6475,7 +6463,7 @@ def hipblasCgels(object handle, object trans, const int m, const int n, const in
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasCgels__retval = hipblasStatus_t(chipblas.hipblasCgels(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,
         hipblasComplex.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
@@ -6490,7 +6478,7 @@ def hipblasZgels(object handle, object trans, const int m, const int n, const in
     if not isinstance(trans,hipblasOperation_t):
         raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
     _hipblasZgels__retval = hipblasStatus_t(chipblas.hipblasZgels(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
@@ -6559,7 +6547,7 @@ def hipblasSgeqrf(object handle, const int m, const int n, object A, const int l
                   If info = j < 0, the j-th argument is invalid.
     """
     _hipblasSgeqrf__retval = hipblasStatus_t(chipblas.hipblasSgeqrf(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
@@ -6571,7 +6559,7 @@ def hipblasDgeqrf(object handle, const int m, const int n, object A, const int l
     """
     """
     _hipblasDgeqrf__retval = hipblasStatus_t(chipblas.hipblasDgeqrf(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
@@ -6583,7 +6571,7 @@ def hipblasCgeqrf(object handle, const int m, const int n, object A, const int l
     """
     """
     _hipblasCgeqrf__retval = hipblasStatus_t(chipblas.hipblasCgeqrf(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(A)._ptr,lda,
         hipblasComplex.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
@@ -6595,7 +6583,7 @@ def hipblasZgeqrf(object handle, const int m, const int n, object A, const int l
     """
     """
     _hipblasZgeqrf__retval = hipblasStatus_t(chipblas.hipblasZgeqrf(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(ipiv)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
@@ -6700,7 +6688,7 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
     if not isinstance(algo,hipblasGemmAlgo_t):
         raise TypeError("argument 'algo' must be of type 'hipblasGemmAlgo_t'")
     _hipblasGemmEx__retval = hipblasStatus_t(chipblas.hipblasGemmEx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(A)._ptr,aType.value,lda,
         <const void *>hip._util.types.DataHandle.from_pyobj(B)._ptr,bType.value,ldb,
@@ -6842,7 +6830,7 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
     if not isinstance(computeType,hipblasDatatype_t):
         raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")
     _hipblasTrsmEx__retval = hipblasStatus_t(chipblas.hipblasTrsmEx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <void *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
@@ -6901,7 +6889,7 @@ def hipblasAxpyEx(object handle, int n, object alpha, object alphaType, object x
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasAxpyEx__retval = hipblasStatus_t(chipblas.hipblasAxpyEx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
         <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,executionType.value))    # fully specified
@@ -6966,7 +6954,7 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasDotEx__retval = hipblasStatus_t(chipblas.hipblasDotEx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
         <const void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,
         <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
@@ -6986,7 +6974,7 @@ def hipblasDotcEx(object handle, int n, object x, object xType, int incx, object
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasDotcEx__retval = hipblasStatus_t(chipblas.hipblasDotcEx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
         <const void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,
         <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
@@ -7038,7 +7026,7 @@ def hipblasNrm2Ex(object handle, int n, object x, object xType, int incx, object
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasNrm2Ex__retval = hipblasStatus_t(chipblas.hipblasNrm2Ex(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
         <void *>hip._util.types.DataHandle.from_pyobj(result)._ptr,resultType.value,executionType.value))    # fully specified
     return (_hipblasNrm2Ex__retval,)
@@ -7104,7 +7092,7 @@ def hipblasRotEx(object handle, int n, object x, object xType, int incx, object 
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasRotEx__retval = hipblasStatus_t(chipblas.hipblasRotEx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
         <void *>hip._util.types.DataHandle.from_pyobj(y)._ptr,yType.value,incy,
         <const void *>hip._util.types.DataHandle.from_pyobj(c)._ptr,
@@ -7153,7 +7141,7 @@ def hipblasScalEx(object handle, int n, object alpha, object alphaType, object x
     if not isinstance(executionType,hipblasDatatype_t):
         raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
     _hipblasScalEx__retval = hipblasStatus_t(chipblas.hipblasScalEx(
-        <chipblas.hipblasHandle_t>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
+        <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
         <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,executionType.value))    # fully specified
     return (_hipblasScalEx__retval,)

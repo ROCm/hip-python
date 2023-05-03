@@ -285,7 +285,7 @@ class Typed:
         Args:
             sep (str): _description_
             renamer (_type_, optional): _description_. Defaults to lambdaname:name.
-            prefer_canonical (bool, optional): If the canonical name should be preferred.
+            use_canonical (bool, optional): If the canonical name should be preferred.
 
         Raises:
             ValueError: _description_
@@ -293,28 +293,30 @@ class Typed:
         Returns:
             _type_: _description_
         """
+        use_canonical = prefer_canonical and self.is_innermost_canonical_type_layer_of_basic_type_or_void
         if sep == None:
             raise ValueError("sep may not be None")
-        if self.typeref is not None and not prefer_canonical:
+        if self.typeref is not None and not use_canonical:
             searched_typename = self.typeref.cursor.type.get_canonical().spelling
             repl_typename = renamer(self.typeref.global_name(sep))
         else:
             searched_typename = None
             repl_typename = None
-        return Typed.canonical_typename(
+        return renamer(Typed.canonical_typename(
             self._type_handler, searched_typename, repl_typename
-        )
+        ))
 
     def typename(self, renamer: callable = lambda name: name, prefer_canonical:bool = False):
-        if self.typeref is not None and not prefer_canonical:
+        use_canonical = prefer_canonical and self.is_innermost_canonical_type_layer_of_basic_type_or_void
+        if self.typeref is not None and not use_canonical:
             searched_typename = self.typeref.cursor.type.get_canonical().spelling
             repl_typename = renamer(self.typeref.name)
         else:
             searched_typename = None
             repl_typename = None
-        return Typed.canonical_typename(
+        return renamer(Typed.canonical_typename(
             self._type_handler, searched_typename, repl_typename
-        )
+        ))
 
     def clang_type_layer_kinds(self, postorder=False, canonical=False):
         return self._type_handler.clang_type_layer_kinds(
@@ -650,7 +652,12 @@ class Typed:
             TypeCategory.RECORD,
             TypeCategory.ENUM,
         )
-
+    
+    @property
+    def is_innermost_canonical_type_layer_of_basic_type_or_void(self):
+        """If the innermost type layer is of basic type or void type.
+        """
+        return self._type_handler.is_innermost_canonical_type_layer_of_basic_type_or_void() 
 
 class Field(Node, Typed, *__FieldMixins):
     def __init__(
@@ -862,15 +869,15 @@ class FunctionPointer(Type):  # TODO handle result type
             if isinstance(child, Parm):
                 yield child
 
-    def parm_types(self, renamer: callable = lambda name: name):
+    def parm_types(self, renamer: callable = lambda name: name, prefer_canonical: bool = False):
         for parm in self.parms:
             assert isinstance(parm, Parm)
-            yield parm.typename(renamer)
+            yield parm.typename(renamer, prefer_canonical)
 
-    def global_parm_types(self, sep=None, renamer: callable = lambda name: name):
+    def global_parm_types(self, sep=None, renamer: callable = lambda name: name, prefer_canonical: bool = False):
         for parm in self.parms:
             assert isinstance(parm, Parm)
-            yield parm.global_typename(sep, renamer)
+            yield parm.global_typename(sep, renamer, prefer_canonical)
 
 
 class TypedefedFunctionPointer(FunctionPointer, *__TypedefedFunctionPointerMixins):
@@ -905,7 +912,7 @@ class AnonymousFunctionPointer(
 
     @property
     def anon_funptr_index(self):
-        return self._orig_index(AnonymousFunctionPointer)
+        return self._index(AnonymousFunctionPointer)
 
     @property
     def name(self):
@@ -949,16 +956,16 @@ class Function(Node, Typed, *__FunctionMixin):
         for parm in self.parms:
             assert isinstance(parm, Parm)
             yield renamer(parm.name)
-
-    def global_parm_types(self, sep=None, renamer: callable = lambda name: name):
+    
+    def parm_types(self, renamer: callable = lambda name: name, prefer_canonical: bool = False):
         for parm in self.parms:
             assert isinstance(parm, Parm)
-            yield parm.global_typename(sep, renamer)
+            yield parm.typename(renamer, prefer_canonical)
 
-    def parm_types(self, renamer: callable = lambda name: name):
+    def global_parm_types(self, sep=None, renamer: callable = lambda name: name, prefer_canonical: bool = False):
         for parm in self.parms:
             assert isinstance(parm, Parm)
-            yield parm.typename(renamer)
+            yield parm.global_typename(sep, renamer, prefer_canonical)
 
     @property
     def raw_comment(self):
@@ -1167,10 +1174,9 @@ def from_libclang_translation_unit(
             clang.cindex.CursorKind.FIELD_DECL,
         )
         if AnonymousFunctionPointer.match(cursor.type):
-            root = parent.get_root()
             typeref = AnonymousFunctionPointer(cursor, parent)
             descend_into_child_cursors_(typeref)  # post-order walk
-            root.append(typeref)
+            parent.append(typeref)
         else:
             typeref_cursor = first_child_cursors_of_kinds_(
                 cursor,
