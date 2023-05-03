@@ -190,7 +190,11 @@ def generate_hip_package_files():
         "HIP_VERSION_GITHASH",
         "HIP_VERSION_BUILD_NAME",
     )
-
+    hip_void_p_macros = (
+       "HIP_LAUNCH_PARAM_BUFFER_POINTER",
+       "HIP_LAUNCH_PARAM_BUFFER_SIZE",
+       "HIP_LAUNCH_PARAM_END",
+    )
     hip_int_macros = (
         #  from hip/hip_version.h
         "HIP_VERSION_MAJOR",
@@ -280,6 +284,8 @@ def generate_hip_package_files():
             return True
         if node.name in hip_str_macros:
             return True
+        if node.name in hip_void_p_macros:
+            return True
         if not isinstance(node, MacroDefinition):
             if "hip/" in node.file:
                 return True
@@ -288,6 +294,8 @@ def generate_hip_package_files():
     def hip_macro_type(node: MacroDefinition):
         if node.name in hip_int_macros:
             return "int"
+        if node.name in hip_void_p_macros:
+            return "unsigned long int"
         if node.name in hip_str_macros:
             return "char*"
         assert False, "Not implemented!"
@@ -336,6 +344,14 @@ def generate_hip_package_files():
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
+   
+    def toclassname(name: str):
+        return name[0].upper() + name[1:]
+
+    def hip_ptr_complicated_type_handler(parm: Parm):
+        if (parm.parent.name, parm.name) == ("hipModuleLaunchKernel","extra"): 
+            return f"hip._hip_helpers.{toclassname(parm.parent.name)}_{parm.name}"
+        return "hip._util.types.DataHandle"
 
     generator = CythonPackageGenerator(
         "hip",
@@ -346,9 +362,13 @@ def generate_hip_package_files():
         node_filter=hip_node_filter,
         ptr_parm_intent=hip_ptr_parm_intent,
         ptr_rank=hip_ptr_rank,
+        ptr_complicated_type_handler=hip_ptr_complicated_type_handler,
         macro_type=hip_macro_type,
         cflags=GENERATOR_ARGS,
     )
+    generator.python_interface_impl_preamble += textwrap.dedent("""\
+    cimport hip._hip_helpers
+    """)
     if HIP_PYTHON_GENERATE:
         generator.write_package_files(output_dir="hip")
 
@@ -518,6 +538,7 @@ if HIP_PYTHON_BUILD:
         ("hip.chip", ["./hip/chip.pyx"]),
         ("hip.chipblas", ["./hip/chipblas.pyx"]),
         ("hip.hiprtc", ["./hip/hiprtc.pyx"]),
+        ("hip._hip_helpers", ["./hip/_hip_helpers.pyx"]),
         ("hip.hip", ["./hip/hip.pyx"]),
         ("hip.hipblas", ["./hip/hipblas.pyx"]),
     ]

@@ -2,6 +2,7 @@
 import cython
 import ctypes
 import enum
+cimport hip._hip_helpers
 HIP_VERSION_MAJOR = chip.HIP_VERSION_MAJOR
 
 HIP_VERSION_MINOR = chip.HIP_VERSION_MINOR
@@ -45,6 +46,12 @@ HIP_SAMPLER_OBJECT_SIZE_DWORD = chip.HIP_SAMPLER_OBJECT_SIZE_DWORD
 HIP_SAMPLER_OBJECT_OFFSET_DWORD = chip.HIP_SAMPLER_OBJECT_OFFSET_DWORD
 
 HIP_TEXTURE_OBJECT_SIZE_DWORD = chip.HIP_TEXTURE_OBJECT_SIZE_DWORD
+
+HIP_LAUNCH_PARAM_BUFFER_POINTER = chip.HIP_LAUNCH_PARAM_BUFFER_POINTER
+
+HIP_LAUNCH_PARAM_BUFFER_SIZE = chip.HIP_LAUNCH_PARAM_BUFFER_SIZE
+
+HIP_LAUNCH_PARAM_END = chip.HIP_LAUNCH_PARAM_END
 
 hipIpcMemLazyEnablePeerAccess = chip.hipIpcMemLazyEnablePeerAccess
 
@@ -21581,7 +21588,7 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
         ihipModuleSymbol_t.from_pyobj(f)._ptr,gridDimX,gridDimY,gridDimZ,blockDimX,blockDimY,blockDimZ,sharedMemBytes,
         ihipStream_t.from_pyobj(stream)._ptr,
         <void **>hip._util.types.DataHandle.from_pyobj(kernelParams)._ptr,
-        <void **>hip._util.types.DataHandle.from_pyobj(extra)._ptr))    # fully specified
+        <void **>hip._hip_helpers.HipModuleLaunchKernel_extra.from_pyobj(extra)._ptr))    # fully specified
     return (_hipModuleLaunchKernel__retval,)
 
 
