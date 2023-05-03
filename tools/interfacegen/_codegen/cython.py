@@ -566,17 +566,9 @@ class TypedefMixin(CythonMixin, Typed):
         elif self.is_pointer_to_basic_type(degree=-1) or self.is_pointer_to_void(
             degree=-1
         ):
-            template = Cython.Tempita.Template(wrapper_class_decl_template)
-            return template.substitute(
-                name=name,
-                cname=self._type_handler.create_from_layer(
-                    layer=1, canonical=True
-                ).clang_type.spelling,
-                cptr_type=self.cursor.type.get_canonical().spelling,
-                has_new=False,
-            )
+            return # always use canonical type
         elif self.is_autoconverted_by_cython:
-            return self.render_c_interface()
+            return # always use canonical type
         else:
             return None
 
@@ -590,17 +582,9 @@ class TypedefMixin(CythonMixin, Typed):
         elif self.is_pointer_to_basic_type(degree=-1) or self.is_pointer_to_void(
             degree=-1
         ):
-            template = Cython.Tempita.Template(wrapper_class_impl_base_template)
-            return template.substitute(
-                name=name,
-                cname=self._type_handler.create_from_layer(
-                    layer=1, canonical=True
-                ).clang_type.spelling,
-                cptr_type=self.cursor.type.get_canonical().spelling,
-                has_new=False,
-            )
+            return # always use canonical type
         elif self.is_autoconverted_by_cython:
-            pass  # in decl file
+            return # always use canonical type
         else:
             return None
 
