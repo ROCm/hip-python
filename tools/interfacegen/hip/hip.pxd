@@ -67,18 +67,6 @@ cdef class hipPointerAttribute_t:
     cdef hipPointerAttribute_t new()
 
 
-cdef class hipDeviceptr_t:
-    cdef void * _ptr
-    cdef bint ptr_owner
-    cdef Py_buffer _py_buffer
-    cdef bint _py_buffer_acquired
-
-    @staticmethod
-    cdef hipDeviceptr_t from_ptr(void * ptr, bint owner=*)
-    @staticmethod
-    cdef hipDeviceptr_t from_pyobj(object pyobj)
-
-
 cdef class hipChannelFormatDesc:
     cdef chip.hipChannelFormatDesc* _ptr
     cdef bint ptr_owner
@@ -1171,8 +1159,6 @@ cdef class ihipCtx_t:
     cdef ihipCtx_t from_pyobj(object pyobj)
 
 
-ctypedef int hipDevice_t
-
 cdef class ihipStream_t:
     cdef chip.ihipStream_t* _ptr
     cdef bint ptr_owner
@@ -1441,18 +1427,6 @@ cdef class hipExternalMemoryBufferDesc_st:
     cdef hipExternalMemoryBufferDesc_st new()
 
 
-cdef class hipExternalMemory_t:
-    cdef void * _ptr
-    cdef bint ptr_owner
-    cdef Py_buffer _py_buffer
-    cdef bint _py_buffer_acquired
-
-    @staticmethod
-    cdef hipExternalMemory_t from_ptr(void * ptr, bint owner=*)
-    @staticmethod
-    cdef hipExternalMemory_t from_pyobj(object pyobj)
-
-
 cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     cdef chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0* _ptr
     cdef bint ptr_owner
@@ -1499,18 +1473,6 @@ cdef class hipExternalSemaphoreHandleDesc_st:
     cdef __allocate(chip.hipExternalSemaphoreHandleDesc_st** ptr)
     @staticmethod
     cdef hipExternalSemaphoreHandleDesc_st new()
-
-
-cdef class hipExternalSemaphore_t:
-    cdef void * _ptr
-    cdef bint ptr_owner
-    cdef Py_buffer _py_buffer
-    cdef bint _py_buffer_acquired
-
-    @staticmethod
-    cdef hipExternalSemaphore_t from_ptr(void * ptr, bint owner=*)
-    @staticmethod
-    cdef hipExternalSemaphore_t from_pyobj(object pyobj)
 
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
@@ -1943,8 +1905,3 @@ cdef class hipStreamCallback_t:
     cdef hipStreamCallback_t from_ptr(chip.hipStreamCallback_t ptr, bint owner=*)
     @staticmethod
     cdef hipStreamCallback_t from_pyobj(object pyobj)
-
-
-ctypedef unsigned int GLuint
-
-ctypedef unsigned int GLenum
