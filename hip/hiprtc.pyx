@@ -1,16 +1,7 @@
 # AMD_COPYRIGHT
-# c imports
-from libc cimport stdlib
-from libc.stdint cimport *
-cimport cpython.long
-cimport cpython.buffer
-# python imports
 import cython
 import ctypes
 import enum
-cimport hip._util.types
-
-from . cimport chiprtc
 class hiprtcResult(enum.IntEnum):
     HIPRTC_SUCCESS = chiprtc.HIPRTC_SUCCESS
     HIPRTC_ERROR_OUT_OF_MEMORY = chiprtc.HIPRTC_ERROR_OUT_OF_MEMORY
@@ -371,7 +362,7 @@ def hiprtcGetProgramLogSize(object prog):
     @return HIPRTC_SUCCESS
     @see hiprtcResult
     """
-    cdef int logSizeRet
+    cdef unsigned long logSizeRet
     _hiprtcGetProgramLogSize__retval = hiprtcResult(chiprtc.hiprtcGetProgramLogSize(
         _hiprtcProgram.from_pyobj(prog)._ptr,&logSizeRet))    # fully specified
     return (_hiprtcGetProgramLogSize__retval,logSizeRet)
@@ -399,7 +390,7 @@ def hiprtcGetCodeSize(object prog):
     @return HIPRTC_SUCCESS
     @see hiprtcResult
     """
-    cdef int codeSizeRet
+    cdef unsigned long codeSizeRet
     _hiprtcGetCodeSize__retval = hiprtcResult(chiprtc.hiprtcGetCodeSize(
         _hiprtcProgram.from_pyobj(prog)._ptr,&codeSizeRet))    # fully specified
     return (_hiprtcGetCodeSize__retval,codeSizeRet)
@@ -429,7 +420,7 @@ def hiprtcGetBitcodeSize(object prog, object bitcode_size):
     """
     _hiprtcGetBitcodeSize__retval = hiprtcResult(chiprtc.hiprtcGetBitcodeSize(
         _hiprtcProgram.from_pyobj(prog)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(bitcode_size)._ptr))    # fully specified
+        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bitcode_size)._ptr))    # fully specified
     return (_hiprtcGetBitcodeSize__retval,)
 
 
@@ -469,7 +460,7 @@ def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * fil
 
 
 @cython.embedsignature(True)
-def hiprtcLinkAddData(object hip_link_state, object input_type, object image, int image_size, const char * name, unsigned int num_options, object options_ptr, object option_values):
+def hiprtcLinkAddData(object hip_link_state, object input_type, object image, unsigned long image_size, const char * name, unsigned int num_options, object options_ptr, object option_values):
     """@brief Completes the linking of the given program.
     @param [in] hiprtc link state, jit input type, image_ptr ,
     option reated parameters.
@@ -500,7 +491,7 @@ def hiprtcLinkComplete(object hip_link_state):
     @see hiprtcResult
     """
     bin_out = hip._util.types.DataHandle.from_ptr(NULL)
-    cdef int size_out
+    cdef unsigned long size_out
     _hiprtcLinkComplete__retval = hiprtcResult(chiprtc.hiprtcLinkComplete(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr,
         <void **>&bin_out._ptr,&size_out))    # fully specified

@@ -1,6 +1,6 @@
 # AMD_COPYRIGHT
 from libc.stdint cimport *
-
+ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 cdef extern from "hip/hip_runtime_api.h":
 
     cdef int HIP_VERSION_MAJOR
@@ -165,8 +165,8 @@ cdef extern from "hip/hip_runtime_api.h":
 
     cdef struct hipDeviceProp_t:
         char[256] name
-        int totalGlobalMem
-        int sharedMemPerBlock
+        unsigned long totalGlobalMem
+        unsigned long sharedMemPerBlock
         int regsPerBlock
         int warpSize
         int maxThreadsPerBlock
@@ -175,7 +175,7 @@ cdef extern from "hip/hip_runtime_api.h":
         int clockRate
         int memoryClockRate
         int memoryBusWidth
-        int totalConstMem
+        unsigned long totalConstMem
         int major
         int minor
         int multiProcessorCount
@@ -188,7 +188,7 @@ cdef extern from "hip/hip_runtime_api.h":
         int pciDomainID
         int pciBusID
         int pciDeviceID
-        int maxSharedMemoryPerMultiProcessor
+        unsigned long maxSharedMemoryPerMultiProcessor
         int isMultiGpuBoard
         int canMapHostMemory
         int gcnArch
@@ -202,9 +202,9 @@ cdef extern from "hip/hip_runtime_api.h":
         int[3] maxTexture3D
         unsigned int * hdpMemFlushCntl
         unsigned int * hdpRegFlushCntl
-        int memPitch
-        int textureAlignment
-        int texturePitchAlignment
+        unsigned long memPitch
+        unsigned long textureAlignment
+        unsigned long texturePitchAlignment
         int kernelExecTimeoutEnabled
         int ECCEnabled
         int tccDriver
@@ -462,15 +462,15 @@ cdef extern from "hip/hip_runtime_api.h":
         HIP_AD_FORMAT_FLOAT
 
     cdef struct HIP_ARRAY_DESCRIPTOR:
-        int Width
-        int Height
+        unsigned long Width
+        unsigned long Height
         hipArray_Format Format
         unsigned int NumChannels
 
     cdef struct HIP_ARRAY3D_DESCRIPTOR:
-        int Width
-        int Height
-        int Depth
+        unsigned long Width
+        unsigned long Height
+        unsigned long Depth
         hipArray_Format Format
         unsigned int NumChannels
         unsigned int Flags
@@ -484,26 +484,26 @@ cdef extern from "hip/hip_runtime_api.h":
         unsigned int depth
         hipArray_Format Format
         unsigned int NumChannels
-        int isDrv
+        _Bool isDrv
         unsigned int textureType
 
     cdef struct hip_Memcpy2D:
-        int srcXInBytes
-        int srcY
+        unsigned long srcXInBytes
+        unsigned long srcY
         hipMemoryType srcMemoryType
         const void * srcHost
-        hipDeviceptr_t srcDevice
+        void * srcDevice
         hipArray * srcArray
-        int srcPitch
-        int dstXInBytes
-        int dstY
+        unsigned long srcPitch
+        unsigned long dstXInBytes
+        unsigned long dstY
         hipMemoryType dstMemoryType
         void * dstHost
-        hipDeviceptr_t dstDevice
+        void * dstDevice
         hipArray * dstArray
-        int dstPitch
-        int WidthInBytes
-        int Height
+        unsigned long dstPitch
+        unsigned long WidthInBytes
+        unsigned long Height
 
     ctypedef hipArray * hipArray_t
 
@@ -656,14 +656,14 @@ cdef struct hipResourceDesc_union_0_struct_1:
 cdef struct hipResourceDesc_union_0_struct_2:
     void * devPtr
     hipChannelFormatDesc desc
-    int sizeInBytes
+    unsigned long sizeInBytes
 
 cdef struct hipResourceDesc_union_0_struct_3:
     void * devPtr
     hipChannelFormatDesc desc
-    int width
-    int height
-    int pitchInBytes
+    unsigned long width
+    unsigned long height
+    unsigned long pitchInBytes
 
 cdef union hipResourceDesc_union_0:
     hipResourceDesc_union_0_struct_0 array
@@ -684,18 +684,18 @@ cdef struct HIP_RESOURCE_DESC_st_union_0_struct_1:
     hipMipmappedArray_t hMipmappedArray
 
 cdef struct HIP_RESOURCE_DESC_st_union_0_struct_2:
-    hipDeviceptr_t devPtr
+    void * devPtr
     hipArray_Format format
     unsigned int numChannels
-    int sizeInBytes
+    unsigned long sizeInBytes
 
 cdef struct HIP_RESOURCE_DESC_st_union_0_struct_3:
-    hipDeviceptr_t devPtr
+    void * devPtr
     hipArray_Format format
     unsigned int numChannels
-    int width
-    int height
-    int pitchInBytes
+    unsigned long width
+    unsigned long height
+    unsigned long pitchInBytes
 
 cdef struct HIP_RESOURCE_DESC_st_union_0_struct_4:
     int[32] reserved
@@ -718,9 +718,9 @@ cdef extern from "hip/hip_runtime_api.h":
 
     cdef struct hipResourceViewDesc:
         hipResourceViewFormat format
-        int width
-        int height
-        int depth
+        unsigned long width
+        unsigned long height
+        unsigned long depth
         unsigned int firstMipmapLevel
         unsigned int lastMipmapLevel
         unsigned int firstLayer
@@ -728,9 +728,9 @@ cdef extern from "hip/hip_runtime_api.h":
 
     cdef struct HIP_RESOURCE_VIEW_DESC_st:
         HIPresourceViewFormat_enum format
-        int width
-        int height
-        int depth
+        unsigned long width
+        unsigned long height
+        unsigned long depth
         unsigned int firstMipmapLevel
         unsigned int lastMipmapLevel
         unsigned int firstLayer
@@ -748,19 +748,19 @@ cdef extern from "hip/hip_runtime_api.h":
 
     cdef struct hipPitchedPtr:
         void * ptr
-        int pitch
-        int xsize
-        int ysize
+        unsigned long pitch
+        unsigned long xsize
+        unsigned long ysize
 
     cdef struct hipExtent:
-        int width
-        int height
-        int depth
+        unsigned long width
+        unsigned long height
+        unsigned long depth
 
     cdef struct hipPos:
-        int x
-        int y
-        int z
+        unsigned long x
+        unsigned long y
+        unsigned long z
 
     cdef struct hipMemcpy3DParms:
         hipArray_t srcArray
@@ -779,7 +779,7 @@ cdef extern from "hip/hip_runtime_api.h":
         unsigned int srcLOD
         hipMemoryType srcMemoryType
         const void * srcHost
-        hipDeviceptr_t srcDevice
+        void * srcDevice
         hipArray_t srcArray
         unsigned int srcPitch
         unsigned int srcHeight
@@ -789,7 +789,7 @@ cdef extern from "hip/hip_runtime_api.h":
         unsigned int dstLOD
         hipMemoryType dstMemoryType
         void * dstHost
-        hipDeviceptr_t dstDevice
+        void * dstDevice
         hipArray_t dstArray
         unsigned int dstPitch
         unsigned int dstHeight
@@ -1086,14 +1086,14 @@ cdef extern from "hip/hip_runtime_api.h":
     cdef struct hipFuncAttributes:
         int binaryVersion
         int cacheModeCA
-        int constSizeBytes
-        int localSizeBytes
+        unsigned long constSizeBytes
+        unsigned long localSizeBytes
         int maxDynamicSharedSizeBytes
         int maxThreadsPerBlock
         int numRegs
         int preferredShmemCarveout
         int ptxVersion
-        int sharedSizeBytes
+        unsigned long sharedSizeBytes
 
     cdef struct ihipEvent_t:
         pass
@@ -1213,16 +1213,16 @@ cdef extern from "hip/hip_runtime_api.h":
         hipSharedMemBankSizeEightByte
 
     cdef struct dim3:
-        uint32_t x
-        uint32_t y
-        uint32_t z
+        unsigned int x
+        unsigned int y
+        unsigned int z
 
     cdef struct hipLaunchParams_t:
         void * func
         dim3 gridDim
         dim3 blockDim
         void ** args
-        int sharedMem
+        unsigned long sharedMem
         hipStream_t stream
 
     ctypedef hipLaunchParams_t hipLaunchParams
@@ -1404,10 +1404,10 @@ cdef extern from "hip/hip_runtime_api.h":
     cdef struct hipMemsetParams:
         void * dst
         unsigned int elementSize
-        int height
-        int pitch
+        unsigned long height
+        unsigned long pitch
         unsigned int value
-        int width
+        unsigned long width
 
     cdef enum hipKernelNodeAttrID:
         hipKernelNodeAttributeAccessPolicyWindow
@@ -1423,7 +1423,7 @@ cdef extern from "hip/hip_runtime_api.h":
         hipAccessProperty hitProp
         float hitRatio
         hipAccessProperty missProp
-        int num_bytes
+        unsigned long num_bytes
 
     cdef union hipKernelNodeAttrValue:
         hipAccessPolicyWindow accessPolicyWindow
@@ -1582,7 +1582,7 @@ cdef hipError_t hipRuntimeGetVersion(int * runtimeVersion) nogil
 # @param [out] device
 # @param [in] ordinal
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceGet(hipDevice_t * device,int ordinal) nogil
+cdef hipError_t hipDeviceGet(int * device,int ordinal) nogil
 
 
 # @brief Returns the compute capability of the device
@@ -1590,7 +1590,7 @@ cdef hipError_t hipDeviceGet(hipDevice_t * device,int ordinal) nogil
 # @param [out] minor
 # @param [in] device
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceComputeCapability(int * major,int * minor,hipDevice_t device) nogil
+cdef hipError_t hipDeviceComputeCapability(int * major,int * minor,int device) nogil
 
 
 # @brief Returns an identifer string for the device.
@@ -1598,7 +1598,7 @@ cdef hipError_t hipDeviceComputeCapability(int * major,int * minor,hipDevice_t d
 # @param [in] len
 # @param [in] device
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceGetName(char * name,int len,hipDevice_t device) nogil
+cdef hipError_t hipDeviceGetName(char * name,int len,int device) nogil
 
 
 # @brief Returns an UUID for the device.[BETA]
@@ -1608,7 +1608,7 @@ cdef hipError_t hipDeviceGetName(char * name,int len,hipDevice_t device) nogil
 # it is still open to changes and may have outstanding issues.
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotInitialized,
 # #hipErrorDeinitialized
-cdef hipError_t hipDeviceGetUuid(hipUUID_t * uuid,hipDevice_t device) nogil
+cdef hipError_t hipDeviceGetUuid(hipUUID_t * uuid,int device) nogil
 
 
 # @brief Returns a value for attr of link between two devices
@@ -1639,7 +1639,7 @@ cdef hipError_t hipDeviceGetByPCIBusId(int * device,const char * pciBusId) nogil
 # @param [out] bytes
 # @param [in] device
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceTotalMem(int * bytes,hipDevice_t device) nogil
+cdef hipError_t hipDeviceTotalMem(unsigned long * bytes,int device) nogil
 
 
 # @}
@@ -1788,14 +1788,14 @@ cdef hipError_t hipDeviceGetCacheConfig(hipFuncCache_t * cacheConfig) nogil
 # @param [in]  limit
 # @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
 # Note: Currently, only hipLimitMallocHeapSize is available
-cdef hipError_t hipDeviceGetLimit(int * pValue,hipLimit_t limit) nogil
+cdef hipError_t hipDeviceGetLimit(unsigned long * pValue,hipLimit_t limit) nogil
 
 
 # @brief Set Resource limits of current device
 # @param [in] limit
 # @param [in] value
 # @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
-cdef hipError_t hipDeviceSetLimit(hipLimit_t limit,int value) nogil
+cdef hipError_t hipDeviceSetLimit(hipLimit_t limit,unsigned long value) nogil
 
 
 # @brief Returns bank width of shared memory for current device
@@ -1852,7 +1852,7 @@ cdef hipError_t hipChooseDevice(int * device,hipDeviceProp_t * prop) nogil
 # @param [out] hopcount Returns the hop count between the two devices
 # Queries and returns the HSA link type and the hop count between the two specified devices.
 # @returns #hipSuccess, #hipInvalidDevice, #hipErrorRuntimeOther
-cdef hipError_t hipExtGetLinkTypeAndHopCount(int device1,int device2,uint32_t * linktype,uint32_t * hopcount) nogil
+cdef hipError_t hipExtGetLinkTypeAndHopCount(int device1,int device2,unsigned int * linktype,unsigned int * hopcount) nogil
 
 
 # @brief Gets an interprocess memory handle for an existing device memory
@@ -2166,7 +2166,7 @@ cdef hipError_t hipStreamGetPriority(hipStream_t stream,int * priority) nogil
 # stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
 # To release the memory used by the stream, application must call hipStreamDestroy.
 # @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-cdef hipError_t hipExtStreamCreateWithCUMask(hipStream_t* stream,uint32_t cuMaskSize,uint32_t * cuMask) nogil
+cdef hipError_t hipExtStreamCreateWithCUMask(hipStream_t* stream,unsigned int cuMaskSize,const unsigned int * cuMask) nogil
 
 
 # @brief Get CU mask associated with an asynchronous stream
@@ -2177,7 +2177,7 @@ cdef hipError_t hipExtStreamCreateWithCUMask(hipStream_t* stream,uint32_t cuMask
 # each active bit represents one active CU
 # @return #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
 # @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-cdef hipError_t hipExtStreamGetCUMask(hipStream_t stream,uint32_t cuMaskSize,uint32_t * cuMask) nogil
+cdef hipError_t hipExtStreamGetCUMask(hipStream_t stream,unsigned int cuMaskSize,unsigned int * cuMask) nogil
 
 
 cdef extern from "hip/hip_runtime_api.h":
@@ -2226,7 +2226,7 @@ cdef hipError_t hipStreamAddCallback(hipStream_t stream,hipStreamCallback_t call
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWaitValue64, hipStreamWriteValue64,
 # hipStreamWriteValue32, hipDeviceGetAttribute
-cdef hipError_t hipStreamWaitValue32(hipStream_t stream,void * ptr,uint32_t value,unsigned int flags,uint32_t mask) nogil
+cdef hipError_t hipStreamWaitValue32(hipStream_t stream,void * ptr,unsigned int value,unsigned int flags,unsigned int mask) nogil
 
 
 # @brief Enqueues a wait command to the stream.[BETA]
@@ -2251,7 +2251,7 @@ cdef hipError_t hipStreamWaitValue32(hipStream_t stream,void * ptr,uint32_t valu
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWaitValue32, hipStreamWriteValue64,
 # hipStreamWriteValue32, hipDeviceGetAttribute
-cdef hipError_t hipStreamWaitValue64(hipStream_t stream,void * ptr,uint64_t value,unsigned int flags,uint64_t mask) nogil
+cdef hipError_t hipStreamWaitValue64(hipStream_t stream,void * ptr,unsigned long value,unsigned int flags,unsigned long mask) nogil
 
 
 # @brief Enqueues a write command to the stream.[BETA]
@@ -2266,7 +2266,7 @@ cdef hipError_t hipStreamWaitValue64(hipStream_t stream,void * ptr,uint64_t valu
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
 # hipStreamWaitValue64
-cdef hipError_t hipStreamWriteValue32(hipStream_t stream,void * ptr,uint32_t value,unsigned int flags) nogil
+cdef hipError_t hipStreamWriteValue32(hipStream_t stream,void * ptr,unsigned int value,unsigned int flags) nogil
 
 
 # @brief Enqueues a write command to the stream.[BETA]
@@ -2281,7 +2281,7 @@ cdef hipError_t hipStreamWriteValue32(hipStream_t stream,void * ptr,uint32_t val
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
 # hipStreamWaitValue64
-cdef hipError_t hipStreamWriteValue64(hipStream_t stream,void * ptr,uint64_t value,unsigned int flags) nogil
+cdef hipError_t hipStreamWriteValue64(hipStream_t stream,void * ptr,unsigned long value,unsigned int flags) nogil
 
 
 # @}
@@ -2411,7 +2411,7 @@ cdef hipError_t hipPointerGetAttributes(hipPointerAttribute_t * attributes,const
 # @beta This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 # @see hipPointerGetAttributes
-cdef hipError_t hipPointerGetAttribute(void * data,hipPointer_attribute attribute,hipDeviceptr_t ptr) nogil
+cdef hipError_t hipPointerGetAttribute(void * data,hipPointer_attribute attribute,void * ptr) nogil
 
 
 # @brief Returns information about the specified pointer.[BETA]
@@ -2424,7 +2424,7 @@ cdef hipError_t hipPointerGetAttribute(void * data,hipPointer_attribute attribut
 # @beta This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 # @see hipPointerGetAttribute
-cdef hipError_t hipDrvPointerGetAttributes(unsigned int numAttributes,hipPointer_attribute * attributes,void ** data,hipDeviceptr_t ptr) nogil
+cdef hipError_t hipDrvPointerGetAttributes(unsigned int numAttributes,hipPointer_attribute * attributes,void ** data,void * ptr) nogil
 
 
 # @brief Imports an external semaphore.
@@ -2432,7 +2432,7 @@ cdef hipError_t hipDrvPointerGetAttributes(unsigned int numAttributes,hipPointer
 # @param[in] semHandleDesc Semaphore import handle descriptor
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipImportExternalSemaphore(hipExternalSemaphore_t* extSem_out,hipExternalSemaphoreHandleDesc_st * semHandleDesc) nogil
+cdef hipError_t hipImportExternalSemaphore(void ** extSem_out,hipExternalSemaphoreHandleDesc_st * semHandleDesc) nogil
 
 
 # @brief Signals a set of external semaphore objects.
@@ -2442,7 +2442,7 @@ cdef hipError_t hipImportExternalSemaphore(hipExternalSemaphore_t* extSem_out,hi
 # @param[in] stream Stream to enqueue the wait operations in
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipSignalExternalSemaphoresAsync(hipExternalSemaphore_t * extSemArray,hipExternalSemaphoreSignalParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil
+cdef hipError_t hipSignalExternalSemaphoresAsync(void *const * extSemArray,hipExternalSemaphoreSignalParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil
 
 
 # @brief Waits on a set of external semaphore objects
@@ -2452,14 +2452,14 @@ cdef hipError_t hipSignalExternalSemaphoresAsync(hipExternalSemaphore_t * extSem
 # @param[in] stream Stream to enqueue the wait operations in
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipWaitExternalSemaphoresAsync(hipExternalSemaphore_t * extSemArray,hipExternalSemaphoreWaitParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil
+cdef hipError_t hipWaitExternalSemaphoresAsync(void *const * extSemArray,hipExternalSemaphoreWaitParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil
 
 
 # @brief Destroys an external semaphore object and releases any references to the underlying resource. Any outstanding signals or waits must have completed before the semaphore is destroyed.
 # @param[in] extSem handle to an external memory object
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipDestroyExternalSemaphore(hipExternalSemaphore_t extSem) nogil
+cdef hipError_t hipDestroyExternalSemaphore(void * extSem) nogil
 
 
 # @brief Imports an external memory object.
@@ -2467,7 +2467,7 @@ cdef hipError_t hipDestroyExternalSemaphore(hipExternalSemaphore_t extSem) nogil
 # @param[in]  memHandleDesc Memory import handle descriptor
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipImportExternalMemory(hipExternalMemory_t* extMem_out,hipExternalMemoryHandleDesc_st * memHandleDesc) nogil
+cdef hipError_t hipImportExternalMemory(void ** extMem_out,hipExternalMemoryHandleDesc_st * memHandleDesc) nogil
 
 
 # @brief Maps a buffer onto an imported memory object.
@@ -2476,14 +2476,14 @@ cdef hipError_t hipImportExternalMemory(hipExternalMemory_t* extMem_out,hipExter
 # @param[in]  bufferDesc  Buffer descriptor
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipExternalMemoryGetMappedBuffer(void ** devPtr,hipExternalMemory_t extMem,hipExternalMemoryBufferDesc_st * bufferDesc) nogil
+cdef hipError_t hipExternalMemoryGetMappedBuffer(void ** devPtr,void * extMem,hipExternalMemoryBufferDesc_st * bufferDesc) nogil
 
 
 # @brief Destroys an external memory object.
 # @param[in] extMem  External memory object to be destroyed
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipDestroyExternalMemory(hipExternalMemory_t extMem) nogil
+cdef hipError_t hipDestroyExternalMemory(void * extMem) nogil
 
 
 # @brief Allocate memory on the default accelerator
@@ -2493,7 +2493,7 @@ cdef hipError_t hipDestroyExternalMemory(hipExternalMemory_t extMem) nogil
 # @return #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
 # @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
 # hipHostFree, hipHostMalloc
-cdef hipError_t hipMalloc(void ** ptr,int size) nogil
+cdef hipError_t hipMalloc(void ** ptr,unsigned long size) nogil
 
 
 # @brief Allocate memory on the default accelerator
@@ -2504,7 +2504,7 @@ cdef hipError_t hipMalloc(void ** ptr,int size) nogil
 # @return #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
 # @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
 # hipHostFree, hipHostMalloc
-cdef hipError_t hipExtMallocWithFlags(void ** ptr,int sizeBytes,unsigned int flags) nogil
+cdef hipError_t hipExtMallocWithFlags(void ** ptr,unsigned long sizeBytes,unsigned int flags) nogil
 
 
 # @brief Allocate pinned host memory [Deprecated]
@@ -2513,7 +2513,7 @@ cdef hipError_t hipExtMallocWithFlags(void ** ptr,int sizeBytes,unsigned int fla
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @deprecated use hipHostMalloc() instead
-cdef hipError_t hipMallocHost(void ** ptr,int size) nogil
+cdef hipError_t hipMallocHost(void ** ptr,unsigned long size) nogil
 
 
 # @brief Allocate pinned host memory [Deprecated]
@@ -2522,7 +2522,7 @@ cdef hipError_t hipMallocHost(void ** ptr,int size) nogil
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @deprecated use hipHostMalloc() instead
-cdef hipError_t hipMemAllocHost(void ** ptr,int size) nogil
+cdef hipError_t hipMemAllocHost(void ** ptr,unsigned long size) nogil
 
 
 # @brief Allocate device accessible page locked host memory
@@ -2532,7 +2532,7 @@ cdef hipError_t hipMemAllocHost(void ** ptr,int size) nogil
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @see hipSetDeviceFlags, hipHostFree
-cdef hipError_t hipHostMalloc(void ** ptr,int size,unsigned int flags) nogil
+cdef hipError_t hipHostMalloc(void ** ptr,unsigned long size,unsigned int flags) nogil
 
 
 # -------------------------------------------------------------------------------------------------
@@ -2547,7 +2547,7 @@ cdef hipError_t hipHostMalloc(void ** ptr,int size,unsigned int flags) nogil
 # @param [in]  flags   - must be either hipMemAttachGlobal or hipMemAttachHost
 # (defaults to hipMemAttachGlobal)
 # @returns #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
-cdef hipError_t hipMallocManaged(void ** dev_ptr,int size,unsigned int flags) nogil
+cdef hipError_t hipMallocManaged(void ** dev_ptr,unsigned long size,unsigned int flags) nogil
 
 
 # @brief Prefetches memory to the specified destination device using HIP.
@@ -2556,7 +2556,7 @@ cdef hipError_t hipMallocManaged(void ** dev_ptr,int size,unsigned int flags) no
 # @param [in] device   destination device to prefetch to
 # @param [in] stream   stream to enqueue prefetch operation
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemPrefetchAsync(const void * dev_ptr,int count,int device,hipStream_t stream) nogil
+cdef hipError_t hipMemPrefetchAsync(const void * dev_ptr,unsigned long count,int device,hipStream_t stream) nogil
 
 
 # @brief Advise about the usage of a given memory range to HIP.
@@ -2565,7 +2565,7 @@ cdef hipError_t hipMemPrefetchAsync(const void * dev_ptr,int count,int device,hi
 # @param [in] advice   advice to be applied for the specified memory range
 # @param [in] device   device to apply the advice for
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemAdvise(const void * dev_ptr,int count,hipMemoryAdvise advice,int device) nogil
+cdef hipError_t hipMemAdvise(const void * dev_ptr,unsigned long count,hipMemoryAdvise advice,int device) nogil
 
 
 # @brief Query an attribute of a given memory range in HIP.
@@ -2576,7 +2576,7 @@ cdef hipError_t hipMemAdvise(const void * dev_ptr,int count,hipMemoryAdvise advi
 # @param [in] dev_ptr    start of the range to query
 # @param [in] count      size of the range to query
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemRangeGetAttribute(void * data,int data_size,hipMemRangeAttribute attribute,const void * dev_ptr,int count) nogil
+cdef hipError_t hipMemRangeGetAttribute(void * data,unsigned long data_size,hipMemRangeAttribute attribute,const void * dev_ptr,unsigned long count) nogil
 
 
 # @brief Query attributes of a given memory range in HIP.
@@ -2589,7 +2589,7 @@ cdef hipError_t hipMemRangeGetAttribute(void * data,int data_size,hipMemRangeAtt
 # @param [in] dev_ptr      start of the range to query
 # @param [in] count        size of the range to query
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemRangeGetAttributes(void ** data,int * data_sizes,hipMemRangeAttribute * attributes,int num_attributes,const void * dev_ptr,int count) nogil
+cdef hipError_t hipMemRangeGetAttributes(void ** data,unsigned long * data_sizes,hipMemRangeAttribute * attributes,unsigned long num_attributes,const void * dev_ptr,unsigned long count) nogil
 
 
 # @brief Attach memory to a stream asynchronously in HIP.
@@ -2600,7 +2600,7 @@ cdef hipError_t hipMemRangeGetAttributes(void ** data,int * data_sizes,hipMemRan
 # @param [in] flags      - must be one of hipMemAttachGlobal, hipMemAttachHost or
 # hipMemAttachSingle (defaults to hipMemAttachSingle)
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipStreamAttachMemAsync(hipStream_t stream,void * dev_ptr,int length,unsigned int flags) nogil
+cdef hipError_t hipStreamAttachMemAsync(hipStream_t stream,void * dev_ptr,unsigned long length,unsigned int flags) nogil
 
 
 # @brief Allocates memory with stream ordered semantics
@@ -2624,7 +2624,7 @@ cdef hipError_t hipStreamAttachMemAsync(hipStream_t stream,void * dev_ptr,int le
 # hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMallocAsync(void ** dev_ptr,int size,hipStream_t stream) nogil
+cdef hipError_t hipMallocAsync(void ** dev_ptr,unsigned long size,hipStream_t stream) nogil
 
 
 # @brief Frees memory with stream ordered semantics
@@ -2661,7 +2661,7 @@ cdef hipError_t hipFreeAsync(void * dev_ptr,hipStream_t stream) nogil
 # hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemPoolTrimTo(hipMemPool_t mem_pool,int min_bytes_to_hold) nogil
+cdef hipError_t hipMemPoolTrimTo(hipMemPool_t mem_pool,unsigned long min_bytes_to_hold) nogil
 
 
 # @brief Sets attributes of a memory pool
@@ -2737,7 +2737,7 @@ cdef hipError_t hipMemPoolGetAttribute(hipMemPool_t mem_pool,hipMemPoolAttr attr
 # hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolGetAccess
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemPoolSetAccess(hipMemPool_t mem_pool,hipMemAccessDesc * desc_list,int count) nogil
+cdef hipError_t hipMemPoolSetAccess(hipMemPool_t mem_pool,hipMemAccessDesc * desc_list,unsigned long count) nogil
 
 
 # @brief Returns the accessibility of a pool from a device
@@ -2807,7 +2807,7 @@ cdef hipError_t hipMemPoolDestroy(hipMemPool_t mem_pool) nogil
 # hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess,
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMallocFromPoolAsync(void ** dev_ptr,int size,hipMemPool_t mem_pool,hipStream_t stream) nogil
+cdef hipError_t hipMallocFromPoolAsync(void ** dev_ptr,unsigned long size,hipMemPool_t mem_pool,hipStream_t stream) nogil
 
 
 # @brief Exports a memory pool to the requested handle type.
@@ -2886,7 +2886,7 @@ cdef hipError_t hipMemPoolImportPointer(void ** dev_ptr,hipMemPool_t mem_pool,hi
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @deprecated use hipHostMalloc() instead
-cdef hipError_t hipHostAlloc(void ** ptr,int size,unsigned int flags) nogil
+cdef hipError_t hipHostAlloc(void ** ptr,unsigned long size,unsigned int flags) nogil
 
 
 # @brief Get Device pointer from Host Pointer allocated through hipHostMalloc
@@ -2931,7 +2931,7 @@ cdef hipError_t hipHostGetFlags(unsigned int * flagsPtr,void * hostPtr) nogil
 # region.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @see hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
-cdef hipError_t hipHostRegister(void * hostPtr,int sizeBytes,unsigned int flags) nogil
+cdef hipError_t hipHostRegister(void * hostPtr,unsigned long sizeBytes,unsigned int flags) nogil
 
 
 # @brief Un-register host pointer
@@ -2953,7 +2953,7 @@ cdef hipError_t hipHostUnregister(void * hostPtr) nogil
 # @return Error code
 # @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
 # hipMalloc3DArray, hipHostMalloc
-cdef hipError_t hipMallocPitch(void ** ptr,int * pitch,int width,int height) nogil
+cdef hipError_t hipMallocPitch(void ** ptr,unsigned long * pitch,unsigned long width,unsigned long height) nogil
 
 
 # Allocates at least width (in bytes) * height bytes of linear memory
@@ -2971,7 +2971,7 @@ cdef hipError_t hipMallocPitch(void ** ptr,int * pitch,int width,int height) nog
 # @return Error code
 # @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
 # hipMalloc3DArray, hipHostMalloc
-cdef hipError_t hipMemAllocPitch(hipDeviceptr_t* dptr,int * pitch,int widthInBytes,int height,unsigned int elementSizeBytes) nogil
+cdef hipError_t hipMemAllocPitch(void ** dptr,unsigned long * pitch,unsigned long widthInBytes,unsigned long height,unsigned int elementSizeBytes) nogil
 
 
 # @brief Free memory allocated by the hcc hip memory allocation API.
@@ -3030,11 +3030,11 @@ cdef hipError_t hipHostFree(void * ptr) nogil
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpy(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpy(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind) nogil
 
 
 
-cdef hipError_t hipMemcpyWithStream(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyWithStream(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 # @brief Copy data from Host to Device
@@ -3049,7 +3049,7 @@ cdef hipError_t hipMemcpyWithStream(void * dst,const void * src,int sizeBytes,hi
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyHtoD(hipDeviceptr_t dst,void * src,int sizeBytes) nogil
+cdef hipError_t hipMemcpyHtoD(void * dst,void * src,unsigned long sizeBytes) nogil
 
 
 # @brief Copy data from Device to Host
@@ -3064,7 +3064,7 @@ cdef hipError_t hipMemcpyHtoD(hipDeviceptr_t dst,void * src,int sizeBytes) nogil
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoH(void * dst,hipDeviceptr_t src,int sizeBytes) nogil
+cdef hipError_t hipMemcpyDtoH(void * dst,void * src,unsigned long sizeBytes) nogil
 
 
 # @brief Copy data from Device to Device
@@ -3079,7 +3079,7 @@ cdef hipError_t hipMemcpyDtoH(void * dst,hipDeviceptr_t src,int sizeBytes) nogil
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoD(hipDeviceptr_t dst,hipDeviceptr_t src,int sizeBytes) nogil
+cdef hipError_t hipMemcpyDtoD(void * dst,void * src,unsigned long sizeBytes) nogil
 
 
 # @brief Copy data from Host to Device asynchronously
@@ -3094,7 +3094,7 @@ cdef hipError_t hipMemcpyDtoD(hipDeviceptr_t dst,hipDeviceptr_t src,int sizeByte
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyHtoDAsync(hipDeviceptr_t dst,void * src,int sizeBytes,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyHtoDAsync(void * dst,void * src,unsigned long sizeBytes,hipStream_t stream) nogil
 
 
 # @brief Copy data from Device to Host asynchronously
@@ -3109,7 +3109,7 @@ cdef hipError_t hipMemcpyHtoDAsync(hipDeviceptr_t dst,void * src,int sizeBytes,h
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoHAsync(void * dst,hipDeviceptr_t src,int sizeBytes,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyDtoHAsync(void * dst,void * src,unsigned long sizeBytes,hipStream_t stream) nogil
 
 
 # @brief Copy data from Device to Device asynchronously
@@ -3124,7 +3124,7 @@ cdef hipError_t hipMemcpyDtoHAsync(void * dst,hipDeviceptr_t src,int sizeBytes,h
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoDAsync(hipDeviceptr_t dst,hipDeviceptr_t src,int sizeBytes,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyDtoDAsync(void * dst,void * src,unsigned long sizeBytes,hipStream_t stream) nogil
 
 
 # @brief Returns a global pointer from a module.
@@ -3136,7 +3136,7 @@ cdef hipError_t hipMemcpyDtoDAsync(hipDeviceptr_t dst,hipDeviceptr_t src,int siz
 # @param[in]   hmod  Module to retrieve global from
 # @param[in]   name  Name of global to retrieve
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
-cdef hipError_t hipModuleGetGlobal(hipDeviceptr_t* dptr,int * bytes,hipModule_t hmod,const char * name) nogil
+cdef hipError_t hipModuleGetGlobal(void ** dptr,unsigned long * bytes,hipModule_t hmod,const char * name) nogil
 
 
 # @brief Gets device pointer associated with symbol on the device.
@@ -3150,7 +3150,7 @@ cdef hipError_t hipGetSymbolAddress(void ** devPtr,const void * symbol) nogil
 # @param[in]   symbol  pointer to the device symbole
 # @param[out]  size  pointer to the size
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipGetSymbolSize(int * size,const void * symbol) nogil
+cdef hipError_t hipGetSymbolSize(unsigned long * size,const void * symbol) nogil
 
 
 # @brief Copies data to the given symbol on the device.
@@ -3166,7 +3166,7 @@ cdef hipError_t hipGetSymbolSize(int * size,const void * symbol) nogil
 # @param[in]   offset  offset in bytes from start of symbole
 # @param[in]   kind  type of memory transfer
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyToSymbol(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpyToSymbol(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil
 
 
 # @brief Copies data to the given symbol on the device asynchronously.
@@ -3177,7 +3177,7 @@ cdef hipError_t hipMemcpyToSymbol(const void * symbol,const void * src,int sizeB
 # @param[in]   kind  type of memory transfer
 # @param[in]   stream  stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyToSymbolAsync(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyToSymbolAsync(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 # @brief Copies data from the given symbol on the device.
@@ -3187,7 +3187,7 @@ cdef hipError_t hipMemcpyToSymbolAsync(const void * symbol,const void * src,int 
 # @param[in]   offset  offset in bytes from the start of symbole
 # @param[in]   kind  type of memory transfer
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyFromSymbol(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpyFromSymbol(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil
 
 
 # @brief Copies data from the given symbol on the device asynchronously.
@@ -3198,7 +3198,7 @@ cdef hipError_t hipMemcpyFromSymbol(void * dst,const void * symbol,int sizeBytes
 # @param[in]   kind  type of memory transfer
 # @param[in]   stream  stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyFromSymbolAsync(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyFromSymbolAsync(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 # @brief Copy data from src to dst asynchronously.
@@ -3222,7 +3222,7 @@ cdef hipError_t hipMemcpyFromSymbolAsync(void * dst,const void * symbol,int size
 # hipMemcpyFromSymbol, hipMemcpy2DAsync, hipMemcpyToArrayAsync, hipMemcpy2DToArrayAsync,
 # hipMemcpyFromArrayAsync, hipMemcpy2DFromArrayAsync, hipMemcpyToSymbolAsync,
 # hipMemcpyFromSymbolAsync
-cdef hipError_t hipMemcpyAsync(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyAsync(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 # @brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
@@ -3231,7 +3231,7 @@ cdef hipError_t hipMemcpyAsync(void * dst,const void * src,int sizeBytes,hipMemc
 # @param[in]  constant value to be set
 # @param[in]  sizeBytes Data size in bytes
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemset(void * dst,int value,int sizeBytes) nogil
+cdef hipError_t hipMemset(void * dst,int value,unsigned long sizeBytes) nogil
 
 
 # @brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
@@ -3240,7 +3240,7 @@ cdef hipError_t hipMemset(void * dst,int value,int sizeBytes) nogil
 # @param[in]  constant value to be set
 # @param[in]  number of values to be set
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD8(hipDeviceptr_t dest,unsigned char value,int count) nogil
+cdef hipError_t hipMemsetD8(void * dest,unsigned char value,unsigned long count) nogil
 
 
 # @brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
@@ -3254,7 +3254,7 @@ cdef hipError_t hipMemsetD8(hipDeviceptr_t dest,unsigned char value,int count) n
 # @param[in]  number of values to be set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD8Async(hipDeviceptr_t dest,unsigned char value,int count,hipStream_t stream) nogil
+cdef hipError_t hipMemsetD8Async(void * dest,unsigned char value,unsigned long count,hipStream_t stream) nogil
 
 
 # @brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
@@ -3263,7 +3263,7 @@ cdef hipError_t hipMemsetD8Async(hipDeviceptr_t dest,unsigned char value,int cou
 # @param[in]  constant value to be set
 # @param[in]  number of values to be set
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD16(hipDeviceptr_t dest,unsigned short value,int count) nogil
+cdef hipError_t hipMemsetD16(void * dest,unsigned short value,unsigned long count) nogil
 
 
 # @brief Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
@@ -3277,7 +3277,7 @@ cdef hipError_t hipMemsetD16(hipDeviceptr_t dest,unsigned short value,int count)
 # @param[in]  number of values to be set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD16Async(hipDeviceptr_t dest,unsigned short value,int count,hipStream_t stream) nogil
+cdef hipError_t hipMemsetD16Async(void * dest,unsigned short value,unsigned long count,hipStream_t stream) nogil
 
 
 # @brief Fills the memory area pointed to by dest with the constant integer
@@ -3286,7 +3286,7 @@ cdef hipError_t hipMemsetD16Async(hipDeviceptr_t dest,unsigned short value,int c
 # @param[in]  constant value to be set
 # @param[in]  number of values to be set
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD32(hipDeviceptr_t dest,int value,int count) nogil
+cdef hipError_t hipMemsetD32(void * dest,int value,unsigned long count) nogil
 
 
 # @brief Fills the first sizeBytes bytes of the memory area pointed to by dev with the constant
@@ -3300,7 +3300,7 @@ cdef hipError_t hipMemsetD32(hipDeviceptr_t dest,int value,int count) nogil
 # @param[in]  sizeBytes - Size in bytes to set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemsetAsync(void * dst,int value,int sizeBytes,hipStream_t stream) nogil
+cdef hipError_t hipMemsetAsync(void * dst,int value,unsigned long sizeBytes,hipStream_t stream) nogil
 
 
 # @brief Fills the memory area pointed to by dev with the constant integer
@@ -3314,7 +3314,7 @@ cdef hipError_t hipMemsetAsync(void * dst,int value,int sizeBytes,hipStream_t st
 # @param[in]  count - number of values to be set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemsetD32Async(hipDeviceptr_t dst,int value,int count,hipStream_t stream) nogil
+cdef hipError_t hipMemsetD32Async(void * dst,int value,unsigned long count,hipStream_t stream) nogil
 
 
 # @brief Fills the memory area pointed to by dst with the constant value.
@@ -3324,7 +3324,7 @@ cdef hipError_t hipMemsetD32Async(hipDeviceptr_t dst,int value,int count,hipStre
 # @param[in]  width
 # @param[in]  height
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemset2D(void * dst,int pitch,int value,int width,int height) nogil
+cdef hipError_t hipMemset2D(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height) nogil
 
 
 # @brief Fills asynchronously the memory area pointed to by dst with the constant value.
@@ -3335,7 +3335,7 @@ cdef hipError_t hipMemset2D(void * dst,int pitch,int value,int width,int height)
 # @param[in]  height
 # @param[in]  stream
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemset2DAsync(void * dst,int pitch,int value,int width,int height,hipStream_t stream) nogil
+cdef hipError_t hipMemset2DAsync(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height,hipStream_t stream) nogil
 
 
 # @brief Fills synchronously the memory area pointed to by pitchedDevPtr with the constant value.
@@ -3361,11 +3361,11 @@ cdef hipError_t hipMemset3DAsync(hipPitchedPtr pitchedDevPtr,int value,hipExtent
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @warning On HCC, the free memory only accounts for memory allocated by this process and may be
 # optimistic.
-cdef hipError_t hipMemGetInfo(int * free,int * total) nogil
+cdef hipError_t hipMemGetInfo(unsigned long * free,unsigned long * total) nogil
 
 
 
-cdef hipError_t hipMemPtrGetInfo(void * ptr,int * size) nogil
+cdef hipError_t hipMemPtrGetInfo(void * ptr,unsigned long * size) nogil
 
 
 # @brief Allocate an array on the device.
@@ -3376,7 +3376,7 @@ cdef hipError_t hipMemPtrGetInfo(void * ptr,int * size) nogil
 # @param[in]   flags  Requested properties of allocated array
 # @return      #hipSuccess, #hipErrorOutOfMemory
 # @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
-cdef hipError_t hipMallocArray(hipArray ** array,hipChannelFormatDesc * desc,int width,int height,unsigned int flags) nogil
+cdef hipError_t hipMallocArray(hipArray ** array,hipChannelFormatDesc * desc,unsigned long width,unsigned long height,unsigned int flags) nogil
 
 
 
@@ -3448,7 +3448,7 @@ cdef hipError_t hipGetMipmappedArrayLevel(hipArray_t* levelArray,hipMipmappedArr
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2D(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpy2D(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil
 
 
 # @brief Copies memory for 2D arrays.
@@ -3483,7 +3483,7 @@ cdef hipError_t hipMemcpyParam2DAsync(hip_Memcpy2D * pCopy,hipStream_t stream) n
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DAsync(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpy2DAsync(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 # @brief Copies data between host and device.
@@ -3499,7 +3499,7 @@ cdef hipError_t hipMemcpy2DAsync(void * dst,int dpitch,const void * src,int spit
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DToArray(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpy2DToArray(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil
 
 
 # @brief Copies data between host and device.
@@ -3516,7 +3516,7 @@ cdef hipError_t hipMemcpy2DToArray(hipArray * dst,int wOffset,int hOffset,const 
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DToArrayAsync(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpy2DToArrayAsync(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 # @brief Copies data between host and device.
@@ -3530,7 +3530,7 @@ cdef hipError_t hipMemcpy2DToArrayAsync(hipArray * dst,int wOffset,int hOffset,c
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyToArray(hipArray * dst,int wOffset,int hOffset,const void * src,int count,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpyToArray(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long count,hipMemcpyKind kind) nogil
 
 
 # @brief Copies data between host and device.
@@ -3544,7 +3544,7 @@ cdef hipError_t hipMemcpyToArray(hipArray * dst,int wOffset,int hOffset,const vo
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyFromArray(void * dst,hipArray_const_t srcArray,int wOffset,int hOffset,int count,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpyFromArray(void * dst,hipArray_const_t srcArray,unsigned long wOffset,unsigned long hOffset,unsigned long count,hipMemcpyKind kind) nogil
 
 
 # @brief Copies data between host and device.
@@ -3560,7 +3560,7 @@ cdef hipError_t hipMemcpyFromArray(void * dst,hipArray_const_t srcArray,int wOff
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DFromArray(void * dst,int dpitch,hipArray_const_t src,int wOffset,int hOffset,int width,int height,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpy2DFromArray(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffset,unsigned long hOffset,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil
 
 
 # @brief Copies data between host and device asynchronously.
@@ -3577,7 +3577,7 @@ cdef hipError_t hipMemcpy2DFromArray(void * dst,int dpitch,hipArray_const_t src,
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DFromArrayAsync(void * dst,int dpitch,hipArray_const_t src,int wOffset,int hOffset,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpy2DFromArrayAsync(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffset,unsigned long hOffset,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 # @brief Copies data between host and device.
@@ -3589,7 +3589,7 @@ cdef hipError_t hipMemcpy2DFromArrayAsync(void * dst,int dpitch,hipArray_const_t
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyAtoH(void * dst,hipArray * srcArray,int srcOffset,int count) nogil
+cdef hipError_t hipMemcpyAtoH(void * dst,hipArray * srcArray,unsigned long srcOffset,unsigned long count) nogil
 
 
 # @brief Copies data between host and device.
@@ -3601,7 +3601,7 @@ cdef hipError_t hipMemcpyAtoH(void * dst,hipArray * srcArray,int srcOffset,int c
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyHtoA(hipArray * dstArray,int dstOffset,const void * srcHost,int count) nogil
+cdef hipError_t hipMemcpyHtoA(hipArray * dstArray,unsigned long dstOffset,const void * srcHost,unsigned long count) nogil
 
 
 # @brief Copies data between host and device.
@@ -3691,7 +3691,7 @@ cdef hipError_t hipDeviceDisablePeerAccess(int peerDeviceId) nogil
 # @returns #hipSuccess, #hipErrorInvalidDevicePointer
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipMemGetAddressRange(hipDeviceptr_t* pbase,int * psize,hipDeviceptr_t dptr) nogil
+cdef hipError_t hipMemGetAddressRange(void ** pbase,unsigned long * psize,void * dptr) nogil
 
 
 # @brief Copies memory from one device to memory on another device.
@@ -3701,7 +3701,7 @@ cdef hipError_t hipMemGetAddressRange(hipDeviceptr_t* pbase,int * psize,hipDevic
 # @param [in] srcDeviceId - Source device
 # @param [in] sizeBytes - Size of memory copy in bytes
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
-cdef hipError_t hipMemcpyPeer(void * dst,int dstDeviceId,const void * src,int srcDeviceId,int sizeBytes) nogil
+cdef hipError_t hipMemcpyPeer(void * dst,int dstDeviceId,const void * src,int srcDeviceId,unsigned long sizeBytes) nogil
 
 
 # @brief Copies memory from one device to memory on another device.
@@ -3712,7 +3712,7 @@ cdef hipError_t hipMemcpyPeer(void * dst,int dstDeviceId,const void * src,int sr
 # @param [in] sizeBytes - Size of memory copy in bytes
 # @param [in] stream - Stream identifier
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
-cdef hipError_t hipMemcpyPeerAsync(void * dst,int dstDeviceId,const void * src,int srcDevice,int sizeBytes,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyPeerAsync(void * dst,int dstDeviceId,const void * src,int srcDevice,unsigned long sizeBytes,hipStream_t stream) nogil
 
 
 # @}
@@ -3732,7 +3732,7 @@ cdef hipError_t hipMemcpyPeerAsync(void * dst,int dstDeviceId,const void * src,i
 # @return #hipSuccess
 # @see hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
 # hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipCtxCreate(hipCtx_t* ctx,unsigned int flags,hipDevice_t device) nogil
+cdef hipError_t hipCtxCreate(hipCtx_t* ctx,unsigned int flags,int device) nogil
 
 
 # @brief Destroy a HIP context.
@@ -3780,7 +3780,7 @@ cdef hipError_t hipCtxGetCurrent(hipCtx_t* ctx) nogil
 # @returns #hipSuccess, #hipErrorInvalidContext
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
-cdef hipError_t hipCtxGetDevice(hipDevice_t * device) nogil
+cdef hipError_t hipCtxGetDevice(int * device) nogil
 
 
 # @brief Returns the approximate HIP api version.
@@ -3890,7 +3890,7 @@ cdef hipError_t hipCtxDisablePeerAccess(hipCtx_t peerCtx) nogil
 # @returns #hipSuccess
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxGetState(hipDevice_t dev,unsigned int * flags,int * active) nogil
+cdef hipError_t hipDevicePrimaryCtxGetState(int dev,unsigned int * flags,int * active) nogil
 
 
 # @brief Release the primary context on the GPU.
@@ -3900,7 +3900,7 @@ cdef hipError_t hipDevicePrimaryCtxGetState(hipDevice_t dev,unsigned int * flags
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 # @warning This function return #hipSuccess though doesn't release the primaryCtx by design on
 # HIP/HCC path.
-cdef hipError_t hipDevicePrimaryCtxRelease(hipDevice_t dev) nogil
+cdef hipError_t hipDevicePrimaryCtxRelease(int dev) nogil
 
 
 # @brief Retain the primary context on the GPU.
@@ -3909,7 +3909,7 @@ cdef hipError_t hipDevicePrimaryCtxRelease(hipDevice_t dev) nogil
 # @returns #hipSuccess
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxRetain(hipCtx_t* pctx,hipDevice_t dev) nogil
+cdef hipError_t hipDevicePrimaryCtxRetain(hipCtx_t* pctx,int dev) nogil
 
 
 # @brief Resets the primary context on the GPU.
@@ -3917,7 +3917,7 @@ cdef hipError_t hipDevicePrimaryCtxRetain(hipCtx_t* pctx,hipDevice_t dev) nogil
 # @returns #hipSuccess
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxReset(hipDevice_t dev) nogil
+cdef hipError_t hipDevicePrimaryCtxReset(int dev) nogil
 
 
 # @brief Set flags for the primary context.
@@ -3926,7 +3926,7 @@ cdef hipError_t hipDevicePrimaryCtxReset(hipDevice_t dev) nogil
 # @returns #hipSuccess, #hipErrorContextAlreadyInUse
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxSetFlags(hipDevice_t dev,unsigned int flags) nogil
+cdef hipError_t hipDevicePrimaryCtxSetFlags(int dev,unsigned int flags) nogil
 
 
 # @}
@@ -4072,7 +4072,7 @@ cdef hipError_t hipExtLaunchMultiKernelMultiDevice(hipLaunchParams_t * launchPar
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-cdef hipError_t hipModuleOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,hipFunction_t f,int dynSharedMemPerBlk,int blockSizeLimit) nogil
+cdef hipError_t hipModuleOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,hipFunction_t f,unsigned long dynSharedMemPerBlk,int blockSizeLimit) nogil
 
 
 # @brief determine the grid and block sizes to achieves maximum occupancy for a kernel
@@ -4085,7 +4085,7 @@ cdef hipError_t hipModuleOccupancyMaxPotentialBlockSize(int * gridSize,int * blo
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-cdef hipError_t hipModuleOccupancyMaxPotentialBlockSizeWithFlags(int * gridSize,int * blockSize,hipFunction_t f,int dynSharedMemPerBlk,int blockSizeLimit,unsigned int flags) nogil
+cdef hipError_t hipModuleOccupancyMaxPotentialBlockSizeWithFlags(int * gridSize,int * blockSize,hipFunction_t f,unsigned long dynSharedMemPerBlk,int blockSizeLimit,unsigned int flags) nogil
 
 
 # @brief Returns occupancy for a device function.
@@ -4093,7 +4093,7 @@ cdef hipError_t hipModuleOccupancyMaxPotentialBlockSizeWithFlags(int * gridSize,
 # @param [in]  func             Kernel function (hipFunction) for which occupancy is calulated
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
-cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,hipFunction_t f,int blockSize,int dynSharedMemPerBlk) nogil
+cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,hipFunction_t f,int blockSize,unsigned long dynSharedMemPerBlk) nogil
 
 
 # @brief Returns occupancy for a device function.
@@ -4102,7 +4102,7 @@ cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(int * numBloc
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
 # @param [in]  flags            Extra flags for occupancy calculation (only default supported)
-cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,hipFunction_t f,int blockSize,int dynSharedMemPerBlk,unsigned int flags) nogil
+cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,hipFunction_t f,int blockSize,unsigned long dynSharedMemPerBlk,unsigned int flags) nogil
 
 
 # @brief Returns occupancy for a device function.
@@ -4110,7 +4110,7 @@ cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int 
 # @param [in]  func             Kernel function for which occupancy is calulated
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
-cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,const void * f,int blockSize,int dynSharedMemPerBlk) nogil
+cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,const void * f,int blockSize,unsigned long dynSharedMemPerBlk) nogil
 
 
 # @brief Returns occupancy for a device function.
@@ -4119,7 +4119,7 @@ cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,con
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
 # @param [in]  flags            Extra flags for occupancy calculation (currently ignored)
-cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,const void * f,int blockSize,int dynSharedMemPerBlk,unsigned int flags) nogil
+cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,const void * f,int blockSize,unsigned long dynSharedMemPerBlk,unsigned int flags) nogil
 
 
 # @brief determine the grid and block sizes to achieves maximum occupancy for a kernel
@@ -4131,7 +4131,7 @@ cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numB
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-cdef hipError_t hipOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,const void * f,int dynSharedMemPerBlk,int blockSizeLimit) nogil
+cdef hipError_t hipOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,const void * f,unsigned long dynSharedMemPerBlk,int blockSizeLimit) nogil
 
 
 # @brief Start recording of profiling information
@@ -4162,7 +4162,7 @@ cdef hipError_t hipProfilerStop() nogil
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
-cdef hipError_t hipConfigureCall(dim3 gridDim,dim3 blockDim,int sharedMem,hipStream_t stream) nogil
+cdef hipError_t hipConfigureCall(dim3 gridDim,dim3 blockDim,unsigned long sharedMem,hipStream_t stream) nogil
 
 
 # @brief Set a kernel argument.
@@ -4170,7 +4170,7 @@ cdef hipError_t hipConfigureCall(dim3 gridDim,dim3 blockDim,int sharedMem,hipStr
 # @param [in] arg    Pointer the argument in host memory.
 # @param [in] size   Size of the argument.
 # @param [in] offset Offset of the argument on the argument stack.
-cdef hipError_t hipSetupArgument(const void * arg,int size,int offset) nogil
+cdef hipError_t hipSetupArgument(const void * arg,unsigned long size,unsigned long offset) nogil
 
 
 # @brief Launch a kernel.
@@ -4189,7 +4189,7 @@ cdef hipError_t hipLaunchByPtr(const void * func) nogil
 # @param [in] stream - Stream where the kernel should be dispatched.  May be 0, in which case th
 # default stream is used with associated synchronization rules.
 # @returns #hipSuccess, #hipErrorInvalidValue, hipInvalidDevice
-cdef hipError_t hipLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,int sharedMemBytes,hipStream_t stream) nogil
+cdef hipError_t hipLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,unsigned long sharedMemBytes,hipStream_t stream) nogil
 
 
 # @brief Enqueues a host function call in a stream.
@@ -4225,7 +4225,7 @@ cdef hipError_t hipDrvMemcpy2DUnaligned(hip_Memcpy2D * pCopy) nogil
 # @param [in] flags. The value of hipExtAnyOrderLaunch, signifies if kernel can be
 # launched in any order.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
-cdef hipError_t hipExtLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,int sharedMemBytes,hipStream_t stream,hipEvent_t startEvent,hipEvent_t stopEvent,int flags) nogil
+cdef hipError_t hipExtLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,unsigned long sharedMemBytes,hipStream_t stream,hipEvent_t startEvent,hipEvent_t stopEvent,int flags) nogil
 
 
 # @brief  Binds a mipmapped array to a texture.
@@ -4349,11 +4349,11 @@ cdef hipError_t hipTexRefSetFormat(textureReference * texRef,hipArray_Format fmt
 
 
 
-cdef hipError_t hipBindTexture(int * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,int size) nogil
+cdef hipError_t hipBindTexture(unsigned long * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,unsigned long size) nogil
 
 
 
-cdef hipError_t hipBindTexture2D(int * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,int width,int height,int pitch) nogil
+cdef hipError_t hipBindTexture2D(unsigned long * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,unsigned long width,unsigned long height,unsigned long pitch) nogil
 
 
 
@@ -4361,7 +4361,7 @@ cdef hipError_t hipBindTextureToArray(textureReference * tex,hipArray_const_t ar
 
 
 
-cdef hipError_t hipGetTextureAlignmentOffset(int * offset,textureReference * texref) nogil
+cdef hipError_t hipGetTextureAlignmentOffset(unsigned long * offset,textureReference * texref) nogil
 
 
 
@@ -4369,7 +4369,7 @@ cdef hipError_t hipUnbindTexture(textureReference * tex) nogil
 
 
 
-cdef hipError_t hipTexRefGetAddress(hipDeviceptr_t* dev_ptr,textureReference * texRef) nogil
+cdef hipError_t hipTexRefGetAddress(void ** dev_ptr,textureReference * texRef) nogil
 
 
 
@@ -4409,11 +4409,11 @@ cdef hipError_t hipTexRefGetMipMappedArray(hipMipmappedArray_t* pArray,textureRe
 
 
 
-cdef hipError_t hipTexRefSetAddress(int * ByteOffset,textureReference * texRef,hipDeviceptr_t dptr,int bytes) nogil
+cdef hipError_t hipTexRefSetAddress(unsigned long * ByteOffset,textureReference * texRef,void * dptr,unsigned long bytes) nogil
 
 
 
-cdef hipError_t hipTexRefSetAddress2D(textureReference * texRef,HIP_ARRAY_DESCRIPTOR * desc,hipDeviceptr_t dptr,int Pitch) nogil
+cdef hipError_t hipTexRefSetAddress2D(textureReference * texRef,HIP_ARRAY_DESCRIPTOR * desc,void * dptr,unsigned long Pitch) nogil
 
 
 
@@ -4458,7 +4458,7 @@ cdef hipError_t hipMipmappedArrayGetLevel(hipArray_t* pLevelArray,hipMipmappedAr
 # @defgroup Callback Callback Activity APIs
 # @{
 # This section describes the callback/Activity of HIP runtime API.
-cdef const char * hipApiName(uint32_t id) nogil
+cdef const char * hipApiName(unsigned int id) nogil
 
 
 
@@ -4512,7 +4512,7 @@ cdef hipError_t hipStreamGetCaptureInfo(hipStream_t stream,hipStreamCaptureStatu
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipStreamGetCaptureInfo_v2(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,int * numDependencies_out) nogil
+cdef hipError_t hipStreamGetCaptureInfo_v2(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,unsigned long * numDependencies_out) nogil
 
 
 # @brief Get stream's capture state
@@ -4531,7 +4531,7 @@ cdef hipError_t hipStreamIsCapturing(hipStream_t stream,hipStreamCaptureStatus *
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorIllegalState
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipStreamUpdateCaptureDependencies(hipStream_t stream,hipGraphNode_t* dependencies,int numDependencies,unsigned int flags) nogil
+cdef hipError_t hipStreamUpdateCaptureDependencies(hipStream_t stream,hipGraphNode_t* dependencies,unsigned long numDependencies,unsigned int flags) nogil
 
 
 # @brief Swaps the stream capture mode of a thread.
@@ -4567,7 +4567,7 @@ cdef hipError_t hipGraphDestroy(hipGraph_t graph) nogil
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,int numDependencies) nogil
+cdef hipError_t hipGraphAddDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,unsigned long numDependencies) nogil
 
 
 # @brief Removes dependency edges from a graph.
@@ -4578,7 +4578,7 @@ cdef hipError_t hipGraphAddDependencies(hipGraph_t graph,hipGraphNode_t * from_,
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphRemoveDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,int numDependencies) nogil
+cdef hipError_t hipGraphRemoveDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,unsigned long numDependencies) nogil
 
 
 # @brief Returns a graph's dependency edges.
@@ -4593,7 +4593,7 @@ cdef hipError_t hipGraphRemoveDependencies(hipGraph_t graph,hipGraphNode_t * fro
 # edges actually returned will be written to numEdges
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphGetEdges(hipGraph_t graph,hipGraphNode_t* from_,hipGraphNode_t* to,int * numEdges) nogil
+cdef hipError_t hipGraphGetEdges(hipGraph_t graph,hipGraphNode_t* from_,hipGraphNode_t* to,unsigned long * numEdges) nogil
 
 
 # @brief Returns graph nodes.
@@ -4607,7 +4607,7 @@ cdef hipError_t hipGraphGetEdges(hipGraph_t graph,hipGraphNode_t* from_,hipGraph
 # obtained will be returned in numNodes.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphGetNodes(hipGraph_t graph,hipGraphNode_t* nodes,int * numNodes) nogil
+cdef hipError_t hipGraphGetNodes(hipGraph_t graph,hipGraphNode_t* nodes,unsigned long * numNodes) nogil
 
 
 # @brief Returns graph's root nodes.
@@ -4621,7 +4621,7 @@ cdef hipError_t hipGraphGetNodes(hipGraph_t graph,hipGraphNode_t* nodes,int * nu
 # and the number of nodes actually obtained will be returned in pNumRootNodes.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphGetRootNodes(hipGraph_t graph,hipGraphNode_t* pRootNodes,int * pNumRootNodes) nogil
+cdef hipError_t hipGraphGetRootNodes(hipGraph_t graph,hipGraphNode_t* pRootNodes,unsigned long * pNumRootNodes) nogil
 
 
 # @brief Returns a node's dependencies.
@@ -4635,7 +4635,7 @@ cdef hipError_t hipGraphGetRootNodes(hipGraph_t graph,hipGraphNode_t* pRootNodes
 # to NULL, and the number of nodes actually obtained will be returned in pNumDependencies.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphNodeGetDependencies(hipGraphNode_t node,hipGraphNode_t* pDependencies,int * pNumDependencies) nogil
+cdef hipError_t hipGraphNodeGetDependencies(hipGraphNode_t node,hipGraphNode_t* pDependencies,unsigned long * pNumDependencies) nogil
 
 
 # @brief Returns a node's dependent nodes.
@@ -4650,7 +4650,7 @@ cdef hipError_t hipGraphNodeGetDependencies(hipGraphNode_t node,hipGraphNode_t* 
 # in pNumDependentNodes.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphNodeGetDependentNodes(hipGraphNode_t node,hipGraphNode_t* pDependentNodes,int * pNumDependentNodes) nogil
+cdef hipError_t hipGraphNodeGetDependentNodes(hipGraphNode_t node,hipGraphNode_t* pDependentNodes,unsigned long * pNumDependentNodes) nogil
 
 
 # @brief Returns a node's type.
@@ -4699,7 +4699,7 @@ cdef hipError_t hipGraphNodeFindInClone(hipGraphNode_t* pNode,hipGraphNode_t ori
 # @returns #hipSuccess, #hipErrorOutOfMemory
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphInstantiate(hipGraphExec_t* pGraphExec,hipGraph_t graph,hipGraphNode_t* pErrorNode,char * pLogBuffer,int bufferSize) nogil
+cdef hipError_t hipGraphInstantiate(hipGraphExec_t* pGraphExec,hipGraph_t graph,hipGraphNode_t* pErrorNode,char * pLogBuffer,unsigned long bufferSize) nogil
 
 
 # @brief Creates an executable graph from a graph.
@@ -4759,7 +4759,7 @@ cdef hipError_t hipGraphExecUpdate(hipGraphExec_t hGraphExec,hipGraph_t hGraph,h
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddKernelNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipKernelNodeParams * pNodeParams) nogil
+cdef hipError_t hipGraphAddKernelNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipKernelNodeParams * pNodeParams) nogil
 
 
 # @brief Gets kernel node's parameters.
@@ -4799,7 +4799,7 @@ cdef hipError_t hipGraphExecKernelNodeSetParams(hipGraphExec_t hGraphExec,hipGra
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipMemcpy3DParms * pCopyParams) nogil
+cdef hipError_t hipGraphAddMemcpyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipMemcpy3DParms * pCopyParams) nogil
 
 
 # @brief Gets a memcpy node's parameters.
@@ -4862,7 +4862,7 @@ cdef hipError_t hipGraphExecMemcpyNodeSetParams(hipGraphExec_t hGraphExec,hipGra
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNode1D(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,void * dst,const void * src,int count,hipMemcpyKind kind) nogil
+cdef hipError_t hipGraphAddMemcpyNode1D(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,void * dst,const void * src,unsigned long count,hipMemcpyKind kind) nogil
 
 
 # @brief Sets a memcpy node's parameters to perform a 1-dimensional copy.
@@ -4874,7 +4874,7 @@ cdef hipError_t hipGraphAddMemcpyNode1D(hipGraphNode_t* pGraphNode,hipGraph_t gr
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphMemcpyNodeSetParams1D(hipGraphNode_t node,void * dst,const void * src,int count,hipMemcpyKind kind) nogil
+cdef hipError_t hipGraphMemcpyNodeSetParams1D(hipGraphNode_t node,void * dst,const void * src,unsigned long count,hipMemcpyKind kind) nogil
 
 
 # @brief Sets the parameters for a memcpy node in the given graphExec to perform a 1-dimensional
@@ -4888,7 +4888,7 @@ cdef hipError_t hipGraphMemcpyNodeSetParams1D(hipGraphNode_t node,void * dst,con
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphExecMemcpyNodeSetParams1D(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * src,int count,hipMemcpyKind kind) nogil
+cdef hipError_t hipGraphExecMemcpyNodeSetParams1D(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * src,unsigned long count,hipMemcpyKind kind) nogil
 
 
 # @brief Creates a memcpy node to copy from a symbol on the device and adds it to a graph.
@@ -4904,7 +4904,7 @@ cdef hipError_t hipGraphExecMemcpyNodeSetParams1D(hipGraphExec_t hGraphExec,hipG
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNodeFromSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,void * dst,const void * symbol,int count,int offset,hipMemcpyKind kind) nogil
+cdef hipError_t hipGraphAddMemcpyNodeFromSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,void * dst,const void * symbol,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil
 
 
 # @brief Sets a memcpy node's parameters to copy from a symbol on the device.
@@ -4917,7 +4917,7 @@ cdef hipError_t hipGraphAddMemcpyNodeFromSymbol(hipGraphNode_t* pGraphNode,hipGr
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphMemcpyNodeSetParamsFromSymbol(hipGraphNode_t node,void * dst,const void * symbol,int count,int offset,hipMemcpyKind kind) nogil
+cdef hipError_t hipGraphMemcpyNodeSetParamsFromSymbol(hipGraphNode_t node,void * dst,const void * symbol,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil
 
 
 # @brief Sets the parameters for a memcpy node in the given graphExec to copy from a symbol on the
@@ -4932,7 +4932,7 @@ cdef hipError_t hipGraphMemcpyNodeSetParamsFromSymbol(hipGraphNode_t node,void *
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphExecMemcpyNodeSetParamsFromSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * symbol,int count,int offset,hipMemcpyKind kind) nogil
+cdef hipError_t hipGraphExecMemcpyNodeSetParamsFromSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * symbol,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil
 
 
 # @brief Creates a memcpy node to copy to a symbol on the device and adds it to a graph.
@@ -4948,7 +4948,7 @@ cdef hipError_t hipGraphExecMemcpyNodeSetParamsFromSymbol(hipGraphExec_t hGraphE
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNodeToSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,const void * symbol,const void * src,int count,int offset,hipMemcpyKind kind) nogil
+cdef hipError_t hipGraphAddMemcpyNodeToSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,const void * symbol,const void * src,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil
 
 
 # @brief Sets a memcpy node's parameters to copy to a symbol on the device.
@@ -4961,7 +4961,7 @@ cdef hipError_t hipGraphAddMemcpyNodeToSymbol(hipGraphNode_t* pGraphNode,hipGrap
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphMemcpyNodeSetParamsToSymbol(hipGraphNode_t node,const void * symbol,const void * src,int count,int offset,hipMemcpyKind kind) nogil
+cdef hipError_t hipGraphMemcpyNodeSetParamsToSymbol(hipGraphNode_t node,const void * symbol,const void * src,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil
 
 
 # @brief Sets the parameters for a memcpy node in the given graphExec to copy to a symbol on the
@@ -4976,7 +4976,7 @@ cdef hipError_t hipGraphMemcpyNodeSetParamsToSymbol(hipGraphNode_t node,const vo
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphExecMemcpyNodeSetParamsToSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,const void * symbol,const void * src,int count,int offset,hipMemcpyKind kind) nogil
+cdef hipError_t hipGraphExecMemcpyNodeSetParamsToSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,const void * symbol,const void * src,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil
 
 
 # @brief Creates a memset node and adds it to a graph.
@@ -4988,7 +4988,7 @@ cdef hipError_t hipGraphExecMemcpyNodeSetParamsToSymbol(hipGraphExec_t hGraphExe
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemsetNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipMemsetParams * pMemsetParams) nogil
+cdef hipError_t hipGraphAddMemsetNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipMemsetParams * pMemsetParams) nogil
 
 
 # @brief Gets a memset node's parameters.
@@ -5028,7 +5028,7 @@ cdef hipError_t hipGraphExecMemsetNodeSetParams(hipGraphExec_t hGraphExec,hipGra
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddHostNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipHostNodeParams * pNodeParams) nogil
+cdef hipError_t hipGraphAddHostNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipHostNodeParams * pNodeParams) nogil
 
 
 # @brief Returns a host node's parameters.
@@ -5068,7 +5068,7 @@ cdef hipError_t hipGraphExecHostNodeSetParams(hipGraphExec_t hGraphExec,hipGraph
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddChildGraphNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipGraph_t childGraph) nogil
+cdef hipError_t hipGraphAddChildGraphNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipGraph_t childGraph) nogil
 
 
 # @brief Gets a handle to the embedded graph of a child graph node.
@@ -5098,7 +5098,7 @@ cdef hipError_t hipGraphExecChildGraphNodeSetParams(hipGraphExec_t hGraphExec,hi
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddEmptyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies) nogil
+cdef hipError_t hipGraphAddEmptyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies) nogil
 
 
 # @brief Creates an event record node and adds it to a graph.
@@ -5110,7 +5110,7 @@ cdef hipError_t hipGraphAddEmptyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddEventRecordNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipEvent_t event) nogil
+cdef hipError_t hipGraphAddEventRecordNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipEvent_t event) nogil
 
 
 # @brief Returns the event associated with an event record node.
@@ -5150,7 +5150,7 @@ cdef hipError_t hipGraphExecEventRecordNodeSetEvent(hipGraphExec_t hGraphExec,hi
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddEventWaitNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipEvent_t event) nogil
+cdef hipError_t hipGraphAddEventWaitNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipEvent_t event) nogil
 
 
 # @brief Returns the event associated with an event wait node.
@@ -5265,7 +5265,7 @@ cdef hipError_t hipGraphReleaseUserObject(hipGraph_t graph,hipUserObject_t objec
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemAddressFree(void * devPtr,int size) nogil
+cdef hipError_t hipMemAddressFree(void * devPtr,unsigned long size) nogil
 
 
 # @brief Reserves an address range
@@ -5277,7 +5277,7 @@ cdef hipError_t hipMemAddressFree(void * devPtr,int size) nogil
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemAddressReserve(void ** ptr,int size,int alignment,void * addr,unsigned long long flags) nogil
+cdef hipError_t hipMemAddressReserve(void ** ptr,unsigned long size,unsigned long alignment,void * addr,unsigned long long flags) nogil
 
 
 # @brief Creates a memory allocation described by the properties and size
@@ -5288,7 +5288,7 @@ cdef hipError_t hipMemAddressReserve(void ** ptr,int size,int alignment,void * a
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemCreate(hipMemGenericAllocationHandle_t* handle,int size,hipMemAllocationProp * prop,unsigned long long flags) nogil
+cdef hipError_t hipMemCreate(hipMemGenericAllocationHandle_t* handle,unsigned long size,hipMemAllocationProp * prop,unsigned long long flags) nogil
 
 
 # @brief Exports an allocation to a requested shareable handle type.
@@ -5319,7 +5319,7 @@ cdef hipError_t hipMemGetAccess(unsigned long long * flags,hipMemLocation * loca
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemGetAllocationGranularity(int * granularity,hipMemAllocationProp * prop,hipMemAllocationGranularity_flags option) nogil
+cdef hipError_t hipMemGetAllocationGranularity(unsigned long * granularity,hipMemAllocationProp * prop,hipMemAllocationGranularity_flags option) nogil
 
 
 # @brief Retrieve the property structure of the given handle.
@@ -5350,7 +5350,7 @@ cdef hipError_t hipMemImportFromShareableHandle(hipMemGenericAllocationHandle_t*
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemMap(void * ptr,int size,int offset,hipMemGenericAllocationHandle_t handle,unsigned long long flags) nogil
+cdef hipError_t hipMemMap(void * ptr,unsigned long size,unsigned long offset,hipMemGenericAllocationHandle_t handle,unsigned long long flags) nogil
 
 
 # @brief Maps or unmaps subregions of sparse HIP arrays and sparse HIP mipmapped arrays.
@@ -5388,7 +5388,7 @@ cdef hipError_t hipMemRetainAllocationHandle(hipMemGenericAllocationHandle_t* ha
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemSetAccess(void * ptr,int size,hipMemAccessDesc * desc,int count) nogil
+cdef hipError_t hipMemSetAccess(void * ptr,unsigned long size,hipMemAccessDesc * desc,unsigned long count) nogil
 
 
 # @brief Unmap memory allocation of a given address range.
@@ -5397,7 +5397,7 @@ cdef hipError_t hipMemSetAccess(void * ptr,int size,hipMemAccessDesc * desc,int 
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemUnmap(void * ptr,int size) nogil
+cdef hipError_t hipMemUnmap(void * ptr,unsigned long size) nogil
 
 
 cdef extern from "hip/hip_runtime_api.h":
@@ -5411,11 +5411,11 @@ cdef hipError_t hipGLGetDevices(unsigned int * pHipDeviceCount,int * pHipDevices
 
 
 
-cdef hipError_t hipGraphicsGLRegisterBuffer(_hipGraphicsResource ** resource,GLuint buffer,unsigned int flags) nogil
+cdef hipError_t hipGraphicsGLRegisterBuffer(_hipGraphicsResource ** resource,unsigned int buffer,unsigned int flags) nogil
 
 
 
-cdef hipError_t hipGraphicsGLRegisterImage(_hipGraphicsResource ** resource,GLuint image,GLenum target,unsigned int flags) nogil
+cdef hipError_t hipGraphicsGLRegisterImage(_hipGraphicsResource ** resource,unsigned int image,unsigned int target,unsigned int flags) nogil
 
 
 
@@ -5427,7 +5427,7 @@ cdef hipError_t hipGraphicsSubResourceGetMappedArray(hipArray_t* array,hipGraphi
 
 
 
-cdef hipError_t hipGraphicsResourceGetMappedPointer(void ** devPtr,int * size,hipGraphicsResource_t resource) nogil
+cdef hipError_t hipGraphicsResourceGetMappedPointer(void ** devPtr,unsigned long * size,hipGraphicsResource_t resource) nogil
 
 
 
@@ -5439,23 +5439,23 @@ cdef hipError_t hipGraphicsUnregisterResource(hipGraphicsResource_t resource) no
 
 
 
-cdef hipError_t hipMemcpy_spt(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpy_spt(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind) nogil
 
 
 
-cdef hipError_t hipMemcpyToSymbol_spt(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpyToSymbol_spt(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil
 
 
 
-cdef hipError_t hipMemcpyFromSymbol_spt(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpyFromSymbol_spt(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil
 
 
 
-cdef hipError_t hipMemcpy2D_spt(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpy2D_spt(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil
 
 
 
-cdef hipError_t hipMemcpy2DFromArray_spt(void * dst,int dpitch,hipArray_const_t src,int wOffset,int hOffset,int width,int height,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpy2DFromArray_spt(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffset,unsigned long hOffset,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil
 
 
 
@@ -5463,19 +5463,19 @@ cdef hipError_t hipMemcpy3D_spt(hipMemcpy3DParms * p) nogil
 
 
 
-cdef hipError_t hipMemset_spt(void * dst,int value,int sizeBytes) nogil
+cdef hipError_t hipMemset_spt(void * dst,int value,unsigned long sizeBytes) nogil
 
 
 
-cdef hipError_t hipMemsetAsync_spt(void * dst,int value,int sizeBytes,hipStream_t stream) nogil
+cdef hipError_t hipMemsetAsync_spt(void * dst,int value,unsigned long sizeBytes,hipStream_t stream) nogil
 
 
 
-cdef hipError_t hipMemset2D_spt(void * dst,int pitch,int value,int width,int height) nogil
+cdef hipError_t hipMemset2D_spt(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height) nogil
 
 
 
-cdef hipError_t hipMemset2DAsync_spt(void * dst,int pitch,int value,int width,int height,hipStream_t stream) nogil
+cdef hipError_t hipMemset2DAsync_spt(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height,hipStream_t stream) nogil
 
 
 
@@ -5487,7 +5487,7 @@ cdef hipError_t hipMemset3D_spt(hipPitchedPtr pitchedDevPtr,int value,hipExtent 
 
 
 
-cdef hipError_t hipMemcpyAsync_spt(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyAsync_spt(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 
@@ -5495,31 +5495,31 @@ cdef hipError_t hipMemcpy3DAsync_spt(hipMemcpy3DParms * p,hipStream_t stream) no
 
 
 
-cdef hipError_t hipMemcpy2DAsync_spt(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpy2DAsync_spt(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 
-cdef hipError_t hipMemcpyFromSymbolAsync_spt(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyFromSymbolAsync_spt(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 
-cdef hipError_t hipMemcpyToSymbolAsync_spt(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpyToSymbolAsync_spt(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 
-cdef hipError_t hipMemcpyFromArray_spt(void * dst,hipArray_const_t src,int wOffsetSrc,int hOffset,int count,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpyFromArray_spt(void * dst,hipArray_const_t src,unsigned long wOffsetSrc,unsigned long hOffset,unsigned long count,hipMemcpyKind kind) nogil
 
 
 
-cdef hipError_t hipMemcpy2DToArray_spt(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil
+cdef hipError_t hipMemcpy2DToArray_spt(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil
 
 
 
-cdef hipError_t hipMemcpy2DFromArrayAsync_spt(void * dst,int dpitch,hipArray_const_t src,int wOffsetSrc,int hOffsetSrc,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpy2DFromArrayAsync_spt(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffsetSrc,unsigned long hOffsetSrc,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 
-cdef hipError_t hipMemcpy2DToArrayAsync_spt(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil
+cdef hipError_t hipMemcpy2DToArrayAsync_spt(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil
 
 
 
@@ -5551,11 +5551,11 @@ cdef hipError_t hipEventRecord_spt(hipEvent_t event,hipStream_t stream) nogil
 
 
 
-cdef hipError_t hipLaunchCooperativeKernel_spt(const void * f,dim3 gridDim,dim3 blockDim,void ** kernelParams,uint32_t sharedMemBytes,hipStream_t hStream) nogil
+cdef hipError_t hipLaunchCooperativeKernel_spt(const void * f,dim3 gridDim,dim3 blockDim,void ** kernelParams,unsigned int sharedMemBytes,hipStream_t hStream) nogil
 
 
 
-cdef hipError_t hipLaunchKernel_spt(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,int sharedMemBytes,hipStream_t stream) nogil
+cdef hipError_t hipLaunchKernel_spt(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,unsigned long sharedMemBytes,hipStream_t stream) nogil
 
 
 
@@ -5579,7 +5579,7 @@ cdef hipError_t hipStreamGetCaptureInfo_spt(hipStream_t stream,hipStreamCaptureS
 
 
 
-cdef hipError_t hipStreamGetCaptureInfo_v2_spt(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,int * numDependencies_out) nogil
+cdef hipError_t hipStreamGetCaptureInfo_v2_spt(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,unsigned long * numDependencies_out) nogil
 
 
 

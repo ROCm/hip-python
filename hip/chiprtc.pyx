@@ -1,6 +1,4 @@
 # AMD_COPYRIGHT
-from libc.stdint cimport *
-
 cimport hip._util.posixloader as loader
 cdef void* _lib_handle = NULL
 
@@ -137,10 +135,10 @@ cdef void* _hiprtcGetProgramLogSize__funptr = NULL
 # @param [out] logSizeRet  size of generated log.
 # @return HIPRTC_SUCCESS
 # @see hiprtcResult
-cdef hiprtcResult hiprtcGetProgramLogSize(hiprtcProgram prog,int * logSizeRet) nogil:
+cdef hiprtcResult hiprtcGetProgramLogSize(hiprtcProgram prog,unsigned long * logSizeRet) nogil:
     global _hiprtcGetProgramLogSize__funptr
     __init_symbol(&_hiprtcGetProgramLogSize__funptr,"hiprtcGetProgramLogSize")
-    return (<hiprtcResult (*)(hiprtcProgram,int *) nogil> _hiprtcGetProgramLogSize__funptr)(prog,logSizeRet)
+    return (<hiprtcResult (*)(hiprtcProgram,unsigned long *) nogil> _hiprtcGetProgramLogSize__funptr)(prog,logSizeRet)
 
 
 cdef void* _hiprtcGetCode__funptr = NULL
@@ -161,10 +159,10 @@ cdef void* _hiprtcGetCodeSize__funptr = NULL
 # @param [out] code  the size of binary.
 # @return HIPRTC_SUCCESS
 # @see hiprtcResult
-cdef hiprtcResult hiprtcGetCodeSize(hiprtcProgram prog,int * codeSizeRet) nogil:
+cdef hiprtcResult hiprtcGetCodeSize(hiprtcProgram prog,unsigned long * codeSizeRet) nogil:
     global _hiprtcGetCodeSize__funptr
     __init_symbol(&_hiprtcGetCodeSize__funptr,"hiprtcGetCodeSize")
-    return (<hiprtcResult (*)(hiprtcProgram,int *) nogil> _hiprtcGetCodeSize__funptr)(prog,codeSizeRet)
+    return (<hiprtcResult (*)(hiprtcProgram,unsigned long *) nogil> _hiprtcGetCodeSize__funptr)(prog,codeSizeRet)
 
 
 cdef void* _hiprtcGetBitcode__funptr = NULL
@@ -185,10 +183,10 @@ cdef void* _hiprtcGetBitcodeSize__funptr = NULL
 # @param [out] code  the size of bitcode.
 # @return HIPRTC_SUCCESS
 # @see hiprtcResult
-cdef hiprtcResult hiprtcGetBitcodeSize(hiprtcProgram prog,int * bitcode_size) nogil:
+cdef hiprtcResult hiprtcGetBitcodeSize(hiprtcProgram prog,unsigned long * bitcode_size) nogil:
     global _hiprtcGetBitcodeSize__funptr
     __init_symbol(&_hiprtcGetBitcodeSize__funptr,"hiprtcGetBitcodeSize")
-    return (<hiprtcResult (*)(hiprtcProgram,int *) nogil> _hiprtcGetBitcodeSize__funptr)(prog,bitcode_size)
+    return (<hiprtcResult (*)(hiprtcProgram,unsigned long *) nogil> _hiprtcGetBitcodeSize__funptr)(prog,bitcode_size)
 
 
 cdef void* _hiprtcLinkCreate__funptr = NULL
@@ -227,10 +225,10 @@ cdef void* _hiprtcLinkAddData__funptr = NULL
 # If adding the file fails, it will
 # @return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
 # @see hiprtcResult
-cdef hiprtcResult hiprtcLinkAddData(hiprtcLinkState hip_link_state,hiprtcJITInputType input_type,void * image,int image_size,const char * name,unsigned int num_options,hiprtcJIT_option * options_ptr,void ** option_values) nogil:
+cdef hiprtcResult hiprtcLinkAddData(hiprtcLinkState hip_link_state,hiprtcJITInputType input_type,void * image,unsigned long image_size,const char * name,unsigned int num_options,hiprtcJIT_option * options_ptr,void ** option_values) nogil:
     global _hiprtcLinkAddData__funptr
     __init_symbol(&_hiprtcLinkAddData__funptr,"hiprtcLinkAddData")
-    return (<hiprtcResult (*)(hiprtcLinkState,hiprtcJITInputType,void *,int,const char *,unsigned int,hiprtcJIT_option *,void **) nogil> _hiprtcLinkAddData__funptr)(hip_link_state,input_type,image,image_size,name,num_options,options_ptr,option_values)
+    return (<hiprtcResult (*)(hiprtcLinkState,hiprtcJITInputType,void *,unsigned long,const char *,unsigned int,hiprtcJIT_option *,void **) nogil> _hiprtcLinkAddData__funptr)(hip_link_state,input_type,image,image_size,name,num_options,options_ptr,option_values)
 
 
 cdef void* _hiprtcLinkComplete__funptr = NULL
@@ -241,10 +239,10 @@ cdef void* _hiprtcLinkComplete__funptr = NULL
 # If adding the data fails, it will
 # @return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
 # @see hiprtcResult
-cdef hiprtcResult hiprtcLinkComplete(hiprtcLinkState hip_link_state,void ** bin_out,int * size_out) nogil:
+cdef hiprtcResult hiprtcLinkComplete(hiprtcLinkState hip_link_state,void ** bin_out,unsigned long * size_out) nogil:
     global _hiprtcLinkComplete__funptr
     __init_symbol(&_hiprtcLinkComplete__funptr,"hiprtcLinkComplete")
-    return (<hiprtcResult (*)(hiprtcLinkState,void **,int *) nogil> _hiprtcLinkComplete__funptr)(hip_link_state,bin_out,size_out)
+    return (<hiprtcResult (*)(hiprtcLinkState,void **,unsigned long *) nogil> _hiprtcLinkComplete__funptr)(hip_link_state,bin_out,size_out)
 
 
 cdef void* _hiprtcLinkDestroy__funptr = NULL
