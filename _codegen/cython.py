@@ -100,6 +100,7 @@ cdef class {{name}}:
 
 wrapper_class_impl_base_template = """
 {{default cptr_type = cname + "*"}}
+{{default is_funptr = False}}
 {{default has_new = True}}
 {{default has_from_pyobj = True}}
 cdef class {{name}}:
@@ -155,6 +156,10 @@ cdef class {{name}}:
             wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+        {{if is_funptr}}
+        elif str(type(pyobj)).startswith("<class 'ctypes.CFUNCTYPE.") and str(type(pyobj)).endswith(".CFunctionType'>" ):
+            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(ctypes.addressof(pyobj))
+        {{else}}
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -170,6 +175,7 @@ cdef class {{name}}:
                 raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
             wrapper._py_buffer_acquired = True
             wrapper._ptr = <{{cptr_type}}>wrapper._py_buffer.buf
+        {{endif}}
         else:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper
@@ -539,9 +545,26 @@ class EnumMixin(CythonMixin):
             return "\n".join(self._render_python_enums(cprefix))
         else:
             name = self._cython_and_c_name(self.global_name(self.sep))
-            return f"class {name}(enum.IntEnum):\n" + textwrap.indent(
+            result = f"class {name}(enum.IntEnum):\n" + textwrap.indent(
                 "\n".join(self._render_python_enums(cprefix)), indent
             )
+            # add methods
+            enum_type = self.cursor.enum_type.get_canonical().spelling
+            ctypes_map = {
+              "short": "ctypes.c_short",
+              "unsigned short": "ctypes.c_ushort",
+              "int": "ctypes.c_int",
+              "unsigned int": "ctypes.c_uint",
+            }
+            result += textwrap.indent(textwrap.dedent(f"""\
+                
+                @staticmethod
+                def ctypes_type():
+                    \"""The type of the enum constants as ctypes type.\"""
+                    return {ctypes_map[enum_type]} 
+                """
+            ), indent)
+            return result
 
 
 class TypedefMixin(CythonMixin, Typed):
@@ -627,6 +650,7 @@ class FunctionPointerMixin(CythonMixin):
             name=name,
             cname=cname,
             cptr_type=cname, # type is already a pointer
+            is_funptr=True,
             has_new=False,
         )
 

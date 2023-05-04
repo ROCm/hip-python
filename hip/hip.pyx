@@ -1174,6 +1174,11 @@ class hipMemoryType(enum.IntEnum):
     hipMemoryTypeArray = chip.hipMemoryTypeArray
     hipMemoryTypeUnified = chip.hipMemoryTypeUnified
     hipMemoryTypeManaged = chip.hipMemoryTypeManaged
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipPointerAttribute_t:
     # members declared in pxd file
@@ -1422,6 +1427,11 @@ class hipError_t(enum.IntEnum):
     hipErrorRuntimeMemory = chip.hipErrorRuntimeMemory
     hipErrorRuntimeOther = chip.hipErrorRuntimeOther
     hipErrorTbd = chip.hipErrorTbd
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipDeviceAttribute_t(enum.IntEnum):
     hipDeviceAttributeCudaCompatibleBegin = chip.hipDeviceAttributeCudaCompatibleBegin
@@ -1537,18 +1547,33 @@ class hipDeviceAttribute_t(enum.IntEnum):
     hipDeviceAttributeWallClockRate = chip.hipDeviceAttributeWallClockRate
     hipDeviceAttributeAmdSpecificEnd = chip.hipDeviceAttributeAmdSpecificEnd
     hipDeviceAttributeVendorSpecificBegin = chip.hipDeviceAttributeVendorSpecificBegin
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipComputeMode(enum.IntEnum):
     hipComputeModeDefault = chip.hipComputeModeDefault
     hipComputeModeExclusive = chip.hipComputeModeExclusive
     hipComputeModeProhibited = chip.hipComputeModeProhibited
     hipComputeModeExclusiveProcess = chip.hipComputeModeExclusiveProcess
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipChannelFormatKind(enum.IntEnum):
     hipChannelFormatKindSigned = chip.hipChannelFormatKindSigned
     hipChannelFormatKindUnsigned = chip.hipChannelFormatKindUnsigned
     hipChannelFormatKindFloat = chip.hipChannelFormatKindFloat
     hipChannelFormatKindNone = chip.hipChannelFormatKindNone
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipChannelFormatDesc:
     # members declared in pxd file
@@ -1741,6 +1766,11 @@ class hipArray_Format(enum.IntEnum):
     HIP_AD_FORMAT_SIGNED_INT32 = chip.HIP_AD_FORMAT_SIGNED_INT32
     HIP_AD_FORMAT_HALF = chip.HIP_AD_FORMAT_HALF
     HIP_AD_FORMAT_FLOAT = chip.HIP_AD_FORMAT_FLOAT
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class HIP_ARRAY_DESCRIPTOR:
     # members declared in pxd file
@@ -2837,22 +2867,42 @@ class hipResourceType(enum.IntEnum):
     hipResourceTypeMipmappedArray = chip.hipResourceTypeMipmappedArray
     hipResourceTypeLinear = chip.hipResourceTypeLinear
     hipResourceTypePitch2D = chip.hipResourceTypePitch2D
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class HIPresourcetype_enum(enum.IntEnum):
     HIP_RESOURCE_TYPE_ARRAY = chip.HIP_RESOURCE_TYPE_ARRAY
     HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY = chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
     HIP_RESOURCE_TYPE_LINEAR = chip.HIP_RESOURCE_TYPE_LINEAR
     HIP_RESOURCE_TYPE_PITCH2D = chip.HIP_RESOURCE_TYPE_PITCH2D
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class HIPaddress_mode_enum(enum.IntEnum):
     HIP_TR_ADDRESS_MODE_WRAP = chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_CLAMP = chip.HIP_TR_ADDRESS_MODE_CLAMP
     HIP_TR_ADDRESS_MODE_MIRROR = chip.HIP_TR_ADDRESS_MODE_MIRROR
     HIP_TR_ADDRESS_MODE_BORDER = chip.HIP_TR_ADDRESS_MODE_BORDER
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class HIPfilter_mode_enum(enum.IntEnum):
     HIP_TR_FILTER_MODE_POINT = chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = chip.HIP_TR_FILTER_MODE_LINEAR
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class HIP_TEXTURE_DESC_st:
     # members declared in pxd file
@@ -3119,6 +3169,11 @@ class hipResourceViewFormat(enum.IntEnum):
     hipResViewFormatUnsignedBlockCompressed6H = chip.hipResViewFormatUnsignedBlockCompressed6H
     hipResViewFormatSignedBlockCompressed6H = chip.hipResViewFormatSignedBlockCompressed6H
     hipResViewFormatUnsignedBlockCompressed7 = chip.hipResViewFormatUnsignedBlockCompressed7
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class HIPresourceViewFormat_enum(enum.IntEnum):
     HIP_RES_VIEW_FORMAT_NONE = chip.HIP_RES_VIEW_FORMAT_NONE
@@ -3156,6 +3211,11 @@ class HIPresourceViewFormat_enum(enum.IntEnum):
     HIP_RES_VIEW_FORMAT_UNSIGNED_BC6H = chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC6H
     HIP_RES_VIEW_FORMAT_SIGNED_BC6H = chip.HIP_RES_VIEW_FORMAT_SIGNED_BC6H
     HIP_RES_VIEW_FORMAT_UNSIGNED_BC7 = chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipResourceDesc_union_0_struct_0:
     # members declared in pxd file
@@ -5366,6 +5426,11 @@ class hipMemcpyKind(enum.IntEnum):
     hipMemcpyDeviceToHost = chip.hipMemcpyDeviceToHost
     hipMemcpyDeviceToDevice = chip.hipMemcpyDeviceToDevice
     hipMemcpyDefault = chip.hipMemcpyDefault
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipPitchedPtr:
     # members declared in pxd file
@@ -6348,6 +6413,11 @@ class hipFunction_attribute(enum.IntEnum):
     HIP_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES = chip.HIP_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES
     HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT = chip.HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
     HIP_FUNC_ATTRIBUTE_MAX = chip.HIP_FUNC_ATTRIBUTE_MAX
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipPointer_attribute(enum.IntEnum):
     HIP_POINTER_ATTRIBUTE_CONTEXT = chip.HIP_POINTER_ATTRIBUTE_CONTEXT
@@ -6367,6 +6437,11 @@ class hipPointer_attribute(enum.IntEnum):
     HIP_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE = chip.HIP_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE
     HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS = chip.HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS
     HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class uchar1:
     # members declared in pxd file
@@ -10451,14 +10526,29 @@ class hipTextureAddressMode(enum.IntEnum):
     hipAddressModeClamp = chip.hipAddressModeClamp
     hipAddressModeMirror = chip.hipAddressModeMirror
     hipAddressModeBorder = chip.hipAddressModeBorder
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipTextureFilterMode(enum.IntEnum):
     hipFilterModePoint = chip.hipFilterModePoint
     hipFilterModeLinear = chip.hipFilterModeLinear
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipTextureReadMode(enum.IntEnum):
     hipReadModeElementType = chip.hipReadModeElementType
     hipReadModeNormalizedFloat = chip.hipReadModeNormalizedFloat
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class textureReference:
     # members declared in pxd file
@@ -11190,6 +11280,11 @@ class hipSurfaceBoundaryMode(enum.IntEnum):
     hipBoundaryModeZero = chip.hipBoundaryModeZero
     hipBoundaryModeTrap = chip.hipBoundaryModeTrap
     hipBoundaryModeClamp = chip.hipBoundaryModeClamp
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class ihipCtx_t:
     # members declared in pxd file
@@ -11281,6 +11376,11 @@ class hipDeviceP2PAttr(enum.IntEnum):
     hipDevP2PAttrAccessSupported = chip.hipDevP2PAttrAccessSupported
     hipDevP2PAttrNativeAtomicSupported = chip.hipDevP2PAttrNativeAtomicSupported
     hipDevP2PAttrHipArrayAccessSupported = chip.hipDevP2PAttrHipArrayAccessSupported
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class ihipStream_t:
     # members declared in pxd file
@@ -12198,6 +12298,11 @@ class hipLimit_t(enum.IntEnum):
     hipLimitPrintfFifoSize = chip.hipLimitPrintfFifoSize
     hipLimitMallocHeapSize = chip.hipLimitMallocHeapSize
     hipLimitRange = chip.hipLimitRange
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipMemoryAdvise(enum.IntEnum):
     hipMemAdviseSetReadMostly = chip.hipMemAdviseSetReadMostly
@@ -12208,11 +12313,21 @@ class hipMemoryAdvise(enum.IntEnum):
     hipMemAdviseUnsetAccessedBy = chip.hipMemAdviseUnsetAccessedBy
     hipMemAdviseSetCoarseGrain = chip.hipMemAdviseSetCoarseGrain
     hipMemAdviseUnsetCoarseGrain = chip.hipMemAdviseUnsetCoarseGrain
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipMemRangeCoherencyMode(enum.IntEnum):
     hipMemRangeCoherencyModeFineGrain = chip.hipMemRangeCoherencyModeFineGrain
     hipMemRangeCoherencyModeCoarseGrain = chip.hipMemRangeCoherencyModeCoarseGrain
     hipMemRangeCoherencyModeIndeterminate = chip.hipMemRangeCoherencyModeIndeterminate
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipMemRangeAttribute(enum.IntEnum):
     hipMemRangeAttributeReadMostly = chip.hipMemRangeAttributeReadMostly
@@ -12220,6 +12335,11 @@ class hipMemRangeAttribute(enum.IntEnum):
     hipMemRangeAttributeAccessedBy = chip.hipMemRangeAttributeAccessedBy
     hipMemRangeAttributeLastPrefetchLocation = chip.hipMemRangeAttributeLastPrefetchLocation
     hipMemRangeAttributeCoherencyMode = chip.hipMemRangeAttributeCoherencyMode
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipMemPoolAttr(enum.IntEnum):
     hipMemPoolReuseFollowEventDependencies = chip.hipMemPoolReuseFollowEventDependencies
@@ -12230,10 +12350,20 @@ class hipMemPoolAttr(enum.IntEnum):
     hipMemPoolAttrReservedMemHigh = chip.hipMemPoolAttrReservedMemHigh
     hipMemPoolAttrUsedMemCurrent = chip.hipMemPoolAttrUsedMemCurrent
     hipMemPoolAttrUsedMemHigh = chip.hipMemPoolAttrUsedMemHigh
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipMemLocationType(enum.IntEnum):
     hipMemLocationTypeInvalid = chip.hipMemLocationTypeInvalid
     hipMemLocationTypeDevice = chip.hipMemLocationTypeDevice
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipMemLocation:
     # members declared in pxd file
@@ -12379,6 +12509,11 @@ class hipMemAccessFlags(enum.IntEnum):
     hipMemAccessFlagsProtNone = chip.hipMemAccessFlagsProtNone
     hipMemAccessFlagsProtRead = chip.hipMemAccessFlagsProtRead
     hipMemAccessFlagsProtReadWrite = chip.hipMemAccessFlagsProtReadWrite
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipMemAccessDesc:
     # members declared in pxd file
@@ -12517,12 +12652,22 @@ class hipMemAllocationType(enum.IntEnum):
     hipMemAllocationTypeInvalid = chip.hipMemAllocationTypeInvalid
     hipMemAllocationTypePinned = chip.hipMemAllocationTypePinned
     hipMemAllocationTypeMax = chip.hipMemAllocationTypeMax
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipMemAllocationHandleType(enum.IntEnum):
     hipMemHandleTypeNone = chip.hipMemHandleTypeNone
     hipMemHandleTypePosixFileDescriptor = chip.hipMemHandleTypePosixFileDescriptor
     hipMemHandleTypeWin32 = chip.hipMemHandleTypeWin32
     hipMemHandleTypeWin32Kmt = chip.hipMemHandleTypeWin32Kmt
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipMemPoolProps:
     # members declared in pxd file
@@ -12818,22 +12963,42 @@ class hipJitOption(enum.IntEnum):
     hipJitOptionSm3xOpt = chip.hipJitOptionSm3xOpt
     hipJitOptionFastCompile = chip.hipJitOptionFastCompile
     hipJitOptionNumOptions = chip.hipJitOptionNumOptions
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipFuncAttribute(enum.IntEnum):
     hipFuncAttributeMaxDynamicSharedMemorySize = chip.hipFuncAttributeMaxDynamicSharedMemorySize
     hipFuncAttributePreferredSharedMemoryCarveout = chip.hipFuncAttributePreferredSharedMemoryCarveout
     hipFuncAttributeMax = chip.hipFuncAttributeMax
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipFuncCache_t(enum.IntEnum):
     hipFuncCachePreferNone = chip.hipFuncCachePreferNone
     hipFuncCachePreferShared = chip.hipFuncCachePreferShared
     hipFuncCachePreferL1 = chip.hipFuncCachePreferL1
     hipFuncCachePreferEqual = chip.hipFuncCachePreferEqual
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipSharedMemConfig(enum.IntEnum):
     hipSharedMemBankSizeDefault = chip.hipSharedMemBankSizeDefault
     hipSharedMemBankSizeFourByte = chip.hipSharedMemBankSizeFourByte
     hipSharedMemBankSizeEightByte = chip.hipSharedMemBankSizeEightByte
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class dim3:
     # members declared in pxd file
@@ -13133,6 +13298,11 @@ class hipExternalMemoryHandleType_enum(enum.IntEnum):
     hipExternalMemoryHandleTypeD3D12Resource = chip.hipExternalMemoryHandleTypeD3D12Resource
     hipExternalMemoryHandleTypeD3D11Resource = chip.hipExternalMemoryHandleTypeD3D11Resource
     hipExternalMemoryHandleTypeD3D11ResourceKmt = chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     # members declared in pxd file
@@ -13693,6 +13863,11 @@ class hipExternalSemaphoreHandleType_enum(enum.IntEnum):
     hipExternalSemaphoreHandleTypeOpaqueWin32 = chip.hipExternalSemaphoreHandleTypeOpaqueWin32
     hipExternalSemaphoreHandleTypeOpaqueWin32Kmt = chip.hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
     hipExternalSemaphoreHandleTypeD3D12Fence = chip.hipExternalSemaphoreHandleTypeD3D12Fence
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     # members declared in pxd file
@@ -15138,6 +15313,11 @@ class hipGLDeviceList(enum.IntEnum):
     hipGLDeviceListAll = chip.hipGLDeviceListAll
     hipGLDeviceListCurrentFrame = chip.hipGLDeviceListCurrentFrame
     hipGLDeviceListNextFrame = chip.hipGLDeviceListNextFrame
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipGraphicsRegisterFlags(enum.IntEnum):
     hipGraphicsRegisterFlagsNone = chip.hipGraphicsRegisterFlagsNone
@@ -15145,6 +15325,11 @@ class hipGraphicsRegisterFlags(enum.IntEnum):
     hipGraphicsRegisterFlagsWriteDiscard = chip.hipGraphicsRegisterFlagsWriteDiscard
     hipGraphicsRegisterFlagsSurfaceLoadStore = chip.hipGraphicsRegisterFlagsSurfaceLoadStore
     hipGraphicsRegisterFlagsTextureGather = chip.hipGraphicsRegisterFlagsTextureGather
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class _hipGraphicsResource:
     # members declared in pxd file
@@ -15585,6 +15770,11 @@ class hipGraphNodeType(enum.IntEnum):
     hipGraphNodeTypeMemcpyFromSymbol = chip.hipGraphNodeTypeMemcpyFromSymbol
     hipGraphNodeTypeMemcpyToSymbol = chip.hipGraphNodeTypeMemcpyToSymbol
     hipGraphNodeTypeCount = chip.hipGraphNodeTypeCount
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipHostFn_t:
     # members declared in pxd file
@@ -15632,21 +15822,8 @@ cdef class hipHostFn_t:
             wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(pyobj.value)
-        elif cuda_array_interface != None:
-            if not "data" in cuda_array_interface:
-                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
-            ptr_as_int = cuda_array_interface["data"][0]
-            wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
-        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
-            err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
-                &wrapper._py_buffer, 
-                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
-            )
-            if err == -1:
-                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
-            wrapper._py_buffer_acquired = True
-            wrapper._ptr = <chip.hipHostFn_t>wrapper._py_buffer.buf
+        elif str(type(pyobj)).startswith("<class 'ctypes.CFUNCTYPE.") and str(type(pyobj)).endswith(".CFunctionType'>" ):
+            wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(ctypes.addressof(pyobj))
         else:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper
@@ -16100,11 +16277,21 @@ cdef class hipMemsetParams:
 class hipKernelNodeAttrID(enum.IntEnum):
     hipKernelNodeAttributeAccessPolicyWindow = chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = chip.hipKernelNodeAttributeCooperative
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipAccessProperty(enum.IntEnum):
     hipAccessPropertyNormal = chip.hipAccessPropertyNormal
     hipAccessPropertyStreaming = chip.hipAccessPropertyStreaming
     hipAccessPropertyPersisting = chip.hipAccessPropertyPersisting
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipAccessPolicyWindow:
     # members declared in pxd file
@@ -16416,35 +16603,75 @@ class hipGraphExecUpdateResult(enum.IntEnum):
     hipGraphExecUpdateErrorParametersChanged = chip.hipGraphExecUpdateErrorParametersChanged
     hipGraphExecUpdateErrorNotSupported = chip.hipGraphExecUpdateErrorNotSupported
     hipGraphExecUpdateErrorUnsupportedFunctionChange = chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipStreamCaptureMode(enum.IntEnum):
     hipStreamCaptureModeGlobal = chip.hipStreamCaptureModeGlobal
     hipStreamCaptureModeThreadLocal = chip.hipStreamCaptureModeThreadLocal
     hipStreamCaptureModeRelaxed = chip.hipStreamCaptureModeRelaxed
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipStreamCaptureStatus(enum.IntEnum):
     hipStreamCaptureStatusNone = chip.hipStreamCaptureStatusNone
     hipStreamCaptureStatusActive = chip.hipStreamCaptureStatusActive
     hipStreamCaptureStatusInvalidated = chip.hipStreamCaptureStatusInvalidated
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipStreamUpdateCaptureDependenciesFlags(enum.IntEnum):
     hipStreamAddCaptureDependencies = chip.hipStreamAddCaptureDependencies
     hipStreamSetCaptureDependencies = chip.hipStreamSetCaptureDependencies
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipGraphMemAttributeType(enum.IntEnum):
     hipGraphMemAttrUsedMemCurrent = chip.hipGraphMemAttrUsedMemCurrent
     hipGraphMemAttrUsedMemHigh = chip.hipGraphMemAttrUsedMemHigh
     hipGraphMemAttrReservedMemCurrent = chip.hipGraphMemAttrReservedMemCurrent
     hipGraphMemAttrReservedMemHigh = chip.hipGraphMemAttrReservedMemHigh
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipUserObjectFlags(enum.IntEnum):
     hipUserObjectNoDestructorSync = chip.hipUserObjectNoDestructorSync
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipUserObjectRetainFlags(enum.IntEnum):
     hipGraphUserObjectMove = chip.hipGraphUserObjectMove
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipGraphInstantiateFlags(enum.IntEnum):
     hipGraphInstantiateFlagAutoFreeOnLaunch = chip.hipGraphInstantiateFlagAutoFreeOnLaunch
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipMemAllocationProp_struct_0:
     # members declared in pxd file
@@ -16842,17 +17069,37 @@ hipMemGenericAllocationHandle_t = ihipMemGenericAllocationHandle
 class hipMemAllocationGranularity_flags(enum.IntEnum):
     hipMemAllocationGranularityMinimum = chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityRecommended = chip.hipMemAllocationGranularityRecommended
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipMemHandleType(enum.IntEnum):
     hipMemHandleTypeGeneric = chip.hipMemHandleTypeGeneric
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipMemOperationType(enum.IntEnum):
     hipMemOperationTypeMap = chip.hipMemOperationTypeMap
     hipMemOperationTypeUnmap = chip.hipMemOperationTypeUnmap
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipArraySparseSubresourceType(enum.IntEnum):
     hipArraySparseSubresourceTypeSparseLevel = chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeMiptail = chip.hipArraySparseSubresourceTypeMiptail
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class hipArrayMapInfo_union_0:
     # members declared in pxd file
@@ -18809,21 +19056,8 @@ cdef class hipStreamCallback_t:
             wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
             wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(pyobj.value)
-        elif cuda_array_interface != None:
-            if not "data" in cuda_array_interface:
-                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
-            ptr_as_int = cuda_array_interface["data"][0]
-            wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
-        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
-            err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
-                &wrapper._py_buffer, 
-                cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
-            )
-            if err == -1:
-                raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
-            wrapper._py_buffer_acquired = True
-            wrapper._ptr = <chip.hipStreamCallback_t>wrapper._py_buffer.buf
+        elif str(type(pyobj)).startswith("<class 'ctypes.CFUNCTYPE.") and str(type(pyobj)).endswith(".CFunctionType'>" ):
+            wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(ctypes.addressof(pyobj))
         else:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper

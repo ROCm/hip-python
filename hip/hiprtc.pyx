@@ -16,6 +16,11 @@ class hiprtcResult(enum.IntEnum):
     HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID = chiprtc.HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID
     HIPRTC_ERROR_INTERNAL_ERROR = chiprtc.HIPRTC_ERROR_INTERNAL_ERROR
     HIPRTC_ERROR_LINKING = chiprtc.HIPRTC_ERROR_LINKING
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hiprtcJIT_option(enum.IntEnum):
     HIPRTC_JIT_MAX_REGISTERS = chiprtc.HIPRTC_JIT_MAX_REGISTERS
@@ -44,6 +49,11 @@ class hiprtcJIT_option(enum.IntEnum):
     HIPRTC_JIT_PREC_SQRT = chiprtc.HIPRTC_JIT_PREC_SQRT
     HIPRTC_JIT_FMA = chiprtc.HIPRTC_JIT_FMA
     HIPRTC_JIT_NUM_OPTIONS = chiprtc.HIPRTC_JIT_NUM_OPTIONS
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hiprtcJITInputType(enum.IntEnum):
     HIPRTC_JIT_INPUT_CUBIN = chiprtc.HIPRTC_JIT_INPUT_CUBIN
@@ -57,6 +67,11 @@ class hiprtcJITInputType(enum.IntEnum):
     HIPRTC_JIT_INPUT_LLVM_BUNDLED_BITCODE = chiprtc.HIPRTC_JIT_INPUT_LLVM_BUNDLED_BITCODE
     HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE = chiprtc.HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE
     HIPRTC_JIT_NUM_INPUT_TYPES = chiprtc.HIPRTC_JIT_NUM_INPUT_TYPES
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 cdef class ihiprtcLinkState:
     # members declared in pxd file
