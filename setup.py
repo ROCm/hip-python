@@ -325,6 +325,8 @@ def generate_hip_package_files():
                 and not parm.is_pointer_to_char(degree=1)
             )
         ):
+            if (parm.parent.name, parm.name) == ("hipDeviceGetAttribute","pi"):
+                return PointerParamIntent.INOUT
             return PointerParamIntent.OUT
         if parm.is_pointer_to_void(degree=2):
             if parm.name in ["devPtr","ptr","dev_ptr","data"]:
