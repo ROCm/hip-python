@@ -17,7 +17,7 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.DataHandle):
         self._ptr = <void*>&self._config
         self._config[0] = <void*>hip.chip.HIP_LAUNCH_PARAM_BUFFER_POINTER
         self._config[2] = <void*>hip.chip.HIP_LAUNCH_PARAM_BUFFER_SIZE
-        self._config[3] = <void*>&self._offset
+        self._config[3] = <void*>&self._args_buffer_size
         self._config[4] = <void*>hip.chip.HIP_LAUNCH_PARAM_END
 
     @staticmethod
@@ -80,7 +80,7 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.DataHandle):
             self._config[1] = <void*>args
             
             # 3. Copy the data into the struct and calculate the offset
-            self._offset = 0
+            self._args_buffer_size = 0
             for entry in pyobj:
                 if isinstance(entry,ctypes_types):
                     ptr = cpython.long.PyLong_AsVoidPtr(ctypes.addressof(entry))
@@ -89,9 +89,9 @@ cdef class HipModuleLaunchKernel_extra(hip._util.types.DataHandle):
                     ptr = &hip._util.types.DataHandle(entry)._ptr # fails if cannot be converted to pointer
                     num_bytes = sizeof(void *)
                 # TODO it is not confirmed that this is the correct alignment algorithm!
-                self._offset = self._aligned_size(self._offset, min(num_bytes,MAX_ALIGN))
-                libc.string.memcpy(<void*>&args[self._offset], ptr, num_bytes)
-                self._offset += num_bytes # TODO: self._aligned_size(num_bytes) # must be 8-byte aligned
+                self._args_buffer_size = self._aligned_size(self._args_buffer_size, min(num_bytes,MAX_ALIGN))
+                libc.string.memcpy(<void*>&args[self._args_buffer_size], ptr, num_bytes)
+                self._args_buffer_size += num_bytes # TODO: self._aligned_size(num_bytes) # must be 8-byte aligned
         else:
             hip._util.types.DataHandle.init_from_pyobj(self,pyobj)
 
