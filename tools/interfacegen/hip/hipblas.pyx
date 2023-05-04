@@ -423,29 +423,59 @@ class hipblasStatus_t(enum.IntEnum):
     HIPBLAS_STATUS_HANDLE_IS_NULLPTR = chipblas.HIPBLAS_STATUS_HANDLE_IS_NULLPTR
     HIPBLAS_STATUS_INVALID_ENUM = chipblas.HIPBLAS_STATUS_INVALID_ENUM
     HIPBLAS_STATUS_UNKNOWN = chipblas.HIPBLAS_STATUS_UNKNOWN
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipblasOperation_t(enum.IntEnum):
     HIPBLAS_OP_N = chipblas.HIPBLAS_OP_N
     HIPBLAS_OP_T = chipblas.HIPBLAS_OP_T
     HIPBLAS_OP_C = chipblas.HIPBLAS_OP_C
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipblasPointerMode_t(enum.IntEnum):
     HIPBLAS_POINTER_MODE_HOST = chipblas.HIPBLAS_POINTER_MODE_HOST
     HIPBLAS_POINTER_MODE_DEVICE = chipblas.HIPBLAS_POINTER_MODE_DEVICE
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipblasFillMode_t(enum.IntEnum):
     HIPBLAS_FILL_MODE_UPPER = chipblas.HIPBLAS_FILL_MODE_UPPER
     HIPBLAS_FILL_MODE_LOWER = chipblas.HIPBLAS_FILL_MODE_LOWER
     HIPBLAS_FILL_MODE_FULL = chipblas.HIPBLAS_FILL_MODE_FULL
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipblasDiagType_t(enum.IntEnum):
     HIPBLAS_DIAG_NON_UNIT = chipblas.HIPBLAS_DIAG_NON_UNIT
     HIPBLAS_DIAG_UNIT = chipblas.HIPBLAS_DIAG_UNIT
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipblasSideMode_t(enum.IntEnum):
     HIPBLAS_SIDE_LEFT = chipblas.HIPBLAS_SIDE_LEFT
     HIPBLAS_SIDE_RIGHT = chipblas.HIPBLAS_SIDE_RIGHT
     HIPBLAS_SIDE_BOTH = chipblas.HIPBLAS_SIDE_BOTH
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipblasDatatype_t(enum.IntEnum):
     HIPBLAS_R_16F = chipblas.HIPBLAS_R_16F
@@ -464,18 +494,38 @@ class hipblasDatatype_t(enum.IntEnum):
     HIPBLAS_C_32U = chipblas.HIPBLAS_C_32U
     HIPBLAS_R_16B = chipblas.HIPBLAS_R_16B
     HIPBLAS_C_16B = chipblas.HIPBLAS_C_16B
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipblasGemmAlgo_t(enum.IntEnum):
     HIPBLAS_GEMM_DEFAULT = chipblas.HIPBLAS_GEMM_DEFAULT
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipblasAtomicsMode_t(enum.IntEnum):
     HIPBLAS_ATOMICS_NOT_ALLOWED = chipblas.HIPBLAS_ATOMICS_NOT_ALLOWED
     HIPBLAS_ATOMICS_ALLOWED = chipblas.HIPBLAS_ATOMICS_ALLOWED
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 class hipblasInt8Datatype_t(enum.IntEnum):
     HIPBLAS_INT8_DATATYPE_DEFAULT = chipblas.HIPBLAS_INT8_DATATYPE_DEFAULT
     HIPBLAS_INT8_DATATYPE_INT8 = chipblas.HIPBLAS_INT8_DATATYPE_INT8
     HIPBLAS_INT8_DATATYPE_PACK_INT8x4 = chipblas.HIPBLAS_INT8_DATATYPE_PACK_INT8x4
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
 
 @cython.embedsignature(True)
 def hipblasCreate():
