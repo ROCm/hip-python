@@ -57,3 +57,5 @@ hip_check(
 )
 
 hip_check(hip.hipModuleUnload(module))
+
+print("ok")
