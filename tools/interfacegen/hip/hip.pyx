@@ -18312,18 +18312,18 @@ def hipGetDeviceCount():
 
 
 @cython.embedsignature(True)
-def hipDeviceGetAttribute(object attr, int deviceId):
+def hipDeviceGetAttribute(object pi, object attr, int deviceId):
     """@brief Query for a specific device attribute.
     @param [out] pi pointer to value to return
     @param [in] attr attribute to query
     @param [in] deviceId which device to query for information
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
-    cdef int pi
     if not isinstance(attr,hipDeviceAttribute_t):
         raise TypeError("argument 'attr' must be of type 'hipDeviceAttribute_t'")
-    _hipDeviceGetAttribute__retval = hipError_t(chip.hipDeviceGetAttribute(&pi,attr.value,deviceId))    # fully specified
-    return (_hipDeviceGetAttribute__retval,pi)
+    _hipDeviceGetAttribute__retval = hipError_t(chip.hipDeviceGetAttribute(
+        <int *>hip._util.types.DataHandle.from_pyobj(pi)._ptr,attr.value,deviceId))    # fully specified
+    return (_hipDeviceGetAttribute__retval,)
 
 
 @cython.embedsignature(True)
