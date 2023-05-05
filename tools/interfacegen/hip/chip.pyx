@@ -901,10 +901,10 @@ cdef void* _hipStreamAddCallback__funptr = NULL
 # @return #hipSuccess, #hipErrorInvalidHandle, #hipErrorNotSupported
 # @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamQuery, hipStreamSynchronize,
 # hipStreamWaitEvent, hipStreamDestroy, hipStreamCreateWithPriority
-cdef hipError_t hipStreamAddCallback(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags) nogil:
+cdef hipError_t hipStreamAddCallback(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags):
     global _hipStreamAddCallback__funptr
     __init_symbol(&_hipStreamAddCallback__funptr,"hipStreamAddCallback")
-    return (<hipError_t (*)(hipStream_t,hipStreamCallback_t,void *,unsigned int) nogil> _hipStreamAddCallback__funptr)(stream,callback,userData,flags)
+    return (<hipError_t (*)(hipStream_t,hipStreamCallback_t,void *,unsigned int)> _hipStreamAddCallback__funptr)(stream,callback,userData,flags)
 
 
 cdef void* _hipStreamWaitValue32__funptr = NULL
@@ -3559,10 +3559,10 @@ cdef void* _hipLaunchHostFunc__funptr = NULL
 # #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipLaunchHostFunc(hipStream_t stream,hipHostFn_t fn,void * userData) nogil:
+cdef hipError_t hipLaunchHostFunc(hipStream_t stream,hipHostFn_t fn,void * userData):
     global _hipLaunchHostFunc__funptr
     __init_symbol(&_hipLaunchHostFunc__funptr,"hipLaunchHostFunc")
-    return (<hipError_t (*)(hipStream_t,hipHostFn_t,void *) nogil> _hipLaunchHostFunc__funptr)(stream,fn,userData)
+    return (<hipError_t (*)(hipStream_t,hipHostFn_t,void *)> _hipLaunchHostFunc__funptr)(stream,fn,userData)
 
 
 cdef void* _hipDrvMemcpy2DUnaligned__funptr = NULL
@@ -5019,10 +5019,10 @@ cdef void* _hipUserObjectCreate__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipUserObjectCreate(hipUserObject_t* object_out,void * ptr,hipHostFn_t destroy,unsigned int initialRefcount,unsigned int flags) nogil:
+cdef hipError_t hipUserObjectCreate(hipUserObject_t* object_out,void * ptr,hipHostFn_t destroy,unsigned int initialRefcount,unsigned int flags):
     global _hipUserObjectCreate__funptr
     __init_symbol(&_hipUserObjectCreate__funptr,"hipUserObjectCreate")
-    return (<hipError_t (*)(hipUserObject_t*,void *,hipHostFn_t,unsigned int,unsigned int) nogil> _hipUserObjectCreate__funptr)(object_out,ptr,destroy,initialRefcount,flags)
+    return (<hipError_t (*)(hipUserObject_t*,void *,hipHostFn_t,unsigned int,unsigned int)> _hipUserObjectCreate__funptr)(object_out,ptr,destroy,initialRefcount,flags)
 
 
 cdef void* _hipUserObjectRelease__funptr = NULL
@@ -5516,10 +5516,10 @@ cdef hipError_t hipStreamGetFlags_spt(hipStream_t stream,unsigned int * flags) n
 
 
 cdef void* _hipStreamAddCallback_spt__funptr = NULL
-cdef hipError_t hipStreamAddCallback_spt(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags) nogil:
+cdef hipError_t hipStreamAddCallback_spt(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags):
     global _hipStreamAddCallback_spt__funptr
     __init_symbol(&_hipStreamAddCallback_spt__funptr,"hipStreamAddCallback_spt")
-    return (<hipError_t (*)(hipStream_t,hipStreamCallback_t,void *,unsigned int) nogil> _hipStreamAddCallback_spt__funptr)(stream,callback,userData,flags)
+    return (<hipError_t (*)(hipStream_t,hipStreamCallback_t,void *,unsigned int)> _hipStreamAddCallback_spt__funptr)(stream,callback,userData,flags)
 
 
 cdef void* _hipEventRecord_spt__funptr = NULL
@@ -5586,7 +5586,7 @@ cdef hipError_t hipStreamGetCaptureInfo_v2_spt(hipStream_t stream,hipStreamCaptu
 
 
 cdef void* _hipLaunchHostFunc_spt__funptr = NULL
-cdef hipError_t hipLaunchHostFunc_spt(hipStream_t stream,hipHostFn_t fn,void * userData) nogil:
+cdef hipError_t hipLaunchHostFunc_spt(hipStream_t stream,hipHostFn_t fn,void * userData):
     global _hipLaunchHostFunc_spt__funptr
     __init_symbol(&_hipLaunchHostFunc_spt__funptr,"hipLaunchHostFunc_spt")
-    return (<hipError_t (*)(hipStream_t,hipHostFn_t,void *) nogil> _hipLaunchHostFunc_spt__funptr)(stream,fn,userData)
+    return (<hipError_t (*)(hipStream_t,hipHostFn_t,void *)> _hipLaunchHostFunc_spt__funptr)(stream,fn,userData)
