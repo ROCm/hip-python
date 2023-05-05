@@ -1,7 +1,5 @@
 # AMD_COPYRIGHT
 
-# TODO typedef to basic type must be replaced by basic type
-
 __author__ = "AMD_AUTHOR"
 
 import sys
@@ -25,6 +23,8 @@ python_interface_retval_template = "_{name}__retval"
 # Always return a tuple if there is at least one return value
 python_interface_always_return_tuple = True
 
+python_interface_record_properties_name = "PROPERTIES"
+
 restricted_names = keyword.kwlist + [
     "cdef",
     "cpdef",  # TODO extend
@@ -41,7 +41,7 @@ def DEFAULT_RENAMER(name):  # backend-specific
 def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
 
-def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm):
+def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm_or_field):
     return "hip._util.types.DataHandle"
 
 default_c_interface_decl_preamble = """\
@@ -101,8 +101,12 @@ cdef class {{name}}:
 wrapper_class_impl_base_template = """
 {{default cptr_type = cname + "*"}}
 {{default is_funptr = False}}
+{{default is_union = False}}
 {{default has_new = True}}
 {{default has_from_pyobj = True}}
+{{default defaults = dict()}}
+{{default properties_name = None}}
+{{default all_properties_rendered = False}}
 cdef class {{name}}:
     # members declared in pxd file
 
@@ -155,10 +159,10 @@ cdef class {{name}}:
         elif isinstance(pyobj,int):
             wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         {{if is_funptr}}
         elif str(type(pyobj)).startswith("<class 'ctypes.CFUNCTYPE.") and str(type(pyobj)).endswith(".CFunctionType'>" ):
-            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(ctypes.addressof(pyobj))
+            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(ctypes.cast(pyobj, ctypes.c_void_p).value)
         {{else}}
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
@@ -208,10 +212,40 @@ cdef class {{name}}:
         cdef {{cptr_type}} ptr
         {{name}}.__allocate(&ptr)
         return {{name}}.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       {{name}}.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    {{py: all_properties_and_is_no_union = all_properties_rendered and not is_union}}
+    {{if all_properties_and_is_no_union}}
+    def __init__(self,*args,**kwargs):
+    {{else}}
+    # {{all_properties_rendered}}
+    # {{is_union}}
+    def __init__(self,**kwargs):
+    {{endif}}
+        {{name}}.__allocate(&self._ptr)
+        self.ptr_owner = True
+        {{for k,v in defaults.items()}}
+        self.{{k}} = {{v}}
+        {{endfor}}
+        attribs = self.{{properties_name}}()
+        used_attribs = set()
+        {{if all_properties_and_is_no_union}}
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        {{endif}}
+        {{if is_union}}
+        if len(kwargs) > 1:
+            raise ValueError("Not more than one attribute might specified for Python types derived from C union types.")
+        {{endif}}
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     {{endif}}
     
     @property
@@ -244,6 +278,30 @@ def {{attr}}(self):
 @{{attr}}.setter
 def {{attr}}(self, {{typename}} value):
     self.set_{{attr}}(0,value)
+{{elif is_pointer_to_basic_type_or_void}}
+def get_{{attr}}(self, i):
+    \"""Get value ``{{attr}}`` of ``self._ptr[i]``.
+    \"""
+    return {{handler}}.from_ptr(self._ptr[i].{{attr}})
+def set_{{attr}}(self, i, object value):
+    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
+
+    Note:
+        This can be dangerous if the pointer is from a python object
+        that is later on garbage collected.
+    \"""
+    self._ptr[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr({{handler}}.from_pyobj(value).ptr)
+@property
+def {{attr}}(self):
+    \"""
+    Note:
+        Setting this {{attr}} can be dangerous if the underlying pointer is from a python object that
+        is later on garbage collected.
+    \"""
+    return self.get_{{attr}}(0)
+@{{attr}}.setter
+def {{attr}}(self, object value):
+    self.set_{{attr}}(0,value)
 {{elif is_basic_type_constantarray}}
 def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
@@ -270,8 +328,6 @@ def {{attr}}(self):
 @{{attr}}.setter
 def {{attr}}(self, value):
     self.set_{{attr}}(0,value)
-{{elif is_enum_constantarray}}
-# TODO is_enum_constantarray: add
 {{elif is_record}}
 def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
@@ -376,6 +432,7 @@ class FieldMixin(CythonMixin, Typed):
     def __init__(self):
         CythonMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
+        self.ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
 
     @property
     def cython_repr(self):
@@ -393,6 +450,7 @@ class FieldMixin(CythonMixin, Typed):
         attr = self.renamer(self.name)
         template = Cython.Tempita.Template(wrapper_class_property_template)
         return template.substitute(
+            handler=self.ptr_complicated_type_handler(self),
             typename=self.global_typename(self.sep, self.renamer, 
                      prefer_canonical=True),
             attr=attr,
@@ -405,10 +463,17 @@ class FieldMixin(CythonMixin, Typed):
             is_enum=self.is_enum,
             is_enum_constantarray=self.is_enum_constantarray,
             is_record_constantarray=self.is_record_constantarray,
+            is_pointer_to_basic_type_or_void = (
+                self.is_pointer_to_basic_type(degree=-1)
+                or self.is_pointer_to_void(degree=-1)
+            ),
+            # is_pointer_to_record ... # TODO
+            # is_pointer_to_function_proto ...
         )
 
 
 class RecordMixin(CythonMixin):
+
     @property
     def c_record_kind(self) -> str:
         if self.cursor.kind == clang.cindex.CursorKind.STRUCT_DECL:
@@ -460,28 +525,84 @@ class RecordMixin(CythonMixin):
             has_new=not self.is_incomplete,
         )
 
-    def _render_python_interface_head(self, cprefix: str) -> str:
+    def _render_python_interface_head(self, cprefix: str, all_propertys_rendered: bool = False) -> str:
         from . import tree
 
         assert isinstance(self, tree.Record)
         global wrapper_class_impl_base_template
+        global python_interface_record_properties_name
         name = self.renamer(self.global_name(self.sep))
         template = Cython.Tempita.Template(wrapper_class_impl_base_template)
         return template.substitute(
             name=name,
             cname=cprefix + name,
             has_new=not self.is_incomplete,
+            defaults=self._defaults if self.has_defaults else {},
+            properties_name=python_interface_record_properties_name,
+            all_properties_rendered=all_propertys_rendered,
+            is_union=self.c_record_kind == "union",
         )
+
+    def set_defaults(self,**kwargs):
+        """Set the defaults for certain variables.
+        """
+        setattr(self,"_defaults", kwargs)
+
+    @property
+    def has_defaults(self):
+        return hasattr(self,"_defaults")
+
+    @property
+    def has_python_body_epilog(self):
+        return hasattr(self,"_python_body_epilog")
+
+    def append_to_python_body(self,code: str):
+        """Append additional code to the generated Python type's body.
+        
+        Append additional code to the Python type's body
+        Provide dedented input, the correct indent is added by this routine.
+        """
+        if not self.has_python_body_epilog:
+            setattr(self,"_python_body_epilog",[])
+        self._python_body_epilog.append(code)
 
     def render_python_interface_impl(self, cprefix: str) -> str:
         from . import tree
 
         assert isinstance(self, tree.Record)
+        global python_interface_record_properties_name
         global indent
 
-        result = self._render_python_interface_head(cprefix)
+        rendered_property_names = []
+        all_properties_rendered = True
         for field in self.fields:
-            result += textwrap.indent(field.render_python_property(cprefix), indent)
+            prop = field.render_python_property(cprefix)
+            if len(prop.strip()):
+                rendered_property_names.append(field.cython_name)
+                self.append_to_python_body(prop)
+            else:
+                all_properties_rendered = False
+        self.append_to_python_body(textwrap.dedent(f"""\
+        @staticmethod
+        def {python_interface_record_properties_name}():
+            return [{','.join(['"'+a+'"' for a in rendered_property_names])}]
+        """))
+        if self.c_record_kind == "struct":
+            self.append_to_python_body(textwrap.dedent(f"""\
+            def __contains__(self,item):
+                properties = self.{python_interface_record_properties_name}()
+                return item in properties
+                
+            def __getitem__(self,item):
+                properties = self.{python_interface_record_properties_name}()
+                if isinstance(item,int):
+                    if item < 0 or item >= len(properties):
+                        raise IndexError()
+                    return getattr(self,properties[item])
+                raise ValueError("'item' type must be 'int'")
+            """))
+        result = self._render_python_interface_head(cprefix,all_properties_rendered)
+        result += textwrap.indent("\n".join(self._python_body_epilog), indent)
         return result
 
 
@@ -743,19 +864,31 @@ class FunctionMixin(CythonMixin, Typed):
         assert isinstance(self, tree.Function)
         return f'"""{"".join(self._raw_comment_stripped()).rstrip()}\n"""'
 
-    def render_c_interface(self, modifiers=" nogil", modifiers_front=""):
+    @property
+    def _has_funptr_parm(self):
+        from . import tree
+
+        assert isinstance(self, tree.Function)
+        for node in self.walk():
+            if isinstance(node,tree.Parm):
+                if isinstance(node.typeref,tree.FunctionPointer):
+                    return True
+        return False
+
+    def render_c_interface(self, modifiers_front=""):
         from . import tree
 
         assert isinstance(self, tree.Function)
         typename = self.cython_global_typename
         name = self.cython_name
         parm_decls = ",".join([parm.cython_repr for parm in self.parms])
+        modifiers = "" if self._has_funptr_parm else " nogil"
         return f"""\
 {self._raw_comment_as_python_comment().rstrip()}
 {modifiers_front}{typename} {name}({parm_decls}){modifiers}
 """
 
-    def render_cython_lazy_loader_decl(self, modifiers=" nogil"):
+    def render_cython_lazy_loader_decl(self):
         return self.render_c_interface(modifiers_front="cdef ")
 
     @property
@@ -763,20 +896,22 @@ class FunctionMixin(CythonMixin, Typed):
         global c_interface_funptr_name_template
         return c_interface_funptr_name_template.format(name=self.cython_name)
 
-    def render_cython_lazy_loader_def(self,modifiers="nogil"):
+    def render_cython_lazy_loader_def(self):
         from . import tree
 
         assert isinstance(self, tree.Function)
         funptr_name = self.cython_funptr_name
+
         parm_types = ",".join(self.global_parm_types(self.sep, self.renamer, prefer_canonical=True))
         parm_names = ",".join(self.parm_names(self.renamer))
         typename = self.global_typename(self.sep, self.renamer, prefer_canonical=True)
+        modifiers = "" if self._has_funptr_parm else " nogil"
         return f"""\
 cdef void* {funptr_name} = NULL
-{self.render_cython_lazy_loader_decl(modifiers).strip()}:
+{self.render_cython_lazy_loader_decl().strip()}:
     global {funptr_name}
     __init_symbol(&{funptr_name},"{self.name}")
-    return (<{typename} (*)({parm_types}) nogil> {funptr_name})({parm_names})
+    return (<{typename} (*)({parm_types}){modifiers}> {funptr_name})({parm_names})
 """
 
     def _analyze_parms(self, cprefix: str):
@@ -1052,6 +1187,7 @@ class CythonBackend:
                     setattr(node, "macro_type", self.macro_type)
                 elif isinstance(node, (FieldMixin)):
                     setattr(node, "ptr_rank", self.ptr_rank)
+                    setattr(node, "ptr_complicated_type_handler", self.ptr_complicated_type_handler)
                 elif isinstance(node, (ParmMixin)):
                     setattr(node, "ptr_rank", self.ptr_rank)
                     setattr(node, "ptr_intent", self.ptr_parm_intent)

@@ -59,7 +59,7 @@ cdef class hipblasBfloat16:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chipblas.hipblasBfloat16*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chipblas.hipblasBfloat16*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chipblas.hipblasBfloat16*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -101,10 +101,24 @@ cdef class hipblasBfloat16:
         cdef chipblas.hipblasBfloat16* ptr
         hipblasBfloat16.__allocate(&ptr)
         return hipblasBfloat16.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipblasBfloat16.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipblasBfloat16.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -132,6 +146,22 @@ cdef class hipblasBfloat16:
     @data.setter
     def data(self, unsigned short value):
         self.set_data(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["data"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipblasComplex:
@@ -183,7 +213,7 @@ cdef class hipblasComplex:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chipblas.hipblasComplex*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chipblas.hipblasComplex*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chipblas.hipblasComplex*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -225,10 +255,24 @@ cdef class hipblasComplex:
         cdef chipblas.hipblasComplex* ptr
         hipblasComplex.__allocate(&ptr)
         return hipblasComplex.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipblasComplex.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipblasComplex.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -256,6 +300,7 @@ cdef class hipblasComplex:
     @x.setter
     def x(self, float value):
         self.set_x(0,value)
+
     def get_y(self, i):
         """Get value ``y`` of ``self._ptr[i]``.
         """
@@ -270,6 +315,22 @@ cdef class hipblasComplex:
     @y.setter
     def y(self, float value):
         self.set_y(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["x","y"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipblasDoubleComplex:
@@ -321,7 +382,7 @@ cdef class hipblasDoubleComplex:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chipblas.hipblasDoubleComplex*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chipblas.hipblasDoubleComplex*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chipblas.hipblasDoubleComplex*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -363,10 +424,24 @@ cdef class hipblasDoubleComplex:
         cdef chipblas.hipblasDoubleComplex* ptr
         hipblasDoubleComplex.__allocate(&ptr)
         return hipblasDoubleComplex.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipblasDoubleComplex.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipblasDoubleComplex.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -394,6 +469,7 @@ cdef class hipblasDoubleComplex:
     @x.setter
     def x(self, double value):
         self.set_x(0,value)
+
     def get_y(self, i):
         """Get value ``y`` of ``self._ptr[i]``.
         """
@@ -408,6 +484,22 @@ cdef class hipblasDoubleComplex:
     @y.setter
     def y(self, double value):
         self.set_y(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["x","y"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipblasStatus_t(enum.IntEnum):
