@@ -20,6 +20,7 @@ from _codegen import (
     Function,
     Parm,
     Field,
+    Record,
     PointerParamIntent,
 )
 
@@ -288,6 +289,9 @@ def generate_hip_package_files():
             return True
         if not isinstance(node, MacroDefinition):
             if "hip/" in node.file:
+                # sime modifications:
+                if isinstance(node,Record) and node.name == "dim3":
+                    node.set_defaults(x=1,y=1,z=1)
                 return True
         return False
 

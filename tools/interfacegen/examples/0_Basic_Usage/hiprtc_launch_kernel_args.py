@@ -19,7 +19,6 @@ def hip_check(call_result):
         raise RuntimeError(str(err))
     return result
 
-
 source = b"""\
 extern "C" __global__ void scale_vector(float factor, int n, short unused1, int unused2, float unused3, float *x) {
   int tid = threadIdx.x + blockIdx.x * blockDim.x;
@@ -61,7 +60,7 @@ n = 100
 x_h = array.array("f",[random.random() for i in range(0,n)])
 num_bytes = x_h.itemsize * len(x_h)
 x_d = hip_check(hip.hipMalloc(num_bytes))
-print(f"{int(x_d)=}")
+print(f"{hex(int(x_d))=}")
 
 ## upload host data
 hip_check(hip.hipMemcpy(x_d,x_h,num_bytes,hip.hipMemcpyKind.hipMemcpyHostToDevice))
@@ -71,16 +70,15 @@ factor = 1.23
 ## expected result
 x_expected = [a*factor for a in x_h]
 
-
-block_size = 32
-num_blocks = block_size * math.ceil(n/block_size)
+block = hip.dim3(x=32)
+grid = hip.dim3(block.x * math.ceil(n/block.x))
 
 ## launch
 hip_check(
     hip.hipModuleLaunchKernel(
         kernel,
-        *(num_blocks, 1, 1), # grid
-        *(block_size, 1, 1),  # block
+        *grid,
+        *block,
         sharedMemBytes=0,
         stream=None,
         kernelParams=None,
