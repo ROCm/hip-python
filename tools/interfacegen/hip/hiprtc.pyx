@@ -118,7 +118,7 @@ cdef class ihiprtcLinkState:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chiprtc.ihiprtcLinkState*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chiprtc.ihiprtcLinkState*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chiprtc.ihiprtcLinkState*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -154,6 +154,21 @@ cdef class ihiprtcLinkState:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hiprtcLinkState = ihiprtcLinkState
@@ -229,7 +244,7 @@ cdef class _hiprtcProgram:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chiprtc._hiprtcProgram*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chiprtc._hiprtcProgram*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chiprtc._hiprtcProgram*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -265,6 +280,21 @@ cdef class _hiprtcProgram:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hiprtcProgram = _hiprtcProgram

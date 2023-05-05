@@ -203,7 +203,7 @@ cdef class hipDeviceArch_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipDeviceArch_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipDeviceArch_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipDeviceArch_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -239,6 +239,21 @@ cdef class hipDeviceArch_t:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipUUID_t:
@@ -290,7 +305,7 @@ cdef class hipUUID_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipUUID_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipUUID_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipUUID_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -332,10 +347,24 @@ cdef class hipUUID_t:
         cdef chip.hipUUID_t* ptr
         hipUUID_t.__allocate(&ptr)
         return hipUUID_t.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipUUID_t.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipUUID_t.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -357,6 +386,22 @@ cdef class hipUUID_t:
     def bytes(self):
         return self.get_bytes(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["bytes"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipDeviceProp_t:
@@ -408,7 +453,7 @@ cdef class hipDeviceProp_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipDeviceProp_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipDeviceProp_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipDeviceProp_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -450,10 +495,24 @@ cdef class hipDeviceProp_t:
         cdef chip.hipDeviceProp_t* ptr
         hipDeviceProp_t.__allocate(&ptr)
         return hipDeviceProp_t.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipDeviceProp_t.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipDeviceProp_t.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -475,6 +534,7 @@ cdef class hipDeviceProp_t:
     def name(self):
         return self.get_name(0)
     # TODO is_basic_type_constantarray: add setters
+
     def get_totalGlobalMem(self, i):
         """Get value ``totalGlobalMem`` of ``self._ptr[i]``.
         """
@@ -489,6 +549,7 @@ cdef class hipDeviceProp_t:
     @totalGlobalMem.setter
     def totalGlobalMem(self, unsigned long value):
         self.set_totalGlobalMem(0,value)
+
     def get_sharedMemPerBlock(self, i):
         """Get value ``sharedMemPerBlock`` of ``self._ptr[i]``.
         """
@@ -503,6 +564,7 @@ cdef class hipDeviceProp_t:
     @sharedMemPerBlock.setter
     def sharedMemPerBlock(self, unsigned long value):
         self.set_sharedMemPerBlock(0,value)
+
     def get_regsPerBlock(self, i):
         """Get value ``regsPerBlock`` of ``self._ptr[i]``.
         """
@@ -517,6 +579,7 @@ cdef class hipDeviceProp_t:
     @regsPerBlock.setter
     def regsPerBlock(self, int value):
         self.set_regsPerBlock(0,value)
+
     def get_warpSize(self, i):
         """Get value ``warpSize`` of ``self._ptr[i]``.
         """
@@ -531,6 +594,7 @@ cdef class hipDeviceProp_t:
     @warpSize.setter
     def warpSize(self, int value):
         self.set_warpSize(0,value)
+
     def get_maxThreadsPerBlock(self, i):
         """Get value ``maxThreadsPerBlock`` of ``self._ptr[i]``.
         """
@@ -545,6 +609,7 @@ cdef class hipDeviceProp_t:
     @maxThreadsPerBlock.setter
     def maxThreadsPerBlock(self, int value):
         self.set_maxThreadsPerBlock(0,value)
+
     def get_maxThreadsDim(self, i):
         """Get value of ``maxThreadsDim`` of ``self._ptr[i]``.
         """
@@ -553,6 +618,7 @@ cdef class hipDeviceProp_t:
     def maxThreadsDim(self):
         return self.get_maxThreadsDim(0)
     # TODO is_basic_type_constantarray: add setters
+
     def get_maxGridSize(self, i):
         """Get value of ``maxGridSize`` of ``self._ptr[i]``.
         """
@@ -561,6 +627,7 @@ cdef class hipDeviceProp_t:
     def maxGridSize(self):
         return self.get_maxGridSize(0)
     # TODO is_basic_type_constantarray: add setters
+
     def get_clockRate(self, i):
         """Get value ``clockRate`` of ``self._ptr[i]``.
         """
@@ -575,6 +642,7 @@ cdef class hipDeviceProp_t:
     @clockRate.setter
     def clockRate(self, int value):
         self.set_clockRate(0,value)
+
     def get_memoryClockRate(self, i):
         """Get value ``memoryClockRate`` of ``self._ptr[i]``.
         """
@@ -589,6 +657,7 @@ cdef class hipDeviceProp_t:
     @memoryClockRate.setter
     def memoryClockRate(self, int value):
         self.set_memoryClockRate(0,value)
+
     def get_memoryBusWidth(self, i):
         """Get value ``memoryBusWidth`` of ``self._ptr[i]``.
         """
@@ -603,6 +672,7 @@ cdef class hipDeviceProp_t:
     @memoryBusWidth.setter
     def memoryBusWidth(self, int value):
         self.set_memoryBusWidth(0,value)
+
     def get_totalConstMem(self, i):
         """Get value ``totalConstMem`` of ``self._ptr[i]``.
         """
@@ -617,6 +687,7 @@ cdef class hipDeviceProp_t:
     @totalConstMem.setter
     def totalConstMem(self, unsigned long value):
         self.set_totalConstMem(0,value)
+
     def get_major(self, i):
         """Get value ``major`` of ``self._ptr[i]``.
         """
@@ -631,6 +702,7 @@ cdef class hipDeviceProp_t:
     @major.setter
     def major(self, int value):
         self.set_major(0,value)
+
     def get_minor(self, i):
         """Get value ``minor`` of ``self._ptr[i]``.
         """
@@ -645,6 +717,7 @@ cdef class hipDeviceProp_t:
     @minor.setter
     def minor(self, int value):
         self.set_minor(0,value)
+
     def get_multiProcessorCount(self, i):
         """Get value ``multiProcessorCount`` of ``self._ptr[i]``.
         """
@@ -659,6 +732,7 @@ cdef class hipDeviceProp_t:
     @multiProcessorCount.setter
     def multiProcessorCount(self, int value):
         self.set_multiProcessorCount(0,value)
+
     def get_l2CacheSize(self, i):
         """Get value ``l2CacheSize`` of ``self._ptr[i]``.
         """
@@ -673,6 +747,7 @@ cdef class hipDeviceProp_t:
     @l2CacheSize.setter
     def l2CacheSize(self, int value):
         self.set_l2CacheSize(0,value)
+
     def get_maxThreadsPerMultiProcessor(self, i):
         """Get value ``maxThreadsPerMultiProcessor`` of ``self._ptr[i]``.
         """
@@ -687,6 +762,7 @@ cdef class hipDeviceProp_t:
     @maxThreadsPerMultiProcessor.setter
     def maxThreadsPerMultiProcessor(self, int value):
         self.set_maxThreadsPerMultiProcessor(0,value)
+
     def get_computeMode(self, i):
         """Get value ``computeMode`` of ``self._ptr[i]``.
         """
@@ -701,6 +777,7 @@ cdef class hipDeviceProp_t:
     @computeMode.setter
     def computeMode(self, int value):
         self.set_computeMode(0,value)
+
     def get_clockInstructionRate(self, i):
         """Get value ``clockInstructionRate`` of ``self._ptr[i]``.
         """
@@ -715,6 +792,7 @@ cdef class hipDeviceProp_t:
     @clockInstructionRate.setter
     def clockInstructionRate(self, int value):
         self.set_clockInstructionRate(0,value)
+
     def get_arch(self, i):
         """Get value of ``arch`` of ``self._ptr[i]``.
         """
@@ -722,6 +800,7 @@ cdef class hipDeviceProp_t:
     @property
     def arch(self):
         return self.get_arch(0)
+
     def get_concurrentKernels(self, i):
         """Get value ``concurrentKernels`` of ``self._ptr[i]``.
         """
@@ -736,6 +815,7 @@ cdef class hipDeviceProp_t:
     @concurrentKernels.setter
     def concurrentKernels(self, int value):
         self.set_concurrentKernels(0,value)
+
     def get_pciDomainID(self, i):
         """Get value ``pciDomainID`` of ``self._ptr[i]``.
         """
@@ -750,6 +830,7 @@ cdef class hipDeviceProp_t:
     @pciDomainID.setter
     def pciDomainID(self, int value):
         self.set_pciDomainID(0,value)
+
     def get_pciBusID(self, i):
         """Get value ``pciBusID`` of ``self._ptr[i]``.
         """
@@ -764,6 +845,7 @@ cdef class hipDeviceProp_t:
     @pciBusID.setter
     def pciBusID(self, int value):
         self.set_pciBusID(0,value)
+
     def get_pciDeviceID(self, i):
         """Get value ``pciDeviceID`` of ``self._ptr[i]``.
         """
@@ -778,6 +860,7 @@ cdef class hipDeviceProp_t:
     @pciDeviceID.setter
     def pciDeviceID(self, int value):
         self.set_pciDeviceID(0,value)
+
     def get_maxSharedMemoryPerMultiProcessor(self, i):
         """Get value ``maxSharedMemoryPerMultiProcessor`` of ``self._ptr[i]``.
         """
@@ -792,6 +875,7 @@ cdef class hipDeviceProp_t:
     @maxSharedMemoryPerMultiProcessor.setter
     def maxSharedMemoryPerMultiProcessor(self, unsigned long value):
         self.set_maxSharedMemoryPerMultiProcessor(0,value)
+
     def get_isMultiGpuBoard(self, i):
         """Get value ``isMultiGpuBoard`` of ``self._ptr[i]``.
         """
@@ -806,6 +890,7 @@ cdef class hipDeviceProp_t:
     @isMultiGpuBoard.setter
     def isMultiGpuBoard(self, int value):
         self.set_isMultiGpuBoard(0,value)
+
     def get_canMapHostMemory(self, i):
         """Get value ``canMapHostMemory`` of ``self._ptr[i]``.
         """
@@ -820,6 +905,7 @@ cdef class hipDeviceProp_t:
     @canMapHostMemory.setter
     def canMapHostMemory(self, int value):
         self.set_canMapHostMemory(0,value)
+
     def get_gcnArch(self, i):
         """Get value ``gcnArch`` of ``self._ptr[i]``.
         """
@@ -834,6 +920,7 @@ cdef class hipDeviceProp_t:
     @gcnArch.setter
     def gcnArch(self, int value):
         self.set_gcnArch(0,value)
+
     def get_gcnArchName(self, i):
         """Get value of ``gcnArchName`` of ``self._ptr[i]``.
         """
@@ -842,6 +929,7 @@ cdef class hipDeviceProp_t:
     def gcnArchName(self):
         return self.get_gcnArchName(0)
     # TODO is_basic_type_constantarray: add setters
+
     def get_integrated(self, i):
         """Get value ``integrated`` of ``self._ptr[i]``.
         """
@@ -856,6 +944,7 @@ cdef class hipDeviceProp_t:
     @integrated.setter
     def integrated(self, int value):
         self.set_integrated(0,value)
+
     def get_cooperativeLaunch(self, i):
         """Get value ``cooperativeLaunch`` of ``self._ptr[i]``.
         """
@@ -870,6 +959,7 @@ cdef class hipDeviceProp_t:
     @cooperativeLaunch.setter
     def cooperativeLaunch(self, int value):
         self.set_cooperativeLaunch(0,value)
+
     def get_cooperativeMultiDeviceLaunch(self, i):
         """Get value ``cooperativeMultiDeviceLaunch`` of ``self._ptr[i]``.
         """
@@ -884,6 +974,7 @@ cdef class hipDeviceProp_t:
     @cooperativeMultiDeviceLaunch.setter
     def cooperativeMultiDeviceLaunch(self, int value):
         self.set_cooperativeMultiDeviceLaunch(0,value)
+
     def get_maxTexture1DLinear(self, i):
         """Get value ``maxTexture1DLinear`` of ``self._ptr[i]``.
         """
@@ -898,6 +989,7 @@ cdef class hipDeviceProp_t:
     @maxTexture1DLinear.setter
     def maxTexture1DLinear(self, int value):
         self.set_maxTexture1DLinear(0,value)
+
     def get_maxTexture1D(self, i):
         """Get value ``maxTexture1D`` of ``self._ptr[i]``.
         """
@@ -912,6 +1004,7 @@ cdef class hipDeviceProp_t:
     @maxTexture1D.setter
     def maxTexture1D(self, int value):
         self.set_maxTexture1D(0,value)
+
     def get_maxTexture2D(self, i):
         """Get value of ``maxTexture2D`` of ``self._ptr[i]``.
         """
@@ -920,6 +1013,7 @@ cdef class hipDeviceProp_t:
     def maxTexture2D(self):
         return self.get_maxTexture2D(0)
     # TODO is_basic_type_constantarray: add setters
+
     def get_maxTexture3D(self, i):
         """Get value of ``maxTexture3D`` of ``self._ptr[i]``.
         """
@@ -928,6 +1022,55 @@ cdef class hipDeviceProp_t:
     def maxTexture3D(self):
         return self.get_maxTexture3D(0)
     # TODO is_basic_type_constantarray: add setters
+
+    def get_hdpMemFlushCntl(self, i):
+        """Get value ``hdpMemFlushCntl`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].hdpMemFlushCntl)
+    def set_hdpMemFlushCntl(self, i, object value):
+        """Set value ``hdpMemFlushCntl`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].hdpMemFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def hdpMemFlushCntl(self):
+        """
+        Note:
+            Setting this hdpMemFlushCntl can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_hdpMemFlushCntl(0)
+    @hdpMemFlushCntl.setter
+    def hdpMemFlushCntl(self, object value):
+        self.set_hdpMemFlushCntl(0,value)
+
+    def get_hdpRegFlushCntl(self, i):
+        """Get value ``hdpRegFlushCntl`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].hdpRegFlushCntl)
+    def set_hdpRegFlushCntl(self, i, object value):
+        """Set value ``hdpRegFlushCntl`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].hdpRegFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def hdpRegFlushCntl(self):
+        """
+        Note:
+            Setting this hdpRegFlushCntl can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_hdpRegFlushCntl(0)
+    @hdpRegFlushCntl.setter
+    def hdpRegFlushCntl(self, object value):
+        self.set_hdpRegFlushCntl(0,value)
+
     def get_memPitch(self, i):
         """Get value ``memPitch`` of ``self._ptr[i]``.
         """
@@ -942,6 +1085,7 @@ cdef class hipDeviceProp_t:
     @memPitch.setter
     def memPitch(self, unsigned long value):
         self.set_memPitch(0,value)
+
     def get_textureAlignment(self, i):
         """Get value ``textureAlignment`` of ``self._ptr[i]``.
         """
@@ -956,6 +1100,7 @@ cdef class hipDeviceProp_t:
     @textureAlignment.setter
     def textureAlignment(self, unsigned long value):
         self.set_textureAlignment(0,value)
+
     def get_texturePitchAlignment(self, i):
         """Get value ``texturePitchAlignment`` of ``self._ptr[i]``.
         """
@@ -970,6 +1115,7 @@ cdef class hipDeviceProp_t:
     @texturePitchAlignment.setter
     def texturePitchAlignment(self, unsigned long value):
         self.set_texturePitchAlignment(0,value)
+
     def get_kernelExecTimeoutEnabled(self, i):
         """Get value ``kernelExecTimeoutEnabled`` of ``self._ptr[i]``.
         """
@@ -984,6 +1130,7 @@ cdef class hipDeviceProp_t:
     @kernelExecTimeoutEnabled.setter
     def kernelExecTimeoutEnabled(self, int value):
         self.set_kernelExecTimeoutEnabled(0,value)
+
     def get_ECCEnabled(self, i):
         """Get value ``ECCEnabled`` of ``self._ptr[i]``.
         """
@@ -998,6 +1145,7 @@ cdef class hipDeviceProp_t:
     @ECCEnabled.setter
     def ECCEnabled(self, int value):
         self.set_ECCEnabled(0,value)
+
     def get_tccDriver(self, i):
         """Get value ``tccDriver`` of ``self._ptr[i]``.
         """
@@ -1012,6 +1160,7 @@ cdef class hipDeviceProp_t:
     @tccDriver.setter
     def tccDriver(self, int value):
         self.set_tccDriver(0,value)
+
     def get_cooperativeMultiDeviceUnmatchedFunc(self, i):
         """Get value ``cooperativeMultiDeviceUnmatchedFunc`` of ``self._ptr[i]``.
         """
@@ -1026,6 +1175,7 @@ cdef class hipDeviceProp_t:
     @cooperativeMultiDeviceUnmatchedFunc.setter
     def cooperativeMultiDeviceUnmatchedFunc(self, int value):
         self.set_cooperativeMultiDeviceUnmatchedFunc(0,value)
+
     def get_cooperativeMultiDeviceUnmatchedGridDim(self, i):
         """Get value ``cooperativeMultiDeviceUnmatchedGridDim`` of ``self._ptr[i]``.
         """
@@ -1040,6 +1190,7 @@ cdef class hipDeviceProp_t:
     @cooperativeMultiDeviceUnmatchedGridDim.setter
     def cooperativeMultiDeviceUnmatchedGridDim(self, int value):
         self.set_cooperativeMultiDeviceUnmatchedGridDim(0,value)
+
     def get_cooperativeMultiDeviceUnmatchedBlockDim(self, i):
         """Get value ``cooperativeMultiDeviceUnmatchedBlockDim`` of ``self._ptr[i]``.
         """
@@ -1054,6 +1205,7 @@ cdef class hipDeviceProp_t:
     @cooperativeMultiDeviceUnmatchedBlockDim.setter
     def cooperativeMultiDeviceUnmatchedBlockDim(self, int value):
         self.set_cooperativeMultiDeviceUnmatchedBlockDim(0,value)
+
     def get_cooperativeMultiDeviceUnmatchedSharedMem(self, i):
         """Get value ``cooperativeMultiDeviceUnmatchedSharedMem`` of ``self._ptr[i]``.
         """
@@ -1068,6 +1220,7 @@ cdef class hipDeviceProp_t:
     @cooperativeMultiDeviceUnmatchedSharedMem.setter
     def cooperativeMultiDeviceUnmatchedSharedMem(self, int value):
         self.set_cooperativeMultiDeviceUnmatchedSharedMem(0,value)
+
     def get_isLargeBar(self, i):
         """Get value ``isLargeBar`` of ``self._ptr[i]``.
         """
@@ -1082,6 +1235,7 @@ cdef class hipDeviceProp_t:
     @isLargeBar.setter
     def isLargeBar(self, int value):
         self.set_isLargeBar(0,value)
+
     def get_asicRevision(self, i):
         """Get value ``asicRevision`` of ``self._ptr[i]``.
         """
@@ -1096,6 +1250,7 @@ cdef class hipDeviceProp_t:
     @asicRevision.setter
     def asicRevision(self, int value):
         self.set_asicRevision(0,value)
+
     def get_managedMemory(self, i):
         """Get value ``managedMemory`` of ``self._ptr[i]``.
         """
@@ -1110,6 +1265,7 @@ cdef class hipDeviceProp_t:
     @managedMemory.setter
     def managedMemory(self, int value):
         self.set_managedMemory(0,value)
+
     def get_directManagedMemAccessFromHost(self, i):
         """Get value ``directManagedMemAccessFromHost`` of ``self._ptr[i]``.
         """
@@ -1124,6 +1280,7 @@ cdef class hipDeviceProp_t:
     @directManagedMemAccessFromHost.setter
     def directManagedMemAccessFromHost(self, int value):
         self.set_directManagedMemAccessFromHost(0,value)
+
     def get_concurrentManagedAccess(self, i):
         """Get value ``concurrentManagedAccess`` of ``self._ptr[i]``.
         """
@@ -1138,6 +1295,7 @@ cdef class hipDeviceProp_t:
     @concurrentManagedAccess.setter
     def concurrentManagedAccess(self, int value):
         self.set_concurrentManagedAccess(0,value)
+
     def get_pageableMemoryAccess(self, i):
         """Get value ``pageableMemoryAccess`` of ``self._ptr[i]``.
         """
@@ -1152,6 +1310,7 @@ cdef class hipDeviceProp_t:
     @pageableMemoryAccess.setter
     def pageableMemoryAccess(self, int value):
         self.set_pageableMemoryAccess(0,value)
+
     def get_pageableMemoryAccessUsesHostPageTables(self, i):
         """Get value ``pageableMemoryAccessUsesHostPageTables`` of ``self._ptr[i]``.
         """
@@ -1166,6 +1325,22 @@ cdef class hipDeviceProp_t:
     @pageableMemoryAccessUsesHostPageTables.setter
     def pageableMemoryAccessUsesHostPageTables(self, int value):
         self.set_pageableMemoryAccessUsesHostPageTables(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["name","totalGlobalMem","sharedMemPerBlock","regsPerBlock","warpSize","maxThreadsPerBlock","maxThreadsDim","maxGridSize","clockRate","memoryClockRate","memoryBusWidth","totalConstMem","major","minor","multiProcessorCount","l2CacheSize","maxThreadsPerMultiProcessor","computeMode","clockInstructionRate","arch","concurrentKernels","pciDomainID","pciBusID","pciDeviceID","maxSharedMemoryPerMultiProcessor","isMultiGpuBoard","canMapHostMemory","gcnArch","gcnArchName","integrated","cooperativeLaunch","cooperativeMultiDeviceLaunch","maxTexture1DLinear","maxTexture1D","maxTexture2D","maxTexture3D","hdpMemFlushCntl","hdpRegFlushCntl","memPitch","textureAlignment","texturePitchAlignment","kernelExecTimeoutEnabled","ECCEnabled","tccDriver","cooperativeMultiDeviceUnmatchedFunc","cooperativeMultiDeviceUnmatchedGridDim","cooperativeMultiDeviceUnmatchedBlockDim","cooperativeMultiDeviceUnmatchedSharedMem","isLargeBar","asicRevision","managedMemory","directManagedMemAccessFromHost","concurrentManagedAccess","pageableMemoryAccess","pageableMemoryAccessUsesHostPageTables"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipMemoryType(enum.IntEnum):
@@ -1229,7 +1404,7 @@ cdef class hipPointerAttribute_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipPointerAttribute_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipPointerAttribute_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipPointerAttribute_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -1271,10 +1446,24 @@ cdef class hipPointerAttribute_t:
         cdef chip.hipPointerAttribute_t* ptr
         hipPointerAttribute_t.__allocate(&ptr)
         return hipPointerAttribute_t.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipPointerAttribute_t.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipPointerAttribute_t.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -1304,6 +1493,7 @@ cdef class hipPointerAttribute_t:
     @memoryType.setter
     def memoryType(self, value):
         self.set_memoryType(0,value)
+
     def get_device(self, i):
         """Get value ``device`` of ``self._ptr[i]``.
         """
@@ -1318,6 +1508,55 @@ cdef class hipPointerAttribute_t:
     @device.setter
     def device(self, int value):
         self.set_device(0,value)
+
+    def get_devicePointer(self, i):
+        """Get value ``devicePointer`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].devicePointer)
+    def set_devicePointer(self, i, object value):
+        """Set value ``devicePointer`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].devicePointer = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def devicePointer(self):
+        """
+        Note:
+            Setting this devicePointer can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_devicePointer(0)
+    @devicePointer.setter
+    def devicePointer(self, object value):
+        self.set_devicePointer(0,value)
+
+    def get_hostPointer(self, i):
+        """Get value ``hostPointer`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].hostPointer)
+    def set_hostPointer(self, i, object value):
+        """Set value ``hostPointer`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].hostPointer = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def hostPointer(self):
+        """
+        Note:
+            Setting this hostPointer can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_hostPointer(0)
+    @hostPointer.setter
+    def hostPointer(self, object value):
+        self.set_hostPointer(0,value)
+
     def get_isManaged(self, i):
         """Get value ``isManaged`` of ``self._ptr[i]``.
         """
@@ -1332,6 +1571,7 @@ cdef class hipPointerAttribute_t:
     @isManaged.setter
     def isManaged(self, int value):
         self.set_isManaged(0,value)
+
     def get_allocationFlags(self, i):
         """Get value ``allocationFlags`` of ``self._ptr[i]``.
         """
@@ -1346,6 +1586,22 @@ cdef class hipPointerAttribute_t:
     @allocationFlags.setter
     def allocationFlags(self, unsigned int value):
         self.set_allocationFlags(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["memoryType","device","devicePointer","hostPointer","isManaged","allocationFlags"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipError_t(enum.IntEnum):
@@ -1624,7 +1880,7 @@ cdef class hipChannelFormatDesc:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipChannelFormatDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipChannelFormatDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipChannelFormatDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -1666,10 +1922,24 @@ cdef class hipChannelFormatDesc:
         cdef chip.hipChannelFormatDesc* ptr
         hipChannelFormatDesc.__allocate(&ptr)
         return hipChannelFormatDesc.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipChannelFormatDesc.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipChannelFormatDesc.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -1697,6 +1967,7 @@ cdef class hipChannelFormatDesc:
     @x.setter
     def x(self, int value):
         self.set_x(0,value)
+
     def get_y(self, i):
         """Get value ``y`` of ``self._ptr[i]``.
         """
@@ -1711,6 +1982,7 @@ cdef class hipChannelFormatDesc:
     @y.setter
     def y(self, int value):
         self.set_y(0,value)
+
     def get_z(self, i):
         """Get value ``z`` of ``self._ptr[i]``.
         """
@@ -1725,6 +1997,7 @@ cdef class hipChannelFormatDesc:
     @z.setter
     def z(self, int value):
         self.set_z(0,value)
+
     def get_w(self, i):
         """Get value ``w`` of ``self._ptr[i]``.
         """
@@ -1739,6 +2012,7 @@ cdef class hipChannelFormatDesc:
     @w.setter
     def w(self, int value):
         self.set_w(0,value)
+
     def get_f(self, i):
         """Get value of ``f`` of ``self._ptr[i]``.
         """
@@ -1755,6 +2029,22 @@ cdef class hipChannelFormatDesc:
     @f.setter
     def f(self, value):
         self.set_f(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["x","y","z","w","f"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipArray_Format(enum.IntEnum):
@@ -1821,7 +2111,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -1863,10 +2153,24 @@ cdef class HIP_ARRAY_DESCRIPTOR:
         cdef chip.HIP_ARRAY_DESCRIPTOR* ptr
         HIP_ARRAY_DESCRIPTOR.__allocate(&ptr)
         return HIP_ARRAY_DESCRIPTOR.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_ARRAY_DESCRIPTOR.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        HIP_ARRAY_DESCRIPTOR.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -1894,6 +2198,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     @Width.setter
     def Width(self, unsigned long value):
         self.set_Width(0,value)
+
     def get_Height(self, i):
         """Get value ``Height`` of ``self._ptr[i]``.
         """
@@ -1908,6 +2213,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     @Height.setter
     def Height(self, unsigned long value):
         self.set_Height(0,value)
+
     def get_Format(self, i):
         """Get value of ``Format`` of ``self._ptr[i]``.
         """
@@ -1924,6 +2230,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     @Format.setter
     def Format(self, value):
         self.set_Format(0,value)
+
     def get_NumChannels(self, i):
         """Get value ``NumChannels`` of ``self._ptr[i]``.
         """
@@ -1938,6 +2245,22 @@ cdef class HIP_ARRAY_DESCRIPTOR:
     @NumChannels.setter
     def NumChannels(self, unsigned int value):
         self.set_NumChannels(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["Width","Height","Format","NumChannels"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class HIP_ARRAY3D_DESCRIPTOR:
@@ -1989,7 +2312,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -2031,10 +2354,24 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
         cdef chip.HIP_ARRAY3D_DESCRIPTOR* ptr
         HIP_ARRAY3D_DESCRIPTOR.__allocate(&ptr)
         return HIP_ARRAY3D_DESCRIPTOR.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_ARRAY3D_DESCRIPTOR.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        HIP_ARRAY3D_DESCRIPTOR.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -2062,6 +2399,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     @Width.setter
     def Width(self, unsigned long value):
         self.set_Width(0,value)
+
     def get_Height(self, i):
         """Get value ``Height`` of ``self._ptr[i]``.
         """
@@ -2076,6 +2414,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     @Height.setter
     def Height(self, unsigned long value):
         self.set_Height(0,value)
+
     def get_Depth(self, i):
         """Get value ``Depth`` of ``self._ptr[i]``.
         """
@@ -2090,6 +2429,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     @Depth.setter
     def Depth(self, unsigned long value):
         self.set_Depth(0,value)
+
     def get_Format(self, i):
         """Get value of ``Format`` of ``self._ptr[i]``.
         """
@@ -2106,6 +2446,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     @Format.setter
     def Format(self, value):
         self.set_Format(0,value)
+
     def get_NumChannels(self, i):
         """Get value ``NumChannels`` of ``self._ptr[i]``.
         """
@@ -2120,6 +2461,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     @NumChannels.setter
     def NumChannels(self, unsigned int value):
         self.set_NumChannels(0,value)
+
     def get_Flags(self, i):
         """Get value ``Flags`` of ``self._ptr[i]``.
         """
@@ -2134,6 +2476,22 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
     @Flags.setter
     def Flags(self, unsigned int value):
         self.set_Flags(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["Width","Height","Depth","Format","NumChannels","Flags"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipArray:
@@ -2185,7 +2543,7 @@ cdef class hipArray:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipArray*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipArray*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipArray*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -2227,10 +2585,24 @@ cdef class hipArray:
         cdef chip.hipArray* ptr
         hipArray.__allocate(&ptr)
         return hipArray.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipArray.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipArray.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -2244,6 +2616,30 @@ cdef class hipArray:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_data(self, i):
+        """Get value ``data`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].data)
+    def set_data(self, i, object value):
+        """Set value ``data`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def data(self):
+        """
+        Note:
+            Setting this data can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_data(0)
+    @data.setter
+    def data(self, object value):
+        self.set_data(0,value)
+
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -2251,6 +2647,7 @@ cdef class hipArray:
     @property
     def desc(self):
         return self.get_desc(0)
+
     def get_type(self, i):
         """Get value ``type`` of ``self._ptr[i]``.
         """
@@ -2265,6 +2662,7 @@ cdef class hipArray:
     @type.setter
     def type(self, unsigned int value):
         self.set_type(0,value)
+
     def get_width(self, i):
         """Get value ``width`` of ``self._ptr[i]``.
         """
@@ -2279,6 +2677,7 @@ cdef class hipArray:
     @width.setter
     def width(self, unsigned int value):
         self.set_width(0,value)
+
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
@@ -2293,6 +2692,7 @@ cdef class hipArray:
     @height.setter
     def height(self, unsigned int value):
         self.set_height(0,value)
+
     def get_depth(self, i):
         """Get value ``depth`` of ``self._ptr[i]``.
         """
@@ -2307,6 +2707,7 @@ cdef class hipArray:
     @depth.setter
     def depth(self, unsigned int value):
         self.set_depth(0,value)
+
     def get_Format(self, i):
         """Get value of ``Format`` of ``self._ptr[i]``.
         """
@@ -2323,6 +2724,7 @@ cdef class hipArray:
     @Format.setter
     def Format(self, value):
         self.set_Format(0,value)
+
     def get_NumChannels(self, i):
         """Get value ``NumChannels`` of ``self._ptr[i]``.
         """
@@ -2337,6 +2739,7 @@ cdef class hipArray:
     @NumChannels.setter
     def NumChannels(self, unsigned int value):
         self.set_NumChannels(0,value)
+
     def get_isDrv(self, i):
         """Get value ``isDrv`` of ``self._ptr[i]``.
         """
@@ -2351,6 +2754,7 @@ cdef class hipArray:
     @isDrv.setter
     def isDrv(self, _Bool value):
         self.set_isDrv(0,value)
+
     def get_textureType(self, i):
         """Get value ``textureType`` of ``self._ptr[i]``.
         """
@@ -2365,6 +2769,22 @@ cdef class hipArray:
     @textureType.setter
     def textureType(self, unsigned int value):
         self.set_textureType(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["data","desc","type","width","height","depth","Format","NumChannels","isDrv","textureType"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hip_Memcpy2D:
@@ -2416,7 +2836,7 @@ cdef class hip_Memcpy2D:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hip_Memcpy2D*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hip_Memcpy2D*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hip_Memcpy2D*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -2458,10 +2878,21 @@ cdef class hip_Memcpy2D:
         cdef chip.hip_Memcpy2D* ptr
         hip_Memcpy2D.__allocate(&ptr)
         return hip_Memcpy2D.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hip_Memcpy2D.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        hip_Memcpy2D.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -2489,6 +2920,7 @@ cdef class hip_Memcpy2D:
     @srcXInBytes.setter
     def srcXInBytes(self, unsigned long value):
         self.set_srcXInBytes(0,value)
+
     def get_srcY(self, i):
         """Get value ``srcY`` of ``self._ptr[i]``.
         """
@@ -2503,6 +2935,7 @@ cdef class hip_Memcpy2D:
     @srcY.setter
     def srcY(self, unsigned long value):
         self.set_srcY(0,value)
+
     def get_srcMemoryType(self, i):
         """Get value of ``srcMemoryType`` of ``self._ptr[i]``.
         """
@@ -2519,6 +2952,55 @@ cdef class hip_Memcpy2D:
     @srcMemoryType.setter
     def srcMemoryType(self, value):
         self.set_srcMemoryType(0,value)
+
+    def get_srcHost(self, i):
+        """Get value ``srcHost`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].srcHost)
+    def set_srcHost(self, i, object value):
+        """Set value ``srcHost`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def srcHost(self):
+        """
+        Note:
+            Setting this srcHost can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_srcHost(0)
+    @srcHost.setter
+    def srcHost(self, object value):
+        self.set_srcHost(0,value)
+
+    def get_srcDevice(self, i):
+        """Get value ``srcDevice`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].srcDevice)
+    def set_srcDevice(self, i, object value):
+        """Set value ``srcDevice`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def srcDevice(self):
+        """
+        Note:
+            Setting this srcDevice can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_srcDevice(0)
+    @srcDevice.setter
+    def srcDevice(self, object value):
+        self.set_srcDevice(0,value)
+
     def get_srcPitch(self, i):
         """Get value ``srcPitch`` of ``self._ptr[i]``.
         """
@@ -2533,6 +3015,7 @@ cdef class hip_Memcpy2D:
     @srcPitch.setter
     def srcPitch(self, unsigned long value):
         self.set_srcPitch(0,value)
+
     def get_dstXInBytes(self, i):
         """Get value ``dstXInBytes`` of ``self._ptr[i]``.
         """
@@ -2547,6 +3030,7 @@ cdef class hip_Memcpy2D:
     @dstXInBytes.setter
     def dstXInBytes(self, unsigned long value):
         self.set_dstXInBytes(0,value)
+
     def get_dstY(self, i):
         """Get value ``dstY`` of ``self._ptr[i]``.
         """
@@ -2561,6 +3045,7 @@ cdef class hip_Memcpy2D:
     @dstY.setter
     def dstY(self, unsigned long value):
         self.set_dstY(0,value)
+
     def get_dstMemoryType(self, i):
         """Get value of ``dstMemoryType`` of ``self._ptr[i]``.
         """
@@ -2577,6 +3062,55 @@ cdef class hip_Memcpy2D:
     @dstMemoryType.setter
     def dstMemoryType(self, value):
         self.set_dstMemoryType(0,value)
+
+    def get_dstHost(self, i):
+        """Get value ``dstHost`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].dstHost)
+    def set_dstHost(self, i, object value):
+        """Set value ``dstHost`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def dstHost(self):
+        """
+        Note:
+            Setting this dstHost can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_dstHost(0)
+    @dstHost.setter
+    def dstHost(self, object value):
+        self.set_dstHost(0,value)
+
+    def get_dstDevice(self, i):
+        """Get value ``dstDevice`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].dstDevice)
+    def set_dstDevice(self, i, object value):
+        """Set value ``dstDevice`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def dstDevice(self):
+        """
+        Note:
+            Setting this dstDevice can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_dstDevice(0)
+    @dstDevice.setter
+    def dstDevice(self, object value):
+        self.set_dstDevice(0,value)
+
     def get_dstPitch(self, i):
         """Get value ``dstPitch`` of ``self._ptr[i]``.
         """
@@ -2591,6 +3125,7 @@ cdef class hip_Memcpy2D:
     @dstPitch.setter
     def dstPitch(self, unsigned long value):
         self.set_dstPitch(0,value)
+
     def get_WidthInBytes(self, i):
         """Get value ``WidthInBytes`` of ``self._ptr[i]``.
         """
@@ -2605,6 +3140,7 @@ cdef class hip_Memcpy2D:
     @WidthInBytes.setter
     def WidthInBytes(self, unsigned long value):
         self.set_WidthInBytes(0,value)
+
     def get_Height(self, i):
         """Get value ``Height`` of ``self._ptr[i]``.
         """
@@ -2619,6 +3155,22 @@ cdef class hip_Memcpy2D:
     @Height.setter
     def Height(self, unsigned long value):
         self.set_Height(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["srcXInBytes","srcY","srcMemoryType","srcHost","srcDevice","srcPitch","dstXInBytes","dstY","dstMemoryType","dstHost","dstDevice","dstPitch","WidthInBytes","Height"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipArray_t = hipArray
@@ -2676,7 +3228,7 @@ cdef class hipMipmappedArray:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipMipmappedArray*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipMipmappedArray*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipMipmappedArray*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -2718,10 +3270,24 @@ cdef class hipMipmappedArray:
         cdef chip.hipMipmappedArray* ptr
         hipMipmappedArray.__allocate(&ptr)
         return hipMipmappedArray.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipMipmappedArray.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipMipmappedArray.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -2735,6 +3301,30 @@ cdef class hipMipmappedArray:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_data(self, i):
+        """Get value ``data`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].data)
+    def set_data(self, i, object value):
+        """Set value ``data`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def data(self):
+        """
+        Note:
+            Setting this data can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_data(0)
+    @data.setter
+    def data(self, object value):
+        self.set_data(0,value)
+
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -2742,6 +3332,7 @@ cdef class hipMipmappedArray:
     @property
     def desc(self):
         return self.get_desc(0)
+
     def get_type(self, i):
         """Get value ``type`` of ``self._ptr[i]``.
         """
@@ -2756,6 +3347,7 @@ cdef class hipMipmappedArray:
     @type.setter
     def type(self, unsigned int value):
         self.set_type(0,value)
+
     def get_width(self, i):
         """Get value ``width`` of ``self._ptr[i]``.
         """
@@ -2770,6 +3362,7 @@ cdef class hipMipmappedArray:
     @width.setter
     def width(self, unsigned int value):
         self.set_width(0,value)
+
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
@@ -2784,6 +3377,7 @@ cdef class hipMipmappedArray:
     @height.setter
     def height(self, unsigned int value):
         self.set_height(0,value)
+
     def get_depth(self, i):
         """Get value ``depth`` of ``self._ptr[i]``.
         """
@@ -2798,6 +3392,7 @@ cdef class hipMipmappedArray:
     @depth.setter
     def depth(self, unsigned int value):
         self.set_depth(0,value)
+
     def get_min_mipmap_level(self, i):
         """Get value ``min_mipmap_level`` of ``self._ptr[i]``.
         """
@@ -2812,6 +3407,7 @@ cdef class hipMipmappedArray:
     @min_mipmap_level.setter
     def min_mipmap_level(self, unsigned int value):
         self.set_min_mipmap_level(0,value)
+
     def get_max_mipmap_level(self, i):
         """Get value ``max_mipmap_level`` of ``self._ptr[i]``.
         """
@@ -2826,6 +3422,7 @@ cdef class hipMipmappedArray:
     @max_mipmap_level.setter
     def max_mipmap_level(self, unsigned int value):
         self.set_max_mipmap_level(0,value)
+
     def get_flags(self, i):
         """Get value ``flags`` of ``self._ptr[i]``.
         """
@@ -2840,6 +3437,7 @@ cdef class hipMipmappedArray:
     @flags.setter
     def flags(self, unsigned int value):
         self.set_flags(0,value)
+
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -2856,6 +3454,22 @@ cdef class hipMipmappedArray:
     @format.setter
     def format(self, value):
         self.set_format(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["data","desc","type","width","height","depth","min_mipmap_level","max_mipmap_level","flags","format"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipMipmappedArray_t = hipMipmappedArray
@@ -2953,7 +3567,7 @@ cdef class HIP_TEXTURE_DESC_st:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -2995,10 +3609,21 @@ cdef class HIP_TEXTURE_DESC_st:
         cdef chip.HIP_TEXTURE_DESC_st* ptr
         HIP_TEXTURE_DESC_st.__allocate(&ptr)
         return HIP_TEXTURE_DESC_st.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_TEXTURE_DESC_st.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        HIP_TEXTURE_DESC_st.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -3012,7 +3637,6 @@ cdef class HIP_TEXTURE_DESC_st:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
-    # TODO is_enum_constantarray: add
     def get_filterMode(self, i):
         """Get value of ``filterMode`` of ``self._ptr[i]``.
         """
@@ -3029,6 +3653,7 @@ cdef class HIP_TEXTURE_DESC_st:
     @filterMode.setter
     def filterMode(self, value):
         self.set_filterMode(0,value)
+
     def get_flags(self, i):
         """Get value ``flags`` of ``self._ptr[i]``.
         """
@@ -3043,6 +3668,7 @@ cdef class HIP_TEXTURE_DESC_st:
     @flags.setter
     def flags(self, unsigned int value):
         self.set_flags(0,value)
+
     def get_maxAnisotropy(self, i):
         """Get value ``maxAnisotropy`` of ``self._ptr[i]``.
         """
@@ -3057,6 +3683,7 @@ cdef class HIP_TEXTURE_DESC_st:
     @maxAnisotropy.setter
     def maxAnisotropy(self, unsigned int value):
         self.set_maxAnisotropy(0,value)
+
     def get_mipmapFilterMode(self, i):
         """Get value of ``mipmapFilterMode`` of ``self._ptr[i]``.
         """
@@ -3073,6 +3700,7 @@ cdef class HIP_TEXTURE_DESC_st:
     @mipmapFilterMode.setter
     def mipmapFilterMode(self, value):
         self.set_mipmapFilterMode(0,value)
+
     def get_mipmapLevelBias(self, i):
         """Get value ``mipmapLevelBias`` of ``self._ptr[i]``.
         """
@@ -3087,6 +3715,7 @@ cdef class HIP_TEXTURE_DESC_st:
     @mipmapLevelBias.setter
     def mipmapLevelBias(self, float value):
         self.set_mipmapLevelBias(0,value)
+
     def get_minMipmapLevelClamp(self, i):
         """Get value ``minMipmapLevelClamp`` of ``self._ptr[i]``.
         """
@@ -3101,6 +3730,7 @@ cdef class HIP_TEXTURE_DESC_st:
     @minMipmapLevelClamp.setter
     def minMipmapLevelClamp(self, float value):
         self.set_minMipmapLevelClamp(0,value)
+
     def get_maxMipmapLevelClamp(self, i):
         """Get value ``maxMipmapLevelClamp`` of ``self._ptr[i]``.
         """
@@ -3115,6 +3745,7 @@ cdef class HIP_TEXTURE_DESC_st:
     @maxMipmapLevelClamp.setter
     def maxMipmapLevelClamp(self, float value):
         self.set_maxMipmapLevelClamp(0,value)
+
     def get_borderColor(self, i):
         """Get value of ``borderColor`` of ``self._ptr[i]``.
         """
@@ -3123,6 +3754,7 @@ cdef class HIP_TEXTURE_DESC_st:
     def borderColor(self):
         return self.get_borderColor(0)
     # TODO is_basic_type_constantarray: add setters
+
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -3131,6 +3763,22 @@ cdef class HIP_TEXTURE_DESC_st:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["filterMode","flags","maxAnisotropy","mipmapFilterMode","mipmapLevelBias","minMipmapLevelClamp","maxMipmapLevelClamp","borderColor","reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipResourceViewFormat(enum.IntEnum):
@@ -3266,7 +3914,7 @@ cdef class hipResourceDesc_union_0_struct_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -3308,10 +3956,21 @@ cdef class hipResourceDesc_union_0_struct_0:
         cdef chip.hipResourceDesc_union_0_struct_0* ptr
         hipResourceDesc_union_0_struct_0.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipResourceDesc_union_0_struct_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        hipResourceDesc_union_0_struct_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -3325,6 +3984,21 @@ cdef class hipResourceDesc_union_0_struct_0:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipResourceDesc_union_0_struct_1:
@@ -3376,7 +4050,7 @@ cdef class hipResourceDesc_union_0_struct_1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -3418,10 +4092,21 @@ cdef class hipResourceDesc_union_0_struct_1:
         cdef chip.hipResourceDesc_union_0_struct_1* ptr
         hipResourceDesc_union_0_struct_1.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_1.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipResourceDesc_union_0_struct_1.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        hipResourceDesc_union_0_struct_1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -3435,6 +4120,21 @@ cdef class hipResourceDesc_union_0_struct_1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipResourceDesc_union_0_struct_2:
@@ -3486,7 +4186,7 @@ cdef class hipResourceDesc_union_0_struct_2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -3528,10 +4228,24 @@ cdef class hipResourceDesc_union_0_struct_2:
         cdef chip.hipResourceDesc_union_0_struct_2* ptr
         hipResourceDesc_union_0_struct_2.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_2.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipResourceDesc_union_0_struct_2.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipResourceDesc_union_0_struct_2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -3545,6 +4259,30 @@ cdef class hipResourceDesc_union_0_struct_2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_devPtr(self, i):
+        """Get value ``devPtr`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].devPtr)
+    def set_devPtr(self, i, object value):
+        """Set value ``devPtr`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def devPtr(self):
+        """
+        Note:
+            Setting this devPtr can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_devPtr(0)
+    @devPtr.setter
+    def devPtr(self, object value):
+        self.set_devPtr(0,value)
+
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -3552,6 +4290,7 @@ cdef class hipResourceDesc_union_0_struct_2:
     @property
     def desc(self):
         return self.get_desc(0)
+
     def get_sizeInBytes(self, i):
         """Get value ``sizeInBytes`` of ``self._ptr[i]``.
         """
@@ -3566,6 +4305,22 @@ cdef class hipResourceDesc_union_0_struct_2:
     @sizeInBytes.setter
     def sizeInBytes(self, unsigned long value):
         self.set_sizeInBytes(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["devPtr","desc","sizeInBytes"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipResourceDesc_union_0_struct_3:
@@ -3617,7 +4372,7 @@ cdef class hipResourceDesc_union_0_struct_3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -3659,10 +4414,24 @@ cdef class hipResourceDesc_union_0_struct_3:
         cdef chip.hipResourceDesc_union_0_struct_3* ptr
         hipResourceDesc_union_0_struct_3.__allocate(&ptr)
         return hipResourceDesc_union_0_struct_3.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipResourceDesc_union_0_struct_3.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipResourceDesc_union_0_struct_3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -3676,6 +4445,30 @@ cdef class hipResourceDesc_union_0_struct_3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_devPtr(self, i):
+        """Get value ``devPtr`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].devPtr)
+    def set_devPtr(self, i, object value):
+        """Set value ``devPtr`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def devPtr(self):
+        """
+        Note:
+            Setting this devPtr can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_devPtr(0)
+    @devPtr.setter
+    def devPtr(self, object value):
+        self.set_devPtr(0,value)
+
     def get_desc(self, i):
         """Get value of ``desc`` of ``self._ptr[i]``.
         """
@@ -3683,6 +4476,7 @@ cdef class hipResourceDesc_union_0_struct_3:
     @property
     def desc(self):
         return self.get_desc(0)
+
     def get_width(self, i):
         """Get value ``width`` of ``self._ptr[i]``.
         """
@@ -3697,6 +4491,7 @@ cdef class hipResourceDesc_union_0_struct_3:
     @width.setter
     def width(self, unsigned long value):
         self.set_width(0,value)
+
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
@@ -3711,6 +4506,7 @@ cdef class hipResourceDesc_union_0_struct_3:
     @height.setter
     def height(self, unsigned long value):
         self.set_height(0,value)
+
     def get_pitchInBytes(self, i):
         """Get value ``pitchInBytes`` of ``self._ptr[i]``.
         """
@@ -3725,6 +4521,22 @@ cdef class hipResourceDesc_union_0_struct_3:
     @pitchInBytes.setter
     def pitchInBytes(self, unsigned long value):
         self.set_pitchInBytes(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["devPtr","desc","width","height","pitchInBytes"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipResourceDesc_union_0:
@@ -3776,7 +4588,7 @@ cdef class hipResourceDesc_union_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipResourceDesc_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipResourceDesc_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipResourceDesc_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -3818,10 +4630,23 @@ cdef class hipResourceDesc_union_0:
         cdef chip.hipResourceDesc_union_0* ptr
         hipResourceDesc_union_0.__allocate(&ptr)
         return hipResourceDesc_union_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipResourceDesc_union_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # True
+    # True
+    def __init__(self,**kwargs):
+        hipResourceDesc_union_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(kwargs) > 1:
+            raise ValueError("Not more than one attribute might specified for Python types derived from C union types.")
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -3842,6 +4667,7 @@ cdef class hipResourceDesc_union_0:
     @property
     def array(self):
         return self.get_array(0)
+
     def get_mipmap(self, i):
         """Get value of ``mipmap`` of ``self._ptr[i]``.
         """
@@ -3849,6 +4675,7 @@ cdef class hipResourceDesc_union_0:
     @property
     def mipmap(self):
         return self.get_mipmap(0)
+
     def get_linear(self, i):
         """Get value of ``linear`` of ``self._ptr[i]``.
         """
@@ -3856,6 +4683,7 @@ cdef class hipResourceDesc_union_0:
     @property
     def linear(self):
         return self.get_linear(0)
+
     def get_pitch2D(self, i):
         """Get value of ``pitch2D`` of ``self._ptr[i]``.
         """
@@ -3863,6 +4691,10 @@ cdef class hipResourceDesc_union_0:
     @property
     def pitch2D(self):
         return self.get_pitch2D(0)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["array","mipmap","linear","pitch2D"]
 
 
 cdef class hipResourceDesc:
@@ -3914,7 +4746,7 @@ cdef class hipResourceDesc:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipResourceDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipResourceDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipResourceDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -3956,10 +4788,24 @@ cdef class hipResourceDesc:
         cdef chip.hipResourceDesc* ptr
         hipResourceDesc.__allocate(&ptr)
         return hipResourceDesc.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipResourceDesc.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipResourceDesc.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -3989,6 +4835,7 @@ cdef class hipResourceDesc:
     @resType.setter
     def resType(self, value):
         self.set_resType(0,value)
+
     def get_res(self, i):
         """Get value of ``res`` of ``self._ptr[i]``.
         """
@@ -3996,6 +4843,22 @@ cdef class hipResourceDesc:
     @property
     def res(self):
         return self.get_res(0)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["resType","res"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
@@ -4047,7 +4910,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -4089,10 +4952,21 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
         cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_0* ptr
         HIP_RESOURCE_DESC_st_union_0_struct_0.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_RESOURCE_DESC_st_union_0_struct_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        HIP_RESOURCE_DESC_st_union_0_struct_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -4106,6 +4980,21 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
@@ -4157,7 +5046,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -4199,10 +5088,21 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
         cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_1* ptr
         HIP_RESOURCE_DESC_st_union_0_struct_1.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_1.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_RESOURCE_DESC_st_union_0_struct_1.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        HIP_RESOURCE_DESC_st_union_0_struct_1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -4216,6 +5116,21 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
@@ -4267,7 +5182,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -4309,10 +5224,24 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
         cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_2* ptr
         HIP_RESOURCE_DESC_st_union_0_struct_2.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_2.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_RESOURCE_DESC_st_union_0_struct_2.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        HIP_RESOURCE_DESC_st_union_0_struct_2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -4326,6 +5255,30 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_devPtr(self, i):
+        """Get value ``devPtr`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].devPtr)
+    def set_devPtr(self, i, object value):
+        """Set value ``devPtr`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def devPtr(self):
+        """
+        Note:
+            Setting this devPtr can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_devPtr(0)
+    @devPtr.setter
+    def devPtr(self, object value):
+        self.set_devPtr(0,value)
+
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -4342,6 +5295,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     @format.setter
     def format(self, value):
         self.set_format(0,value)
+
     def get_numChannels(self, i):
         """Get value ``numChannels`` of ``self._ptr[i]``.
         """
@@ -4356,6 +5310,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     @numChannels.setter
     def numChannels(self, unsigned int value):
         self.set_numChannels(0,value)
+
     def get_sizeInBytes(self, i):
         """Get value ``sizeInBytes`` of ``self._ptr[i]``.
         """
@@ -4370,6 +5325,22 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
     @sizeInBytes.setter
     def sizeInBytes(self, unsigned long value):
         self.set_sizeInBytes(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["devPtr","format","numChannels","sizeInBytes"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
@@ -4421,7 +5392,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -4463,10 +5434,24 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
         cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_3* ptr
         HIP_RESOURCE_DESC_st_union_0_struct_3.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_3.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_RESOURCE_DESC_st_union_0_struct_3.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        HIP_RESOURCE_DESC_st_union_0_struct_3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -4480,6 +5465,30 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_devPtr(self, i):
+        """Get value ``devPtr`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].devPtr)
+    def set_devPtr(self, i, object value):
+        """Set value ``devPtr`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def devPtr(self):
+        """
+        Note:
+            Setting this devPtr can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_devPtr(0)
+    @devPtr.setter
+    def devPtr(self, object value):
+        self.set_devPtr(0,value)
+
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -4496,6 +5505,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     @format.setter
     def format(self, value):
         self.set_format(0,value)
+
     def get_numChannels(self, i):
         """Get value ``numChannels`` of ``self._ptr[i]``.
         """
@@ -4510,6 +5520,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     @numChannels.setter
     def numChannels(self, unsigned int value):
         self.set_numChannels(0,value)
+
     def get_width(self, i):
         """Get value ``width`` of ``self._ptr[i]``.
         """
@@ -4524,6 +5535,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     @width.setter
     def width(self, unsigned long value):
         self.set_width(0,value)
+
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
@@ -4538,6 +5550,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     @height.setter
     def height(self, unsigned long value):
         self.set_height(0,value)
+
     def get_pitchInBytes(self, i):
         """Get value ``pitchInBytes`` of ``self._ptr[i]``.
         """
@@ -4552,6 +5565,22 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
     @pitchInBytes.setter
     def pitchInBytes(self, unsigned long value):
         self.set_pitchInBytes(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["devPtr","format","numChannels","width","height","pitchInBytes"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
@@ -4603,7 +5632,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -4645,10 +5674,24 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
         cdef chip.HIP_RESOURCE_DESC_st_union_0_struct_4* ptr
         HIP_RESOURCE_DESC_st_union_0_struct_4.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0_struct_4.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_RESOURCE_DESC_st_union_0_struct_4.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        HIP_RESOURCE_DESC_st_union_0_struct_4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -4670,6 +5713,22 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class HIP_RESOURCE_DESC_st_union_0:
@@ -4721,7 +5780,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -4763,10 +5822,23 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
         cdef chip.HIP_RESOURCE_DESC_st_union_0* ptr
         HIP_RESOURCE_DESC_st_union_0.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st_union_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_RESOURCE_DESC_st_union_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # True
+    # True
+    def __init__(self,**kwargs):
+        HIP_RESOURCE_DESC_st_union_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(kwargs) > 1:
+            raise ValueError("Not more than one attribute might specified for Python types derived from C union types.")
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -4787,6 +5859,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
     @property
     def array(self):
         return self.get_array(0)
+
     def get_mipmap(self, i):
         """Get value of ``mipmap`` of ``self._ptr[i]``.
         """
@@ -4794,6 +5867,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
     @property
     def mipmap(self):
         return self.get_mipmap(0)
+
     def get_linear(self, i):
         """Get value of ``linear`` of ``self._ptr[i]``.
         """
@@ -4801,6 +5875,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
     @property
     def linear(self):
         return self.get_linear(0)
+
     def get_pitch2D(self, i):
         """Get value of ``pitch2D`` of ``self._ptr[i]``.
         """
@@ -4808,6 +5883,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
     @property
     def pitch2D(self):
         return self.get_pitch2D(0)
+
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -4815,6 +5891,10 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
     @property
     def reserved(self):
         return self.get_reserved(0)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["array","mipmap","linear","pitch2D","reserved"]
 
 
 cdef class HIP_RESOURCE_DESC_st:
@@ -4866,7 +5946,7 @@ cdef class HIP_RESOURCE_DESC_st:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -4908,10 +5988,24 @@ cdef class HIP_RESOURCE_DESC_st:
         cdef chip.HIP_RESOURCE_DESC_st* ptr
         HIP_RESOURCE_DESC_st.__allocate(&ptr)
         return HIP_RESOURCE_DESC_st.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_RESOURCE_DESC_st.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        HIP_RESOURCE_DESC_st.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -4941,6 +6035,7 @@ cdef class HIP_RESOURCE_DESC_st:
     @resType.setter
     def resType(self, value):
         self.set_resType(0,value)
+
     def get_res(self, i):
         """Get value of ``res`` of ``self._ptr[i]``.
         """
@@ -4948,6 +6043,7 @@ cdef class HIP_RESOURCE_DESC_st:
     @property
     def res(self):
         return self.get_res(0)
+
     def get_flags(self, i):
         """Get value ``flags`` of ``self._ptr[i]``.
         """
@@ -4962,6 +6058,22 @@ cdef class HIP_RESOURCE_DESC_st:
     @flags.setter
     def flags(self, unsigned int value):
         self.set_flags(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["resType","res","flags"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipResourceViewDesc:
@@ -5013,7 +6125,7 @@ cdef class hipResourceViewDesc:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipResourceViewDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipResourceViewDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipResourceViewDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -5055,10 +6167,24 @@ cdef class hipResourceViewDesc:
         cdef chip.hipResourceViewDesc* ptr
         hipResourceViewDesc.__allocate(&ptr)
         return hipResourceViewDesc.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipResourceViewDesc.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipResourceViewDesc.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -5088,6 +6214,7 @@ cdef class hipResourceViewDesc:
     @format.setter
     def format(self, value):
         self.set_format(0,value)
+
     def get_width(self, i):
         """Get value ``width`` of ``self._ptr[i]``.
         """
@@ -5102,6 +6229,7 @@ cdef class hipResourceViewDesc:
     @width.setter
     def width(self, unsigned long value):
         self.set_width(0,value)
+
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
@@ -5116,6 +6244,7 @@ cdef class hipResourceViewDesc:
     @height.setter
     def height(self, unsigned long value):
         self.set_height(0,value)
+
     def get_depth(self, i):
         """Get value ``depth`` of ``self._ptr[i]``.
         """
@@ -5130,6 +6259,7 @@ cdef class hipResourceViewDesc:
     @depth.setter
     def depth(self, unsigned long value):
         self.set_depth(0,value)
+
     def get_firstMipmapLevel(self, i):
         """Get value ``firstMipmapLevel`` of ``self._ptr[i]``.
         """
@@ -5144,6 +6274,7 @@ cdef class hipResourceViewDesc:
     @firstMipmapLevel.setter
     def firstMipmapLevel(self, unsigned int value):
         self.set_firstMipmapLevel(0,value)
+
     def get_lastMipmapLevel(self, i):
         """Get value ``lastMipmapLevel`` of ``self._ptr[i]``.
         """
@@ -5158,6 +6289,7 @@ cdef class hipResourceViewDesc:
     @lastMipmapLevel.setter
     def lastMipmapLevel(self, unsigned int value):
         self.set_lastMipmapLevel(0,value)
+
     def get_firstLayer(self, i):
         """Get value ``firstLayer`` of ``self._ptr[i]``.
         """
@@ -5172,6 +6304,7 @@ cdef class hipResourceViewDesc:
     @firstLayer.setter
     def firstLayer(self, unsigned int value):
         self.set_firstLayer(0,value)
+
     def get_lastLayer(self, i):
         """Get value ``lastLayer`` of ``self._ptr[i]``.
         """
@@ -5186,6 +6319,22 @@ cdef class hipResourceViewDesc:
     @lastLayer.setter
     def lastLayer(self, unsigned int value):
         self.set_lastLayer(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["format","width","height","depth","firstMipmapLevel","lastMipmapLevel","firstLayer","lastLayer"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class HIP_RESOURCE_VIEW_DESC_st:
@@ -5237,7 +6386,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -5279,10 +6428,24 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         cdef chip.HIP_RESOURCE_VIEW_DESC_st* ptr
         HIP_RESOURCE_VIEW_DESC_st.__allocate(&ptr)
         return HIP_RESOURCE_VIEW_DESC_st.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_RESOURCE_VIEW_DESC_st.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        HIP_RESOURCE_VIEW_DESC_st.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -5312,6 +6475,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     @format.setter
     def format(self, value):
         self.set_format(0,value)
+
     def get_width(self, i):
         """Get value ``width`` of ``self._ptr[i]``.
         """
@@ -5326,6 +6490,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     @width.setter
     def width(self, unsigned long value):
         self.set_width(0,value)
+
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
@@ -5340,6 +6505,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     @height.setter
     def height(self, unsigned long value):
         self.set_height(0,value)
+
     def get_depth(self, i):
         """Get value ``depth`` of ``self._ptr[i]``.
         """
@@ -5354,6 +6520,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     @depth.setter
     def depth(self, unsigned long value):
         self.set_depth(0,value)
+
     def get_firstMipmapLevel(self, i):
         """Get value ``firstMipmapLevel`` of ``self._ptr[i]``.
         """
@@ -5368,6 +6535,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     @firstMipmapLevel.setter
     def firstMipmapLevel(self, unsigned int value):
         self.set_firstMipmapLevel(0,value)
+
     def get_lastMipmapLevel(self, i):
         """Get value ``lastMipmapLevel`` of ``self._ptr[i]``.
         """
@@ -5382,6 +6550,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     @lastMipmapLevel.setter
     def lastMipmapLevel(self, unsigned int value):
         self.set_lastMipmapLevel(0,value)
+
     def get_firstLayer(self, i):
         """Get value ``firstLayer`` of ``self._ptr[i]``.
         """
@@ -5396,6 +6565,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     @firstLayer.setter
     def firstLayer(self, unsigned int value):
         self.set_firstLayer(0,value)
+
     def get_lastLayer(self, i):
         """Get value ``lastLayer`` of ``self._ptr[i]``.
         """
@@ -5410,6 +6580,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     @lastLayer.setter
     def lastLayer(self, unsigned int value):
         self.set_lastLayer(0,value)
+
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -5418,6 +6589,22 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["format","width","height","depth","firstMipmapLevel","lastMipmapLevel","firstLayer","lastLayer","reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipMemcpyKind(enum.IntEnum):
@@ -5481,7 +6668,7 @@ cdef class hipPitchedPtr:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipPitchedPtr*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipPitchedPtr*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipPitchedPtr*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -5523,10 +6710,24 @@ cdef class hipPitchedPtr:
         cdef chip.hipPitchedPtr* ptr
         hipPitchedPtr.__allocate(&ptr)
         return hipPitchedPtr.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipPitchedPtr.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipPitchedPtr.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -5540,6 +6741,30 @@ cdef class hipPitchedPtr:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_ptr(self, i):
+        """Get value ``ptr`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].ptr)
+    def set_ptr(self, i, object value):
+        """Set value ``ptr`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].ptr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def ptr(self):
+        """
+        Note:
+            Setting this ptr can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_ptr(0)
+    @ptr.setter
+    def ptr(self, object value):
+        self.set_ptr(0,value)
+
     def get_pitch(self, i):
         """Get value ``pitch`` of ``self._ptr[i]``.
         """
@@ -5554,6 +6779,7 @@ cdef class hipPitchedPtr:
     @pitch.setter
     def pitch(self, unsigned long value):
         self.set_pitch(0,value)
+
     def get_xsize(self, i):
         """Get value ``xsize`` of ``self._ptr[i]``.
         """
@@ -5568,6 +6794,7 @@ cdef class hipPitchedPtr:
     @xsize.setter
     def xsize(self, unsigned long value):
         self.set_xsize(0,value)
+
     def get_ysize(self, i):
         """Get value ``ysize`` of ``self._ptr[i]``.
         """
@@ -5582,6 +6809,22 @@ cdef class hipPitchedPtr:
     @ysize.setter
     def ysize(self, unsigned long value):
         self.set_ysize(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["ptr","pitch","xsize","ysize"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExtent:
@@ -5633,7 +6876,7 @@ cdef class hipExtent:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExtent*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExtent*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExtent*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -5675,10 +6918,24 @@ cdef class hipExtent:
         cdef chip.hipExtent* ptr
         hipExtent.__allocate(&ptr)
         return hipExtent.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExtent.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExtent.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -5706,6 +6963,7 @@ cdef class hipExtent:
     @width.setter
     def width(self, unsigned long value):
         self.set_width(0,value)
+
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
@@ -5720,6 +6978,7 @@ cdef class hipExtent:
     @height.setter
     def height(self, unsigned long value):
         self.set_height(0,value)
+
     def get_depth(self, i):
         """Get value ``depth`` of ``self._ptr[i]``.
         """
@@ -5734,6 +6993,22 @@ cdef class hipExtent:
     @depth.setter
     def depth(self, unsigned long value):
         self.set_depth(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["width","height","depth"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipPos:
@@ -5785,7 +7060,7 @@ cdef class hipPos:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipPos*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipPos*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipPos*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -5827,10 +7102,24 @@ cdef class hipPos:
         cdef chip.hipPos* ptr
         hipPos.__allocate(&ptr)
         return hipPos.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipPos.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipPos.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -5858,6 +7147,7 @@ cdef class hipPos:
     @x.setter
     def x(self, unsigned long value):
         self.set_x(0,value)
+
     def get_y(self, i):
         """Get value ``y`` of ``self._ptr[i]``.
         """
@@ -5872,6 +7162,7 @@ cdef class hipPos:
     @y.setter
     def y(self, unsigned long value):
         self.set_y(0,value)
+
     def get_z(self, i):
         """Get value ``z`` of ``self._ptr[i]``.
         """
@@ -5886,6 +7177,22 @@ cdef class hipPos:
     @z.setter
     def z(self, unsigned long value):
         self.set_z(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["x","y","z"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipMemcpy3DParms:
@@ -5937,7 +7244,7 @@ cdef class hipMemcpy3DParms:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipMemcpy3DParms*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipMemcpy3DParms*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipMemcpy3DParms*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -5979,10 +7286,21 @@ cdef class hipMemcpy3DParms:
         cdef chip.hipMemcpy3DParms* ptr
         hipMemcpy3DParms.__allocate(&ptr)
         return hipMemcpy3DParms.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipMemcpy3DParms.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        hipMemcpy3DParms.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -6003,6 +7321,7 @@ cdef class hipMemcpy3DParms:
     @property
     def srcPos(self):
         return self.get_srcPos(0)
+
     def get_srcPtr(self, i):
         """Get value of ``srcPtr`` of ``self._ptr[i]``.
         """
@@ -6010,6 +7329,7 @@ cdef class hipMemcpy3DParms:
     @property
     def srcPtr(self):
         return self.get_srcPtr(0)
+
     def get_dstPos(self, i):
         """Get value of ``dstPos`` of ``self._ptr[i]``.
         """
@@ -6017,6 +7337,7 @@ cdef class hipMemcpy3DParms:
     @property
     def dstPos(self):
         return self.get_dstPos(0)
+
     def get_dstPtr(self, i):
         """Get value of ``dstPtr`` of ``self._ptr[i]``.
         """
@@ -6024,6 +7345,7 @@ cdef class hipMemcpy3DParms:
     @property
     def dstPtr(self):
         return self.get_dstPtr(0)
+
     def get_extent(self, i):
         """Get value of ``extent`` of ``self._ptr[i]``.
         """
@@ -6031,6 +7353,7 @@ cdef class hipMemcpy3DParms:
     @property
     def extent(self):
         return self.get_extent(0)
+
     def get_kind(self, i):
         """Get value of ``kind`` of ``self._ptr[i]``.
         """
@@ -6047,6 +7370,22 @@ cdef class hipMemcpy3DParms:
     @kind.setter
     def kind(self, value):
         self.set_kind(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["srcPos","srcPtr","dstPos","dstPtr","extent","kind"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class HIP_MEMCPY3D:
@@ -6098,7 +7437,7 @@ cdef class HIP_MEMCPY3D:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.HIP_MEMCPY3D*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.HIP_MEMCPY3D*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.HIP_MEMCPY3D*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -6140,10 +7479,21 @@ cdef class HIP_MEMCPY3D:
         cdef chip.HIP_MEMCPY3D* ptr
         HIP_MEMCPY3D.__allocate(&ptr)
         return HIP_MEMCPY3D.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       HIP_MEMCPY3D.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        HIP_MEMCPY3D.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -6171,6 +7521,7 @@ cdef class HIP_MEMCPY3D:
     @srcXInBytes.setter
     def srcXInBytes(self, unsigned int value):
         self.set_srcXInBytes(0,value)
+
     def get_srcY(self, i):
         """Get value ``srcY`` of ``self._ptr[i]``.
         """
@@ -6185,6 +7536,7 @@ cdef class HIP_MEMCPY3D:
     @srcY.setter
     def srcY(self, unsigned int value):
         self.set_srcY(0,value)
+
     def get_srcZ(self, i):
         """Get value ``srcZ`` of ``self._ptr[i]``.
         """
@@ -6199,6 +7551,7 @@ cdef class HIP_MEMCPY3D:
     @srcZ.setter
     def srcZ(self, unsigned int value):
         self.set_srcZ(0,value)
+
     def get_srcLOD(self, i):
         """Get value ``srcLOD`` of ``self._ptr[i]``.
         """
@@ -6213,6 +7566,7 @@ cdef class HIP_MEMCPY3D:
     @srcLOD.setter
     def srcLOD(self, unsigned int value):
         self.set_srcLOD(0,value)
+
     def get_srcMemoryType(self, i):
         """Get value of ``srcMemoryType`` of ``self._ptr[i]``.
         """
@@ -6229,6 +7583,55 @@ cdef class HIP_MEMCPY3D:
     @srcMemoryType.setter
     def srcMemoryType(self, value):
         self.set_srcMemoryType(0,value)
+
+    def get_srcHost(self, i):
+        """Get value ``srcHost`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].srcHost)
+    def set_srcHost(self, i, object value):
+        """Set value ``srcHost`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def srcHost(self):
+        """
+        Note:
+            Setting this srcHost can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_srcHost(0)
+    @srcHost.setter
+    def srcHost(self, object value):
+        self.set_srcHost(0,value)
+
+    def get_srcDevice(self, i):
+        """Get value ``srcDevice`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].srcDevice)
+    def set_srcDevice(self, i, object value):
+        """Set value ``srcDevice`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def srcDevice(self):
+        """
+        Note:
+            Setting this srcDevice can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_srcDevice(0)
+    @srcDevice.setter
+    def srcDevice(self, object value):
+        self.set_srcDevice(0,value)
+
     def get_srcPitch(self, i):
         """Get value ``srcPitch`` of ``self._ptr[i]``.
         """
@@ -6243,6 +7646,7 @@ cdef class HIP_MEMCPY3D:
     @srcPitch.setter
     def srcPitch(self, unsigned int value):
         self.set_srcPitch(0,value)
+
     def get_srcHeight(self, i):
         """Get value ``srcHeight`` of ``self._ptr[i]``.
         """
@@ -6257,6 +7661,7 @@ cdef class HIP_MEMCPY3D:
     @srcHeight.setter
     def srcHeight(self, unsigned int value):
         self.set_srcHeight(0,value)
+
     def get_dstXInBytes(self, i):
         """Get value ``dstXInBytes`` of ``self._ptr[i]``.
         """
@@ -6271,6 +7676,7 @@ cdef class HIP_MEMCPY3D:
     @dstXInBytes.setter
     def dstXInBytes(self, unsigned int value):
         self.set_dstXInBytes(0,value)
+
     def get_dstY(self, i):
         """Get value ``dstY`` of ``self._ptr[i]``.
         """
@@ -6285,6 +7691,7 @@ cdef class HIP_MEMCPY3D:
     @dstY.setter
     def dstY(self, unsigned int value):
         self.set_dstY(0,value)
+
     def get_dstZ(self, i):
         """Get value ``dstZ`` of ``self._ptr[i]``.
         """
@@ -6299,6 +7706,7 @@ cdef class HIP_MEMCPY3D:
     @dstZ.setter
     def dstZ(self, unsigned int value):
         self.set_dstZ(0,value)
+
     def get_dstLOD(self, i):
         """Get value ``dstLOD`` of ``self._ptr[i]``.
         """
@@ -6313,6 +7721,7 @@ cdef class HIP_MEMCPY3D:
     @dstLOD.setter
     def dstLOD(self, unsigned int value):
         self.set_dstLOD(0,value)
+
     def get_dstMemoryType(self, i):
         """Get value of ``dstMemoryType`` of ``self._ptr[i]``.
         """
@@ -6329,6 +7738,55 @@ cdef class HIP_MEMCPY3D:
     @dstMemoryType.setter
     def dstMemoryType(self, value):
         self.set_dstMemoryType(0,value)
+
+    def get_dstHost(self, i):
+        """Get value ``dstHost`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].dstHost)
+    def set_dstHost(self, i, object value):
+        """Set value ``dstHost`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def dstHost(self):
+        """
+        Note:
+            Setting this dstHost can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_dstHost(0)
+    @dstHost.setter
+    def dstHost(self, object value):
+        self.set_dstHost(0,value)
+
+    def get_dstDevice(self, i):
+        """Get value ``dstDevice`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].dstDevice)
+    def set_dstDevice(self, i, object value):
+        """Set value ``dstDevice`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def dstDevice(self):
+        """
+        Note:
+            Setting this dstDevice can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_dstDevice(0)
+    @dstDevice.setter
+    def dstDevice(self, object value):
+        self.set_dstDevice(0,value)
+
     def get_dstPitch(self, i):
         """Get value ``dstPitch`` of ``self._ptr[i]``.
         """
@@ -6343,6 +7801,7 @@ cdef class HIP_MEMCPY3D:
     @dstPitch.setter
     def dstPitch(self, unsigned int value):
         self.set_dstPitch(0,value)
+
     def get_dstHeight(self, i):
         """Get value ``dstHeight`` of ``self._ptr[i]``.
         """
@@ -6357,6 +7816,7 @@ cdef class HIP_MEMCPY3D:
     @dstHeight.setter
     def dstHeight(self, unsigned int value):
         self.set_dstHeight(0,value)
+
     def get_WidthInBytes(self, i):
         """Get value ``WidthInBytes`` of ``self._ptr[i]``.
         """
@@ -6371,6 +7831,7 @@ cdef class HIP_MEMCPY3D:
     @WidthInBytes.setter
     def WidthInBytes(self, unsigned int value):
         self.set_WidthInBytes(0,value)
+
     def get_Height(self, i):
         """Get value ``Height`` of ``self._ptr[i]``.
         """
@@ -6385,6 +7846,7 @@ cdef class HIP_MEMCPY3D:
     @Height.setter
     def Height(self, unsigned int value):
         self.set_Height(0,value)
+
     def get_Depth(self, i):
         """Get value ``Depth`` of ``self._ptr[i]``.
         """
@@ -6399,6 +7861,22 @@ cdef class HIP_MEMCPY3D:
     @Depth.setter
     def Depth(self, unsigned int value):
         self.set_Depth(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["srcXInBytes","srcY","srcZ","srcLOD","srcMemoryType","srcHost","srcDevice","srcPitch","srcHeight","dstXInBytes","dstY","dstZ","dstLOD","dstMemoryType","dstHost","dstDevice","dstPitch","dstHeight","WidthInBytes","Height","Depth"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipFunction_attribute(enum.IntEnum):
@@ -6488,7 +7966,7 @@ cdef class uchar1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.uchar1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.uchar1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.uchar1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -6524,6 +8002,21 @@ cdef class uchar1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class uchar2:
@@ -6571,7 +8064,7 @@ cdef class uchar2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.uchar2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.uchar2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.uchar2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -6607,6 +8100,21 @@ cdef class uchar2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class uchar3:
@@ -6654,7 +8162,7 @@ cdef class uchar3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.uchar3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.uchar3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.uchar3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -6690,6 +8198,21 @@ cdef class uchar3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class uchar4:
@@ -6737,7 +8260,7 @@ cdef class uchar4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.uchar4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.uchar4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.uchar4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -6773,6 +8296,21 @@ cdef class uchar4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class char1:
@@ -6820,7 +8358,7 @@ cdef class char1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.char1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.char1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.char1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -6856,6 +8394,21 @@ cdef class char1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class char2:
@@ -6903,7 +8456,7 @@ cdef class char2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.char2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.char2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.char2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -6939,6 +8492,21 @@ cdef class char2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class char3:
@@ -6986,7 +8554,7 @@ cdef class char3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.char3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.char3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.char3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7022,6 +8590,21 @@ cdef class char3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class char4:
@@ -7069,7 +8652,7 @@ cdef class char4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.char4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.char4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.char4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7105,6 +8688,21 @@ cdef class char4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ushort1:
@@ -7152,7 +8750,7 @@ cdef class ushort1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ushort1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ushort1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ushort1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7188,6 +8786,21 @@ cdef class ushort1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ushort2:
@@ -7235,7 +8848,7 @@ cdef class ushort2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ushort2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ushort2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ushort2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7271,6 +8884,21 @@ cdef class ushort2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ushort3:
@@ -7318,7 +8946,7 @@ cdef class ushort3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ushort3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ushort3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ushort3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7354,6 +8982,21 @@ cdef class ushort3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ushort4:
@@ -7401,7 +9044,7 @@ cdef class ushort4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ushort4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ushort4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ushort4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7437,6 +9080,21 @@ cdef class ushort4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class short1:
@@ -7484,7 +9142,7 @@ cdef class short1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.short1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.short1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.short1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7520,6 +9178,21 @@ cdef class short1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class short2:
@@ -7567,7 +9240,7 @@ cdef class short2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.short2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.short2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.short2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7603,6 +9276,21 @@ cdef class short2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class short3:
@@ -7650,7 +9338,7 @@ cdef class short3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.short3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.short3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.short3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7686,6 +9374,21 @@ cdef class short3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class short4:
@@ -7733,7 +9436,7 @@ cdef class short4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.short4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.short4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.short4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7769,6 +9472,21 @@ cdef class short4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class uint1:
@@ -7816,7 +9534,7 @@ cdef class uint1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.uint1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.uint1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.uint1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7852,6 +9570,21 @@ cdef class uint1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class uint2:
@@ -7899,7 +9632,7 @@ cdef class uint2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.uint2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.uint2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.uint2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -7935,6 +9668,21 @@ cdef class uint2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class uint3:
@@ -7982,7 +9730,7 @@ cdef class uint3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.uint3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.uint3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.uint3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8018,6 +9766,21 @@ cdef class uint3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class uint4:
@@ -8065,7 +9828,7 @@ cdef class uint4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.uint4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.uint4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.uint4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8101,6 +9864,21 @@ cdef class uint4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class int1:
@@ -8148,7 +9926,7 @@ cdef class int1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.int1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.int1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.int1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8184,6 +9962,21 @@ cdef class int1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class int2:
@@ -8231,7 +10024,7 @@ cdef class int2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.int2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.int2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.int2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8267,6 +10060,21 @@ cdef class int2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class int3:
@@ -8314,7 +10122,7 @@ cdef class int3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.int3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.int3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.int3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8350,6 +10158,21 @@ cdef class int3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class int4:
@@ -8397,7 +10220,7 @@ cdef class int4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.int4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.int4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.int4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8433,6 +10256,21 @@ cdef class int4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ulong1:
@@ -8480,7 +10318,7 @@ cdef class ulong1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ulong1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ulong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ulong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8516,6 +10354,21 @@ cdef class ulong1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ulong2:
@@ -8563,7 +10416,7 @@ cdef class ulong2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ulong2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ulong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ulong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8599,6 +10452,21 @@ cdef class ulong2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ulong3:
@@ -8646,7 +10514,7 @@ cdef class ulong3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ulong3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ulong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ulong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8682,6 +10550,21 @@ cdef class ulong3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ulong4:
@@ -8729,7 +10612,7 @@ cdef class ulong4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ulong4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ulong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ulong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8765,6 +10648,21 @@ cdef class ulong4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class long1:
@@ -8812,7 +10710,7 @@ cdef class long1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.long1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.long1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.long1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8848,6 +10746,21 @@ cdef class long1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class long2:
@@ -8895,7 +10808,7 @@ cdef class long2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.long2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.long2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.long2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -8931,6 +10844,21 @@ cdef class long2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class long3:
@@ -8978,7 +10906,7 @@ cdef class long3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.long3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.long3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.long3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9014,6 +10942,21 @@ cdef class long3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class long4:
@@ -9061,7 +11004,7 @@ cdef class long4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.long4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.long4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.long4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9097,6 +11040,21 @@ cdef class long4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ulonglong1:
@@ -9144,7 +11102,7 @@ cdef class ulonglong1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ulonglong1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ulonglong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ulonglong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9180,6 +11138,21 @@ cdef class ulonglong1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ulonglong2:
@@ -9227,7 +11200,7 @@ cdef class ulonglong2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ulonglong2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ulonglong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ulonglong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9263,6 +11236,21 @@ cdef class ulonglong2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ulonglong3:
@@ -9310,7 +11298,7 @@ cdef class ulonglong3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ulonglong3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ulonglong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ulonglong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9346,6 +11334,21 @@ cdef class ulonglong3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ulonglong4:
@@ -9393,7 +11396,7 @@ cdef class ulonglong4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ulonglong4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ulonglong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ulonglong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9429,6 +11432,21 @@ cdef class ulonglong4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class longlong1:
@@ -9476,7 +11494,7 @@ cdef class longlong1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.longlong1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.longlong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.longlong1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9512,6 +11530,21 @@ cdef class longlong1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class longlong2:
@@ -9559,7 +11592,7 @@ cdef class longlong2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.longlong2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.longlong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.longlong2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9595,6 +11628,21 @@ cdef class longlong2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class longlong3:
@@ -9642,7 +11690,7 @@ cdef class longlong3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.longlong3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.longlong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.longlong3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9678,6 +11726,21 @@ cdef class longlong3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class longlong4:
@@ -9725,7 +11788,7 @@ cdef class longlong4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.longlong4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.longlong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.longlong4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9761,6 +11824,21 @@ cdef class longlong4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class float1:
@@ -9808,7 +11886,7 @@ cdef class float1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.float1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.float1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.float1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9844,6 +11922,21 @@ cdef class float1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class float2:
@@ -9891,7 +11984,7 @@ cdef class float2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.float2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.float2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.float2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -9927,6 +12020,21 @@ cdef class float2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class float3:
@@ -9974,7 +12082,7 @@ cdef class float3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.float3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.float3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.float3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -10010,6 +12118,21 @@ cdef class float3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class float4:
@@ -10057,7 +12180,7 @@ cdef class float4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.float4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.float4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.float4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -10093,6 +12216,21 @@ cdef class float4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class double1:
@@ -10140,7 +12278,7 @@ cdef class double1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.double1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.double1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.double1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -10176,6 +12314,21 @@ cdef class double1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class double2:
@@ -10223,7 +12376,7 @@ cdef class double2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.double2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.double2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.double2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -10259,6 +12412,21 @@ cdef class double2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class double3:
@@ -10306,7 +12474,7 @@ cdef class double3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.double3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.double3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.double3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -10342,6 +12510,21 @@ cdef class double3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class double4:
@@ -10389,7 +12572,7 @@ cdef class double4:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.double4*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.double4*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.double4*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -10425,6 +12608,21 @@ cdef class double4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 @cython.embedsignature(True)
@@ -10481,7 +12679,7 @@ cdef class __hip_texture:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.__hip_texture*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.__hip_texture*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.__hip_texture*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -10517,6 +12715,21 @@ cdef class __hip_texture:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipTextureObject_t = __hip_texture
@@ -10599,7 +12812,7 @@ cdef class textureReference:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.textureReference*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.textureReference*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.textureReference*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -10641,10 +12854,21 @@ cdef class textureReference:
         cdef chip.textureReference* ptr
         textureReference.__allocate(&ptr)
         return textureReference.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       textureReference.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        textureReference.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10672,6 +12896,7 @@ cdef class textureReference:
     @normalized.setter
     def normalized(self, int value):
         self.set_normalized(0,value)
+
     def get_readMode(self, i):
         """Get value of ``readMode`` of ``self._ptr[i]``.
         """
@@ -10688,6 +12913,7 @@ cdef class textureReference:
     @readMode.setter
     def readMode(self, value):
         self.set_readMode(0,value)
+
     def get_filterMode(self, i):
         """Get value of ``filterMode`` of ``self._ptr[i]``.
         """
@@ -10704,7 +12930,7 @@ cdef class textureReference:
     @filterMode.setter
     def filterMode(self, value):
         self.set_filterMode(0,value)
-    # TODO is_enum_constantarray: add
+
     def get_channelDesc(self, i):
         """Get value of ``channelDesc`` of ``self._ptr[i]``.
         """
@@ -10712,6 +12938,7 @@ cdef class textureReference:
     @property
     def channelDesc(self):
         return self.get_channelDesc(0)
+
     def get_sRGB(self, i):
         """Get value ``sRGB`` of ``self._ptr[i]``.
         """
@@ -10726,6 +12953,7 @@ cdef class textureReference:
     @sRGB.setter
     def sRGB(self, int value):
         self.set_sRGB(0,value)
+
     def get_maxAnisotropy(self, i):
         """Get value ``maxAnisotropy`` of ``self._ptr[i]``.
         """
@@ -10740,6 +12968,7 @@ cdef class textureReference:
     @maxAnisotropy.setter
     def maxAnisotropy(self, unsigned int value):
         self.set_maxAnisotropy(0,value)
+
     def get_mipmapFilterMode(self, i):
         """Get value of ``mipmapFilterMode`` of ``self._ptr[i]``.
         """
@@ -10756,6 +12985,7 @@ cdef class textureReference:
     @mipmapFilterMode.setter
     def mipmapFilterMode(self, value):
         self.set_mipmapFilterMode(0,value)
+
     def get_mipmapLevelBias(self, i):
         """Get value ``mipmapLevelBias`` of ``self._ptr[i]``.
         """
@@ -10770,6 +13000,7 @@ cdef class textureReference:
     @mipmapLevelBias.setter
     def mipmapLevelBias(self, float value):
         self.set_mipmapLevelBias(0,value)
+
     def get_minMipmapLevelClamp(self, i):
         """Get value ``minMipmapLevelClamp`` of ``self._ptr[i]``.
         """
@@ -10784,6 +13015,7 @@ cdef class textureReference:
     @minMipmapLevelClamp.setter
     def minMipmapLevelClamp(self, float value):
         self.set_minMipmapLevelClamp(0,value)
+
     def get_maxMipmapLevelClamp(self, i):
         """Get value ``maxMipmapLevelClamp`` of ``self._ptr[i]``.
         """
@@ -10798,6 +13030,7 @@ cdef class textureReference:
     @maxMipmapLevelClamp.setter
     def maxMipmapLevelClamp(self, float value):
         self.set_maxMipmapLevelClamp(0,value)
+
     def get_numChannels(self, i):
         """Get value ``numChannels`` of ``self._ptr[i]``.
         """
@@ -10812,6 +13045,7 @@ cdef class textureReference:
     @numChannels.setter
     def numChannels(self, int value):
         self.set_numChannels(0,value)
+
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -10828,6 +13062,22 @@ cdef class textureReference:
     @format.setter
     def format(self, value):
         self.set_format(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["normalized","readMode","filterMode","channelDesc","sRGB","maxAnisotropy","mipmapFilterMode","mipmapLevelBias","minMipmapLevelClamp","maxMipmapLevelClamp","numChannels","format"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipTextureDesc:
@@ -10879,7 +13129,7 @@ cdef class hipTextureDesc:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipTextureDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipTextureDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipTextureDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -10921,10 +13171,21 @@ cdef class hipTextureDesc:
         cdef chip.hipTextureDesc* ptr
         hipTextureDesc.__allocate(&ptr)
         return hipTextureDesc.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipTextureDesc.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        hipTextureDesc.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10938,7 +13199,6 @@ cdef class hipTextureDesc:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
-    # TODO is_enum_constantarray: add
     def get_filterMode(self, i):
         """Get value of ``filterMode`` of ``self._ptr[i]``.
         """
@@ -10955,6 +13215,7 @@ cdef class hipTextureDesc:
     @filterMode.setter
     def filterMode(self, value):
         self.set_filterMode(0,value)
+
     def get_readMode(self, i):
         """Get value of ``readMode`` of ``self._ptr[i]``.
         """
@@ -10971,6 +13232,7 @@ cdef class hipTextureDesc:
     @readMode.setter
     def readMode(self, value):
         self.set_readMode(0,value)
+
     def get_sRGB(self, i):
         """Get value ``sRGB`` of ``self._ptr[i]``.
         """
@@ -10985,6 +13247,7 @@ cdef class hipTextureDesc:
     @sRGB.setter
     def sRGB(self, int value):
         self.set_sRGB(0,value)
+
     def get_borderColor(self, i):
         """Get value of ``borderColor`` of ``self._ptr[i]``.
         """
@@ -10993,6 +13256,7 @@ cdef class hipTextureDesc:
     def borderColor(self):
         return self.get_borderColor(0)
     # TODO is_basic_type_constantarray: add setters
+
     def get_normalizedCoords(self, i):
         """Get value ``normalizedCoords`` of ``self._ptr[i]``.
         """
@@ -11007,6 +13271,7 @@ cdef class hipTextureDesc:
     @normalizedCoords.setter
     def normalizedCoords(self, int value):
         self.set_normalizedCoords(0,value)
+
     def get_maxAnisotropy(self, i):
         """Get value ``maxAnisotropy`` of ``self._ptr[i]``.
         """
@@ -11021,6 +13286,7 @@ cdef class hipTextureDesc:
     @maxAnisotropy.setter
     def maxAnisotropy(self, unsigned int value):
         self.set_maxAnisotropy(0,value)
+
     def get_mipmapFilterMode(self, i):
         """Get value of ``mipmapFilterMode`` of ``self._ptr[i]``.
         """
@@ -11037,6 +13303,7 @@ cdef class hipTextureDesc:
     @mipmapFilterMode.setter
     def mipmapFilterMode(self, value):
         self.set_mipmapFilterMode(0,value)
+
     def get_mipmapLevelBias(self, i):
         """Get value ``mipmapLevelBias`` of ``self._ptr[i]``.
         """
@@ -11051,6 +13318,7 @@ cdef class hipTextureDesc:
     @mipmapLevelBias.setter
     def mipmapLevelBias(self, float value):
         self.set_mipmapLevelBias(0,value)
+
     def get_minMipmapLevelClamp(self, i):
         """Get value ``minMipmapLevelClamp`` of ``self._ptr[i]``.
         """
@@ -11065,6 +13333,7 @@ cdef class hipTextureDesc:
     @minMipmapLevelClamp.setter
     def minMipmapLevelClamp(self, float value):
         self.set_minMipmapLevelClamp(0,value)
+
     def get_maxMipmapLevelClamp(self, i):
         """Get value ``maxMipmapLevelClamp`` of ``self._ptr[i]``.
         """
@@ -11079,6 +13348,22 @@ cdef class hipTextureDesc:
     @maxMipmapLevelClamp.setter
     def maxMipmapLevelClamp(self, float value):
         self.set_maxMipmapLevelClamp(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["filterMode","readMode","sRGB","borderColor","normalizedCoords","maxAnisotropy","mipmapFilterMode","mipmapLevelBias","minMipmapLevelClamp","maxMipmapLevelClamp"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class __hip_surface:
@@ -11126,7 +13411,7 @@ cdef class __hip_surface:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.__hip_surface*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.__hip_surface*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.__hip_surface*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -11162,6 +13447,21 @@ cdef class __hip_surface:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipSurfaceObject_t = __hip_surface
@@ -11215,7 +13515,7 @@ cdef class surfaceReference:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.surfaceReference*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.surfaceReference*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.surfaceReference*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -11257,10 +13557,21 @@ cdef class surfaceReference:
         cdef chip.surfaceReference* ptr
         surfaceReference.__allocate(&ptr)
         return surfaceReference.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       surfaceReference.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        surfaceReference.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11274,6 +13585,21 @@ cdef class surfaceReference:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipSurfaceBoundaryMode(enum.IntEnum):
@@ -11331,7 +13657,7 @@ cdef class ihipCtx_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ihipCtx_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ihipCtx_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ihipCtx_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -11367,6 +13693,21 @@ cdef class ihipCtx_t:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipCtx_t = ihipCtx_t
@@ -11427,7 +13768,7 @@ cdef class ihipStream_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ihipStream_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ihipStream_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ihipStream_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -11463,6 +13804,21 @@ cdef class ihipStream_t:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipStream_t = ihipStream_t
@@ -11516,7 +13872,7 @@ cdef class hipIpcMemHandle_st:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipIpcMemHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipIpcMemHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipIpcMemHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -11558,10 +13914,24 @@ cdef class hipIpcMemHandle_st:
         cdef chip.hipIpcMemHandle_st* ptr
         hipIpcMemHandle_st.__allocate(&ptr)
         return hipIpcMemHandle_st.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipIpcMemHandle_st.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipIpcMemHandle_st.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11583,6 +13953,22 @@ cdef class hipIpcMemHandle_st:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipIpcEventHandle_st:
@@ -11634,7 +14020,7 @@ cdef class hipIpcEventHandle_st:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipIpcEventHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipIpcEventHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipIpcEventHandle_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -11676,10 +14062,24 @@ cdef class hipIpcEventHandle_st:
         cdef chip.hipIpcEventHandle_st* ptr
         hipIpcEventHandle_st.__allocate(&ptr)
         return hipIpcEventHandle_st.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipIpcEventHandle_st.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipIpcEventHandle_st.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11701,6 +14101,22 @@ cdef class hipIpcEventHandle_st:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ihipModule_t:
@@ -11748,7 +14164,7 @@ cdef class ihipModule_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ihipModule_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ihipModule_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ihipModule_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -11784,6 +14200,21 @@ cdef class ihipModule_t:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipModule_t = ihipModule_t
@@ -11833,7 +14264,7 @@ cdef class ihipModuleSymbol_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ihipModuleSymbol_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ihipModuleSymbol_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ihipModuleSymbol_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -11869,6 +14300,21 @@ cdef class ihipModuleSymbol_t:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipFunction_t = ihipModuleSymbol_t
@@ -11918,7 +14364,7 @@ cdef class ihipMemPoolHandle_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ihipMemPoolHandle_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ihipMemPoolHandle_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ihipMemPoolHandle_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -11954,6 +14400,21 @@ cdef class ihipMemPoolHandle_t:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipMemPool_t = ihipMemPoolHandle_t
@@ -12007,7 +14468,7 @@ cdef class hipFuncAttributes:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipFuncAttributes*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipFuncAttributes*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipFuncAttributes*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -12049,10 +14510,24 @@ cdef class hipFuncAttributes:
         cdef chip.hipFuncAttributes* ptr
         hipFuncAttributes.__allocate(&ptr)
         return hipFuncAttributes.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipFuncAttributes.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipFuncAttributes.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12080,6 +14555,7 @@ cdef class hipFuncAttributes:
     @binaryVersion.setter
     def binaryVersion(self, int value):
         self.set_binaryVersion(0,value)
+
     def get_cacheModeCA(self, i):
         """Get value ``cacheModeCA`` of ``self._ptr[i]``.
         """
@@ -12094,6 +14570,7 @@ cdef class hipFuncAttributes:
     @cacheModeCA.setter
     def cacheModeCA(self, int value):
         self.set_cacheModeCA(0,value)
+
     def get_constSizeBytes(self, i):
         """Get value ``constSizeBytes`` of ``self._ptr[i]``.
         """
@@ -12108,6 +14585,7 @@ cdef class hipFuncAttributes:
     @constSizeBytes.setter
     def constSizeBytes(self, unsigned long value):
         self.set_constSizeBytes(0,value)
+
     def get_localSizeBytes(self, i):
         """Get value ``localSizeBytes`` of ``self._ptr[i]``.
         """
@@ -12122,6 +14600,7 @@ cdef class hipFuncAttributes:
     @localSizeBytes.setter
     def localSizeBytes(self, unsigned long value):
         self.set_localSizeBytes(0,value)
+
     def get_maxDynamicSharedSizeBytes(self, i):
         """Get value ``maxDynamicSharedSizeBytes`` of ``self._ptr[i]``.
         """
@@ -12136,6 +14615,7 @@ cdef class hipFuncAttributes:
     @maxDynamicSharedSizeBytes.setter
     def maxDynamicSharedSizeBytes(self, int value):
         self.set_maxDynamicSharedSizeBytes(0,value)
+
     def get_maxThreadsPerBlock(self, i):
         """Get value ``maxThreadsPerBlock`` of ``self._ptr[i]``.
         """
@@ -12150,6 +14630,7 @@ cdef class hipFuncAttributes:
     @maxThreadsPerBlock.setter
     def maxThreadsPerBlock(self, int value):
         self.set_maxThreadsPerBlock(0,value)
+
     def get_numRegs(self, i):
         """Get value ``numRegs`` of ``self._ptr[i]``.
         """
@@ -12164,6 +14645,7 @@ cdef class hipFuncAttributes:
     @numRegs.setter
     def numRegs(self, int value):
         self.set_numRegs(0,value)
+
     def get_preferredShmemCarveout(self, i):
         """Get value ``preferredShmemCarveout`` of ``self._ptr[i]``.
         """
@@ -12178,6 +14660,7 @@ cdef class hipFuncAttributes:
     @preferredShmemCarveout.setter
     def preferredShmemCarveout(self, int value):
         self.set_preferredShmemCarveout(0,value)
+
     def get_ptxVersion(self, i):
         """Get value ``ptxVersion`` of ``self._ptr[i]``.
         """
@@ -12192,6 +14675,7 @@ cdef class hipFuncAttributes:
     @ptxVersion.setter
     def ptxVersion(self, int value):
         self.set_ptxVersion(0,value)
+
     def get_sharedSizeBytes(self, i):
         """Get value ``sharedSizeBytes`` of ``self._ptr[i]``.
         """
@@ -12206,6 +14690,22 @@ cdef class hipFuncAttributes:
     @sharedSizeBytes.setter
     def sharedSizeBytes(self, unsigned long value):
         self.set_sharedSizeBytes(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["binaryVersion","cacheModeCA","constSizeBytes","localSizeBytes","maxDynamicSharedSizeBytes","maxThreadsPerBlock","numRegs","preferredShmemCarveout","ptxVersion","sharedSizeBytes"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ihipEvent_t:
@@ -12253,7 +14753,7 @@ cdef class ihipEvent_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ihipEvent_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ihipEvent_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ihipEvent_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -12289,6 +14789,21 @@ cdef class ihipEvent_t:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipEvent_t = ihipEvent_t
@@ -12414,7 +14929,7 @@ cdef class hipMemLocation:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipMemLocation*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipMemLocation*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipMemLocation*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -12456,10 +14971,24 @@ cdef class hipMemLocation:
         cdef chip.hipMemLocation* ptr
         hipMemLocation.__allocate(&ptr)
         return hipMemLocation.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipMemLocation.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipMemLocation.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12489,6 +15018,7 @@ cdef class hipMemLocation:
     @type.setter
     def type(self, value):
         self.set_type(0,value)
+
     def get_id(self, i):
         """Get value ``id`` of ``self._ptr[i]``.
         """
@@ -12503,6 +15033,22 @@ cdef class hipMemLocation:
     @id.setter
     def id(self, int value):
         self.set_id(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["type","id"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipMemAccessFlags(enum.IntEnum):
@@ -12564,7 +15110,7 @@ cdef class hipMemAccessDesc:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipMemAccessDesc*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipMemAccessDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipMemAccessDesc*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -12606,10 +15152,24 @@ cdef class hipMemAccessDesc:
         cdef chip.hipMemAccessDesc* ptr
         hipMemAccessDesc.__allocate(&ptr)
         return hipMemAccessDesc.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipMemAccessDesc.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipMemAccessDesc.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12630,6 +15190,7 @@ cdef class hipMemAccessDesc:
     @property
     def location(self):
         return self.get_location(0)
+
     def get_flags(self, i):
         """Get value of ``flags`` of ``self._ptr[i]``.
         """
@@ -12646,6 +15207,22 @@ cdef class hipMemAccessDesc:
     @flags.setter
     def flags(self, value):
         self.set_flags(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["location","flags"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipMemAllocationType(enum.IntEnum):
@@ -12718,7 +15295,7 @@ cdef class hipMemPoolProps:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipMemPoolProps*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipMemPoolProps*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipMemPoolProps*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -12760,10 +15337,24 @@ cdef class hipMemPoolProps:
         cdef chip.hipMemPoolProps* ptr
         hipMemPoolProps.__allocate(&ptr)
         return hipMemPoolProps.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipMemPoolProps.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipMemPoolProps.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12793,6 +15384,7 @@ cdef class hipMemPoolProps:
     @allocType.setter
     def allocType(self, value):
         self.set_allocType(0,value)
+
     def get_handleTypes(self, i):
         """Get value of ``handleTypes`` of ``self._ptr[i]``.
         """
@@ -12809,6 +15401,7 @@ cdef class hipMemPoolProps:
     @handleTypes.setter
     def handleTypes(self, value):
         self.set_handleTypes(0,value)
+
     def get_location(self, i):
         """Get value of ``location`` of ``self._ptr[i]``.
         """
@@ -12816,6 +15409,31 @@ cdef class hipMemPoolProps:
     @property
     def location(self):
         return self.get_location(0)
+
+    def get_win32SecurityAttributes(self, i):
+        """Get value ``win32SecurityAttributes`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].win32SecurityAttributes)
+    def set_win32SecurityAttributes(self, i, object value):
+        """Set value ``win32SecurityAttributes`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].win32SecurityAttributes = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def win32SecurityAttributes(self):
+        """
+        Note:
+            Setting this win32SecurityAttributes can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_win32SecurityAttributes(0)
+    @win32SecurityAttributes.setter
+    def win32SecurityAttributes(self, object value):
+        self.set_win32SecurityAttributes(0,value)
+
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -12824,6 +15442,22 @@ cdef class hipMemPoolProps:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["allocType","handleTypes","location","win32SecurityAttributes","reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipMemPoolPtrExportData:
@@ -12875,7 +15509,7 @@ cdef class hipMemPoolPtrExportData:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipMemPoolPtrExportData*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipMemPoolPtrExportData*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipMemPoolPtrExportData*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -12917,10 +15551,24 @@ cdef class hipMemPoolPtrExportData:
         cdef chip.hipMemPoolPtrExportData* ptr
         hipMemPoolPtrExportData.__allocate(&ptr)
         return hipMemPoolPtrExportData.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipMemPoolPtrExportData.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipMemPoolPtrExportData.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12942,6 +15590,22 @@ cdef class hipMemPoolPtrExportData:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipJitOption(enum.IntEnum):
@@ -13049,7 +15713,7 @@ cdef class dim3:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.dim3*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.dim3*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.dim3*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -13091,10 +15755,27 @@ cdef class dim3:
         cdef chip.dim3* ptr
         dim3.__allocate(&ptr)
         return dim3.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       dim3.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        dim3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        self.x = 1
+        self.y = 1
+        self.z = 1
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -13122,6 +15803,7 @@ cdef class dim3:
     @x.setter
     def x(self, unsigned int value):
         self.set_x(0,value)
+
     def get_y(self, i):
         """Get value ``y`` of ``self._ptr[i]``.
         """
@@ -13136,6 +15818,7 @@ cdef class dim3:
     @y.setter
     def y(self, unsigned int value):
         self.set_y(0,value)
+
     def get_z(self, i):
         """Get value ``z`` of ``self._ptr[i]``.
         """
@@ -13150,6 +15833,22 @@ cdef class dim3:
     @z.setter
     def z(self, unsigned int value):
         self.set_z(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["x","y","z"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipLaunchParams_t:
@@ -13201,7 +15900,7 @@ cdef class hipLaunchParams_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipLaunchParams_t*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipLaunchParams_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipLaunchParams_t*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -13243,10 +15942,21 @@ cdef class hipLaunchParams_t:
         cdef chip.hipLaunchParams_t* ptr
         hipLaunchParams_t.__allocate(&ptr)
         return hipLaunchParams_t.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipLaunchParams_t.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        hipLaunchParams_t.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -13260,6 +15970,30 @@ cdef class hipLaunchParams_t:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_func(self, i):
+        """Get value ``func`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].func)
+    def set_func(self, i, object value):
+        """Set value ``func`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def func(self):
+        """
+        Note:
+            Setting this func can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_func(0)
+    @func.setter
+    def func(self, object value):
+        self.set_func(0,value)
+
     def get_gridDim(self, i):
         """Get value of ``gridDim`` of ``self._ptr[i]``.
         """
@@ -13267,6 +16001,7 @@ cdef class hipLaunchParams_t:
     @property
     def gridDim(self):
         return self.get_gridDim(0)
+
     def get_blockDim(self, i):
         """Get value of ``blockDim`` of ``self._ptr[i]``.
         """
@@ -13274,6 +16009,31 @@ cdef class hipLaunchParams_t:
     @property
     def blockDim(self):
         return self.get_blockDim(0)
+
+    def get_args(self, i):
+        """Get value ``args`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].args)
+    def set_args(self, i, object value):
+        """Set value ``args`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].args = <void **>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def args(self):
+        """
+        Note:
+            Setting this args can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_args(0)
+    @args.setter
+    def args(self, object value):
+        self.set_args(0,value)
+
     def get_sharedMem(self, i):
         """Get value ``sharedMem`` of ``self._ptr[i]``.
         """
@@ -13288,6 +16048,22 @@ cdef class hipLaunchParams_t:
     @sharedMem.setter
     def sharedMem(self, unsigned long value):
         self.set_sharedMem(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["func","gridDim","blockDim","args","sharedMem"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipExternalMemoryHandleType_enum(enum.IntEnum):
@@ -13353,7 +16129,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -13395,10 +16171,24 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
         cdef chip.hipExternalMemoryHandleDesc_st_union_0_struct_0* ptr
         hipExternalMemoryHandleDesc_st_union_0_struct_0.__allocate(&ptr)
         return hipExternalMemoryHandleDesc_st_union_0_struct_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalMemoryHandleDesc_st_union_0_struct_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalMemoryHandleDesc_st_union_0_struct_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -13412,6 +16202,69 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_handle(self, i):
+        """Get value ``handle`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].handle)
+    def set_handle(self, i, object value):
+        """Set value ``handle`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def handle(self):
+        """
+        Note:
+            Setting this handle can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_handle(0)
+    @handle.setter
+    def handle(self, object value):
+        self.set_handle(0,value)
+
+    def get_name(self, i):
+        """Get value ``name`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].name)
+    def set_name(self, i, object value):
+        """Set value ``name`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def name(self):
+        """
+        Note:
+            Setting this name can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_name(0)
+    @name.setter
+    def name(self, object value):
+        self.set_name(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["handle","name"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalMemoryHandleDesc_st_union_0:
@@ -13463,7 +16316,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -13505,10 +16358,23 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
         cdef chip.hipExternalMemoryHandleDesc_st_union_0* ptr
         hipExternalMemoryHandleDesc_st_union_0.__allocate(&ptr)
         return hipExternalMemoryHandleDesc_st_union_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalMemoryHandleDesc_st_union_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # True
+    # True
+    def __init__(self,**kwargs):
+        hipExternalMemoryHandleDesc_st_union_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(kwargs) > 1:
+            raise ValueError("Not more than one attribute might specified for Python types derived from C union types.")
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -13536,6 +16402,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
     @fd.setter
     def fd(self, int value):
         self.set_fd(0,value)
+
     def get_win32(self, i):
         """Get value of ``win32`` of ``self._ptr[i]``.
         """
@@ -13543,6 +16410,10 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
     @property
     def win32(self):
         return self.get_win32(0)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["fd","win32"]
 
 
 cdef class hipExternalMemoryHandleDesc_st:
@@ -13594,7 +16465,7 @@ cdef class hipExternalMemoryHandleDesc_st:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -13636,10 +16507,24 @@ cdef class hipExternalMemoryHandleDesc_st:
         cdef chip.hipExternalMemoryHandleDesc_st* ptr
         hipExternalMemoryHandleDesc_st.__allocate(&ptr)
         return hipExternalMemoryHandleDesc_st.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalMemoryHandleDesc_st.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalMemoryHandleDesc_st.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -13669,6 +16554,7 @@ cdef class hipExternalMemoryHandleDesc_st:
     @type.setter
     def type(self, value):
         self.set_type(0,value)
+
     def get_handle(self, i):
         """Get value of ``handle`` of ``self._ptr[i]``.
         """
@@ -13676,6 +16562,7 @@ cdef class hipExternalMemoryHandleDesc_st:
     @property
     def handle(self):
         return self.get_handle(0)
+
     def get_size(self, i):
         """Get value ``size`` of ``self._ptr[i]``.
         """
@@ -13690,6 +16577,7 @@ cdef class hipExternalMemoryHandleDesc_st:
     @size.setter
     def size(self, unsigned long long value):
         self.set_size(0,value)
+
     def get_flags(self, i):
         """Get value ``flags`` of ``self._ptr[i]``.
         """
@@ -13704,6 +16592,22 @@ cdef class hipExternalMemoryHandleDesc_st:
     @flags.setter
     def flags(self, unsigned int value):
         self.set_flags(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["type","handle","size","flags"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalMemoryBufferDesc_st:
@@ -13755,7 +16659,7 @@ cdef class hipExternalMemoryBufferDesc_st:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -13797,10 +16701,24 @@ cdef class hipExternalMemoryBufferDesc_st:
         cdef chip.hipExternalMemoryBufferDesc_st* ptr
         hipExternalMemoryBufferDesc_st.__allocate(&ptr)
         return hipExternalMemoryBufferDesc_st.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalMemoryBufferDesc_st.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalMemoryBufferDesc_st.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -13828,6 +16746,7 @@ cdef class hipExternalMemoryBufferDesc_st:
     @offset.setter
     def offset(self, unsigned long long value):
         self.set_offset(0,value)
+
     def get_size(self, i):
         """Get value ``size`` of ``self._ptr[i]``.
         """
@@ -13842,6 +16761,7 @@ cdef class hipExternalMemoryBufferDesc_st:
     @size.setter
     def size(self, unsigned long long value):
         self.set_size(0,value)
+
     def get_flags(self, i):
         """Get value ``flags`` of ``self._ptr[i]``.
         """
@@ -13856,6 +16776,22 @@ cdef class hipExternalMemoryBufferDesc_st:
     @flags.setter
     def flags(self, unsigned int value):
         self.set_flags(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["offset","size","flags"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipExternalSemaphoreHandleType_enum(enum.IntEnum):
@@ -13918,7 +16854,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -13960,10 +16896,24 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
         cdef chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0* ptr
         hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreHandleDesc_st_union_0_struct_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalSemaphoreHandleDesc_st_union_0_struct_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -13977,6 +16927,69 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_handle(self, i):
+        """Get value ``handle`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].handle)
+    def set_handle(self, i, object value):
+        """Set value ``handle`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def handle(self):
+        """
+        Note:
+            Setting this handle can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_handle(0)
+    @handle.setter
+    def handle(self, object value):
+        self.set_handle(0,value)
+
+    def get_name(self, i):
+        """Get value ``name`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].name)
+    def set_name(self, i, object value):
+        """Set value ``name`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def name(self):
+        """
+        Note:
+            Setting this name can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_name(0)
+    @name.setter
+    def name(self, object value):
+        self.set_name(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["handle","name"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalSemaphoreHandleDesc_st_union_0:
@@ -14028,7 +17041,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -14070,10 +17083,23 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
         cdef chip.hipExternalSemaphoreHandleDesc_st_union_0* ptr
         hipExternalSemaphoreHandleDesc_st_union_0.__allocate(&ptr)
         return hipExternalSemaphoreHandleDesc_st_union_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreHandleDesc_st_union_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # True
+    # True
+    def __init__(self,**kwargs):
+        hipExternalSemaphoreHandleDesc_st_union_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(kwargs) > 1:
+            raise ValueError("Not more than one attribute might specified for Python types derived from C union types.")
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -14101,6 +17127,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
     @fd.setter
     def fd(self, int value):
         self.set_fd(0,value)
+
     def get_win32(self, i):
         """Get value of ``win32`` of ``self._ptr[i]``.
         """
@@ -14108,6 +17135,10 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
     @property
     def win32(self):
         return self.get_win32(0)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["fd","win32"]
 
 
 cdef class hipExternalSemaphoreHandleDesc_st:
@@ -14159,7 +17190,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -14201,10 +17232,24 @@ cdef class hipExternalSemaphoreHandleDesc_st:
         cdef chip.hipExternalSemaphoreHandleDesc_st* ptr
         hipExternalSemaphoreHandleDesc_st.__allocate(&ptr)
         return hipExternalSemaphoreHandleDesc_st.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreHandleDesc_st.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalSemaphoreHandleDesc_st.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -14234,6 +17279,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
     @type.setter
     def type(self, value):
         self.set_type(0,value)
+
     def get_handle(self, i):
         """Get value of ``handle`` of ``self._ptr[i]``.
         """
@@ -14241,6 +17287,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
     @property
     def handle(self):
         return self.get_handle(0)
+
     def get_flags(self, i):
         """Get value ``flags`` of ``self._ptr[i]``.
         """
@@ -14255,6 +17302,22 @@ cdef class hipExternalSemaphoreHandleDesc_st:
     @flags.setter
     def flags(self, unsigned int value):
         self.set_flags(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["type","handle","flags"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
@@ -14306,7 +17369,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -14348,10 +17411,24 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
         cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0* ptr
         hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalSemaphoreSignalParams_st_struct_0_struct_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -14379,6 +17456,22 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
     @value.setter
     def value(self, unsigned long long value):
         self.set_value(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["value"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
@@ -14430,7 +17523,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -14472,10 +17565,24 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
         cdef chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1* ptr
         hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st_struct_0_struct_1.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalSemaphoreSignalParams_st_struct_0_struct_1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -14503,6 +17610,22 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
     @key.setter
     def key(self, unsigned long long value):
         self.set_key(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["key"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0:
@@ -14554,7 +17677,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -14596,10 +17719,24 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
         cdef chip.hipExternalSemaphoreSignalParams_st_struct_0* ptr
         hipExternalSemaphoreSignalParams_st_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st_struct_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreSignalParams_st_struct_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalSemaphoreSignalParams_st_struct_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -14620,6 +17757,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
     @property
     def fence(self):
         return self.get_fence(0)
+
     def get_keyedMutex(self, i):
         """Get value of ``keyedMutex`` of ``self._ptr[i]``.
         """
@@ -14627,6 +17765,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
     @property
     def keyedMutex(self):
         return self.get_keyedMutex(0)
+
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -14635,6 +17774,22 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["fence","keyedMutex","reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalSemaphoreSignalParams_st:
@@ -14686,7 +17841,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -14728,10 +17883,24 @@ cdef class hipExternalSemaphoreSignalParams_st:
         cdef chip.hipExternalSemaphoreSignalParams_st* ptr
         hipExternalSemaphoreSignalParams_st.__allocate(&ptr)
         return hipExternalSemaphoreSignalParams_st.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreSignalParams_st.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalSemaphoreSignalParams_st.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -14752,6 +17921,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
     @property
     def params(self):
         return self.get_params(0)
+
     def get_flags(self, i):
         """Get value ``flags`` of ``self._ptr[i]``.
         """
@@ -14766,6 +17936,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
     @flags.setter
     def flags(self, unsigned int value):
         self.set_flags(0,value)
+
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -14774,6 +17945,22 @@ cdef class hipExternalSemaphoreSignalParams_st:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["params","flags","reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
@@ -14825,7 +18012,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -14867,10 +18054,24 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
         cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0* ptr
         hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalSemaphoreWaitParams_st_struct_0_struct_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -14898,6 +18099,22 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
     @value.setter
     def value(self, unsigned long long value):
         self.set_value(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["value"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
@@ -14949,7 +18166,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -14991,10 +18208,24 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
         cdef chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1* ptr
         hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st_struct_0_struct_1.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalSemaphoreWaitParams_st_struct_0_struct_1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -15022,6 +18253,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
     @key.setter
     def key(self, unsigned long long value):
         self.set_key(0,value)
+
     def get_timeoutMs(self, i):
         """Get value ``timeoutMs`` of ``self._ptr[i]``.
         """
@@ -15036,6 +18268,22 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
     @timeoutMs.setter
     def timeoutMs(self, unsigned int value):
         self.set_timeoutMs(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["key","timeoutMs"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalSemaphoreWaitParams_st_struct_0:
@@ -15087,7 +18335,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -15129,10 +18377,24 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
         cdef chip.hipExternalSemaphoreWaitParams_st_struct_0* ptr
         hipExternalSemaphoreWaitParams_st_struct_0.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st_struct_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreWaitParams_st_struct_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalSemaphoreWaitParams_st_struct_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -15153,6 +18415,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
     @property
     def fence(self):
         return self.get_fence(0)
+
     def get_keyedMutex(self, i):
         """Get value of ``keyedMutex`` of ``self._ptr[i]``.
         """
@@ -15160,6 +18423,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
     @property
     def keyedMutex(self):
         return self.get_keyedMutex(0)
+
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -15168,6 +18432,22 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["fence","keyedMutex","reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipExternalSemaphoreWaitParams_st:
@@ -15219,7 +18499,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -15261,10 +18541,24 @@ cdef class hipExternalSemaphoreWaitParams_st:
         cdef chip.hipExternalSemaphoreWaitParams_st* ptr
         hipExternalSemaphoreWaitParams_st.__allocate(&ptr)
         return hipExternalSemaphoreWaitParams_st.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipExternalSemaphoreWaitParams_st.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipExternalSemaphoreWaitParams_st.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -15285,6 +18579,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
     @property
     def params(self):
         return self.get_params(0)
+
     def get_flags(self, i):
         """Get value ``flags`` of ``self._ptr[i]``.
         """
@@ -15299,6 +18594,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
     @flags.setter
     def flags(self, unsigned int value):
         self.set_flags(0,value)
+
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -15307,6 +18603,22 @@ cdef class hipExternalSemaphoreWaitParams_st:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["params","flags","reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipGLDeviceList(enum.IntEnum):
@@ -15376,7 +18688,7 @@ cdef class _hipGraphicsResource:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip._hipGraphicsResource*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip._hipGraphicsResource*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip._hipGraphicsResource*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -15412,6 +18724,21 @@ cdef class _hipGraphicsResource:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipGraphicsResource_t = _hipGraphicsResource
@@ -15461,7 +18788,7 @@ cdef class ihipGraph:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ihipGraph*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ihipGraph*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ihipGraph*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -15497,6 +18824,21 @@ cdef class ihipGraph:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipGraph_t = ihipGraph
@@ -15546,7 +18888,7 @@ cdef class hipGraphNode:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipGraphNode*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipGraphNode*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipGraphNode*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -15582,6 +18924,21 @@ cdef class hipGraphNode:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipGraphNode_t = hipGraphNode
@@ -15631,7 +18988,7 @@ cdef class hipGraphExec:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipGraphExec*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipGraphExec*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipGraphExec*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -15667,6 +19024,21 @@ cdef class hipGraphExec:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipGraphExec_t = hipGraphExec
@@ -15716,7 +19088,7 @@ cdef class hipUserObject:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipUserObject*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipUserObject*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipUserObject*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -15752,6 +19124,21 @@ cdef class hipUserObject:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipUserObject_t = hipUserObject
@@ -15821,9 +19208,9 @@ cdef class hipHostFn_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif str(type(pyobj)).startswith("<class 'ctypes.CFUNCTYPE.") and str(type(pyobj)).endswith(".CFunctionType'>" ):
-            wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(ctypes.addressof(pyobj))
+            wrapper._ptr = <chip.hipHostFn_t>cpython.long.PyLong_AsVoidPtr(ctypes.cast(pyobj, ctypes.c_void_p).value)
         else:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper
@@ -15895,7 +19282,7 @@ cdef class hipHostNodeParams:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipHostNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipHostNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipHostNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -15937,10 +19324,21 @@ cdef class hipHostNodeParams:
         cdef chip.hipHostNodeParams* ptr
         hipHostNodeParams.__allocate(&ptr)
         return hipHostNodeParams.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipHostNodeParams.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # False
+    def __init__(self,**kwargs):
+        hipHostNodeParams.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -15954,6 +19352,45 @@ cdef class hipHostNodeParams:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_userData(self, i):
+        """Get value ``userData`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].userData)
+    def set_userData(self, i, object value):
+        """Set value ``userData`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].userData = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def userData(self):
+        """
+        Note:
+            Setting this userData can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_userData(0)
+    @userData.setter
+    def userData(self, object value):
+        self.set_userData(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["userData"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipKernelNodeParams:
@@ -16005,7 +19442,7 @@ cdef class hipKernelNodeParams:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipKernelNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipKernelNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipKernelNodeParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -16047,10 +19484,24 @@ cdef class hipKernelNodeParams:
         cdef chip.hipKernelNodeParams* ptr
         hipKernelNodeParams.__allocate(&ptr)
         return hipKernelNodeParams.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipKernelNodeParams.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipKernelNodeParams.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -16071,6 +19522,55 @@ cdef class hipKernelNodeParams:
     @property
     def blockDim(self):
         return self.get_blockDim(0)
+
+    def get_extra(self, i):
+        """Get value ``extra`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].extra)
+    def set_extra(self, i, object value):
+        """Set value ``extra`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].extra = <void **>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def extra(self):
+        """
+        Note:
+            Setting this extra can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_extra(0)
+    @extra.setter
+    def extra(self, object value):
+        self.set_extra(0,value)
+
+    def get_func(self, i):
+        """Get value ``func`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].func)
+    def set_func(self, i, object value):
+        """Set value ``func`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def func(self):
+        """
+        Note:
+            Setting this func can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_func(0)
+    @func.setter
+    def func(self, object value):
+        self.set_func(0,value)
+
     def get_gridDim(self, i):
         """Get value of ``gridDim`` of ``self._ptr[i]``.
         """
@@ -16078,6 +19578,31 @@ cdef class hipKernelNodeParams:
     @property
     def gridDim(self):
         return self.get_gridDim(0)
+
+    def get_kernelParams(self, i):
+        """Get value ``kernelParams`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].kernelParams)
+    def set_kernelParams(self, i, object value):
+        """Set value ``kernelParams`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].kernelParams = <void **>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def kernelParams(self):
+        """
+        Note:
+            Setting this kernelParams can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_kernelParams(0)
+    @kernelParams.setter
+    def kernelParams(self, object value):
+        self.set_kernelParams(0,value)
+
     def get_sharedMemBytes(self, i):
         """Get value ``sharedMemBytes`` of ``self._ptr[i]``.
         """
@@ -16092,6 +19617,22 @@ cdef class hipKernelNodeParams:
     @sharedMemBytes.setter
     def sharedMemBytes(self, unsigned int value):
         self.set_sharedMemBytes(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["blockDim","extra","func","gridDim","kernelParams","sharedMemBytes"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipMemsetParams:
@@ -16143,7 +19684,7 @@ cdef class hipMemsetParams:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipMemsetParams*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipMemsetParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipMemsetParams*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -16185,10 +19726,24 @@ cdef class hipMemsetParams:
         cdef chip.hipMemsetParams* ptr
         hipMemsetParams.__allocate(&ptr)
         return hipMemsetParams.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipMemsetParams.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipMemsetParams.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -16202,6 +19757,30 @@ cdef class hipMemsetParams:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_dst(self, i):
+        """Get value ``dst`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].dst)
+    def set_dst(self, i, object value):
+        """Set value ``dst`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].dst = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def dst(self):
+        """
+        Note:
+            Setting this dst can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_dst(0)
+    @dst.setter
+    def dst(self, object value):
+        self.set_dst(0,value)
+
     def get_elementSize(self, i):
         """Get value ``elementSize`` of ``self._ptr[i]``.
         """
@@ -16216,6 +19795,7 @@ cdef class hipMemsetParams:
     @elementSize.setter
     def elementSize(self, unsigned int value):
         self.set_elementSize(0,value)
+
     def get_height(self, i):
         """Get value ``height`` of ``self._ptr[i]``.
         """
@@ -16230,6 +19810,7 @@ cdef class hipMemsetParams:
     @height.setter
     def height(self, unsigned long value):
         self.set_height(0,value)
+
     def get_pitch(self, i):
         """Get value ``pitch`` of ``self._ptr[i]``.
         """
@@ -16244,6 +19825,7 @@ cdef class hipMemsetParams:
     @pitch.setter
     def pitch(self, unsigned long value):
         self.set_pitch(0,value)
+
     def get_value(self, i):
         """Get value ``value`` of ``self._ptr[i]``.
         """
@@ -16258,6 +19840,7 @@ cdef class hipMemsetParams:
     @value.setter
     def value(self, unsigned int value):
         self.set_value(0,value)
+
     def get_width(self, i):
         """Get value ``width`` of ``self._ptr[i]``.
         """
@@ -16272,6 +19855,22 @@ cdef class hipMemsetParams:
     @width.setter
     def width(self, unsigned long value):
         self.set_width(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["dst","elementSize","height","pitch","value","width"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 class hipKernelNodeAttrID(enum.IntEnum):
@@ -16342,7 +19941,7 @@ cdef class hipAccessPolicyWindow:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipAccessPolicyWindow*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipAccessPolicyWindow*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipAccessPolicyWindow*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -16384,10 +19983,24 @@ cdef class hipAccessPolicyWindow:
         cdef chip.hipAccessPolicyWindow* ptr
         hipAccessPolicyWindow.__allocate(&ptr)
         return hipAccessPolicyWindow.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipAccessPolicyWindow.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipAccessPolicyWindow.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -16401,6 +20014,30 @@ cdef class hipAccessPolicyWindow:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_base_ptr(self, i):
+        """Get value ``base_ptr`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].base_ptr)
+    def set_base_ptr(self, i, object value):
+        """Set value ``base_ptr`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].base_ptr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def base_ptr(self):
+        """
+        Note:
+            Setting this base_ptr can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_base_ptr(0)
+    @base_ptr.setter
+    def base_ptr(self, object value):
+        self.set_base_ptr(0,value)
+
     def get_hitProp(self, i):
         """Get value of ``hitProp`` of ``self._ptr[i]``.
         """
@@ -16417,6 +20054,7 @@ cdef class hipAccessPolicyWindow:
     @hitProp.setter
     def hitProp(self, value):
         self.set_hitProp(0,value)
+
     def get_hitRatio(self, i):
         """Get value ``hitRatio`` of ``self._ptr[i]``.
         """
@@ -16431,6 +20069,7 @@ cdef class hipAccessPolicyWindow:
     @hitRatio.setter
     def hitRatio(self, float value):
         self.set_hitRatio(0,value)
+
     def get_missProp(self, i):
         """Get value of ``missProp`` of ``self._ptr[i]``.
         """
@@ -16447,6 +20086,7 @@ cdef class hipAccessPolicyWindow:
     @missProp.setter
     def missProp(self, value):
         self.set_missProp(0,value)
+
     def get_num_bytes(self, i):
         """Get value ``num_bytes`` of ``self._ptr[i]``.
         """
@@ -16461,6 +20101,22 @@ cdef class hipAccessPolicyWindow:
     @num_bytes.setter
     def num_bytes(self, unsigned long value):
         self.set_num_bytes(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["base_ptr","hitProp","hitRatio","missProp","num_bytes"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipKernelNodeAttrValue:
@@ -16512,7 +20168,7 @@ cdef class hipKernelNodeAttrValue:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipKernelNodeAttrValue*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipKernelNodeAttrValue*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipKernelNodeAttrValue*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -16554,10 +20210,23 @@ cdef class hipKernelNodeAttrValue:
         cdef chip.hipKernelNodeAttrValue* ptr
         hipKernelNodeAttrValue.__allocate(&ptr)
         return hipKernelNodeAttrValue.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipKernelNodeAttrValue.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # True
+    # True
+    def __init__(self,**kwargs):
+        hipKernelNodeAttrValue.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(kwargs) > 1:
+            raise ValueError("Not more than one attribute might specified for Python types derived from C union types.")
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -16578,6 +20247,7 @@ cdef class hipKernelNodeAttrValue:
     @property
     def accessPolicyWindow(self):
         return self.get_accessPolicyWindow(0)
+
     def get_cooperative(self, i):
         """Get value ``cooperative`` of ``self._ptr[i]``.
         """
@@ -16592,6 +20262,10 @@ cdef class hipKernelNodeAttrValue:
     @cooperative.setter
     def cooperative(self, int value):
         self.set_cooperative(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["accessPolicyWindow","cooperative"]
 
 
 class hipGraphExecUpdateResult(enum.IntEnum):
@@ -16722,7 +20396,7 @@ cdef class hipMemAllocationProp_struct_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -16764,10 +20438,24 @@ cdef class hipMemAllocationProp_struct_0:
         cdef chip.hipMemAllocationProp_struct_0* ptr
         hipMemAllocationProp_struct_0.__allocate(&ptr)
         return hipMemAllocationProp_struct_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipMemAllocationProp_struct_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipMemAllocationProp_struct_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -16795,6 +20483,7 @@ cdef class hipMemAllocationProp_struct_0:
     @compressionType.setter
     def compressionType(self, unsigned char value):
         self.set_compressionType(0,value)
+
     def get_gpuDirectRDMACapable(self, i):
         """Get value ``gpuDirectRDMACapable`` of ``self._ptr[i]``.
         """
@@ -16809,6 +20498,7 @@ cdef class hipMemAllocationProp_struct_0:
     @gpuDirectRDMACapable.setter
     def gpuDirectRDMACapable(self, unsigned char value):
         self.set_gpuDirectRDMACapable(0,value)
+
     def get_usage(self, i):
         """Get value ``usage`` of ``self._ptr[i]``.
         """
@@ -16823,6 +20513,22 @@ cdef class hipMemAllocationProp_struct_0:
     @usage.setter
     def usage(self, unsigned short value):
         self.set_usage(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["compressionType","gpuDirectRDMACapable","usage"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipMemAllocationProp:
@@ -16874,7 +20580,7 @@ cdef class hipMemAllocationProp:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipMemAllocationProp*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipMemAllocationProp*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipMemAllocationProp*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -16916,10 +20622,24 @@ cdef class hipMemAllocationProp:
         cdef chip.hipMemAllocationProp* ptr
         hipMemAllocationProp.__allocate(&ptr)
         return hipMemAllocationProp.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipMemAllocationProp.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipMemAllocationProp.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -16949,6 +20669,7 @@ cdef class hipMemAllocationProp:
     @type.setter
     def type(self, value):
         self.set_type(0,value)
+
     def get_requestedHandleType(self, i):
         """Get value of ``requestedHandleType`` of ``self._ptr[i]``.
         """
@@ -16965,6 +20686,7 @@ cdef class hipMemAllocationProp:
     @requestedHandleType.setter
     def requestedHandleType(self, value):
         self.set_requestedHandleType(0,value)
+
     def get_location(self, i):
         """Get value of ``location`` of ``self._ptr[i]``.
         """
@@ -16972,6 +20694,31 @@ cdef class hipMemAllocationProp:
     @property
     def location(self):
         return self.get_location(0)
+
+    def get_win32HandleMetaData(self, i):
+        """Get value ``win32HandleMetaData`` of ``self._ptr[i]``.
+        """
+        return hip._util.types.DataHandle.from_ptr(self._ptr[i].win32HandleMetaData)
+    def set_win32HandleMetaData(self, i, object value):
+        """Set value ``win32HandleMetaData`` of ``self._ptr[i]``.
+
+        Note:
+            This can be dangerous if the pointer is from a python object
+            that is later on garbage collected.
+        """
+        self._ptr[i].win32HandleMetaData = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+    @property
+    def win32HandleMetaData(self):
+        """
+        Note:
+            Setting this win32HandleMetaData can be dangerous if the underlying pointer is from a python object that
+            is later on garbage collected.
+        """
+        return self.get_win32HandleMetaData(0)
+    @win32HandleMetaData.setter
+    def win32HandleMetaData(self, object value):
+        self.set_win32HandleMetaData(0,value)
+
     def get_allocFlags(self, i):
         """Get value of ``allocFlags`` of ``self._ptr[i]``.
         """
@@ -16979,6 +20726,22 @@ cdef class hipMemAllocationProp:
     @property
     def allocFlags(self):
         return self.get_allocFlags(0)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["type","requestedHandleType","location","win32HandleMetaData","allocFlags"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class ihipMemGenericAllocationHandle:
@@ -17026,7 +20789,7 @@ cdef class ihipMemGenericAllocationHandle:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -17062,6 +20825,21 @@ cdef class ihipMemGenericAllocationHandle:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 hipMemGenericAllocationHandle_t = ihipMemGenericAllocationHandle
@@ -17150,7 +20928,7 @@ cdef class hipArrayMapInfo_union_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipArrayMapInfo_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipArrayMapInfo_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipArrayMapInfo_union_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -17192,10 +20970,23 @@ cdef class hipArrayMapInfo_union_0:
         cdef chip.hipArrayMapInfo_union_0* ptr
         hipArrayMapInfo_union_0.__allocate(&ptr)
         return hipArrayMapInfo_union_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipArrayMapInfo_union_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # True
+    def __init__(self,**kwargs):
+        hipArrayMapInfo_union_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(kwargs) > 1:
+            raise ValueError("Not more than one attribute might specified for Python types derived from C union types.")
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -17216,6 +21007,10 @@ cdef class hipArrayMapInfo_union_0:
     @property
     def mipmap(self):
         return self.get_mipmap(0)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["mipmap"]
 
 
 cdef class hipArrayMapInfo_union_1_struct_0:
@@ -17267,7 +21062,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -17309,10 +21104,24 @@ cdef class hipArrayMapInfo_union_1_struct_0:
         cdef chip.hipArrayMapInfo_union_1_struct_0* ptr
         hipArrayMapInfo_union_1_struct_0.__allocate(&ptr)
         return hipArrayMapInfo_union_1_struct_0.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipArrayMapInfo_union_1_struct_0.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipArrayMapInfo_union_1_struct_0.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -17340,6 +21149,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     @level.setter
     def level(self, unsigned int value):
         self.set_level(0,value)
+
     def get_layer(self, i):
         """Get value ``layer`` of ``self._ptr[i]``.
         """
@@ -17354,6 +21164,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     @layer.setter
     def layer(self, unsigned int value):
         self.set_layer(0,value)
+
     def get_offsetX(self, i):
         """Get value ``offsetX`` of ``self._ptr[i]``.
         """
@@ -17368,6 +21179,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     @offsetX.setter
     def offsetX(self, unsigned int value):
         self.set_offsetX(0,value)
+
     def get_offsetY(self, i):
         """Get value ``offsetY`` of ``self._ptr[i]``.
         """
@@ -17382,6 +21194,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     @offsetY.setter
     def offsetY(self, unsigned int value):
         self.set_offsetY(0,value)
+
     def get_offsetZ(self, i):
         """Get value ``offsetZ`` of ``self._ptr[i]``.
         """
@@ -17396,6 +21209,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     @offsetZ.setter
     def offsetZ(self, unsigned int value):
         self.set_offsetZ(0,value)
+
     def get_extentWidth(self, i):
         """Get value ``extentWidth`` of ``self._ptr[i]``.
         """
@@ -17410,6 +21224,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     @extentWidth.setter
     def extentWidth(self, unsigned int value):
         self.set_extentWidth(0,value)
+
     def get_extentHeight(self, i):
         """Get value ``extentHeight`` of ``self._ptr[i]``.
         """
@@ -17424,6 +21239,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     @extentHeight.setter
     def extentHeight(self, unsigned int value):
         self.set_extentHeight(0,value)
+
     def get_extentDepth(self, i):
         """Get value ``extentDepth`` of ``self._ptr[i]``.
         """
@@ -17438,6 +21254,22 @@ cdef class hipArrayMapInfo_union_1_struct_0:
     @extentDepth.setter
     def extentDepth(self, unsigned int value):
         self.set_extentDepth(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["level","layer","offsetX","offsetY","offsetZ","extentWidth","extentHeight","extentDepth"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipArrayMapInfo_union_1_struct_1:
@@ -17489,7 +21321,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -17531,10 +21363,24 @@ cdef class hipArrayMapInfo_union_1_struct_1:
         cdef chip.hipArrayMapInfo_union_1_struct_1* ptr
         hipArrayMapInfo_union_1_struct_1.__allocate(&ptr)
         return hipArrayMapInfo_union_1_struct_1.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipArrayMapInfo_union_1_struct_1.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipArrayMapInfo_union_1_struct_1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -17562,6 +21408,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
     @layer.setter
     def layer(self, unsigned int value):
         self.set_layer(0,value)
+
     def get_offset(self, i):
         """Get value ``offset`` of ``self._ptr[i]``.
         """
@@ -17576,6 +21423,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
     @offset.setter
     def offset(self, unsigned long long value):
         self.set_offset(0,value)
+
     def get_size(self, i):
         """Get value ``size`` of ``self._ptr[i]``.
         """
@@ -17590,6 +21438,22 @@ cdef class hipArrayMapInfo_union_1_struct_1:
     @size.setter
     def size(self, unsigned long long value):
         self.set_size(0,value)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["layer","offset","size"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 cdef class hipArrayMapInfo_union_1:
@@ -17641,7 +21505,7 @@ cdef class hipArrayMapInfo_union_1:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipArrayMapInfo_union_1*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipArrayMapInfo_union_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipArrayMapInfo_union_1*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -17683,10 +21547,23 @@ cdef class hipArrayMapInfo_union_1:
         cdef chip.hipArrayMapInfo_union_1* ptr
         hipArrayMapInfo_union_1.__allocate(&ptr)
         return hipArrayMapInfo_union_1.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipArrayMapInfo_union_1.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # True
+    # True
+    def __init__(self,**kwargs):
+        hipArrayMapInfo_union_1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(kwargs) > 1:
+            raise ValueError("Not more than one attribute might specified for Python types derived from C union types.")
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -17707,6 +21584,7 @@ cdef class hipArrayMapInfo_union_1:
     @property
     def sparseLevel(self):
         return self.get_sparseLevel(0)
+
     def get_miptail(self, i):
         """Get value of ``miptail`` of ``self._ptr[i]``.
         """
@@ -17714,6 +21592,10 @@ cdef class hipArrayMapInfo_union_1:
     @property
     def miptail(self):
         return self.get_miptail(0)
+
+    @staticmethod
+    def PROPERTIES():
+        return ["sparseLevel","miptail"]
 
 
 cdef class hipArrayMapInfo_union_2:
@@ -17765,7 +21647,7 @@ cdef class hipArrayMapInfo_union_2:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipArrayMapInfo_union_2*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipArrayMapInfo_union_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipArrayMapInfo_union_2*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -17807,10 +21689,23 @@ cdef class hipArrayMapInfo_union_2:
         cdef chip.hipArrayMapInfo_union_2* ptr
         hipArrayMapInfo_union_2.__allocate(&ptr)
         return hipArrayMapInfo_union_2.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipArrayMapInfo_union_2.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    # False
+    # True
+    def __init__(self,**kwargs):
+        hipArrayMapInfo_union_2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(kwargs) > 1:
+            raise ValueError("Not more than one attribute might specified for Python types derived from C union types.")
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -17824,6 +21719,9 @@ cdef class hipArrayMapInfo_union_2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    @staticmethod
+    def PROPERTIES():
+        return []
 
 
 cdef class hipArrayMapInfo:
@@ -17875,7 +21773,7 @@ cdef class hipArrayMapInfo:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipArrayMapInfo*>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipArrayMapInfo*>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipArrayMapInfo*>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
@@ -17917,10 +21815,24 @@ cdef class hipArrayMapInfo:
         cdef chip.hipArrayMapInfo* ptr
         hipArrayMapInfo.__allocate(&ptr)
         return hipArrayMapInfo.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       hipArrayMapInfo.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    def __init__(self,*args,**kwargs):
+        hipArrayMapInfo.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -17950,6 +21862,7 @@ cdef class hipArrayMapInfo:
     @resourceType.setter
     def resourceType(self, value):
         self.set_resourceType(0,value)
+
     def get_resource(self, i):
         """Get value of ``resource`` of ``self._ptr[i]``.
         """
@@ -17957,6 +21870,7 @@ cdef class hipArrayMapInfo:
     @property
     def resource(self):
         return self.get_resource(0)
+
     def get_subresourceType(self, i):
         """Get value of ``subresourceType`` of ``self._ptr[i]``.
         """
@@ -17973,6 +21887,7 @@ cdef class hipArrayMapInfo:
     @subresourceType.setter
     def subresourceType(self, value):
         self.set_subresourceType(0,value)
+
     def get_subresource(self, i):
         """Get value of ``subresource`` of ``self._ptr[i]``.
         """
@@ -17980,6 +21895,7 @@ cdef class hipArrayMapInfo:
     @property
     def subresource(self):
         return self.get_subresource(0)
+
     def get_memOperationType(self, i):
         """Get value of ``memOperationType`` of ``self._ptr[i]``.
         """
@@ -17996,6 +21912,7 @@ cdef class hipArrayMapInfo:
     @memOperationType.setter
     def memOperationType(self, value):
         self.set_memOperationType(0,value)
+
     def get_memHandleType(self, i):
         """Get value of ``memHandleType`` of ``self._ptr[i]``.
         """
@@ -18012,6 +21929,7 @@ cdef class hipArrayMapInfo:
     @memHandleType.setter
     def memHandleType(self, value):
         self.set_memHandleType(0,value)
+
     def get_memHandle(self, i):
         """Get value of ``memHandle`` of ``self._ptr[i]``.
         """
@@ -18019,6 +21937,7 @@ cdef class hipArrayMapInfo:
     @property
     def memHandle(self):
         return self.get_memHandle(0)
+
     def get_offset(self, i):
         """Get value ``offset`` of ``self._ptr[i]``.
         """
@@ -18033,6 +21952,7 @@ cdef class hipArrayMapInfo:
     @offset.setter
     def offset(self, unsigned long long value):
         self.set_offset(0,value)
+
     def get_deviceBitMask(self, i):
         """Get value ``deviceBitMask`` of ``self._ptr[i]``.
         """
@@ -18047,6 +21967,7 @@ cdef class hipArrayMapInfo:
     @deviceBitMask.setter
     def deviceBitMask(self, unsigned int value):
         self.set_deviceBitMask(0,value)
+
     def get_flags(self, i):
         """Get value ``flags`` of ``self._ptr[i]``.
         """
@@ -18061,6 +21982,7 @@ cdef class hipArrayMapInfo:
     @flags.setter
     def flags(self, unsigned int value):
         self.set_flags(0,value)
+
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -18069,6 +21991,22 @@ cdef class hipArrayMapInfo:
     def reserved(self):
         return self.get_reserved(0)
     # TODO is_basic_type_constantarray: add setters
+
+    @staticmethod
+    def PROPERTIES():
+        return ["resourceType","resource","subresourceType","subresource","memOperationType","memHandleType","memHandle","offset","deviceBitMask","flags","reserved"]
+
+    def __contains__(self,item):
+        properties = self.PROPERTIES()
+        return item in properties
+
+    def __getitem__(self,item):
+        properties = self.PROPERTIES()
+        if isinstance(item,int):
+            if item < 0 or item >= len(properties):
+                raise IndexError()
+            return getattr(self,properties[item])
+        raise ValueError("'item' type must be 'int'")
 
 
 @cython.embedsignature(True)
@@ -19055,9 +22993,9 @@ cdef class hipStreamCallback_t:
         elif isinstance(pyobj,int):
             wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif str(type(pyobj)).startswith("<class 'ctypes.CFUNCTYPE.") and str(type(pyobj)).endswith(".CFunctionType'>" ):
-            wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(ctypes.addressof(pyobj))
+            wrapper._ptr = <chip.hipStreamCallback_t>cpython.long.PyLong_AsVoidPtr(ctypes.cast(pyobj, ctypes.c_void_p).value)
         else:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper
