@@ -56,6 +56,7 @@ hip_check(
     )
 )
 
+hip_check(hip.hipDeviceSynchronize())
 hip_check(hip.hipModuleUnload(module))
 
 print("ok")
