@@ -2201,7 +2201,7 @@ cdef extern from "hip/hip_runtime_api.h":
 # @return #hipSuccess, #hipErrorInvalidHandle, #hipErrorNotSupported
 # @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamQuery, hipStreamSynchronize,
 # hipStreamWaitEvent, hipStreamDestroy, hipStreamCreateWithPriority
-cdef hipError_t hipStreamAddCallback(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags) nogil
+cdef hipError_t hipStreamAddCallback(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags)
 
 
 # @}
@@ -4206,7 +4206,7 @@ cdef hipError_t hipLaunchKernel(const void * function_address,dim3 numBlocks,dim
 # #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipLaunchHostFunc(hipStream_t stream,hipHostFn_t fn,void * userData) nogil
+cdef hipError_t hipLaunchHostFunc(hipStream_t stream,hipHostFn_t fn,void * userData)
 
 
 # Copies memory for 2D arrays.
@@ -5223,7 +5223,7 @@ cdef hipError_t hipDeviceGraphMemTrim(int device) nogil
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipUserObjectCreate(hipUserObject_t* object_out,void * ptr,hipHostFn_t destroy,unsigned int initialRefcount,unsigned int flags) nogil
+cdef hipError_t hipUserObjectCreate(hipUserObject_t* object_out,void * ptr,hipHostFn_t destroy,unsigned int initialRefcount,unsigned int flags)
 
 
 # @brief Release number of references to resource.
@@ -5549,7 +5549,7 @@ cdef hipError_t hipStreamGetFlags_spt(hipStream_t stream,unsigned int * flags) n
 
 
 
-cdef hipError_t hipStreamAddCallback_spt(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags) nogil
+cdef hipError_t hipStreamAddCallback_spt(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags)
 
 
 
@@ -5589,4 +5589,4 @@ cdef hipError_t hipStreamGetCaptureInfo_v2_spt(hipStream_t stream,hipStreamCaptu
 
 
 
-cdef hipError_t hipLaunchHostFunc_spt(hipStream_t stream,hipHostFn_t fn,void * userData) nogil
+cdef hipError_t hipLaunchHostFunc_spt(hipStream_t stream,hipHostFn_t fn,void * userData)
