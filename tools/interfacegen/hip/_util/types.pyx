@@ -37,7 +37,7 @@ cdef class DataHandle:
         elif isinstance(pyobj,int):
             self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            self._ptr = cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
         elif cuda_array_interface != None:
             if not "data" in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
