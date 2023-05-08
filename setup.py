@@ -45,7 +45,7 @@ if not ROCM_PATH:
     ROCM_PATH = os.environ.get("ROCM_HOME")
 if not ROCM_PATH:
     raise RuntimeError("Environment variable ROCM_PATH is not set")
-rocm_inc = os.path.join(ROCM_PATH, "include")
+ROCM_INC = os.path.join(ROCM_PATH, "include")
 CFLAGS = os.environ.get("CFLAGS", None)
 
 HIP_PLATFORM = os.environ.get("HIP_PLATFORM", "amd")
@@ -96,7 +96,7 @@ HIP_PYTHON_RUNTIME_LINKING = get_bool_environ_var(
 )
 HIP_PYTHON_VERBOSE = get_bool_environ_var("HIP_PYTHON_VERBOSE", "true")
 
-GENERATOR_ARGS = hip_platform.cflags
+GENERATOR_ARGS = hip_platform.cflags + [f"-I{ROCM_INC}"]
 if HIP_PYTHON_GENERATE:
     HIP_PYTHON_CLANG_RES_DIR = os.environ.get("HIP_PYTHON_CLANG_RES_DIR", None)
     if not HIP_PYTHON_CLANG_RES_DIR:
@@ -137,6 +137,7 @@ HIP_VERSION_PATCH = 0
 HIP_VERSION_GITHASH = ""
 
 def generate_hiprtc_package_files():
+    global ROCM_INC
     global HIP_PYTHON_GENERATE
     global GENERATOR_ARGS
     global CYTHON_EXT_MODULES
@@ -161,6 +162,7 @@ def generate_hiprtc_package_files():
             ("hiprtcGetLoweredName","lowered_name"), # rank == 1
             ("hiprtcGetProgramLogSize","logSizeRet"),
             ("hiprtcGetCodeSize","codeSizeRet"),
+            ("hiprtcGetBitcodeSize","bitcode_size"),
             ("hiprtcLinkCreate","hip_link_state_ptr"),
             ("hiprtcLinkComplete","bin_out"), # rank == 1
             ("hiprtcLinkComplete","size_out"),
@@ -201,7 +203,7 @@ def generate_hiprtc_package_files():
 
     generator = CythonPackageGenerator(
         "hiprtc",
-        rocm_inc,
+        ROCM_INC,
         "hip/hiprtc.h",
         runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
         dll="libhiprtc.so",
@@ -220,6 +222,7 @@ def generate_hiprtc_package_files():
     
 
 def generate_hip_package_files():
+    global ROCM_INC
     global HIP_PYTHON_GENERATE
     global GENERATOR_ARGS
     global CYTHON_EXT_MODULES
@@ -404,7 +407,7 @@ def generate_hip_package_files():
 
     generator = CythonPackageGenerator(
         "hip",
-        rocm_inc,
+        ROCM_INC,
         "hip/hip_runtime_api.h",
         runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
         dll="libamdhip64.so",
@@ -445,6 +448,7 @@ def generate_hip_package_files():
 
 # hipblas
 def generate_hipblas_package_files():
+    global ROCM_INC
     global HIP_PYTHON_GENERATE
     global GENERATOR_ARGS
     global CYTHON_EXT_MODULES
@@ -526,7 +530,7 @@ def generate_hipblas_package_files():
 
     generator = CythonPackageGenerator(
         "hipblas",
-        rocm_inc,
+        ROCM_INC,
         "hipblas/hipblas.h",
         runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
         dll="libhipblas.so",
@@ -552,6 +556,7 @@ def generate_hipblas_package_files():
 
 # rccl
 def generate_rccl_package_files():
+    global ROCM_INC
     global HIP_PYTHON_GENERATE
     global GENERATOR_ARGS
     global CYTHON_EXT_MODULES
@@ -625,7 +630,7 @@ def generate_rccl_package_files():
 
     generator = CythonPackageGenerator(
         "rccl",
-        rocm_inc,
+        ROCM_INC,
         "rccl/rccl.h",
         runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
         dll="librccl.so",
@@ -650,11 +655,89 @@ def generate_rccl_package_files():
         ("hip.rccl", ["./hip/rccl.pyx"]),
     ]
 
+ #hiprand
+def generate_hiprand_package_files():
+    global ROCM_INC
+    global HIP_PYTHON_GENERATE
+    global GENERATOR_ARGS
+    global CYTHON_EXT_MODULES
+
+    def hiprand_node_filter(node: Node):
+        if not isinstance(node, MacroDefinition):
+            if ( 
+                node.name.startswith("hiprand")
+                or node.name.startswith("rocrand")
+                or node.name == "uint4"
+            ):
+                return True
+        elif node.name in (
+            "HIPRAND_VERSION",
+            "HIPRAND_DEFAULT_MAX_BLOCK_SIZE",
+            "HIPRAND_DEFAULT_MIN_WARPS_PER_EU",
+        ):
+            return True
+        return False
+
+    def hiprand_macro_type(node: MacroDefinition):
+        return "int"
+
+    def hiprand_ptr_parm_intent(node: Parm):
+        """Flags pointer parameters that are actually return values
+        that are passed as C-style reference, i.e. `<type>* <param>`.
+        """
+        if node.is_pointer_to_record(degree=2):
+            return PointerParamIntent.OUT
+        if node.is_pointer_to_basic_type(degree=1):
+            return PointerParamIntent.OUT
+        return PointerParamIntent.IN
+
+    def hiprand_ptr_rank(node: Node):
+        """Actual rank of the variables underlying pointer indirections.
+        
+        Most of the parameter names follow LAPACK convention.
+        """
+        if isinstance(node, Parm):
+            if node.is_pointer_to_record(degree=1):
+                return 0
+            if node.is_pointer_to_record(degree=2):
+                return 0
+            elif node.is_pointer_to_basic_type(degree=1):
+                return 0
+        elif isinstance(node, Field):
+            pass  # nothing to do
+        return 1
+
+    generator = CythonPackageGenerator(
+        "hiprand",
+        ROCM_INC,
+        "hiprand/hiprand.h",
+        runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
+        dll="libhiprand.so",
+        node_filter=hiprand_node_filter,
+        macro_type=hiprand_macro_type,
+        ptr_parm_intent=hiprand_ptr_parm_intent,
+        ptr_rank=hiprand_ptr_rank,
+        cflags=GENERATOR_ARGS,
+    )
+    generator.c_interface_decl_preamble += textwrap.dedent("""\
+    from .chip cimport hipStream_t
+    """)
+    generator.python_interface_decl_preamble += textwrap.dedent("""\
+    from .hip cimport ihipStream_t
+    """)
+    if HIP_PYTHON_GENERATE:
+        generator.write_package_files(output_dir="hip")
+    CYTHON_EXT_MODULES += [
+        ("hip.chiprand", ["./hip/chiprand.pyx"]),
+        ("hip.hiprand", ["./hip/hiprand.pyx"]),
+    ]
+
 AVAILABLE_GENERATORS = dict(
   hip=generate_hip_package_files,
   hiprtc=generate_hiprtc_package_files,
   hipblas=generate_hipblas_package_files,
   rccl=generate_rccl_package_files,
+  hiprand=generate_hiprand_package_files,
 )
 
 for entry in HIP_PYTHON_LIBS.split(","):
@@ -700,13 +783,13 @@ if HIP_PYTHON_BUILD:
 
     extra_compile_args = hip_platform.cflags
     if CFLAGS == None:
-        extra_compile_args += ["-O3"]
+        extra_compile_args += ["-O3"]+["-D","__half=uint16_t"]
 
     def create_extension(name, sources):
         return Extension(
             name,
             sources=sources,
-            include_dirs=[rocm_inc],
+            include_dirs=[ROCM_INC],
             library_dirs=library_dirs,
             libraries=libraries,
             language="c",
