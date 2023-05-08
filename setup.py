@@ -400,7 +400,7 @@ def generate_hip_package_files():
     def hip_ptr_complicated_type_handler(parm: Parm):
         if (parm.parent.name, parm.name) == ("hipModuleLaunchKernel","extra"): 
             return f"hip._hip_helpers.{toclassname(parm.parent.name)}_{parm.name}"
-        return "hip._util.types.DataHandle"
+        return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
 
     generator = CythonPackageGenerator(
         "hip",
@@ -594,6 +594,11 @@ def generate_rccl_package_files():
             if (node.parent.name,node.name) == "ncclGetUniqueId":
                 return PointerParamIntent.OUT
         if node.is_pointer_to_basic_type(degree=1):
+            if (node.parent.name,node.name) in (
+                ("ncclCommInitAll","devlist"),
+                ("pncclCommInitAll","devlist"),
+            ):
+                return PointerParamIntent.IN
             return PointerParamIntent.OUT
         return PointerParamIntent.IN
 
@@ -608,6 +613,11 @@ def generate_rccl_package_files():
             if node.is_pointer_to_record(degree=2):
                 return 0
             elif node.is_pointer_to_basic_type(degree=1):
+                if (node.parent.name,node.name) in (
+                    ("ncclCommInitAll","devlist"),
+                    ("pncclCommInitAll","devlist"),
+                ):
+                    return 1
                 return 0
         elif isinstance(node, Field):
             pass  # nothing to do

@@ -48,6 +48,16 @@ def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm_or_field):
     from . import tree
 
     assert isinstance(parm_or_field,tree.Typed)
+    if parm_or_field.actual_rank == 1:
+        innermost_type_kind = next(parm_or_field.clang_type_layer_kinds(postorder=-1,canonical=True))
+        print(parm_or_field.name)
+        print(innermost_type_kind)
+        if innermost_type_kind == clang.cindex.TypeKind.INT:
+            return "hip._util.types.ListOfInt"
+        elif innermost_type_kind == clang.cindex.TypeKind.UINT:
+            return "hip._util.types.ListOfUnsigned"
+        elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
+            return "hip._util.types.ListOfUnsignedLong"
     if parm_or_field.actual_rank == 2:
         return "hip._util.types.ListOfDataHandle"
     return "hip._util.types.DataHandle"
@@ -980,7 +990,7 @@ cdef void* {funptr_name} = NULL
                 f"\n{indent*2}<{cprefix}{parm_typename}>{handler_name}.from_pyobj({parm_name})._ptr"
             )
 
-        def emit_data_handle_for_void_basic_enum_type_(parm: tree.Parm, cprefix: str):
+        def emit_data_handle_for_ptr_to_void_basic_enum_type_(parm: tree.Parm, cprefix: str):
             parm_typename = (
                 parm.cython_global_typename
                 if parm.has_typeref
@@ -1061,7 +1071,7 @@ cdef void* {funptr_name} = NULL
                 or parm.is_pointer_to_basic_type(degree=-1, incomplete_array=True)
                 or parm.is_pointer_to_enum(degree=-1, incomplete_array=True)
             ):
-                emit_data_handle_for_void_basic_enum_type_(parm, cprefix)
+                emit_data_handle_for_ptr_to_void_basic_enum_type_(parm, cprefix)
             else:
                 assert False, "should not be entered"
 
