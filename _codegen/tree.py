@@ -674,7 +674,7 @@ class Typed:
     
     @property
     def is_basic_type_constarray(self):
-        """If this is a pointer to a struct or enum."""
+        """If this is a constant array of basic datatype."""
         # TODO multi-dim arrays
         from clang.cindex import TypeKind
 
@@ -1164,7 +1164,7 @@ def from_libclang_translation_unit(
             anon_type_decl = root.lookup_type_from_cursor(type_decl_cursor)
             assert anon_type_decl != None and isinstance(anon_type_decl, (Enum, Record))
             type_decl = handle_anon_typedef_child_cursor_(type_decl_cursor, node)
-            descend_into_child_cursors_(node)  # post-order walk
+            descend_into_child_cursors_(type_decl)  # post-order walk
             root.insert(anon_type_decl.index, type_decl)
             root.remove(anon_type_decl)
             # do not append typedef node
@@ -1210,7 +1210,6 @@ def from_libclang_translation_unit(
         nonlocal nested_structure_types
 
         is_anonymous = cursor.spelling == ""
-        root = parent.get_root()
 
         if cursor.kind in structure_types:
             cls = structure_types[cursor.kind]
