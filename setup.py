@@ -400,7 +400,7 @@ def generate_hip_package_files():
     def hip_ptr_complicated_type_handler(parm: Parm):
         if (parm.parent.name, parm.name) == ("hipModuleLaunchKernel","extra"): 
             return f"hip._hip_helpers.{toclassname(parm.parent.name)}_{parm.name}"
-        return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
+        return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
     generator = CythonPackageGenerator(
         "hip",

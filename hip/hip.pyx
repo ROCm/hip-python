@@ -170,6 +170,10 @@ cdef class hipDeviceArch_t:
     cdef hipDeviceArch_t from_ptr(chip.hipDeviceArch_t* ptr, bint owner=False):
         """Factory function to create ``hipDeviceArch_t`` objects from
         given ``chip.hipDeviceArch_t`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef hipDeviceArch_t wrapper = hipDeviceArch_t.__new__(hipDeviceArch_t)
@@ -226,6 +230,43 @@ cdef class hipDeviceArch_t:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.hipDeviceArch_t** ptr):
+        ptr[0] = <chip.hipDeviceArch_t*>stdlib.malloc(sizeof(chip.hipDeviceArch_t))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef hipDeviceArch_t new():
+        """Factory function to create hipDeviceArch_t objects with
+        newly allocated chip.hipDeviceArch_t"""
+        cdef chip.hipDeviceArch_t* ptr
+        hipDeviceArch_t.__allocate(&ptr)
+        return hipDeviceArch_t.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        hipDeviceArch_t.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -239,9 +280,264 @@ cdef class hipDeviceArch_t:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_hasGlobalInt32Atomics(self, i):
+        """Get value ``hasGlobalInt32Atomics`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasGlobalInt32Atomics
+    def set_hasGlobalInt32Atomics(self, i, unsigned int value):
+        """Set value ``hasGlobalInt32Atomics`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasGlobalInt32Atomics = value
+    @property
+    def hasGlobalInt32Atomics(self):
+        return self.get_hasGlobalInt32Atomics(0)
+    @hasGlobalInt32Atomics.setter
+    def hasGlobalInt32Atomics(self, unsigned int value):
+        self.set_hasGlobalInt32Atomics(0,value)
+
+    def get_hasGlobalFloatAtomicExch(self, i):
+        """Get value ``hasGlobalFloatAtomicExch`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasGlobalFloatAtomicExch
+    def set_hasGlobalFloatAtomicExch(self, i, unsigned int value):
+        """Set value ``hasGlobalFloatAtomicExch`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasGlobalFloatAtomicExch = value
+    @property
+    def hasGlobalFloatAtomicExch(self):
+        return self.get_hasGlobalFloatAtomicExch(0)
+    @hasGlobalFloatAtomicExch.setter
+    def hasGlobalFloatAtomicExch(self, unsigned int value):
+        self.set_hasGlobalFloatAtomicExch(0,value)
+
+    def get_hasSharedInt32Atomics(self, i):
+        """Get value ``hasSharedInt32Atomics`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasSharedInt32Atomics
+    def set_hasSharedInt32Atomics(self, i, unsigned int value):
+        """Set value ``hasSharedInt32Atomics`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasSharedInt32Atomics = value
+    @property
+    def hasSharedInt32Atomics(self):
+        return self.get_hasSharedInt32Atomics(0)
+    @hasSharedInt32Atomics.setter
+    def hasSharedInt32Atomics(self, unsigned int value):
+        self.set_hasSharedInt32Atomics(0,value)
+
+    def get_hasSharedFloatAtomicExch(self, i):
+        """Get value ``hasSharedFloatAtomicExch`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasSharedFloatAtomicExch
+    def set_hasSharedFloatAtomicExch(self, i, unsigned int value):
+        """Set value ``hasSharedFloatAtomicExch`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasSharedFloatAtomicExch = value
+    @property
+    def hasSharedFloatAtomicExch(self):
+        return self.get_hasSharedFloatAtomicExch(0)
+    @hasSharedFloatAtomicExch.setter
+    def hasSharedFloatAtomicExch(self, unsigned int value):
+        self.set_hasSharedFloatAtomicExch(0,value)
+
+    def get_hasFloatAtomicAdd(self, i):
+        """Get value ``hasFloatAtomicAdd`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasFloatAtomicAdd
+    def set_hasFloatAtomicAdd(self, i, unsigned int value):
+        """Set value ``hasFloatAtomicAdd`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasFloatAtomicAdd = value
+    @property
+    def hasFloatAtomicAdd(self):
+        return self.get_hasFloatAtomicAdd(0)
+    @hasFloatAtomicAdd.setter
+    def hasFloatAtomicAdd(self, unsigned int value):
+        self.set_hasFloatAtomicAdd(0,value)
+
+    def get_hasGlobalInt64Atomics(self, i):
+        """Get value ``hasGlobalInt64Atomics`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasGlobalInt64Atomics
+    def set_hasGlobalInt64Atomics(self, i, unsigned int value):
+        """Set value ``hasGlobalInt64Atomics`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasGlobalInt64Atomics = value
+    @property
+    def hasGlobalInt64Atomics(self):
+        return self.get_hasGlobalInt64Atomics(0)
+    @hasGlobalInt64Atomics.setter
+    def hasGlobalInt64Atomics(self, unsigned int value):
+        self.set_hasGlobalInt64Atomics(0,value)
+
+    def get_hasSharedInt64Atomics(self, i):
+        """Get value ``hasSharedInt64Atomics`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasSharedInt64Atomics
+    def set_hasSharedInt64Atomics(self, i, unsigned int value):
+        """Set value ``hasSharedInt64Atomics`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasSharedInt64Atomics = value
+    @property
+    def hasSharedInt64Atomics(self):
+        return self.get_hasSharedInt64Atomics(0)
+    @hasSharedInt64Atomics.setter
+    def hasSharedInt64Atomics(self, unsigned int value):
+        self.set_hasSharedInt64Atomics(0,value)
+
+    def get_hasDoubles(self, i):
+        """Get value ``hasDoubles`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasDoubles
+    def set_hasDoubles(self, i, unsigned int value):
+        """Set value ``hasDoubles`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasDoubles = value
+    @property
+    def hasDoubles(self):
+        return self.get_hasDoubles(0)
+    @hasDoubles.setter
+    def hasDoubles(self, unsigned int value):
+        self.set_hasDoubles(0,value)
+
+    def get_hasWarpVote(self, i):
+        """Get value ``hasWarpVote`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasWarpVote
+    def set_hasWarpVote(self, i, unsigned int value):
+        """Set value ``hasWarpVote`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasWarpVote = value
+    @property
+    def hasWarpVote(self):
+        return self.get_hasWarpVote(0)
+    @hasWarpVote.setter
+    def hasWarpVote(self, unsigned int value):
+        self.set_hasWarpVote(0,value)
+
+    def get_hasWarpBallot(self, i):
+        """Get value ``hasWarpBallot`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasWarpBallot
+    def set_hasWarpBallot(self, i, unsigned int value):
+        """Set value ``hasWarpBallot`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasWarpBallot = value
+    @property
+    def hasWarpBallot(self):
+        return self.get_hasWarpBallot(0)
+    @hasWarpBallot.setter
+    def hasWarpBallot(self, unsigned int value):
+        self.set_hasWarpBallot(0,value)
+
+    def get_hasWarpShuffle(self, i):
+        """Get value ``hasWarpShuffle`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasWarpShuffle
+    def set_hasWarpShuffle(self, i, unsigned int value):
+        """Set value ``hasWarpShuffle`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasWarpShuffle = value
+    @property
+    def hasWarpShuffle(self):
+        return self.get_hasWarpShuffle(0)
+    @hasWarpShuffle.setter
+    def hasWarpShuffle(self, unsigned int value):
+        self.set_hasWarpShuffle(0,value)
+
+    def get_hasFunnelShift(self, i):
+        """Get value ``hasFunnelShift`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasFunnelShift
+    def set_hasFunnelShift(self, i, unsigned int value):
+        """Set value ``hasFunnelShift`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasFunnelShift = value
+    @property
+    def hasFunnelShift(self):
+        return self.get_hasFunnelShift(0)
+    @hasFunnelShift.setter
+    def hasFunnelShift(self, unsigned int value):
+        self.set_hasFunnelShift(0,value)
+
+    def get_hasThreadFenceSystem(self, i):
+        """Get value ``hasThreadFenceSystem`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasThreadFenceSystem
+    def set_hasThreadFenceSystem(self, i, unsigned int value):
+        """Set value ``hasThreadFenceSystem`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasThreadFenceSystem = value
+    @property
+    def hasThreadFenceSystem(self):
+        return self.get_hasThreadFenceSystem(0)
+    @hasThreadFenceSystem.setter
+    def hasThreadFenceSystem(self, unsigned int value):
+        self.set_hasThreadFenceSystem(0,value)
+
+    def get_hasSyncThreadsExt(self, i):
+        """Get value ``hasSyncThreadsExt`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasSyncThreadsExt
+    def set_hasSyncThreadsExt(self, i, unsigned int value):
+        """Set value ``hasSyncThreadsExt`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasSyncThreadsExt = value
+    @property
+    def hasSyncThreadsExt(self):
+        return self.get_hasSyncThreadsExt(0)
+    @hasSyncThreadsExt.setter
+    def hasSyncThreadsExt(self, unsigned int value):
+        self.set_hasSyncThreadsExt(0,value)
+
+    def get_hasSurfaceFuncs(self, i):
+        """Get value ``hasSurfaceFuncs`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasSurfaceFuncs
+    def set_hasSurfaceFuncs(self, i, unsigned int value):
+        """Set value ``hasSurfaceFuncs`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasSurfaceFuncs = value
+    @property
+    def hasSurfaceFuncs(self):
+        return self.get_hasSurfaceFuncs(0)
+    @hasSurfaceFuncs.setter
+    def hasSurfaceFuncs(self, unsigned int value):
+        self.set_hasSurfaceFuncs(0,value)
+
+    def get_has3dGrid(self, i):
+        """Get value ``has3dGrid`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].has3dGrid
+    def set_has3dGrid(self, i, unsigned int value):
+        """Set value ``has3dGrid`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].has3dGrid = value
+    @property
+    def has3dGrid(self):
+        return self.get_has3dGrid(0)
+    @has3dGrid.setter
+    def has3dGrid(self, unsigned int value):
+        self.set_has3dGrid(0,value)
+
+    def get_hasDynamicParallelism(self, i):
+        """Get value ``hasDynamicParallelism`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].hasDynamicParallelism
+    def set_hasDynamicParallelism(self, i, unsigned int value):
+        """Set value ``hasDynamicParallelism`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].hasDynamicParallelism = value
+    @property
+    def hasDynamicParallelism(self):
+        return self.get_hasDynamicParallelism(0)
+    @hasDynamicParallelism.setter
+    def hasDynamicParallelism(self, unsigned int value):
+        self.set_hasDynamicParallelism(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["hasGlobalInt32Atomics","hasGlobalFloatAtomicExch","hasSharedInt32Atomics","hasSharedFloatAtomicExch","hasFloatAtomicAdd","hasGlobalInt64Atomics","hasSharedInt64Atomics","hasDoubles","hasWarpVote","hasWarpBallot","hasWarpShuffle","hasFunnelShift","hasThreadFenceSystem","hasSyncThreadsExt","hasSurfaceFuncs","has3dGrid","hasDynamicParallelism"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -382,10 +678,18 @@ cdef class hipUUID_t:
         """Get value of ``bytes`` of ``self._ptr[i]``.
         """
         return self._ptr[i].bytes
+    # TODO add setters
+    #def set_bytes(self, i, char[16] value):
+    #    """Set value ``bytes`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].bytes = value
     @property
     def bytes(self):
         return self.get_bytes(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@bytes.setter
+    #def bytes(self, char[16] value):
+    #    self.set_bytes(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -530,10 +834,18 @@ cdef class hipDeviceProp_t:
         """Get value of ``name`` of ``self._ptr[i]``.
         """
         return self._ptr[i].name
+    # TODO add setters
+    #def set_name(self, i, char[256] value):
+    #    """Set value ``name`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].name = value
     @property
     def name(self):
         return self.get_name(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@name.setter
+    #def name(self, char[256] value):
+    #    self.set_name(0,value)
 
     def get_totalGlobalMem(self, i):
         """Get value ``totalGlobalMem`` of ``self._ptr[i]``.
@@ -614,19 +926,35 @@ cdef class hipDeviceProp_t:
         """Get value of ``maxThreadsDim`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxThreadsDim
+    # TODO add setters
+    #def set_maxThreadsDim(self, i, int[3] value):
+    #    """Set value ``maxThreadsDim`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].maxThreadsDim = value
     @property
     def maxThreadsDim(self):
         return self.get_maxThreadsDim(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@maxThreadsDim.setter
+    #def maxThreadsDim(self, int[3] value):
+    #    self.set_maxThreadsDim(0,value)
 
     def get_maxGridSize(self, i):
         """Get value of ``maxGridSize`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxGridSize
+    # TODO add setters
+    #def set_maxGridSize(self, i, int[3] value):
+    #    """Set value ``maxGridSize`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].maxGridSize = value
     @property
     def maxGridSize(self):
         return self.get_maxGridSize(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@maxGridSize.setter
+    #def maxGridSize(self, int[3] value):
+    #    self.set_maxGridSize(0,value)
 
     def get_clockRate(self, i):
         """Get value ``clockRate`` of ``self._ptr[i]``.
@@ -925,10 +1253,18 @@ cdef class hipDeviceProp_t:
         """Get value of ``gcnArchName`` of ``self._ptr[i]``.
         """
         return self._ptr[i].gcnArchName
+    # TODO add setters
+    #def set_gcnArchName(self, i, char[256] value):
+    #    """Set value ``gcnArchName`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].gcnArchName = value
     @property
     def gcnArchName(self):
         return self.get_gcnArchName(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@gcnArchName.setter
+    #def gcnArchName(self, char[256] value):
+    #    self.set_gcnArchName(0,value)
 
     def get_integrated(self, i):
         """Get value ``integrated`` of ``self._ptr[i]``.
@@ -1009,24 +1345,40 @@ cdef class hipDeviceProp_t:
         """Get value of ``maxTexture2D`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxTexture2D
+    # TODO add setters
+    #def set_maxTexture2D(self, i, int[2] value):
+    #    """Set value ``maxTexture2D`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].maxTexture2D = value
     @property
     def maxTexture2D(self):
         return self.get_maxTexture2D(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@maxTexture2D.setter
+    #def maxTexture2D(self, int[2] value):
+    #    self.set_maxTexture2D(0,value)
 
     def get_maxTexture3D(self, i):
         """Get value of ``maxTexture3D`` of ``self._ptr[i]``.
         """
         return self._ptr[i].maxTexture3D
+    # TODO add setters
+    #def set_maxTexture3D(self, i, int[3] value):
+    #    """Set value ``maxTexture3D`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].maxTexture3D = value
     @property
     def maxTexture3D(self):
         return self.get_maxTexture3D(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@maxTexture3D.setter
+    #def maxTexture3D(self, int[3] value):
+    #    self.set_maxTexture3D(0,value)
 
     def get_hdpMemFlushCntl(self, i):
         """Get value ``hdpMemFlushCntl`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].hdpMemFlushCntl)
+        return hip._util.types.ListOfUnsigned.from_ptr(self._ptr[i].hdpMemFlushCntl)
     def set_hdpMemFlushCntl(self, i, object value):
         """Set value ``hdpMemFlushCntl`` of ``self._ptr[i]``.
 
@@ -1034,7 +1386,7 @@ cdef class hipDeviceProp_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].hdpMemFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].hdpMemFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(hip._util.types.ListOfUnsigned.from_pyobj(value).ptr)
     @property
     def hdpMemFlushCntl(self):
         """
@@ -1050,7 +1402,7 @@ cdef class hipDeviceProp_t:
     def get_hdpRegFlushCntl(self, i):
         """Get value ``hdpRegFlushCntl`` of ``self._ptr[i]``.
         """
-        return hip._util.types.DataHandle.from_ptr(self._ptr[i].hdpRegFlushCntl)
+        return hip._util.types.ListOfUnsigned.from_ptr(self._ptr[i].hdpRegFlushCntl)
     def set_hdpRegFlushCntl(self, i, object value):
         """Set value ``hdpRegFlushCntl`` of ``self._ptr[i]``.
 
@@ -1058,7 +1410,7 @@ cdef class hipDeviceProp_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].hdpRegFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].hdpRegFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(hip._util.types.ListOfUnsigned.from_pyobj(value).ptr)
     @property
     def hdpRegFlushCntl(self):
         """
@@ -3750,19 +4102,35 @@ cdef class HIP_TEXTURE_DESC_st:
         """Get value of ``borderColor`` of ``self._ptr[i]``.
         """
         return self._ptr[i].borderColor
+    # TODO add setters
+    #def set_borderColor(self, i, float[4] value):
+    #    """Set value ``borderColor`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].borderColor = value
     @property
     def borderColor(self):
         return self.get_borderColor(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@borderColor.setter
+    #def borderColor(self, float[4] value):
+    #    self.set_borderColor(0,value)
 
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, int[12] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, int[12] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -5709,10 +6077,18 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, int[32] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, int[32] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -6585,10 +6961,18 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, unsigned int[16] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, unsigned int[16] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -7933,6 +8317,10 @@ cdef class uchar1:
     cdef uchar1 from_ptr(chip.uchar1* ptr, bint owner=False):
         """Factory function to create ``uchar1`` objects from
         given ``chip.uchar1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uchar1 wrapper = uchar1.__new__(uchar1)
@@ -7989,6 +8377,43 @@ cdef class uchar1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.uchar1** ptr):
+        ptr[0] = <chip.uchar1*>stdlib.malloc(sizeof(chip.uchar1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef uchar1 new():
+        """Factory function to create uchar1 objects with
+        newly allocated chip.uchar1"""
+        cdef chip.uchar1* ptr
+        uchar1.__allocate(&ptr)
+        return uchar1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        uchar1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8002,9 +8427,24 @@ cdef class uchar1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned char value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned char value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -8031,6 +8471,10 @@ cdef class uchar2:
     cdef uchar2 from_ptr(chip.uchar2* ptr, bint owner=False):
         """Factory function to create ``uchar2`` objects from
         given ``chip.uchar2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uchar2 wrapper = uchar2.__new__(uchar2)
@@ -8087,6 +8531,43 @@ cdef class uchar2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.uchar2** ptr):
+        ptr[0] = <chip.uchar2*>stdlib.malloc(sizeof(chip.uchar2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef uchar2 new():
+        """Factory function to create uchar2 objects with
+        newly allocated chip.uchar2"""
+        cdef chip.uchar2* ptr
+        uchar2.__allocate(&ptr)
+        return uchar2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        uchar2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8100,9 +8581,39 @@ cdef class uchar2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned char value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned char value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned char value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned char value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -8129,6 +8640,10 @@ cdef class uchar3:
     cdef uchar3 from_ptr(chip.uchar3* ptr, bint owner=False):
         """Factory function to create ``uchar3`` objects from
         given ``chip.uchar3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uchar3 wrapper = uchar3.__new__(uchar3)
@@ -8185,6 +8700,43 @@ cdef class uchar3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.uchar3** ptr):
+        ptr[0] = <chip.uchar3*>stdlib.malloc(sizeof(chip.uchar3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef uchar3 new():
+        """Factory function to create uchar3 objects with
+        newly allocated chip.uchar3"""
+        cdef chip.uchar3* ptr
+        uchar3.__allocate(&ptr)
+        return uchar3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        uchar3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8198,9 +8750,54 @@ cdef class uchar3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned char value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned char value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned char value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned char value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, unsigned char value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, unsigned char value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -8227,6 +8824,10 @@ cdef class uchar4:
     cdef uchar4 from_ptr(chip.uchar4* ptr, bint owner=False):
         """Factory function to create ``uchar4`` objects from
         given ``chip.uchar4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uchar4 wrapper = uchar4.__new__(uchar4)
@@ -8283,6 +8884,43 @@ cdef class uchar4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.uchar4** ptr):
+        ptr[0] = <chip.uchar4*>stdlib.malloc(sizeof(chip.uchar4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef uchar4 new():
+        """Factory function to create uchar4 objects with
+        newly allocated chip.uchar4"""
+        cdef chip.uchar4* ptr
+        uchar4.__allocate(&ptr)
+        return uchar4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        uchar4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8296,9 +8934,69 @@ cdef class uchar4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned char value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned char value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned char value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned char value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, unsigned char value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, unsigned char value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, unsigned char value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, unsigned char value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -8325,6 +9023,10 @@ cdef class char1:
     cdef char1 from_ptr(chip.char1* ptr, bint owner=False):
         """Factory function to create ``char1`` objects from
         given ``chip.char1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef char1 wrapper = char1.__new__(char1)
@@ -8381,6 +9083,43 @@ cdef class char1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.char1** ptr):
+        ptr[0] = <chip.char1*>stdlib.malloc(sizeof(chip.char1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef char1 new():
+        """Factory function to create char1 objects with
+        newly allocated chip.char1"""
+        cdef chip.char1* ptr
+        char1.__allocate(&ptr)
+        return char1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        char1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8394,9 +9133,24 @@ cdef class char1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, char value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, char value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -8423,6 +9177,10 @@ cdef class char2:
     cdef char2 from_ptr(chip.char2* ptr, bint owner=False):
         """Factory function to create ``char2`` objects from
         given ``chip.char2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef char2 wrapper = char2.__new__(char2)
@@ -8479,6 +9237,43 @@ cdef class char2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.char2** ptr):
+        ptr[0] = <chip.char2*>stdlib.malloc(sizeof(chip.char2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef char2 new():
+        """Factory function to create char2 objects with
+        newly allocated chip.char2"""
+        cdef chip.char2* ptr
+        char2.__allocate(&ptr)
+        return char2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        char2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8492,9 +9287,39 @@ cdef class char2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, char value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, char value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, char value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, char value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -8521,6 +9346,10 @@ cdef class char3:
     cdef char3 from_ptr(chip.char3* ptr, bint owner=False):
         """Factory function to create ``char3`` objects from
         given ``chip.char3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef char3 wrapper = char3.__new__(char3)
@@ -8577,6 +9406,43 @@ cdef class char3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.char3** ptr):
+        ptr[0] = <chip.char3*>stdlib.malloc(sizeof(chip.char3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef char3 new():
+        """Factory function to create char3 objects with
+        newly allocated chip.char3"""
+        cdef chip.char3* ptr
+        char3.__allocate(&ptr)
+        return char3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        char3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8590,9 +9456,54 @@ cdef class char3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, char value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, char value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, char value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, char value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, char value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, char value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -8619,6 +9530,10 @@ cdef class char4:
     cdef char4 from_ptr(chip.char4* ptr, bint owner=False):
         """Factory function to create ``char4`` objects from
         given ``chip.char4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef char4 wrapper = char4.__new__(char4)
@@ -8675,6 +9590,43 @@ cdef class char4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.char4** ptr):
+        ptr[0] = <chip.char4*>stdlib.malloc(sizeof(chip.char4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef char4 new():
+        """Factory function to create char4 objects with
+        newly allocated chip.char4"""
+        cdef chip.char4* ptr
+        char4.__allocate(&ptr)
+        return char4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        char4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8688,9 +9640,69 @@ cdef class char4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, char value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, char value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, char value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, char value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, char value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, char value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, char value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, char value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -8717,6 +9729,10 @@ cdef class ushort1:
     cdef ushort1 from_ptr(chip.ushort1* ptr, bint owner=False):
         """Factory function to create ``ushort1`` objects from
         given ``chip.ushort1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ushort1 wrapper = ushort1.__new__(ushort1)
@@ -8773,6 +9789,43 @@ cdef class ushort1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ushort1** ptr):
+        ptr[0] = <chip.ushort1*>stdlib.malloc(sizeof(chip.ushort1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ushort1 new():
+        """Factory function to create ushort1 objects with
+        newly allocated chip.ushort1"""
+        cdef chip.ushort1* ptr
+        ushort1.__allocate(&ptr)
+        return ushort1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ushort1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8786,9 +9839,24 @@ cdef class ushort1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned short value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned short value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -8815,6 +9883,10 @@ cdef class ushort2:
     cdef ushort2 from_ptr(chip.ushort2* ptr, bint owner=False):
         """Factory function to create ``ushort2`` objects from
         given ``chip.ushort2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ushort2 wrapper = ushort2.__new__(ushort2)
@@ -8871,6 +9943,43 @@ cdef class ushort2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ushort2** ptr):
+        ptr[0] = <chip.ushort2*>stdlib.malloc(sizeof(chip.ushort2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ushort2 new():
+        """Factory function to create ushort2 objects with
+        newly allocated chip.ushort2"""
+        cdef chip.ushort2* ptr
+        ushort2.__allocate(&ptr)
+        return ushort2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ushort2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8884,9 +9993,39 @@ cdef class ushort2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned short value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned short value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned short value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned short value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -8913,6 +10052,10 @@ cdef class ushort3:
     cdef ushort3 from_ptr(chip.ushort3* ptr, bint owner=False):
         """Factory function to create ``ushort3`` objects from
         given ``chip.ushort3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ushort3 wrapper = ushort3.__new__(ushort3)
@@ -8969,6 +10112,43 @@ cdef class ushort3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ushort3** ptr):
+        ptr[0] = <chip.ushort3*>stdlib.malloc(sizeof(chip.ushort3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ushort3 new():
+        """Factory function to create ushort3 objects with
+        newly allocated chip.ushort3"""
+        cdef chip.ushort3* ptr
+        ushort3.__allocate(&ptr)
+        return ushort3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ushort3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -8982,9 +10162,54 @@ cdef class ushort3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned short value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned short value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned short value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned short value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, unsigned short value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, unsigned short value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9011,6 +10236,10 @@ cdef class ushort4:
     cdef ushort4 from_ptr(chip.ushort4* ptr, bint owner=False):
         """Factory function to create ``ushort4`` objects from
         given ``chip.ushort4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ushort4 wrapper = ushort4.__new__(ushort4)
@@ -9067,6 +10296,43 @@ cdef class ushort4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ushort4** ptr):
+        ptr[0] = <chip.ushort4*>stdlib.malloc(sizeof(chip.ushort4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ushort4 new():
+        """Factory function to create ushort4 objects with
+        newly allocated chip.ushort4"""
+        cdef chip.ushort4* ptr
+        ushort4.__allocate(&ptr)
+        return ushort4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ushort4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -9080,9 +10346,69 @@ cdef class ushort4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned short value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned short value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned short value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned short value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, unsigned short value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, unsigned short value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, unsigned short value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, unsigned short value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9109,6 +10435,10 @@ cdef class short1:
     cdef short1 from_ptr(chip.short1* ptr, bint owner=False):
         """Factory function to create ``short1`` objects from
         given ``chip.short1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef short1 wrapper = short1.__new__(short1)
@@ -9165,6 +10495,43 @@ cdef class short1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.short1** ptr):
+        ptr[0] = <chip.short1*>stdlib.malloc(sizeof(chip.short1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef short1 new():
+        """Factory function to create short1 objects with
+        newly allocated chip.short1"""
+        cdef chip.short1* ptr
+        short1.__allocate(&ptr)
+        return short1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        short1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -9178,9 +10545,24 @@ cdef class short1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, short value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, short value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9207,6 +10589,10 @@ cdef class short2:
     cdef short2 from_ptr(chip.short2* ptr, bint owner=False):
         """Factory function to create ``short2`` objects from
         given ``chip.short2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef short2 wrapper = short2.__new__(short2)
@@ -9263,6 +10649,43 @@ cdef class short2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.short2** ptr):
+        ptr[0] = <chip.short2*>stdlib.malloc(sizeof(chip.short2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef short2 new():
+        """Factory function to create short2 objects with
+        newly allocated chip.short2"""
+        cdef chip.short2* ptr
+        short2.__allocate(&ptr)
+        return short2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        short2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -9276,9 +10699,39 @@ cdef class short2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, short value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, short value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, short value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, short value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9305,6 +10758,10 @@ cdef class short3:
     cdef short3 from_ptr(chip.short3* ptr, bint owner=False):
         """Factory function to create ``short3`` objects from
         given ``chip.short3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef short3 wrapper = short3.__new__(short3)
@@ -9361,6 +10818,43 @@ cdef class short3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.short3** ptr):
+        ptr[0] = <chip.short3*>stdlib.malloc(sizeof(chip.short3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef short3 new():
+        """Factory function to create short3 objects with
+        newly allocated chip.short3"""
+        cdef chip.short3* ptr
+        short3.__allocate(&ptr)
+        return short3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        short3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -9374,9 +10868,54 @@ cdef class short3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, short value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, short value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, short value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, short value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, short value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, short value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9403,6 +10942,10 @@ cdef class short4:
     cdef short4 from_ptr(chip.short4* ptr, bint owner=False):
         """Factory function to create ``short4`` objects from
         given ``chip.short4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef short4 wrapper = short4.__new__(short4)
@@ -9459,6 +11002,43 @@ cdef class short4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.short4** ptr):
+        ptr[0] = <chip.short4*>stdlib.malloc(sizeof(chip.short4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef short4 new():
+        """Factory function to create short4 objects with
+        newly allocated chip.short4"""
+        cdef chip.short4* ptr
+        short4.__allocate(&ptr)
+        return short4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        short4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -9472,9 +11052,69 @@ cdef class short4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, short value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, short value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, short value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, short value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, short value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, short value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, short value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, short value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9501,6 +11141,10 @@ cdef class uint1:
     cdef uint1 from_ptr(chip.uint1* ptr, bint owner=False):
         """Factory function to create ``uint1`` objects from
         given ``chip.uint1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uint1 wrapper = uint1.__new__(uint1)
@@ -9557,6 +11201,43 @@ cdef class uint1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.uint1** ptr):
+        ptr[0] = <chip.uint1*>stdlib.malloc(sizeof(chip.uint1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef uint1 new():
+        """Factory function to create uint1 objects with
+        newly allocated chip.uint1"""
+        cdef chip.uint1* ptr
+        uint1.__allocate(&ptr)
+        return uint1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        uint1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -9570,9 +11251,24 @@ cdef class uint1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned int value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned int value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9599,6 +11295,10 @@ cdef class uint2:
     cdef uint2 from_ptr(chip.uint2* ptr, bint owner=False):
         """Factory function to create ``uint2`` objects from
         given ``chip.uint2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uint2 wrapper = uint2.__new__(uint2)
@@ -9655,6 +11355,43 @@ cdef class uint2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.uint2** ptr):
+        ptr[0] = <chip.uint2*>stdlib.malloc(sizeof(chip.uint2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef uint2 new():
+        """Factory function to create uint2 objects with
+        newly allocated chip.uint2"""
+        cdef chip.uint2* ptr
+        uint2.__allocate(&ptr)
+        return uint2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        uint2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -9668,9 +11405,39 @@ cdef class uint2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned int value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned int value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned int value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned int value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9697,6 +11464,10 @@ cdef class uint3:
     cdef uint3 from_ptr(chip.uint3* ptr, bint owner=False):
         """Factory function to create ``uint3`` objects from
         given ``chip.uint3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uint3 wrapper = uint3.__new__(uint3)
@@ -9753,6 +11524,43 @@ cdef class uint3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.uint3** ptr):
+        ptr[0] = <chip.uint3*>stdlib.malloc(sizeof(chip.uint3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef uint3 new():
+        """Factory function to create uint3 objects with
+        newly allocated chip.uint3"""
+        cdef chip.uint3* ptr
+        uint3.__allocate(&ptr)
+        return uint3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        uint3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -9766,9 +11574,54 @@ cdef class uint3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned int value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned int value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned int value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned int value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, unsigned int value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, unsigned int value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9795,6 +11648,10 @@ cdef class uint4:
     cdef uint4 from_ptr(chip.uint4* ptr, bint owner=False):
         """Factory function to create ``uint4`` objects from
         given ``chip.uint4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef uint4 wrapper = uint4.__new__(uint4)
@@ -9851,6 +11708,43 @@ cdef class uint4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.uint4** ptr):
+        ptr[0] = <chip.uint4*>stdlib.malloc(sizeof(chip.uint4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef uint4 new():
+        """Factory function to create uint4 objects with
+        newly allocated chip.uint4"""
+        cdef chip.uint4* ptr
+        uint4.__allocate(&ptr)
+        return uint4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        uint4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -9864,9 +11758,69 @@ cdef class uint4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned int value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned int value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned int value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned int value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, unsigned int value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, unsigned int value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, unsigned int value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, unsigned int value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9893,6 +11847,10 @@ cdef class int1:
     cdef int1 from_ptr(chip.int1* ptr, bint owner=False):
         """Factory function to create ``int1`` objects from
         given ``chip.int1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef int1 wrapper = int1.__new__(int1)
@@ -9949,6 +11907,43 @@ cdef class int1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.int1** ptr):
+        ptr[0] = <chip.int1*>stdlib.malloc(sizeof(chip.int1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef int1 new():
+        """Factory function to create int1 objects with
+        newly allocated chip.int1"""
+        cdef chip.int1* ptr
+        int1.__allocate(&ptr)
+        return int1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        int1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -9962,9 +11957,24 @@ cdef class int1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, int value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, int value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -9991,6 +12001,10 @@ cdef class int2:
     cdef int2 from_ptr(chip.int2* ptr, bint owner=False):
         """Factory function to create ``int2`` objects from
         given ``chip.int2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef int2 wrapper = int2.__new__(int2)
@@ -10047,6 +12061,43 @@ cdef class int2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.int2** ptr):
+        ptr[0] = <chip.int2*>stdlib.malloc(sizeof(chip.int2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef int2 new():
+        """Factory function to create int2 objects with
+        newly allocated chip.int2"""
+        cdef chip.int2* ptr
+        int2.__allocate(&ptr)
+        return int2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        int2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10060,9 +12111,39 @@ cdef class int2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, int value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, int value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, int value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, int value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -10089,6 +12170,10 @@ cdef class int3:
     cdef int3 from_ptr(chip.int3* ptr, bint owner=False):
         """Factory function to create ``int3`` objects from
         given ``chip.int3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef int3 wrapper = int3.__new__(int3)
@@ -10145,6 +12230,43 @@ cdef class int3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.int3** ptr):
+        ptr[0] = <chip.int3*>stdlib.malloc(sizeof(chip.int3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef int3 new():
+        """Factory function to create int3 objects with
+        newly allocated chip.int3"""
+        cdef chip.int3* ptr
+        int3.__allocate(&ptr)
+        return int3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        int3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10158,9 +12280,54 @@ cdef class int3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, int value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, int value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, int value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, int value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, int value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, int value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -10187,6 +12354,10 @@ cdef class int4:
     cdef int4 from_ptr(chip.int4* ptr, bint owner=False):
         """Factory function to create ``int4`` objects from
         given ``chip.int4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef int4 wrapper = int4.__new__(int4)
@@ -10243,6 +12414,43 @@ cdef class int4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.int4** ptr):
+        ptr[0] = <chip.int4*>stdlib.malloc(sizeof(chip.int4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef int4 new():
+        """Factory function to create int4 objects with
+        newly allocated chip.int4"""
+        cdef chip.int4* ptr
+        int4.__allocate(&ptr)
+        return int4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        int4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10256,9 +12464,69 @@ cdef class int4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, int value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, int value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, int value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, int value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, int value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, int value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, int value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, int value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -10285,6 +12553,10 @@ cdef class ulong1:
     cdef ulong1 from_ptr(chip.ulong1* ptr, bint owner=False):
         """Factory function to create ``ulong1`` objects from
         given ``chip.ulong1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulong1 wrapper = ulong1.__new__(ulong1)
@@ -10341,6 +12613,43 @@ cdef class ulong1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ulong1** ptr):
+        ptr[0] = <chip.ulong1*>stdlib.malloc(sizeof(chip.ulong1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ulong1 new():
+        """Factory function to create ulong1 objects with
+        newly allocated chip.ulong1"""
+        cdef chip.ulong1* ptr
+        ulong1.__allocate(&ptr)
+        return ulong1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ulong1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10354,9 +12663,24 @@ cdef class ulong1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned long value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -10383,6 +12707,10 @@ cdef class ulong2:
     cdef ulong2 from_ptr(chip.ulong2* ptr, bint owner=False):
         """Factory function to create ``ulong2`` objects from
         given ``chip.ulong2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulong2 wrapper = ulong2.__new__(ulong2)
@@ -10439,6 +12767,43 @@ cdef class ulong2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ulong2** ptr):
+        ptr[0] = <chip.ulong2*>stdlib.malloc(sizeof(chip.ulong2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ulong2 new():
+        """Factory function to create ulong2 objects with
+        newly allocated chip.ulong2"""
+        cdef chip.ulong2* ptr
+        ulong2.__allocate(&ptr)
+        return ulong2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ulong2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10452,9 +12817,39 @@ cdef class ulong2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned long value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -10481,6 +12876,10 @@ cdef class ulong3:
     cdef ulong3 from_ptr(chip.ulong3* ptr, bint owner=False):
         """Factory function to create ``ulong3`` objects from
         given ``chip.ulong3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulong3 wrapper = ulong3.__new__(ulong3)
@@ -10537,6 +12936,43 @@ cdef class ulong3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ulong3** ptr):
+        ptr[0] = <chip.ulong3*>stdlib.malloc(sizeof(chip.ulong3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ulong3 new():
+        """Factory function to create ulong3 objects with
+        newly allocated chip.ulong3"""
+        cdef chip.ulong3* ptr
+        ulong3.__allocate(&ptr)
+        return ulong3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ulong3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10550,9 +12986,54 @@ cdef class ulong3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned long value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, unsigned long value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, unsigned long value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -10579,6 +13060,10 @@ cdef class ulong4:
     cdef ulong4 from_ptr(chip.ulong4* ptr, bint owner=False):
         """Factory function to create ``ulong4`` objects from
         given ``chip.ulong4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulong4 wrapper = ulong4.__new__(ulong4)
@@ -10635,6 +13120,43 @@ cdef class ulong4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ulong4** ptr):
+        ptr[0] = <chip.ulong4*>stdlib.malloc(sizeof(chip.ulong4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ulong4 new():
+        """Factory function to create ulong4 objects with
+        newly allocated chip.ulong4"""
+        cdef chip.ulong4* ptr
+        ulong4.__allocate(&ptr)
+        return ulong4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ulong4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10648,9 +13170,69 @@ cdef class ulong4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned long value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, unsigned long value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, unsigned long value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, unsigned long value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, unsigned long value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -10677,6 +13259,10 @@ cdef class long1:
     cdef long1 from_ptr(chip.long1* ptr, bint owner=False):
         """Factory function to create ``long1`` objects from
         given ``chip.long1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef long1 wrapper = long1.__new__(long1)
@@ -10733,6 +13319,43 @@ cdef class long1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.long1** ptr):
+        ptr[0] = <chip.long1*>stdlib.malloc(sizeof(chip.long1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef long1 new():
+        """Factory function to create long1 objects with
+        newly allocated chip.long1"""
+        cdef chip.long1* ptr
+        long1.__allocate(&ptr)
+        return long1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        long1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10746,9 +13369,24 @@ cdef class long1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, long value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -10775,6 +13413,10 @@ cdef class long2:
     cdef long2 from_ptr(chip.long2* ptr, bint owner=False):
         """Factory function to create ``long2`` objects from
         given ``chip.long2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef long2 wrapper = long2.__new__(long2)
@@ -10831,6 +13473,43 @@ cdef class long2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.long2** ptr):
+        ptr[0] = <chip.long2*>stdlib.malloc(sizeof(chip.long2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef long2 new():
+        """Factory function to create long2 objects with
+        newly allocated chip.long2"""
+        cdef chip.long2* ptr
+        long2.__allocate(&ptr)
+        return long2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        long2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10844,9 +13523,39 @@ cdef class long2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, long value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -10873,6 +13582,10 @@ cdef class long3:
     cdef long3 from_ptr(chip.long3* ptr, bint owner=False):
         """Factory function to create ``long3`` objects from
         given ``chip.long3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef long3 wrapper = long3.__new__(long3)
@@ -10929,6 +13642,43 @@ cdef class long3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.long3** ptr):
+        ptr[0] = <chip.long3*>stdlib.malloc(sizeof(chip.long3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef long3 new():
+        """Factory function to create long3 objects with
+        newly allocated chip.long3"""
+        cdef chip.long3* ptr
+        long3.__allocate(&ptr)
+        return long3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        long3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -10942,9 +13692,54 @@ cdef class long3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, long value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, long value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, long value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -10971,6 +13766,10 @@ cdef class long4:
     cdef long4 from_ptr(chip.long4* ptr, bint owner=False):
         """Factory function to create ``long4`` objects from
         given ``chip.long4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef long4 wrapper = long4.__new__(long4)
@@ -11027,6 +13826,43 @@ cdef class long4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.long4** ptr):
+        ptr[0] = <chip.long4*>stdlib.malloc(sizeof(chip.long4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef long4 new():
+        """Factory function to create long4 objects with
+        newly allocated chip.long4"""
+        cdef chip.long4* ptr
+        long4.__allocate(&ptr)
+        return long4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        long4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11040,9 +13876,69 @@ cdef class long4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, long value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, long value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, long value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, long value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, long value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -11069,6 +13965,10 @@ cdef class ulonglong1:
     cdef ulonglong1 from_ptr(chip.ulonglong1* ptr, bint owner=False):
         """Factory function to create ``ulonglong1`` objects from
         given ``chip.ulonglong1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulonglong1 wrapper = ulonglong1.__new__(ulonglong1)
@@ -11125,6 +14025,43 @@ cdef class ulonglong1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ulonglong1** ptr):
+        ptr[0] = <chip.ulonglong1*>stdlib.malloc(sizeof(chip.ulonglong1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ulonglong1 new():
+        """Factory function to create ulonglong1 objects with
+        newly allocated chip.ulonglong1"""
+        cdef chip.ulonglong1* ptr
+        ulonglong1.__allocate(&ptr)
+        return ulonglong1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ulonglong1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11138,9 +14075,24 @@ cdef class ulonglong1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned long long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned long long value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -11167,6 +14119,10 @@ cdef class ulonglong2:
     cdef ulonglong2 from_ptr(chip.ulonglong2* ptr, bint owner=False):
         """Factory function to create ``ulonglong2`` objects from
         given ``chip.ulonglong2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulonglong2 wrapper = ulonglong2.__new__(ulonglong2)
@@ -11223,6 +14179,43 @@ cdef class ulonglong2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ulonglong2** ptr):
+        ptr[0] = <chip.ulonglong2*>stdlib.malloc(sizeof(chip.ulonglong2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ulonglong2 new():
+        """Factory function to create ulonglong2 objects with
+        newly allocated chip.ulonglong2"""
+        cdef chip.ulonglong2* ptr
+        ulonglong2.__allocate(&ptr)
+        return ulonglong2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ulonglong2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11236,9 +14229,39 @@ cdef class ulonglong2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned long long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned long long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned long long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned long long value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -11265,6 +14288,10 @@ cdef class ulonglong3:
     cdef ulonglong3 from_ptr(chip.ulonglong3* ptr, bint owner=False):
         """Factory function to create ``ulonglong3`` objects from
         given ``chip.ulonglong3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulonglong3 wrapper = ulonglong3.__new__(ulonglong3)
@@ -11321,6 +14348,43 @@ cdef class ulonglong3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ulonglong3** ptr):
+        ptr[0] = <chip.ulonglong3*>stdlib.malloc(sizeof(chip.ulonglong3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ulonglong3 new():
+        """Factory function to create ulonglong3 objects with
+        newly allocated chip.ulonglong3"""
+        cdef chip.ulonglong3* ptr
+        ulonglong3.__allocate(&ptr)
+        return ulonglong3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ulonglong3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11334,9 +14398,54 @@ cdef class ulonglong3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned long long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned long long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned long long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned long long value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, unsigned long long value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, unsigned long long value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -11363,6 +14472,10 @@ cdef class ulonglong4:
     cdef ulonglong4 from_ptr(chip.ulonglong4* ptr, bint owner=False):
         """Factory function to create ``ulonglong4`` objects from
         given ``chip.ulonglong4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef ulonglong4 wrapper = ulonglong4.__new__(ulonglong4)
@@ -11419,6 +14532,43 @@ cdef class ulonglong4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.ulonglong4** ptr):
+        ptr[0] = <chip.ulonglong4*>stdlib.malloc(sizeof(chip.ulonglong4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef ulonglong4 new():
+        """Factory function to create ulonglong4 objects with
+        newly allocated chip.ulonglong4"""
+        cdef chip.ulonglong4* ptr
+        ulonglong4.__allocate(&ptr)
+        return ulonglong4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        ulonglong4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11432,9 +14582,69 @@ cdef class ulonglong4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, unsigned long long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, unsigned long long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, unsigned long long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, unsigned long long value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, unsigned long long value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, unsigned long long value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, unsigned long long value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, unsigned long long value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -11461,6 +14671,10 @@ cdef class longlong1:
     cdef longlong1 from_ptr(chip.longlong1* ptr, bint owner=False):
         """Factory function to create ``longlong1`` objects from
         given ``chip.longlong1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef longlong1 wrapper = longlong1.__new__(longlong1)
@@ -11517,6 +14731,43 @@ cdef class longlong1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.longlong1** ptr):
+        ptr[0] = <chip.longlong1*>stdlib.malloc(sizeof(chip.longlong1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef longlong1 new():
+        """Factory function to create longlong1 objects with
+        newly allocated chip.longlong1"""
+        cdef chip.longlong1* ptr
+        longlong1.__allocate(&ptr)
+        return longlong1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        longlong1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11530,9 +14781,24 @@ cdef class longlong1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, long long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, long long value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -11559,6 +14825,10 @@ cdef class longlong2:
     cdef longlong2 from_ptr(chip.longlong2* ptr, bint owner=False):
         """Factory function to create ``longlong2`` objects from
         given ``chip.longlong2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef longlong2 wrapper = longlong2.__new__(longlong2)
@@ -11615,6 +14885,43 @@ cdef class longlong2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.longlong2** ptr):
+        ptr[0] = <chip.longlong2*>stdlib.malloc(sizeof(chip.longlong2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef longlong2 new():
+        """Factory function to create longlong2 objects with
+        newly allocated chip.longlong2"""
+        cdef chip.longlong2* ptr
+        longlong2.__allocate(&ptr)
+        return longlong2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        longlong2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11628,9 +14935,39 @@ cdef class longlong2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, long long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, long long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, long long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, long long value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -11657,6 +14994,10 @@ cdef class longlong3:
     cdef longlong3 from_ptr(chip.longlong3* ptr, bint owner=False):
         """Factory function to create ``longlong3`` objects from
         given ``chip.longlong3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef longlong3 wrapper = longlong3.__new__(longlong3)
@@ -11713,6 +15054,43 @@ cdef class longlong3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.longlong3** ptr):
+        ptr[0] = <chip.longlong3*>stdlib.malloc(sizeof(chip.longlong3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef longlong3 new():
+        """Factory function to create longlong3 objects with
+        newly allocated chip.longlong3"""
+        cdef chip.longlong3* ptr
+        longlong3.__allocate(&ptr)
+        return longlong3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        longlong3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11726,9 +15104,54 @@ cdef class longlong3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, long long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, long long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, long long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, long long value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, long long value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, long long value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -11755,6 +15178,10 @@ cdef class longlong4:
     cdef longlong4 from_ptr(chip.longlong4* ptr, bint owner=False):
         """Factory function to create ``longlong4`` objects from
         given ``chip.longlong4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef longlong4 wrapper = longlong4.__new__(longlong4)
@@ -11811,6 +15238,43 @@ cdef class longlong4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.longlong4** ptr):
+        ptr[0] = <chip.longlong4*>stdlib.malloc(sizeof(chip.longlong4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef longlong4 new():
+        """Factory function to create longlong4 objects with
+        newly allocated chip.longlong4"""
+        cdef chip.longlong4* ptr
+        longlong4.__allocate(&ptr)
+        return longlong4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        longlong4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11824,9 +15288,69 @@ cdef class longlong4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, long long value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, long long value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, long long value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, long long value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, long long value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, long long value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, long long value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, long long value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -11853,6 +15377,10 @@ cdef class float1:
     cdef float1 from_ptr(chip.float1* ptr, bint owner=False):
         """Factory function to create ``float1`` objects from
         given ``chip.float1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef float1 wrapper = float1.__new__(float1)
@@ -11909,6 +15437,43 @@ cdef class float1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.float1** ptr):
+        ptr[0] = <chip.float1*>stdlib.malloc(sizeof(chip.float1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef float1 new():
+        """Factory function to create float1 objects with
+        newly allocated chip.float1"""
+        cdef chip.float1* ptr
+        float1.__allocate(&ptr)
+        return float1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        float1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -11922,9 +15487,24 @@ cdef class float1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, float value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, float value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -11951,6 +15531,10 @@ cdef class float2:
     cdef float2 from_ptr(chip.float2* ptr, bint owner=False):
         """Factory function to create ``float2`` objects from
         given ``chip.float2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef float2 wrapper = float2.__new__(float2)
@@ -12007,6 +15591,43 @@ cdef class float2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.float2** ptr):
+        ptr[0] = <chip.float2*>stdlib.malloc(sizeof(chip.float2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef float2 new():
+        """Factory function to create float2 objects with
+        newly allocated chip.float2"""
+        cdef chip.float2* ptr
+        float2.__allocate(&ptr)
+        return float2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        float2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12020,9 +15641,39 @@ cdef class float2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, float value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, float value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, float value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, float value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -12049,6 +15700,10 @@ cdef class float3:
     cdef float3 from_ptr(chip.float3* ptr, bint owner=False):
         """Factory function to create ``float3`` objects from
         given ``chip.float3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef float3 wrapper = float3.__new__(float3)
@@ -12105,6 +15760,43 @@ cdef class float3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.float3** ptr):
+        ptr[0] = <chip.float3*>stdlib.malloc(sizeof(chip.float3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef float3 new():
+        """Factory function to create float3 objects with
+        newly allocated chip.float3"""
+        cdef chip.float3* ptr
+        float3.__allocate(&ptr)
+        return float3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        float3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12118,9 +15810,54 @@ cdef class float3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, float value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, float value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, float value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, float value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, float value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, float value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -12147,6 +15884,10 @@ cdef class float4:
     cdef float4 from_ptr(chip.float4* ptr, bint owner=False):
         """Factory function to create ``float4`` objects from
         given ``chip.float4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef float4 wrapper = float4.__new__(float4)
@@ -12203,6 +15944,43 @@ cdef class float4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.float4** ptr):
+        ptr[0] = <chip.float4*>stdlib.malloc(sizeof(chip.float4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef float4 new():
+        """Factory function to create float4 objects with
+        newly allocated chip.float4"""
+        cdef chip.float4* ptr
+        float4.__allocate(&ptr)
+        return float4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        float4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12216,9 +15994,69 @@ cdef class float4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, float value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, float value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, float value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, float value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, float value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, float value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, float value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, float value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -12245,6 +16083,10 @@ cdef class double1:
     cdef double1 from_ptr(chip.double1* ptr, bint owner=False):
         """Factory function to create ``double1`` objects from
         given ``chip.double1`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef double1 wrapper = double1.__new__(double1)
@@ -12301,6 +16143,43 @@ cdef class double1:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.double1** ptr):
+        ptr[0] = <chip.double1*>stdlib.malloc(sizeof(chip.double1))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef double1 new():
+        """Factory function to create double1 objects with
+        newly allocated chip.double1"""
+        cdef chip.double1* ptr
+        double1.__allocate(&ptr)
+        return double1.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        double1.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12314,9 +16193,24 @@ cdef class double1:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, double value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, double value):
+        self.set_x(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -12343,6 +16237,10 @@ cdef class double2:
     cdef double2 from_ptr(chip.double2* ptr, bint owner=False):
         """Factory function to create ``double2`` objects from
         given ``chip.double2`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef double2 wrapper = double2.__new__(double2)
@@ -12399,6 +16297,43 @@ cdef class double2:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.double2** ptr):
+        ptr[0] = <chip.double2*>stdlib.malloc(sizeof(chip.double2))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef double2 new():
+        """Factory function to create double2 objects with
+        newly allocated chip.double2"""
+        cdef chip.double2* ptr
+        double2.__allocate(&ptr)
+        return double2.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        double2.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12412,9 +16347,39 @@ cdef class double2:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, double value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, double value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, double value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, double value):
+        self.set_y(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -12441,6 +16406,10 @@ cdef class double3:
     cdef double3 from_ptr(chip.double3* ptr, bint owner=False):
         """Factory function to create ``double3`` objects from
         given ``chip.double3`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef double3 wrapper = double3.__new__(double3)
@@ -12497,6 +16466,43 @@ cdef class double3:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.double3** ptr):
+        ptr[0] = <chip.double3*>stdlib.malloc(sizeof(chip.double3))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef double3 new():
+        """Factory function to create double3 objects with
+        newly allocated chip.double3"""
+        cdef chip.double3* ptr
+        double3.__allocate(&ptr)
+        return double3.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        double3.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12510,9 +16516,54 @@ cdef class double3:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, double value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, double value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, double value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, double value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, double value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, double value):
+        self.set_z(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -12539,6 +16590,10 @@ cdef class double4:
     cdef double4 from_ptr(chip.double4* ptr, bint owner=False):
         """Factory function to create ``double4`` objects from
         given ``chip.double4`` pointer.
+
+        Setting ``owner`` flag to ``True`` causes
+        the extension type to ``free`` the structure pointed to by ``ptr``
+        when the wrapper object is deallocated.
         """
         # Fast call to __new__() that bypasses the __init__() constructor.
         cdef double4 wrapper = double4.__new__(double4)
@@ -12595,6 +16650,43 @@ cdef class double4:
         # Release the buffer handle
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        # De-allocate if not null and flag is set
+        if self._ptr is not NULL and self.ptr_owner is True:
+            stdlib.free(self._ptr)
+            self._ptr = NULL
+    @staticmethod
+    cdef __allocate(chip.double4** ptr):
+        ptr[0] = <chip.double4*>stdlib.malloc(sizeof(chip.double4))
+
+        if ptr[0] is NULL:
+            raise MemoryError
+        # TODO init values, if present
+
+    @staticmethod
+    cdef double4 new():
+        """Factory function to create double4 objects with
+        newly allocated chip.double4"""
+        cdef chip.double4* ptr
+        double4.__allocate(&ptr)
+        return double4.from_ptr(ptr, owner=True)
+   
+    def __init__(self,*args,**kwargs):
+        double4.__allocate(&self._ptr)
+        self.ptr_owner = True
+        attribs = self.PROPERTIES()
+        used_attribs = set()
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     
     @property
     def ptr(self):
@@ -12608,9 +16700,69 @@ cdef class double4:
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
         return ctypes.c_void_p(self.ptr)
+    def get_x(self, i):
+        """Get value ``x`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].x
+    def set_x(self, i, double value):
+        """Set value ``x`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].x = value
+    @property
+    def x(self):
+        return self.get_x(0)
+    @x.setter
+    def x(self, double value):
+        self.set_x(0,value)
+
+    def get_y(self, i):
+        """Get value ``y`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].y
+    def set_y(self, i, double value):
+        """Set value ``y`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].y = value
+    @property
+    def y(self):
+        return self.get_y(0)
+    @y.setter
+    def y(self, double value):
+        self.set_y(0,value)
+
+    def get_z(self, i):
+        """Get value ``z`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].z
+    def set_z(self, i, double value):
+        """Set value ``z`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].z = value
+    @property
+    def z(self):
+        return self.get_z(0)
+    @z.setter
+    def z(self, double value):
+        self.set_z(0,value)
+
+    def get_w(self, i):
+        """Get value ``w`` of ``self._ptr[i]``.
+        """
+        return self._ptr[i].w
+    def set_w(self, i, double value):
+        """Set value ``w`` of ``self._ptr[i]``.
+        """
+        self._ptr[i].w = value
+    @property
+    def w(self):
+        return self.get_w(0)
+    @w.setter
+    def w(self, double value):
+        self.set_w(0,value)
+
     @staticmethod
     def PROPERTIES():
-        return []
+        return ["x","y","z","w"]
 
     def __contains__(self,item):
         properties = self.PROPERTIES()
@@ -13252,10 +17404,18 @@ cdef class hipTextureDesc:
         """Get value of ``borderColor`` of ``self._ptr[i]``.
         """
         return self._ptr[i].borderColor
+    # TODO add setters
+    #def set_borderColor(self, i, float[4] value):
+    #    """Set value ``borderColor`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].borderColor = value
     @property
     def borderColor(self):
         return self.get_borderColor(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@borderColor.setter
+    #def borderColor(self, float[4] value):
+    #    self.set_borderColor(0,value)
 
     def get_normalizedCoords(self, i):
         """Get value ``normalizedCoords`` of ``self._ptr[i]``.
@@ -13949,10 +18109,18 @@ cdef class hipIpcMemHandle_st:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, char[64] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, char[64] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -14097,10 +18265,18 @@ cdef class hipIpcEventHandle_st:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, char[64] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, char[64] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -15438,10 +19614,18 @@ cdef class hipMemPoolProps:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, unsigned char[64] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, unsigned char[64] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -15586,10 +19770,18 @@ cdef class hipMemPoolPtrExportData:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, unsigned char[64] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, unsigned char[64] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -17770,10 +21962,18 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, unsigned int[12] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, unsigned int[12] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -17941,10 +22141,18 @@ cdef class hipExternalSemaphoreSignalParams_st:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, unsigned int[16] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, unsigned int[16] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -18428,10 +22636,18 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, unsigned int[10] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, unsigned int[10] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -18599,10 +22815,18 @@ cdef class hipExternalSemaphoreWaitParams_st:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, unsigned int[16] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, unsigned int[16] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():
@@ -21987,10 +26211,18 @@ cdef class hipArrayMapInfo:
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
         return self._ptr[i].reserved
+    # TODO add setters
+    #def set_reserved(self, i, unsigned int[2] value):
+    #    """Set value ``reserved`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].reserved = value
     @property
     def reserved(self):
         return self.get_reserved(0)
-    # TODO is_basic_type_constantarray: add setters
+    # TODO add setters
+    #@reserved.setter
+    #def reserved(self, unsigned int[2] value):
+    #    self.set_reserved(0,value)
 
     @staticmethod
     def PROPERTIES():

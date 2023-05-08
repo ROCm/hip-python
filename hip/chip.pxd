@@ -162,7 +162,23 @@ cdef enum:
 cdef extern from "hip/hip_runtime_api.h":
 
     ctypedef struct hipDeviceArch_t:
-        pass
+        unsigned int hasGlobalInt32Atomics
+        unsigned int hasGlobalFloatAtomicExch
+        unsigned int hasSharedInt32Atomics
+        unsigned int hasSharedFloatAtomicExch
+        unsigned int hasFloatAtomicAdd
+        unsigned int hasGlobalInt64Atomics
+        unsigned int hasSharedInt64Atomics
+        unsigned int hasDoubles
+        unsigned int hasWarpVote
+        unsigned int hasWarpBallot
+        unsigned int hasWarpShuffle
+        unsigned int hasFunnelShift
+        unsigned int hasThreadFenceSystem
+        unsigned int hasSyncThreadsExt
+        unsigned int hasSurfaceFuncs
+        unsigned int has3dGrid
+        unsigned int hasDynamicParallelism
 
     cdef struct hipUUID_t:
         char[16] bytes
@@ -836,148 +852,220 @@ cdef extern from "hip/hip_runtime_api.h":
         HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
 
     ctypedef struct uchar1:
-        pass
+        unsigned char x
 
     ctypedef struct uchar2:
-        pass
+        unsigned char x
+        unsigned char y
 
     ctypedef struct uchar3:
-        pass
+        unsigned char x
+        unsigned char y
+        unsigned char z
 
     ctypedef struct uchar4:
-        pass
+        unsigned char x
+        unsigned char y
+        unsigned char z
+        unsigned char w
 
     ctypedef struct char1:
-        pass
+        char x
 
     ctypedef struct char2:
-        pass
+        char x
+        char y
 
     ctypedef struct char3:
-        pass
+        char x
+        char y
+        char z
 
     ctypedef struct char4:
-        pass
+        char x
+        char y
+        char z
+        char w
 
     ctypedef struct ushort1:
-        pass
+        unsigned short x
 
     ctypedef struct ushort2:
-        pass
+        unsigned short x
+        unsigned short y
 
     ctypedef struct ushort3:
-        pass
+        unsigned short x
+        unsigned short y
+        unsigned short z
 
     ctypedef struct ushort4:
-        pass
+        unsigned short x
+        unsigned short y
+        unsigned short z
+        unsigned short w
 
     ctypedef struct short1:
-        pass
+        short x
 
     ctypedef struct short2:
-        pass
+        short x
+        short y
 
     ctypedef struct short3:
-        pass
+        short x
+        short y
+        short z
 
     ctypedef struct short4:
-        pass
+        short x
+        short y
+        short z
+        short w
 
     ctypedef struct uint1:
-        pass
+        unsigned int x
 
     ctypedef struct uint2:
-        pass
+        unsigned int x
+        unsigned int y
 
     ctypedef struct uint3:
-        pass
+        unsigned int x
+        unsigned int y
+        unsigned int z
 
     ctypedef struct uint4:
-        pass
+        unsigned int x
+        unsigned int y
+        unsigned int z
+        unsigned int w
 
     ctypedef struct int1:
-        pass
+        int x
 
     ctypedef struct int2:
-        pass
+        int x
+        int y
 
     ctypedef struct int3:
-        pass
+        int x
+        int y
+        int z
 
     ctypedef struct int4:
-        pass
+        int x
+        int y
+        int z
+        int w
 
     ctypedef struct ulong1:
-        pass
+        unsigned long x
 
     ctypedef struct ulong2:
-        pass
+        unsigned long x
+        unsigned long y
 
     ctypedef struct ulong3:
-        pass
+        unsigned long x
+        unsigned long y
+        unsigned long z
 
     ctypedef struct ulong4:
-        pass
+        unsigned long x
+        unsigned long y
+        unsigned long z
+        unsigned long w
 
     ctypedef struct long1:
-        pass
+        long x
 
     ctypedef struct long2:
-        pass
+        long x
+        long y
 
     ctypedef struct long3:
-        pass
+        long x
+        long y
+        long z
 
     ctypedef struct long4:
-        pass
+        long x
+        long y
+        long z
+        long w
 
     ctypedef struct ulonglong1:
-        pass
+        unsigned long long x
 
     ctypedef struct ulonglong2:
-        pass
+        unsigned long long x
+        unsigned long long y
 
     ctypedef struct ulonglong3:
-        pass
+        unsigned long long x
+        unsigned long long y
+        unsigned long long z
 
     ctypedef struct ulonglong4:
-        pass
+        unsigned long long x
+        unsigned long long y
+        unsigned long long z
+        unsigned long long w
 
     ctypedef struct longlong1:
-        pass
+        long long x
 
     ctypedef struct longlong2:
-        pass
+        long long x
+        long long y
 
     ctypedef struct longlong3:
-        pass
+        long long x
+        long long y
+        long long z
 
     ctypedef struct longlong4:
-        pass
+        long long x
+        long long y
+        long long z
+        long long w
 
     ctypedef struct float1:
-        pass
+        float x
 
     ctypedef struct float2:
-        pass
+        float x
+        float y
 
     ctypedef struct float3:
-        pass
+        float x
+        float y
+        float z
 
     ctypedef struct float4:
-        pass
+        float x
+        float y
+        float z
+        float w
 
     ctypedef struct double1:
-        pass
+        double x
 
     ctypedef struct double2:
-        pass
+        double x
+        double y
 
     ctypedef struct double3:
-        pass
+        double x
+        double y
+        double z
 
     ctypedef struct double4:
-        pass
+        double x
+        double y
+        double z
+        double w
 
 
 cdef hipChannelFormatDesc hipCreateChannelDesc(int x,int y,int z,int w,hipChannelFormatKind f) nogil

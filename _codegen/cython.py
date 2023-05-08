@@ -50,8 +50,6 @@ def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm_or_field):
     assert isinstance(parm_or_field,tree.Typed)
     if parm_or_field.actual_rank == 1:
         innermost_type_kind = next(parm_or_field.clang_type_layer_kinds(postorder=-1,canonical=True))
-        print(parm_or_field.name)
-        print(innermost_type_kind)
         if innermost_type_kind == clang.cindex.TypeKind.INT:
             return "hip._util.types.ListOfInt"
         elif innermost_type_kind == clang.cindex.TypeKind.UINT:
@@ -326,16 +324,18 @@ def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
     \"""
     return self._ptr[i].{{attr}}
-def set_{{attr}}(self, i, {{typename}} value):
-    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
-    \"""
-    self._ptr[i].{{attr}} = value
+# TODO add setters
+#def set_{{attr}}(self, i, {{typename}} value):
+#    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
+#    \"""
+#    self._ptr[i].{{attr}} = value
 @property
 def {{attr}}(self):
     return self.get_{{attr}}(0)
-@{{attr}}.setter
-def {{attr}}(self, {{typename}} value):
-    self.set_{{attr}}(0,value)
+# TODO add setters
+#@{{attr}}.setter
+#def {{attr}}(self, {{typename}} value):
+#    self.set_{{attr}}(0,value)
 {{elif is_enum}}
 def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.

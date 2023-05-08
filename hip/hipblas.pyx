@@ -995,7 +995,7 @@ def hipblasIsamax(object handle, int n, object x, int incx, object result):
     _hipblasIsamax__retval = hipblasStatus_t(chipblas.hipblasIsamax(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsamax__retval,)
 
 
@@ -1006,7 +1006,7 @@ def hipblasIdamax(object handle, int n, object x, int incx, object result):
     _hipblasIdamax__retval = hipblasStatus_t(chipblas.hipblasIdamax(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdamax__retval,)
 
 
@@ -1017,7 +1017,7 @@ def hipblasIcamax(object handle, int n, object x, int incx, object result):
     _hipblasIcamax__retval = hipblasStatus_t(chipblas.hipblasIcamax(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcamax__retval,)
 
 
@@ -1028,7 +1028,7 @@ def hipblasIzamax(object handle, int n, object x, int incx, object result):
     _hipblasIzamax__retval = hipblasStatus_t(chipblas.hipblasIzamax(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzamax__retval,)
 
 
@@ -1065,7 +1065,7 @@ def hipblasIsamaxBatched(object handle, int n, object x, int incx, int batchCoun
     _hipblasIsamaxBatched__retval = hipblasStatus_t(chipblas.hipblasIsamaxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsamaxBatched__retval,)
 
 
@@ -1076,7 +1076,7 @@ def hipblasIdamaxBatched(object handle, int n, object x, int incx, int batchCoun
     _hipblasIdamaxBatched__retval = hipblasStatus_t(chipblas.hipblasIdamaxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdamaxBatched__retval,)
 
 
@@ -1087,7 +1087,7 @@ def hipblasIcamaxBatched(object handle, int n, object x, int incx, int batchCoun
     _hipblasIcamaxBatched__retval = hipblasStatus_t(chipblas.hipblasIcamaxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcamaxBatched__retval,)
 
 
@@ -1098,7 +1098,7 @@ def hipblasIzamaxBatched(object handle, int n, object x, int incx, int batchCoun
     _hipblasIzamaxBatched__retval = hipblasStatus_t(chipblas.hipblasIzamaxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzamaxBatched__retval,)
 
 
@@ -1138,7 +1138,7 @@ def hipblasIsamaxStridedBatched(object handle, int n, object x, int incx, long s
     _hipblasIsamaxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIsamaxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsamaxStridedBatched__retval,)
 
 
@@ -1149,7 +1149,7 @@ def hipblasIdamaxStridedBatched(object handle, int n, object x, int incx, long s
     _hipblasIdamaxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIdamaxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdamaxStridedBatched__retval,)
 
 
@@ -1160,7 +1160,7 @@ def hipblasIcamaxStridedBatched(object handle, int n, object x, int incx, long s
     _hipblasIcamaxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIcamaxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcamaxStridedBatched__retval,)
 
 
@@ -1171,7 +1171,7 @@ def hipblasIzamaxStridedBatched(object handle, int n, object x, int incx, long s
     _hipblasIzamaxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIzamaxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzamaxStridedBatched__retval,)
 
 
@@ -1205,7 +1205,7 @@ def hipblasIsamin(object handle, int n, object x, int incx, object result):
     _hipblasIsamin__retval = hipblasStatus_t(chipblas.hipblasIsamin(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsamin__retval,)
 
 
@@ -1216,7 +1216,7 @@ def hipblasIdamin(object handle, int n, object x, int incx, object result):
     _hipblasIdamin__retval = hipblasStatus_t(chipblas.hipblasIdamin(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdamin__retval,)
 
 
@@ -1227,7 +1227,7 @@ def hipblasIcamin(object handle, int n, object x, int incx, object result):
     _hipblasIcamin__retval = hipblasStatus_t(chipblas.hipblasIcamin(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcamin__retval,)
 
 
@@ -1238,7 +1238,7 @@ def hipblasIzamin(object handle, int n, object x, int incx, object result):
     _hipblasIzamin__retval = hipblasStatus_t(chipblas.hipblasIzamin(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzamin__retval,)
 
 
@@ -1275,7 +1275,7 @@ def hipblasIsaminBatched(object handle, int n, object x, int incx, int batchCoun
     _hipblasIsaminBatched__retval = hipblasStatus_t(chipblas.hipblasIsaminBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsaminBatched__retval,)
 
 
@@ -1286,7 +1286,7 @@ def hipblasIdaminBatched(object handle, int n, object x, int incx, int batchCoun
     _hipblasIdaminBatched__retval = hipblasStatus_t(chipblas.hipblasIdaminBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *const*>hip._util.types.ListOfDataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdaminBatched__retval,)
 
 
@@ -1297,7 +1297,7 @@ def hipblasIcaminBatched(object handle, int n, object x, int incx, int batchCoun
     _hipblasIcaminBatched__retval = hipblasStatus_t(chipblas.hipblasIcaminBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcaminBatched__retval,)
 
 
@@ -1308,7 +1308,7 @@ def hipblasIzaminBatched(object handle, int n, object x, int incx, int batchCoun
     _hipblasIzaminBatched__retval = hipblasStatus_t(chipblas.hipblasIzaminBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzaminBatched__retval,)
 
 
@@ -1348,7 +1348,7 @@ def hipblasIsaminStridedBatched(object handle, int n, object x, int incx, long s
     _hipblasIsaminStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIsaminStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIsaminStridedBatched__retval,)
 
 
@@ -1359,7 +1359,7 @@ def hipblasIdaminStridedBatched(object handle, int n, object x, int incx, long s
     _hipblasIdaminStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIdaminStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIdaminStridedBatched__retval,)
 
 
@@ -1370,7 +1370,7 @@ def hipblasIcaminStridedBatched(object handle, int n, object x, int incx, long s
     _hipblasIcaminStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIcaminStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIcaminStridedBatched__retval,)
 
 
@@ -1381,7 +1381,7 @@ def hipblasIzaminStridedBatched(object handle, int n, object x, int incx, long s
     _hipblasIzaminStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIzaminStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(x)._ptr,incx,stridex,batchCount,
-        <int *>hip._util.types.DataHandle.from_pyobj(result)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(result)._ptr))    # fully specified
     return (_hipblasIzaminStridedBatched__retval,)
 
 
@@ -17545,8 +17545,8 @@ def hipblasSgetrf(object handle, const int n, object A, const int lda, object ip
     _hipblasSgetrf__retval = hipblasStatus_t(chipblas.hipblasSgetrf(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasSgetrf__retval,)
 
 
@@ -17557,8 +17557,8 @@ def hipblasDgetrf(object handle, const int n, object A, const int lda, object ip
     _hipblasDgetrf__retval = hipblasStatus_t(chipblas.hipblasDgetrf(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasDgetrf__retval,)
 
 
@@ -17569,8 +17569,8 @@ def hipblasCgetrf(object handle, const int n, object A, const int lda, object ip
     _hipblasCgetrf__retval = hipblasStatus_t(chipblas.hipblasCgetrf(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasCgetrf__retval,)
 
 
@@ -17581,8 +17581,8 @@ def hipblasZgetrf(object handle, const int n, object A, const int lda, object ip
     _hipblasZgetrf__retval = hipblasStatus_t(chipblas.hipblasZgetrf(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasZgetrf__retval,)
 
 
@@ -17648,8 +17648,8 @@ def hipblasSgetrfBatched(object handle, const int n, object A, const int lda, ob
     _hipblasSgetrfBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrfBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgetrfBatched__retval,)
 
 
@@ -17660,8 +17660,8 @@ def hipblasDgetrfBatched(object handle, const int n, object A, const int lda, ob
     _hipblasDgetrfBatched__retval = hipblasStatus_t(chipblas.hipblasDgetrfBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgetrfBatched__retval,)
 
 
@@ -17672,8 +17672,8 @@ def hipblasCgetrfBatched(object handle, const int n, object A, const int lda, ob
     _hipblasCgetrfBatched__retval = hipblasStatus_t(chipblas.hipblasCgetrfBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgetrfBatched__retval,)
 
 
@@ -17684,8 +17684,8 @@ def hipblasZgetrfBatched(object handle, const int n, object A, const int lda, ob
     _hipblasZgetrfBatched__retval = hipblasStatus_t(chipblas.hipblasZgetrfBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgetrfBatched__retval,)
 
 
@@ -17759,8 +17759,8 @@ def hipblasSgetrfStridedBatched(object handle, const int n, object A, const int 
     _hipblasSgetrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrfStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgetrfStridedBatched__retval,)
 
 
@@ -17771,8 +17771,8 @@ def hipblasDgetrfStridedBatched(object handle, const int n, object A, const int 
     _hipblasDgetrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgetrfStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgetrfStridedBatched__retval,)
 
 
@@ -17783,8 +17783,8 @@ def hipblasCgetrfStridedBatched(object handle, const int n, object A, const int 
     _hipblasCgetrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgetrfStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasComplex.from_pyobj(A)._ptr,lda,strideA,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgetrfStridedBatched__retval,)
 
 
@@ -17795,8 +17795,8 @@ def hipblasZgetrfStridedBatched(object handle, const int n, object A, const int 
     _hipblasZgetrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgetrfStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,strideA,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgetrfStridedBatched__retval,)
 
 
@@ -17862,9 +17862,9 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
     _hipblasSgetrs__retval = hipblasStatus_t(chipblas.hipblasSgetrs(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasSgetrs__retval,)
 
 
@@ -17877,9 +17877,9 @@ def hipblasDgetrs(object handle, object trans, const int n, const int nrhs, obje
     _hipblasDgetrs__retval = hipblasStatus_t(chipblas.hipblasDgetrs(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasDgetrs__retval,)
 
 
@@ -17892,9 +17892,9 @@ def hipblasCgetrs(object handle, object trans, const int n, const int nrhs, obje
     _hipblasCgetrs__retval = hipblasStatus_t(chipblas.hipblasCgetrs(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         hipblasComplex.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasCgetrs__retval,)
 
 
@@ -17907,9 +17907,9 @@ def hipblasZgetrs(object handle, object trans, const int n, const int nrhs, obje
     _hipblasZgetrs__retval = hipblasStatus_t(chipblas.hipblasZgetrs(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasZgetrs__retval,)
 
 
@@ -17977,9 +17977,9 @@ def hipblasSgetrsBatched(object handle, object trans, const int n, const int nrh
     _hipblasSgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgetrsBatched__retval,)
 
 
@@ -17992,9 +17992,9 @@ def hipblasDgetrsBatched(object handle, object trans, const int n, const int nrh
     _hipblasDgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasDgetrsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgetrsBatched__retval,)
 
 
@@ -18007,9 +18007,9 @@ def hipblasCgetrsBatched(object handle, object trans, const int n, const int nrh
     _hipblasCgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasCgetrsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgetrsBatched__retval,)
 
 
@@ -18022,9 +18022,9 @@ def hipblasZgetrsBatched(object handle, object trans, const int n, const int nrh
     _hipblasZgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasZgetrsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgetrsBatched__retval,)
 
 
@@ -18105,9 +18105,9 @@ def hipblasSgetrsStridedBatched(object handle, object trans, const int n, const 
     _hipblasSgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
         <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,strideB,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgetrsStridedBatched__retval,)
 
 
@@ -18120,9 +18120,9 @@ def hipblasDgetrsStridedBatched(object handle, object trans, const int n, const 
     _hipblasDgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgetrsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
         <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,strideB,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgetrsStridedBatched__retval,)
 
 
@@ -18135,9 +18135,9 @@ def hipblasCgetrsStridedBatched(object handle, object trans, const int n, const 
     _hipblasCgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgetrsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,strideA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
         hipblasComplex.from_pyobj(B)._ptr,ldb,strideB,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgetrsStridedBatched__retval,)
 
 
@@ -18150,9 +18150,9 @@ def hipblasZgetrsStridedBatched(object handle, object trans, const int n, const 
     _hipblasZgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgetrsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,strideA,
-        <const int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,strideP,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,strideB,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgetrsStridedBatched__retval,)
 
 
@@ -18207,9 +18207,9 @@ def hipblasSgetriBatched(object handle, const int n, object A, const int lda, ob
     _hipblasSgetriBatched__retval = hipblasStatus_t(chipblas.hipblasSgetriBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(C)._ptr,ldc,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgetriBatched__retval,)
 
 
@@ -18220,9 +18220,9 @@ def hipblasDgetriBatched(object handle, const int n, object A, const int lda, ob
     _hipblasDgetriBatched__retval = hipblasStatus_t(chipblas.hipblasDgetriBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(C)._ptr,ldc,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgetriBatched__retval,)
 
 
@@ -18233,9 +18233,9 @@ def hipblasCgetriBatched(object handle, const int n, object A, const int lda, ob
     _hipblasCgetriBatched__retval = hipblasStatus_t(chipblas.hipblasCgetriBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgetriBatched__retval,)
 
 
@@ -18246,9 +18246,9 @@ def hipblasZgetriBatched(object handle, const int n, object A, const int lda, ob
     _hipblasZgetriBatched__retval = hipblasStatus_t(chipblas.hipblasZgetriBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
-        <int *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(ipiv)._ptr,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(C)._ptr,ldc,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgetriBatched__retval,)
 
 
@@ -18328,8 +18328,8 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr))    # fully specified
     return (_hipblasSgels__retval,)
 
 
@@ -18343,8 +18343,8 @@ def hipblasDgels(object handle, object trans, const int m, const int n, const in
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr))    # fully specified
     return (_hipblasDgels__retval,)
 
 
@@ -18358,8 +18358,8 @@ def hipblasCgels(object handle, object trans, const int m, const int n, const in
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,
         hipblasComplex.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr))    # fully specified
     return (_hipblasCgels__retval,)
 
 
@@ -18373,8 +18373,8 @@ def hipblasZgels(object handle, object trans, const int m, const int n, const in
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr))    # fully specified
     return (_hipblasZgels__retval,)
 
 
@@ -18459,8 +18459,8 @@ def hipblasSgelsBatched(object handle, object trans, const int m, const int n, c
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
         <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
     return (_hipblasSgelsBatched__retval,)
 
 
@@ -18474,8 +18474,8 @@ def hipblasDgelsBatched(object handle, object trans, const int m, const int n, c
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
         <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
     return (_hipblasDgelsBatched__retval,)
 
 
@@ -18489,8 +18489,8 @@ def hipblasCgelsBatched(object handle, object trans, const int m, const int n, c
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
     return (_hipblasCgelsBatched__retval,)
 
 
@@ -18504,8 +18504,8 @@ def hipblasZgelsBatched(object handle, object trans, const int m, const int n, c
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batchCount))    # fully specified
     return (_hipblasZgelsBatched__retval,)
 
 
@@ -18598,8 +18598,8 @@ def hipblasSgelsStridedBatched(object handle, object trans, const int m, const i
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
         <float *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,strideB,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr,batch_count))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batch_count))    # fully specified
     return (_hipblasSgelsStridedBatched__retval,)
 
 
@@ -18613,8 +18613,8 @@ def hipblasDgelsStridedBatched(object handle, object trans, const int m, const i
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
         <double *>hip._util.types.DataHandle.from_pyobj(B)._ptr,ldb,strideB,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr,batch_count))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batch_count))    # fully specified
     return (_hipblasDgelsStridedBatched__retval,)
 
 
@@ -18628,8 +18628,8 @@ def hipblasCgelsStridedBatched(object handle, object trans, const int m, const i
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(B)._ptr,ldb,strideB,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr,batch_count))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batch_count))    # fully specified
     return (_hipblasCgelsStridedBatched__retval,)
 
 
@@ -18643,8 +18643,8 @@ def hipblasZgelsStridedBatched(object handle, object trans, const int m, const i
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(B)._ptr,ldb,strideB,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(deviceInfo)._ptr,batch_count))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,
+        <int *>hip._util.types.ListOfInt.from_pyobj(deviceInfo)._ptr,batch_count))    # fully specified
     return (_hipblasZgelsStridedBatched__retval,)
 
 
@@ -18712,7 +18712,7 @@ def hipblasSgeqrf(object handle, const int m, const int n, object A, const int l
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <float *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasSgeqrf__retval,)
 
 
@@ -18724,7 +18724,7 @@ def hipblasDgeqrf(object handle, const int m, const int n, object A, const int l
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <double *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasDgeqrf__retval,)
 
 
@@ -18736,7 +18736,7 @@ def hipblasCgeqrf(object handle, const int m, const int n, object A, const int l
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(A)._ptr,lda,
         hipblasComplex.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasCgeqrf__retval,)
 
 
@@ -18748,7 +18748,7 @@ def hipblasZgeqrf(object handle, const int m, const int n, object A, const int l
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
         hipblasDoubleComplex.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr))    # fully specified
     return (_hipblasZgeqrf__retval,)
 
 
@@ -18821,7 +18821,7 @@ def hipblasSgeqrfBatched(object handle, const int m, const int n, object A, cons
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
         <float *const*>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgeqrfBatched__retval,)
 
 
@@ -18833,7 +18833,7 @@ def hipblasDgeqrfBatched(object handle, const int m, const int n, object A, cons
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
         <double *const*>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgeqrfBatched__retval,)
 
 
@@ -18845,7 +18845,7 @@ def hipblasCgeqrfBatched(object handle, const int m, const int n, object A, cons
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgeqrfBatched__retval,)
 
 
@@ -18857,7 +18857,7 @@ def hipblasZgeqrfBatched(object handle, const int m, const int n, object A, cons
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgeqrfBatched__retval,)
 
 
@@ -18938,7 +18938,7 @@ def hipblasSgeqrfStridedBatched(object handle, const int m, const int n, object 
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
         <float *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasSgeqrfStridedBatched__retval,)
 
 
@@ -18950,7 +18950,7 @@ def hipblasDgeqrfStridedBatched(object handle, const int m, const int n, object 
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
         <double *>hip._util.types.DataHandle.from_pyobj(ipiv)._ptr,strideP,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasDgeqrfStridedBatched__retval,)
 
 
@@ -18962,7 +18962,7 @@ def hipblasCgeqrfStridedBatched(object handle, const int m, const int n, object 
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         hipblasComplex.from_pyobj(A)._ptr,lda,strideA,
         hipblasComplex.from_pyobj(ipiv)._ptr,strideP,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasCgeqrfStridedBatched__retval,)
 
 
@@ -18974,7 +18974,7 @@ def hipblasZgeqrfStridedBatched(object handle, const int m, const int n, object 
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,strideA,
         hipblasDoubleComplex.from_pyobj(ipiv)._ptr,strideP,
-        <int *>hip._util.types.DataHandle.from_pyobj(info)._ptr,batchCount))    # fully specified
+        <int *>hip._util.types.ListOfInt.from_pyobj(info)._ptr,batchCount))    # fully specified
     return (_hipblasZgeqrfStridedBatched__retval,)
 
 

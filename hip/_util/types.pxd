@@ -15,6 +15,17 @@ cdef class DataHandle:
     @staticmethod
     cdef DataHandle from_pyobj(object pyobj)
 
+cdef class ListOfDataHandle(DataHandle):
+    cdef bint _owner
+    
+    @staticmethod
+    cdef ListOfDataHandle from_ptr(void* ptr)
+    
+    cdef void init_from_pyobj(self, object pyobj)
+    
+    @staticmethod
+    cdef ListOfDataHandle from_pyobj(object pyobj)
+
 cdef class ListOfBytes(DataHandle):
     cdef bint _owner
     
