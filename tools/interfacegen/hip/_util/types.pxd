@@ -26,13 +26,35 @@ cdef class ListOfBytes(DataHandle):
     @staticmethod
     cdef ListOfBytes from_pyobj(object pyobj)
 
-cdef class ListOfDataHandle(DataHandle):
+cdef class ListOfInt(DataHandle):
     cdef bint _owner
     
     @staticmethod
-    cdef ListOfDataHandle from_ptr(void* ptr)
+    cdef ListOfInt from_ptr(void* ptr)
     
     cdef void init_from_pyobj(self, object pyobj)
     
     @staticmethod
-    cdef ListOfDataHandle from_pyobj(object pyobj)
+    cdef ListOfInt from_pyobj(object pyobj)
+
+cdef class ListOfUnsigned(DataHandle):
+    cdef bint _owner
+    
+    @staticmethod
+    cdef ListOfUnsigned from_ptr(void* ptr)
+    
+    cdef void init_from_pyobj(self, object pyobj)
+    
+    @staticmethod
+    cdef ListOfUnsigned from_pyobj(object pyobj)
+
+cdef class ListOfUnsignedLong(DataHandle):
+    cdef bint _owner
+    
+    @staticmethod
+    cdef ListOfUnsignedLong from_ptr(void* ptr)
+    
+    cdef void init_from_pyobj(self, object pyobj)
+    
+    @staticmethod
+    cdef ListOfUnsignedLong from_pyobj(object pyobj)

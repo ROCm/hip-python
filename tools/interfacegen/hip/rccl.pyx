@@ -404,7 +404,7 @@ def pncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
 
 
 @cython.embedsignature(True)
-def ncclCommInitAll(int ndev):
+def ncclCommInitAll(int ndev, object devlist):
     """! @brief Creates a clique of communicators (single process version).
     @details This is a convenience function to create a single-process communicator clique.
     Returns an array of ndev newly initialized communicators in comm.
@@ -413,19 +413,19 @@ def ncclCommInitAll(int ndev):
     Order of devlist defines user-order of processors within the communicator.
     """
     comm = ncclComm.from_ptr(NULL)
-    cdef const int devlist
-    _ncclCommInitAll__retval = ncclResult_t(crccl.ncclCommInitAll(&comm._ptr,ndev,&devlist))    # fully specified
-    return (_ncclCommInitAll__retval,comm,devlist)
+    _ncclCommInitAll__retval = ncclResult_t(crccl.ncclCommInitAll(&comm._ptr,ndev,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(devlist)._ptr))    # fully specified
+    return (_ncclCommInitAll__retval,comm)
 
 
 @cython.embedsignature(True)
-def pncclCommInitAll(int ndev):
+def pncclCommInitAll(int ndev, object devlist):
     """@cond include_hidden
     """
     comm = ncclComm.from_ptr(NULL)
-    cdef const int devlist
-    _pncclCommInitAll__retval = ncclResult_t(crccl.pncclCommInitAll(&comm._ptr,ndev,&devlist))    # fully specified
-    return (_pncclCommInitAll__retval,comm,devlist)
+    _pncclCommInitAll__retval = ncclResult_t(crccl.pncclCommInitAll(&comm._ptr,ndev,
+        <const int *>hip._util.types.ListOfInt.from_pyobj(devlist)._ptr))    # fully specified
+    return (_pncclCommInitAll__retval,comm)
 
 
 @cython.embedsignature(True)
@@ -1074,11 +1074,11 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
         raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
     _ncclAllToAllv__retval = ncclResult_t(crccl.ncclAllToAllv(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <const unsigned long*>hip._util.types.DataHandle.from_pyobj(sendcounts)._ptr,
-        <const unsigned long*>hip._util.types.DataHandle.from_pyobj(sdispls)._ptr,
+        <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(sendcounts)._ptr,
+        <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(sdispls)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,
-        <const unsigned long*>hip._util.types.DataHandle.from_pyobj(recvcounts)._ptr,
-        <const unsigned long*>hip._util.types.DataHandle.from_pyobj(rdispls)._ptr,datatype.value,
+        <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(recvcounts)._ptr,
+        <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(rdispls)._ptr,datatype.value,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_ncclAllToAllv__retval,)
@@ -1092,11 +1092,11 @@ def pncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object re
         raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
     _pncclAllToAllv__retval = ncclResult_t(crccl.pncclAllToAllv(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
-        <const unsigned long*>hip._util.types.DataHandle.from_pyobj(sendcounts)._ptr,
-        <const unsigned long*>hip._util.types.DataHandle.from_pyobj(sdispls)._ptr,
+        <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(sendcounts)._ptr,
+        <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(sdispls)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,
-        <const unsigned long*>hip._util.types.DataHandle.from_pyobj(recvcounts)._ptr,
-        <const unsigned long*>hip._util.types.DataHandle.from_pyobj(rdispls)._ptr,datatype.value,
+        <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(recvcounts)._ptr,
+        <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(rdispls)._ptr,datatype.value,
         ncclComm.from_pyobj(comm)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
     return (_pncclAllToAllv__retval,)

@@ -5,6 +5,7 @@ __author__ = "AMD_AUTHOR"
 import ctypes
 
 cimport cpython.long
+cimport cpython.int
 cimport cpython.buffer
 cimport libc.stdlib
 
@@ -241,3 +242,255 @@ cdef class ListOfDataHandle(DataHandle):
 
     def __init__(self,object pyobj):
         ListOfDataHandle.init_from_pyobj(self,pyobj)
+
+cdef class ListOfInt(DataHandle):
+    # members declared in declaration part ``types.pxd``
+
+    def __cinit__(self):
+        self._owner = False
+
+    @staticmethod
+    cdef ListOfInt from_ptr(void* ptr):
+        cdef ListOfInt wrapper = ListOfInt.__new__(ListOfInt)
+        wrapper._ptr = ptr
+        return wrapper
+
+    cdef void init_from_pyobj(self, object pyobj):
+        """
+        NOTE:
+            If ``pyobj`` is an instance of ListOfInt, only the pointer is copied.
+            Releasing an acquired Py_buffer and temporary memory are still obligations 
+            of the original object.
+        """
+        self._py_buffer_acquired = False
+        self._owner = False
+        if isinstance(pyobj,ListOfInt):
+            self._ptr = (<ListOfInt>pyobj)._ptr
+        
+        elif isinstance(pyobj,(tuple,list)):
+            self._owner = True
+            self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(int))
+            for i,entry in enumerate(pyobj):
+                if isinstance(entry,int):
+                    (<int*>self._ptr)[i] = <int>cpython.long.PyLong_AsLongLong(pyobj)
+                elif isinstance(entry,(
+                    ctypes.c_bool,
+                    ctypes.c_short,
+                    ctypes.c_ushort,
+                    ctypes.c_int,
+                    ctypes.c_uint,
+                    ctypes.c_long,
+                    ctypes.c_ulong,
+                    ctypes.c_longlong,
+                    ctypes.c_ulonglong,
+                    ctypes.c_size_t,
+                    ctypes.c_ssize_t,
+                )):
+                    (<int*>self._ptr)[i] = <int>cpython.long.PyLong_AsLongLong(entry.value)
+                else:
+                    raise ValueError(f"element '{i}' of input cannot be converted to C int type")
+        else:
+            self._owner = False
+            DataHandle.init_from_pyobj(self,pyobj)
+
+    @staticmethod
+    cdef ListOfInt from_pyobj(object pyobj):
+        """Derives a ListOfInt from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfInt`` instance, this method
+        returns it directly. No new ListOfInt is created.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ListOfInt``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original pyobj
+            if ``pyobj`` is an instance of ListOfInt.
+        Note:
+            This routines assumes that the original input is not garbage
+            collected before the deletion of this object.
+        """
+        cdef ListOfInt wrapper = ListOfInt.__new__(ListOfInt)
+        
+        if isinstance(pyobj,ListOfInt):
+            return pyobj
+        else:
+            wrapper = ListOfInt.__new__(ListOfInt)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
+
+    def __dealloc__(self):
+        if self._owner:
+            libc.stdlib.free(self._ptr)
+
+    def __init__(self,object pyobj):
+        ListOfInt.init_from_pyobj(self,pyobj)
+
+cdef class ListOfUnsigned(DataHandle):
+    # members declared in declaration part ``types.pxd``
+
+    def __cinit__(self):
+        self._owner = False
+
+    @staticmethod
+    cdef ListOfUnsigned from_ptr(void* ptr):
+        cdef ListOfUnsigned wrapper = ListOfUnsigned.__new__(ListOfUnsigned)
+        wrapper._ptr = ptr
+        return wrapper
+
+    cdef void init_from_pyobj(self, object pyobj):
+        """
+        NOTE:
+            If ``pyobj`` is an instance of ListOfUnsigned, only the pointer is copied.
+            Releasing an acquired Py_buffer and temporary memory are still obligations 
+            of the original object.
+        """
+        self._py_buffer_acquired = False
+        self._owner = False
+        if isinstance(pyobj,ListOfUnsigned):
+            self._ptr = (<ListOfUnsigned>pyobj)._ptr
+        
+        elif isinstance(pyobj,(tuple,list)):
+            self._owner = True
+            self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(unsigned int))
+            for i,entry in enumerate(pyobj):
+                if isinstance(entry,unsigned int):
+                    (<unsigned int*>self._ptr)[i] = <unsigned int>cpython.long.PyLong_AsUnsignedLongLong(pyobj)
+                elif isinstance(entry,(
+                    ctypes.c_bool,
+                    ctypes.c_short,
+                    ctypes.c_ushort,
+                    ctypes.c_int,
+                    ctypes.c_uint,
+                    ctypes.c_long,
+                    ctypes.c_ulong,
+                    ctypes.c_longlong,
+                    ctypes.c_ulonglong,
+                    ctypes.c_size_t,
+                    ctypes.c_ssize_t,
+                )):
+                    (<unsigned int*>self._ptr)[i] = <unsigned int>cpython.long.PyLong_AsUnsignedLongLong(entry.value)
+                else:
+                    raise ValueError(f"element '{i}' of input cannot be converted to C unsigned int type")
+        else:
+            self._owner = False
+            DataHandle.init_from_pyobj(self,pyobj)
+
+    @staticmethod
+    cdef ListOfUnsigned from_pyobj(object pyobj):
+        """Derives a ListOfUnsigned from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfUnsigned`` instance, this method
+        returns it directly. No new ListOfUnsigned is created.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ListOfUnsigned``, ``unsigned int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original pyobj
+            if ``pyobj`` is an instance of ListOfUnsigned.
+        Note:
+            This routines assumes that the original input is not garbage
+            collected before the deletion of this object.
+        """
+        cdef ListOfUnsigned wrapper = ListOfUnsigned.__new__(ListOfUnsigned)
+        
+        if isinstance(pyobj,ListOfUnsigned):
+            return pyobj
+        else:
+            wrapper = ListOfUnsigned.__new__(ListOfUnsigned)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
+
+    def __dealloc__(self):
+        if self._owner:
+            libc.stdlib.free(self._ptr)
+
+    def __init__(self,object pyobj):
+        ListOfUnsigned.init_from_pyobj(self,pyobj)
+
+cdef class ListOfUnsignedLong(DataHandle):
+    # members declared in declaration part ``types.pxd``
+
+    def __cinit__(self):
+        self._owner = False
+
+    @staticmethod
+    cdef ListOfUnsignedLong from_ptr(void* ptr):
+        cdef ListOfUnsignedLong wrapper = ListOfUnsignedLong.__new__(ListOfUnsignedLong)
+        wrapper._ptr = ptr
+        return wrapper
+
+    cdef void init_from_pyobj(self, object pyobj):
+        """
+        NOTE:
+            If ``pyobj`` is an instance of ListOfUnsignedLong, only the pointer is copied.
+            Releasing an acquired Py_buffer and temporary memory are still obligations 
+            of the original object.
+        """
+        self._py_buffer_acquired = False
+        self._owner = False
+        if isinstance(pyobj,ListOfUnsignedLong):
+            self._ptr = (<ListOfUnsignedLong>pyobj)._ptr
+        
+        elif isinstance(pyobj,(tuple,list)):
+            self._owner = True
+            self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(unsigned long))
+            for i,entry in enumerate(pyobj):
+                if isinstance(entry,int):
+                    (<unsigned long*>self._ptr)[i] = <unsigned long>cpython.long.PyLong_AsUnsignedLongLong(pyobj)
+                elif isinstance(entry,(
+                    ctypes.c_bool,
+                    ctypes.c_short,
+                    ctypes.c_ushort,
+                    ctypes.c_int,
+                    ctypes.c_uint,
+                    ctypes.c_long,
+                    ctypes.c_ulong,
+                    ctypes.c_longlong,
+                    ctypes.c_ulonglong,
+                    ctypes.c_size_t,
+                    ctypes.c_ssize_t,
+                )):
+                    (<unsigned long*>self._ptr)[i] = <unsigned long>cpython.long.PyLong_AsUnsignedLongLong(entry.value)
+                else:
+                    raise ValueError(f"element '{i}' of input cannot be converted to C unsigned long type")
+        else:
+            self._owner = False
+            DataHandle.init_from_pyobj(self,pyobj)
+
+    @staticmethod
+    cdef ListOfUnsignedLong from_pyobj(object pyobj):
+        """Derives a ListOfUnsignedLong from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfUnsignedLong`` instance, this method
+        returns it directly. No new ListOfUnsignedLong is created.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ListOfUnsignedLong``, ``unsigned long``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original pyobj
+            if ``pyobj`` is an instance of ListOfUnsignedLong.
+        Note:
+            This routines assumes that the original input is not garbage
+            collected before the deletion of this object.
+        """
+        cdef ListOfUnsignedLong wrapper = ListOfUnsignedLong.__new__(ListOfUnsignedLong)
+        
+        if isinstance(pyobj,ListOfUnsignedLong):
+            return pyobj
+        else:
+            wrapper = ListOfUnsignedLong.__new__(ListOfUnsignedLong)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
+
+    def __dealloc__(self):
+        if self._owner:
+            libc.stdlib.free(self._ptr)
+
+    def __init__(self,object pyobj):
+        ListOfUnsignedLong.init_from_pyobj(self,pyobj)
