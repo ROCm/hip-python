@@ -457,17 +457,17 @@ def hiprtcGetBitcode(object prog, object bitcode):
 
 
 @cython.embedsignature(True)
-def hiprtcGetBitcodeSize(object prog, object bitcode_size):
+def hiprtcGetBitcodeSize(object prog):
     """@brief Gets the size of compiled bitcode by the runtime compilation program instance.
     @param [in] prog  runtime compilation program instance.
     @param [out] code  the size of bitcode.
     @return HIPRTC_SUCCESS
     @see hiprtcResult
     """
+    cdef unsigned long bitcode_size
     _hiprtcGetBitcodeSize__retval = hiprtcResult(chiprtc.hiprtcGetBitcodeSize(
-        _hiprtcProgram.from_pyobj(prog)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(bitcode_size)._ptr))    # fully specified
-    return (_hiprtcGetBitcodeSize__retval,)
+        _hiprtcProgram.from_pyobj(prog)._ptr,&bitcode_size))    # fully specified
+    return (_hiprtcGetBitcodeSize__retval,bitcode_size)
 
 
 @cython.embedsignature(True)
