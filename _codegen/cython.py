@@ -316,10 +316,16 @@ def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
     \"""
     return self._ptr[i].{{attr}}
+def set_{{attr}}(self, i, {{typename}} value):
+    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
+    \"""
+    self._ptr[i].{{attr}} = value
 @property
 def {{attr}}(self):
     return self.get_{{attr}}(0)
-# TODO is_basic_type_constantarray: add setters
+@{{attr}}.setter
+def {{attr}}(self, {{typename}} value):
+    self.set_{{attr}}(0,value)
 {{elif is_enum}}
 def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
@@ -484,11 +490,14 @@ class Typed:
 
     @property
     def is_autoconverted_by_cython(self):
+        from . import tree
+
+        assert isinstance(self,tree.Typed)
+
         return (
             self.is_basic_type
             or self.is_basic_type_constarray
-            or self.is_pointer_to_char()
-            or self.is_char_incompletearray
+            or self.is_pointer_to_char(incomplete_array=True)
         )
 
 
