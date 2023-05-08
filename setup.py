@@ -567,7 +567,6 @@ def generate_rccl_package_files():
             "NCCL_PATCH",
             "NCCL_SUFFIX",
             "NCCL_VERSION_CODE",
-            "NCCL_VERSION",
             "RCCL_BFLOAT16",
             "RCCL_GATHER_SCATTER",
             "RCCL_ALLTOALLV",
@@ -577,12 +576,23 @@ def generate_rccl_package_files():
             return True
         return False
 
+    def rccl_macro_type(node: MacroDefinition):
+        rccl_str_macros = (
+           "NCCL_SUFFIX"
+        )
+        if node.name in rccl_str_macros:
+            return "char*"
+        return "int"
+
     def rccl_ptr_parm_intent(node: Parm):
         """Flags pointer parameters that are actually return values
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         if node.is_pointer_to_record(degree=2):
             return PointerParamIntent.OUT
+        if node.is_pointer_to_record(degree=1):
+            if (node.parent.name,node.name) == "ncclGetUniqueId":
+                return PointerParamIntent.OUT
         if node.is_pointer_to_basic_type(degree=1):
             return PointerParamIntent.OUT
         return PointerParamIntent.IN
@@ -610,6 +620,7 @@ def generate_rccl_package_files():
         runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
         dll="librccl.so",
         node_filter=rccl_node_filter,
+        macro_type=rccl_macro_type,
         ptr_parm_intent=rccl_ptr_parm_intent,
         ptr_rank=rccl_ptr_rank,
         cflags=GENERATOR_ARGS,
@@ -633,6 +644,7 @@ AVAILABLE_GENERATORS = dict(
   hip=generate_hip_package_files,
   hiprtc=generate_hiprtc_package_files,
   hipblas=generate_hipblas_package_files,
+  rccl=generate_rccl_package_files,
 )
 
 for entry in HIP_PYTHON_LIBS.split(","):
