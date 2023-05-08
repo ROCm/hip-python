@@ -139,7 +139,7 @@ cdef class ListOfBytes(DataHandle):
                 (<const char**>self._ptr)[i] = entry_as_cstr
         else:
             self._owner = False
-            generic_handle = DataHandle.init_from_pyobj(self,pyobj)
+            DataHandle.init_from_pyobj(self,pyobj)
 
     @staticmethod
     cdef ListOfBytes from_pyobj(object pyobj):
@@ -174,3 +174,70 @@ cdef class ListOfBytes(DataHandle):
 
     def __init__(self,object pyobj):
         ListOfBytes.init_from_pyobj(self,pyobj)
+
+cdef class ListOfDataHandle(DataHandle):
+    # members declared in declaration part ``types.pxd``
+
+    def __cinit__(self):
+        self._owner = False
+
+    @staticmethod
+    cdef ListOfDataHandle from_ptr(void* ptr):
+        cdef ListOfDataHandle wrapper = ListOfDataHandle.__new__(ListOfDataHandle)
+        wrapper._ptr = ptr
+        return wrapper
+
+    cdef void init_from_pyobj(self, object pyobj):
+        """
+        NOTE:
+            If ``pyobj`` is an instance of ListOfDataHandle, only the pointer is copied.
+            Releasing an acquired Py_buffer and temporary memory are still obligations 
+            of the original object.
+        """
+        self._py_buffer_acquired = False
+        self._owner = False
+        if isinstance(pyobj,ListOfDataHandle):
+            self._ptr = (<ListOfDataHandle>pyobj)._ptr
+        
+        elif isinstance(pyobj,(tuple,list)):
+            self._owner = True
+            self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void *))
+            for i,entry in enumerate(pyobj):
+                (<void**>self._ptr)[i] = cpython.long.PyLong_AsVoidPtr(DataHandle.from_pyobj(entry).ptr())
+        else:
+            self._owner = False
+            DataHandle.init_from_pyobj(self,pyobj)
+
+    @staticmethod
+    cdef ListOfDataHandle from_pyobj(object pyobj):
+        """Derives a ListOfDataHandle from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfDataHandle`` instance, this method
+        returns it directly. No new ListOfDataHandle is created.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``ListOfDataHandle``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original pyobj
+            if ``pyobj`` is an instance of ListOfDataHandle.
+        Note:
+            This routines assumes that the original input is not garbage
+            collected before the deletion of this object.
+        """
+        cdef ListOfDataHandle wrapper = ListOfDataHandle.__new__(ListOfDataHandle)
+        
+        if isinstance(pyobj,ListOfDataHandle):
+            return pyobj
+        else:
+            wrapper = ListOfDataHandle.__new__(ListOfDataHandle)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
+
+    def __dealloc__(self):
+        if self._owner:
+            libc.stdlib.free(self._ptr)
+
+    def __init__(self,object pyobj):
+        ListOfDataHandle.init_from_pyobj(self,pyobj)
