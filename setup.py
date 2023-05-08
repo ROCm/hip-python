@@ -8,8 +8,8 @@ modules. The generated Cython declaration files can be used
 by Cython users of this project.
 """
 
-import sys
 import os
+import warnings
 import enum
 import textwrap
 
@@ -39,7 +39,6 @@ HIP_PLATFORM = os.environ.get("HIP_PLATFORM", "amd")
 if HIP_PLATFORM not in ("amd", "hcc"):
     raise RuntimeError("Currently only HIP_PLATFORM=amd is supported")
 
-
 class HipPlatform(enum.IntEnum):
     AMD = 0
     NVIDIA = 1
@@ -64,10 +63,20 @@ class HipPlatform(enum.IntEnum):
 hip_platform = HipPlatform.from_string(HIP_PLATFORM)
 
 def get_bool_environ_var(env_var, default):
-    return os.environ.get(env_var, default).lower() in ("true", "1", "t", "y", "yes")
-
+    yes_vals = ("true", "1", "t", "y", "yes")
+    no_vals = ("false", "0", "f", "n", "no")
+    value = os.environ.get(env_var, default).lower()
+    if value in yes_vals:
+        return True
+    elif value in no_vals:
+        return False
+    else:
+        allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals)+list(no_vals))])
+        raise RuntimeError(f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}")
 
 HIP_PYTHON_GENERATE = get_bool_environ_var("HIP_PYTHON_GENERATE", "true")
+HIP_PYTHON_LIBS = os.environ.get("HIP_PYTHON_LIBS","hip,hiprtc")
+HIP_PYTHON_ERR_IF_LIB_NOT_FOUND = get_bool_environ_var("HIP_PYTHON_ERR_IF_LIB_NOT_FOUND","true")
 HIP_PYTHON_BUILD = get_bool_environ_var("HIP_PYTHON_BUILD", "true")
 HIP_PYTHON_RUNTIME_LINKING = get_bool_environ_var(
     "HIP_PYTHON_RUNTIME_LINKING", "true"
@@ -75,7 +84,6 @@ HIP_PYTHON_RUNTIME_LINKING = get_bool_environ_var(
 HIP_PYTHON_VERBOSE = get_bool_environ_var("HIP_PYTHON_VERBOSE", "true")
 
 GENERATOR_ARGS = hip_platform.cflags
-
 if HIP_PYTHON_GENERATE:
     HIP_PYTHON_CLANG_RES_DIR = os.environ.get("HIP_PYTHON_CLANG_RES_DIR", None)
     if not HIP_PYTHON_CLANG_RES_DIR:
@@ -101,13 +109,21 @@ if HIP_PYTHON_VERBOSE:
     print(f"{HIP_PLATFORM=}")
     print(f"{HIP_PYTHON_CLANG_RES_DIR=}")
     print(f"{HIP_PYTHON_GENERATE=}")
+    print(f"{HIP_PYTHON_LIBS=}")
+    print(f"{HIP_PYTHON_ERR_IF_LIB_NOT_FOUND=}")
     print(f"{HIP_PYTHON_BUILD=}")
     print(f"{HIP_PYTHON_RUNTIME_LINKING=}")
     print(f"{HIP_PYTHON_VERBOSE=}")
+    
+
+CYTHON_EXT_MODULES = []
+
+HIP_VERSION_NAME = None
 
 def generate_hiprtc_package_files():
     global HIP_PYTHON_GENERATE
-    global GENERATE_ARGS
+    global GENERATOR_ARGS
+    global CYTHON_EXT_MODULES
     
     # hiprtc
     def hiprtc_node_filter(node: Node):
@@ -181,10 +197,17 @@ def generate_hiprtc_package_files():
     )
     if HIP_PYTHON_GENERATE:
         generator.write_package_files(output_dir="hip")
+    CYTHON_EXT_MODULES += [
+        ("hip.chiprtc", ["./hip/chiprtc.pyx"]),
+        ("hip.hiprtc", ["./hip/hiprtc.pyx"]),
+    ]
+    
 
 def generate_hip_package_files():
     global HIP_PYTHON_GENERATE
-    global GENERATE_ARGS
+    global HIP_VERSION_NAME
+    global GENERATOR_ARGS
+    global CYTHON_EXT_MODULES
 
     # hip
     hip_str_macros = (
@@ -408,12 +431,18 @@ def generate_hip_package_files():
             from . import hiprtc
             from . import hipblas""")
         )
-    return HIP_VERSION_NAME
+
+    CYTHON_EXT_MODULES += [
+        ("hip.chip", ["./hip/chip.pyx"]),
+        ("hip._hip_helpers", ["./hip/_hip_helpers.pyx"]),
+        ("hip.hip", ["./hip/hip.pyx"]),
+    ]
 
 # hipblas
 def generate_hipblas_package_files():
     global HIP_PYTHON_GENERATE
-    global GENERATE_ARGS
+    global GENERATOR_ARGS
+    global CYTHON_EXT_MODULES
 
     def hipblas_node_filter(node: Node):
         if node.name in ("__int16_t","__uint16_t"):
@@ -505,11 +534,27 @@ def generate_hipblas_package_files():
     """)
     if HIP_PYTHON_GENERATE:
         generator.write_package_files(output_dir="hip")
+    CYTHON_EXT_MODULES += [
+        ("hip.chipblas", ["./hip/chipblas.pyx"]),
+        ("hip.hipblas", ["./hip/hipblas.pyx"]),
+    ]
 
+AVAILABLE_GENERATORS = dict(
+  hip=generate_hip_package_files,
+  hiprtc=generate_hiprtc_package_files,
+  hipblas=generate_hipblas_package_files,
+)
 
-generate_hiprtc_package_files()
-generate_hipblas_package_files()
-HIP_VERSION_NAME = generate_hip_package_files()
+for entry in HIP_PYTHON_LIBS.split(","):
+    libname = entry.strip()
+    if libname not in AVAILABLE_GENERATORS:
+        available_libs = ", ".join([f"'{a}'" for a  in AVAILABLE_GENERATORS.keys()])
+        msg = f"no codegenerator found for library '{libname}'; please choose one of: {available_libs}"
+        if HIP_PYTHON_ERR_IF_LIB_NOT_FOUND:
+            raise KeyError(msg)
+        else:
+            warnings.warn("default",msg)
+    AVAILABLE_GENERATORS[libname]()
 
 # Build Cython packages
 if HIP_PYTHON_BUILD:
@@ -537,24 +582,14 @@ if HIP_PYTHON_BUILD:
             language="c",
             extra_compile_args=extra_compile_args,
         )
-
-    cython_module_sources = [
-        ("hip._util.types", ["./hip/_util/types.pyx"]),
-        ("hip.chiprtc", ["./hip/chiprtc.pyx"]),
-        ("hip.chip", ["./hip/chip.pyx"]),
-        ("hip.chipblas", ["./hip/chipblas.pyx"]),
-        ("hip.hiprtc", ["./hip/hiprtc.pyx"]),
-        ("hip._hip_helpers", ["./hip/_hip_helpers.pyx"]),
-        ("hip.hip", ["./hip/hip.pyx"]),
-        ("hip.hipblas", ["./hip/hipblas.pyx"]),
-    ]
+    
     if HIP_PYTHON_RUNTIME_LINKING:
-        cython_module_sources.insert(
+        CYTHON_EXT_MODULES.insert(
             0, ("hip._util.posixloader", ["./hip/_util/posixloader.pyx"])
         )
 
     ext_modules = []
-    for name, sources in cython_module_sources:
+    for name, sources in CYTHON_EXT_MODULES:
         extension = create_extension(name, sources)
         ext_modules += cythonize(
             [extension],
@@ -564,10 +599,10 @@ if HIP_PYTHON_BUILD:
             ),
         )
 
+    scm_version_opts = { "write_to": "hip/_version.py", }
+    if HIP_VERSION_NAME != None:
+        scm_version_opts["local_scheme"] = lambda v: f"+{HIP_VERSION_NAME.replace('-','.')}"
     setup(
         ext_modules=ext_modules,
-        use_scm_version = {
-          "write_to": "hip/_version.py",
-          "local_scheme": lambda v: f"+{HIP_VERSION_NAME.replace('-','.')}"
-        }
+        use_scm_version = scm_version_opts,
     )
