@@ -17,6 +17,10 @@ cdef class hipDeviceArch_t:
     cdef hipDeviceArch_t from_ptr(chip.hipDeviceArch_t* ptr, bint owner=*)
     @staticmethod
     cdef hipDeviceArch_t from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.hipDeviceArch_t** ptr)
+    @staticmethod
+    cdef hipDeviceArch_t new()
 
 
 cdef class hipUUID_t:
@@ -509,6 +513,10 @@ cdef class uchar1:
     cdef uchar1 from_ptr(chip.uchar1* ptr, bint owner=*)
     @staticmethod
     cdef uchar1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.uchar1** ptr)
+    @staticmethod
+    cdef uchar1 new()
 
 
 cdef class uchar2:
@@ -521,6 +529,10 @@ cdef class uchar2:
     cdef uchar2 from_ptr(chip.uchar2* ptr, bint owner=*)
     @staticmethod
     cdef uchar2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.uchar2** ptr)
+    @staticmethod
+    cdef uchar2 new()
 
 
 cdef class uchar3:
@@ -533,6 +545,10 @@ cdef class uchar3:
     cdef uchar3 from_ptr(chip.uchar3* ptr, bint owner=*)
     @staticmethod
     cdef uchar3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.uchar3** ptr)
+    @staticmethod
+    cdef uchar3 new()
 
 
 cdef class uchar4:
@@ -545,6 +561,10 @@ cdef class uchar4:
     cdef uchar4 from_ptr(chip.uchar4* ptr, bint owner=*)
     @staticmethod
     cdef uchar4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.uchar4** ptr)
+    @staticmethod
+    cdef uchar4 new()
 
 
 cdef class char1:
@@ -557,6 +577,10 @@ cdef class char1:
     cdef char1 from_ptr(chip.char1* ptr, bint owner=*)
     @staticmethod
     cdef char1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.char1** ptr)
+    @staticmethod
+    cdef char1 new()
 
 
 cdef class char2:
@@ -569,6 +593,10 @@ cdef class char2:
     cdef char2 from_ptr(chip.char2* ptr, bint owner=*)
     @staticmethod
     cdef char2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.char2** ptr)
+    @staticmethod
+    cdef char2 new()
 
 
 cdef class char3:
@@ -581,6 +609,10 @@ cdef class char3:
     cdef char3 from_ptr(chip.char3* ptr, bint owner=*)
     @staticmethod
     cdef char3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.char3** ptr)
+    @staticmethod
+    cdef char3 new()
 
 
 cdef class char4:
@@ -593,6 +625,10 @@ cdef class char4:
     cdef char4 from_ptr(chip.char4* ptr, bint owner=*)
     @staticmethod
     cdef char4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.char4** ptr)
+    @staticmethod
+    cdef char4 new()
 
 
 cdef class ushort1:
@@ -605,6 +641,10 @@ cdef class ushort1:
     cdef ushort1 from_ptr(chip.ushort1* ptr, bint owner=*)
     @staticmethod
     cdef ushort1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ushort1** ptr)
+    @staticmethod
+    cdef ushort1 new()
 
 
 cdef class ushort2:
@@ -617,6 +657,10 @@ cdef class ushort2:
     cdef ushort2 from_ptr(chip.ushort2* ptr, bint owner=*)
     @staticmethod
     cdef ushort2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ushort2** ptr)
+    @staticmethod
+    cdef ushort2 new()
 
 
 cdef class ushort3:
@@ -629,6 +673,10 @@ cdef class ushort3:
     cdef ushort3 from_ptr(chip.ushort3* ptr, bint owner=*)
     @staticmethod
     cdef ushort3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ushort3** ptr)
+    @staticmethod
+    cdef ushort3 new()
 
 
 cdef class ushort4:
@@ -641,6 +689,10 @@ cdef class ushort4:
     cdef ushort4 from_ptr(chip.ushort4* ptr, bint owner=*)
     @staticmethod
     cdef ushort4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ushort4** ptr)
+    @staticmethod
+    cdef ushort4 new()
 
 
 cdef class short1:
@@ -653,6 +705,10 @@ cdef class short1:
     cdef short1 from_ptr(chip.short1* ptr, bint owner=*)
     @staticmethod
     cdef short1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.short1** ptr)
+    @staticmethod
+    cdef short1 new()
 
 
 cdef class short2:
@@ -665,6 +721,10 @@ cdef class short2:
     cdef short2 from_ptr(chip.short2* ptr, bint owner=*)
     @staticmethod
     cdef short2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.short2** ptr)
+    @staticmethod
+    cdef short2 new()
 
 
 cdef class short3:
@@ -677,6 +737,10 @@ cdef class short3:
     cdef short3 from_ptr(chip.short3* ptr, bint owner=*)
     @staticmethod
     cdef short3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.short3** ptr)
+    @staticmethod
+    cdef short3 new()
 
 
 cdef class short4:
@@ -689,6 +753,10 @@ cdef class short4:
     cdef short4 from_ptr(chip.short4* ptr, bint owner=*)
     @staticmethod
     cdef short4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.short4** ptr)
+    @staticmethod
+    cdef short4 new()
 
 
 cdef class uint1:
@@ -701,6 +769,10 @@ cdef class uint1:
     cdef uint1 from_ptr(chip.uint1* ptr, bint owner=*)
     @staticmethod
     cdef uint1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.uint1** ptr)
+    @staticmethod
+    cdef uint1 new()
 
 
 cdef class uint2:
@@ -713,6 +785,10 @@ cdef class uint2:
     cdef uint2 from_ptr(chip.uint2* ptr, bint owner=*)
     @staticmethod
     cdef uint2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.uint2** ptr)
+    @staticmethod
+    cdef uint2 new()
 
 
 cdef class uint3:
@@ -725,6 +801,10 @@ cdef class uint3:
     cdef uint3 from_ptr(chip.uint3* ptr, bint owner=*)
     @staticmethod
     cdef uint3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.uint3** ptr)
+    @staticmethod
+    cdef uint3 new()
 
 
 cdef class uint4:
@@ -737,6 +817,10 @@ cdef class uint4:
     cdef uint4 from_ptr(chip.uint4* ptr, bint owner=*)
     @staticmethod
     cdef uint4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.uint4** ptr)
+    @staticmethod
+    cdef uint4 new()
 
 
 cdef class int1:
@@ -749,6 +833,10 @@ cdef class int1:
     cdef int1 from_ptr(chip.int1* ptr, bint owner=*)
     @staticmethod
     cdef int1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.int1** ptr)
+    @staticmethod
+    cdef int1 new()
 
 
 cdef class int2:
@@ -761,6 +849,10 @@ cdef class int2:
     cdef int2 from_ptr(chip.int2* ptr, bint owner=*)
     @staticmethod
     cdef int2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.int2** ptr)
+    @staticmethod
+    cdef int2 new()
 
 
 cdef class int3:
@@ -773,6 +865,10 @@ cdef class int3:
     cdef int3 from_ptr(chip.int3* ptr, bint owner=*)
     @staticmethod
     cdef int3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.int3** ptr)
+    @staticmethod
+    cdef int3 new()
 
 
 cdef class int4:
@@ -785,6 +881,10 @@ cdef class int4:
     cdef int4 from_ptr(chip.int4* ptr, bint owner=*)
     @staticmethod
     cdef int4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.int4** ptr)
+    @staticmethod
+    cdef int4 new()
 
 
 cdef class ulong1:
@@ -797,6 +897,10 @@ cdef class ulong1:
     cdef ulong1 from_ptr(chip.ulong1* ptr, bint owner=*)
     @staticmethod
     cdef ulong1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ulong1** ptr)
+    @staticmethod
+    cdef ulong1 new()
 
 
 cdef class ulong2:
@@ -809,6 +913,10 @@ cdef class ulong2:
     cdef ulong2 from_ptr(chip.ulong2* ptr, bint owner=*)
     @staticmethod
     cdef ulong2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ulong2** ptr)
+    @staticmethod
+    cdef ulong2 new()
 
 
 cdef class ulong3:
@@ -821,6 +929,10 @@ cdef class ulong3:
     cdef ulong3 from_ptr(chip.ulong3* ptr, bint owner=*)
     @staticmethod
     cdef ulong3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ulong3** ptr)
+    @staticmethod
+    cdef ulong3 new()
 
 
 cdef class ulong4:
@@ -833,6 +945,10 @@ cdef class ulong4:
     cdef ulong4 from_ptr(chip.ulong4* ptr, bint owner=*)
     @staticmethod
     cdef ulong4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ulong4** ptr)
+    @staticmethod
+    cdef ulong4 new()
 
 
 cdef class long1:
@@ -845,6 +961,10 @@ cdef class long1:
     cdef long1 from_ptr(chip.long1* ptr, bint owner=*)
     @staticmethod
     cdef long1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.long1** ptr)
+    @staticmethod
+    cdef long1 new()
 
 
 cdef class long2:
@@ -857,6 +977,10 @@ cdef class long2:
     cdef long2 from_ptr(chip.long2* ptr, bint owner=*)
     @staticmethod
     cdef long2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.long2** ptr)
+    @staticmethod
+    cdef long2 new()
 
 
 cdef class long3:
@@ -869,6 +993,10 @@ cdef class long3:
     cdef long3 from_ptr(chip.long3* ptr, bint owner=*)
     @staticmethod
     cdef long3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.long3** ptr)
+    @staticmethod
+    cdef long3 new()
 
 
 cdef class long4:
@@ -881,6 +1009,10 @@ cdef class long4:
     cdef long4 from_ptr(chip.long4* ptr, bint owner=*)
     @staticmethod
     cdef long4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.long4** ptr)
+    @staticmethod
+    cdef long4 new()
 
 
 cdef class ulonglong1:
@@ -893,6 +1025,10 @@ cdef class ulonglong1:
     cdef ulonglong1 from_ptr(chip.ulonglong1* ptr, bint owner=*)
     @staticmethod
     cdef ulonglong1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ulonglong1** ptr)
+    @staticmethod
+    cdef ulonglong1 new()
 
 
 cdef class ulonglong2:
@@ -905,6 +1041,10 @@ cdef class ulonglong2:
     cdef ulonglong2 from_ptr(chip.ulonglong2* ptr, bint owner=*)
     @staticmethod
     cdef ulonglong2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ulonglong2** ptr)
+    @staticmethod
+    cdef ulonglong2 new()
 
 
 cdef class ulonglong3:
@@ -917,6 +1057,10 @@ cdef class ulonglong3:
     cdef ulonglong3 from_ptr(chip.ulonglong3* ptr, bint owner=*)
     @staticmethod
     cdef ulonglong3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ulonglong3** ptr)
+    @staticmethod
+    cdef ulonglong3 new()
 
 
 cdef class ulonglong4:
@@ -929,6 +1073,10 @@ cdef class ulonglong4:
     cdef ulonglong4 from_ptr(chip.ulonglong4* ptr, bint owner=*)
     @staticmethod
     cdef ulonglong4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.ulonglong4** ptr)
+    @staticmethod
+    cdef ulonglong4 new()
 
 
 cdef class longlong1:
@@ -941,6 +1089,10 @@ cdef class longlong1:
     cdef longlong1 from_ptr(chip.longlong1* ptr, bint owner=*)
     @staticmethod
     cdef longlong1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.longlong1** ptr)
+    @staticmethod
+    cdef longlong1 new()
 
 
 cdef class longlong2:
@@ -953,6 +1105,10 @@ cdef class longlong2:
     cdef longlong2 from_ptr(chip.longlong2* ptr, bint owner=*)
     @staticmethod
     cdef longlong2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.longlong2** ptr)
+    @staticmethod
+    cdef longlong2 new()
 
 
 cdef class longlong3:
@@ -965,6 +1121,10 @@ cdef class longlong3:
     cdef longlong3 from_ptr(chip.longlong3* ptr, bint owner=*)
     @staticmethod
     cdef longlong3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.longlong3** ptr)
+    @staticmethod
+    cdef longlong3 new()
 
 
 cdef class longlong4:
@@ -977,6 +1137,10 @@ cdef class longlong4:
     cdef longlong4 from_ptr(chip.longlong4* ptr, bint owner=*)
     @staticmethod
     cdef longlong4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.longlong4** ptr)
+    @staticmethod
+    cdef longlong4 new()
 
 
 cdef class float1:
@@ -989,6 +1153,10 @@ cdef class float1:
     cdef float1 from_ptr(chip.float1* ptr, bint owner=*)
     @staticmethod
     cdef float1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.float1** ptr)
+    @staticmethod
+    cdef float1 new()
 
 
 cdef class float2:
@@ -1001,6 +1169,10 @@ cdef class float2:
     cdef float2 from_ptr(chip.float2* ptr, bint owner=*)
     @staticmethod
     cdef float2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.float2** ptr)
+    @staticmethod
+    cdef float2 new()
 
 
 cdef class float3:
@@ -1013,6 +1185,10 @@ cdef class float3:
     cdef float3 from_ptr(chip.float3* ptr, bint owner=*)
     @staticmethod
     cdef float3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.float3** ptr)
+    @staticmethod
+    cdef float3 new()
 
 
 cdef class float4:
@@ -1025,6 +1201,10 @@ cdef class float4:
     cdef float4 from_ptr(chip.float4* ptr, bint owner=*)
     @staticmethod
     cdef float4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.float4** ptr)
+    @staticmethod
+    cdef float4 new()
 
 
 cdef class double1:
@@ -1037,6 +1217,10 @@ cdef class double1:
     cdef double1 from_ptr(chip.double1* ptr, bint owner=*)
     @staticmethod
     cdef double1 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.double1** ptr)
+    @staticmethod
+    cdef double1 new()
 
 
 cdef class double2:
@@ -1049,6 +1233,10 @@ cdef class double2:
     cdef double2 from_ptr(chip.double2* ptr, bint owner=*)
     @staticmethod
     cdef double2 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.double2** ptr)
+    @staticmethod
+    cdef double2 new()
 
 
 cdef class double3:
@@ -1061,6 +1249,10 @@ cdef class double3:
     cdef double3 from_ptr(chip.double3* ptr, bint owner=*)
     @staticmethod
     cdef double3 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.double3** ptr)
+    @staticmethod
+    cdef double3 new()
 
 
 cdef class double4:
@@ -1073,6 +1265,10 @@ cdef class double4:
     cdef double4 from_ptr(chip.double4* ptr, bint owner=*)
     @staticmethod
     cdef double4 from_pyobj(object pyobj)
+    @staticmethod
+    cdef __allocate(chip.double4** ptr)
+    @staticmethod
+    cdef double4 new()
 
 
 cdef class __hip_texture:

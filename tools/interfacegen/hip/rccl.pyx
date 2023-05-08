@@ -248,16 +248,18 @@ cdef class ncclUniqueId:
         """Get value of ``internal`` of ``self._ptr[i]``.
         """
         return self._ptr[i].internal
-    def set_internal(self, i, char[128] value):
-        """Set value ``internal`` of ``self._ptr[i]``.
-        """
-        self._ptr[i].internal = value
+    # TODO add setters
+    #def set_internal(self, i, char[128] value):
+    #    """Set value ``internal`` of ``self._ptr[i]``.
+    #    """
+    #    self._ptr[i].internal = value
     @property
     def internal(self):
         return self.get_internal(0)
-    @internal.setter
-    def internal(self, char[128] value):
-        self.set_internal(0,value)
+    # TODO add setters
+    #@internal.setter
+    #def internal(self, char[128] value):
+    #    self.set_internal(0,value)
 
     @staticmethod
     def PROPERTIES():
