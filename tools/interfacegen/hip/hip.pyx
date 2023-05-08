@@ -22509,7 +22509,7 @@ def hipIpcGetMemHandle(object handle, object devPtr):
 
 
 @cython.embedsignature(True)
-def hipIpcOpenMemHandle(unsigned int flags):
+def hipIpcOpenMemHandle(object handle, unsigned int flags):
     """@brief Opens an interprocess memory handle exported from another process
     and returns a device pointer usable in the local process.
     Maps memory exported from another process with hipIpcGetMemHandle into
@@ -22539,7 +22539,11 @@ def hipIpcOpenMemHandle(unsigned int flags):
     This is diffrent from CUDA.
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
-    pass
+    _hipIpcOpenMemHandle__retval = hipError_t(chip.hipIpcOpenMemHandle(
+        <void **>&devPtr._ptr,
+        hipIpcMemHandle_st.from_pyobj(handle)._ptr[0],flags))    # fully specified
+    return (_hipIpcOpenMemHandle__retval,devPtr)
+
 
 @cython.embedsignature(True)
 def hipIpcCloseMemHandle(object devPtr):
@@ -22578,7 +22582,7 @@ def hipIpcGetEventHandle(object handle, object event):
 
 
 @cython.embedsignature(True)
-def hipIpcOpenEventHandle():
+def hipIpcOpenEventHandle(object handle):
     """@brief Opens an interprocess event handles.
     Opens an interprocess event handle exported from another process with cudaIpcGetEventHandle. The returned
     hipEvent_t behaves like a locally created event with the hipEventDisableTiming flag specified. This event
@@ -22590,7 +22594,10 @@ def hipIpcOpenEventHandle():
     @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext
     """
     event = ihipEvent_t.from_ptr(NULL)
-    pass
+    _hipIpcOpenEventHandle__retval = hipError_t(chip.hipIpcOpenEventHandle(&event._ptr,
+        hipIpcEventHandle_st.from_pyobj(handle)._ptr[0]))    # fully specified
+    return (_hipIpcOpenEventHandle__retval,event)
+
 
 @cython.embedsignature(True)
 def hipFuncSetAttribute(object func, object attr, int value):
@@ -22685,6 +22692,7 @@ def hipGetErrorName(object hip_error):
     if not isinstance(hip_error,hipError_t):
         raise TypeError("argument 'hip_error' must be of type 'hipError_t'")
     cdef const char * _hipGetErrorName__retval = chip.hipGetErrorName(hip_error.value)    # fully specified
+    return (_hipGetErrorName__retval,)
 
 
 @cython.embedsignature(True)
@@ -22697,6 +22705,7 @@ def hipGetErrorString(object hipError):
     if not isinstance(hipError,hipError_t):
         raise TypeError("argument 'hipError' must be of type 'hipError_t'")
     cdef const char * _hipGetErrorString__retval = chip.hipGetErrorString(hipError.value)    # fully specified
+    return (_hipGetErrorString__retval,)
 
 
 @cython.embedsignature(True)
@@ -24707,17 +24716,21 @@ def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long w
 
 
 @cython.embedsignature(True)
-def hipMemset3D(int value):
+def hipMemset3D(object pitchedDevPtr, int value, object extent):
     """@brief Fills synchronously the memory area pointed to by pitchedDevPtr with the constant value.
     @param[in] pitchedDevPtr
     @param[in]  value - constant value to be set
     @param[in]  extent
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
-    pass
+    _hipMemset3D__retval = hipError_t(chip.hipMemset3D(
+        hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr[0],value,
+        hipExtent.from_pyobj(extent)._ptr[0]))    # fully specified
+    return (_hipMemset3D__retval,)
+
 
 @cython.embedsignature(True)
-def hipMemset3DAsync(int value, object stream):
+def hipMemset3DAsync(object pitchedDevPtr, int value, object extent, object stream):
     """@brief Fills asynchronously the memory area pointed to by pitchedDevPtr with the constant value.
     @param[in] pitchedDevPtr
     @param[in]  value - constant value to be set
@@ -24725,7 +24738,12 @@ def hipMemset3DAsync(int value, object stream):
     @param[in]  stream
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
-    pass
+    _hipMemset3DAsync__retval = hipError_t(chip.hipMemset3DAsync(
+        hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr[0],value,
+        hipExtent.from_pyobj(extent)._ptr[0],
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return (_hipMemset3DAsync__retval,)
+
 
 @cython.embedsignature(True)
 def hipMemGetInfo():
@@ -24799,10 +24817,14 @@ def hipArray3DCreate(object pAllocateArray):
 
 
 @cython.embedsignature(True)
-def hipMalloc3D(object pitchedDevPtr):
+def hipMalloc3D(object pitchedDevPtr, object extent):
     """
     """
-    pass
+    _hipMalloc3D__retval = hipError_t(chip.hipMalloc3D(
+        hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr,
+        hipExtent.from_pyobj(extent)._ptr[0]))    # fully specified
+    return (_hipMalloc3D__retval,)
+
 
 @cython.embedsignature(True)
 def hipFreeArray(object array):
@@ -24828,7 +24850,7 @@ def hipFreeMipmappedArray(object mipmappedArray):
 
 
 @cython.embedsignature(True)
-def hipMalloc3DArray(object desc, unsigned int flags):
+def hipMalloc3DArray(object desc, object extent, unsigned int flags):
     """@brief Allocate an array on the device.
     @param[out]  array  Pointer to allocated array in device memory
     @param[in]   desc   Requested channel format
@@ -24838,10 +24860,14 @@ def hipMalloc3DArray(object desc, unsigned int flags):
     @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
     """
     array = hipArray.from_ptr(NULL)
-    pass
+    _hipMalloc3DArray__retval = hipError_t(chip.hipMalloc3DArray(&array._ptr,
+        hipChannelFormatDesc.from_pyobj(desc)._ptr,
+        hipExtent.from_pyobj(extent)._ptr[0],flags))    # fully specified
+    return (_hipMalloc3DArray__retval,array)
+
 
 @cython.embedsignature(True)
-def hipMallocMipmappedArray(object desc, unsigned int numLevels, unsigned int flags):
+def hipMallocMipmappedArray(object desc, object extent, unsigned int numLevels, unsigned int flags):
     """@brief Allocate a mipmapped array on the device
     @param[out] mipmappedArray  - Pointer to allocated mipmapped array in device memory
     @param[in]  desc            - Requested channel format
@@ -24851,7 +24877,11 @@ def hipMallocMipmappedArray(object desc, unsigned int numLevels, unsigned int fl
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
     """
     mipmappedArray = hipMipmappedArray.from_ptr(NULL)
-    pass
+    _hipMallocMipmappedArray__retval = hipError_t(chip.hipMallocMipmappedArray(&mipmappedArray._ptr,
+        hipChannelFormatDesc.from_pyobj(desc)._ptr,
+        hipExtent.from_pyobj(extent)._ptr[0],numLevels,flags))    # fully specified
+    return (_hipMallocMipmappedArray__retval,mipmappedArray)
+
 
 @cython.embedsignature(True)
 def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
@@ -25765,7 +25795,7 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
 
 
 @cython.embedsignature(True)
-def hipLaunchCooperativeKernel(object f, object kernelParams, unsigned int sharedMemBytes, object stream):
+def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, object kernelParams, unsigned int sharedMemBytes, object stream):
     """@brief launches kernel f with launch parameters and shared memory on stream with arguments passed
     to kernelparams or extra, where thread blocks can cooperate and synchronize as they execute
     @param [in] f         Kernel to launch.
@@ -25780,7 +25810,14 @@ def hipLaunchCooperativeKernel(object f, object kernelParams, unsigned int share
     size gridDim x blockDim >= 2^32.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
     """
-    pass
+    _hipLaunchCooperativeKernel__retval = hipError_t(chip.hipLaunchCooperativeKernel(
+        <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
+        dim3.from_pyobj(gridDim)._ptr[0],
+        dim3.from_pyobj(blockDimX)._ptr[0],
+        <void **>hip._util.types.DataHandle.from_pyobj(kernelParams)._ptr,sharedMemBytes,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return (_hipLaunchCooperativeKernel__retval,)
+
 
 @cython.embedsignature(True)
 def hipLaunchCooperativeKernelMultiDevice(object launchParamsList, int numDevices, unsigned int flags):
@@ -25951,7 +25988,7 @@ def hipProfilerStop():
 
 
 @cython.embedsignature(True)
-def hipConfigureCall(unsigned long sharedMem, object stream):
+def hipConfigureCall(object gridDim, object blockDim, unsigned long sharedMem, object stream):
     """@}
     -------------------------------------------------------------------------------------------------
     -------------------------------------------------------------------------------------------------
@@ -25969,7 +26006,12 @@ def hipConfigureCall(unsigned long sharedMem, object stream):
     size gridDim x blockDim >= 2^32.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
-    pass
+    _hipConfigureCall__retval = hipError_t(chip.hipConfigureCall(
+        dim3.from_pyobj(gridDim)._ptr[0],
+        dim3.from_pyobj(blockDim)._ptr[0],sharedMem,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return (_hipConfigureCall__retval,)
+
 
 @cython.embedsignature(True)
 def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
@@ -25996,7 +26038,7 @@ def hipLaunchByPtr(object func):
 
 
 @cython.embedsignature(True)
-def hipLaunchKernel(object function_address, object args, unsigned long sharedMemBytes, object stream):
+def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks, object args, unsigned long sharedMemBytes, object stream):
     """@brief C compliant kernel launch API
     @param [in] function_address - kernel stub function pointer.
     @param [in] numBlocks - number of blocks
@@ -26008,7 +26050,14 @@ def hipLaunchKernel(object function_address, object args, unsigned long sharedMe
     default stream is used with associated synchronization rules.
     @returns #hipSuccess, #hipErrorInvalidValue, hipInvalidDevice
     """
-    pass
+    _hipLaunchKernel__retval = hipError_t(chip.hipLaunchKernel(
+        <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
+        dim3.from_pyobj(numBlocks)._ptr[0],
+        dim3.from_pyobj(dimBlocks)._ptr[0],
+        <void **>hip._util.types.DataHandle.from_pyobj(args)._ptr,sharedMemBytes,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return (_hipLaunchKernel__retval,)
+
 
 @cython.embedsignature(True)
 def hipLaunchHostFunc(object stream, object fn, object userData):
@@ -26040,7 +26089,7 @@ def hipDrvMemcpy2DUnaligned(object pCopy):
 
 
 @cython.embedsignature(True)
-def hipExtLaunchKernel(object function_address, object args, unsigned long sharedMemBytes, object stream, object startEvent, object stopEvent, int flags):
+def hipExtLaunchKernel(object function_address, object numBlocks, object dimBlocks, object args, unsigned long sharedMemBytes, object stream, object startEvent, object stopEvent, int flags):
     """@brief Launches kernel from the pointer address, with arguments and shared memory on stream.
     @param [in] function_address pointer to the Kernel to launch.
     @param [in] numBlocks number of blocks.
@@ -26058,7 +26107,16 @@ def hipExtLaunchKernel(object function_address, object args, unsigned long share
     launched in any order.
     @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
     """
-    pass
+    _hipExtLaunchKernel__retval = hipError_t(chip.hipExtLaunchKernel(
+        <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
+        dim3.from_pyobj(numBlocks)._ptr[0],
+        dim3.from_pyobj(dimBlocks)._ptr[0],
+        <void **>hip._util.types.DataHandle.from_pyobj(args)._ptr,sharedMemBytes,
+        ihipStream_t.from_pyobj(stream)._ptr,
+        ihipEvent_t.from_pyobj(startEvent)._ptr,
+        ihipEvent_t.from_pyobj(stopEvent)._ptr,flags))    # fully specified
+    return (_hipExtLaunchKernel__retval,)
+
 
 @cython.embedsignature(True)
 def hipBindTextureToMipmappedArray(object tex, object mipmappedArray, object desc):
@@ -26569,6 +26627,7 @@ def hipApiName(unsigned int id):
     This section describes the callback/Activity of HIP runtime API.
     """
     cdef const char * _hipApiName__retval = chip.hipApiName(id)    # fully specified
+    return (_hipApiName__retval,)
 
 
 @cython.embedsignature(True)
@@ -26577,6 +26636,7 @@ def hipKernelNameRef(object f):
     """
     cdef const char * _hipKernelNameRef__retval = chip.hipKernelNameRef(
         ihipModuleSymbol_t.from_pyobj(f)._ptr)    # fully specified
+    return (_hipKernelNameRef__retval,)
 
 
 @cython.embedsignature(True)
@@ -26586,6 +26646,7 @@ def hipKernelNameRefByPtr(object hostFunction, object stream):
     cdef const char * _hipKernelNameRefByPtr__retval = chip.hipKernelNameRefByPtr(
         <const void *>hip._util.types.DataHandle.from_pyobj(hostFunction)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr)    # fully specified
+    return (_hipKernelNameRefByPtr__retval,)
 
 
 @cython.embedsignature(True)
@@ -28314,16 +28375,25 @@ def hipMemset2DAsync_spt(object dst, unsigned long pitch, int value, unsigned lo
 
 
 @cython.embedsignature(True)
-def hipMemset3DAsync_spt(int value, object stream):
+def hipMemset3DAsync_spt(object pitchedDevPtr, int value, object extent, object stream):
     """
     """
-    pass
+    _hipMemset3DAsync_spt__retval = hipError_t(chip.hipMemset3DAsync_spt(
+        hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr[0],value,
+        hipExtent.from_pyobj(extent)._ptr[0],
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return (_hipMemset3DAsync_spt__retval,)
+
 
 @cython.embedsignature(True)
-def hipMemset3D_spt(int value):
+def hipMemset3D_spt(object pitchedDevPtr, int value, object extent):
     """
     """
-    pass
+    _hipMemset3D_spt__retval = hipError_t(chip.hipMemset3D_spt(
+        hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr[0],value,
+        hipExtent.from_pyobj(extent)._ptr[0]))    # fully specified
+    return (_hipMemset3D_spt__retval,)
+
 
 @cython.embedsignature(True)
 def hipMemcpyAsync_spt(object dst, object src, unsigned long sizeBytes, object kind, object stream):
@@ -28507,16 +28577,30 @@ def hipEventRecord_spt(object event, object stream):
 
 
 @cython.embedsignature(True)
-def hipLaunchCooperativeKernel_spt(object f, object kernelParams, unsigned int sharedMemBytes, object hStream):
+def hipLaunchCooperativeKernel_spt(object f, object gridDim, object blockDim, object kernelParams, unsigned int sharedMemBytes, object hStream):
     """
     """
-    pass
+    _hipLaunchCooperativeKernel_spt__retval = hipError_t(chip.hipLaunchCooperativeKernel_spt(
+        <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
+        dim3.from_pyobj(gridDim)._ptr[0],
+        dim3.from_pyobj(blockDim)._ptr[0],
+        <void **>hip._util.types.DataHandle.from_pyobj(kernelParams)._ptr,sharedMemBytes,
+        ihipStream_t.from_pyobj(hStream)._ptr))    # fully specified
+    return (_hipLaunchCooperativeKernel_spt__retval,)
+
 
 @cython.embedsignature(True)
-def hipLaunchKernel_spt(object function_address, object args, unsigned long sharedMemBytes, object stream):
+def hipLaunchKernel_spt(object function_address, object numBlocks, object dimBlocks, object args, unsigned long sharedMemBytes, object stream):
     """
     """
-    pass
+    _hipLaunchKernel_spt__retval = hipError_t(chip.hipLaunchKernel_spt(
+        <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
+        dim3.from_pyobj(numBlocks)._ptr[0],
+        dim3.from_pyobj(dimBlocks)._ptr[0],
+        <void **>hip._util.types.DataHandle.from_pyobj(args)._ptr,sharedMemBytes,
+        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    return (_hipLaunchKernel_spt__retval,)
+
 
 @cython.embedsignature(True)
 def hipGraphLaunch_spt(object graphExec, object stream):

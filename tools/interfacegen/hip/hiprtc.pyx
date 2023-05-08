@@ -185,6 +185,7 @@ def hiprtcGetErrorString(object result):
     if not isinstance(result,hiprtcResult):
         raise TypeError("argument 'result' must be of type 'hiprtcResult'")
     cdef const char * _hiprtcGetErrorString__retval = chiprtc.hiprtcGetErrorString(result.value)    # fully specified
+    return (_hiprtcGetErrorString__retval,)
 
 
 @cython.embedsignature(True)

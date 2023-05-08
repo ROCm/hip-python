@@ -13,16 +13,29 @@ import warnings
 import enum
 import textwrap
 
-from _codegen import (
+from _codegen.cython import (
     CythonPackageGenerator,
+    DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
+)
+
+from _codegen.cparser import (
+    TypeHandler
+)
+
+TypeCategory = TypeHandler.TypeCategory
+
+from clang.cindex import TypeKind
+
+from _codegen.tree import (
     Node,
     MacroDefinition,
     Function,
     Parm,
     Field,
     Record,
-    PointerParamIntent,
 )
+
+from _codegen.control import PointerParamIntent
 
 __author__ = "AMD_AUTHOR"
 
@@ -118,7 +131,10 @@ if HIP_PYTHON_VERBOSE:
 
 CYTHON_EXT_MODULES = []
 
-HIP_VERSION_NAME = None
+HIP_VERSION_MAJOR = 0
+HIP_VERSION_MINOR = 0
+HIP_VERSION_PATCH = 0
+HIP_VERSION_GITHASH = ""
 
 def generate_hiprtc_package_files():
     global HIP_PYTHON_GENERATE
@@ -181,7 +197,7 @@ def generate_hiprtc_package_files():
         )
         if (parm.parent.name, parm.name) in list_of_str_parms:
             return "hip._util.types.ListOfBytes"
-        return "hip._util.types.DataHandle"
+        return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
     generator = CythonPackageGenerator(
         "hiprtc",
@@ -205,9 +221,13 @@ def generate_hiprtc_package_files():
 
 def generate_hip_package_files():
     global HIP_PYTHON_GENERATE
-    global HIP_VERSION_NAME
     global GENERATOR_ARGS
     global CYTHON_EXT_MODULES
+
+    global HIP_VERSION_MAJOR
+    global HIP_VERSION_MINOR
+    global HIP_VERSION_PATCH
+    global HIP_VERSION_GITHASH 
 
     # hip
     hip_str_macros = (
@@ -416,21 +436,6 @@ def generate_hip_package_files():
                 HIP_VERSION_PATCH = int(last_token)
             elif node.name == "HIP_VERSION_GITHASH":
                 HIP_VERSION_GITHASH = last_token.strip('"')
-    HIP_VERSION_NAME = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}-{HIP_VERSION_GITHASH}"
-    HIP_VERSION= (HIP_VERSION_MAJOR * 10000000 + HIP_VERSION_MINOR * 100000 + HIP_VERSION_PATCH)
-
-    with open("hip/__init__.py","w") as f:
-        f.write(textwrap.dedent(f"""\
-            from ._version import *
-            HIP_VERSION = {HIP_VERSION}
-            HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
-            HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
-
-            from . import _util
-            from . import hip
-            from . import hiprtc
-            from . import hipblas""")
-        )
 
     CYTHON_EXT_MODULES += [
         ("hip.chip", ["./hip/chip.pyx"]),
@@ -449,8 +454,8 @@ def generate_hipblas_package_files():
             return True
         if not isinstance(node, MacroDefinition):
             if node.name[0:7] in ("hipblas,HIPBLAS"):
-                if "Batched" in node.name:
-                    return False
+                #if "Batched" in node.name:
+                #    return False
                 return True
         elif node.name in (
             "hipblasVersionMajor",
@@ -506,6 +511,12 @@ def generate_hipblas_package_files():
             ):
                 return 0
             elif len(node.name) == 1 and node.name.lower() in "abcdefghijklmnopqrstuvwxyz":
+                categories = list(node.categorized_type_layer_kinds())
+                if categories in ( 
+                    [TypeCategory.ARRAY,TypeCategory.POINTER,TypeCategory.BASIC],
+                    [TypeCategory.ARRAY,TypeCategory.POINTER,TypeCategory.VOID],
+                ):
+                    return 2
                 return 1
             elif len(node.name) == 1 and node.name in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
                 return 2
@@ -539,6 +550,85 @@ def generate_hipblas_package_files():
         ("hip.hipblas", ["./hip/hipblas.pyx"]),
     ]
 
+# rccl
+def generate_rccl_package_files():
+    global HIP_PYTHON_GENERATE
+    global GENERATOR_ARGS
+    global CYTHON_EXT_MODULES
+
+    def rccl_node_filter(node: Node):
+        if not isinstance(node, MacroDefinition):
+            if ( node.name.startswith("nccl")
+                 or node.name.startswith("pnccl") ):
+                return True
+        elif node.name in (
+            "NCCL_MAJOR",
+            "NCCL_MINOR",
+            "NCCL_PATCH",
+            "NCCL_SUFFIX",
+            "NCCL_VERSION_CODE",
+            "NCCL_VERSION",
+            "RCCL_BFLOAT16",
+            "RCCL_GATHER_SCATTER",
+            "RCCL_ALLTOALLV",
+            "RCCL_MULTIRANKPERGPU",
+            "NCCL_UNIQUE_ID_BYTES",
+        ):
+            return True
+        return False
+
+    def rccl_ptr_parm_intent(node: Parm):
+        """Flags pointer parameters that are actually return values
+        that are passed as C-style reference, i.e. `<type>* <param>`.
+        """
+        if node.is_pointer_to_record(degree=2):
+            return PointerParamIntent.OUT
+        if node.is_pointer_to_basic_type(degree=1):
+            return PointerParamIntent.OUT
+        return PointerParamIntent.IN
+
+    def rccl_ptr_rank(node: Node):
+        """Actual rank of the variables underlying pointer indirections.
+        
+        Most of the parameter names follow LAPACK convention.
+        """
+        if isinstance(node, Parm):
+            if node.is_pointer_to_record(degree=1):
+                return 0
+            if node.is_pointer_to_record(degree=2):
+                return 0
+            elif node.is_pointer_to_basic_type(degree=1):
+                return 0
+        elif isinstance(node, Field):
+            pass  # nothing to do
+        return 1
+
+    generator = CythonPackageGenerator(
+        "rccl",
+        rocm_inc,
+        "rccl/rccl.h",
+        runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
+        dll="librccl.so",
+        node_filter=rccl_node_filter,
+        ptr_parm_intent=rccl_ptr_parm_intent,
+        ptr_rank=rccl_ptr_rank,
+        cflags=GENERATOR_ARGS,
+    )
+    generator.c_interface_decl_preamble += textwrap.dedent("""\
+    from .chip cimport hipStream_t
+    """)
+    generator.python_interface_decl_preamble += textwrap.dedent("""\
+    #ctypedef int16_t __int16_t
+    #ctypedef uint16_t __uint16_t
+    from .hip cimport ihipStream_t
+    """)
+    if HIP_PYTHON_GENERATE:
+        generator.write_package_files(output_dir="hip")
+    CYTHON_EXT_MODULES += [
+        ("hip.crccl", ["./hip/crccl.pyx"]),
+        ("hip.rccl", ["./hip/rccl.pyx"]),
+    ]
+
 AVAILABLE_GENERATORS = dict(
   hip=generate_hip_package_files,
   hiprtc=generate_hiprtc_package_files,
@@ -555,6 +645,24 @@ for entry in HIP_PYTHON_LIBS.split(","):
         else:
             warnings.warn("default",msg)
     AVAILABLE_GENERATORS[libname]()
+
+HIP_VERSION_NAME = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}-{HIP_VERSION_GITHASH}"
+HIP_VERSION= (HIP_VERSION_MAJOR * 10000000 + HIP_VERSION_MINOR * 100000 + HIP_VERSION_PATCH)
+
+with open("hip/__init__.py","w") as f:
+    init_content = textwrap.dedent(f"""\
+        from ._version import *
+        HIP_VERSION = {HIP_VERSION}
+        HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
+        HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
+
+        from . import _util
+        """)
+    
+    for pkg_name in AVAILABLE_GENERATORS.keys():
+        init_content += f"from . import {pkg_name}\n"
+    
+    f.write(init_content)
 
 # Build Cython packages
 if HIP_PYTHON_BUILD:
@@ -599,10 +707,10 @@ if HIP_PYTHON_BUILD:
             ),
         )
 
-    scm_version_opts = { "write_to": "hip/_version.py", }
-    if HIP_VERSION_NAME != None:
-        scm_version_opts["local_scheme"] = lambda v: f"+{HIP_VERSION_NAME.replace('-','.')}"
     setup(
         ext_modules=ext_modules,
-        use_scm_version = scm_version_opts,
+        use_scm_version = { 
+            "write_to": "hip/_version.py",
+            "local_scheme": lambda v: f"+{HIP_VERSION_NAME.replace('-','.')}",
+        }
     )

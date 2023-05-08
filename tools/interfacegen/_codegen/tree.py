@@ -385,7 +385,6 @@ class Typed:
         """
         from clang.cindex import TypeKind
 
-        TypeCategory = cparser.TypeHandler.TypeCategory
         rank_counted: int = 0
         for kind in self._type_handler.clang_type_layer_kinds(canonical=True):
             if constant_array and kind == TypeKind.CONSTANTARRAY:
@@ -415,18 +414,24 @@ class Typed:
         """
         return self.get_rank(constant_array,incomplete_array,pointer) == rank
             
-    def get_pointer_degree(self) -> int:
+    def get_pointer_degree(self,incomplete_array=False) -> int:
         """Returns number of outer type layers which are of TypeKind.POINTER.
+        Args:
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
         """
-        return self.get_rank(constant_array=False,incomplete_array=False,pointer=True)
+        return self.get_rank(constant_array=False,
+                             incomplete_array=incomplete_array,
+                             pointer=True)
 
     def _is_pointer_to_kind(self,
                             type_kind,
-                            degree: int = 1):
+                            degree = 1,
+                            incomplete_array: bool=False):
         """If this is a pointerof the given ``degree`` to the given type kind.
         
         Args:
             degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
 
         Note:
             Does not check for any const modifiers.
@@ -437,21 +442,34 @@ class Typed:
             assert isinstance(type_kind,clang.cindex.TypeKind)
             type_kinds = (type_kind,)
 
-        if degree >= 0:
-            if list(self._type_handler.clang_type_layer_kinds(canonical=True))[-1] in type_kinds:
-                return self.get_pointer_degree() == degree
-        else:
-            if list(self._type_handler.clang_type_layer_kinds(canonical=True))[-1] in type_kinds:
-                return self.get_pointer_degree() >= abs(degree)
+        layers = list(self._type_handler.clang_type_layer_kinds(canonical=True))
+        found_pointer_degree = self.get_pointer_degree(incomplete_array)
+        if layers[found_pointer_degree] in type_kinds:
+            if isinstance(degree,int):
+                degrees = (degree,)
+            elif not isinstance(degree,tuple):
+                degrees = degree
+            else:
+                raise RuntimeError("degree: expected int or tuple of int")
+            for d in degrees:
+                if d >= 0:
+                    if found_pointer_degree == d:
+                        return True
+                else:
+                    if found_pointer_degree >= abs(d):
+                        return True
+        return False
         
     def _is_pointer_to_category(self,
                                type_category,
-                               degree: int = 1,
+                               degree = 1,
+                               incomplete_array: bool=False,
                                subdivide_categories:bool = False):
         """If this is a pointerof the given ``degree`` to the given type category.
 
         Args:
             degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
 
         Note:
             Does not check for any const modifiers.
@@ -462,12 +480,25 @@ class Typed:
             assert isinstance(type_category,self._type_handler.TypeCategory)
             type_categories = (type_category,)
 
-        if degree >= 0:
-            if list(self._type_handler.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))[-1] in type_categories:
-                return self.get_pointer_degree() == degree
-        else:
-            if list(self._type_handler.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))[-1] in type_categories:
-                return self.get_pointer_degree() >= abs(degree)
+        layers = list(self._type_handler.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))
+        found_pointer_degree = self.get_pointer_degree(incomplete_array)
+        if layers[found_pointer_degree] in type_categories:
+            if isinstance(degree,int):
+                degrees = (degree,)
+            elif not isinstance(degree,tuple):
+                degrees = degree
+            else:
+                raise RuntimeError("degree: expected int or tuple of int")
+            
+            found_pointer_degree = self.get_pointer_degree(incomplete_array)
+            for d in degrees:
+                if d >= 0:
+                    if found_pointer_degree == d:
+                        return True
+                else:
+                    if found_pointer_degree >= abs(d):
+                        return True
+        return False
 
     @property
     def is_void(self):
@@ -479,59 +510,101 @@ class Typed:
             == TypeKind.VOID
         )
 
-    def is_pointer_to_void(self,degree: int = 1):
+    def is_pointer_to_void(self,degree: int = 1,
+                           incomplete_array: bool=False,):
         """If this is a record (struct, union) pointer of the given degree.
+        
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.VOID,degree)
+        return self._is_pointer_to_kind(TypeKind.VOID,degree,
+                                        incomplete_array=incomplete_array)
     
-    def is_pointer_to_char(self,degree: int = 1):
+    def is_pointer_to_char(self,degree: int = 1,
+                           incomplete_array: bool=False,):
         """If this is a record (struct, union) pointer of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.CHAR_S,degree)
+        return self._is_pointer_to_kind(TypeKind.CHAR_S,degree,
+                                        incomplete_array=incomplete_array)
     
-    def is_pointer_to_basic_type(self,degree: int = 1):
+    def is_pointer_to_basic_type(self,degree: int = 1,
+                                 incomplete_array: bool=False,):
         """If this is a record (struct, union) pointer of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         TypeCategory = cparser.TypeHandler.TypeCategory
 
-        return self._is_pointer_to_category(TypeCategory.BASIC,degree)
+        return self._is_pointer_to_category(TypeCategory.BASIC,degree,
+                                            incomplete_array=incomplete_array)
     
-    def is_pointer_to_record(self,degree: int = 1):
+    def is_pointer_to_record(self,degree: int = 1,
+                                 incomplete_array: bool=False,):
         """If this is a void pointer of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.RECORD,degree)
+        return self._is_pointer_to_kind(TypeKind.RECORD,degree,
+                                        incomplete_array=incomplete_array)
     
-    def is_pointer_to_enum(self,degree: int = 1):
+    def is_pointer_to_enum(self,degree: int = 1,
+                                incomplete_array: bool=False,):
         """If this is a enum pointer of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.ENUM,degree)
+        return self._is_pointer_to_kind(TypeKind.ENUM,degree,
+                                        incomplete_array=incomplete_array)
 
-    def is_pointer_to_function_proto(self,degree: int = 1):
+    def is_pointer_to_function_proto(self,degree: int = 1,
+                                     incomplete_array: bool=False,):
         """If this is a void pointer of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.FUNCTIONPROTO,degree)
+        return self._is_pointer_to_kind(TypeKind.FUNCTIONPROTO,degree,
+                                        incomplete_array=incomplete_array)
 
     @property
     def is_any_pointer(self):
@@ -869,11 +942,6 @@ class FunctionPointer(Type):  # TODO handle result type
             if isinstance(child, Parm):
                 yield child
 
-    def parm_types(self, renamer: callable = lambda name: name, prefer_canonical: bool = False):
-        for parm in self.parms:
-            assert isinstance(parm, Parm)
-            yield parm.typename(renamer, prefer_canonical)
-
     def global_parm_types(self, sep=None, renamer: callable = lambda name: name, prefer_canonical: bool = False):
         for parm in self.parms:
             assert isinstance(parm, Parm)
@@ -956,11 +1024,6 @@ class Function(Node, Typed, *__FunctionMixin):
         for parm in self.parms:
             assert isinstance(parm, Parm)
             yield renamer(parm.name)
-    
-    def parm_types(self, renamer: callable = lambda name: name, prefer_canonical: bool = False):
-        for parm in self.parms:
-            assert isinstance(parm, Parm)
-            yield parm.typename(renamer, prefer_canonical)
 
     def global_parm_types(self, sep=None, renamer: callable = lambda name: name, prefer_canonical: bool = False):
         for parm in self.parms:
