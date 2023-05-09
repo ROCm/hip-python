@@ -544,6 +544,9 @@ cdef class rocrand_generator_base_type:
         if isinstance(item,int):
             if item < 0 or item >= len(properties):
                 raise IndexError()
+
+
+                
             return getattr(self,properties[item])
         raise ValueError("'item' type must be 'int'")
 
@@ -584,569 +587,6 @@ class rocrand_rng_type(enum.IntEnum):
     def ctypes_type():
         """The type of the enum constants as ctypes type."""
         return ctypes.c_uint 
-
-
-@cython.embedsignature(True)
-def rocrand_create_generator(object rng_type):
-    """\brief Creates a new random number generator.
-    Creates a new pseudo random number generator of type \p rng_type
-    and returns it in \p generator.
-    Values for \p rng_type are:
-    - ROCRAND_RNG_PSEUDO_XORWOW
-    - ROCRAND_RNG_PSEUDO_MRG31K3P
-    - ROCRAND_RNG_PSEUDO_MRG32K3A
-    - ROCRAND_RNG_PSEUDO_MTGP32
-    - ROCRAND_RNG_PSEUDO_PHILOX4_32_10
-    - ROCRAND_RNG_PSEUDO_LFSR113
-    - ROCRAND_RNG_QUASI_SOBOL32
-    - ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL32
-    - ROCRAND_RNG_QUASI_SOBOL64
-    - ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL64
-    \param generator - Pointer to generator
-    \param rng_type - Type of generator to create
-    \return
-    - ROCRAND_STATUS_ALLOCATION_FAILED, if memory could not be allocated \n
-    - ROCRAND_STATUS_VERSION_MISMATCH if the header file version does not match the
-    dynamically linked library version \n
-    - ROCRAND_STATUS_TYPE_ERROR if the value for \p rng_type is invalid \n
-    - ROCRAND_STATUS_SUCCESS if generator was created successfully \n
-    """
-    generator = rocrand_generator_base_type.from_ptr(NULL)
-    if not isinstance(rng_type,rocrand_rng_type):
-        raise TypeError("argument 'rng_type' must be of type 'rocrand_rng_type'")
-    _rocrand_create_generator__retval = rocrand_status(chiprand.rocrand_create_generator(&generator._ptr,rng_type.value))    # fully specified
-    return (_rocrand_create_generator__retval,generator)
-
-
-@cython.embedsignature(True)
-def rocrand_destroy_generator(object generator):
-    """\brief Destroys random number generator.
-    Destroys random number generator and frees related memory.
-    \param generator - Generator to be destroyed
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_SUCCESS if generator was destroyed successfully \n
-    """
-    _rocrand_destroy_generator__retval = rocrand_status(chiprand.rocrand_destroy_generator(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr))    # fully specified
-    return (_rocrand_destroy_generator__retval,)
-
-
-@cython.embedsignature(True)
-def rocrand_generate(object generator, unsigned long n):
-    """\brief Generates uniformly distributed 32-bit unsigned integers.
-    Generates \p n uniformly distributed 32-bit unsigned integers and
-    saves them to \p output_data.
-    Generated numbers are between \p 0 and \p 2^32, including \p 0 and
-    excluding \p 2^32.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of 32-bit unsigned integers to generate
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef unsigned int output_data
-    _rocrand_generate__retval = rocrand_status(chiprand.rocrand_generate(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_rocrand_generate__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_long_long(object generator, unsigned long n):
-    """\brief Generates uniformly distributed 64-bit unsigned integers.
-    Generates \p n uniformly distributed 64-bit unsigned integers and
-    saves them to \p output_data.
-    Generated numbers are between \p 0 and \p 2^64, including \p 0 and
-    excluding \p 2^64.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of 64-bit unsigned integers to generate
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_TYPE_ERROR if the generator can't natively generate 64-bit random numbers \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef unsigned long long output_data
-    _rocrand_generate_long_long__retval = rocrand_status(chiprand.rocrand_generate_long_long(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_rocrand_generate_long_long__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_char(object generator, unsigned long n):
-    """\brief Generates uniformly distributed 8-bit unsigned integers.
-    Generates \p n uniformly distributed 8-bit unsigned integers and
-    saves them to \p output_data.
-    Generated numbers are between \p 0 and \p 2^8, including \p 0 and
-    excluding \p 2^8.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of 8-bit unsigned integers to generate
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef unsigned char output_data
-    _rocrand_generate_char__retval = rocrand_status(chiprand.rocrand_generate_char(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_rocrand_generate_char__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_short(object generator, unsigned long n):
-    """\brief Generates uniformly distributed 16-bit unsigned integers.
-    Generates \p n uniformly distributed 16-bit unsigned integers and
-    saves them to \p output_data.
-    Generated numbers are between \p 0 and \p 2^16, including \p 0 and
-    excluding \p 2^16.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of 16-bit unsigned integers to generate
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef unsigned short output_data
-    _rocrand_generate_short__retval = rocrand_status(chiprand.rocrand_generate_short(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_rocrand_generate_short__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_uniform(object generator, unsigned long n):
-    """\brief Generates uniformly distributed \p float values.
-    Generates \p n uniformly distributed 32-bit floating-point values
-    and saves them to \p output_data.
-    Generated numbers are between \p 0.0f and \p 1.0f, excluding \p 0.0f and
-    including \p 1.0f.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of <tt>float</tt>s to generate
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef float output_data
-    _rocrand_generate_uniform__retval = rocrand_status(chiprand.rocrand_generate_uniform(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_rocrand_generate_uniform__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_uniform_double(object generator, unsigned long n):
-    """\brief Generates uniformly distributed double-precision floating-point values.
-    Generates \p n uniformly distributed 64-bit double-precision floating-point
-    values and saves them to \p output_data.
-    Generated numbers are between \p 0.0 and \p 1.0, excluding \p 0.0 and
-    including \p 1.0.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of <tt>double</tt>s to generate
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef double output_data
-    _rocrand_generate_uniform_double__retval = rocrand_status(chiprand.rocrand_generate_uniform_double(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_rocrand_generate_uniform_double__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_uniform_half(object generator, unsigned long n):
-    """\brief Generates uniformly distributed half-precision floating-point values.
-    Generates \p n uniformly distributed 16-bit half-precision floating-point
-    values and saves them to \p output_data.
-    Generated numbers are between \p 0.0 and \p 1.0, excluding \p 0.0 and
-    including \p 1.0.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of <tt>half</tt>s to generate
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef int output_data
-    _rocrand_generate_uniform_half__retval = rocrand_status(chiprand.rocrand_generate_uniform_half(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_rocrand_generate_uniform_half__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_normal(object generator, unsigned long n, float mean, float stddev):
-    """\brief Generates normally distributed \p float values.
-    Generates \p n normally distributed distributed 32-bit floating-point
-    values and saves them to \p output_data.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of <tt>float</tt>s to generate
-    \param mean - Mean value of normal distribution
-    \param stddev - Standard deviation value of normal distribution
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef float output_data
-    _rocrand_generate_normal__retval = rocrand_status(chiprand.rocrand_generate_normal(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_rocrand_generate_normal__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_normal_double(object generator, unsigned long n, double mean, double stddev):
-    """\brief Generates normally distributed \p double values.
-    Generates \p n normally distributed 64-bit double-precision floating-point
-    numbers and saves them to \p output_data.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of <tt>double</tt>s to generate
-    \param mean - Mean value of normal distribution
-    \param stddev - Standard deviation value of normal distribution
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef double output_data
-    _rocrand_generate_normal_double__retval = rocrand_status(chiprand.rocrand_generate_normal_double(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_rocrand_generate_normal_double__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_normal_half(object generator, unsigned long n, int mean, int stddev):
-    """\brief Generates normally distributed \p half values.
-    Generates \p n normally distributed 16-bit half-precision floating-point
-    numbers and saves them to \p output_data.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of <tt>half</tt>s to generate
-    \param mean - Mean value of normal distribution
-    \param stddev - Standard deviation value of normal distribution
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef int output_data
-    _rocrand_generate_normal_half__retval = rocrand_status(chiprand.rocrand_generate_normal_half(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_rocrand_generate_normal_half__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_log_normal(object generator, unsigned long n, float mean, float stddev):
-    """\brief Generates log-normally distributed \p float values.
-    Generates \p n log-normally distributed 32-bit floating-point values
-    and saves them to \p output_data.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of <tt>float</tt>s to generate
-    \param mean - Mean value of log normal distribution
-    \param stddev - Standard deviation value of log normal distribution
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef float output_data
-    _rocrand_generate_log_normal__retval = rocrand_status(chiprand.rocrand_generate_log_normal(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_rocrand_generate_log_normal__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_log_normal_double(object generator, unsigned long n, double mean, double stddev):
-    """\brief Generates log-normally distributed \p double values.
-    Generates \p n log-normally distributed 64-bit double-precision floating-point
-    values and saves them to \p output_data.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of <tt>double</tt>s to generate
-    \param mean - Mean value of log normal distribution
-    \param stddev - Standard deviation value of log normal distribution
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef double output_data
-    _rocrand_generate_log_normal_double__retval = rocrand_status(chiprand.rocrand_generate_log_normal_double(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_rocrand_generate_log_normal_double__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_log_normal_half(object generator, unsigned long n, int mean, int stddev):
-    """\brief Generates log-normally distributed \p half values.
-    Generates \p n log-normally distributed 16-bit half-precision floating-point
-    values and saves them to \p output_data.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of <tt>half</tt>s to generate
-    \param mean - Mean value of log normal distribution
-    \param stddev - Standard deviation value of log normal distribution
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef int output_data
-    _rocrand_generate_log_normal_half__retval = rocrand_status(chiprand.rocrand_generate_log_normal_half(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_rocrand_generate_log_normal_half__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_generate_poisson(object generator, unsigned long n, double lambda_):
-    """\brief Generates Poisson-distributed 32-bit unsigned integers.
-    Generates \p n Poisson-distributed 32-bit unsigned integers and
-    saves them to \p output_data.
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of 32-bit unsigned integers to generate
-    \param lambda - lambda for the Poisson distribution
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_OUT_OF_RANGE if lambda is non-positive \n
-    - ROCRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension
-    of used quasi-random generator \n
-    - ROCRAND_STATUS_SUCCESS if random numbers were successfully generated \n
-    """
-    cdef unsigned int output_data
-    _rocrand_generate_poisson__retval = rocrand_status(chiprand.rocrand_generate_poisson(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,lambda_))    # fully specified
-    return (_rocrand_generate_poisson__retval,output_data)
-
-
-@cython.embedsignature(True)
-def rocrand_initialize_generator(object generator):
-    """\brief Initializes the generator's state on GPU or host.
-    Initializes the generator's state on GPU or host. User it not
-    required to call this function before using a generator.
-    If rocrand_initialize() was not called for a generator, it will be
-    automatically called by functions which generates random numbers like
-    rocrand_generate(), rocrand_generate_uniform() etc.
-    \param generator - Generator to initialize
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_LAUNCH_FAILURE if a HIP kernel launch failed \n
-    - ROCRAND_STATUS_SUCCESS if the seeds were generated successfully \n
-    """
-    _rocrand_initialize_generator__retval = rocrand_status(chiprand.rocrand_initialize_generator(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr))    # fully specified
-    return (_rocrand_initialize_generator__retval,)
-
-
-@cython.embedsignature(True)
-def rocrand_set_stream(object generator, object stream):
-    """\brief Sets the current stream for kernel launches.
-    Sets the current stream for all kernel launches of the generator.
-    All functions will use this stream.
-    \param generator - Generator to modify
-    \param stream - Stream to use or NULL for default stream
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_SUCCESS if stream was set successfully \n
-    """
-    _rocrand_set_stream__retval = rocrand_status(chiprand.rocrand_set_stream(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    return (_rocrand_set_stream__retval,)
-
-
-@cython.embedsignature(True)
-def rocrand_set_seed(object generator, unsigned long long seed):
-    """\brief Sets the seed of a pseudo-random number generator.
-    Sets the seed of the pseudo-random number generator.
-    - This operation resets the generator's internal state.
-    - This operation does not change the generator's offset.
-    For an MRG32K3a or MRG31K3p generator the seed value can't be zero. If \p seed is
-    equal to zero and generator's type is ROCRAND_RNG_PSEUDO_MRG32K3A or ROCRAND_RNG_PSEUDO_MRG31K3P,
-    value \p 12345 is used as seed instead.
-    For a LFSR113 generator seed values must be larger than 1, 7, 15,
-    127. The \p seed upper and lower 32 bits used as first and
-    second seed value. If those values smaller than 2 and/or 8, those
-    are increased with 1 and/or 7.
-    \param generator - Pseudo-random number generator
-    \param seed - New seed value
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_TYPE_ERROR if the generator is a quasi-random number generator \n
-    - ROCRAND_STATUS_SUCCESS if seed was set successfully \n
-    """
-    _rocrand_set_seed__retval = rocrand_status(chiprand.rocrand_set_seed(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,seed))    # fully specified
-    return (_rocrand_set_seed__retval,)
-
-
-@cython.embedsignature(True)
-def rocrand_set_seed_uint4(object generator, object seed):
-    """\brief Sets the seeds of a pseudo-random number generator.
-    Sets the seed of the pseudo-random number generator. Currently only for LFSR113
-    - This operation resets the generator's internal state.
-    - This operation does not change the generator's offset.
-    Only usable for LFSR113.
-    For a LFSR113 generator seed values must be bigger than 1, 7, 15,
-    127. If those values smaller, than the requested minimum values [2, 8, 16, 128], then
-    it will be increased with the minimum values minus 1 [1, 7, 15, 127].
-    \param generator - Pseudo-random number generator
-    \param seed - New seed value
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_TYPE_ERROR if the generator is a quasi-random number generator \n
-    - ROCRAND_STATUS_SUCCESS if seed was set successfully \n
-    """
-    _rocrand_set_seed_uint4__retval = rocrand_status(chiprand.rocrand_set_seed_uint4(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,
-        uint4.from_pyobj(seed)._ptr[0]))    # fully specified
-    return (_rocrand_set_seed_uint4__retval,)
-
-
-@cython.embedsignature(True)
-def rocrand_set_offset(object generator, unsigned long long offset):
-    """\brief Sets the offset of a random number generator.
-    Sets the absolute offset of the random number generator.
-    - This operation resets the generator's internal state.
-    - This operation does not change the generator's seed.
-    Absolute offset cannot be set if generator's type is ROCRAND_RNG_PSEUDO_MTGP32 or
-    ROCRAND_RNG_PSEUDO_LFSR113.
-    \param generator - Random number generator
-    \param offset - New absolute offset
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_SUCCESS if offset was successfully set \n
-    - ROCRAND_STATUS_TYPE_ERROR if generator's type is ROCRAND_RNG_PSEUDO_MTGP32 or
-    ROCRAND_RNG_PSEUDO_LFSR113
-    """
-    _rocrand_set_offset__retval = rocrand_status(chiprand.rocrand_set_offset(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,offset))    # fully specified
-    return (_rocrand_set_offset__retval,)
-
-
-@cython.embedsignature(True)
-def rocrand_set_quasi_random_generator_dimensions(object generator, unsigned int dimensions):
-    """\brief Set the number of dimensions of a quasi-random number generator.
-    Set the number of dimensions of a quasi-random number generator.
-    Supported values of \p dimensions are 1 to 20000.
-    - This operation resets the generator's internal state.
-    - This operation does not change the generator's offset.
-    \param generator - Quasi-random number generator
-    \param dimensions - Number of dimensions
-    \return
-    - ROCRAND_STATUS_NOT_CREATED if the generator wasn't created \n
-    - ROCRAND_STATUS_TYPE_ERROR if the generator is not a quasi-random number generator \n
-    - ROCRAND_STATUS_OUT_OF_RANGE if \p dimensions is out of range \n
-    - ROCRAND_STATUS_SUCCESS if the number of dimensions was set successfully \n
-    """
-    _rocrand_set_quasi_random_generator_dimensions__retval = rocrand_status(chiprand.rocrand_set_quasi_random_generator_dimensions(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,dimensions))    # fully specified
-    return (_rocrand_set_quasi_random_generator_dimensions__retval,)
-
-
-@cython.embedsignature(True)
-def rocrand_get_version():
-    """\brief Returns the version number of the library.
-    Returns in \p version the version number of the dynamically linked
-    rocRAND library.
-    \param version - Version of the library
-    \return
-    - ROCRAND_STATUS_OUT_OF_RANGE if \p version is NULL \n
-    - ROCRAND_STATUS_SUCCESS if the version number was successfully returned \n
-    """
-    cdef int version
-    _rocrand_get_version__retval = rocrand_status(chiprand.rocrand_get_version(&version))    # fully specified
-    return (_rocrand_get_version__retval,version)
-
-
-@cython.embedsignature(True)
-def rocrand_create_poisson_distribution(double lambda_):
-    """\brief Construct the histogram for a Poisson distribution.
-    Construct the histogram for the Poisson distribution with lambda \p lambda.
-    \param lambda - lambda for the Poisson distribution
-    \param discrete_distribution - pointer to the histogram in device memory
-    \return
-    - ROCRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated \n
-    - ROCRAND_STATUS_OUT_OF_RANGE if \p discrete_distribution pointer was null \n
-    - ROCRAND_STATUS_OUT_OF_RANGE if lambda is non-positive \n
-    - ROCRAND_STATUS_SUCCESS if the histogram was constructed successfully \n
-    """
-    discrete_distribution = rocrand_discrete_distribution_st.from_ptr(NULL)
-    _rocrand_create_poisson_distribution__retval = rocrand_status(chiprand.rocrand_create_poisson_distribution(lambda_,&discrete_distribution._ptr))    # fully specified
-    return (_rocrand_create_poisson_distribution__retval,discrete_distribution)
-
-
-@cython.embedsignature(True)
-def rocrand_create_discrete_distribution(unsigned int size, unsigned int offset):
-    """\brief Construct the histogram for a custom discrete distribution.
-    Construct the histogram for the discrete distribution of \p size
-    32-bit unsigned integers from the range [\p offset, \p offset + \p size)
-    using \p probabilities as probabilities.
-    \param probabilities - probabilities of the the distribution in host memory
-    \param size - size of \p probabilities
-    \param offset - offset of values
-    \param discrete_distribution - pointer to the histogram in device memory
-    \return
-    - ROCRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated \n
-    - ROCRAND_STATUS_OUT_OF_RANGE if \p discrete_distribution pointer was null \n
-    - ROCRAND_STATUS_OUT_OF_RANGE if \p size was zero \n
-    - ROCRAND_STATUS_SUCCESS if the histogram was constructed successfully \n
-    """
-    cdef const double probabilities
-    discrete_distribution = rocrand_discrete_distribution_st.from_ptr(NULL)
-    _rocrand_create_discrete_distribution__retval = rocrand_status(chiprand.rocrand_create_discrete_distribution(&probabilities,size,offset,&discrete_distribution._ptr))    # fully specified
-    return (_rocrand_create_discrete_distribution__retval,probabilities,discrete_distribution)
-
-
-@cython.embedsignature(True)
-def rocrand_destroy_discrete_distribution(object discrete_distribution):
-    """\brief Destroy the histogram array for a discrete distribution.
-    Destroy the histogram array for a discrete distribution created by
-    rocrand_create_poisson_distribution.
-    \param discrete_distribution - pointer to the histogram in device memory
-    \return
-    - ROCRAND_STATUS_OUT_OF_RANGE if \p discrete_distribution was null \n
-    - ROCRAND_STATUS_SUCCESS if the histogram was destroyed successfully \n
-    """
-    _rocrand_destroy_discrete_distribution__retval = rocrand_status(chiprand.rocrand_destroy_discrete_distribution(
-        rocrand_discrete_distribution_st.from_pyobj(discrete_distribution)._ptr))    # fully specified
-    return (_rocrand_destroy_discrete_distribution__retval,)
 
 
 hiprandGenerator_t = rocrand_generator_base_type
@@ -1279,7 +719,7 @@ def hiprandDestroyGenerator(object generator):
 
 
 @cython.embedsignature(True)
-def hiprandGenerate(object generator, unsigned long n):
+def hiprandGenerate(object generator, object output_data, unsigned long n):
     """\brief Generates uniformly distributed 32-bit unsigned integers.
     Generates \p n uniformly distributed 32-bit unsigned integers and
     saves them to \p output_data.
@@ -1293,14 +733,14 @@ def hiprandGenerate(object generator, unsigned long n):
     - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef unsigned int output_data
     _hiprandGenerate__retval = hiprandStatus(chiprand.hiprandGenerate(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_hiprandGenerate__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <unsigned int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+    return (_hiprandGenerate__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateChar(object generator, unsigned long n):
+def hiprandGenerateChar(object generator, object output_data, unsigned long n):
     """\brief Generates uniformly distributed 8-bit unsigned integers.
     Generates \p n uniformly distributed 8-bit unsigned integers and
     saves them to \p output_data.
@@ -1314,14 +754,14 @@ def hiprandGenerateChar(object generator, unsigned long n):
     - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef unsigned char output_data
     _hiprandGenerateChar__retval = hiprandStatus(chiprand.hiprandGenerateChar(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_hiprandGenerateChar__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <unsigned char *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+    return (_hiprandGenerateChar__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateShort(object generator, unsigned long n):
+def hiprandGenerateShort(object generator, object output_data, unsigned long n):
     """\brief Generates uniformly distributed 16-bit unsigned integers.
     Generates \p n uniformly distributed 16-bit unsigned integers and
     saves them to \p output_data.
@@ -1335,14 +775,14 @@ def hiprandGenerateShort(object generator, unsigned long n):
     - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef unsigned short output_data
     _hiprandGenerateShort__retval = hiprandStatus(chiprand.hiprandGenerateShort(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_hiprandGenerateShort__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <unsigned short *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+    return (_hiprandGenerateShort__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateUniform(object generator, unsigned long n):
+def hiprandGenerateUniform(object generator, object output_data, unsigned long n):
     """\brief Generates uniformly distributed floats.
     Generates \p n uniformly distributed 32-bit floating-point values
     and saves them to \p output_data.
@@ -1358,14 +798,14 @@ def hiprandGenerateUniform(object generator, unsigned long n):
     of used quasi-random generator \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef float output_data
     _hiprandGenerateUniform__retval = hiprandStatus(chiprand.hiprandGenerateUniform(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_hiprandGenerateUniform__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <float *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+    return (_hiprandGenerateUniform__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateUniformDouble(object generator, unsigned long n):
+def hiprandGenerateUniformDouble(object generator, object output_data, unsigned long n):
     """\brief Generates uniformly distributed double-precision floating-point values.
     Generates \p n uniformly distributed 64-bit double-precision floating-point
     values and saves them to \p output_data.
@@ -1385,14 +825,14 @@ def hiprandGenerateUniformDouble(object generator, unsigned long n):
     of used quasi-random generator \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef double output_data
     _hiprandGenerateUniformDouble__retval = hiprandStatus(chiprand.hiprandGenerateUniformDouble(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_hiprandGenerateUniformDouble__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <double *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+    return (_hiprandGenerateUniformDouble__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateUniformHalf(object generator, unsigned long n):
+def hiprandGenerateUniformHalf(object generator, object output_data, unsigned long n):
     """\brief Generates uniformly distributed half-precision floating-point values.
     Generates \p n uniformly distributed 16-bit half-precision floating-point
     values and saves them to \p output_data.
@@ -1408,14 +848,14 @@ def hiprandGenerateUniformHalf(object generator, unsigned long n):
     of used quasi-random generator \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef int output_data
     _hiprandGenerateUniformHalf__retval = hiprandStatus(chiprand.hiprandGenerateUniformHalf(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n))    # fully specified
-    return (_hiprandGenerateUniformHalf__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n))    # fully specified
+    return (_hiprandGenerateUniformHalf__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateNormal(object generator, unsigned long n, float mean, float stddev):
+def hiprandGenerateNormal(object generator, object output_data, unsigned long n, float mean, float stddev):
     """\brief Generates normally distributed floats.
     Generates \p n normally distributed 32-bit floating-point
     values and saves them to \p output_data.
@@ -1432,14 +872,14 @@ def hiprandGenerateNormal(object generator, unsigned long n, float mean, float s
     of used quasi-random generator \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef float output_data
     _hiprandGenerateNormal__retval = hiprandStatus(chiprand.hiprandGenerateNormal(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_hiprandGenerateNormal__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <float *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+    return (_hiprandGenerateNormal__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateNormalDouble(object generator, unsigned long n, double mean, double stddev):
+def hiprandGenerateNormalDouble(object generator, object output_data, unsigned long n, double mean, double stddev):
     """\brief Generates normally distributed doubles.
     Generates \p n normally distributed 64-bit double-precision floating-point
     numbers and saves them to \p output_data.
@@ -1456,14 +896,14 @@ def hiprandGenerateNormalDouble(object generator, unsigned long n, double mean, 
     of used quasi-random generator \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef double output_data
     _hiprandGenerateNormalDouble__retval = hiprandStatus(chiprand.hiprandGenerateNormalDouble(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_hiprandGenerateNormalDouble__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <double *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+    return (_hiprandGenerateNormalDouble__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateNormalHalf(object generator, unsigned long n, int mean, int stddev):
+def hiprandGenerateNormalHalf(object generator, object output_data, unsigned long n, int mean, int stddev):
     """\brief Generates normally distributed halfs.
     Generates \p n normally distributed 16-bit half-precision floating-point
     numbers and saves them to \p output_data.
@@ -1480,14 +920,14 @@ def hiprandGenerateNormalHalf(object generator, unsigned long n, int mean, int s
     of used quasi-random generator \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef int output_data
     _hiprandGenerateNormalHalf__retval = hiprandStatus(chiprand.hiprandGenerateNormalHalf(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_hiprandGenerateNormalHalf__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+    return (_hiprandGenerateNormalHalf__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateLogNormal(object generator, unsigned long n, float mean, float stddev):
+def hiprandGenerateLogNormal(object generator, object output_data, unsigned long n, float mean, float stddev):
     """\brief Generates log-normally distributed floats.
     Generates \p n log-normally distributed 32-bit floating-point values
     and saves them to \p output_data.
@@ -1504,14 +944,14 @@ def hiprandGenerateLogNormal(object generator, unsigned long n, float mean, floa
     of used quasi-random generator \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef float output_data
     _hiprandGenerateLogNormal__retval = hiprandStatus(chiprand.hiprandGenerateLogNormal(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_hiprandGenerateLogNormal__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <float *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+    return (_hiprandGenerateLogNormal__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateLogNormalDouble(object generator, unsigned long n, double mean, double stddev):
+def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigned long n, double mean, double stddev):
     """\brief Generates log-normally distributed doubles.
     Generates \p n log-normally distributed 64-bit double-precision floating-point
     values and saves them to \p output_data.
@@ -1528,14 +968,14 @@ def hiprandGenerateLogNormalDouble(object generator, unsigned long n, double mea
     of used quasi-random generator \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef double output_data
     _hiprandGenerateLogNormalDouble__retval = hiprandStatus(chiprand.hiprandGenerateLogNormalDouble(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_hiprandGenerateLogNormalDouble__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <double *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+    return (_hiprandGenerateLogNormalDouble__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGenerateLogNormalHalf(object generator, unsigned long n, int mean, int stddev):
+def hiprandGenerateLogNormalHalf(object generator, object output_data, unsigned long n, int mean, int stddev):
     """\brief Generates log-normally distributed halfs.
     Generates \p n log-normally distributed 16-bit half-precision floating-point
     values and saves them to \p output_data.
@@ -1552,14 +992,14 @@ def hiprandGenerateLogNormalHalf(object generator, unsigned long n, int mean, in
     of used quasi-random generator \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef int output_data
     _hiprandGenerateLogNormalHalf__retval = hiprandStatus(chiprand.hiprandGenerateLogNormalHalf(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,mean,stddev))    # fully specified
-    return (_hiprandGenerateLogNormalHalf__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,mean,stddev))    # fully specified
+    return (_hiprandGenerateLogNormalHalf__retval,)
 
 
 @cython.embedsignature(True)
-def hiprandGeneratePoisson(object generator, unsigned long n, double lambda_):
+def hiprandGeneratePoisson(object generator, object output_data, unsigned long n, double lambda_):
     """\brief Generates Poisson-distributed 32-bit unsigned integers.
     Generates \p n Poisson-distributed 32-bit unsigned integers and
     saves them to \p output_data.
@@ -1575,10 +1015,10 @@ def hiprandGeneratePoisson(object generator, unsigned long n, double lambda_):
     of used quasi-random generator \n
     - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n
     """
-    cdef unsigned int output_data
     _hiprandGeneratePoisson__retval = hiprandStatus(chiprand.hiprandGeneratePoisson(
-        rocrand_generator_base_type.from_pyobj(generator)._ptr,&output_data,n,lambda_))    # fully specified
-    return (_hiprandGeneratePoisson__retval,output_data)
+        rocrand_generator_base_type.from_pyobj(generator)._ptr,
+        <unsigned int *>hip._util.types.DataHandle.from_pyobj(output_data)._ptr,n,lambda_))    # fully specified
+    return (_hiprandGeneratePoisson__retval,)
 
 
 @cython.embedsignature(True)
