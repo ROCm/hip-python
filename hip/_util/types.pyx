@@ -575,7 +575,7 @@ cdef class Array(DataHandle):
         return self._itemsize
     @property
     def is_readonly(self):
-        return self.___cuda_array_interface__["data"]["readonly"],
+        return self.___cuda_array_interface__["data"]["readonly"]
     @property
     def stream_as_int(self):
         return self.___cuda_array_interface__["stream"]
