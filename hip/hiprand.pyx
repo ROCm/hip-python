@@ -544,9 +544,6 @@ cdef class rocrand_generator_base_type:
         if isinstance(item,int):
             if item < 0 or item >= len(properties):
                 raise IndexError()
-
-
-                
             return getattr(self,properties[item])
         raise ValueError("'item' type must be 'int'")
 

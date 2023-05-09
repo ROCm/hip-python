@@ -379,7 +379,7 @@ def generate_hip_package_files():
                 return PointerParamIntent.INOUT
             return PointerParamIntent.OUT
         if parm.is_pointer_to_void(degree=2):
-            if parm.name in ["devPtr","ptr","dev_ptr","data"]:
+            if parm.name in ["devPtr","ptr","dev_ptr","data","dptr"]:
                 return PointerParamIntent.OUT
         return PointerParamIntent.IN
 
@@ -400,9 +400,25 @@ def generate_hip_package_files():
     def toclassname(name: str):
         return name[0].upper() + name[1:]
 
-    def hip_ptr_complicated_type_handler(parm: Parm):
+    def hip_ptr_complicated_type_handler(parm: Node):
         if (parm.parent.name, parm.name) == ("hipModuleLaunchKernel","extra"): 
             return f"hip._hip_helpers.{toclassname(parm.parent.name)}_{parm.name}"
+        if (parm.parent.name, parm.name) in (
+            ("hipMalloc","ptr"),
+            ("hipExtMallocWithFlags","ptr"),
+            ("hipMallocHost","ptr"),
+            ("hipMallocManaged","dev_ptr"),
+            ("hipMallocAsync","dev_ptr"),
+            ("hipMallocFromPoolAsync","dev_ptr"),
+        ):
+            if parm.parent.name == "hipExtMallocWithFlags":
+                size = "sizeBytes"
+            else:
+                size = "size"
+            parm.parent.python_body_prepend_before_return(
+                f"{parm.name}.configure(shape=(cpython.long.PyLong_FromUnsignedLong({size}),))"
+            )
+            return "hip._util.types.Array"
         return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
     generator = CythonPackageGenerator(
@@ -803,6 +819,9 @@ if HIP_PYTHON_BUILD:
     if HIP_PYTHON_RUNTIME_LINKING:
         CYTHON_EXT_MODULES.insert(
             0, ("hip._util.posixloader", ["./hip/_util/posixloader.pyx"])
+        )
+        CYTHON_EXT_MODULES.insert(
+            0, ("hip._util.types", ["./hip/_util/types.pyx"])
         )
 
     ext_modules = []
