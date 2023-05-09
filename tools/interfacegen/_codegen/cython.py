@@ -907,6 +907,24 @@ class FunctionMixin(CythonMixin, Typed):
         else:
             return ""
 
+    @property
+    def has_python_body_prolog(self):
+        return hasattr(self, "_python_body_prolog")
+    
+    @property
+    def has_python_body_epilog(self):
+        return hasattr(self, "_python_body_epilog")
+
+    def python_body_prepend_before_c_interface_call(self,code: str):
+        if not self.has_python_body_prolog:
+            setattr(self, "_python_body_prolog", [])
+        self._python_body_prolog.append(code)
+
+    def python_body_prepend_before_return(self,code: str):
+        if not self.has_python_body_epilog:
+            setattr(self, "_python_body_epilog", [])
+        self._python_body_epilog.append(code)
+
     # TODO Identify and extract doxygen params and other sections to create higher quality docstring
     # doxygen param is terminated by blank line or new section/paragraph
     # Can be used to build parser for args
@@ -1177,11 +1195,18 @@ cdef void* {funptr_name} = NULL
             + textwrap.indent(self._raw_comment_as_docstring(), indent).rstrip()
             + "\n"
         )
+        if self.has_python_body_prolog:
+            prolog += self._python_body_prolog
+        epilog = []
+        if self.has_python_body_epilog:
+            epilog += self._python_body_epilog
         if len(prolog):
             result += textwrap.indent("\n".join(prolog), indent).rstrip() + "\n"
         if fully_specified:
             result += f"{indent}{self._render_python_interface_c_interface_call(cprefix,call_args,out_args)}"
             result += f"{indent}# fully specified\n"
+            if len(epilog):
+                result += textwrap.indent("\n".join(epilog), indent).rstrip() + "\n"
             if len(out_args) > 1:
                 comma = ","
                 result += f"{indent}return ({comma.join(out_args)})\n"
