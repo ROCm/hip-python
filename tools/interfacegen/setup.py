@@ -666,10 +666,12 @@ def generate_hiprand_package_files():
         if not isinstance(node, MacroDefinition):
             if ( 
                 node.name.startswith("hiprand")
-                or node.name.startswith("rocrand")
                 or node.name == "uint4"
             ):
                 return True
+            if node.name.startswith("rocrand"):
+                if not isinstance(node, Function):
+                    return True
         elif node.name in (
             "HIPRAND_VERSION",
             "HIPRAND_DEFAULT_MAX_BLOCK_SIZE",
@@ -688,6 +690,8 @@ def generate_hiprand_package_files():
         if node.is_pointer_to_record(degree=2):
             return PointerParamIntent.OUT
         if node.is_pointer_to_basic_type(degree=1):
+            if node.name == "output_data":
+                return PointerParamIntent.INOUT    
             return PointerParamIntent.OUT
         return PointerParamIntent.IN
 
