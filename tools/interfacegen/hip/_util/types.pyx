@@ -8,6 +8,7 @@ cimport cpython.long
 cimport cpython.int
 cimport cpython.buffer
 cimport libc.stdlib
+cimport libc.stdint
 
 cdef class DataHandle:
     # members declared in declaration part ``types.pxd``
@@ -15,13 +16,13 @@ cdef class DataHandle:
     def __cinit__(self):
         self._ptr = NULL
         self._py_buffer_acquired = False
-    
+
     @staticmethod
     cdef DataHandle from_ptr(void* ptr):
         cdef DataHandle wrapper = DataHandle.__new__(DataHandle)
         wrapper._ptr = ptr
         return wrapper
-    
+
     cdef void init_from_pyobj(self, object pyobj):
         """
         NOTE:
@@ -100,9 +101,487 @@ cdef class DataHandle:
     def as_c_void_p(self):
         """"Data pointer as ``ctypes.c_void_p``."""
         return ctypes.c_void_p(self.ptr)
+
+    def __getitem__(self,offset):
+        """Returns a new DataHandle whose pointer is this instance's pointer offsetted by ``offset``.
+
+        Args:
+            offset (int): Offset (in bytes) to add to this instance's pointer.
+        """
+        cdef DataHandle result
+        if isinstance(offset,int):
+            if offset < 0:
+                raise ValueError("offset='{offset}' must be non-negative")
+            return DataHandle.from_ptr(<void*>(<unsigned long>self._ptr + cpython.long.PyLong_AsUnsignedLong(offset)))
+        raise NotImplementedError("'__getitem__': not implemented for other 'offset' types than 'int'")
     
     def __init__(self,object pyobj):
         DataHandle.init_from_pyobj(self,pyobj)
+
+cdef class Array(DataHandle):
+    # members declared in declaration part ``types.pxd``
+
+    NUMPY_CHAR_CODES = (
+        "?", "=?", "<?", ">?", "bool", "bool_", "bool8",
+        "uint8", "u1", "=u1", "<u1", ">u1",
+        "uint16", "u2", "=u2", "<u2", ">u2",
+        "uint32", "u4", "=u4", "<u4", ">u4",
+        "uint64", "u8", "=u8", "<u8", ">u8",
+
+        "int8", "i1", "=i1", "<i1", ">i1",
+        "int16", "i2", "=i2", "<i2", ">i2",
+        "int32", "i4", "=i4", "<i4", ">i4",
+        "int64", "i8", "=i8", "<i8", ">i8",
+
+        "float16", "f2", "=f2", "<f2", ">f2",
+        "float32", "f4", "=f4", "<f4", ">f4",
+        "float64", "f8", "=f8", "<f8", ">f8",
+
+        "complex64", "c8", "=c8", "<c8", ">c8",
+        "complex128", "c16", "=c16", "<c16", ">c16",
+
+        "byte", "b", "=b", "<b", ">b",
+        "short", "h", "=h", "<h", ">h",
+        "intc", "i", "=i", "<i", ">i",
+        "intp", "int0", "p", "=p", "<p", ">p",
+        "long", "int", "int_", "l", "=l", "<l", ">l",
+        "longlong", "q", "=q", "<q", ">q",
+
+        "ubyte", "B", "=B", "<B", ">B",
+        "ushort", "H", "=H", "<H", ">H",
+        "uintc", "I", "=I", "<I", ">I",
+        "uintp", "uint0", "P", "=P", "<P", ">P",
+        "ulong", "uint", "L", "=L", "<L", ">L",
+        "ulonglong", "Q", "=Q", "<Q", ">Q",
+
+        "half", "e", "=e", "<e", ">e",
+        "single", "f", "=f", "<f", ">f",
+        "double", "float", "float_", "d", "=d", "<d", ">d",
+        "longdouble", "longfloat", "g", "=g", "<g", ">g",
+
+        "csingle", "singlecomplex", "F", "=F", "<F", ">F",
+        "cdouble", "complex", "complex_", "cfloat", "D", "=D", "<D", ">D",
+        "clongdouble", "clongfloat", "longcomplex", "G", "=G", "<G", ">G",
+
+        "str", "str_", "str0", "unicode", "unicode_", "U", "=U", "<U", ">U",
+        "bytes", "bytes_", "bytes0", "S", "=S", "<S", ">S",
+        "void", "void0", "V", "=V", "<V", ">V",
+        "object", "object_", "O", "=O", "<O", ">O",
+
+        "datetime64", "=datetime64", "<datetime64", ">datetime64",
+        "datetime64[Y]", "=datetime64[Y]", "<datetime64[Y]", ">datetime64[Y]",
+        "datetime64[M]", "=datetime64[M]", "<datetime64[M]", ">datetime64[M]",
+        "datetime64[W]", "=datetime64[W]", "<datetime64[W]", ">datetime64[W]",
+        "datetime64[D]", "=datetime64[D]", "<datetime64[D]", ">datetime64[D]",
+        "datetime64[h]", "=datetime64[h]", "<datetime64[h]", ">datetime64[h]",
+        "datetime64[m]", "=datetime64[m]", "<datetime64[m]", ">datetime64[m]",
+        "datetime64[s]", "=datetime64[s]", "<datetime64[s]", ">datetime64[s]",
+        "datetime64[ms]", "=datetime64[ms]", "<datetime64[ms]", ">datetime64[ms]",
+        "datetime64[us]", "=datetime64[us]", "<datetime64[us]", ">datetime64[us]",
+        "datetime64[ns]", "=datetime64[ns]", "<datetime64[ns]", ">datetime64[ns]",
+        "datetime64[ps]", "=datetime64[ps]", "<datetime64[ps]", ">datetime64[ps]",
+        "datetime64[fs]", "=datetime64[fs]", "<datetime64[fs]", ">datetime64[fs]",
+        "datetime64[as]", "=datetime64[as]", "<datetime64[as]", ">datetime64[as]",
+        "M", "=M", "<M", ">M",
+        "M8", "=M8", "<M8", ">M8",
+        "M8[Y]", "=M8[Y]", "<M8[Y]", ">M8[Y]",
+        "M8[M]", "=M8[M]", "<M8[M]", ">M8[M]",
+        "M8[W]", "=M8[W]", "<M8[W]", ">M8[W]",
+        "M8[D]", "=M8[D]", "<M8[D]", ">M8[D]",
+        "M8[h]", "=M8[h]", "<M8[h]", ">M8[h]",
+        "M8[m]", "=M8[m]", "<M8[m]", ">M8[m]",
+        "M8[s]", "=M8[s]", "<M8[s]", ">M8[s]",
+        "M8[ms]", "=M8[ms]", "<M8[ms]", ">M8[ms]",
+        "M8[us]", "=M8[us]", "<M8[us]", ">M8[us]",
+        "M8[ns]", "=M8[ns]", "<M8[ns]", ">M8[ns]",
+        "M8[ps]", "=M8[ps]", "<M8[ps]", ">M8[ps]",
+        "M8[fs]", "=M8[fs]", "<M8[fs]", ">M8[fs]",
+        "M8[as]", "=M8[as]", "<M8[as]", ">M8[as]",
+
+        "timedelta64", "=timedelta64", "<timedelta64", ">timedelta64",
+        "timedelta64[Y]", "=timedelta64[Y]", "<timedelta64[Y]", ">timedelta64[Y]",
+        "timedelta64[M]", "=timedelta64[M]", "<timedelta64[M]", ">timedelta64[M]",
+        "timedelta64[W]", "=timedelta64[W]", "<timedelta64[W]", ">timedelta64[W]",
+        "timedelta64[D]", "=timedelta64[D]", "<timedelta64[D]", ">timedelta64[D]",
+        "timedelta64[h]", "=timedelta64[h]", "<timedelta64[h]", ">timedelta64[h]",
+        "timedelta64[m]", "=timedelta64[m]", "<timedelta64[m]", ">timedelta64[m]",
+        "timedelta64[s]", "=timedelta64[s]", "<timedelta64[s]", ">timedelta64[s]",
+        "timedelta64[ms]", "=timedelta64[ms]", "<timedelta64[ms]", ">timedelta64[ms]",
+        "timedelta64[us]", "=timedelta64[us]", "<timedelta64[us]", ">timedelta64[us]",
+        "timedelta64[ns]", "=timedelta64[ns]", "<timedelta64[ns]", ">timedelta64[ns]",
+        "timedelta64[ps]", "=timedelta64[ps]", "<timedelta64[ps]", ">timedelta64[ps]",
+        "timedelta64[fs]", "=timedelta64[fs]", "<timedelta64[fs]", ">timedelta64[fs]",
+        "timedelta64[as]", "=timedelta64[as]", "<timedelta64[as]", ">timedelta64[as]",
+        "m", "=m", "<m", ">m",
+        "m8", "=m8", "<m8", ">m8",
+        "m8[Y]", "=m8[Y]", "<m8[Y]", ">m8[Y]",
+        "m8[M]", "=m8[M]", "<m8[M]", ">m8[M]",
+        "m8[W]", "=m8[W]", "<m8[W]", ">m8[W]",
+        "m8[D]", "=m8[D]", "<m8[D]", ">m8[D]",
+        "m8[h]", "=m8[h]", "<m8[h]", ">m8[h]",
+        "m8[m]", "=m8[m]", "<m8[m]", ">m8[m]",
+        "m8[s]", "=m8[s]", "<m8[s]", ">m8[s]",
+        "m8[ms]", "=m8[ms]", "<m8[ms]", ">m8[ms]",
+        "m8[us]", "=m8[us]", "<m8[us]", ">m8[us]",
+        "m8[ns]", "=m8[ns]", "<m8[ns]", ">m8[ns]",
+        "m8[ps]", "=m8[ps]", "<m8[ps]", ">m8[ps]",
+        "m8[fs]", "=m8[fs]", "<m8[fs]", ">m8[fs]",
+        "m8[as]", "=m8[as]", "<m8[as]", ">m8[as]",
+    )
+
+    def __cinit__(self):
+        self._ptr = NULL
+        self._py_buffer_acquired = False
+        self._itemsize = 1
+        self.___cuda_array_interface__ = dict(
+            shape=(1,),
+            typestr='b', # See: https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__
+            data=(None,False), # 1: data pointer as int (long int), 2: read-only?
+            strides=None,
+            offset=0,
+            mask=None,
+            version=3,
+            # numba
+            stream=None, # 
+        )
+
+    cdef _set_ptr(self,void* ptr):
+        self._ptr = ptr
+        self.___cuda_array_interface__["data"][0] = cpython.long.PyLong_FromVoidPtr(ptr)
+
+    @staticmethod
+    cdef Array from_ptr(void* ptr):
+        cdef Array wrapper = Array.__new__(Array)
+        wrapper._set_ptr(ptr)
+        return wrapper
+    
+    @property
+    def rank(self):
+        """Rank of the underlying data.
+        
+        See:
+            set_bounds
+        """
+        return len(self.___cuda_array_interface__["shape"])
+        
+    cdef int _numpy_typestr_to_bytes(self,str typestr):
+        if typestr in ("?", "=?", "<?", ">?", "bool", "bool_", "bool8"):
+            return <int>sizeof(bool)
+        elif typestr in ("uint8", "u1", "=u1", "<u1", ">u1"):
+            return <int>sizeof(libc.stdint.uint8_t)
+        elif typestr in ("uint16", "u2", "=u2", "<u2", ">u2"):
+            return <int>sizeof(libc.stdint.uint16_t)
+        elif typestr in ("uint32", "u4", "=u4", "<u4", ">u4"):
+            return <int>sizeof(libc.stdint.uint32_t)
+        elif typestr in ("uint64", "u8", "=u8", "<u8", ">u8"):
+            return <int>sizeof(libc.stdint.uint64_t)
+        elif typestr in ("int8", "i1", "=i1", "<i1", ">i1"):
+            return <int>sizeof(libc.stdint.int8_t)
+        elif typestr in ("int16", "i2", "=i2", "<i2", ">i2"):
+            return <int>sizeof(libc.stdint.int16_t)
+        elif typestr in ("int32", "i4", "=i4", "<i4", ">i4"):
+            return <int>sizeof(libc.stdint.int32_t)
+        elif typestr in ("int64", "i8", "=i8", "<i8", ">i8"):
+            return <int>sizeof(libc.stdint.int64_t)
+        elif typestr in ("float16", "f2", "=f2", "<f2", ">f2"):
+            return <int>sizeof(libc.stdint.uint16_t)
+        elif typestr in ("float32", "f4", "=f4", "<f4", ">f4"):
+            return <int>sizeof(libc.stdint.uint32_t)
+        elif typestr in ("float64", "f8", "=f8", "<f8", ">f8"):
+            return <int>sizeof(libc.stdint.uint64_t)
+        elif typestr in ("complex64", "c8", "=c8", "<c8", ">c8"):
+            return <int>sizeof(libc.stdint.uint64_t)
+        elif typestr in ("complex128", "c16", "=c16", "<c16", ">c16"):
+            return <int>sizeof(libc.stdint.uint64_t)*2
+        elif typestr in ("byte", "b", "=b", "<b", ">b"):
+            return 1
+        elif typestr in ("short", "h", "=h", "<h", ">h"):
+            return <int>sizeof(short)
+        elif typestr in ("intc", "i", "=i", "<i", ">i"):
+            return <int>sizeof(int)
+        elif typestr in ("intp", "int0", "p", "=p", "<p", ">p"):
+            return <int>sizeof(libc.stdint.intptr_t)
+        elif typestr in ("long", "int", "int_", "l", "=l", "<l", ">l"):
+            return <int>sizeof(long)
+        elif typestr in ("longlong", "q", "=q", "<q", ">q"):
+            return <int>sizeof(long long)
+        elif typestr in ("ubyte", "B", "=B", "<B", ">B"):
+            return 1
+        elif typestr in ("ushort", "H", "=H", "<H", ">H"):
+            return <int>sizeof(unsigned short)
+        elif typestr in ("uintc", "I", "=I", "<I", ">I"):
+            return <int>sizeof(unsigned int)
+        elif typestr in ("uintp", "uint0", "P", "=P", "<P", ">P"):
+            return <int>sizeof(libc.stdint.uintptr_t)
+        elif typestr in ("ulong", "uint", "L", "=L", "<L", ">L"):
+            return <int>sizeof(unsigned long)
+        elif typestr in ("ulonglong", "Q", "=Q", "<Q", ">Q"):
+            return <int>sizeof(unsigned long long)
+        elif typestr in ("half", "e", "=e", "<e", ">e"):
+            return <int>sizeof(libc.stdint.uint16_t)
+        elif typestr in ("single", "f", "=f", "<f", ">f"):
+            return <int>sizeof(float)
+        elif typestr in ("double", "float", "float_", "d", "=d", "<d", ">d"):
+            return <int>sizeof(double)
+        elif typestr in ("longdouble", "longfloat", "g", "=g", "<g", ">g"):
+            return <int>sizeof(long double)
+        elif typestr in ("csingle", "singlecomplex", "F", "=F", "<F", ">F"):
+            return <int>sizeof(float complex)
+        elif typestr in ("cdouble", "complex", "complex_", "cfloat", "D", "=D", "<D", ">D"):
+            return <int>sizeof(double complex)
+        elif typestr in ("clongdouble", "clongfloat", "longcomplex", "G", "=G", "<G", ">G"):
+            return <int>sizeof(long double complex)
+        return -1
+
+    def configure(self, **kwargs):
+        """
+        Args:
+            \*\*kwargs: Keyword arguments.
+            
+        Keyword Arguments:
+
+            shape (tuple): An int that describes the intent per dimension. The length of the tuple is the number of dimensions.
+            typestr (str): A numpy typestr, see the first note for more details.
+            stream (int or None): The stream to synchronize before consuming this array. See first note for more details.
+            itemsize (int): Size in bytes of 
+                            each item. Defaults to 1. See the notes.
+            readonly (bool): Array is readonly. Second entry of the CAI 'data' tuple. Defaults to False.
+
+        Note:
+            More details on the keyword arguments can be found here:
+            https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html
+
+        Note:
+
+            This method does not automatically map numpy/numba typestr to appropriate number 
+            of bytes, i.e. `itemsize`. Hence, you need to specify itemsize additionally
+            when dealing with other datatypes than bytes (typestr: ``'b'``).
+        """
+        cdef int num_bytes = -1
+        cdef list supported_keys = ["shape","typestr","stream"]
+        cdef list extra_keys = ["itemsize","readonly"]
+
+        for k,v in supported_keys:
+            if k == "data":
+                raise KeyError("'data' key cannot be overwritten directly. Use keyword argument 'readonly' to set the 'readonly' property of the 'data' tuple.")
+            if k not in (supported_keys + extra_keys):
+                allowed_keys =", ".join([f"'{e}'" for e in supported_keys + extra_keys])
+                raise KeyError(f"Allowed arguments are{allowed_keys}")
+            if k == "shape":
+                if not isinstance(v,tuple):
+                    raise TypeError("'shape': value must be of type 'tuple'")
+                for i in v:
+                    if not isinstance(i,int):
+                        raise TypeError("'shape': entries must be of type 'int'")
+                self.___cuda_array_interface__["shape"] = v
+            elif k == "typestr":
+                typestr = str(v)
+                self.___cuda_array_interface__["typestr"] = typestr
+                num_bytes = self._numpy_typestr_to_bytes(typestr)
+                if num_bytes < 0:
+                    if str(v) not in self.NUMPY_CHAR_CODES:
+                        raise ValueError(f"'typestr': value '{typestr}' is not a valid numpy char code. See class attributes 'NUMPY_CHAR_CODES' for valid expressions.")
+                    elif "itemsize" not in kwargs:
+                        raise ValueError(f"'typestr': value '{typestr}' could not be mapped to a number of bytes. Please additionally specify 'itemsize'.")
+            elif k == "itemsize":
+                self._itemsize = v
+            elif k == "stream":
+                if isinstance(v,int):
+                    if v == 0:
+                        return ValueError("stream: value '0' is disallowed as it would be ambiguous between None and the default stream, more details: https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html")
+                    elif v < 0:
+                        return ValueError("stream: expected positive integer")
+                    self.___cuda_array_interface__["stream"] = v
+                else:
+                    self.___cuda_array_interface__["stream"] = DataHandle.from_pyobj(v).ptr()
+            elif k == "readonly":
+                if not isinstance(v,bool):
+                    raise ValueError("'readonly:' expected bool")
+        return self
+
+    cdef void init_from_pyobj(self, object pyobj):
+        """
+        Note:
+            If ``pyobj`` is an instance of Array, only the pointer is copied.
+            Releasing an acquired Py_buffer handles is still an obligation of the original object.
+        """
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+       
+        self._py_buffer_acquired = False
+        if pyobj is None:
+            self._set_ptr(NULL)
+        elif isinstance(pyobj,int):
+            self._set_ptr(cpython.long.PyLong_AsVoidPtr(pyobj))
+        elif isinstance(pyobj,ctypes.c_void_p):
+            self._set_ptr(cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL)
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            if cuda_array_interface["strides"] != None:
+                raise RuntimeError("CUDA array interface is not contiguous")
+            ptr_as_int = cuda_array_interface["data"][0]
+            self._set_ptr(cpython.long.PyLong_AsVoidPtr(ptr_as_int))
+            self.configure(cuda_array_interface)
+            if isinstance(pyobj,Array):
+                self._itemsize = pyobj._itemsize
+        elif isinstance(pyobj,DataHandle):
+            self._set_ptr((<DataHandle>pyobj)._ptr)
+        elif cpython.buffer.PyObject_CheckBuffer(pyobj):
+            raise NotImplementedError("Py_buffer is no ideal format for data that is not accessible from the host")
+        else:
+            raise NotImplementedError(f"no conversion implemented for instance of '{type(pyobj)}'")
+
+    @staticmethod
+    cdef Array from_pyobj(object pyobj):
+        """Derives a Array from the given object.
+
+        In case ``pyobj`` is itself an ``Array`` instance, this method
+        returns it directly. No new Array is created.
+
+        Args:
+            pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
+                            or of type ``Array``, ``int``, or ``ctypes.c_void_p``
+
+        Note:
+            This routine does not perform a copy but returns the original pyobj
+            if ``pyobj`` is an instance of Array.
+        """
+        cdef Array wrapper = Array.__new__(Array)
+        
+        if isinstance(pyobj,Array):
+            return pyobj
+        else:
+            wrapper = Array.__new__(Array)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
+
+    @property
+    def ptr(self):
+        """"Data pointer as long integer."""
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
+    @property
+    def is_ptr_null(self):
+        """If data pointer is NULL."""
+        return self._ptr == NULL
+    def __int__(self):
+        return self.ptr
+    def __repr__(self):
+        return f"<Array object, self.ptr={self.ptr()}>"
+    @property
+    def as_c_void_p(self):
+        """"Data pointer as ``ctypes.c_void_p``."""
+        return ctypes.c_void_p(self.ptr)
+
+
+    cdef tuple _handle_int(self,size_t subscript, size_t shape_dim):
+        if subscript < 0:
+            raise ValueError(f"subscript='{subscript}' must be non-negative.")  
+        if subscript >= shape_dim:
+            raise ValueError(f"subscript='{subscript}' must be smaller than axis' exclusive upper bound ('{shape_dim}')")
+        return (subscript,subscript+1,False)
+        
+
+    cdef tuple _handle_slice(self,slice subscript,size_t shape_dim):
+        cdef size_t start = -1
+        cdef size_t stop = -1
+        cdef bint extract_full_dim = False
+
+        if subscript.step not in (None,1):
+            raise ValueError("subscript.step='{subscript.step}' must be 'None' or '1'.")  
+        if subscript.stop != None:
+            if subscript.stop <= 0:
+                raise ValueError("subscript.stop='{subscript.stop}' must be greater than zero.")
+            if subscript.stop > shape_dim:
+                raise ValueError("subscript.stop='{subscript.stop}' must not be greater than axis' exclusive upper bound ({shape_dim}).")
+            stop = subscript.stop
+        else:
+            stop = shape_dim
+        if subscript.start != None:
+            if subscript.start < 0:
+                raise ValueError("subscript.start='{subscript.start}' must be non-negative.")
+            if subscript.start >= shape_dim:
+                raise ValueError("subscript.start='{subscript.start}' must be smaller than axis' exclusive upper bound ({shape_dim}).")
+            start = subscript.start
+        else:
+            start = 0
+
+        if start >= stop:
+            raise ValueError("subscript.stop='{subscript.stop}' must be greater than subscript.start='{subscript.start}'")
+
+        extract_full_dim = (
+            start == 0
+            and stop == shape_dim
+        )
+        return (start,stop,extract_full_dim)
+
+
+    def __getitem__(self,subscript):
+        """Returns a contiguous subarray according to the subscript expression.
+
+        Args:
+            Subscript: Either an integer, a slice, or a tuple of slices and integers.
+
+        Note:
+            If the subscript is a single integer, only the first axis ("axis 0") of the 
+            array is accessed. A KeyError is raised if the extent
+            of axis 0 is surpassed. This behavior is identical to that of numpy.
+        
+        Raise:
+            TypeError: If the subscript types are not 'int', 'slice' or a 'tuple' thereof.
+            ValueError: If the subscripts do not yield an contiguous subarray. A single array element
+                        is regarded as contiguous array of size 1.
+        """
+        cdef size_t stride = 1
+        cdef size_t offset = 0
+        cdef bint contiguous = False
+        cdef list shape = self.__cuda_array_interface__["shape"]
+        cdef size_t rank = len(shape)
+        cdef list result_shape = list()
+        cdef tuple subscript_tuple
+        
+        if isinstance(subscript,tuple):
+            subscript_tuple = subscript
+        elif isinstance(subscript,(slice,int)):
+            subscript_tuple = (subscript,)
+        else:
+            raise TypeError(f"subscript type='{type(subscript)}' is none of: 'slice', 'int', 'tuple'")
+        #
+        for _i,spec in enumerate(reversed(subscript_tuple)): # row major
+            i = rank-_i-1
+            if not contiguous:
+                raise ValueError(f"subscript='{subscript_tuple}' yields no contiguous subarray")
+            if isinstance(spec,int):
+                (start,stop,contiguous) = self._handle_int(spec,shape[i])
+            elif isinstance(spec,slice):
+                (start,stop,contiguous) = self._handle_slice(spec,shape[i])
+            else:
+                raise TypeError(f"subscript tuple entry type='{type(spec)}' is none of: 'slice', 'int'")
+            result_shape.append(stop-start)
+            offset = start*stride
+            stride *= <size_t>shape[i]
+        return Array.from_ptr(<void*>(<unsigned long>self._ptr + offset)).configure({
+            "typestr":  self.___cuda_array_interface__["typestr"],
+            "itemsize":  self._itemsize,
+            "shape": tuple(result_shape),
+            "readonly":  self.___cuda_array_interface__["data"]["readonly"],
+            "stream": self.___cuda_array_interface__["stream"],
+        })
+
+    @property
+    def typestr(self):
+        return self.___cuda_array_interface__["typestr"]
+    @property
+    def itemsize(self):
+        return self._itemsize
+    @property
+    def is_readonly(self):
+        return self.___cuda_array_interface__["data"]["readonly"],
+    @property
+    def stream_as_int(self):
+        return self.___cuda_array_interface__["stream"]
+    
+    def __init__(self,object pyobj):
+        Array.init_from_pyobj(self,pyobj)
 
 cdef class ListOfBytes(DataHandle):
     # members declared in declaration part ``types.pxd``
@@ -355,7 +834,7 @@ cdef class ListOfUnsigned(DataHandle):
             self._owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(unsigned int))
             for i,entry in enumerate(pyobj):
-                if isinstance(entry,unsigned int):
+                if isinstance(entry,int):
                     (<unsigned int*>self._ptr)[i] = <unsigned int>cpython.long.PyLong_AsUnsignedLongLong(pyobj)
                 elif isinstance(entry,(
                     ctypes.c_bool,

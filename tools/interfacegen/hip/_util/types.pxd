@@ -15,6 +15,25 @@ cdef class DataHandle:
     @staticmethod
     cdef DataHandle from_pyobj(object pyobj)
 
+cdef class Array(DataHandle):
+    cdef dict __cuda_array_interface__
+
+    @staticmethod
+    cdef Array from_ptr(void* ptr)
+    
+    cdef void init_from_pyobj(self, object pyobj)
+
+    @staticmethod
+    cdef Array from_pyobj(object pyobj)
+
+    cdef _set_ptr(self,void* ptr)
+    
+    cdef int _numpy_typestr_to_bytes(self, str typestr)
+    
+    cdef tuple _handle_int(self,size_t subscript, size_t shape_dim)
+    
+    cdef tuple _handle_slice(self,slice subscript,size_t shape_dim)
+
 cdef class ListOfDataHandle(DataHandle):
     cdef bint _owner
     
