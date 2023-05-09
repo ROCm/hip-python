@@ -27706,9 +27706,10 @@ def hipMalloc(unsigned long size):
     @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
     hipHostFree, hipHostMalloc
     """
-    ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.Array.from_ptr(NULL)
     _hipMalloc__retval = hipError_t(chip.hipMalloc(
         <void **>&ptr._ptr,size))    # fully specified
+    ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMalloc__retval,ptr)
 
 
@@ -27723,9 +27724,10 @@ def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
     @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
     hipHostFree, hipHostMalloc
     """
-    ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.Array.from_ptr(NULL)
     _hipExtMallocWithFlags__retval = hipError_t(chip.hipExtMallocWithFlags(
         <void **>&ptr._ptr,sizeBytes,flags))    # fully specified
+    ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(sizeBytes),))
     return (_hipExtMallocWithFlags__retval,ptr)
 
 
@@ -27738,9 +27740,10 @@ def hipMallocHost(unsigned long size):
     @return #hipSuccess, #hipErrorOutOfMemory
     @deprecated use hipHostMalloc() instead
     """
-    ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    ptr = hip._util.types.Array.from_ptr(NULL)
     _hipMallocHost__retval = hipError_t(chip.hipMallocHost(
         <void **>&ptr._ptr,size))    # fully specified
+    ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMallocHost__retval,ptr)
 
 
@@ -27790,9 +27793,10 @@ def hipMallocManaged(unsigned long size, unsigned int flags):
     (defaults to hipMemAttachGlobal)
     @returns #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
     """
-    dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    dev_ptr = hip._util.types.Array.from_ptr(NULL)
     _hipMallocManaged__retval = hipError_t(chip.hipMallocManaged(
         <void **>&dev_ptr._ptr,size,flags))    # fully specified
+    dev_ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMallocManaged__retval,dev_ptr)
 
 
@@ -27909,10 +27913,11 @@ def hipMallocAsync(unsigned long size, object stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    dev_ptr = hip._util.types.Array.from_ptr(NULL)
     _hipMallocAsync__retval = hipError_t(chip.hipMallocAsync(
         <void **>&dev_ptr._ptr,size,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    dev_ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMallocAsync__retval,dev_ptr)
 
 
@@ -28150,11 +28155,12 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
+    dev_ptr = hip._util.types.Array.from_ptr(NULL)
     _hipMallocFromPoolAsync__retval = hipError_t(chip.hipMallocFromPoolAsync(
         <void **>&dev_ptr._ptr,size,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
+    dev_ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMallocFromPoolAsync__retval,dev_ptr)
 
 
@@ -28371,7 +28377,7 @@ def hipMallocPitch(unsigned long width, unsigned long height):
 
 
 @cython.embedsignature(True)
-def hipMemAllocPitch(object dptr, unsigned long widthInBytes, unsigned long height, unsigned int elementSizeBytes):
+def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned int elementSizeBytes):
     """Allocates at least width (in bytes) * height bytes of linear memory
     Padding may occur to ensure alighnment requirements are met for the given row
     The change in width size due to padding will be returned in *pitch.
@@ -28388,10 +28394,11 @@ def hipMemAllocPitch(object dptr, unsigned long widthInBytes, unsigned long heig
     @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
     hipMalloc3DArray, hipHostMalloc
     """
+    dptr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long pitch
     _hipMemAllocPitch__retval = hipError_t(chip.hipMemAllocPitch(
-        <void **>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,&pitch,widthInBytes,height,elementSizeBytes))    # fully specified
-    return (_hipMemAllocPitch__retval,pitch)
+        <void **>&dptr._ptr,&pitch,widthInBytes,height,elementSizeBytes))    # fully specified
+    return (_hipMemAllocPitch__retval,dptr,pitch)
 
 
 @cython.embedsignature(True)
@@ -28619,7 +28626,7 @@ def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object s
 
 
 @cython.embedsignature(True)
-def hipModuleGetGlobal(object dptr, object hmod, const char * name):
+def hipModuleGetGlobal(object hmod, const char * name):
     """@brief Returns a global pointer from a module.
     Returns in *dptr and *bytes the pointer and size of the global of name name located in module hmod.
     If no variable of that name exists, it returns hipErrorNotFound. Both parameters dptr and bytes are optional.
@@ -28630,11 +28637,12 @@ def hipModuleGetGlobal(object dptr, object hmod, const char * name):
     @param[in]   name  Name of global to retrieve
     @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
     """
+    dptr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long bytes
     _hipModuleGetGlobal__retval = hipError_t(chip.hipModuleGetGlobal(
-        <void **>hip._util.types.DataHandle.from_pyobj(dptr)._ptr,&bytes,
+        <void **>&dptr._ptr,&bytes,
         ihipModule_t.from_pyobj(hmod)._ptr,name))    # fully specified
-    return (_hipModuleGetGlobal__retval,bytes)
+    return (_hipModuleGetGlobal__retval,dptr,bytes)
 
 
 @cython.embedsignature(True)
