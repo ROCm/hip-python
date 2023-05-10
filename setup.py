@@ -416,7 +416,7 @@ def generate_hip_package_files():
             else:
                 size = "size"
             parm.parent.python_body_prepend_before_return(
-                f"{parm.name}.configure(shape=(cpython.long.PyLong_FromUnsignedLong({size}),))"
+                f"{parm.name}.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong({size}),))"
             )
             return "hip._util.types.Array"
         return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
@@ -760,11 +760,12 @@ AVAILABLE_GENERATORS = dict(
   hiprand=generate_hiprand_package_files,
 )
 
-for entry in HIP_PYTHON_LIBS.split(","):
+lib_names = AVAILABLE_GENERATORS.keys() if HIP_PYTHON_LIBS == "*" else HIP_PYTHON_LIBS.split(",")
+for entry in lib_names:
     libname = entry.strip()
     if libname not in AVAILABLE_GENERATORS:
         available_libs = ", ".join([f"'{a}'" for a  in AVAILABLE_GENERATORS.keys()])
-        msg = f"no codegenerator found for library '{libname}'; please choose one of: {available_libs}"
+        msg = f"no codegenerator found for library '{libname}'; please choose one of: {available_libs}, or '*', which implies that all code generators will be used."
         if HIP_PYTHON_ERR_IF_LIB_NOT_FOUND:
             raise KeyError(msg)
         else:
