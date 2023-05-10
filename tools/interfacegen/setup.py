@@ -760,7 +760,10 @@ AVAILABLE_GENERATORS = dict(
   hiprand=generate_hiprand_package_files,
 )
 
-lib_names = AVAILABLE_GENERATORS.keys() if HIP_PYTHON_LIBS == "*" else HIP_PYTHON_LIBS.split(",")
+if len(HIP_PYTHON_LIBS.strip()):
+    lib_names = AVAILABLE_GENERATORS.keys() if HIP_PYTHON_LIBS == "*" else HIP_PYTHON_LIBS.split(",")
+else:
+    lib_names = []
 for entry in lib_names:
     libname = entry.strip()
     if libname not in AVAILABLE_GENERATORS:
