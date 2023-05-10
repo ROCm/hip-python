@@ -18,9 +18,7 @@ from _codegen.cython import (
     DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
 )
 
-from _codegen.cparser import (
-    TypeHandler
-)
+from _codegen.cparser import TypeHandler
 
 TypeCategory = TypeHandler.TypeCategory
 
@@ -37,6 +35,8 @@ from _codegen.tree import (
 
 from _codegen.control import PointerParamIntent
 
+from _parse_hipify_perl import render_hipify_perl_info
+
 __author__ = "AMD_AUTHOR"
 
 # Configuration
@@ -51,6 +51,7 @@ CFLAGS = os.environ.get("CFLAGS", None)
 HIP_PLATFORM = os.environ.get("HIP_PLATFORM", "amd")
 if HIP_PLATFORM not in ("amd", "hcc"):
     raise RuntimeError("Currently only HIP_PLATFORM=amd is supported")
+
 
 class HipPlatform(enum.IntEnum):
     AMD = 0
@@ -73,7 +74,9 @@ class HipPlatform(enum.IntEnum):
     def cflags(self):
         return ["-D", f"__HIP_PLATFORM_{self.name}__"]
 
+
 hip_platform = HipPlatform.from_string(HIP_PLATFORM)
+
 
 def get_bool_environ_var(env_var, default):
     yes_vals = ("true", "1", "t", "y", "yes")
@@ -84,23 +87,28 @@ def get_bool_environ_var(env_var, default):
     elif value in no_vals:
         return False
     else:
-        allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals)+list(no_vals))])
-        raise RuntimeError(f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}")
+        allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals) + list(no_vals))])
+        raise RuntimeError(
+            f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}"
+        )
+
 
 HIP_PYTHON_GENERATE = get_bool_environ_var("HIP_PYTHON_GENERATE", "true")
-HIP_PYTHON_LIBS = os.environ.get("HIP_PYTHON_LIBS","hip,hiprtc")
-HIP_PYTHON_ERR_IF_LIB_NOT_FOUND = get_bool_environ_var("HIP_PYTHON_ERR_IF_LIB_NOT_FOUND","true")
-HIP_PYTHON_BUILD = get_bool_environ_var("HIP_PYTHON_BUILD", "true")
-HIP_PYTHON_RUNTIME_LINKING = get_bool_environ_var(
-    "HIP_PYTHON_RUNTIME_LINKING", "true"
+HIP_PYTHON_LIBS = os.environ.get("HIP_PYTHON_LIBS", "hip,hiprtc")
+HIP_PYTHON_ERR_IF_LIB_NOT_FOUND = get_bool_environ_var(
+    "HIP_PYTHON_ERR_IF_LIB_NOT_FOUND", "true"
 )
+HIP_PYTHON_BUILD = get_bool_environ_var("HIP_PYTHON_BUILD", "true")
+HIP_PYTHON_RUNTIME_LINKING = get_bool_environ_var("HIP_PYTHON_RUNTIME_LINKING", "true")
 HIP_PYTHON_VERBOSE = get_bool_environ_var("HIP_PYTHON_VERBOSE", "true")
 
 GENERATOR_ARGS = hip_platform.cflags + [f"-I{ROCM_INC}"]
 if HIP_PYTHON_GENERATE:
     HIP_PYTHON_CLANG_RES_DIR = os.environ.get("HIP_PYTHON_CLANG_RES_DIR", None)
     if not HIP_PYTHON_CLANG_RES_DIR:
-        raise RuntimeError(textwrap.dedent("""\
+        raise RuntimeError(
+            textwrap.dedent(
+                """\
             Environment variable HIP_PYTHON_CLANG_RES_DIR is not set.
             
             Hint: If `clang` is installed and in the PATH, you can 
@@ -112,9 +120,11 @@ if HIP_PYTHON_GENERATE:
             
             Hint: If you have the HIP SDK installed, the last include folder listed in ``hipconfig --cpp_config``
             points to the `amdclang` compiler's resource dir too.
-            """))
+            """
+            )
+        )
 
-    GENERATOR_ARGS += ["-resource-dir",HIP_PYTHON_CLANG_RES_DIR]
+    GENERATOR_ARGS += ["-resource-dir", HIP_PYTHON_CLANG_RES_DIR]
 
 if HIP_PYTHON_VERBOSE:
     print("Environment variables:")
@@ -127,7 +137,7 @@ if HIP_PYTHON_VERBOSE:
     print(f"{HIP_PYTHON_BUILD=}")
     print(f"{HIP_PYTHON_RUNTIME_LINKING=}")
     print(f"{HIP_PYTHON_VERBOSE=}")
-    
+
 
 CYTHON_EXT_MODULES = []
 
@@ -136,12 +146,13 @@ HIP_VERSION_MINOR = 0
 HIP_VERSION_PATCH = 0
 HIP_VERSION_GITHASH = ""
 
+
 def generate_hiprtc_package_files():
     global ROCM_INC
     global HIP_PYTHON_GENERATE
     global GENERATOR_ARGS
     global CYTHON_EXT_MODULES
-    
+
     # hiprtc
     def hiprtc_node_filter(node: Node):
         if isinstance(node, MacroDefinition):
@@ -153,24 +164,23 @@ def generate_hiprtc_package_files():
         return False
 
     def hiprtc_ptr_parm_intent(parm: Parm):
-        """
-        """
+        """ """
         out_parms = (
-            ("hiprtcVersion","major"),
-            ("hiprtcVersion","minor"),
-            ("hiprtcCreateProgram","prog"),
-            ("hiprtcGetLoweredName","lowered_name"), # rank == 1
-            ("hiprtcGetProgramLogSize","logSizeRet"),
-            ("hiprtcGetCodeSize","codeSizeRet"),
-            ("hiprtcGetBitcodeSize","bitcode_size"),
-            ("hiprtcLinkCreate","hip_link_state_ptr"),
-            ("hiprtcLinkComplete","bin_out"), # rank == 1
-            ("hiprtcLinkComplete","size_out"),
+            ("hiprtcVersion", "major"),
+            ("hiprtcVersion", "minor"),
+            ("hiprtcCreateProgram", "prog"),
+            ("hiprtcGetLoweredName", "lowered_name"),  # rank == 1
+            ("hiprtcGetProgramLogSize", "logSizeRet"),
+            ("hiprtcGetCodeSize", "codeSizeRet"),
+            ("hiprtcGetBitcodeSize", "bitcode_size"),
+            ("hiprtcLinkCreate", "hip_link_state_ptr"),
+            ("hiprtcLinkComplete", "bin_out"),  # rank == 1
+            ("hiprtcLinkComplete", "size_out"),
         )
-        inout_parms = ( # these buffers must be allocated by user
-            ("hiprtcGetCode","code"),
-            ("hiprtcGetProgramLog","log"),
-            ("hiprtcGetBitcode","bitcode"),
+        inout_parms = (  # these buffers must be allocated by user
+            ("hiprtcGetCode", "code"),
+            ("hiprtcGetProgramLog", "log"),
+            ("hiprtcGetBitcode", "bitcode"),
         )
         if (parm.parent.name, parm.name) in out_parms:
             return PointerParamIntent.OUT
@@ -182,7 +192,8 @@ def generate_hiprtc_package_files():
         """Actual rank of the variables underlying pointer indirections."""
         if isinstance(node, Parm):
             if (
-                node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(degree=1)
+                node.is_pointer_to_basic_type(degree=1)
+                and not node.is_pointer_to_char(degree=1)
                 or node.is_pointer_to_record(degree=1)
                 or node.is_pointer_to_record(degree=2)
             ):
@@ -190,12 +201,12 @@ def generate_hiprtc_package_files():
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
-    
+
     def hiprtc_ptr_complicated_type_handler(parm: Parm):
         list_of_str_parms = (
-            ("hiprtcCompileProgram","options"),
-            ("hiprtcCreateProgram","headers"),
-            ("hiprtcCreateProgram","includeNames"),
+            ("hiprtcCompileProgram", "options"),
+            ("hiprtcCreateProgram", "headers"),
+            ("hiprtcCreateProgram", "includeNames"),
         )
         if (parm.parent.name, parm.name) in list_of_str_parms:
             return "hip._util.types.ListOfBytes"
@@ -219,7 +230,7 @@ def generate_hiprtc_package_files():
         ("hip.chiprtc", ["./hip/chiprtc.pyx"]),
         ("hip.hiprtc", ["./hip/hiprtc.pyx"]),
     ]
-    
+
 
 def generate_hip_package_files():
     global ROCM_INC
@@ -230,7 +241,7 @@ def generate_hip_package_files():
     global HIP_VERSION_MAJOR
     global HIP_VERSION_MINOR
     global HIP_VERSION_PATCH
-    global HIP_VERSION_GITHASH 
+    global HIP_VERSION_GITHASH
 
     # hip
     hip_str_macros = (
@@ -238,9 +249,9 @@ def generate_hip_package_files():
         "HIP_VERSION_BUILD_NAME",
     )
     hip_void_p_macros = (
-       "HIP_LAUNCH_PARAM_BUFFER_POINTER",
-       "HIP_LAUNCH_PARAM_BUFFER_SIZE",
-       "HIP_LAUNCH_PARAM_END",
+        "HIP_LAUNCH_PARAM_BUFFER_POINTER",
+        "HIP_LAUNCH_PARAM_BUFFER_SIZE",
+        "HIP_LAUNCH_PARAM_END",
     )
     hip_int_macros = (
         #  from hip/hip_version.h
@@ -336,8 +347,8 @@ def generate_hip_package_files():
         if not isinstance(node, MacroDefinition):
             if "hip/" in node.file:
                 # sime modifications:
-                if isinstance(node,Record) and node.name == "dim3":
-                    node.set_defaults(x=1,y=1,z=1)
+                if isinstance(node, Record) and node.name == "dim3":
+                    node.set_defaults(x=1, y=1, z=1)
                 return True
         return False
 
@@ -375,11 +386,11 @@ def generate_hip_package_files():
                 and not parm.is_pointer_to_char(degree=1)
             )
         ):
-            if (parm.parent.name, parm.name) == ("hipDeviceGetAttribute","pi"):
+            if (parm.parent.name, parm.name) == ("hipDeviceGetAttribute", "pi"):
                 return PointerParamIntent.INOUT
             return PointerParamIntent.OUT
         if parm.is_pointer_to_void(degree=2):
-            if parm.name in ["devPtr","ptr","dev_ptr","data","dptr"]:
+            if parm.name in ["devPtr", "ptr", "dev_ptr", "data", "dptr"]:
                 return PointerParamIntent.OUT
         return PointerParamIntent.IN
 
@@ -396,19 +407,19 @@ def generate_hip_package_files():
         elif isinstance(node, Field):
             pass  # nothing to do
         return 1
-   
+
     def toclassname(name: str):
         return name[0].upper() + name[1:]
 
     def hip_ptr_complicated_type_handler(parm: Node):
-        if (parm.parent.name, parm.name) == ("hipModuleLaunchKernel","extra"): 
+        if (parm.parent.name, parm.name) == ("hipModuleLaunchKernel", "extra"):
             return f"hip._hip_helpers.{toclassname(parm.parent.name)}_{parm.name}"
         if (parm.parent.name, parm.name) in (
-            ("hipMalloc","ptr"),
-            ("hipExtMallocWithFlags","ptr"),
-            ("hipMallocManaged","dev_ptr"),
-            ("hipMallocAsync","dev_ptr"),
-            ("hipMallocFromPoolAsync","dev_ptr"),
+            ("hipMalloc", "ptr"),
+            ("hipExtMallocWithFlags", "ptr"),
+            ("hipMallocManaged", "dev_ptr"),
+            ("hipMallocAsync", "dev_ptr"),
+            ("hipMallocFromPoolAsync", "dev_ptr"),
         ):
             if parm.parent.name == "hipExtMallocWithFlags":
                 size = "sizeBytes"
@@ -433,9 +444,11 @@ def generate_hip_package_files():
         macro_type=hip_macro_type,
         cflags=GENERATOR_ARGS,
     )
-    generator.python_interface_impl_preamble += textwrap.dedent("""\
+    generator.python_interface_impl_preamble += textwrap.dedent(
+        """\
     cimport hip._hip_helpers
-    """)
+    """
+    )
     if HIP_PYTHON_GENERATE:
         generator.write_package_files(output_dir="hip")
 
@@ -444,7 +457,7 @@ def generate_hip_package_files():
     HIP_VERSION_PATCH = 0
     HIP_VERSION_GITHASH = ""
     for node in generator.backend.root.walk():
-        if isinstance(node,MacroDefinition):
+        if isinstance(node, MacroDefinition):
             last_token = list(node.cursor.get_tokens())[-1].spelling
             if node.name == "HIP_VERSION_MAJOR":
                 HIP_VERSION_MAJOR = int(last_token)
@@ -461,6 +474,7 @@ def generate_hip_package_files():
         ("hip.hip", ["./hip/hip.pyx"]),
     ]
 
+
 # hipblas
 def generate_hipblas_package_files():
     global ROCM_INC
@@ -469,11 +483,11 @@ def generate_hipblas_package_files():
     global CYTHON_EXT_MODULES
 
     def hipblas_node_filter(node: Node):
-        if node.name in ("__int16_t","__uint16_t"):
+        if node.name in ("__int16_t", "__uint16_t"):
             return True
         if not isinstance(node, MacroDefinition):
             if node.name[0:7] in ("hipblas,HIPBLAS"):
-                #if "Batched" in node.name:
+                # if "Batched" in node.name:
                 #    return False
                 return True
         elif node.name in (
@@ -496,7 +510,7 @@ def generate_hipblas_package_files():
 
     def hipblas_ptr_rank(node: Node):
         """Actual rank of the variables underlying pointer indirections.
-        
+
         Most of the parameter names follow LAPACK convention.
         """
         if isinstance(node, Parm):
@@ -529,11 +543,14 @@ def generate_hipblas_package_files():
                 "omega",
             ):
                 return 0
-            elif len(node.name) == 1 and node.name.lower() in "abcdefghijklmnopqrstuvwxyz":
+            elif (
+                len(node.name) == 1
+                and node.name.lower() in "abcdefghijklmnopqrstuvwxyz"
+            ):
                 categories = list(node.categorized_type_layer_kinds())
-                if categories in ( 
-                    [TypeCategory.ARRAY,TypeCategory.POINTER,TypeCategory.BASIC],
-                    [TypeCategory.ARRAY,TypeCategory.POINTER,TypeCategory.VOID],
+                if categories in (
+                    [TypeCategory.ARRAY, TypeCategory.POINTER, TypeCategory.BASIC],
+                    [TypeCategory.ARRAY, TypeCategory.POINTER, TypeCategory.VOID],
                 ):
                     return 2
                 return 1
@@ -554,20 +571,25 @@ def generate_hipblas_package_files():
         ptr_rank=hipblas_ptr_rank,
         cflags=GENERATOR_ARGS,
     )
-    generator.c_interface_decl_preamble += textwrap.dedent("""\
+    generator.c_interface_decl_preamble += textwrap.dedent(
+        """\
     from .chip cimport hipStream_t
-    """)
-    generator.python_interface_decl_preamble += textwrap.dedent("""\
+    """
+    )
+    generator.python_interface_decl_preamble += textwrap.dedent(
+        """\
     #ctypedef int16_t __int16_t
     #ctypedef uint16_t __uint16_t
     from .hip cimport ihipStream_t
-    """)
+    """
+    )
     if HIP_PYTHON_GENERATE:
         generator.write_package_files(output_dir="hip")
     CYTHON_EXT_MODULES += [
         ("hip.chipblas", ["./hip/chipblas.pyx"]),
         ("hip.hipblas", ["./hip/hipblas.pyx"]),
     ]
+
 
 # rccl
 def generate_rccl_package_files():
@@ -578,8 +600,7 @@ def generate_rccl_package_files():
 
     def rccl_node_filter(node: Node):
         if not isinstance(node, MacroDefinition):
-            if ( node.name.startswith("nccl")
-                 or node.name.startswith("pnccl") ):
+            if node.name.startswith("nccl") or node.name.startswith("pnccl"):
                 return True
         elif node.name in (
             "NCCL_MAJOR",
@@ -597,9 +618,7 @@ def generate_rccl_package_files():
         return False
 
     def rccl_macro_type(node: MacroDefinition):
-        rccl_str_macros = (
-           "NCCL_SUFFIX"
-        )
+        rccl_str_macros = "NCCL_SUFFIX"
         if node.name in rccl_str_macros:
             return "char*"
         return "int"
@@ -611,12 +630,12 @@ def generate_rccl_package_files():
         if node.is_pointer_to_record(degree=2):
             return PointerParamIntent.OUT
         if node.is_pointer_to_record(degree=1):
-            if (node.parent.name,node.name) == "ncclGetUniqueId":
+            if (node.parent.name, node.name) == "ncclGetUniqueId":
                 return PointerParamIntent.OUT
         if node.is_pointer_to_basic_type(degree=1):
-            if (node.parent.name,node.name) in (
-                ("ncclCommInitAll","devlist"),
-                ("pncclCommInitAll","devlist"),
+            if (node.parent.name, node.name) in (
+                ("ncclCommInitAll", "devlist"),
+                ("pncclCommInitAll", "devlist"),
             ):
                 return PointerParamIntent.IN
             return PointerParamIntent.OUT
@@ -624,7 +643,7 @@ def generate_rccl_package_files():
 
     def rccl_ptr_rank(node: Node):
         """Actual rank of the variables underlying pointer indirections.
-        
+
         Most of the parameter names follow LAPACK convention.
         """
         if isinstance(node, Parm):
@@ -633,9 +652,9 @@ def generate_rccl_package_files():
             if node.is_pointer_to_record(degree=2):
                 return 0
             elif node.is_pointer_to_basic_type(degree=1):
-                if (node.parent.name,node.name) in (
-                    ("ncclCommInitAll","devlist"),
-                    ("pncclCommInitAll","devlist"),
+                if (node.parent.name, node.name) in (
+                    ("ncclCommInitAll", "devlist"),
+                    ("pncclCommInitAll", "devlist"),
                 ):
                     return 1
                 return 0
@@ -655,14 +674,18 @@ def generate_rccl_package_files():
         ptr_rank=rccl_ptr_rank,
         cflags=GENERATOR_ARGS,
     )
-    generator.c_interface_decl_preamble += textwrap.dedent("""\
+    generator.c_interface_decl_preamble += textwrap.dedent(
+        """\
     from .chip cimport hipStream_t
-    """)
-    generator.python_interface_decl_preamble += textwrap.dedent("""\
+    """
+    )
+    generator.python_interface_decl_preamble += textwrap.dedent(
+        """\
     #ctypedef int16_t __int16_t
     #ctypedef uint16_t __uint16_t
     from .hip cimport ihipStream_t
-    """)
+    """
+    )
     if HIP_PYTHON_GENERATE:
         generator.write_package_files(output_dir="hip")
     CYTHON_EXT_MODULES += [
@@ -670,7 +693,8 @@ def generate_rccl_package_files():
         ("hip.rccl", ["./hip/rccl.pyx"]),
     ]
 
- #hiprand
+
+# hiprand
 def generate_hiprand_package_files():
     global ROCM_INC
     global HIP_PYTHON_GENERATE
@@ -679,10 +703,7 @@ def generate_hiprand_package_files():
 
     def hiprand_node_filter(node: Node):
         if not isinstance(node, MacroDefinition):
-            if ( 
-                node.name.startswith("hiprand")
-                or node.name == "uint4"
-            ):
+            if node.name.startswith("hiprand") or node.name == "uint4":
                 return True
             if node.name.startswith("rocrand"):
                 if not isinstance(node, Function):
@@ -706,13 +727,13 @@ def generate_hiprand_package_files():
             return PointerParamIntent.OUT
         if node.is_pointer_to_basic_type(degree=1):
             if node.name == "output_data":
-                return PointerParamIntent.INOUT    
+                return PointerParamIntent.INOUT
             return PointerParamIntent.OUT
         return PointerParamIntent.IN
 
     def hiprand_ptr_rank(node: Node):
         """Actual rank of the variables underlying pointer indirections.
-        
+
         Most of the parameter names follow LAPACK convention.
         """
         if isinstance(node, Parm):
@@ -738,12 +759,16 @@ def generate_hiprand_package_files():
         ptr_rank=hiprand_ptr_rank,
         cflags=GENERATOR_ARGS,
     )
-    generator.c_interface_decl_preamble += textwrap.dedent("""\
+    generator.c_interface_decl_preamble += textwrap.dedent(
+        """\
     from .chip cimport hipStream_t
-    """)
-    generator.python_interface_decl_preamble += textwrap.dedent("""\
+    """
+    )
+    generator.python_interface_decl_preamble += textwrap.dedent(
+        """\
     from .hip cimport ihipStream_t
-    """)
+    """
+    )
     if HIP_PYTHON_GENERATE:
         generator.write_package_files(output_dir="hip")
     CYTHON_EXT_MODULES += [
@@ -751,45 +776,68 @@ def generate_hiprand_package_files():
         ("hip.hiprand", ["./hip/hiprand.pyx"]),
     ]
 
+
+def generate_hipify_file():
+    template = open(os.path.join("hip", "hipify.py.in"), "r").read()
+    with open(os.path.join("hip", "hipify.py"), "w") as outfile:
+        outfile.write(
+            template.replace(
+                "{{fields}}",
+                render_hipify_perl_info(os.path.join(ROCM_PATH, "bin", "hipify-perl")),
+            )
+        )
+
+
 AVAILABLE_GENERATORS = dict(
-  hip=generate_hip_package_files,
-  hiprtc=generate_hiprtc_package_files,
-  hipblas=generate_hipblas_package_files,
-  rccl=generate_rccl_package_files,
-  hiprand=generate_hiprand_package_files,
+    hip=generate_hip_package_files,
+    hiprtc=generate_hiprtc_package_files,
+    hipblas=generate_hipblas_package_files,
+    rccl=generate_rccl_package_files,
+    hiprand=generate_hiprand_package_files,
+    hipify=generate_hipify_file,
 )
 
 if len(HIP_PYTHON_LIBS.strip()):
-    lib_names = AVAILABLE_GENERATORS.keys() if HIP_PYTHON_LIBS == "*" else HIP_PYTHON_LIBS.split(",")
+    lib_names = (
+        AVAILABLE_GENERATORS.keys()
+        if HIP_PYTHON_LIBS == "*"
+        else HIP_PYTHON_LIBS.split(",")
+    )
 else:
     lib_names = []
 for entry in lib_names:
     libname = entry.strip()
     if libname not in AVAILABLE_GENERATORS:
-        available_libs = ", ".join([f"'{a}'" for a  in AVAILABLE_GENERATORS.keys()])
+        available_libs = ", ".join([f"'{a}'" for a in AVAILABLE_GENERATORS.keys()])
         msg = f"no codegenerator found for library '{libname}'; please choose one of: {available_libs}, or '*', which implies that all code generators will be used."
         if HIP_PYTHON_ERR_IF_LIB_NOT_FOUND:
             raise KeyError(msg)
         else:
-            warnings.warn("default",msg)
+            warnings.warn("default", msg)
     AVAILABLE_GENERATORS[libname]()
 
-HIP_VERSION_NAME = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}-{HIP_VERSION_GITHASH}"
-HIP_VERSION= (HIP_VERSION_MAJOR * 10000000 + HIP_VERSION_MINOR * 100000 + HIP_VERSION_PATCH)
+HIP_VERSION_NAME = (
+    f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}-{HIP_VERSION_GITHASH}"
+)
+HIP_VERSION = (
+    HIP_VERSION_MAJOR * 10000000 + HIP_VERSION_MINOR * 100000 + HIP_VERSION_PATCH
+)
 
-with open("hip/__init__.py","w") as f:
-    init_content = textwrap.dedent(f"""\
+with open("hip/__init__.py", "w") as f:
+    init_content = textwrap.dedent(
+        f"""\
         from ._version import *
         HIP_VERSION = {HIP_VERSION}
         HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
         HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
 
         from . import _util
-        """)
-    
+        """
+    )
+
     for pkg_name in AVAILABLE_GENERATORS.keys():
         init_content += f"from . import {pkg_name}\n"
-    
+
     f.write(init_content)
 
 # Build Cython packages
@@ -806,7 +854,7 @@ if HIP_PYTHON_BUILD:
 
     extra_compile_args = hip_platform.cflags
     if CFLAGS == None:
-        extra_compile_args += ["-O3"]+["-D","__half=uint16_t"]
+        extra_compile_args += ["-O3"] + ["-D", "__half=uint16_t"]
 
     def create_extension(name, sources):
         return Extension(
@@ -818,14 +866,12 @@ if HIP_PYTHON_BUILD:
             language="c",
             extra_compile_args=extra_compile_args,
         )
-    
+
     if HIP_PYTHON_RUNTIME_LINKING:
         CYTHON_EXT_MODULES.insert(
             0, ("hip._util.posixloader", ["./hip/_util/posixloader.pyx"])
         )
-        CYTHON_EXT_MODULES.insert(
-            0, ("hip._util.types", ["./hip/_util/types.pyx"])
-        )
+        CYTHON_EXT_MODULES.insert(0, ("hip._util.types", ["./hip/_util/types.pyx"]))
 
     ext_modules = []
     for name, sources in CYTHON_EXT_MODULES:
@@ -840,8 +886,8 @@ if HIP_PYTHON_BUILD:
 
     setup(
         ext_modules=ext_modules,
-        use_scm_version = { 
+        use_scm_version={
             "write_to": "hip/_version.py",
             "local_scheme": lambda v: f"+{HIP_VERSION_NAME.replace('-','.')}",
-        }
+        },
     )
