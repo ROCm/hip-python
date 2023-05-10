@@ -411,7 +411,7 @@ cdef class DeviceArray(DataHandle):
                 self.__cuda_array_interface__["stream"] = int(DataHandle.from_pyobj(stream))
         if "read_only" in kwargs:
             read_only = kwargs["read_only"]
-            if not isinstance(shape,bool):
+            if not isinstance(read_only,bool):
                 raise ValueError("'read_only:' expected bool")
             old_data = self.__cuda_array_interface__["data"]
             self.__cuda_array_interface__["data"] = (old_data[0],read_only)
@@ -499,26 +499,26 @@ cdef class DeviceArray(DataHandle):
         cdef bint extract_full_dim = False
 
         if subscript.step not in (None,1):
-            raise ValueError("subscript.step='{subscript.step}' must be 'None' or '1'.")  
+            raise ValueError(f"subscript.step='{subscript.step}' must be 'None' or '1'.")  
         if subscript.stop != None:
             if subscript.stop <= 0:
-                raise ValueError("subscript.stop='{subscript.stop}' must be greater than zero.")
+                raise ValueError(f"subscript.stop='{subscript.stop}' must be greater than zero.")
             if subscript.stop > shape_dim:
-                raise ValueError("subscript.stop='{subscript.stop}' must not be greater than axis' exclusive upper bound ({shape_dim}).")
+                raise ValueError(f"subscript.stop='{subscript.stop}' must not be greater than axis' exclusive upper bound ({shape_dim}).")
             stop = subscript.stop
         else:
             stop = shape_dim
         if subscript.start != None:
             if subscript.start < 0:
-                raise ValueError("subscript.start='{subscript.start}' must be non-negative.")
+                raise ValueError(f"subscript.start='{subscript.start}' must be non-negative.")
             if subscript.start >= shape_dim:
-                raise ValueError("subscript.start='{subscript.start}' must be smaller than axis' exclusive upper bound ({shape_dim}).")
+                raise ValueError(f"subscript.start='{subscript.start}' must be smaller than axis' exclusive upper bound ({shape_dim}).")
             start = subscript.start
         else:
             start = 0
 
         if start >= stop:
-            raise ValueError("subscript.stop='{subscript.stop}' must be greater than subscript.start='{subscript.start}'")
+            raise ValueError(f"subscript.stop='{subscript.stop}' must be greater than subscript.start='{subscript.start}'")
 
         extract_full_dim = (
             start == 0
@@ -572,6 +572,7 @@ cdef class DeviceArray(DataHandle):
             offset = start*stride
             stride *= <size_t>shape[i]
         return DeviceArray.from_ptr(<void*>(<unsigned long>self._ptr + offset)).configure(
+            _force=True,
             typestr=self.typestr,
             itemsize=self.itemsize,
             shape=tuple(result_shape),
