@@ -20,6 +20,8 @@ c_interface_funptr_name_template = "_{name}__funptr"
 
 python_interface_retval_template = "_{name}__retval"
 
+python_interface_int_enum_base_class = "enum.IntEnum"
+
 # Always return a tuple if there is at least one return value
 python_interface_always_return_tuple = True
 
@@ -750,11 +752,12 @@ class EnumMixin(CythonMixin):
 
         assert isinstance(self, tree.Enum)
         global indent
+        global python_interface_int_enum_base_class
         if self.is_anonymous:
             return "\n".join(self._render_python_enums(cprefix))
         else:
             name = self._cython_and_c_name(self.global_name(self.sep))
-            result = f"class {name}(enum.IntEnum):\n" + textwrap.indent(
+            result = f"class {name}({python_interface_int_enum_base_class}):\n" + textwrap.indent(
                 "\n".join(self._render_python_enums(cprefix)), indent
             )
             # add methods

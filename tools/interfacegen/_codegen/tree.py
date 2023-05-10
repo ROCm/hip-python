@@ -5,6 +5,7 @@ __author__ = "AMD_AUTHOR"
 import collections
 import re
 import sys
+import warnings
 import clang.cindex
 
 from . import control
@@ -1054,7 +1055,7 @@ class Function(Node, Typed, *__FunctionMixin):
 
 
 def from_libclang_translation_unit(
-    translation_unit: clang.cindex.TranslationUnit, warnings=control.Warnings.WARN
+    translation_unit: clang.cindex.TranslationUnit, warn=control.Warnings.WARN
 ) -> Root:
     """Create a tree from a libclang translation unit."""
 
@@ -1085,17 +1086,19 @@ def from_libclang_translation_unit(
     def handle_top_level_cursor_(cursor: clang.cindex.Cursor, root: Root):
         """Handle cursors whose parent is the cursor of kind TRANSLATION_UNIT."""
         nonlocal structure_types
+        nonlocal warn
+
         if cursor.kind in structure_types.keys():
             handle_nested_record_or_enum_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
             handle_typedef_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.VAR_DECL:
-            if warnings in (control.Warnings.WARN, control.Warnings.ERROR):
+            if warn in (control.Warnings.WARN, control.Warnings.ERROR):
                 msg = (
                     f"VAR_DECL cursor '{cursor.spelling}' not handled (not implemented)"
                 )
-                if warnings == control.Warnings.WARN:
-                    print(f"WARN: {msg}'", file=sys.stderr)
+                if warn == control.Warnings.WARN:
+                    warnings.warn("default",msg)
                 else:
                     print(f"ERROR: {msg}'", file=sys.stderr)
                     sys.exit(2)
