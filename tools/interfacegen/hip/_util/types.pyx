@@ -234,7 +234,7 @@ cdef class Array(DataHandle):
         self._ptr = NULL
         self._py_buffer_acquired = False
         self._itemsize = 1
-        self.___cuda_array_interface__ = dict(
+        self.__cuda_array_interface__ = dict(
             shape=(1,),
             typestr='b', # See: https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__
             data=(None,False), # 1: data pointer as int (long int), 2: read-only?
@@ -247,8 +247,9 @@ cdef class Array(DataHandle):
         )
 
     cdef _set_ptr(self,void* ptr):
+        cdef tuple old_data = self.__cuda_array_interface__["data"]
         self._ptr = ptr
-        self.___cuda_array_interface__["data"][0] = cpython.long.PyLong_FromVoidPtr(ptr)
+        self.__cuda_array_interface__["data"] = (cpython.long.PyLong_FromVoidPtr(ptr),old_data[1])
 
     @staticmethod
     cdef Array from_ptr(void* ptr):
@@ -263,7 +264,7 @@ cdef class Array(DataHandle):
         See:
             set_bounds
         """
-        return len(self.___cuda_array_interface__["shape"])
+        return len(self.__cuda_array_interface__["shape"])
         
     cdef int _numpy_typestr_to_bytes(self,str typestr):
         if typestr in ("?", "=?", "<?", ">?", "bool", "bool_", "bool8"):
@@ -361,14 +362,13 @@ cdef class Array(DataHandle):
         """
         cdef list supported_keys = ["shape","typestr","stream"]
         cdef list extra_keys = ["itemsize","read_only","_force"]
-        cdef list allowed_keys_str =", ".join([f"'{e}'" for e in supported_keys + extra_keys])
+        cdef str allowed_keys_str =", ".join([f"'{e}'" for e in supported_keys + extra_keys])
         cdef bint force_new_shape
         cdef tuple shape
         cdef tuple old_shape
+        cdef tuple old_data
         cdef bint read_only
         cdef int itemsize = -1
-        cdef size_t old_num_bytes
-        cdef size_t new_num_bytes
         cdef str typestr = None
 
         for k in kwargs:
@@ -376,7 +376,7 @@ cdef class Array(DataHandle):
                 raise KeyError(f"allowed keyword arguments are: {allowed_keys_str}")
         
         force_new_shape = kwargs.get("_force",False)
-        shape = old_shape = self.___cuda_array_interface__["shape"]
+        shape = old_shape = self.__cuda_array_interface__["shape"]
         if "shape" in kwargs:
             shape = kwargs["shape"]
             if not len(shape):
@@ -384,10 +384,10 @@ cdef class Array(DataHandle):
             for i in shape:
                 if not isinstance(i,int):
                     raise TypeError("'shape': entries must be int")
-            #self.___cuda_array_interface__["shape"] = shape
+            #self.__cuda_array_interface__["shape"] = shape
         if "typestr" in kwargs:
             typestr = kwargs["typestr"]
-            self.___cuda_array_interface__["typestr"] = typestr
+            self.__cuda_array_interface__["typestr"] = typestr
             itemsize = self._numpy_typestr_to_bytes(typestr)
             if itemsize < 0:
                 if typestr not in self.NUMPY_CHAR_CODES:
@@ -408,21 +408,22 @@ cdef class Array(DataHandle):
                     return ValueError("'stream': value '0' is disallowed as it would be ambiguous between None and the default stream, more details: https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html")
                 elif stream < 0:
                     return ValueError("'stream': expected positive integer")
-                self.___cuda_array_interface__["stream"] = stream
+                self.__cuda_array_interface__["stream"] = stream
             else:
-                self.___cuda_array_interface__["stream"] = DataHandle.from_pyobj(stream).ptr()
+                self.__cuda_array_interface__["stream"] = DataHandle.from_pyobj(stream).ptr()
         if "read_only" in kwargs:
             read_only = kwargs["read_only"]
             if not isinstance(shape,bool):
                 raise ValueError("'read_only:' expected bool")
-            self.___cuda_array_interface__["data"][1] = read_only
+            old_data = self.__cuda_array_interface__["data"]
+            self.__cuda_array_interface__["data"] = (old_data[0],read_only)
 
         if itemsize > 0 or shape != old_shape:
             old_num_bytes = self._itemsize * math.prod(old_shape)
             new_num_bytes = itemsize * math.prod(shape)
             if old_num_bytes == new_num_bytes or force_new_shape:
                 self._itemsize = itemsize
-                self.___cuda_array_interface__["shape"] = shape
+                self.__cuda_array_interface__["shape"] = shape
             else:
                 raise ValueError("new shape would change buffer size information: {old_num_bytes} B -> {new_num_bytes} B. Additionaly specify `_force=True` if this is intended.")
 
@@ -589,25 +590,25 @@ cdef class Array(DataHandle):
             offset = start*stride
             stride *= <size_t>shape[i]
         return Array.from_ptr(<void*>(<unsigned long>self._ptr + offset)).configure({
-            "typestr":  self.___cuda_array_interface__["typestr"],
-            "itemsize":  self._itemsize,
+            "typestr":  self.typestr,
+            "itemsize":  self.itemsize,
             "shape": tuple(result_shape),
-            "read_only":  self.___cuda_array_interface__["data"]["read_only"],
-            "stream": self.___cuda_array_interface__["stream"],
+            "read_only":  self.is_read_only,
+            "stream": self.stream_as_int,
         })
 
     @property
     def typestr(self):
-        return self.___cuda_array_interface__["typestr"]
+        return self.__cuda_array_interface__["typestr"]
     @property
     def itemsize(self):
         return self._itemsize
     @property
     def is_read_only(self):
-        return self.___cuda_array_interface__["data"]["read_only"]
+        return self.__cuda_array_interface__["data"][1]
     @property
     def stream_as_int(self):
-        return self.___cuda_array_interface__["stream"]
+        return self.__cuda_array_interface__["stream"]
     
     def __init__(self,object pyobj):
         Array.init_from_pyobj(self,pyobj)
