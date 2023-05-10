@@ -215,7 +215,7 @@ cdef class hipDeviceArch_t:
             wrapper._ptr = <chip.hipDeviceArch_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -268,18 +268,14 @@ cdef class hipDeviceArch_t:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipDeviceArch_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipDeviceArch_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_hasGlobalInt32Atomics(self, i):
         """Get value ``hasGlobalInt32Atomics`` of ``self._ptr[i]``.
         """
@@ -609,7 +605,7 @@ cdef class hipUUID_t:
             wrapper._ptr = <chip.hipUUID_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -662,18 +658,14 @@ cdef class hipUUID_t:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipUUID_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipUUID_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_bytes(self, i):
         """Get value of ``bytes`` of ``self._ptr[i]``.
         """
@@ -765,7 +757,7 @@ cdef class hipDeviceProp_t:
             wrapper._ptr = <chip.hipDeviceProp_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -818,18 +810,14 @@ cdef class hipDeviceProp_t:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipDeviceProp_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipDeviceProp_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_name(self, i):
         """Get value of ``name`` of ``self._ptr[i]``.
         """
@@ -1386,7 +1374,7 @@ cdef class hipDeviceProp_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].hdpMemFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(hip._util.types.ListOfUnsigned.from_pyobj(value).ptr)
+        self._ptr[i].hdpMemFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.ListOfUnsigned.from_pyobj(value)))
     @property
     def hdpMemFlushCntl(self):
         """
@@ -1410,7 +1398,7 @@ cdef class hipDeviceProp_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].hdpRegFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(hip._util.types.ListOfUnsigned.from_pyobj(value).ptr)
+        self._ptr[i].hdpRegFlushCntl = <unsigned int *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.ListOfUnsigned.from_pyobj(value)))
     @property
     def hdpRegFlushCntl(self):
         """
@@ -1764,7 +1752,7 @@ cdef class hipPointerAttribute_t:
             wrapper._ptr = <chip.hipPointerAttribute_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -1817,18 +1805,14 @@ cdef class hipPointerAttribute_t:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipPointerAttribute_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipPointerAttribute_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_memoryType(self, i):
         """Get value of ``memoryType`` of ``self._ptr[i]``.
         """
@@ -1872,7 +1856,7 @@ cdef class hipPointerAttribute_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].devicePointer = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].devicePointer = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def devicePointer(self):
         """
@@ -1896,7 +1880,7 @@ cdef class hipPointerAttribute_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].hostPointer = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].hostPointer = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def hostPointer(self):
         """
@@ -2240,7 +2224,7 @@ cdef class hipChannelFormatDesc:
             wrapper._ptr = <chip.hipChannelFormatDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -2293,18 +2277,14 @@ cdef class hipChannelFormatDesc:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipChannelFormatDesc object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipChannelFormatDesc object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -2471,7 +2451,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
             wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -2524,18 +2504,14 @@ cdef class HIP_ARRAY_DESCRIPTOR:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_ARRAY_DESCRIPTOR object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_ARRAY_DESCRIPTOR object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_Width(self, i):
         """Get value ``Width`` of ``self._ptr[i]``.
         """
@@ -2672,7 +2648,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
             wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -2725,18 +2701,14 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_ARRAY3D_DESCRIPTOR object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_ARRAY3D_DESCRIPTOR object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_Width(self, i):
         """Get value ``Width`` of ``self._ptr[i]``.
         """
@@ -2903,7 +2875,7 @@ cdef class hipArray:
             wrapper._ptr = <chip.hipArray*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -2956,18 +2928,14 @@ cdef class hipArray:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipArray object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipArray object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_data(self, i):
         """Get value ``data`` of ``self._ptr[i]``.
         """
@@ -2979,7 +2947,7 @@ cdef class hipArray:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def data(self):
         """
@@ -3196,7 +3164,7 @@ cdef class hip_Memcpy2D:
             wrapper._ptr = <chip.hip_Memcpy2D*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -3246,18 +3214,14 @@ cdef class hip_Memcpy2D:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hip_Memcpy2D object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hip_Memcpy2D object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_srcXInBytes(self, i):
         """Get value ``srcXInBytes`` of ``self._ptr[i]``.
         """
@@ -3316,7 +3280,7 @@ cdef class hip_Memcpy2D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def srcHost(self):
         """
@@ -3340,7 +3304,7 @@ cdef class hip_Memcpy2D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def srcDevice(self):
         """
@@ -3426,7 +3390,7 @@ cdef class hip_Memcpy2D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def dstHost(self):
         """
@@ -3450,7 +3414,7 @@ cdef class hip_Memcpy2D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def dstDevice(self):
         """
@@ -3588,7 +3552,7 @@ cdef class hipMipmappedArray:
             wrapper._ptr = <chip.hipMipmappedArray*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -3641,18 +3605,14 @@ cdef class hipMipmappedArray:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipMipmappedArray object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipMipmappedArray object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_data(self, i):
         """Get value ``data`` of ``self._ptr[i]``.
         """
@@ -3664,7 +3624,7 @@ cdef class hipMipmappedArray:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].data = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def data(self):
         """
@@ -3927,7 +3887,7 @@ cdef class HIP_TEXTURE_DESC_st:
             wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -3977,18 +3937,14 @@ cdef class HIP_TEXTURE_DESC_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_TEXTURE_DESC_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_TEXTURE_DESC_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_filterMode(self, i):
         """Get value of ``filterMode`` of ``self._ptr[i]``.
         """
@@ -4290,7 +4246,7 @@ cdef class hipResourceDesc_union_0_struct_0:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -4340,18 +4296,14 @@ cdef class hipResourceDesc_union_0_struct_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipResourceDesc_union_0_struct_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipResourceDesc_union_0_struct_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -4426,7 +4378,7 @@ cdef class hipResourceDesc_union_0_struct_1:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -4476,18 +4428,14 @@ cdef class hipResourceDesc_union_0_struct_1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipResourceDesc_union_0_struct_1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipResourceDesc_union_0_struct_1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -4562,7 +4510,7 @@ cdef class hipResourceDesc_union_0_struct_2:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -4615,18 +4563,14 @@ cdef class hipResourceDesc_union_0_struct_2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipResourceDesc_union_0_struct_2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipResourceDesc_union_0_struct_2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_devPtr(self, i):
         """Get value ``devPtr`` of ``self._ptr[i]``.
         """
@@ -4638,7 +4582,7 @@ cdef class hipResourceDesc_union_0_struct_2:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def devPtr(self):
         """
@@ -4748,7 +4692,7 @@ cdef class hipResourceDesc_union_0_struct_3:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -4801,18 +4745,14 @@ cdef class hipResourceDesc_union_0_struct_3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipResourceDesc_union_0_struct_3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipResourceDesc_union_0_struct_3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_devPtr(self, i):
         """Get value ``devPtr`` of ``self._ptr[i]``.
         """
@@ -4824,7 +4764,7 @@ cdef class hipResourceDesc_union_0_struct_3:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def devPtr(self):
         """
@@ -4964,7 +4904,7 @@ cdef class hipResourceDesc_union_0:
             wrapper._ptr = <chip.hipResourceDesc_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5016,18 +4956,14 @@ cdef class hipResourceDesc_union_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipResourceDesc_union_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipResourceDesc_union_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_array(self, i):
         """Get value of ``array`` of ``self._ptr[i]``.
         """
@@ -5122,7 +5058,7 @@ cdef class hipResourceDesc:
             wrapper._ptr = <chip.hipResourceDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5175,18 +5111,14 @@ cdef class hipResourceDesc:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipResourceDesc object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipResourceDesc object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_resType(self, i):
         """Get value of ``resType`` of ``self._ptr[i]``.
         """
@@ -5286,7 +5218,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5336,18 +5268,14 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_RESOURCE_DESC_st_union_0_struct_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_RESOURCE_DESC_st_union_0_struct_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -5422,7 +5350,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5472,18 +5400,14 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_RESOURCE_DESC_st_union_0_struct_1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_RESOURCE_DESC_st_union_0_struct_1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -5558,7 +5482,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5611,18 +5535,14 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_RESOURCE_DESC_st_union_0_struct_2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_RESOURCE_DESC_st_union_0_struct_2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_devPtr(self, i):
         """Get value ``devPtr`` of ``self._ptr[i]``.
         """
@@ -5634,7 +5554,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def devPtr(self):
         """
@@ -5768,7 +5688,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5821,18 +5741,14 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_RESOURCE_DESC_st_union_0_struct_3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_RESOURCE_DESC_st_union_0_struct_3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_devPtr(self, i):
         """Get value ``devPtr`` of ``self._ptr[i]``.
         """
@@ -5844,7 +5760,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].devPtr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def devPtr(self):
         """
@@ -6008,7 +5924,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -6061,18 +5977,14 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_RESOURCE_DESC_st_union_0_struct_4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_RESOURCE_DESC_st_union_0_struct_4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -6164,7 +6076,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -6216,18 +6128,14 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_RESOURCE_DESC_st_union_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_RESOURCE_DESC_st_union_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_array(self, i):
         """Get value of ``array`` of ``self._ptr[i]``.
         """
@@ -6330,7 +6238,7 @@ cdef class HIP_RESOURCE_DESC_st:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -6383,18 +6291,14 @@ cdef class HIP_RESOURCE_DESC_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_RESOURCE_DESC_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_RESOURCE_DESC_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_resType(self, i):
         """Get value of ``resType`` of ``self._ptr[i]``.
         """
@@ -6509,7 +6413,7 @@ cdef class hipResourceViewDesc:
             wrapper._ptr = <chip.hipResourceViewDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -6562,18 +6466,14 @@ cdef class hipResourceViewDesc:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipResourceViewDesc object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipResourceViewDesc object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -6770,7 +6670,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
             wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -6823,18 +6723,14 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_RESOURCE_VIEW_DESC_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_RESOURCE_VIEW_DESC_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_format(self, i):
         """Get value of ``format`` of ``self._ptr[i]``.
         """
@@ -7060,7 +6956,7 @@ cdef class hipPitchedPtr:
             wrapper._ptr = <chip.hipPitchedPtr*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -7113,18 +7009,14 @@ cdef class hipPitchedPtr:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipPitchedPtr object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipPitchedPtr object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_ptr(self, i):
         """Get value ``ptr`` of ``self._ptr[i]``.
         """
@@ -7136,7 +7028,7 @@ cdef class hipPitchedPtr:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].ptr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].ptr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def ptr(self):
         """
@@ -7268,7 +7160,7 @@ cdef class hipExtent:
             wrapper._ptr = <chip.hipExtent*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -7321,18 +7213,14 @@ cdef class hipExtent:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExtent object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExtent object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_width(self, i):
         """Get value ``width`` of ``self._ptr[i]``.
         """
@@ -7452,7 +7340,7 @@ cdef class hipPos:
             wrapper._ptr = <chip.hipPos*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -7505,18 +7393,14 @@ cdef class hipPos:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipPos object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipPos object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -7636,7 +7520,7 @@ cdef class hipMemcpy3DParms:
             wrapper._ptr = <chip.hipMemcpy3DParms*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -7686,18 +7570,14 @@ cdef class hipMemcpy3DParms:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipMemcpy3DParms object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipMemcpy3DParms object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_srcPos(self, i):
         """Get value of ``srcPos`` of ``self._ptr[i]``.
         """
@@ -7829,7 +7709,7 @@ cdef class HIP_MEMCPY3D:
             wrapper._ptr = <chip.HIP_MEMCPY3D*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -7879,18 +7759,14 @@ cdef class HIP_MEMCPY3D:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<HIP_MEMCPY3D object, self.ptr={self.ptr()}>"
-    @property
+        return f"<HIP_MEMCPY3D object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_srcXInBytes(self, i):
         """Get value ``srcXInBytes`` of ``self._ptr[i]``.
         """
@@ -7979,7 +7855,7 @@ cdef class HIP_MEMCPY3D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].srcHost = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def srcHost(self):
         """
@@ -8003,7 +7879,7 @@ cdef class HIP_MEMCPY3D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].srcDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def srcDevice(self):
         """
@@ -8134,7 +8010,7 @@ cdef class HIP_MEMCPY3D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].dstHost = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def dstHost(self):
         """
@@ -8158,7 +8034,7 @@ cdef class HIP_MEMCPY3D:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].dstDevice = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def dstDevice(self):
         """
@@ -8362,7 +8238,7 @@ cdef class uchar1:
             wrapper._ptr = <chip.uchar1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -8415,18 +8291,14 @@ cdef class uchar1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<uchar1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<uchar1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -8516,7 +8388,7 @@ cdef class uchar2:
             wrapper._ptr = <chip.uchar2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -8569,18 +8441,14 @@ cdef class uchar2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<uchar2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<uchar2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -8685,7 +8553,7 @@ cdef class uchar3:
             wrapper._ptr = <chip.uchar3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -8738,18 +8606,14 @@ cdef class uchar3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<uchar3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<uchar3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -8869,7 +8733,7 @@ cdef class uchar4:
             wrapper._ptr = <chip.uchar4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -8922,18 +8786,14 @@ cdef class uchar4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<uchar4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<uchar4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -9068,7 +8928,7 @@ cdef class char1:
             wrapper._ptr = <chip.char1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9121,18 +8981,14 @@ cdef class char1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<char1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<char1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -9222,7 +9078,7 @@ cdef class char2:
             wrapper._ptr = <chip.char2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9275,18 +9131,14 @@ cdef class char2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<char2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<char2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -9391,7 +9243,7 @@ cdef class char3:
             wrapper._ptr = <chip.char3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9444,18 +9296,14 @@ cdef class char3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<char3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<char3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -9575,7 +9423,7 @@ cdef class char4:
             wrapper._ptr = <chip.char4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9628,18 +9476,14 @@ cdef class char4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<char4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<char4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -9774,7 +9618,7 @@ cdef class ushort1:
             wrapper._ptr = <chip.ushort1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9827,18 +9671,14 @@ cdef class ushort1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ushort1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ushort1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -9928,7 +9768,7 @@ cdef class ushort2:
             wrapper._ptr = <chip.ushort2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9981,18 +9821,14 @@ cdef class ushort2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ushort2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ushort2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -10097,7 +9933,7 @@ cdef class ushort3:
             wrapper._ptr = <chip.ushort3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10150,18 +9986,14 @@ cdef class ushort3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ushort3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ushort3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -10281,7 +10113,7 @@ cdef class ushort4:
             wrapper._ptr = <chip.ushort4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10334,18 +10166,14 @@ cdef class ushort4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ushort4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ushort4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -10480,7 +10308,7 @@ cdef class short1:
             wrapper._ptr = <chip.short1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10533,18 +10361,14 @@ cdef class short1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<short1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<short1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -10634,7 +10458,7 @@ cdef class short2:
             wrapper._ptr = <chip.short2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10687,18 +10511,14 @@ cdef class short2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<short2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<short2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -10803,7 +10623,7 @@ cdef class short3:
             wrapper._ptr = <chip.short3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10856,18 +10676,14 @@ cdef class short3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<short3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<short3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -10987,7 +10803,7 @@ cdef class short4:
             wrapper._ptr = <chip.short4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11040,18 +10856,14 @@ cdef class short4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<short4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<short4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -11186,7 +10998,7 @@ cdef class uint1:
             wrapper._ptr = <chip.uint1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11239,18 +11051,14 @@ cdef class uint1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<uint1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<uint1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -11340,7 +11148,7 @@ cdef class uint2:
             wrapper._ptr = <chip.uint2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11393,18 +11201,14 @@ cdef class uint2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<uint2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<uint2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -11509,7 +11313,7 @@ cdef class uint3:
             wrapper._ptr = <chip.uint3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11562,18 +11366,14 @@ cdef class uint3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<uint3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<uint3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -11693,7 +11493,7 @@ cdef class uint4:
             wrapper._ptr = <chip.uint4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11746,18 +11546,14 @@ cdef class uint4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<uint4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<uint4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -11892,7 +11688,7 @@ cdef class int1:
             wrapper._ptr = <chip.int1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11945,18 +11741,14 @@ cdef class int1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<int1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<int1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -12046,7 +11838,7 @@ cdef class int2:
             wrapper._ptr = <chip.int2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12099,18 +11891,14 @@ cdef class int2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<int2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<int2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -12215,7 +12003,7 @@ cdef class int3:
             wrapper._ptr = <chip.int3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12268,18 +12056,14 @@ cdef class int3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<int3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<int3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -12399,7 +12183,7 @@ cdef class int4:
             wrapper._ptr = <chip.int4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12452,18 +12236,14 @@ cdef class int4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<int4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<int4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -12598,7 +12378,7 @@ cdef class ulong1:
             wrapper._ptr = <chip.ulong1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12651,18 +12431,14 @@ cdef class ulong1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ulong1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ulong1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -12752,7 +12528,7 @@ cdef class ulong2:
             wrapper._ptr = <chip.ulong2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12805,18 +12581,14 @@ cdef class ulong2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ulong2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ulong2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -12921,7 +12693,7 @@ cdef class ulong3:
             wrapper._ptr = <chip.ulong3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12974,18 +12746,14 @@ cdef class ulong3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ulong3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ulong3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -13105,7 +12873,7 @@ cdef class ulong4:
             wrapper._ptr = <chip.ulong4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13158,18 +12926,14 @@ cdef class ulong4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ulong4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ulong4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -13304,7 +13068,7 @@ cdef class long1:
             wrapper._ptr = <chip.long1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13357,18 +13121,14 @@ cdef class long1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<long1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<long1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -13458,7 +13218,7 @@ cdef class long2:
             wrapper._ptr = <chip.long2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13511,18 +13271,14 @@ cdef class long2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<long2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<long2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -13627,7 +13383,7 @@ cdef class long3:
             wrapper._ptr = <chip.long3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13680,18 +13436,14 @@ cdef class long3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<long3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<long3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -13811,7 +13563,7 @@ cdef class long4:
             wrapper._ptr = <chip.long4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13864,18 +13616,14 @@ cdef class long4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<long4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<long4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -14010,7 +13758,7 @@ cdef class ulonglong1:
             wrapper._ptr = <chip.ulonglong1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14063,18 +13811,14 @@ cdef class ulonglong1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ulonglong1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ulonglong1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -14164,7 +13908,7 @@ cdef class ulonglong2:
             wrapper._ptr = <chip.ulonglong2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14217,18 +13961,14 @@ cdef class ulonglong2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ulonglong2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ulonglong2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -14333,7 +14073,7 @@ cdef class ulonglong3:
             wrapper._ptr = <chip.ulonglong3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14386,18 +14126,14 @@ cdef class ulonglong3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ulonglong3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ulonglong3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -14517,7 +14253,7 @@ cdef class ulonglong4:
             wrapper._ptr = <chip.ulonglong4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14570,18 +14306,14 @@ cdef class ulonglong4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ulonglong4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ulonglong4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -14716,7 +14448,7 @@ cdef class longlong1:
             wrapper._ptr = <chip.longlong1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14769,18 +14501,14 @@ cdef class longlong1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<longlong1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<longlong1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -14870,7 +14598,7 @@ cdef class longlong2:
             wrapper._ptr = <chip.longlong2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14923,18 +14651,14 @@ cdef class longlong2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<longlong2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<longlong2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -15039,7 +14763,7 @@ cdef class longlong3:
             wrapper._ptr = <chip.longlong3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15092,18 +14816,14 @@ cdef class longlong3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<longlong3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<longlong3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -15223,7 +14943,7 @@ cdef class longlong4:
             wrapper._ptr = <chip.longlong4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15276,18 +14996,14 @@ cdef class longlong4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<longlong4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<longlong4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -15422,7 +15138,7 @@ cdef class float1:
             wrapper._ptr = <chip.float1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15475,18 +15191,14 @@ cdef class float1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<float1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<float1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -15576,7 +15288,7 @@ cdef class float2:
             wrapper._ptr = <chip.float2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15629,18 +15341,14 @@ cdef class float2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<float2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<float2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -15745,7 +15453,7 @@ cdef class float3:
             wrapper._ptr = <chip.float3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15798,18 +15506,14 @@ cdef class float3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<float3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<float3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -15929,7 +15633,7 @@ cdef class float4:
             wrapper._ptr = <chip.float4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15982,18 +15686,14 @@ cdef class float4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<float4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<float4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -16128,7 +15828,7 @@ cdef class double1:
             wrapper._ptr = <chip.double1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -16181,18 +15881,14 @@ cdef class double1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<double1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<double1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -16282,7 +15978,7 @@ cdef class double2:
             wrapper._ptr = <chip.double2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -16335,18 +16031,14 @@ cdef class double2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<double2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<double2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -16451,7 +16143,7 @@ cdef class double3:
             wrapper._ptr = <chip.double3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -16504,18 +16196,14 @@ cdef class double3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<double3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<double3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -16635,7 +16323,7 @@ cdef class double4:
             wrapper._ptr = <chip.double4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -16688,18 +16376,14 @@ cdef class double4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<double4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<double4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -16839,7 +16523,7 @@ cdef class __hip_texture:
             wrapper._ptr = <chip.__hip_texture*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -16855,18 +16539,14 @@ cdef class __hip_texture:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<__hip_texture object, self.ptr={self.ptr()}>"
-    @property
+        return f"<__hip_texture object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -16972,7 +16652,7 @@ cdef class textureReference:
             wrapper._ptr = <chip.textureReference*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17022,18 +16702,14 @@ cdef class textureReference:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<textureReference object, self.ptr={self.ptr()}>"
-    @property
+        return f"<textureReference object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_normalized(self, i):
         """Get value ``normalized`` of ``self._ptr[i]``.
         """
@@ -17289,7 +16965,7 @@ cdef class hipTextureDesc:
             wrapper._ptr = <chip.hipTextureDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17339,18 +17015,14 @@ cdef class hipTextureDesc:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipTextureDesc object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipTextureDesc object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_filterMode(self, i):
         """Get value of ``filterMode`` of ``self._ptr[i]``.
         """
@@ -17579,7 +17251,7 @@ cdef class __hip_surface:
             wrapper._ptr = <chip.__hip_surface*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17595,18 +17267,14 @@ cdef class __hip_surface:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<__hip_surface object, self.ptr={self.ptr()}>"
-    @property
+        return f"<__hip_surface object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -17683,7 +17351,7 @@ cdef class surfaceReference:
             wrapper._ptr = <chip.surfaceReference*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17733,18 +17401,14 @@ cdef class surfaceReference:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<surfaceReference object, self.ptr={self.ptr()}>"
-    @property
+        return f"<surfaceReference object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -17825,7 +17489,7 @@ cdef class ihipCtx_t:
             wrapper._ptr = <chip.ihipCtx_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17841,18 +17505,14 @@ cdef class ihipCtx_t:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ihipCtx_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ihipCtx_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -17936,7 +17596,7 @@ cdef class ihipStream_t:
             wrapper._ptr = <chip.ihipStream_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17952,18 +17612,14 @@ cdef class ihipStream_t:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ihipStream_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ihipStream_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -18040,7 +17696,7 @@ cdef class hipIpcMemHandle_st:
             wrapper._ptr = <chip.hipIpcMemHandle_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18093,18 +17749,14 @@ cdef class hipIpcMemHandle_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipIpcMemHandle_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipIpcMemHandle_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -18196,7 +17848,7 @@ cdef class hipIpcEventHandle_st:
             wrapper._ptr = <chip.hipIpcEventHandle_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18249,18 +17901,14 @@ cdef class hipIpcEventHandle_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipIpcEventHandle_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipIpcEventHandle_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -18348,7 +17996,7 @@ cdef class ihipModule_t:
             wrapper._ptr = <chip.ihipModule_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18364,18 +18012,14 @@ cdef class ihipModule_t:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ihipModule_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ihipModule_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -18448,7 +18092,7 @@ cdef class ihipModuleSymbol_t:
             wrapper._ptr = <chip.ihipModuleSymbol_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18464,18 +18108,14 @@ cdef class ihipModuleSymbol_t:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ihipModuleSymbol_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ihipModuleSymbol_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -18548,7 +18188,7 @@ cdef class ihipMemPoolHandle_t:
             wrapper._ptr = <chip.ihipMemPoolHandle_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18564,18 +18204,14 @@ cdef class ihipMemPoolHandle_t:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ihipMemPoolHandle_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ihipMemPoolHandle_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -18652,7 +18288,7 @@ cdef class hipFuncAttributes:
             wrapper._ptr = <chip.hipFuncAttributes*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18705,18 +18341,14 @@ cdef class hipFuncAttributes:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipFuncAttributes object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipFuncAttributes object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_binaryVersion(self, i):
         """Get value ``binaryVersion`` of ``self._ptr[i]``.
         """
@@ -18937,7 +18569,7 @@ cdef class ihipEvent_t:
             wrapper._ptr = <chip.ihipEvent_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18953,18 +18585,14 @@ cdef class ihipEvent_t:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ihipEvent_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ihipEvent_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -19113,7 +18741,7 @@ cdef class hipMemLocation:
             wrapper._ptr = <chip.hipMemLocation*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -19166,18 +18794,14 @@ cdef class hipMemLocation:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipMemLocation object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipMemLocation object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -19294,7 +18918,7 @@ cdef class hipMemAccessDesc:
             wrapper._ptr = <chip.hipMemAccessDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -19347,18 +18971,14 @@ cdef class hipMemAccessDesc:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipMemAccessDesc object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipMemAccessDesc object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_location(self, i):
         """Get value of ``location`` of ``self._ptr[i]``.
         """
@@ -19479,7 +19099,7 @@ cdef class hipMemPoolProps:
             wrapper._ptr = <chip.hipMemPoolProps*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -19532,18 +19152,14 @@ cdef class hipMemPoolProps:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipMemPoolProps object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipMemPoolProps object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_allocType(self, i):
         """Get value of ``allocType`` of ``self._ptr[i]``.
         """
@@ -19597,7 +19213,7 @@ cdef class hipMemPoolProps:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].win32SecurityAttributes = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].win32SecurityAttributes = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def win32SecurityAttributes(self):
         """
@@ -19701,7 +19317,7 @@ cdef class hipMemPoolPtrExportData:
             wrapper._ptr = <chip.hipMemPoolPtrExportData*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -19754,18 +19370,14 @@ cdef class hipMemPoolPtrExportData:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipMemPoolPtrExportData object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipMemPoolPtrExportData object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_reserved(self, i):
         """Get value of ``reserved`` of ``self._ptr[i]``.
         """
@@ -19913,7 +19525,7 @@ cdef class dim3:
             wrapper._ptr = <chip.dim3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -19969,18 +19581,14 @@ cdef class dim3:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<dim3 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<dim3 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -20100,7 +19708,7 @@ cdef class hipLaunchParams_t:
             wrapper._ptr = <chip.hipLaunchParams_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -20150,18 +19758,14 @@ cdef class hipLaunchParams_t:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipLaunchParams_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipLaunchParams_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_func(self, i):
         """Get value ``func`` of ``self._ptr[i]``.
         """
@@ -20173,7 +19777,7 @@ cdef class hipLaunchParams_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def func(self):
         """
@@ -20213,7 +19817,7 @@ cdef class hipLaunchParams_t:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].args = <void **>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].args = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def args(self):
         """
@@ -20329,7 +19933,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -20382,18 +19986,14 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalMemoryHandleDesc_st_union_0_struct_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalMemoryHandleDesc_st_union_0_struct_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_handle(self, i):
         """Get value ``handle`` of ``self._ptr[i]``.
         """
@@ -20405,7 +20005,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def handle(self):
         """
@@ -20429,7 +20029,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def name(self):
         """
@@ -20516,7 +20116,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -20568,18 +20168,14 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalMemoryHandleDesc_st_union_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalMemoryHandleDesc_st_union_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_fd(self, i):
         """Get value ``fd`` of ``self._ptr[i]``.
         """
@@ -20665,7 +20261,7 @@ cdef class hipExternalMemoryHandleDesc_st:
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -20718,18 +20314,14 @@ cdef class hipExternalMemoryHandleDesc_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalMemoryHandleDesc_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalMemoryHandleDesc_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -20859,7 +20451,7 @@ cdef class hipExternalMemoryBufferDesc_st:
             wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -20912,18 +20504,14 @@ cdef class hipExternalMemoryBufferDesc_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalMemoryBufferDesc_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalMemoryBufferDesc_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_offset(self, i):
         """Get value ``offset`` of ``self._ptr[i]``.
         """
@@ -21054,7 +20642,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21107,18 +20695,14 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreHandleDesc_st_union_0_struct_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreHandleDesc_st_union_0_struct_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_handle(self, i):
         """Get value ``handle`` of ``self._ptr[i]``.
         """
@@ -21130,7 +20714,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].handle = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def handle(self):
         """
@@ -21154,7 +20738,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].name = <const void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def name(self):
         """
@@ -21241,7 +20825,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21293,18 +20877,14 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreHandleDesc_st_union_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreHandleDesc_st_union_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_fd(self, i):
         """Get value ``fd`` of ``self._ptr[i]``.
         """
@@ -21390,7 +20970,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21443,18 +21023,14 @@ cdef class hipExternalSemaphoreHandleDesc_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreHandleDesc_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreHandleDesc_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -21569,7 +21145,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21622,18 +21198,14 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreSignalParams_st_struct_0_struct_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreSignalParams_st_struct_0_struct_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_value(self, i):
         """Get value ``value`` of ``self._ptr[i]``.
         """
@@ -21723,7 +21295,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21776,18 +21348,14 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreSignalParams_st_struct_0_struct_1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreSignalParams_st_struct_0_struct_1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_key(self, i):
         """Get value ``key`` of ``self._ptr[i]``.
         """
@@ -21877,7 +21445,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21930,18 +21498,14 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreSignalParams_st_struct_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreSignalParams_st_struct_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_fence(self, i):
         """Get value of ``fence`` of ``self._ptr[i]``.
         """
@@ -22049,7 +21613,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22102,18 +21666,14 @@ cdef class hipExternalSemaphoreSignalParams_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreSignalParams_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreSignalParams_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_params(self, i):
         """Get value of ``params`` of ``self._ptr[i]``.
         """
@@ -22228,7 +21788,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22281,18 +21841,14 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreWaitParams_st_struct_0_struct_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreWaitParams_st_struct_0_struct_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_value(self, i):
         """Get value ``value`` of ``self._ptr[i]``.
         """
@@ -22382,7 +21938,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22435,18 +21991,14 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreWaitParams_st_struct_0_struct_1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreWaitParams_st_struct_0_struct_1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_key(self, i):
         """Get value ``key`` of ``self._ptr[i]``.
         """
@@ -22551,7 +22103,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22604,18 +22156,14 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreWaitParams_st_struct_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreWaitParams_st_struct_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_fence(self, i):
         """Get value of ``fence`` of ``self._ptr[i]``.
         """
@@ -22723,7 +22271,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22776,18 +22324,14 @@ cdef class hipExternalSemaphoreWaitParams_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipExternalSemaphoreWaitParams_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipExternalSemaphoreWaitParams_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_params(self, i):
         """Get value of ``params`` of ``self._ptr[i]``.
         """
@@ -22920,7 +22464,7 @@ cdef class _hipGraphicsResource:
             wrapper._ptr = <chip._hipGraphicsResource*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22936,18 +22480,14 @@ cdef class _hipGraphicsResource:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<_hipGraphicsResource object, self.ptr={self.ptr()}>"
-    @property
+        return f"<_hipGraphicsResource object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -23020,7 +22560,7 @@ cdef class ihipGraph:
             wrapper._ptr = <chip.ihipGraph*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23036,18 +22576,14 @@ cdef class ihipGraph:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ihipGraph object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ihipGraph object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -23120,7 +22656,7 @@ cdef class hipGraphNode:
             wrapper._ptr = <chip.hipGraphNode*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23136,18 +22672,14 @@ cdef class hipGraphNode:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipGraphNode object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipGraphNode object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -23220,7 +22752,7 @@ cdef class hipGraphExec:
             wrapper._ptr = <chip.hipGraphExec*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23236,18 +22768,14 @@ cdef class hipGraphExec:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipGraphExec object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipGraphExec object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -23320,7 +22848,7 @@ cdef class hipUserObject:
             wrapper._ptr = <chip.hipUserObject*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23336,18 +22864,14 @@ cdef class hipUserObject:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipUserObject object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipUserObject object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -23443,18 +22967,14 @@ cdef class hipHostFn_t:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipHostFn_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipHostFn_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
 
 
 cdef class hipHostNodeParams:
@@ -23514,7 +23034,7 @@ cdef class hipHostNodeParams:
             wrapper._ptr = <chip.hipHostNodeParams*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23564,18 +23084,14 @@ cdef class hipHostNodeParams:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipHostNodeParams object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipHostNodeParams object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_userData(self, i):
         """Get value ``userData`` of ``self._ptr[i]``.
         """
@@ -23587,7 +23103,7 @@ cdef class hipHostNodeParams:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].userData = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].userData = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def userData(self):
         """
@@ -23674,7 +23190,7 @@ cdef class hipKernelNodeParams:
             wrapper._ptr = <chip.hipKernelNodeParams*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23727,18 +23243,14 @@ cdef class hipKernelNodeParams:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipKernelNodeParams object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipKernelNodeParams object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_blockDim(self, i):
         """Get value of ``blockDim`` of ``self._ptr[i]``.
         """
@@ -23758,7 +23270,7 @@ cdef class hipKernelNodeParams:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].extra = <void **>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].extra = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def extra(self):
         """
@@ -23782,7 +23294,7 @@ cdef class hipKernelNodeParams:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].func = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def func(self):
         """
@@ -23814,7 +23326,7 @@ cdef class hipKernelNodeParams:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].kernelParams = <void **>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].kernelParams = <void **>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def kernelParams(self):
         """
@@ -23916,7 +23428,7 @@ cdef class hipMemsetParams:
             wrapper._ptr = <chip.hipMemsetParams*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23969,18 +23481,14 @@ cdef class hipMemsetParams:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipMemsetParams object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipMemsetParams object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_dst(self, i):
         """Get value ``dst`` of ``self._ptr[i]``.
         """
@@ -23992,7 +23500,7 @@ cdef class hipMemsetParams:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].dst = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].dst = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def dst(self):
         """
@@ -24173,7 +23681,7 @@ cdef class hipAccessPolicyWindow:
             wrapper._ptr = <chip.hipAccessPolicyWindow*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -24226,18 +23734,14 @@ cdef class hipAccessPolicyWindow:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipAccessPolicyWindow object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipAccessPolicyWindow object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_base_ptr(self, i):
         """Get value ``base_ptr`` of ``self._ptr[i]``.
         """
@@ -24249,7 +23753,7 @@ cdef class hipAccessPolicyWindow:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].base_ptr = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].base_ptr = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def base_ptr(self):
         """
@@ -24400,7 +23904,7 @@ cdef class hipKernelNodeAttrValue:
             wrapper._ptr = <chip.hipKernelNodeAttrValue*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -24452,18 +23956,14 @@ cdef class hipKernelNodeAttrValue:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipKernelNodeAttrValue object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipKernelNodeAttrValue object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_accessPolicyWindow(self, i):
         """Get value of ``accessPolicyWindow`` of ``self._ptr[i]``.
         """
@@ -24628,7 +24128,7 @@ cdef class hipMemAllocationProp_struct_0:
             wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -24681,18 +24181,14 @@ cdef class hipMemAllocationProp_struct_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipMemAllocationProp_struct_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipMemAllocationProp_struct_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_compressionType(self, i):
         """Get value ``compressionType`` of ``self._ptr[i]``.
         """
@@ -24812,7 +24308,7 @@ cdef class hipMemAllocationProp:
             wrapper._ptr = <chip.hipMemAllocationProp*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -24865,18 +24361,14 @@ cdef class hipMemAllocationProp:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipMemAllocationProp object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipMemAllocationProp object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_type(self, i):
         """Get value of ``type`` of ``self._ptr[i]``.
         """
@@ -24930,7 +24422,7 @@ cdef class hipMemAllocationProp:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].win32HandleMetaData = <void *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].win32HandleMetaData = <void *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def win32HandleMetaData(self):
         """
@@ -25021,7 +24513,7 @@ cdef class ihipMemGenericAllocationHandle:
             wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -25037,18 +24529,14 @@ cdef class ihipMemGenericAllocationHandle:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ihipMemGenericAllocationHandle object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ihipMemGenericAllocationHandle object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -25160,7 +24648,7 @@ cdef class hipArrayMapInfo_union_0:
             wrapper._ptr = <chip.hipArrayMapInfo_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -25212,18 +24700,14 @@ cdef class hipArrayMapInfo_union_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipArrayMapInfo_union_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipArrayMapInfo_union_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_mipmap(self, i):
         """Get value of ``mipmap`` of ``self._ptr[i]``.
         """
@@ -25294,7 +24778,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
             wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -25347,18 +24831,14 @@ cdef class hipArrayMapInfo_union_1_struct_0:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipArrayMapInfo_union_1_struct_0 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipArrayMapInfo_union_1_struct_0 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_level(self, i):
         """Get value ``level`` of ``self._ptr[i]``.
         """
@@ -25553,7 +25033,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
             wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -25606,18 +25086,14 @@ cdef class hipArrayMapInfo_union_1_struct_1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipArrayMapInfo_union_1_struct_1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipArrayMapInfo_union_1_struct_1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_layer(self, i):
         """Get value ``layer`` of ``self._ptr[i]``.
         """
@@ -25737,7 +25213,7 @@ cdef class hipArrayMapInfo_union_1:
             wrapper._ptr = <chip.hipArrayMapInfo_union_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -25789,18 +25265,14 @@ cdef class hipArrayMapInfo_union_1:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipArrayMapInfo_union_1 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipArrayMapInfo_union_1 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_sparseLevel(self, i):
         """Get value of ``sparseLevel`` of ``self._ptr[i]``.
         """
@@ -25879,7 +25351,7 @@ cdef class hipArrayMapInfo_union_2:
             wrapper._ptr = <chip.hipArrayMapInfo_union_2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -25931,18 +25403,14 @@ cdef class hipArrayMapInfo_union_2:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipArrayMapInfo_union_2 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipArrayMapInfo_union_2 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -26005,7 +25473,7 @@ cdef class hipArrayMapInfo:
             wrapper._ptr = <chip.hipArrayMapInfo*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -26058,18 +25526,14 @@ cdef class hipArrayMapInfo:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipArrayMapInfo object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipArrayMapInfo object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_resourceType(self, i):
         """Get value of ``resourceType`` of ``self._ptr[i]``.
         """
@@ -27245,18 +26709,14 @@ cdef class hipStreamCallback_t:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipStreamCallback_t object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipStreamCallback_t object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
 
 
 @cython.embedsignature(True)
@@ -27706,7 +27166,7 @@ def hipMalloc(unsigned long size):
     @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
     hipHostFree, hipHostMalloc
     """
-    ptr = hip._util.types.Array.from_ptr(NULL)
+    ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMalloc__retval = hipError_t(chip.hipMalloc(
         <void **>&ptr._ptr,size))    # fully specified
     ptr.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong(size),))
@@ -27724,7 +27184,7 @@ def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
     @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
     hipHostFree, hipHostMalloc
     """
-    ptr = hip._util.types.Array.from_ptr(NULL)
+    ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipExtMallocWithFlags__retval = hipError_t(chip.hipExtMallocWithFlags(
         <void **>&ptr._ptr,sizeBytes,flags))    # fully specified
     ptr.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong(sizeBytes),))
@@ -27740,10 +27200,9 @@ def hipMallocHost(unsigned long size):
     @return #hipSuccess, #hipErrorOutOfMemory
     @deprecated use hipHostMalloc() instead
     """
-    ptr = hip._util.types.Array.from_ptr(NULL)
+    ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMallocHost__retval = hipError_t(chip.hipMallocHost(
         <void **>&ptr._ptr,size))    # fully specified
-    ptr.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMallocHost__retval,ptr)
 
 
@@ -27793,7 +27252,7 @@ def hipMallocManaged(unsigned long size, unsigned int flags):
     (defaults to hipMemAttachGlobal)
     @returns #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
     """
-    dev_ptr = hip._util.types.Array.from_ptr(NULL)
+    dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocManaged__retval = hipError_t(chip.hipMallocManaged(
         <void **>&dev_ptr._ptr,size,flags))    # fully specified
     dev_ptr.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong(size),))
@@ -27913,7 +27372,7 @@ def hipMallocAsync(unsigned long size, object stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    dev_ptr = hip._util.types.Array.from_ptr(NULL)
+    dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocAsync__retval = hipError_t(chip.hipMallocAsync(
         <void **>&dev_ptr._ptr,size,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
@@ -28155,7 +27614,7 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    dev_ptr = hip._util.types.Array.from_ptr(NULL)
+    dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocFromPoolAsync__retval = hipError_t(chip.hipMallocFromPoolAsync(
         <void **>&dev_ptr._ptr,size,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,

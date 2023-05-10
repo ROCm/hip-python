@@ -406,7 +406,6 @@ def generate_hip_package_files():
         if (parm.parent.name, parm.name) in (
             ("hipMalloc","ptr"),
             ("hipExtMallocWithFlags","ptr"),
-            ("hipMallocHost","ptr"),
             ("hipMallocManaged","dev_ptr"),
             ("hipMallocAsync","dev_ptr"),
             ("hipMallocFromPoolAsync","dev_ptr"),
@@ -418,7 +417,7 @@ def generate_hip_package_files():
             parm.parent.python_body_prepend_before_return(
                 f"{parm.name}.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong({size}),))"
             )
-            return "hip._util.types.Array"
+            return "hip._util.types.DeviceArray"
         return DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm)
 
     generator = CythonPackageGenerator(

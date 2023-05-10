@@ -188,7 +188,7 @@ cdef class {{name}}:
             wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -265,18 +265,14 @@ cdef class {{name}}:
             setattr(self,k,v)
     {{endif}}
     
-    @property
-    def ptr(self):
+    def __int__(self):
         \"""Returns the data's address as long integer.\"""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<{{name}} object, self.ptr={self.ptr()}>"
-    @property
+        return f"<{{name}} object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         \"""Returns the data's address as `ctypes.c_void_p`\"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
 """
 
 wrapper_class_property_template = """\
@@ -307,7 +303,7 @@ def set_{{attr}}(self, i, object value):
         This can be dangerous if the pointer is from a python object
         that is later on garbage collected.
     \"""
-    self._ptr[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr({{handler}}.from_pyobj(value).ptr)
+    self._ptr[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
 @property
 def {{attr}}(self):
     \"""

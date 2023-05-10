@@ -15,17 +15,17 @@ cdef class DataHandle:
     @staticmethod
     cdef DataHandle from_pyobj(object pyobj)
 
-cdef class Array(DataHandle):
+cdef class DeviceArray(DataHandle):
     cdef size_t _itemsize
     cdef dict __cuda_array_interface__
 
     @staticmethod
-    cdef Array from_ptr(void* ptr)
+    cdef DeviceArray from_ptr(void* ptr)
     
     cdef void init_from_pyobj(self, object pyobj)
 
     @staticmethod
-    cdef Array from_pyobj(object pyobj)
+    cdef DeviceArray from_pyobj(object pyobj)
 
     cdef _set_ptr(self,void* ptr)
     
