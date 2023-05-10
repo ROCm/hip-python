@@ -75,7 +75,7 @@ cdef class ncclComm:
             wrapper._ptr = <crccl.ncclComm*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -91,18 +91,14 @@ cdef class ncclComm:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ncclComm object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ncclComm object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -179,7 +175,7 @@ cdef class ncclUniqueId:
             wrapper._ptr = <crccl.ncclUniqueId*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -232,18 +228,14 @@ cdef class ncclUniqueId:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ncclUniqueId object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ncclUniqueId object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_internal(self, i):
         """Get value of ``internal`` of ``self._ptr[i]``.
         """

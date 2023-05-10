@@ -67,7 +67,7 @@ cdef class hipblasBfloat16:
             wrapper._ptr = <chipblas.hipblasBfloat16*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -120,18 +120,14 @@ cdef class hipblasBfloat16:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipblasBfloat16 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipblasBfloat16 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_data(self, i):
         """Get value ``data`` of ``self._ptr[i]``.
         """
@@ -221,7 +217,7 @@ cdef class hipblasComplex:
             wrapper._ptr = <chipblas.hipblasComplex*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -274,18 +270,14 @@ cdef class hipblasComplex:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipblasComplex object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipblasComplex object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -390,7 +382,7 @@ cdef class hipblasDoubleComplex:
             wrapper._ptr = <chipblas.hipblasDoubleComplex*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -443,18 +435,14 @@ cdef class hipblasDoubleComplex:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<hipblasDoubleComplex object, self.ptr={self.ptr()}>"
-    @property
+        return f"<hipblasDoubleComplex object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """

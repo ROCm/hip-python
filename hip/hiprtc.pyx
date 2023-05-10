@@ -126,7 +126,7 @@ cdef class ihiprtcLinkState:
             wrapper._ptr = <chiprtc.ihiprtcLinkState*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -142,18 +142,14 @@ cdef class ihiprtcLinkState:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<ihiprtcLinkState object, self.ptr={self.ptr()}>"
-    @property
+        return f"<ihiprtcLinkState object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
@@ -253,7 +249,7 @@ cdef class _hiprtcProgram:
             wrapper._ptr = <chiprtc._hiprtcProgram*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -269,18 +265,14 @@ cdef class _hiprtcProgram:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<_hiprtcProgram object, self.ptr={self.ptr()}>"
-    @property
+        return f"<_hiprtcProgram object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []

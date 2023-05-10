@@ -12,7 +12,7 @@ import ctypes
 import math
 
 cdef class DataHandle:
-    # members declared in declaration part ``types.pxd``
+    # C members declared in declaration part ``types.pxd``
 
     def __cinit__(self):
         self._ptr = NULL
@@ -87,21 +87,16 @@ cdef class DataHandle:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     @property
-    def ptr(self):
-        """"Data pointer as long integer."""
-        return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    @property
     def is_ptr_null(self):
         """If data pointer is NULL."""
         return self._ptr == NULL
     def __int__(self):
-        return self.ptr
+        return cpython.long.PyLong_FromVoidPtr(self._ptr)
     def __repr__(self):
-        return f"<DataHandle object, self.ptr={self.ptr()}>"
-    @property
+        return f"<DataHandle object, _ptr={int(self)}>"
     def as_c_void_p(self):
         """"Data pointer as ``ctypes.c_void_p``."""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
 
     def __getitem__(self,offset):
         """Returns a new DataHandle whose pointer is this instance's pointer offsetted by ``offset``.
@@ -119,8 +114,11 @@ cdef class DataHandle:
     def __init__(self,object pyobj):
         DataHandle.init_from_pyobj(self,pyobj)
 
-cdef class Array(DataHandle):
-    # members declared in declaration part ``types.pxd``
+cdef class DeviceArray(DataHandle):
+    # C members declared in declaration part ``types.pxd``
+    
+    def __repr__(self):
+        return f"<DeviceArray object, _ptr={int(self)}, typestr={self.typestr}, itemsize={self.itemsize}, shape={str(self.shape)}, is_read_only={self.is_read_only}, stream={self.stream_as_int}>"
 
     NUMPY_CHAR_CODES = (
         "?", "=?", "<?", ">?", "bool", "bool_", "bool8",
@@ -252,8 +250,8 @@ cdef class Array(DataHandle):
         self.__cuda_array_interface__["data"] = (cpython.long.PyLong_FromVoidPtr(ptr),old_data[1])
 
     @staticmethod
-    cdef Array from_ptr(void* ptr):
-        cdef Array wrapper = Array.__new__(Array)
+    cdef DeviceArray from_ptr(void* ptr):
+        cdef DeviceArray wrapper = DeviceArray.__new__(DeviceArray)
         wrapper._set_ptr(ptr)
         return wrapper
     
@@ -347,7 +345,7 @@ cdef class Array(DataHandle):
             stream (int or None): The stream to synchronize before consuming this array. See first note for more details.
             itemsize (int): Size in bytes of 
                             each item. Defaults to 1. See the notes.
-            read_only (bool): Array is read_only. Second entry of the CAI 'data' tuple. Defaults to False.
+            read_only (bool): DeviceArray is read_only. Second entry of the CAI 'data' tuple. Defaults to False.
             _force(bool): Ignore changes in the total number of bytes when override shape, typestr, and/or itemsize.
 
         Note:
@@ -410,7 +408,7 @@ cdef class Array(DataHandle):
                     return ValueError("'stream': expected positive integer")
                 self.__cuda_array_interface__["stream"] = stream
             else:
-                self.__cuda_array_interface__["stream"] = DataHandle.from_pyobj(stream).ptr()
+                self.__cuda_array_interface__["stream"] = int(DataHandle.from_pyobj(stream))
         if "read_only" in kwargs:
             read_only = kwargs["read_only"]
             if not isinstance(shape,bool):
@@ -420,19 +418,21 @@ cdef class Array(DataHandle):
 
         if itemsize > 0 or shape != old_shape:
             old_num_bytes = self._itemsize * math.prod(old_shape)
+            if itemsize < 0:
+                itemsize = self._itemsize
             new_num_bytes = itemsize * math.prod(shape)
             if old_num_bytes == new_num_bytes or force_new_shape:
                 self._itemsize = itemsize
                 self.__cuda_array_interface__["shape"] = shape
             else:
-                raise ValueError("new shape would change buffer size information: {old_num_bytes} B -> {new_num_bytes} B. Additionaly specify `_force=True` if this is intended.")
+                raise ValueError(f"new shape would change buffer size information: {old_num_bytes} B -> {new_num_bytes} B. Additionaly specify `_force=True` if this is intended.")
 
         return self
 
     cdef void init_from_pyobj(self, object pyobj):
         """
         Note:
-            If ``pyobj`` is an instance of Array, only the pointer is copied.
+            If ``pyobj`` is an instance of DeviceArray, only the pointer is copied.
             Releasing an acquired Py_buffer handles is still an obligation of the original object.
         """
         cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
@@ -452,7 +452,7 @@ cdef class Array(DataHandle):
             ptr_as_int = cuda_array_interface["data"][0]
             self._set_ptr(cpython.long.PyLong_AsVoidPtr(ptr_as_int))
             self.configure(cuda_array_interface)
-            if isinstance(pyobj,Array):
+            if isinstance(pyobj,DeviceArray):
                 self._itemsize = pyobj._itemsize
         elif isinstance(pyobj,DataHandle):
             self._set_ptr((<DataHandle>pyobj)._ptr)
@@ -462,46 +462,28 @@ cdef class Array(DataHandle):
             raise NotImplementedError(f"no conversion implemented for instance of '{type(pyobj)}'")
 
     @staticmethod
-    cdef Array from_pyobj(object pyobj):
-        """Derives a Array from the given object.
+    cdef DeviceArray from_pyobj(object pyobj):
+        """Derives a DeviceArray from the given object.
 
-        In case ``pyobj`` is itself an ``Array`` instance, this method
-        returns it directly. No new Array is created.
+        In case ``pyobj`` is itself an ``DeviceArray`` instance, this method
+        returns it directly. No new DeviceArray is created.
 
         Args:
             pyobj (object): Must be either ``None``, a simple, contiguous buffer according to the buffer protocol,
-                            or of type ``Array``, ``int``, or ``ctypes.c_void_p``
+                            or of type ``DeviceArray``, ``int``, or ``ctypes.c_void_p``
 
         Note:
             This routine does not perform a copy but returns the original pyobj
-            if ``pyobj`` is an instance of Array.
+            if ``pyobj`` is an instance of DeviceArray.
         """
-        cdef Array wrapper = Array.__new__(Array)
+        cdef DeviceArray wrapper = DeviceArray.__new__(DeviceArray)
         
-        if isinstance(pyobj,Array):
+        if isinstance(pyobj,DeviceArray):
             return pyobj
         else:
-            wrapper = Array.__new__(Array)
+            wrapper = DeviceArray.__new__(DeviceArray)
             wrapper.init_from_pyobj(pyobj)
             return wrapper
-
-    @property
-    def ptr(self):
-        """"Data pointer as long integer."""
-        return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    @property
-    def is_ptr_null(self):
-        """If data pointer is NULL."""
-        return self._ptr == NULL
-    def __int__(self):
-        return self.ptr
-    def __repr__(self):
-        return f"<Array object, self.ptr={self.ptr()}>"
-    @property
-    def as_c_void_p(self):
-        """"Data pointer as ``ctypes.c_void_p``."""
-        return ctypes.c_void_p(self.ptr)
-
 
     cdef tuple _handle_int(self,size_t subscript, size_t shape_dim):
         if subscript < 0:
@@ -563,10 +545,10 @@ cdef class Array(DataHandle):
         """
         cdef size_t stride = 1
         cdef size_t offset = 0
-        cdef bint contiguous = False
-        cdef list shape = self.__cuda_array_interface__["shape"]
+        cdef bint contiguous = True
+        cdef tuple shape = self.__cuda_array_interface__["shape"]
         cdef size_t rank = len(shape)
-        cdef list result_shape = list()
+        cdef list result_shape = list() # elements will be appended
         cdef tuple subscript_tuple
         
         if isinstance(subscript,tuple):
@@ -589,17 +571,20 @@ cdef class Array(DataHandle):
             result_shape.append(stop-start)
             offset = start*stride
             stride *= <size_t>shape[i]
-        return Array.from_ptr(<void*>(<unsigned long>self._ptr + offset)).configure({
-            "typestr":  self.typestr,
-            "itemsize":  self.itemsize,
-            "shape": tuple(result_shape),
-            "read_only":  self.is_read_only,
-            "stream": self.stream_as_int,
-        })
+        return DeviceArray.from_ptr(<void*>(<unsigned long>self._ptr + offset)).configure(
+            typestr=self.typestr,
+            itemsize=self.itemsize,
+            shape=tuple(result_shape),
+            read_only=self.is_read_only,
+            stream=self.stream_as_int,
+        )
 
     @property
     def typestr(self):
         return self.__cuda_array_interface__["typestr"]
+    @property
+    def shape(self):
+        return self.__cuda_array_interface__["shape"]
     @property
     def itemsize(self):
         return self._itemsize
@@ -611,10 +596,12 @@ cdef class Array(DataHandle):
         return self.__cuda_array_interface__["stream"]
     
     def __init__(self,object pyobj):
-        Array.init_from_pyobj(self,pyobj)
+        DeviceArray.init_from_pyobj(self,pyobj)
 
 cdef class ListOfBytes(DataHandle):
-    # members declared in declaration part ``types.pxd``
+    # C members declared in declaration part ``types.pxd``
+    def __repr__(self):
+        return f"<ListOfBytes object, _ptr={int(self)}>"
 
     def __cinit__(self):
         self._owner = False
@@ -686,7 +673,10 @@ cdef class ListOfBytes(DataHandle):
         ListOfBytes.init_from_pyobj(self,pyobj)
 
 cdef class ListOfDataHandle(DataHandle):
-    # members declared in declaration part ``types.pxd``
+    # C members declared in declaration part ``types.pxd``
+    
+    def __repr__(self):
+        return f"<ListOfDataHandle object, _ptr={int(self)}>"
 
     def __cinit__(self):
         self._owner = False
@@ -713,7 +703,7 @@ cdef class ListOfDataHandle(DataHandle):
             self._owner = True
             self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(void *))
             for i,entry in enumerate(pyobj):
-                (<void**>self._ptr)[i] = cpython.long.PyLong_AsVoidPtr(DataHandle.from_pyobj(entry).ptr())
+                (<void**>self._ptr)[i] = cpython.long.PyLong_AsVoidPtr(int(DataHandle.from_pyobj(entry)))
         else:
             self._owner = False
             DataHandle.init_from_pyobj(self,pyobj)
@@ -753,7 +743,10 @@ cdef class ListOfDataHandle(DataHandle):
         ListOfDataHandle.init_from_pyobj(self,pyobj)
 
 cdef class ListOfInt(DataHandle):
-    # members declared in declaration part ``types.pxd``
+    # C members declared in declaration part ``types.pxd``
+
+    def __repr__(self):
+        return f"<ListOfDataInt object, _ptr={int(self)}>"
 
     def __cinit__(self):
         self._owner = False
@@ -837,7 +830,10 @@ cdef class ListOfInt(DataHandle):
         ListOfInt.init_from_pyobj(self,pyobj)
 
 cdef class ListOfUnsigned(DataHandle):
-    # members declared in declaration part ``types.pxd``
+    # C members declared in declaration part ``types.pxd``
+    
+    def __repr__(self):
+        return f"<ListOfUnsigned object, _ptr={int(self)}>"
 
     def __cinit__(self):
         self._owner = False
@@ -921,7 +917,10 @@ cdef class ListOfUnsigned(DataHandle):
         ListOfUnsigned.init_from_pyobj(self,pyobj)
 
 cdef class ListOfUnsignedLong(DataHandle):
-    # members declared in declaration part ``types.pxd``
+    # C members declared in declaration part ``types.pxd``
+    
+    def __repr__(self):
+        return f"<ListOfUnsigned object, _ptr={int(self)}>"
 
     def __cinit__(self):
         self._owner = False

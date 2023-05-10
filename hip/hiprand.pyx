@@ -65,7 +65,7 @@ cdef class uint4:
             wrapper._ptr = <chiprand.uint4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -118,18 +118,14 @@ cdef class uint4:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<uint4 object, self.ptr={self.ptr()}>"
-    @property
+        return f"<uint4 object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_x(self, i):
         """Get value ``x`` of ``self._ptr[i]``.
         """
@@ -264,7 +260,7 @@ cdef class rocrand_discrete_distribution_st:
             wrapper._ptr = <chiprand.rocrand_discrete_distribution_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -317,18 +313,14 @@ cdef class rocrand_discrete_distribution_st:
                 raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
             setattr(self,k,v)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<rocrand_discrete_distribution_st object, self.ptr={self.ptr()}>"
-    @property
+        return f"<rocrand_discrete_distribution_st object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     def get_size(self, i):
         """Get value ``size`` of ``self._ptr[i]``.
         """
@@ -370,7 +362,7 @@ cdef class rocrand_discrete_distribution_st:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].alias = <unsigned int *>cpython.long.PyLong_AsVoidPtr(hip._util.types.ListOfUnsigned.from_pyobj(value).ptr)
+        self._ptr[i].alias = <unsigned int *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.ListOfUnsigned.from_pyobj(value)))
     @property
     def alias(self):
         """
@@ -394,7 +386,7 @@ cdef class rocrand_discrete_distribution_st:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].probability = <double *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].probability = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def probability(self):
         """
@@ -418,7 +410,7 @@ cdef class rocrand_discrete_distribution_st:
             This can be dangerous if the pointer is from a python object
             that is later on garbage collected.
         """
-        self._ptr[i].cdf = <double *>cpython.long.PyLong_AsVoidPtr(hip._util.types.DataHandle.from_pyobj(value).ptr)
+        self._ptr[i].cdf = <double *>cpython.long.PyLong_AsVoidPtr(int(hip._util.types.DataHandle.from_pyobj(value)))
     @property
     def cdf(self):
         """
@@ -503,7 +495,7 @@ cdef class rocrand_generator_base_type:
             wrapper._ptr = <chiprand.rocrand_generator_base_type*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                int(wrapper),
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -519,18 +511,14 @@ cdef class rocrand_generator_base_type:
         if self._py_buffer_acquired is True:
             cpython.buffer.PyBuffer_Release(&self._py_buffer)
     
-    @property
-    def ptr(self):
+    def __int__(self):
         """Returns the data's address as long integer."""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<rocrand_generator_base_type object, self.ptr={self.ptr()}>"
-    @property
+        return f"<rocrand_generator_base_type object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         """Returns the data's address as `ctypes.c_void_p`"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
     @staticmethod
     def PROPERTIES():
         return []
