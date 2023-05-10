@@ -2,13 +2,14 @@
 
 __author__ = "AMD_AUTHOR"
 
-import ctypes
-
 cimport cpython.long
 cimport cpython.int
 cimport cpython.buffer
 cimport libc.stdlib
 cimport libc.stdint
+
+import ctypes
+import math
 
 cdef class DataHandle:
     # members declared in declaration part ``types.pxd``
@@ -345,7 +346,8 @@ cdef class Array(DataHandle):
             stream (int or None): The stream to synchronize before consuming this array. See first note for more details.
             itemsize (int): Size in bytes of 
                             each item. Defaults to 1. See the notes.
-            readonly (bool): Array is readonly. Second entry of the CAI 'data' tuple. Defaults to False.
+            read_only (bool): Array is read_only. Second entry of the CAI 'data' tuple. Defaults to False.
+            _force(bool): Ignore changes in the total number of bytes when override shape, typestr, and/or itemsize.
 
         Note:
             More details on the keyword arguments can be found here:
@@ -357,46 +359,73 @@ cdef class Array(DataHandle):
             of bytes, i.e. `itemsize`. Hence, you need to specify itemsize additionally
             when dealing with other datatypes than bytes (typestr: ``'b'``).
         """
-        cdef int num_bytes = -1
         cdef list supported_keys = ["shape","typestr","stream"]
-        cdef list extra_keys = ["itemsize","readonly"]
+        cdef list extra_keys = ["itemsize","read_only","_force"]
+        cdef list allowed_keys_str =", ".join([f"'{e}'" for e in supported_keys + extra_keys])
+        cdef bint force_new_shape
+        cdef tuple shape
+        cdef tuple old_shape
+        cdef bint read_only
+        cdef int itemsize = -1
+        cdef size_t old_num_bytes
+        cdef size_t new_num_bytes
+        cdef str typestr = None
 
-        for k,v in supported_keys:
-            if k == "data":
-                raise KeyError("'data' key cannot be overwritten directly. Use keyword argument 'readonly' to set the 'readonly' property of the 'data' tuple.")
+        for k in kwargs:
             if k not in (supported_keys + extra_keys):
-                allowed_keys =", ".join([f"'{e}'" for e in supported_keys + extra_keys])
-                raise KeyError(f"Allowed arguments are{allowed_keys}")
-            if k == "shape":
-                if not isinstance(v,tuple):
-                    raise TypeError("'shape': value must be of type 'tuple'")
-                for i in v:
-                    if not isinstance(i,int):
-                        raise TypeError("'shape': entries must be of type 'int'")
-                self.___cuda_array_interface__["shape"] = v
-            elif k == "typestr":
-                typestr = str(v)
-                self.___cuda_array_interface__["typestr"] = typestr
-                num_bytes = self._numpy_typestr_to_bytes(typestr)
-                if num_bytes < 0:
-                    if str(v) not in self.NUMPY_CHAR_CODES:
-                        raise ValueError(f"'typestr': value '{typestr}' is not a valid numpy char code. See class attributes 'NUMPY_CHAR_CODES' for valid expressions.")
-                    elif "itemsize" not in kwargs:
-                        raise ValueError(f"'typestr': value '{typestr}' could not be mapped to a number of bytes. Please additionally specify 'itemsize'.")
-            elif k == "itemsize":
-                self._itemsize = v
-            elif k == "stream":
-                if isinstance(v,int):
-                    if v == 0:
-                        return ValueError("stream: value '0' is disallowed as it would be ambiguous between None and the default stream, more details: https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html")
-                    elif v < 0:
-                        return ValueError("stream: expected positive integer")
-                    self.___cuda_array_interface__["stream"] = v
-                else:
-                    self.___cuda_array_interface__["stream"] = DataHandle.from_pyobj(v).ptr()
-            elif k == "readonly":
-                if not isinstance(v,bool):
-                    raise ValueError("'readonly:' expected bool")
+                raise KeyError(f"allowed keyword arguments are: {allowed_keys_str}")
+        
+        force_new_shape = kwargs.get("_force",False)
+        shape = old_shape = self.___cuda_array_interface__["shape"]
+        if "shape" in kwargs:
+            shape = kwargs["shape"]
+            if not len(shape):
+                raise ValueError("'shape': must have at least one entry")
+            for i in shape:
+                if not isinstance(i,int):
+                    raise TypeError("'shape': entries must be int")
+            #self.___cuda_array_interface__["shape"] = shape
+        if "typestr" in kwargs:
+            typestr = kwargs["typestr"]
+            self.___cuda_array_interface__["typestr"] = typestr
+            itemsize = self._numpy_typestr_to_bytes(typestr)
+            if itemsize < 0:
+                if typestr not in self.NUMPY_CHAR_CODES:
+                    raise ValueError(f"'typestr': value '{typestr}' is not a valid numpy char code. See class attributes 'NUMPY_CHAR_CODES' for valid expressions.")
+                elif "itemsize" not in kwargs:
+                    raise ValueError(f"'typestr': value '{typestr}' could not be mapped to a number of bytes. Please additionally specify 'itemsize'.")
+        if "itemsize" in kwargs:
+            itemsize = kwargs["itemsize"]
+            if not isinstance(itemsize,int):
+                raise TypeError("'itemsize': must be int")
+            if itemsize <= 0:
+                raise ValueError("'itemsize': must be positive int")
+        #
+        if "stream" in kwargs:
+            stream = kwargs["stream"]
+            if isinstance(stream,int):
+                if stream == 0:
+                    return ValueError("'stream': value '0' is disallowed as it would be ambiguous between None and the default stream, more details: https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html")
+                elif stream < 0:
+                    return ValueError("'stream': expected positive integer")
+                self.___cuda_array_interface__["stream"] = stream
+            else:
+                self.___cuda_array_interface__["stream"] = DataHandle.from_pyobj(stream).ptr()
+        if "read_only" in kwargs:
+            read_only = kwargs["read_only"]
+            if not isinstance(shape,bool):
+                raise ValueError("'read_only:' expected bool")
+            self.___cuda_array_interface__["data"][1] = read_only
+
+        if itemsize > 0 or shape != old_shape:
+            old_num_bytes = self._itemsize * math.prod(old_shape)
+            new_num_bytes = itemsize * math.prod(shape)
+            if old_num_bytes == new_num_bytes or force_new_shape:
+                self._itemsize = itemsize
+                self.___cuda_array_interface__["shape"] = shape
+            else:
+                raise ValueError("new shape would change buffer size information: {old_num_bytes} B -> {new_num_bytes} B. Additionaly specify `_force=True` if this is intended.")
+
         return self
 
     cdef void init_from_pyobj(self, object pyobj):
@@ -563,7 +592,7 @@ cdef class Array(DataHandle):
             "typestr":  self.___cuda_array_interface__["typestr"],
             "itemsize":  self._itemsize,
             "shape": tuple(result_shape),
-            "readonly":  self.___cuda_array_interface__["data"]["readonly"],
+            "read_only":  self.___cuda_array_interface__["data"]["read_only"],
             "stream": self.___cuda_array_interface__["stream"],
         })
 
@@ -574,8 +603,8 @@ cdef class Array(DataHandle):
     def itemsize(self):
         return self._itemsize
     @property
-    def is_readonly(self):
-        return self.___cuda_array_interface__["data"]["readonly"]
+    def is_read_only(self):
+        return self.___cuda_array_interface__["data"]["read_only"]
     @property
     def stream_as_int(self):
         return self.___cuda_array_interface__["stream"]

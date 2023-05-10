@@ -27709,7 +27709,7 @@ def hipMalloc(unsigned long size):
     ptr = hip._util.types.Array.from_ptr(NULL)
     _hipMalloc__retval = hipError_t(chip.hipMalloc(
         <void **>&ptr._ptr,size))    # fully specified
-    ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(size),))
+    ptr.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMalloc__retval,ptr)
 
 
@@ -27727,7 +27727,7 @@ def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
     ptr = hip._util.types.Array.from_ptr(NULL)
     _hipExtMallocWithFlags__retval = hipError_t(chip.hipExtMallocWithFlags(
         <void **>&ptr._ptr,sizeBytes,flags))    # fully specified
-    ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(sizeBytes),))
+    ptr.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong(sizeBytes),))
     return (_hipExtMallocWithFlags__retval,ptr)
 
 
@@ -27743,7 +27743,7 @@ def hipMallocHost(unsigned long size):
     ptr = hip._util.types.Array.from_ptr(NULL)
     _hipMallocHost__retval = hipError_t(chip.hipMallocHost(
         <void **>&ptr._ptr,size))    # fully specified
-    ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(size),))
+    ptr.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMallocHost__retval,ptr)
 
 
@@ -27796,7 +27796,7 @@ def hipMallocManaged(unsigned long size, unsigned int flags):
     dev_ptr = hip._util.types.Array.from_ptr(NULL)
     _hipMallocManaged__retval = hipError_t(chip.hipMallocManaged(
         <void **>&dev_ptr._ptr,size,flags))    # fully specified
-    dev_ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(size),))
+    dev_ptr.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMallocManaged__retval,dev_ptr)
 
 
@@ -27917,7 +27917,7 @@ def hipMallocAsync(unsigned long size, object stream):
     _hipMallocAsync__retval = hipError_t(chip.hipMallocAsync(
         <void **>&dev_ptr._ptr,size,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    dev_ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(size),))
+    dev_ptr.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMallocAsync__retval,dev_ptr)
 
 
@@ -28160,7 +28160,7 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
         <void **>&dev_ptr._ptr,size,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
-    dev_ptr.configure(shape=(cpython.long.PyLong_FromUnsignedLong(size),))
+    dev_ptr.configure(_force=True,shape=(cpython.long.PyLong_FromUnsignedLong(size),))
     return (_hipMallocFromPoolAsync__retval,dev_ptr)
 
 

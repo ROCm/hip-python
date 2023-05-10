@@ -16,6 +16,7 @@ cdef class DataHandle:
     cdef DataHandle from_pyobj(object pyobj)
 
 cdef class Array(DataHandle):
+    cdef size_t _itemsize
     cdef dict __cuda_array_interface__
 
     @staticmethod
