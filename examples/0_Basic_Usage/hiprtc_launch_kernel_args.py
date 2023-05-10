@@ -71,7 +71,7 @@ factor = 1.23
 x_expected = [a*factor for a in x_h]
 
 block = hip.dim3(x=32)
-grid = hip.dim3(block.x * math.ceil(n/block.x))
+grid = hip.dim3(math.ceil(n/block.x))
 
 ## launch
 hip_check(
