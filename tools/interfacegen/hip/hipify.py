@@ -12388,7 +12388,7 @@ def get_bool_environ_var(env_var, default):
         raise RuntimeError(f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}")
 
 accept_cuda_enum_names = get_bool_environ_var("HIP_PYTHON_ENUM_ACCEPT_CUDA_NAMES","true") # Accept CUDA enum names in addition to HIP ones
-generate_fake_enums = get_bool_environ_var("HIP_PYTHON_ENUM_GENERATE_FAKES","false")  # Generate fake enums if member does not exist
+generate_fake_enums = get_bool_environ_var("HIP_PYTHON_ENUM_HALLUCINATE_MEMBERS","false")  # Hallucinate fake enum constants if member does not exist
 
 def _get_hip_name(cuda_name):
     global cuda2hip
