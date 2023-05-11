@@ -16,7 +16,7 @@ def __create__all__(hip_mod):
 class Cuda2HipModule:
 
     def __init__(self,wrapped):
-        self.wrapped = wrapped
+        self.__wrapped = wrapped
 
     def __getattr__(self, name):
 
@@ -26,7 +26,7 @@ class Cuda2HipModule:
             return self.__dict__[name]
 
         if name in cuda2hip:
-            hip_obj = getattr(self.wrapped,cuda2hip[name])
+            hip_obj = getattr(self.__wrapped,cuda2hip[name])
             if isinstance(hip_obj,enum.EnumMeta):
                 setattr(self,name,hip_obj)
             elif isinstance(hip_obj,(types.BuiltinFunctionType,types.FunctionType)):
@@ -39,9 +39,9 @@ class Cuda2HipModule:
                     #print(type(hip_obj))
                     new_type = type(name,(hip_obj,),{})
                     setattr(self,name,new_type)
-                return self.__dict__[name]
+            return self.__dict__[name]
         else:
-            return getattr(self.wrapped,name) # allow hip names too, e.g. for rccl
+            return getattr(self.__wrapped,name) # allow hip names too, e.g. for rccl
 
 hipvars=vars(hip)
 
