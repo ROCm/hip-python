@@ -12390,7 +12390,7 @@ def get_bool_environ_var(env_var, default):
 accept_cuda_enum_names = get_bool_environ_var("HIP_PYTHON_ACCEPT_CUDA_ENUM_NAMES","true") # Accept CUDA enum names in addition to HIP ones
 generate_fake_enums = get_bool_environ_var("HIP_PYTHON_GENERATE_FAKE_ENUMS","false")  # Generate fake enums if member does not exist
 
-def __get_hip_name(cuda_name):
+def _get_hip_name(cuda_name):
     global cuda2hip
     return cuda2hip.get(cuda_name,None)
 
@@ -12430,10 +12430,10 @@ class FakeEnumType():
         """Mimicks enum.Enum.__str__"""
         return "%s.%s" % (self.__class__.__name__, self._name_)
 
-class __EnumMeta(enum.EnumMeta):
+class _EnumMeta(enum.EnumMeta):
         
     def __getattribute__(cls,name):
-        global __get_hip_name
+        global _get_hip_name
         global accept_cuda_enum_names
         global generate_fake_enums
         try:
@@ -12442,13 +12442,15 @@ class __EnumMeta(enum.EnumMeta):
         except AttributeError as ae:
             if not accept_cuda_enum_names:
                 raise ae
-            hip_name = __get_hip_name(name)
+            hip_name = _get_hip_name(name)
             if hip_name != None:
                 return super().__getattribute__(hip_name)
             elif not generate_fake_enums:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
+                if not len(used_vals):
+                    raise ae
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
@@ -12461,5 +12463,5 @@ class __EnumMeta(enum.EnumMeta):
                 )()
                 return new
         
-class IntEnum(enum.IntEnum,metaclass=__EnumMeta):
+class IntEnum(enum.IntEnum,metaclass=_EnumMeta):
     pass
