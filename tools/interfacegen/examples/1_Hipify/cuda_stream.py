@@ -9,7 +9,7 @@ def cuda_check(call_result):
     result = call_result[1:]
     if len(result) == 1:
         result = result[0]
-    if isinstance(err, cuda.cudaError_t) and err != cuda.cudaError_t.CUDA_SUCCESS:
+    if isinstance(err, cuda.cudaError_t) and err != cuda.cudaError_t.hipSuccess:
         raise RuntimeError(str(err))
     return result
 
