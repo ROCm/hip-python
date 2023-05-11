@@ -490,7 +490,7 @@ cdef class DeviceArray(DataHandle):
             raise ValueError(f"subscript='{subscript}' must be non-negative.")  
         if subscript >= shape_dim:
             raise ValueError(f"subscript='{subscript}' must be smaller than axis' exclusive upper bound ('{shape_dim}')")
-        return (subscript,subscript+1,False)
+        return (subscript,subscript+1)
         
 
     cdef tuple _handle_slice(self,slice subscript,size_t shape_dim):
@@ -545,7 +545,7 @@ cdef class DeviceArray(DataHandle):
         """
         cdef size_t stride = 1
         cdef size_t offset = 0
-        cdef bint contiguous = True
+        cdef bint next_slice_yields_contiguous = True
         cdef tuple shape = self.__cuda_array_interface__["shape"]
         cdef size_t rank = len(shape)
         cdef list result_shape = list() # elements will be appended
@@ -560,16 +560,19 @@ cdef class DeviceArray(DataHandle):
         #
         for _i,spec in enumerate(reversed(subscript_tuple)): # row major
             i = rank-_i-1
-            if not contiguous:
-                raise ValueError(f"subscript='{subscript_tuple}' yields no contiguous subarray")
             if isinstance(spec,int):
-                (start,stop,contiguous) = self._handle_int(spec,shape[i])
+                (start,stop) = self._handle_int(spec,shape[i])
+                next_slice_yields_contiguous = False
             elif isinstance(spec,slice):
-                (start,stop,contiguous) = self._handle_slice(spec,shape[i])
+                if not next_slice_yields_contiguous:
+                    raise ValueError(f"subscript='{subscript_tuple}' yields no contiguous subarray")
+                (start,stop,extract_full_dim) = self._handle_slice(spec,shape[i])
+                next_slice_yields_contiguous = extract_full_dim
+                # extract_full_dim => start == 0
             else:
                 raise TypeError(f"subscript tuple entry type='{type(spec)}' is none of: 'slice', 'int'")
             result_shape.append(stop-start)
-            offset = start*stride
+            offset += start*stride
             stride *= <size_t>shape[i]
         return DeviceArray.from_ptr(<void*>(<unsigned long>self._ptr + offset)).configure(
             _force=True,
