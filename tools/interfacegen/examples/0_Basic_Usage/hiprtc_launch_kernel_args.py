@@ -1,3 +1,7 @@
+# AMD_COPYRIGHT
+
+__author__ = "AMD_AUTHOR"
+
 import ctypes
 import array
 import random
