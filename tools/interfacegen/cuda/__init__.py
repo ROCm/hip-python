@@ -5,7 +5,7 @@ import enum
 import hip
 from hip.hipify import cuda2hip, hip2cuda, IntEnum
 
-def __create__all__(hip_mod):
+def _create_all(hip_mod):
     global hip2cuda
     result = []
     for hip_sym in vars(hip_mod):
@@ -59,12 +59,12 @@ for (hip_lib,cuda_lib) in (
         hip_mod = hipvars[hip_lib]
         module_obj = type(cuda_lib,(Cuda2HipModule,), {
             "__name__":cuda_lib,
-            "__all__": __create__all__(hip_mod)
+            "__all__": _create_all(hip_mod)
         })(hip_mod)
         setattr(sys.modules[__name__],cuda_lib,module_obj)
         sys.modules[f"{__name__}.{cuda_lib}"] = module_obj
 
-del __create__all__
+del _create_all
 del hipvars
 del hip
 del sys
