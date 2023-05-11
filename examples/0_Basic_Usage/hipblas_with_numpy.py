@@ -1,3 +1,7 @@
+# AMD_COPYRIGHT
+
+__author__ = "AMD_AUTHOR"
+
 import ctypes
 import math
 import numpy as np
