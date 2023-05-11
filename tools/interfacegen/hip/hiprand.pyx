@@ -2,6 +2,7 @@
 import cython
 import ctypes
 import enum
+import hip.hipify
 HIPRAND_VERSION = chiprand.HIPRAND_VERSION
 
 HIPRAND_DEFAULT_MAX_BLOCK_SIZE = chiprand.HIPRAND_DEFAULT_MAX_BLOCK_SIZE
@@ -538,7 +539,7 @@ cdef class rocrand_generator_base_type:
 
 rocrand_generator = rocrand_generator_base_type
 
-class rocrand_status(enum.IntEnum):
+class rocrand_status(hip.hipify.IntEnum):
     ROCRAND_STATUS_SUCCESS = chiprand.ROCRAND_STATUS_SUCCESS
     ROCRAND_STATUS_VERSION_MISMATCH = chiprand.ROCRAND_STATUS_VERSION_MISMATCH
     ROCRAND_STATUS_NOT_CREATED = chiprand.ROCRAND_STATUS_NOT_CREATED
@@ -555,7 +556,7 @@ class rocrand_status(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class rocrand_rng_type(enum.IntEnum):
+class rocrand_rng_type(hip.hipify.IntEnum):
     ROCRAND_RNG_PSEUDO_DEFAULT = chiprand.ROCRAND_RNG_PSEUDO_DEFAULT
     ROCRAND_RNG_PSEUDO_XORWOW = chiprand.ROCRAND_RNG_PSEUDO_XORWOW
     ROCRAND_RNG_PSEUDO_MRG32K3A = chiprand.ROCRAND_RNG_PSEUDO_MRG32K3A
@@ -578,7 +579,7 @@ hiprandGenerator_t = rocrand_generator_base_type
 
 hiprandDiscreteDistribution_t = rocrand_discrete_distribution_st
 
-class hiprandStatus(enum.IntEnum):
+class hiprandStatus(hip.hipify.IntEnum):
     HIPRAND_STATUS_SUCCESS = chiprand.HIPRAND_STATUS_SUCCESS
     HIPRAND_STATUS_VERSION_MISMATCH = chiprand.HIPRAND_STATUS_VERSION_MISMATCH
     HIPRAND_STATUS_NOT_INITIALIZED = chiprand.HIPRAND_STATUS_NOT_INITIALIZED
@@ -599,7 +600,7 @@ class hiprandStatus(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hiprandRngType(enum.IntEnum):
+class hiprandRngType(hip.hipify.IntEnum):
     HIPRAND_RNG_TEST = chiprand.HIPRAND_RNG_TEST
     HIPRAND_RNG_PSEUDO_DEFAULT = chiprand.HIPRAND_RNG_PSEUDO_DEFAULT
     HIPRAND_RNG_PSEUDO_XORWOW = chiprand.HIPRAND_RNG_PSEUDO_XORWOW
