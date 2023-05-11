@@ -2,6 +2,7 @@
 import cython
 import ctypes
 import enum
+import hip.hipify
 NCCL_MAJOR = crccl.NCCL_MAJOR
 
 NCCL_MINOR = crccl.NCCL_MINOR
@@ -270,7 +271,7 @@ cdef class ncclUniqueId:
         raise ValueError("'item' type must be 'int'")
 
 
-class ncclResult_t(enum.IntEnum):
+class ncclResult_t(hip.hipify.IntEnum):
     ncclSuccess = crccl.ncclSuccess
     ncclUnhandledCudaError = crccl.ncclUnhandledCudaError
     ncclSystemError = crccl.ncclSystemError
@@ -577,7 +578,7 @@ def pncclCommUserRank(object comm):
     return (_pncclCommUserRank__retval,rank)
 
 
-class ncclRedOp_dummy_t(enum.IntEnum):
+class ncclRedOp_dummy_t(hip.hipify.IntEnum):
     ncclNumOps_dummy = crccl.ncclNumOps_dummy
     @staticmethod
     def ctypes_type():
@@ -585,7 +586,7 @@ class ncclRedOp_dummy_t(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class ncclRedOp_t(enum.IntEnum):
+class ncclRedOp_t(hip.hipify.IntEnum):
     ncclSum = crccl.ncclSum
     ncclProd = crccl.ncclProd
     ncclMax = crccl.ncclMax
@@ -599,7 +600,7 @@ class ncclRedOp_t(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class ncclDataType_t(enum.IntEnum):
+class ncclDataType_t(hip.hipify.IntEnum):
     ncclInt8 = crccl.ncclInt8
     ncclChar = crccl.ncclChar
     ncclUint8 = crccl.ncclUint8
@@ -622,7 +623,7 @@ class ncclDataType_t(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class ncclScalarResidence_t(enum.IntEnum):
+class ncclScalarResidence_t(hip.hipify.IntEnum):
     ncclScalarDevice = crccl.ncclScalarDevice
     ncclScalarHostImmediate = crccl.ncclScalarHostImmediate
     @staticmethod

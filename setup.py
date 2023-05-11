@@ -13,6 +13,10 @@ import warnings
 import enum
 import textwrap
 
+from _codegen import cython
+
+cython.python_interface_int_enum_base_class = "hip.hipify.IntEnum"
+
 from _codegen.cython import (
     CythonPackageGenerator,
     DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
@@ -94,7 +98,7 @@ def get_bool_environ_var(env_var, default):
 
 
 HIP_PYTHON_GENERATE = get_bool_environ_var("HIP_PYTHON_GENERATE", "true")
-HIP_PYTHON_LIBS = os.environ.get("HIP_PYTHON_LIBS", "hip,hiprtc")
+HIP_PYTHON_LIBS = os.environ.get("HIP_PYTHON_LIBS", "hip,hiprtc,hipify")
 HIP_PYTHON_ERR_IF_LIB_NOT_FOUND = get_bool_environ_var(
     "HIP_PYTHON_ERR_IF_LIB_NOT_FOUND", "true"
 )
@@ -224,13 +228,11 @@ def generate_hiprtc_package_files():
         ptr_complicated_type_handler=hiprtc_ptr_complicated_type_handler,
         cflags=GENERATOR_ARGS,
     )
-    if HIP_PYTHON_GENERATE:
-        generator.write_package_files(output_dir="hip")
     CYTHON_EXT_MODULES += [
         ("hip.chiprtc", ["./hip/chiprtc.pyx"]),
         ("hip.hiprtc", ["./hip/hiprtc.pyx"]),
     ]
-
+    return generator
 
 def generate_hip_package_files():
     global ROCM_INC
@@ -449,9 +451,6 @@ def generate_hip_package_files():
     cimport hip._hip_helpers
     """
     )
-    if HIP_PYTHON_GENERATE:
-        generator.write_package_files(output_dir="hip")
-
     HIP_VERSION_MAJOR = 0
     HIP_VERSION_MINOR = 0
     HIP_VERSION_PATCH = 0
@@ -473,7 +472,7 @@ def generate_hip_package_files():
         ("hip._hip_helpers", ["./hip/_hip_helpers.pyx"]),
         ("hip.hip", ["./hip/hip.pyx"]),
     ]
-
+    return generator
 
 # hipblas
 def generate_hipblas_package_files():
@@ -583,12 +582,11 @@ def generate_hipblas_package_files():
     from .hip cimport ihipStream_t
     """
     )
-    if HIP_PYTHON_GENERATE:
-        generator.write_package_files(output_dir="hip")
     CYTHON_EXT_MODULES += [
         ("hip.chipblas", ["./hip/chipblas.pyx"]),
         ("hip.hipblas", ["./hip/hipblas.pyx"]),
     ]
+    return generator
 
 
 # rccl
@@ -686,12 +684,11 @@ def generate_rccl_package_files():
     from .hip cimport ihipStream_t
     """
     )
-    if HIP_PYTHON_GENERATE:
-        generator.write_package_files(output_dir="hip")
     CYTHON_EXT_MODULES += [
         ("hip.crccl", ["./hip/crccl.pyx"]),
         ("hip.rccl", ["./hip/rccl.pyx"]),
     ]
+    return generator
 
 
 # hiprand
@@ -769,12 +766,11 @@ def generate_hiprand_package_files():
     from .hip cimport ihipStream_t
     """
     )
-    if HIP_PYTHON_GENERATE:
-        generator.write_package_files(output_dir="hip")
     CYTHON_EXT_MODULES += [
         ("hip.chiprand", ["./hip/chiprand.pyx"]),
         ("hip.hiprand", ["./hip/hiprand.pyx"]),
     ]
+    return generator
 
 
 def generate_hipify_file():
@@ -786,6 +782,7 @@ def generate_hipify_file():
                 render_hipify_perl_info(os.path.join(ROCM_PATH, "bin", "hipify-perl")),
             )
         )
+    return None
 
 
 AVAILABLE_GENERATORS = dict(
@@ -813,8 +810,14 @@ for entry in lib_names:
         if HIP_PYTHON_ERR_IF_LIB_NOT_FOUND:
             raise KeyError(msg)
         else:
-            warnings.warn("default", msg)
-    AVAILABLE_GENERATORS[libname]()
+            warnings.warn(msg, RuntimeWarning)
+    generator = AVAILABLE_GENERATORS[libname]()
+    if generator != None and HIP_PYTHON_GENERATE:
+        generator.python_interface_impl_preamble += textwrap.dedent("""\
+        import hip.hipify
+        """
+        )
+        generator.write_package_files(output_dir="hip")
 
 HIP_VERSION_NAME = (
     f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}-{HIP_VERSION_GITHASH}"
