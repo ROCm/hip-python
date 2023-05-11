@@ -12430,6 +12430,9 @@ class FakeEnumType():
         """Mimicks enum.Enum.__str__"""
         return "%s.%s" % (self.__class__.__name__, self._name_)
 
+    def __hash__(self):
+        return hash(str(self))
+
 class _EnumMeta(enum.EnumMeta):
         
     def __getattribute__(cls,name):
@@ -12437,7 +12440,8 @@ class _EnumMeta(enum.EnumMeta):
         global accept_cuda_enum_names
         global generate_fake_enums
         try:
-            return super().__getattribute__(name)
+            result = super().__getattribute__(name)
+            return result
         except AttributeError as ae:
             if not accept_cuda_enum_names:
                 raise ae
