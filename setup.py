@@ -348,7 +348,7 @@ def generate_hip_package_files():
             return True
         if not isinstance(node, MacroDefinition):
             if "hip/" in node.file:
-                # sime modifications:
+                # some modifications:
                 if isinstance(node, Record) and node.name == "dim3":
                     node.set_defaults(x=1, y=1, z=1)
                 return True
@@ -436,7 +436,7 @@ def generate_hip_package_files():
     generator = CythonPackageGenerator(
         "hip",
         ROCM_INC,
-        "hip/hip_runtime_api.h",
+        "hip/hip_runtime.h",
         runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
         dll="libamdhip64.so",
         node_filter=hip_node_filter,
@@ -690,7 +690,6 @@ def generate_rccl_package_files():
     ]
     return generator
 
-
 # hiprand
 def generate_hiprand_package_files():
     global ROCM_INC
@@ -772,6 +771,149 @@ def generate_hiprand_package_files():
     ]
     return generator
 
+# hipfft
+def generate_hipfft_package_files():
+    global ROCM_INC
+    global HIP_PYTHON_GENERATE
+    global GENERATOR_ARGS
+    global CYTHON_EXT_MODULES
+
+    def hipfft_node_filter(node: Node):
+        if not isinstance(node, MacroDefinition):
+            if node.name.startswith("hipfft"):
+                return True
+        elif node.name in (
+             "HIPFFT_FORWARD",
+             "HIPFFT_BACKWARD",
+        ):
+            return True
+        return False
+
+    def hipfft_macro_type(node: MacroDefinition):
+        return "int"
+
+    def hipfft_ptr_parm_intent(node: Parm):
+        """Flags pointer parameters that are actually return values
+        that are passed as C-style reference, i.e. `<type>* <param>`.
+        """
+        if node.is_pointer_to_record(degree=2):
+            return PointerParamIntent.OUT
+        return PointerParamIntent.IN
+
+    def hipfft_ptr_rank(node: Node):
+        """Actual rank of the variables underlying pointer indirections.
+
+        Most of the parameter names follow LAPACK convention.
+        """
+        if isinstance(node, Parm):
+            if node.is_pointer_to_record(degree=(1,2)):
+                return 0
+            elif node.is_pointer_to_basic_type(degree=1):
+                return 0
+        elif isinstance(node, Field):
+            pass  # nothing to do
+        return 1
+
+    generator = CythonPackageGenerator(
+        "hipfft",
+        ROCM_INC,
+        "hipfft/hipfft.h",
+        runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
+        dll="libhipfft.so",
+        node_filter=hipfft_node_filter,
+        macro_type=hipfft_macro_type,
+        ptr_parm_intent=hipfft_ptr_parm_intent,
+        ptr_rank=hipfft_ptr_rank,
+        cflags=GENERATOR_ARGS,
+    )
+    generator.c_interface_decl_preamble += textwrap.dedent(
+        """\
+    from .chip cimport hipStream_t, float2, double2
+    """
+    )
+    generator.python_interface_decl_preamble += textwrap.dedent(
+        """\
+    from .hip cimport ihipStream_t, float2, double2
+    """
+    )
+    CYTHON_EXT_MODULES += [
+        ("hip.chipfft", ["./hip/chipfft.pyx"]),
+        ("hip.hipfft", ["./hip/hipfft.pyx"]),
+    ]
+    return generator
+
+# hipsparse
+def generate_hipsparse_package_files():
+    global ROCM_INC
+    global HIP_PYTHON_GENERATE
+    global GENERATOR_ARGS
+    global CYTHON_EXT_MODULES
+
+    def hipsparse_node_filter(node: Node):
+        if not isinstance(node, MacroDefinition):
+            if ( 
+                node.name.startswith("hipsparse") 
+                or node.name.endswith("Info_t")
+                or (node.name.endswith("Info")
+                    and not node.name == "hipArrayMapInfo"
+                )
+            ):
+                return True
+        return False
+
+    def hipsparse_macro_type(node: MacroDefinition):
+        return "int"
+
+    def hipsparse_ptr_parm_intent(node: Parm):
+        """Flags pointer parameters that are actually return values
+        that are passed as C-style reference, i.e. `<type>* <param>`.
+        """
+        if node.is_pointer_to_record(degree=2):
+            return PointerParamIntent.OUT
+        return PointerParamIntent.IN
+
+    def hipsparse_ptr_rank(node: Node):
+        """Actual rank of the variables underlying pointer indirections.
+
+        Most of the parameter names follow LAPACK convention.
+        """
+        if isinstance(node, Parm):
+            if node.is_pointer_to_record(degree=(1,2)):
+                return 0
+            elif node.is_pointer_to_basic_type(degree=1):
+                return 0
+        elif isinstance(node, Field):
+            pass  # nothing to do
+        return 1
+
+    generator = CythonPackageGenerator(
+        "hipsparse",
+        ROCM_INC,
+        "hipsparse/hipsparse.h",
+        runtime_linking=HIP_PYTHON_RUNTIME_LINKING,
+        dll="libhipsparse.so",
+        node_filter=hipsparse_node_filter,
+        macro_type=hipsparse_macro_type,
+        ptr_parm_intent=hipsparse_ptr_parm_intent,
+        ptr_rank=hipsparse_ptr_rank,
+        cflags=GENERATOR_ARGS,
+    )
+    generator.c_interface_decl_preamble += textwrap.dedent(
+        """\
+    from .chip cimport *
+    """
+    )
+    generator.python_interface_decl_preamble += textwrap.dedent(
+        """\
+    from .hip import hipError_t, hipDataType # PY import enums
+    from .hip cimport ihipStream_t, float2, double2 # C import structs/union types
+    """
+    )
+    CYTHON_EXT_MODULES += [
+        ("hip.chipsparse", ["./hip/chipsparse.pyx"]),
+        ("hip.hipsparse", ["./hip/hipsparse.pyx"]),
+    ]
+    return generator
 
 def generate_hipify_file():
     template = open(os.path.join("hip", "hipify.py.in"), "r").read()
@@ -791,6 +933,8 @@ AVAILABLE_GENERATORS = dict(
     hipblas=generate_hipblas_package_files,
     rccl=generate_rccl_package_files,
     hiprand=generate_hiprand_package_files,
+    hipfft=generate_hipfft_package_files,
+    hipsparse=generate_hipsparse_package_files,
     hipify=generate_hipify_file,
 )
 

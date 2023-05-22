@@ -448,7 +448,7 @@ class Typed:
         if layers[found_pointer_degree] in type_kinds:
             if isinstance(degree,int):
                 degrees = (degree,)
-            elif not isinstance(degree,tuple):
+            elif isinstance(degree,tuple):
                 degrees = degree
             else:
                 raise RuntimeError("degree: expected int or tuple of int")
@@ -486,7 +486,7 @@ class Typed:
         if layers[found_pointer_degree] in type_categories:
             if isinstance(degree,int):
                 degrees = (degree,)
-            elif not isinstance(degree,tuple):
+            elif isinstance(degree,tuple):
                 degrees = degree
             else:
                 raise RuntimeError("degree: expected int or tuple of int")
