@@ -1,7 +1,7 @@
 # AMD_COPYRIGHT
 from libc.stdint cimport *
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     cdef int HIP_VERSION_MAJOR
 
@@ -159,7 +159,7 @@ cdef enum:
     HIP_ERROR_NOT_INITIALIZED
     HIP_ERROR_LAUNCH_OUT_OF_RESOURCES
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     ctypedef struct hipDeviceArch_t:
         unsigned int hasGlobalInt32Atomics
@@ -693,7 +693,7 @@ cdef union hipResourceDesc_union_0:
     hipResourceDesc_union_0_struct_2 linear
     hipResourceDesc_union_0_struct_3 pitch2D
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     cdef struct hipResourceDesc:
         hipResourceType resType
@@ -729,7 +729,7 @@ cdef union HIP_RESOURCE_DESC_st_union_0:
     HIP_RESOURCE_DESC_st_union_0_struct_3 pitch2D
     HIP_RESOURCE_DESC_st_union_0_struct_4 reserved
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     cdef struct HIP_RESOURCE_DESC_st:
         HIPresourcetype_enum resType
@@ -1071,7 +1071,7 @@ cdef extern from "hip/hip_runtime_api.h":
 cdef hipChannelFormatDesc hipCreateChannelDesc(int x,int y,int z,int w,hipChannelFormatKind f) nogil
 
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     cdef struct __hip_texture:
         pass
@@ -1340,7 +1340,7 @@ cdef union hipExternalMemoryHandleDesc_st_union_0:
     int fd
     hipExternalMemoryHandleDesc_st_union_0_struct_0 win32
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     cdef struct hipExternalMemoryHandleDesc_st:
         hipExternalMemoryHandleType_enum type
@@ -1375,7 +1375,7 @@ cdef union hipExternalSemaphoreHandleDesc_st_union_0:
     int fd
     hipExternalSemaphoreHandleDesc_st_union_0_struct_0 win32
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     cdef struct hipExternalSemaphoreHandleDesc_st:
         hipExternalSemaphoreHandleType_enum type
@@ -1397,7 +1397,7 @@ cdef struct hipExternalSemaphoreSignalParams_st_struct_0:
     hipExternalSemaphoreSignalParams_st_struct_0_struct_1 keyedMutex
     unsigned int[12] reserved
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     cdef struct hipExternalSemaphoreSignalParams_st:
         hipExternalSemaphoreSignalParams_st_struct_0 params
@@ -1418,7 +1418,7 @@ cdef struct hipExternalSemaphoreWaitParams_st_struct_0:
     hipExternalSemaphoreWaitParams_st_struct_0_struct_1 keyedMutex
     unsigned int[10] reserved
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     cdef struct hipExternalSemaphoreWaitParams_st:
         hipExternalSemaphoreWaitParams_st_struct_0 params
@@ -1567,7 +1567,7 @@ cdef struct hipMemAllocationProp_struct_0:
     unsigned char gpuDirectRDMACapable
     unsigned short usage
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     cdef struct hipMemAllocationProp:
         hipMemAllocationType type
@@ -1622,7 +1622,7 @@ cdef union hipArrayMapInfo_union_1:
 cdef union hipArrayMapInfo_union_2:
     hipMemGenericAllocationHandle_t memHandle
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     cdef struct hipArrayMapInfo:
         hipResourceType resourceType
@@ -2274,7 +2274,7 @@ cdef hipError_t hipExtStreamCreateWithCUMask(hipStream_t* stream,unsigned int cu
 cdef hipError_t hipExtStreamGetCUMask(hipStream_t stream,unsigned int cuMaskSize,unsigned int * cuMask) nogil
 
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     ctypedef void (*hipStreamCallback_t) (hipStream_t,hipError_t,void *)
 
@@ -5494,7 +5494,7 @@ cdef hipError_t hipMemSetAccess(void * ptr,unsigned long size,hipMemAccessDesc *
 cdef hipError_t hipMemUnmap(void * ptr,unsigned long size) nogil
 
 
-cdef extern from "hip/hip_runtime_api.h":
+cdef extern from "hip/hip_runtime.h":
 
     ctypedef unsigned int GLuint
 
@@ -5678,3 +5678,19 @@ cdef hipError_t hipStreamGetCaptureInfo_v2_spt(hipStream_t stream,hipStreamCaptu
 
 
 cdef hipError_t hipLaunchHostFunc_spt(hipStream_t stream,hipHostFn_t fn,void * userData)
+
+
+cdef extern from "hip/hip_runtime.h":
+
+    cdef enum hipDataType:
+        HIP_R_16F
+        HIP_R_32F
+        HIP_R_64F
+        HIP_C_16F
+        HIP_C_32F
+        HIP_C_64F
+
+    cdef enum hipLibraryPropertyType:
+        HIP_LIBRARY_MAJOR_VERSION
+        HIP_LIBRARY_MINOR_VERSION
+        HIP_LIBRARY_PATCH_LEVEL
