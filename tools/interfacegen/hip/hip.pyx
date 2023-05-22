@@ -32377,3 +32377,26 @@ def hipLaunchHostFunc_spt(object stream, object fn, object userData):
         hipHostFn_t.from_pyobj(fn)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(userData)._ptr))    # fully specified
     return (_hipLaunchHostFunc_spt__retval,)
+
+
+class hipDataType(hip.hipify.IntEnum):
+    HIP_R_16F = chip.HIP_R_16F
+    HIP_R_32F = chip.HIP_R_32F
+    HIP_R_64F = chip.HIP_R_64F
+    HIP_C_16F = chip.HIP_C_16F
+    HIP_C_32F = chip.HIP_C_32F
+    HIP_C_64F = chip.HIP_C_64F
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
+
+
+class hipLibraryPropertyType(hip.hipify.IntEnum):
+    HIP_LIBRARY_MAJOR_VERSION = chip.HIP_LIBRARY_MAJOR_VERSION
+    HIP_LIBRARY_MINOR_VERSION = chip.HIP_LIBRARY_MINOR_VERSION
+    HIP_LIBRARY_PATCH_LEVEL = chip.HIP_LIBRARY_PATCH_LEVEL
+    @staticmethod
+    def ctypes_type():
+        """The type of the enum constants as ctypes type."""
+        return ctypes.c_uint 
