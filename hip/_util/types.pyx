@@ -340,21 +340,19 @@ cdef class DeviceArray(DataHandle):
             
         Keyword Arguments:
 
-            shape (tuple): An int that describes the intent per dimension. The length of the tuple is the number of dimensions.
-            typestr (str): A numpy typestr, see the first note for more details.
+            shape (tuple): A tuple that describes the extent per dimension. The length of the tuple is the number of dimensions.
+            typestr (str): A numpy typestr, see the notes for more details.
             stream (int or None): The stream to synchronize before consuming this array. See first note for more details.
-            itemsize (int): Size in bytes of 
-                            each item. Defaults to 1. See the notes.
-            read_only (bool): DeviceArray is read_only. Second entry of the CAI 'data' tuple. Defaults to False.
-            _force(bool): Ignore changes in the total number of bytes when override shape, typestr, and/or itemsize.
+            itemsize (int): Size in bytes of each item. Defaults to 1. See the notes.
+            read_only (bool): DeviceArray is read_only. Second entry of the CUDA array interface 'data' tuple. Defaults to False.
+            _force(bool): Ignore changes in the total number of bytes when overriding shape, typestr, and/or itemsize.
 
         Note:
             More details on the keyword arguments can be found here:
             https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html
 
         Note:
-
-            This method does not automatically map numpy/numba typestr to appropriate number 
+            This method does not automatically map all existing numpy/numba typestr to appropriate number 
             of bytes, i.e. `itemsize`. Hence, you need to specify itemsize additionally
             when dealing with other datatypes than bytes (typestr: ``'b'``).
         """
@@ -589,6 +587,9 @@ cdef class DeviceArray(DataHandle):
     @property
     def shape(self):
         return self.__cuda_array_interface__["shape"]
+    @property
+    def size(self):
+        return math.prod(self.__cuda_array_interface__["shape"])
     @property
     def itemsize(self):
         return self._itemsize
