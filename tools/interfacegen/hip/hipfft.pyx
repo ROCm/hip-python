@@ -30,6 +30,8 @@ class hipfftResult_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
+hipfftResult = hipfftResult_t
+
 class hipfftType_t(hip.hipify.IntEnum):
     HIPFFT_R2C = chipfft.HIPFFT_R2C
     HIPFFT_C2R = chipfft.HIPFFT_C2R
@@ -43,6 +45,8 @@ class hipfftType_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
+hipfftType = hipfftType_t
+
 class hipfftLibraryPropertyType_t(hip.hipify.IntEnum):
     HIPFFT_MAJOR_VERSION = chipfft.HIPFFT_MAJOR_VERSION
     HIPFFT_MINOR_VERSION = chipfft.HIPFFT_MINOR_VERSION
@@ -52,6 +56,8 @@ class hipfftLibraryPropertyType_t(hip.hipify.IntEnum):
         """The type of the enum constants as ctypes type."""
         return ctypes.c_uint 
 
+
+hipfftLibraryPropertyType = hipfftLibraryPropertyType_t
 
 cdef class hipfftHandle_t:
     # members declared in pxd file
@@ -148,6 +154,10 @@ cdef class hipfftHandle_t:
 
 
 hipfftHandle = hipfftHandle_t
+
+hipfftComplex = float2
+
+hipfftDoubleComplex = double2
 
 @cython.embedsignature(True)
 def hipfftPlan1d(int nx, object type, int batch):
@@ -270,7 +280,7 @@ def hipfftExtPlanScaleFactor(object plan, double scalefactor):
 
 
 @cython.embedsignature(True)
-def hipfftMakePlan1d(object plan, int nx, object type, int batch, object workSize):
+def hipfftMakePlan1d(object plan, int nx, object type, int batch):
     """! @brief Initialize a new one-dimensional FFT plan.
     @details Assumes that the plan has been created already, and
     modifies the plan associated with the plan handle.
@@ -280,15 +290,15 @@ def hipfftMakePlan1d(object plan, int nx, object type, int batch, object workSiz
     @param[in] batch Number of batched transforms to compute.
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftMakePlan1d__retval = hipfftResult_t(chipfft.hipfftMakePlan1d(
-        hipfftHandle_t.from_pyobj(plan)._ptr,nx,type.value,batch,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftMakePlan1d__retval,)
+        hipfftHandle_t.from_pyobj(plan)._ptr,nx,type.value,batch,&workSize))    # fully specified
+    return (_hipfftMakePlan1d__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftMakePlan2d(object plan, int nx, int ny, object type, object workSize):
+def hipfftMakePlan2d(object plan, int nx, int ny, object type):
     """! @brief Initialize a new two-dimensional FFT plan.
     @details Assumes that the plan has been created already, and
     modifies the plan associated with the plan handle.
@@ -302,15 +312,15 @@ def hipfftMakePlan2d(object plan, int nx, int ny, object type, object workSize):
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftMakePlan2d__retval = hipfftResult_t(chipfft.hipfftMakePlan2d(
-        hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,type.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftMakePlan2d__retval,)
+        hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,type.value,&workSize))    # fully specified
+    return (_hipfftMakePlan2d__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftMakePlan3d(object plan, int nx, int ny, int nz, object type, object workSize):
+def hipfftMakePlan3d(object plan, int nx, int ny, int nz, object type):
     """! @brief Initialize a new two-dimensional FFT plan.
     @details Assumes that the plan has been created already, and
     modifies the plan associated with the plan handle.
@@ -325,15 +335,15 @@ def hipfftMakePlan3d(object plan, int nx, int ny, int nz, object type, object wo
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftMakePlan3d__retval = hipfftResult_t(chipfft.hipfftMakePlan3d(
-        hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,nz,type.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftMakePlan3d__retval,)
+        hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,nz,type.value,&workSize))    # fully specified
+    return (_hipfftMakePlan3d__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istride, int idist, object onembed, int ostride, int odist, object type, int batch, object workSize):
+def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istride, int idist, object onembed, int ostride, int odist, object type, int batch):
     """! @brief Initialize a new batched rank-dimensional FFT plan with advanced data layout.
     @details Assumes that the plan has been created already, and
     modifies the plan associated with the plan handle. The number 
@@ -367,47 +377,47 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftMakePlanMany__retval = hipfftResult_t(chipfft.hipfftMakePlanMany(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
         <int *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <int *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftMakePlanMany__retval,)
+        <int *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
+    return (_hipfftMakePlanMany__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftMakePlanMany64(object plan, int rank, object n, object inembed, long long istride, long long idist, object onembed, long long ostride, long long odist, object type, long long batch, object workSize):
+def hipfftMakePlanMany64(object plan, int rank, object n, object inembed, long long istride, long long idist, object onembed, long long ostride, long long odist, object type, long long batch):
     """
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftMakePlanMany64__retval = hipfftResult_t(chipfft.hipfftMakePlanMany64(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
         <long long *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
         <long long *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <long long *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftMakePlanMany64__retval,)
+        <long long *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
+    return (_hipfftMakePlanMany64__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftEstimate1d(int nx, object type, int batch, object workSize):
+def hipfftEstimate1d(int nx, object type, int batch):
     """! @brief Return an estimate of the work area size required for a 1D plan.
     @param[in] nx Number of elements in the x-direction.
     @param[in] type FFT type.
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
-    _hipfftEstimate1d__retval = hipfftResult_t(chipfft.hipfftEstimate1d(nx,type.value,batch,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftEstimate1d__retval,)
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
+    _hipfftEstimate1d__retval = hipfftResult_t(chipfft.hipfftEstimate1d(nx,type.value,batch,&workSize))    # fully specified
+    return (_hipfftEstimate1d__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftEstimate2d(int nx, int ny, object type, object workSize):
+def hipfftEstimate2d(int nx, int ny, object type):
     """! @brief Return an estimate of the work area size required for a 2D plan.
     @param[in] nx Number of elements in the x-direction.
     @param[in] ny Number of elements in the y-direction.
@@ -415,14 +425,14 @@ def hipfftEstimate2d(int nx, int ny, object type, object workSize):
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
-    _hipfftEstimate2d__retval = hipfftResult_t(chipfft.hipfftEstimate2d(nx,ny,type.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftEstimate2d__retval,)
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
+    _hipfftEstimate2d__retval = hipfftResult_t(chipfft.hipfftEstimate2d(nx,ny,type.value,&workSize))    # fully specified
+    return (_hipfftEstimate2d__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftEstimate3d(int nx, int ny, int nz, object type, object workSize):
+def hipfftEstimate3d(int nx, int ny, int nz, object type):
     """! @brief Return an estimate of the work area size required for a 3D plan.
     @param[in] nx Number of elements in the x-direction.
     @param[in] ny Number of elements in the y-direction.
@@ -431,14 +441,14 @@ def hipfftEstimate3d(int nx, int ny, int nz, object type, object workSize):
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
-    _hipfftEstimate3d__retval = hipfftResult_t(chipfft.hipfftEstimate3d(nx,ny,nz,type.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftEstimate3d__retval,)
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
+    _hipfftEstimate3d__retval = hipfftResult_t(chipfft.hipfftEstimate3d(nx,ny,nz,type.value,&workSize))    # fully specified
+    return (_hipfftEstimate3d__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftEstimateMany(int rank, object n, object inembed, int istride, int idist, object onembed, int ostride, int odist, object type, int batch, object workSize):
+def hipfftEstimateMany(int rank, object n, object inembed, int istride, int idist, object onembed, int ostride, int odist, object type, int batch):
     """! @brief Return an estimate of the work area size required for a rank-dimensional plan.
     @param[in] rank Dimension of FFT transform (1, 2, or 3).
     @param[in] n Number of elements in the x/y/z directions.
@@ -453,17 +463,17 @@ def hipfftEstimateMany(int rank, object n, object inembed, int istride, int idis
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftEstimateMany__retval = hipfftResult_t(chipfft.hipfftEstimateMany(rank,
         <int *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <int *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftEstimateMany__retval,)
+        <int *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
+    return (_hipfftEstimateMany__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftGetSize1d(object plan, int nx, object type, int batch, object workSize):
+def hipfftGetSize1d(object plan, int nx, object type, int batch):
     """! @brief Return size of the work area size required for a 1D plan.
     @param[in] plan Pointer to the FFT plan.
     @param[in] nx Number of elements in the x-direction.
@@ -471,15 +481,15 @@ def hipfftGetSize1d(object plan, int nx, object type, int batch, object workSize
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftGetSize1d__retval = hipfftResult_t(chipfft.hipfftGetSize1d(
-        hipfftHandle_t.from_pyobj(plan)._ptr,nx,type.value,batch,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftGetSize1d__retval,)
+        hipfftHandle_t.from_pyobj(plan)._ptr,nx,type.value,batch,&workSize))    # fully specified
+    return (_hipfftGetSize1d__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftGetSize2d(object plan, int nx, int ny, object type, object workSize):
+def hipfftGetSize2d(object plan, int nx, int ny, object type):
     """! @brief Return size of the work area size required for a 2D plan.
     @param[in] plan Pointer to the FFT plan.
     @param[in] nx Number of elements in the x-direction.
@@ -488,15 +498,15 @@ def hipfftGetSize2d(object plan, int nx, int ny, object type, object workSize):
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftGetSize2d__retval = hipfftResult_t(chipfft.hipfftGetSize2d(
-        hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,type.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftGetSize2d__retval,)
+        hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,type.value,&workSize))    # fully specified
+    return (_hipfftGetSize2d__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftGetSize3d(object plan, int nx, int ny, int nz, object type, object workSize):
+def hipfftGetSize3d(object plan, int nx, int ny, int nz, object type):
     """! @brief Return size of the work area size required for a 3D plan.
     @param[in] plan Pointer to the FFT plan.
     @param[in] nx Number of elements in the x-direction.
@@ -506,15 +516,15 @@ def hipfftGetSize3d(object plan, int nx, int ny, int nz, object type, object wor
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftGetSize3d__retval = hipfftResult_t(chipfft.hipfftGetSize3d(
-        hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,nz,type.value,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftGetSize3d__retval,)
+        hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,nz,type.value,&workSize))    # fully specified
+    return (_hipfftGetSize3d__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istride, int idist, object onembed, int ostride, int odist, object type, int batch, object workSize):
+def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istride, int idist, object onembed, int ostride, int odist, object type, int batch):
     """! @brief Return size of the work area size required for a rank-dimensional plan.
     @param[in] plan Pointer to the FFT plan.
     @param[in] rank Dimension of FFT transform (1, 2, or 3).
@@ -530,40 +540,40 @@ def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istri
     @param[out] workSize Pointer to work area size (returned value).
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftGetSizeMany__retval = hipfftResult_t(chipfft.hipfftGetSizeMany(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
         <int *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <int *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftGetSizeMany__retval,)
+        <int *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
+    return (_hipfftGetSizeMany__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftGetSizeMany64(object plan, int rank, object n, object inembed, long long istride, long long idist, object onembed, long long ostride, long long odist, object type, long long batch, object workSize):
+def hipfftGetSizeMany64(object plan, int rank, object n, object inembed, long long istride, long long idist, object onembed, long long ostride, long long odist, object type, long long batch):
     """
     """
     if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    cdef unsigned long workSize
     _hipfftGetSizeMany64__retval = hipfftResult_t(chipfft.hipfftGetSizeMany64(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
         <long long *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
         <long long *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
-        <long long *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftGetSizeMany64__retval,)
+        <long long *>hip._util.types.DataHandle.from_pyobj(onembed)._ptr,ostride,odist,type.value,batch,&workSize))    # fully specified
+    return (_hipfftGetSizeMany64__retval,workSize)
 
 
 @cython.embedsignature(True)
-def hipfftGetSize(object plan, object workSize):
+def hipfftGetSize(object plan):
     """! @brief Return size of the work area size required for a rank-dimensional plan.
     @param[in] plan Pointer to the FFT plan.
     """
+    cdef unsigned long workSize
     _hipfftGetSize__retval = hipfftResult_t(chipfft.hipfftGetSize(
-        hipfftHandle_t.from_pyobj(plan)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(workSize)._ptr))    # fully specified
-    return (_hipfftGetSize__retval,)
+        hipfftHandle_t.from_pyobj(plan)._ptr,&workSize))    # fully specified
+    return (_hipfftGetSize__retval,workSize)
 
 
 @cython.embedsignature(True)

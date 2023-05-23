@@ -107,8 +107,8 @@ HIP_PYTHON_RUNTIME_LINKING = get_bool_environ_var("HIP_PYTHON_RUNTIME_LINKING", 
 HIP_PYTHON_VERBOSE = get_bool_environ_var("HIP_PYTHON_VERBOSE", "true")
 
 GENERATOR_ARGS = hip_platform.cflags + [f"-I{ROCM_INC}"]
+HIP_PYTHON_CLANG_RES_DIR = os.environ.get("HIP_PYTHON_CLANG_RES_DIR", None)
 if HIP_PYTHON_GENERATE:
-    HIP_PYTHON_CLANG_RES_DIR = os.environ.get("HIP_PYTHON_CLANG_RES_DIR", None)
     if not HIP_PYTHON_CLANG_RES_DIR:
         raise RuntimeError(
             textwrap.dedent(
@@ -798,20 +798,18 @@ def generate_hipfft_package_files():
         """
         if node.is_pointer_to_record(degree=2):
             return PointerParamIntent.OUT
+        if node.name == "workSize":
+            return PointerParamIntent.OUT
         return PointerParamIntent.IN
 
     def hipfft_ptr_rank(node: Node):
         """Actual rank of the variables underlying pointer indirections.
-
-        Most of the parameter names follow LAPACK convention.
         """
         if isinstance(node, Parm):
             if node.is_pointer_to_record(degree=(1,2)):
                 return 0
             elif node.is_pointer_to_basic_type(degree=1):
                 return 0
-        elif isinstance(node, Field):
-            pass  # nothing to do
         return 1
 
     generator = CythonPackageGenerator(
