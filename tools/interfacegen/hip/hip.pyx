@@ -701,6 +701,8 @@ cdef class hipUUID_t:
         raise ValueError("'item' type must be 'int'")
 
 
+hipUUID = hipUUID_t
+
 cdef class hipDeviceProp_t:
     # members declared in pxd file
 
@@ -3811,6 +3813,10 @@ class HIPresourcetype_enum(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
+HIPresourcetype = HIPresourcetype_enum
+
+hipResourcetype = HIPresourcetype_enum
+
 class HIPaddress_mode_enum(hip.hipify.IntEnum):
     HIP_TR_ADDRESS_MODE_WRAP = chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_CLAMP = chip.HIP_TR_ADDRESS_MODE_CLAMP
@@ -3822,6 +3828,8 @@ class HIPaddress_mode_enum(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
+HIPaddress_mode = HIPaddress_mode_enum
+
 class HIPfilter_mode_enum(hip.hipify.IntEnum):
     HIP_TR_FILTER_MODE_POINT = chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = chip.HIP_TR_FILTER_MODE_LINEAR
@@ -3830,6 +3838,8 @@ class HIPfilter_mode_enum(hip.hipify.IntEnum):
         """The type of the enum constants as ctypes type."""
         return ctypes.c_uint 
 
+
+HIPfilter_mode = HIPfilter_mode_enum
 
 cdef class HIP_TEXTURE_DESC_st:
     # members declared in pxd file
@@ -4106,6 +4116,8 @@ cdef class HIP_TEXTURE_DESC_st:
         raise ValueError("'item' type must be 'int'")
 
 
+HIP_TEXTURE_DESC = HIP_TEXTURE_DESC_st
+
 class hipResourceViewFormat(hip.hipify.IntEnum):
     hipResViewFormatNone = chip.hipResViewFormatNone
     hipResViewFormatUnsignedChar1 = chip.hipResViewFormatUnsignedChar1
@@ -4189,6 +4201,8 @@ class HIPresourceViewFormat_enum(hip.hipify.IntEnum):
         """The type of the enum constants as ctypes type."""
         return ctypes.c_uint 
 
+
+HIPresourceViewFormat = HIPresourceViewFormat_enum
 
 cdef class hipResourceDesc_union_0_struct_0:
     # members declared in pxd file
@@ -6357,6 +6371,8 @@ cdef class HIP_RESOURCE_DESC_st:
         raise ValueError("'item' type must be 'int'")
 
 
+HIP_RESOURCE_DESC = HIP_RESOURCE_DESC_st
+
 cdef class hipResourceViewDesc:
     # members declared in pxd file
 
@@ -6887,6 +6903,8 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
             return getattr(self,properties[item])
         raise ValueError("'item' type must be 'int'")
 
+
+HIP_RESOURCE_VIEW_DESC = HIP_RESOURCE_VIEW_DESC_st
 
 class hipMemcpyKind(hip.hipify.IntEnum):
     hipMemcpyHostToHost = chip.hipMemcpyHostToHost
@@ -17792,6 +17810,8 @@ cdef class hipIpcMemHandle_st:
         raise ValueError("'item' type must be 'int'")
 
 
+hipIpcMemHandle_t = hipIpcMemHandle_st
+
 cdef class hipIpcEventHandle_st:
     # members declared in pxd file
 
@@ -17943,6 +17963,8 @@ cdef class hipIpcEventHandle_st:
             return getattr(self,properties[item])
         raise ValueError("'item' type must be 'int'")
 
+
+hipIpcEventHandle_t = hipIpcEventHandle_st
 
 cdef class ihipModule_t:
     # members declared in pxd file
@@ -19863,6 +19885,8 @@ cdef class hipLaunchParams_t:
         raise ValueError("'item' type must be 'int'")
 
 
+hipLaunchParams = hipLaunchParams_t
+
 class hipExternalMemoryHandleType_enum(hip.hipify.IntEnum):
     hipExternalMemoryHandleTypeOpaqueFd = chip.hipExternalMemoryHandleTypeOpaqueFd
     hipExternalMemoryHandleTypeOpaqueWin32 = chip.hipExternalMemoryHandleTypeOpaqueWin32
@@ -19876,6 +19900,8 @@ class hipExternalMemoryHandleType_enum(hip.hipify.IntEnum):
         """The type of the enum constants as ctypes type."""
         return ctypes.c_uint 
 
+
+hipExternalMemoryHandleType = hipExternalMemoryHandleType_enum
 
 cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
     # members declared in pxd file
@@ -20395,6 +20421,8 @@ cdef class hipExternalMemoryHandleDesc_st:
         raise ValueError("'item' type must be 'int'")
 
 
+hipExternalMemoryHandleDesc = hipExternalMemoryHandleDesc_st
+
 cdef class hipExternalMemoryBufferDesc_st:
     # members declared in pxd file
 
@@ -20575,6 +20603,8 @@ cdef class hipExternalMemoryBufferDesc_st:
         raise ValueError("'item' type must be 'int'")
 
 
+hipExternalMemoryBufferDesc = hipExternalMemoryBufferDesc_st
+
 class hipExternalSemaphoreHandleType_enum(hip.hipify.IntEnum):
     hipExternalSemaphoreHandleTypeOpaqueFd = chip.hipExternalSemaphoreHandleTypeOpaqueFd
     hipExternalSemaphoreHandleTypeOpaqueWin32 = chip.hipExternalSemaphoreHandleTypeOpaqueWin32
@@ -20585,6 +20615,8 @@ class hipExternalSemaphoreHandleType_enum(hip.hipify.IntEnum):
         """The type of the enum constants as ctypes type."""
         return ctypes.c_uint 
 
+
+hipExternalSemaphoreHandleType = hipExternalSemaphoreHandleType_enum
 
 cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
     # members declared in pxd file
@@ -21088,6 +21120,8 @@ cdef class hipExternalSemaphoreHandleDesc_st:
             return getattr(self,properties[item])
         raise ValueError("'item' type must be 'int'")
 
+
+hipExternalSemaphoreHandleDesc = hipExternalSemaphoreHandleDesc_st
 
 cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
     # members declared in pxd file
@@ -21731,6 +21765,8 @@ cdef class hipExternalSemaphoreSignalParams_st:
             return getattr(self,properties[item])
         raise ValueError("'item' type must be 'int'")
 
+
+hipExternalSemaphoreSignalParams = hipExternalSemaphoreSignalParams_st
 
 cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
     # members declared in pxd file
@@ -22390,6 +22426,8 @@ cdef class hipExternalSemaphoreWaitParams_st:
         raise ValueError("'item' type must be 'int'")
 
 
+hipExternalSemaphoreWaitParams = hipExternalSemaphoreWaitParams_st
+
 class hipGLDeviceList(hip.hipify.IntEnum):
     hipGLDeviceListAll = chip.hipGLDeviceListAll
     hipGLDeviceListCurrentFrame = chip.hipGLDeviceListCurrentFrame
@@ -22505,6 +22543,8 @@ cdef class _hipGraphicsResource:
             return getattr(self,properties[item])
         raise ValueError("'item' type must be 'int'")
 
+
+hipGraphicsResource = _hipGraphicsResource
 
 hipGraphicsResource_t = _hipGraphicsResource
 
