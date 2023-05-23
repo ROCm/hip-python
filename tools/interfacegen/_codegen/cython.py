@@ -799,32 +799,16 @@ class TypedefMixin(CythonMixin, Typed):
         from . import tree
 
         assert isinstance(self, tree.Typedef)
-        if self.is_pointer_to_record() or self.is_pointer_to_enum():
-            pass  # cannot typedef to prevent name conflict with Python type
-        elif self.is_pointer_to_basic_type(degree=-1) or self.is_pointer_to_void(
-            degree=-1
-        ):
-            return  # always use canonical type
-        elif self.is_autoconverted_by_cython:
-            return  # always use canonical type
-        else:
-            return None
+        return None
 
     def render_python_interface_impl(self, cprefix: str) -> str:
         from . import tree
 
         assert isinstance(self, tree.Typedef)
         name = self.cython_global_name
-        if self.is_pointer_to_record(degree=-1) or self.is_pointer_to_enum(degree=-1):
+        if self.is_pointer_to_record(degree=(0,-1)) or self.is_pointer_to_enum(degree=(0,-1)):
             return f"{name} = {self.renamer(self.typeref.global_name(self.sep))}"
-        elif self.is_pointer_to_basic_type(degree=-1) or self.is_pointer_to_void(
-            degree=-1
-        ):
-            return  # always use canonical type
-        elif self.is_autoconverted_by_cython:
-            return  # always use canonical type
-        else:
-            return None
+        return None
 
 
 class FunctionPointerMixin(CythonMixin):
