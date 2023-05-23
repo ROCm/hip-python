@@ -626,6 +626,11 @@ def generate_rccl_package_files():
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         if node.is_pointer_to_record(degree=2):
+            if ( node.parent.name, node.name ) in (
+                ("ncclCommInitAll", "comm"),
+                ("pncclCommInitAll", "comm"),
+            ):
+                return PointerParamIntent.INOUT
             return PointerParamIntent.OUT
         if node.is_pointer_to_record(degree=1):
             if (node.parent.name, node.name) == "ncclGetUniqueId":
@@ -648,6 +653,11 @@ def generate_rccl_package_files():
             if node.is_pointer_to_record(degree=1):
                 return 0
             if node.is_pointer_to_record(degree=2):
+                if ( node.parent.name, node.name ) in (
+                    ("ncclCommInitAll", "comm"),
+                    ("pncclCommInitAll", "comm"),
+                ):
+                    return 1
                 return 0
             elif node.is_pointer_to_basic_type(degree=1):
                 if (node.parent.name, node.name) in (
@@ -656,8 +666,6 @@ def generate_rccl_package_files():
                 ):
                     return 1
                 return 0
-        elif isinstance(node, Field):
-            pass  # nothing to do
         return 1
 
     generator = CythonPackageGenerator(
