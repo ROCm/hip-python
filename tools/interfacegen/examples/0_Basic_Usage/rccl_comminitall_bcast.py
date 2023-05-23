@@ -44,9 +44,9 @@ for dev in devlist:
     dx=dxlist[dev]
     hx[:] = 0
     hip_check(hip.hipMemcpy(hx,dx,dx.size,hip.hipMemcpyKind.hipMemcpyDeviceToHost)) 
-    for item in hx:
+    for i,item in enumerate(hx):
         if item != 1:
-            raise RuntimeError("failed for element {item}")
+            raise RuntimeError(f"failed for element {i}")
 
 # clean up
 for dx in dxlist:
