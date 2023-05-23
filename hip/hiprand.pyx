@@ -575,6 +575,10 @@ class rocrand_rng_type(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
+hiprandGenerator_st = rocrand_generator_base_type
+
+hiprandDiscreteDistribution_st = rocrand_discrete_distribution_st
+
 hiprandGenerator_t = rocrand_generator_base_type
 
 hiprandDiscreteDistribution_t = rocrand_discrete_distribution_st
@@ -600,6 +604,8 @@ class hiprandStatus(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
+hiprandStatus_t = hiprandStatus
+
 class hiprandRngType(hip.hipify.IntEnum):
     HIPRAND_RNG_TEST = chiprand.HIPRAND_RNG_TEST
     HIPRAND_RNG_PSEUDO_DEFAULT = chiprand.HIPRAND_RNG_PSEUDO_DEFAULT
@@ -618,6 +624,8 @@ class hiprandRngType(hip.hipify.IntEnum):
         """The type of the enum constants as ctypes type."""
         return ctypes.c_uint 
 
+
+hiprandRngType_t = hiprandRngType
 
 @cython.embedsignature(True)
 def hiprandCreateGenerator(object rng_type):
