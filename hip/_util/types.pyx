@@ -232,22 +232,24 @@ cdef class DeviceArray(DataHandle):
         self._ptr = NULL
         self._py_buffer_acquired = False
         self._itemsize = 1
-        self.__cuda_array_interface__ = dict(
-            shape=(1,),
-            typestr='b', # See: https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__
-            data=(None,False), # 1: data pointer as int (long int), 2: read-only?
-            strides=None,
-            offset=0,
-            mask=None,
-            version=3,
-            # numba
-            stream=None, # 
+        self.__dict__ = dict(
+            __cuda_array_interface__ = dict(
+               shape=(1,),
+               typestr='b', # See: https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.interface.html#__array_interface__
+               data=(None,False), # 1: data pointer as int (long int), 2: read-only?
+               strides=None,
+               offset=0,
+               mask=None,
+               version=3,
+               # numba
+               stream=None, # 
+           )
         )
 
     cdef _set_ptr(self,void* ptr):
-        cdef tuple old_data = self.__cuda_array_interface__["data"]
+        cdef tuple old_data = self.__dict__["__cuda_array_interface__"]["data"]
         self._ptr = ptr
-        self.__cuda_array_interface__["data"] = (cpython.long.PyLong_FromVoidPtr(ptr),old_data[1])
+        self.__dict__["__cuda_array_interface__"]["data"] = (cpython.long.PyLong_FromVoidPtr(ptr),old_data[1])
 
     @staticmethod
     cdef DeviceArray from_ptr(void* ptr):
@@ -262,7 +264,7 @@ cdef class DeviceArray(DataHandle):
         See:
             set_bounds
         """
-        return len(self.__cuda_array_interface__["shape"])
+        return len(self.__dict__["__cuda_array_interface__"]["shape"])
         
     cdef int _numpy_typestr_to_bytes(self,str typestr):
         if typestr in ("?", "=?", "<?", ">?", "bool", "bool_", "bool8"):
@@ -372,7 +374,7 @@ cdef class DeviceArray(DataHandle):
                 raise KeyError(f"allowed keyword arguments are: {allowed_keys_str}")
         
         force_new_shape = kwargs.get("_force",False)
-        shape = old_shape = self.__cuda_array_interface__["shape"]
+        shape = old_shape = self.__dict__["__cuda_array_interface__"]["shape"]
         if "shape" in kwargs:
             shape = kwargs["shape"]
             if not len(shape):
@@ -380,10 +382,10 @@ cdef class DeviceArray(DataHandle):
             for i in shape:
                 if not isinstance(i,int):
                     raise TypeError("'shape': entries must be int")
-            #self.__cuda_array_interface__["shape"] = shape
+            #self.__dict__["__cuda_array_interface__"]["shape"] = shape
         if "typestr" in kwargs:
             typestr = kwargs["typestr"]
-            self.__cuda_array_interface__["typestr"] = typestr
+            self.__dict__["__cuda_array_interface__"]["typestr"] = typestr
             itemsize = self._numpy_typestr_to_bytes(typestr)
             if itemsize < 0:
                 if typestr not in self.NUMPY_CHAR_CODES:
@@ -404,15 +406,15 @@ cdef class DeviceArray(DataHandle):
                     return ValueError("'stream': value '0' is disallowed as it would be ambiguous between None and the default stream, more details: https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html")
                 elif stream < 0:
                     return ValueError("'stream': expected positive integer")
-                self.__cuda_array_interface__["stream"] = stream
+                self.__dict__["__cuda_array_interface__"]["stream"] = stream
             else:
-                self.__cuda_array_interface__["stream"] = int(DataHandle.from_pyobj(stream))
+                self.__dict__["__cuda_array_interface__"]["stream"] = int(DataHandle.from_pyobj(stream))
         if "read_only" in kwargs:
             read_only = kwargs["read_only"]
             if not isinstance(read_only,bool):
                 raise ValueError("'read_only:' expected bool")
-            old_data = self.__cuda_array_interface__["data"]
-            self.__cuda_array_interface__["data"] = (old_data[0],read_only)
+            old_data = self.__dict__["__cuda_array_interface__"]["data"]
+            self.__dict__["__cuda_array_interface__"]["data"] = (old_data[0],read_only)
 
         if itemsize > 0 or shape != old_shape:
             old_num_bytes = self._itemsize * math.prod(old_shape)
@@ -421,7 +423,7 @@ cdef class DeviceArray(DataHandle):
             new_num_bytes = itemsize * math.prod(shape)
             if old_num_bytes == new_num_bytes or force_new_shape:
                 self._itemsize = itemsize
-                self.__cuda_array_interface__["shape"] = shape
+                self.__dict__["__cuda_array_interface__"]["shape"] = shape
             else:
                 raise ValueError(f"new shape would change buffer size information: {old_num_bytes} B -> {new_num_bytes} B. Additionaly specify `_force=True` if this is intended.")
 
@@ -544,7 +546,7 @@ cdef class DeviceArray(DataHandle):
         cdef size_t stride = 1
         cdef size_t offset = 0
         cdef bint next_slice_yields_contiguous = True
-        cdef tuple shape = self.__cuda_array_interface__["shape"]
+        cdef tuple shape = self.__dict__["__cuda_array_interface__"]["shape"]
         cdef size_t rank = len(shape)
         cdef list result_shape = list() # elements will be appended
         cdef tuple subscript_tuple
@@ -581,24 +583,31 @@ cdef class DeviceArray(DataHandle):
             stream=self.stream_as_int,
         )
 
+    def __getattribute__(self,key):
+        """Synchronize interface data whenever it is accessed.
+        """
+        if key == "__cuda_array_interface__":
+            self._set_ptr(self._ptr)
+        return super().__getattribute__(key)
+
     @property
     def typestr(self):
-        return self.__cuda_array_interface__["typestr"]
+        return self.__dict__["__cuda_array_interface__"]["typestr"]
     @property
     def shape(self):
-        return self.__cuda_array_interface__["shape"]
+        return self.__dict__["__cuda_array_interface__"]["shape"]
     @property
     def size(self):
-        return math.prod(self.__cuda_array_interface__["shape"])
+        return math.prod(self.__dict__["__cuda_array_interface__"]["shape"])
     @property
     def itemsize(self):
         return self._itemsize
     @property
     def is_read_only(self):
-        return self.__cuda_array_interface__["data"][1]
+        return self.__dict__["__cuda_array_interface__"]["data"][1]
     @property
     def stream_as_int(self):
-        return self.__cuda_array_interface__["stream"]
+        return self.__dict__["__cuda_array_interface__"]["stream"]
     
     def __init__(self,object pyobj):
         DeviceArray.init_from_pyobj(self,pyobj)
