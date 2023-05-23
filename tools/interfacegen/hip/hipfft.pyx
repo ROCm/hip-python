@@ -112,7 +112,7 @@ cdef class hipfftHandle_t:
             wrapper._ptr = <chipfft.hipfftHandle_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )

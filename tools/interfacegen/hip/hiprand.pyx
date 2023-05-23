@@ -66,7 +66,7 @@ cdef class uint4:
             wrapper._ptr = <chiprand.uint4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -261,7 +261,7 @@ cdef class rocrand_discrete_distribution_st:
             wrapper._ptr = <chiprand.rocrand_discrete_distribution_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -496,7 +496,7 @@ cdef class rocrand_generator_base_type:
             wrapper._ptr = <chiprand.rocrand_generator_base_type*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )

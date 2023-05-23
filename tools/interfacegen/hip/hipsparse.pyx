@@ -98,7 +98,7 @@ cdef class bsrsv2Info:
             wrapper._ptr = <chipsparse.bsrsv2Info*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -194,7 +194,7 @@ cdef class bsrsm2Info:
             wrapper._ptr = <chipsparse.bsrsm2Info*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -290,7 +290,7 @@ cdef class bsrilu02Info:
             wrapper._ptr = <chipsparse.bsrilu02Info*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -386,7 +386,7 @@ cdef class bsric02Info:
             wrapper._ptr = <chipsparse.bsric02Info*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -482,7 +482,7 @@ cdef class csrsv2Info:
             wrapper._ptr = <chipsparse.csrsv2Info*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -578,7 +578,7 @@ cdef class csrsm2Info:
             wrapper._ptr = <chipsparse.csrsm2Info*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -674,7 +674,7 @@ cdef class csrilu02Info:
             wrapper._ptr = <chipsparse.csrilu02Info*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -770,7 +770,7 @@ cdef class csric02Info:
             wrapper._ptr = <chipsparse.csric02Info*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -866,7 +866,7 @@ cdef class csrgemm2Info:
             wrapper._ptr = <chipsparse.csrgemm2Info*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -962,7 +962,7 @@ cdef class pruneInfo:
             wrapper._ptr = <chipsparse.pruneInfo*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -1058,7 +1058,7 @@ cdef class csru2csrInfo:
             wrapper._ptr = <chipsparse.csru2csrInfo*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10547,7 +10547,7 @@ cdef class hipsparseSpGEMMDescr:
             wrapper._ptr = <chipsparse.hipsparseSpGEMMDescr*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10643,7 +10643,7 @@ cdef class hipsparseSpSVDescr:
             wrapper._ptr = <chipsparse.hipsparseSpSVDescr*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10739,7 +10739,7 @@ cdef class hipsparseSpSMDescr:
             wrapper._ptr = <chipsparse.hipsparseSpSMDescr*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
