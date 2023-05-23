@@ -216,7 +216,7 @@ cdef class hipDeviceArch_t:
             wrapper._ptr = <chip.hipDeviceArch_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -606,7 +606,7 @@ cdef class hipUUID_t:
             wrapper._ptr = <chip.hipUUID_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -760,7 +760,7 @@ cdef class hipDeviceProp_t:
             wrapper._ptr = <chip.hipDeviceProp_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -1755,7 +1755,7 @@ cdef class hipPointerAttribute_t:
             wrapper._ptr = <chip.hipPointerAttribute_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -2227,7 +2227,7 @@ cdef class hipChannelFormatDesc:
             wrapper._ptr = <chip.hipChannelFormatDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -2454,7 +2454,7 @@ cdef class HIP_ARRAY_DESCRIPTOR:
             wrapper._ptr = <chip.HIP_ARRAY_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -2651,7 +2651,7 @@ cdef class HIP_ARRAY3D_DESCRIPTOR:
             wrapper._ptr = <chip.HIP_ARRAY3D_DESCRIPTOR*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -2878,7 +2878,7 @@ cdef class hipArray:
             wrapper._ptr = <chip.hipArray*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -3167,7 +3167,7 @@ cdef class hip_Memcpy2D:
             wrapper._ptr = <chip.hip_Memcpy2D*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -3555,7 +3555,7 @@ cdef class hipMipmappedArray:
             wrapper._ptr = <chip.hipMipmappedArray*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -3898,7 +3898,7 @@ cdef class HIP_TEXTURE_DESC_st:
             wrapper._ptr = <chip.HIP_TEXTURE_DESC_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -4261,7 +4261,7 @@ cdef class hipResourceDesc_union_0_struct_0:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -4393,7 +4393,7 @@ cdef class hipResourceDesc_union_0_struct_1:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -4525,7 +4525,7 @@ cdef class hipResourceDesc_union_0_struct_2:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -4707,7 +4707,7 @@ cdef class hipResourceDesc_union_0_struct_3:
             wrapper._ptr = <chip.hipResourceDesc_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -4919,7 +4919,7 @@ cdef class hipResourceDesc_union_0:
             wrapper._ptr = <chip.hipResourceDesc_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5073,7 +5073,7 @@ cdef class hipResourceDesc:
             wrapper._ptr = <chip.hipResourceDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5233,7 +5233,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_0:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5365,7 +5365,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_1:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5497,7 +5497,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_2:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5703,7 +5703,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_3:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -5939,7 +5939,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0_struct_4:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0_struct_4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -6091,7 +6091,7 @@ cdef class HIP_RESOURCE_DESC_st_union_0:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -6253,7 +6253,7 @@ cdef class HIP_RESOURCE_DESC_st:
             wrapper._ptr = <chip.HIP_RESOURCE_DESC_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -6430,7 +6430,7 @@ cdef class hipResourceViewDesc:
             wrapper._ptr = <chip.hipResourceViewDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -6687,7 +6687,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
             wrapper._ptr = <chip.HIP_RESOURCE_VIEW_DESC_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -6975,7 +6975,7 @@ cdef class hipPitchedPtr:
             wrapper._ptr = <chip.hipPitchedPtr*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -7179,7 +7179,7 @@ cdef class hipExtent:
             wrapper._ptr = <chip.hipExtent*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -7359,7 +7359,7 @@ cdef class hipPos:
             wrapper._ptr = <chip.hipPos*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -7539,7 +7539,7 @@ cdef class hipMemcpy3DParms:
             wrapper._ptr = <chip.hipMemcpy3DParms*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -7728,7 +7728,7 @@ cdef class HIP_MEMCPY3D:
             wrapper._ptr = <chip.HIP_MEMCPY3D*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -8257,7 +8257,7 @@ cdef class uchar1:
             wrapper._ptr = <chip.uchar1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -8407,7 +8407,7 @@ cdef class uchar2:
             wrapper._ptr = <chip.uchar2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -8572,7 +8572,7 @@ cdef class uchar3:
             wrapper._ptr = <chip.uchar3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -8752,7 +8752,7 @@ cdef class uchar4:
             wrapper._ptr = <chip.uchar4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -8947,7 +8947,7 @@ cdef class char1:
             wrapper._ptr = <chip.char1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9097,7 +9097,7 @@ cdef class char2:
             wrapper._ptr = <chip.char2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9262,7 +9262,7 @@ cdef class char3:
             wrapper._ptr = <chip.char3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9442,7 +9442,7 @@ cdef class char4:
             wrapper._ptr = <chip.char4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9637,7 +9637,7 @@ cdef class ushort1:
             wrapper._ptr = <chip.ushort1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9787,7 +9787,7 @@ cdef class ushort2:
             wrapper._ptr = <chip.ushort2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -9952,7 +9952,7 @@ cdef class ushort3:
             wrapper._ptr = <chip.ushort3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10132,7 +10132,7 @@ cdef class ushort4:
             wrapper._ptr = <chip.ushort4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10327,7 +10327,7 @@ cdef class short1:
             wrapper._ptr = <chip.short1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10477,7 +10477,7 @@ cdef class short2:
             wrapper._ptr = <chip.short2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10642,7 +10642,7 @@ cdef class short3:
             wrapper._ptr = <chip.short3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -10822,7 +10822,7 @@ cdef class short4:
             wrapper._ptr = <chip.short4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11017,7 +11017,7 @@ cdef class uint1:
             wrapper._ptr = <chip.uint1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11167,7 +11167,7 @@ cdef class uint2:
             wrapper._ptr = <chip.uint2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11332,7 +11332,7 @@ cdef class uint3:
             wrapper._ptr = <chip.uint3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11512,7 +11512,7 @@ cdef class uint4:
             wrapper._ptr = <chip.uint4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11707,7 +11707,7 @@ cdef class int1:
             wrapper._ptr = <chip.int1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -11857,7 +11857,7 @@ cdef class int2:
             wrapper._ptr = <chip.int2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12022,7 +12022,7 @@ cdef class int3:
             wrapper._ptr = <chip.int3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12202,7 +12202,7 @@ cdef class int4:
             wrapper._ptr = <chip.int4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12397,7 +12397,7 @@ cdef class ulong1:
             wrapper._ptr = <chip.ulong1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12547,7 +12547,7 @@ cdef class ulong2:
             wrapper._ptr = <chip.ulong2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12712,7 +12712,7 @@ cdef class ulong3:
             wrapper._ptr = <chip.ulong3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -12892,7 +12892,7 @@ cdef class ulong4:
             wrapper._ptr = <chip.ulong4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13087,7 +13087,7 @@ cdef class long1:
             wrapper._ptr = <chip.long1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13237,7 +13237,7 @@ cdef class long2:
             wrapper._ptr = <chip.long2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13402,7 +13402,7 @@ cdef class long3:
             wrapper._ptr = <chip.long3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13582,7 +13582,7 @@ cdef class long4:
             wrapper._ptr = <chip.long4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13777,7 +13777,7 @@ cdef class ulonglong1:
             wrapper._ptr = <chip.ulonglong1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -13927,7 +13927,7 @@ cdef class ulonglong2:
             wrapper._ptr = <chip.ulonglong2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14092,7 +14092,7 @@ cdef class ulonglong3:
             wrapper._ptr = <chip.ulonglong3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14272,7 +14272,7 @@ cdef class ulonglong4:
             wrapper._ptr = <chip.ulonglong4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14467,7 +14467,7 @@ cdef class longlong1:
             wrapper._ptr = <chip.longlong1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14617,7 +14617,7 @@ cdef class longlong2:
             wrapper._ptr = <chip.longlong2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14782,7 +14782,7 @@ cdef class longlong3:
             wrapper._ptr = <chip.longlong3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -14962,7 +14962,7 @@ cdef class longlong4:
             wrapper._ptr = <chip.longlong4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15157,7 +15157,7 @@ cdef class float1:
             wrapper._ptr = <chip.float1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15307,7 +15307,7 @@ cdef class float2:
             wrapper._ptr = <chip.float2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15472,7 +15472,7 @@ cdef class float3:
             wrapper._ptr = <chip.float3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15652,7 +15652,7 @@ cdef class float4:
             wrapper._ptr = <chip.float4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15847,7 +15847,7 @@ cdef class double1:
             wrapper._ptr = <chip.double1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -15997,7 +15997,7 @@ cdef class double2:
             wrapper._ptr = <chip.double2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -16162,7 +16162,7 @@ cdef class double3:
             wrapper._ptr = <chip.double3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -16342,7 +16342,7 @@ cdef class double4:
             wrapper._ptr = <chip.double4*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -16542,7 +16542,7 @@ cdef class __hip_texture:
             wrapper._ptr = <chip.__hip_texture*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -16671,7 +16671,7 @@ cdef class textureReference:
             wrapper._ptr = <chip.textureReference*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -16984,7 +16984,7 @@ cdef class hipTextureDesc:
             wrapper._ptr = <chip.hipTextureDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17270,7 +17270,7 @@ cdef class __hip_surface:
             wrapper._ptr = <chip.__hip_surface*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17370,7 +17370,7 @@ cdef class surfaceReference:
             wrapper._ptr = <chip.surfaceReference*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17508,7 +17508,7 @@ cdef class ihipCtx_t:
             wrapper._ptr = <chip.ihipCtx_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17615,7 +17615,7 @@ cdef class ihipStream_t:
             wrapper._ptr = <chip.ihipStream_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17715,7 +17715,7 @@ cdef class hipIpcMemHandle_st:
             wrapper._ptr = <chip.hipIpcMemHandle_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -17869,7 +17869,7 @@ cdef class hipIpcEventHandle_st:
             wrapper._ptr = <chip.hipIpcEventHandle_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18019,7 +18019,7 @@ cdef class ihipModule_t:
             wrapper._ptr = <chip.ihipModule_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18115,7 +18115,7 @@ cdef class ihipModuleSymbol_t:
             wrapper._ptr = <chip.ihipModuleSymbol_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18211,7 +18211,7 @@ cdef class ihipMemPoolHandle_t:
             wrapper._ptr = <chip.ihipMemPoolHandle_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18311,7 +18311,7 @@ cdef class hipFuncAttributes:
             wrapper._ptr = <chip.hipFuncAttributes*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18592,7 +18592,7 @@ cdef class ihipEvent_t:
             wrapper._ptr = <chip.ihipEvent_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18764,7 +18764,7 @@ cdef class hipMemLocation:
             wrapper._ptr = <chip.hipMemLocation*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -18941,7 +18941,7 @@ cdef class hipMemAccessDesc:
             wrapper._ptr = <chip.hipMemAccessDesc*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -19122,7 +19122,7 @@ cdef class hipMemPoolProps:
             wrapper._ptr = <chip.hipMemPoolProps*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -19340,7 +19340,7 @@ cdef class hipMemPoolPtrExportData:
             wrapper._ptr = <chip.hipMemPoolPtrExportData*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -19548,7 +19548,7 @@ cdef class dim3:
             wrapper._ptr = <chip.dim3*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -19731,7 +19731,7 @@ cdef class hipLaunchParams_t:
             wrapper._ptr = <chip.hipLaunchParams_t*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -19960,7 +19960,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0_struct_0:
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -20143,7 +20143,7 @@ cdef class hipExternalMemoryHandleDesc_st_union_0:
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -20288,7 +20288,7 @@ cdef class hipExternalMemoryHandleDesc_st:
             wrapper._ptr = <chip.hipExternalMemoryHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -20480,7 +20480,7 @@ cdef class hipExternalMemoryBufferDesc_st:
             wrapper._ptr = <chip.hipExternalMemoryBufferDesc_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -20675,7 +20675,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -20858,7 +20858,7 @@ cdef class hipExternalSemaphoreHandleDesc_st_union_0:
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21003,7 +21003,7 @@ cdef class hipExternalSemaphoreHandleDesc_st:
             wrapper._ptr = <chip.hipExternalSemaphoreHandleDesc_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21180,7 +21180,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21330,7 +21330,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0_struct_1:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21480,7 +21480,7 @@ cdef class hipExternalSemaphoreSignalParams_st_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21648,7 +21648,7 @@ cdef class hipExternalSemaphoreSignalParams_st:
             wrapper._ptr = <chip.hipExternalSemaphoreSignalParams_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21825,7 +21825,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -21975,7 +21975,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0_struct_1:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22140,7 +22140,7 @@ cdef class hipExternalSemaphoreWaitParams_st_struct_0:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22308,7 +22308,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
             wrapper._ptr = <chip.hipExternalSemaphoreWaitParams_st*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22503,7 +22503,7 @@ cdef class _hipGraphicsResource:
             wrapper._ptr = <chip._hipGraphicsResource*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22601,7 +22601,7 @@ cdef class ihipGraph:
             wrapper._ptr = <chip.ihipGraph*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22697,7 +22697,7 @@ cdef class hipGraphNode:
             wrapper._ptr = <chip.hipGraphNode*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22793,7 +22793,7 @@ cdef class hipGraphExec:
             wrapper._ptr = <chip.hipGraphExec*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -22889,7 +22889,7 @@ cdef class hipUserObject:
             wrapper._ptr = <chip.hipUserObject*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23075,7 +23075,7 @@ cdef class hipHostNodeParams:
             wrapper._ptr = <chip.hipHostNodeParams*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23231,7 +23231,7 @@ cdef class hipKernelNodeParams:
             wrapper._ptr = <chip.hipKernelNodeParams*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23469,7 +23469,7 @@ cdef class hipMemsetParams:
             wrapper._ptr = <chip.hipMemsetParams*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23722,7 +23722,7 @@ cdef class hipAccessPolicyWindow:
             wrapper._ptr = <chip.hipAccessPolicyWindow*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -23945,7 +23945,7 @@ cdef class hipKernelNodeAttrValue:
             wrapper._ptr = <chip.hipKernelNodeAttrValue*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -24169,7 +24169,7 @@ cdef class hipMemAllocationProp_struct_0:
             wrapper._ptr = <chip.hipMemAllocationProp_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -24349,7 +24349,7 @@ cdef class hipMemAllocationProp:
             wrapper._ptr = <chip.hipMemAllocationProp*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -24554,7 +24554,7 @@ cdef class ihipMemGenericAllocationHandle:
             wrapper._ptr = <chip.ihipMemGenericAllocationHandle*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -24689,7 +24689,7 @@ cdef class hipArrayMapInfo_union_0:
             wrapper._ptr = <chip.hipArrayMapInfo_union_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -24819,7 +24819,7 @@ cdef class hipArrayMapInfo_union_1_struct_0:
             wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_0*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -25074,7 +25074,7 @@ cdef class hipArrayMapInfo_union_1_struct_1:
             wrapper._ptr = <chip.hipArrayMapInfo_union_1_struct_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -25254,7 +25254,7 @@ cdef class hipArrayMapInfo_union_1:
             wrapper._ptr = <chip.hipArrayMapInfo_union_1*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -25392,7 +25392,7 @@ cdef class hipArrayMapInfo_union_2:
             wrapper._ptr = <chip.hipArrayMapInfo_union_2*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -25514,7 +25514,7 @@ cdef class hipArrayMapInfo:
             wrapper._ptr = <chip.hipArrayMapInfo*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )

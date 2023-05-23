@@ -68,7 +68,7 @@ cdef class hipblasBfloat16:
             wrapper._ptr = <chipblas.hipblasBfloat16*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -218,7 +218,7 @@ cdef class hipblasComplex:
             wrapper._ptr = <chipblas.hipblasComplex*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -383,7 +383,7 @@ cdef class hipblasDoubleComplex:
             wrapper._ptr = <chipblas.hipblasDoubleComplex*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )

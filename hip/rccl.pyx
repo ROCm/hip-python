@@ -76,7 +76,7 @@ cdef class ncclComm:
             wrapper._ptr = <crccl.ncclComm*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -176,7 +176,7 @@ cdef class ncclUniqueId:
             wrapper._ptr = <crccl.ncclUniqueId*>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                int(wrapper),
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -399,7 +399,7 @@ def pncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
 
 
 @cython.embedsignature(True)
-def ncclCommInitAll(int ndev, object devlist):
+def ncclCommInitAll(object comm, int ndev, object devlist):
     """! @brief Creates a clique of communicators (single process version).
     @details This is a convenience function to create a single-process communicator clique.
     Returns an array of ndev newly initialized communicators in comm.
@@ -407,20 +407,20 @@ def ncclCommInitAll(int ndev, object devlist):
     If devlist is NULL, the first ndev HIP devices are used.
     Order of devlist defines user-order of processors within the communicator.
     """
-    comm = ncclComm.from_ptr(NULL)
-    _ncclCommInitAll__retval = ncclResult_t(crccl.ncclCommInitAll(&comm._ptr,ndev,
+    _ncclCommInitAll__retval = ncclResult_t(crccl.ncclCommInitAll(
+        <crccl.ncclComm_t*>hip._util.types.DataHandle.from_pyobj(comm)._ptr,ndev,
         <const int *>hip._util.types.ListOfInt.from_pyobj(devlist)._ptr))    # fully specified
-    return (_ncclCommInitAll__retval,comm)
+    return (_ncclCommInitAll__retval,)
 
 
 @cython.embedsignature(True)
-def pncclCommInitAll(int ndev, object devlist):
+def pncclCommInitAll(object comm, int ndev, object devlist):
     """@cond include_hidden
     """
-    comm = ncclComm.from_ptr(NULL)
-    _pncclCommInitAll__retval = ncclResult_t(crccl.pncclCommInitAll(&comm._ptr,ndev,
+    _pncclCommInitAll__retval = ncclResult_t(crccl.pncclCommInitAll(
+        <crccl.ncclComm_t*>hip._util.types.DataHandle.from_pyobj(comm)._ptr,ndev,
         <const int *>hip._util.types.ListOfInt.from_pyobj(devlist)._ptr))    # fully specified
-    return (_pncclCommInitAll__retval,comm)
+    return (_pncclCommInitAll__retval,)
 
 
 @cython.embedsignature(True)
