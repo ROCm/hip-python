@@ -17,7 +17,7 @@ cdef class DataHandle:
 
 cdef class DeviceArray(DataHandle):
     cdef size_t _itemsize
-    cdef dict __cuda_array_interface__
+    cdef dict __dict__
 
     @staticmethod
     cdef DeviceArray from_ptr(void* ptr)
