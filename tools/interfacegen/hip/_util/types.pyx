@@ -264,7 +264,11 @@ cdef class DeviceArray(DataHandle):
         See:
             set_bounds
         """
-        return len(self.__dict__["__cuda_array_interface__"]["shape"])
+        cdef size_t rank = 0
+        for r in self.__dict__["__cuda_array_interface__"]["shape"]:
+            if r > 1:
+                rank += 1
+        return rank
         
     cdef int _numpy_typestr_to_bytes(self,str typestr):
         if typestr in ("?", "=?", "<?", ">?", "bool", "bool_", "bool8"):
@@ -547,7 +551,7 @@ cdef class DeviceArray(DataHandle):
         cdef size_t offset = 0
         cdef bint next_slice_yields_contiguous = True
         cdef tuple shape = self.__dict__["__cuda_array_interface__"]["shape"]
-        cdef size_t rank = len(shape)
+        cdef size_t shape_dims = len(shape)
         cdef list result_shape = list() # elements will be appended
         cdef tuple subscript_tuple
         
@@ -559,7 +563,7 @@ cdef class DeviceArray(DataHandle):
             raise TypeError(f"subscript type='{type(subscript)}' is none of: 'slice', 'int', 'tuple'")
         #
         for _i,spec in enumerate(reversed(subscript_tuple)): # row major
-            i = rank-_i-1
+            i = shape_dims-_i-1
             if isinstance(spec,int):
                 (start,stop) = self._handle_int(spec,shape[i])
                 next_slice_yields_contiguous = False
