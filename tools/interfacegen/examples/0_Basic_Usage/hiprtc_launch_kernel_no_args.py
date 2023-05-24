@@ -44,7 +44,6 @@ if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
 code_size = hip_check(hiprtc.hiprtcGetCodeSize(prog))
 code = bytearray(code_size)
 hip_check(hiprtc.hiprtcGetCode(prog, code))
-## Untested below:
 module = hip_check(hip.hipModuleLoadData(code))
 kernel = hip_check(hip.hipModuleGetFunction(module, b"print_tid"))
 #
