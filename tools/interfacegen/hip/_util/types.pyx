@@ -578,6 +578,7 @@ cdef class DeviceArray(DataHandle):
             result_shape.append(stop-start)
             offset += start*stride
             stride *= <size_t>shape[i]
+        offset *= self._itemsize # scale offset with itemsize
         return DeviceArray.from_ptr(<void*>(<unsigned long>self._ptr + offset)).configure(
             _force=True,
             typestr=self.typestr,

@@ -17,7 +17,6 @@ import ctypes
 
 from hip import hip, hipblas
 import numpy as np
-import math
 
 def hip_check(call_result):
     err = call_result[0]
@@ -31,7 +30,7 @@ def hip_check(call_result):
     return result
 
 # init host array and fill with ones
-shape = (20,3) # shape[0]: inner dim
+shape = (3,20) # shape[1]: inner dim
 x_h = np.ones(shape,dtype="float32")
 num_bytes = x_h.size * x_h.itemsize
 
@@ -43,10 +42,10 @@ hip_check(hip.hipMemcpy(x_d,x_h,num_bytes,hip.hipMemcpyKind.hipMemcpyHostToDevic
 
 # scale device array entries by row index using hipblasSscal
 handle = hip_check(hipblas.hipblasCreate())
-for r in range(0,shape[1]):
-    row = x_d[:,r] # extract subarray
+for r in range(0,shape[0]):
+    row = x_d[r,:] # extract subarray
     row_len = row.size
-    alpha = ctypes.float(r)
+    alpha = ctypes.c_float(r)
     hip_check(hipblas.hipblasSscal(handle, row_len, ctypes.addressof(alpha), row, 1))
     hip_check(hip.hipDeviceSynchronize())
 hip_check(hipblas.hipblasDestroy(handle))
@@ -57,10 +56,11 @@ hip_check(hip.hipMemcpy(x_h,x_d,num_bytes,hip.hipMemcpyKind.hipMemcpyDeviceToHos
 # deallocate device data
 hip_check(hip.hipFree(x_d))
 
-for r in range(0,shape[1]):
-    row_rounded = [math.round(el) for el in x_h[:,r]]
-    for c,e in row_rounded:
+for r in range(0,shape[0]):
+    row_rounded = [round(el) for el in x_h[r,:]]
+    for c,e in enumerate(row_rounded):
         if e != r:
-            raise ValueError("expected '{r}' for element ({r},{c}), is '{e}")
-    print("\t".join([row_rounded])+"\n")
+            raise ValueError(f"expected '{r}' for element ({r},{c}), is '{e}")
+    if verbose:
+        print("\t".join((str(i) for i in row_rounded))+"\n")
 print("ok")
