@@ -2,7 +2,6 @@
 import cython
 import ctypes
 import enum
-import hip.hipify
 hipblasVersionMajor = chipblas.hipblasVersionMajor
 
 hipblaseVersionMinor = chipblas.hipblaseVersionMinor
@@ -491,7 +490,7 @@ cdef class hipblasDoubleComplex:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipblasStatus_t(hip.hipify.IntEnum):
+class hipblasStatus_t(enum.IntEnum):
     HIPBLAS_STATUS_SUCCESS = chipblas.HIPBLAS_STATUS_SUCCESS
     HIPBLAS_STATUS_NOT_INITIALIZED = chipblas.HIPBLAS_STATUS_NOT_INITIALIZED
     HIPBLAS_STATUS_ALLOC_FAILED = chipblas.HIPBLAS_STATUS_ALLOC_FAILED
@@ -510,7 +509,7 @@ class hipblasStatus_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasOperation_t(hip.hipify.IntEnum):
+class hipblasOperation_t(enum.IntEnum):
     HIPBLAS_OP_N = chipblas.HIPBLAS_OP_N
     HIPBLAS_OP_T = chipblas.HIPBLAS_OP_T
     HIPBLAS_OP_C = chipblas.HIPBLAS_OP_C
@@ -520,7 +519,7 @@ class hipblasOperation_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasPointerMode_t(hip.hipify.IntEnum):
+class hipblasPointerMode_t(enum.IntEnum):
     HIPBLAS_POINTER_MODE_HOST = chipblas.HIPBLAS_POINTER_MODE_HOST
     HIPBLAS_POINTER_MODE_DEVICE = chipblas.HIPBLAS_POINTER_MODE_DEVICE
     @staticmethod
@@ -529,7 +528,7 @@ class hipblasPointerMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasFillMode_t(hip.hipify.IntEnum):
+class hipblasFillMode_t(enum.IntEnum):
     HIPBLAS_FILL_MODE_UPPER = chipblas.HIPBLAS_FILL_MODE_UPPER
     HIPBLAS_FILL_MODE_LOWER = chipblas.HIPBLAS_FILL_MODE_LOWER
     HIPBLAS_FILL_MODE_FULL = chipblas.HIPBLAS_FILL_MODE_FULL
@@ -539,7 +538,7 @@ class hipblasFillMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasDiagType_t(hip.hipify.IntEnum):
+class hipblasDiagType_t(enum.IntEnum):
     HIPBLAS_DIAG_NON_UNIT = chipblas.HIPBLAS_DIAG_NON_UNIT
     HIPBLAS_DIAG_UNIT = chipblas.HIPBLAS_DIAG_UNIT
     @staticmethod
@@ -548,7 +547,7 @@ class hipblasDiagType_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasSideMode_t(hip.hipify.IntEnum):
+class hipblasSideMode_t(enum.IntEnum):
     HIPBLAS_SIDE_LEFT = chipblas.HIPBLAS_SIDE_LEFT
     HIPBLAS_SIDE_RIGHT = chipblas.HIPBLAS_SIDE_RIGHT
     HIPBLAS_SIDE_BOTH = chipblas.HIPBLAS_SIDE_BOTH
@@ -558,7 +557,7 @@ class hipblasSideMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasDatatype_t(hip.hipify.IntEnum):
+class hipblasDatatype_t(enum.IntEnum):
     HIPBLAS_R_16F = chipblas.HIPBLAS_R_16F
     HIPBLAS_R_32F = chipblas.HIPBLAS_R_32F
     HIPBLAS_R_64F = chipblas.HIPBLAS_R_64F
@@ -581,7 +580,7 @@ class hipblasDatatype_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasGemmAlgo_t(hip.hipify.IntEnum):
+class hipblasGemmAlgo_t(enum.IntEnum):
     HIPBLAS_GEMM_DEFAULT = chipblas.HIPBLAS_GEMM_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -589,7 +588,7 @@ class hipblasGemmAlgo_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasAtomicsMode_t(hip.hipify.IntEnum):
+class hipblasAtomicsMode_t(enum.IntEnum):
     HIPBLAS_ATOMICS_NOT_ALLOWED = chipblas.HIPBLAS_ATOMICS_NOT_ALLOWED
     HIPBLAS_ATOMICS_ALLOWED = chipblas.HIPBLAS_ATOMICS_ALLOWED
     @staticmethod
@@ -598,7 +597,7 @@ class hipblasAtomicsMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasInt8Datatype_t(hip.hipify.IntEnum):
+class hipblasInt8Datatype_t(enum.IntEnum):
     HIPBLAS_INT8_DATATYPE_DEFAULT = chipblas.HIPBLAS_INT8_DATATYPE_DEFAULT
     HIPBLAS_INT8_DATATYPE_INT8 = chipblas.HIPBLAS_INT8_DATATYPE_INT8
     HIPBLAS_INT8_DATATYPE_PACK_INT8x4 = chipblas.HIPBLAS_INT8_DATATYPE_PACK_INT8x4

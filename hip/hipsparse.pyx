@@ -2,7 +2,6 @@
 import cython
 import ctypes
 import enum
-import hip.hipify
 cdef class bsrsv2Info:
     # members declared in pxd file
 
@@ -1059,7 +1058,7 @@ cdef class csru2csrInfo:
 
 csru2csrInfo_t = csru2csrInfo
 
-class hipsparseStatus_t(hip.hipify.IntEnum):
+class hipsparseStatus_t(enum.IntEnum):
     HIPSPARSE_STATUS_SUCCESS = chipsparse.HIPSPARSE_STATUS_SUCCESS
     HIPSPARSE_STATUS_NOT_INITIALIZED = chipsparse.HIPSPARSE_STATUS_NOT_INITIALIZED
     HIPSPARSE_STATUS_ALLOC_FAILED = chipsparse.HIPSPARSE_STATUS_ALLOC_FAILED
@@ -1078,7 +1077,7 @@ class hipsparseStatus_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparsePointerMode_t(hip.hipify.IntEnum):
+class hipsparsePointerMode_t(enum.IntEnum):
     HIPSPARSE_POINTER_MODE_HOST = chipsparse.HIPSPARSE_POINTER_MODE_HOST
     HIPSPARSE_POINTER_MODE_DEVICE = chipsparse.HIPSPARSE_POINTER_MODE_DEVICE
     @staticmethod
@@ -1087,7 +1086,7 @@ class hipsparsePointerMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseAction_t(hip.hipify.IntEnum):
+class hipsparseAction_t(enum.IntEnum):
     HIPSPARSE_ACTION_SYMBOLIC = chipsparse.HIPSPARSE_ACTION_SYMBOLIC
     HIPSPARSE_ACTION_NUMERIC = chipsparse.HIPSPARSE_ACTION_NUMERIC
     @staticmethod
@@ -1096,7 +1095,7 @@ class hipsparseAction_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseMatrixType_t(hip.hipify.IntEnum):
+class hipsparseMatrixType_t(enum.IntEnum):
     HIPSPARSE_MATRIX_TYPE_GENERAL = chipsparse.HIPSPARSE_MATRIX_TYPE_GENERAL
     HIPSPARSE_MATRIX_TYPE_SYMMETRIC = chipsparse.HIPSPARSE_MATRIX_TYPE_SYMMETRIC
     HIPSPARSE_MATRIX_TYPE_HERMITIAN = chipsparse.HIPSPARSE_MATRIX_TYPE_HERMITIAN
@@ -1107,7 +1106,7 @@ class hipsparseMatrixType_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseFillMode_t(hip.hipify.IntEnum):
+class hipsparseFillMode_t(enum.IntEnum):
     HIPSPARSE_FILL_MODE_LOWER = chipsparse.HIPSPARSE_FILL_MODE_LOWER
     HIPSPARSE_FILL_MODE_UPPER = chipsparse.HIPSPARSE_FILL_MODE_UPPER
     @staticmethod
@@ -1116,7 +1115,7 @@ class hipsparseFillMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseDiagType_t(hip.hipify.IntEnum):
+class hipsparseDiagType_t(enum.IntEnum):
     HIPSPARSE_DIAG_TYPE_NON_UNIT = chipsparse.HIPSPARSE_DIAG_TYPE_NON_UNIT
     HIPSPARSE_DIAG_TYPE_UNIT = chipsparse.HIPSPARSE_DIAG_TYPE_UNIT
     @staticmethod
@@ -1125,7 +1124,7 @@ class hipsparseDiagType_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseIndexBase_t(hip.hipify.IntEnum):
+class hipsparseIndexBase_t(enum.IntEnum):
     HIPSPARSE_INDEX_BASE_ZERO = chipsparse.HIPSPARSE_INDEX_BASE_ZERO
     HIPSPARSE_INDEX_BASE_ONE = chipsparse.HIPSPARSE_INDEX_BASE_ONE
     @staticmethod
@@ -1134,7 +1133,7 @@ class hipsparseIndexBase_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseOperation_t(hip.hipify.IntEnum):
+class hipsparseOperation_t(enum.IntEnum):
     HIPSPARSE_OPERATION_NON_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_NON_TRANSPOSE
     HIPSPARSE_OPERATION_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_TRANSPOSE
     HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE
@@ -1144,7 +1143,7 @@ class hipsparseOperation_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseHybPartition_t(hip.hipify.IntEnum):
+class hipsparseHybPartition_t(enum.IntEnum):
     HIPSPARSE_HYB_PARTITION_AUTO = chipsparse.HIPSPARSE_HYB_PARTITION_AUTO
     HIPSPARSE_HYB_PARTITION_USER = chipsparse.HIPSPARSE_HYB_PARTITION_USER
     HIPSPARSE_HYB_PARTITION_MAX = chipsparse.HIPSPARSE_HYB_PARTITION_MAX
@@ -1154,7 +1153,7 @@ class hipsparseHybPartition_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSolvePolicy_t(hip.hipify.IntEnum):
+class hipsparseSolvePolicy_t(enum.IntEnum):
     HIPSPARSE_SOLVE_POLICY_NO_LEVEL = chipsparse.HIPSPARSE_SOLVE_POLICY_NO_LEVEL
     HIPSPARSE_SOLVE_POLICY_USE_LEVEL = chipsparse.HIPSPARSE_SOLVE_POLICY_USE_LEVEL
     @staticmethod
@@ -1163,7 +1162,7 @@ class hipsparseSolvePolicy_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSideMode_t(hip.hipify.IntEnum):
+class hipsparseSideMode_t(enum.IntEnum):
     HIPSPARSE_SIDE_LEFT = chipsparse.HIPSPARSE_SIDE_LEFT
     HIPSPARSE_SIDE_RIGHT = chipsparse.HIPSPARSE_SIDE_RIGHT
     @staticmethod
@@ -1172,7 +1171,7 @@ class hipsparseSideMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseDirection_t(hip.hipify.IntEnum):
+class hipsparseDirection_t(enum.IntEnum):
     HIPSPARSE_DIRECTION_ROW = chipsparse.HIPSPARSE_DIRECTION_ROW
     HIPSPARSE_DIRECTION_COLUMN = chipsparse.HIPSPARSE_DIRECTION_COLUMN
     @staticmethod
@@ -8545,7 +8544,7 @@ def hipsparseZcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
     return (_hipsparseZcsr2csc__retval,)
 
 
-class hipsparseCsr2CscAlg_t(hip.hipify.IntEnum):
+class hipsparseCsr2CscAlg_t(enum.IntEnum):
     HIPSPARSE_CSR2CSC_ALG1 = chipsparse.HIPSPARSE_CSR2CSC_ALG1
     HIPSPARSE_CSR2CSC_ALG2 = chipsparse.HIPSPARSE_CSR2CSC_ALG2
     @staticmethod
@@ -10740,7 +10739,7 @@ cdef class hipsparseSpSMDescr:
 
 hipsparseSpSMDescr_t = hipsparseSpSMDescr
 
-class hipsparseFormat_t(hip.hipify.IntEnum):
+class hipsparseFormat_t(enum.IntEnum):
     HIPSPARSE_FORMAT_CSR = chipsparse.HIPSPARSE_FORMAT_CSR
     HIPSPARSE_FORMAT_CSC = chipsparse.HIPSPARSE_FORMAT_CSC
     HIPSPARSE_FORMAT_COO = chipsparse.HIPSPARSE_FORMAT_COO
@@ -10752,7 +10751,7 @@ class hipsparseFormat_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseOrder_t(hip.hipify.IntEnum):
+class hipsparseOrder_t(enum.IntEnum):
     HIPSPARSE_ORDER_ROW = chipsparse.HIPSPARSE_ORDER_ROW
     HIPSPARSE_ORDER_COLUMN = chipsparse.HIPSPARSE_ORDER_COLUMN
     HIPSPARSE_ORDER_COL = chipsparse.HIPSPARSE_ORDER_COL
@@ -10762,7 +10761,7 @@ class hipsparseOrder_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseIndexType_t(hip.hipify.IntEnum):
+class hipsparseIndexType_t(enum.IntEnum):
     HIPSPARSE_INDEX_16U = chipsparse.HIPSPARSE_INDEX_16U
     HIPSPARSE_INDEX_32I = chipsparse.HIPSPARSE_INDEX_32I
     HIPSPARSE_INDEX_64I = chipsparse.HIPSPARSE_INDEX_64I
@@ -10772,7 +10771,7 @@ class hipsparseIndexType_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpMVAlg_t(hip.hipify.IntEnum):
+class hipsparseSpMVAlg_t(enum.IntEnum):
     HIPSPARSE_MV_ALG_DEFAULT = chipsparse.HIPSPARSE_MV_ALG_DEFAULT
     HIPSPARSE_COOMV_ALG = chipsparse.HIPSPARSE_COOMV_ALG
     HIPSPARSE_CSRMV_ALG1 = chipsparse.HIPSPARSE_CSRMV_ALG1
@@ -10788,7 +10787,7 @@ class hipsparseSpMVAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpMMAlg_t(hip.hipify.IntEnum):
+class hipsparseSpMMAlg_t(enum.IntEnum):
     HIPSPARSE_MM_ALG_DEFAULT = chipsparse.HIPSPARSE_MM_ALG_DEFAULT
     HIPSPARSE_COOMM_ALG1 = chipsparse.HIPSPARSE_COOMM_ALG1
     HIPSPARSE_COOMM_ALG2 = chipsparse.HIPSPARSE_COOMM_ALG2
@@ -10809,7 +10808,7 @@ class hipsparseSpMMAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSparseToDenseAlg_t(hip.hipify.IntEnum):
+class hipsparseSparseToDenseAlg_t(enum.IntEnum):
     HIPSPARSE_SPARSETODENSE_ALG_DEFAULT = chipsparse.HIPSPARSE_SPARSETODENSE_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -10817,7 +10816,7 @@ class hipsparseSparseToDenseAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseDenseToSparseAlg_t(hip.hipify.IntEnum):
+class hipsparseDenseToSparseAlg_t(enum.IntEnum):
     HIPSPARSE_DENSETOSPARSE_ALG_DEFAULT = chipsparse.HIPSPARSE_DENSETOSPARSE_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -10825,7 +10824,7 @@ class hipsparseDenseToSparseAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSDDMMAlg_t(hip.hipify.IntEnum):
+class hipsparseSDDMMAlg_t(enum.IntEnum):
     HIPSPARSE_SDDMM_ALG_DEFAULT = chipsparse.HIPSPARSE_SDDMM_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -10833,7 +10832,7 @@ class hipsparseSDDMMAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpSVAlg_t(hip.hipify.IntEnum):
+class hipsparseSpSVAlg_t(enum.IntEnum):
     HIPSPARSE_SPSV_ALG_DEFAULT = chipsparse.HIPSPARSE_SPSV_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -10841,7 +10840,7 @@ class hipsparseSpSVAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpSMAlg_t(hip.hipify.IntEnum):
+class hipsparseSpSMAlg_t(enum.IntEnum):
     HIPSPARSE_SPSM_ALG_DEFAULT = chipsparse.HIPSPARSE_SPSM_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -10849,7 +10848,7 @@ class hipsparseSpSMAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpMatAttribute_t(hip.hipify.IntEnum):
+class hipsparseSpMatAttribute_t(enum.IntEnum):
     HIPSPARSE_SPMAT_FILL_MODE = chipsparse.HIPSPARSE_SPMAT_FILL_MODE
     HIPSPARSE_SPMAT_DIAG_TYPE = chipsparse.HIPSPARSE_SPMAT_DIAG_TYPE
     @staticmethod
@@ -10858,7 +10857,7 @@ class hipsparseSpMatAttribute_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpGEMMAlg_t(hip.hipify.IntEnum):
+class hipsparseSpGEMMAlg_t(enum.IntEnum):
     HIPSPARSE_SPGEMM_DEFAULT = chipsparse.HIPSPARSE_SPGEMM_DEFAULT
     HIPSPARSE_SPGEMM_CSR_ALG_NONDETERMINISTIC = chipsparse.HIPSPARSE_SPGEMM_CSR_ALG_NONDETERMINISTIC
     HIPSPARSE_SPGEMM_CSR_ALG_DETERMINISTIC = chipsparse.HIPSPARSE_SPGEMM_CSR_ALG_DETERMINISTIC

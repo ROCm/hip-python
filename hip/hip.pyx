@@ -3,7 +3,6 @@ import cython
 import ctypes
 import enum
 cimport hip._hip_helpers
-import hip.hipify
 HIP_VERSION_MAJOR = chip.HIP_VERSION_MAJOR
 
 HIP_VERSION_MINOR = chip.HIP_VERSION_MINOR
@@ -1686,7 +1685,7 @@ cdef class hipDeviceProp_t:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipMemoryType(hip.hipify.IntEnum):
+class hipMemoryType(enum.IntEnum):
     hipMemoryTypeHost = chip.hipMemoryTypeHost
     hipMemoryTypeDevice = chip.hipMemoryTypeDevice
     hipMemoryTypeArray = chip.hipMemoryTypeArray
@@ -1943,7 +1942,7 @@ cdef class hipPointerAttribute_t:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipError_t(hip.hipify.IntEnum):
+class hipError_t(enum.IntEnum):
     hipSuccess = chip.hipSuccess
     hipErrorInvalidValue = chip.hipErrorInvalidValue
     hipErrorOutOfMemory = chip.hipErrorOutOfMemory
@@ -2028,7 +2027,7 @@ class hipError_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipDeviceAttribute_t(hip.hipify.IntEnum):
+class hipDeviceAttribute_t(enum.IntEnum):
     hipDeviceAttributeCudaCompatibleBegin = chip.hipDeviceAttributeCudaCompatibleBegin
     hipDeviceAttributeEccEnabled = chip.hipDeviceAttributeEccEnabled
     hipDeviceAttributeAccessPolicyMaxWindowSize = chip.hipDeviceAttributeAccessPolicyMaxWindowSize
@@ -2148,7 +2147,7 @@ class hipDeviceAttribute_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipComputeMode(hip.hipify.IntEnum):
+class hipComputeMode(enum.IntEnum):
     hipComputeModeDefault = chip.hipComputeModeDefault
     hipComputeModeExclusive = chip.hipComputeModeExclusive
     hipComputeModeProhibited = chip.hipComputeModeProhibited
@@ -2159,7 +2158,7 @@ class hipComputeMode(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipChannelFormatKind(hip.hipify.IntEnum):
+class hipChannelFormatKind(enum.IntEnum):
     hipChannelFormatKindSigned = chip.hipChannelFormatKindSigned
     hipChannelFormatKindUnsigned = chip.hipChannelFormatKindUnsigned
     hipChannelFormatKindFloat = chip.hipChannelFormatKindFloat
@@ -2382,7 +2381,7 @@ cdef class hipChannelFormatDesc:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipArray_Format(hip.hipify.IntEnum):
+class hipArray_Format(enum.IntEnum):
     HIP_AD_FORMAT_UNSIGNED_INT8 = chip.HIP_AD_FORMAT_UNSIGNED_INT8
     HIP_AD_FORMAT_UNSIGNED_INT16 = chip.HIP_AD_FORMAT_UNSIGNED_INT16
     HIP_AD_FORMAT_UNSIGNED_INT32 = chip.HIP_AD_FORMAT_UNSIGNED_INT32
@@ -3791,7 +3790,7 @@ hipMipmappedArray_t = hipMipmappedArray
 
 hipMipmappedArray_const_t = hipMipmappedArray
 
-class hipResourceType(hip.hipify.IntEnum):
+class hipResourceType(enum.IntEnum):
     hipResourceTypeArray = chip.hipResourceTypeArray
     hipResourceTypeMipmappedArray = chip.hipResourceTypeMipmappedArray
     hipResourceTypeLinear = chip.hipResourceTypeLinear
@@ -3802,7 +3801,7 @@ class hipResourceType(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class HIPresourcetype_enum(hip.hipify.IntEnum):
+class HIPresourcetype_enum(enum.IntEnum):
     HIP_RESOURCE_TYPE_ARRAY = chip.HIP_RESOURCE_TYPE_ARRAY
     HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY = chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
     HIP_RESOURCE_TYPE_LINEAR = chip.HIP_RESOURCE_TYPE_LINEAR
@@ -3817,7 +3816,7 @@ HIPresourcetype = HIPresourcetype_enum
 
 hipResourcetype = HIPresourcetype_enum
 
-class HIPaddress_mode_enum(hip.hipify.IntEnum):
+class HIPaddress_mode_enum(enum.IntEnum):
     HIP_TR_ADDRESS_MODE_WRAP = chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_CLAMP = chip.HIP_TR_ADDRESS_MODE_CLAMP
     HIP_TR_ADDRESS_MODE_MIRROR = chip.HIP_TR_ADDRESS_MODE_MIRROR
@@ -3830,7 +3829,7 @@ class HIPaddress_mode_enum(hip.hipify.IntEnum):
 
 HIPaddress_mode = HIPaddress_mode_enum
 
-class HIPfilter_mode_enum(hip.hipify.IntEnum):
+class HIPfilter_mode_enum(enum.IntEnum):
     HIP_TR_FILTER_MODE_POINT = chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = chip.HIP_TR_FILTER_MODE_LINEAR
     @staticmethod
@@ -4118,7 +4117,7 @@ cdef class HIP_TEXTURE_DESC_st:
 
 HIP_TEXTURE_DESC = HIP_TEXTURE_DESC_st
 
-class hipResourceViewFormat(hip.hipify.IntEnum):
+class hipResourceViewFormat(enum.IntEnum):
     hipResViewFormatNone = chip.hipResViewFormatNone
     hipResViewFormatUnsignedChar1 = chip.hipResViewFormatUnsignedChar1
     hipResViewFormatUnsignedChar2 = chip.hipResViewFormatUnsignedChar2
@@ -4160,7 +4159,7 @@ class hipResourceViewFormat(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class HIPresourceViewFormat_enum(hip.hipify.IntEnum):
+class HIPresourceViewFormat_enum(enum.IntEnum):
     HIP_RES_VIEW_FORMAT_NONE = chip.HIP_RES_VIEW_FORMAT_NONE
     HIP_RES_VIEW_FORMAT_UINT_1X8 = chip.HIP_RES_VIEW_FORMAT_UINT_1X8
     HIP_RES_VIEW_FORMAT_UINT_2X8 = chip.HIP_RES_VIEW_FORMAT_UINT_2X8
@@ -6906,7 +6905,7 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
 
 HIP_RESOURCE_VIEW_DESC = HIP_RESOURCE_VIEW_DESC_st
 
-class hipMemcpyKind(hip.hipify.IntEnum):
+class hipMemcpyKind(enum.IntEnum):
     hipMemcpyHostToHost = chip.hipMemcpyHostToHost
     hipMemcpyHostToDevice = chip.hipMemcpyHostToDevice
     hipMemcpyDeviceToHost = chip.hipMemcpyDeviceToHost
@@ -8158,7 +8157,7 @@ cdef class HIP_MEMCPY3D:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipFunction_attribute(hip.hipify.IntEnum):
+class hipFunction_attribute(enum.IntEnum):
     HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
     HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES = chip.HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES
@@ -8176,7 +8175,7 @@ class hipFunction_attribute(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipPointer_attribute(hip.hipify.IntEnum):
+class hipPointer_attribute(enum.IntEnum):
     HIP_POINTER_ATTRIBUTE_CONTEXT = chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     HIP_POINTER_ATTRIBUTE_MEMORY_TYPE = chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
     HIP_POINTER_ATTRIBUTE_DEVICE_POINTER = chip.HIP_POINTER_ATTRIBUTE_DEVICE_POINTER
@@ -16585,7 +16584,7 @@ cdef class __hip_texture:
 
 hipTextureObject_t = __hip_texture
 
-class hipTextureAddressMode(hip.hipify.IntEnum):
+class hipTextureAddressMode(enum.IntEnum):
     hipAddressModeWrap = chip.hipAddressModeWrap
     hipAddressModeClamp = chip.hipAddressModeClamp
     hipAddressModeMirror = chip.hipAddressModeMirror
@@ -16596,7 +16595,7 @@ class hipTextureAddressMode(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipTextureFilterMode(hip.hipify.IntEnum):
+class hipTextureFilterMode(enum.IntEnum):
     hipFilterModePoint = chip.hipFilterModePoint
     hipFilterModeLinear = chip.hipFilterModeLinear
     @staticmethod
@@ -16605,7 +16604,7 @@ class hipTextureFilterMode(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipTextureReadMode(hip.hipify.IntEnum):
+class hipTextureReadMode(enum.IntEnum):
     hipReadModeElementType = chip.hipReadModeElementType
     hipReadModeNormalizedFloat = chip.hipReadModeNormalizedFloat
     @staticmethod
@@ -17445,7 +17444,7 @@ cdef class surfaceReference:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipSurfaceBoundaryMode(hip.hipify.IntEnum):
+class hipSurfaceBoundaryMode(enum.IntEnum):
     hipBoundaryModeZero = chip.hipBoundaryModeZero
     hipBoundaryModeTrap = chip.hipBoundaryModeTrap
     hipBoundaryModeClamp = chip.hipBoundaryModeClamp
@@ -17551,7 +17550,7 @@ cdef class ihipCtx_t:
 
 hipCtx_t = ihipCtx_t
 
-class hipDeviceP2PAttr(hip.hipify.IntEnum):
+class hipDeviceP2PAttr(enum.IntEnum):
     hipDevP2PAttrPerformanceRank = chip.hipDevP2PAttrPerformanceRank
     hipDevP2PAttrAccessSupported = chip.hipDevP2PAttrAccessSupported
     hipDevP2PAttrNativeAtomicSupported = chip.hipDevP2PAttrNativeAtomicSupported
@@ -18635,7 +18634,7 @@ cdef class ihipEvent_t:
 
 hipEvent_t = ihipEvent_t
 
-class hipLimit_t(hip.hipify.IntEnum):
+class hipLimit_t(enum.IntEnum):
     hipLimitStackSize = chip.hipLimitStackSize
     hipLimitPrintfFifoSize = chip.hipLimitPrintfFifoSize
     hipLimitMallocHeapSize = chip.hipLimitMallocHeapSize
@@ -18646,7 +18645,7 @@ class hipLimit_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemoryAdvise(hip.hipify.IntEnum):
+class hipMemoryAdvise(enum.IntEnum):
     hipMemAdviseSetReadMostly = chip.hipMemAdviseSetReadMostly
     hipMemAdviseUnsetReadMostly = chip.hipMemAdviseUnsetReadMostly
     hipMemAdviseSetPreferredLocation = chip.hipMemAdviseSetPreferredLocation
@@ -18661,7 +18660,7 @@ class hipMemoryAdvise(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemRangeCoherencyMode(hip.hipify.IntEnum):
+class hipMemRangeCoherencyMode(enum.IntEnum):
     hipMemRangeCoherencyModeFineGrain = chip.hipMemRangeCoherencyModeFineGrain
     hipMemRangeCoherencyModeCoarseGrain = chip.hipMemRangeCoherencyModeCoarseGrain
     hipMemRangeCoherencyModeIndeterminate = chip.hipMemRangeCoherencyModeIndeterminate
@@ -18671,7 +18670,7 @@ class hipMemRangeCoherencyMode(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemRangeAttribute(hip.hipify.IntEnum):
+class hipMemRangeAttribute(enum.IntEnum):
     hipMemRangeAttributeReadMostly = chip.hipMemRangeAttributeReadMostly
     hipMemRangeAttributePreferredLocation = chip.hipMemRangeAttributePreferredLocation
     hipMemRangeAttributeAccessedBy = chip.hipMemRangeAttributeAccessedBy
@@ -18683,7 +18682,7 @@ class hipMemRangeAttribute(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemPoolAttr(hip.hipify.IntEnum):
+class hipMemPoolAttr(enum.IntEnum):
     hipMemPoolReuseFollowEventDependencies = chip.hipMemPoolReuseFollowEventDependencies
     hipMemPoolReuseAllowOpportunistic = chip.hipMemPoolReuseAllowOpportunistic
     hipMemPoolReuseAllowInternalDependencies = chip.hipMemPoolReuseAllowInternalDependencies
@@ -18698,7 +18697,7 @@ class hipMemPoolAttr(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemLocationType(hip.hipify.IntEnum):
+class hipMemLocationType(enum.IntEnum):
     hipMemLocationTypeInvalid = chip.hipMemLocationTypeInvalid
     hipMemLocationTypeDevice = chip.hipMemLocationTypeDevice
     @staticmethod
@@ -18874,7 +18873,7 @@ cdef class hipMemLocation:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipMemAccessFlags(hip.hipify.IntEnum):
+class hipMemAccessFlags(enum.IntEnum):
     hipMemAccessFlagsProtNone = chip.hipMemAccessFlagsProtNone
     hipMemAccessFlagsProtRead = chip.hipMemAccessFlagsProtRead
     hipMemAccessFlagsProtReadWrite = chip.hipMemAccessFlagsProtReadWrite
@@ -19044,7 +19043,7 @@ cdef class hipMemAccessDesc:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipMemAllocationType(hip.hipify.IntEnum):
+class hipMemAllocationType(enum.IntEnum):
     hipMemAllocationTypeInvalid = chip.hipMemAllocationTypeInvalid
     hipMemAllocationTypePinned = chip.hipMemAllocationTypePinned
     hipMemAllocationTypeMax = chip.hipMemAllocationTypeMax
@@ -19054,7 +19053,7 @@ class hipMemAllocationType(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemAllocationHandleType(hip.hipify.IntEnum):
+class hipMemAllocationHandleType(enum.IntEnum):
     hipMemHandleTypeNone = chip.hipMemHandleTypeNone
     hipMemHandleTypePosixFileDescriptor = chip.hipMemHandleTypePosixFileDescriptor
     hipMemHandleTypeWin32 = chip.hipMemHandleTypeWin32
@@ -19435,7 +19434,7 @@ cdef class hipMemPoolPtrExportData:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipJitOption(hip.hipify.IntEnum):
+class hipJitOption(enum.IntEnum):
     hipJitOptionMaxRegisters = chip.hipJitOptionMaxRegisters
     hipJitOptionThreadsPerBlock = chip.hipJitOptionThreadsPerBlock
     hipJitOptionWallTime = chip.hipJitOptionWallTime
@@ -19460,7 +19459,7 @@ class hipJitOption(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipFuncAttribute(hip.hipify.IntEnum):
+class hipFuncAttribute(enum.IntEnum):
     hipFuncAttributeMaxDynamicSharedMemorySize = chip.hipFuncAttributeMaxDynamicSharedMemorySize
     hipFuncAttributePreferredSharedMemoryCarveout = chip.hipFuncAttributePreferredSharedMemoryCarveout
     hipFuncAttributeMax = chip.hipFuncAttributeMax
@@ -19470,7 +19469,7 @@ class hipFuncAttribute(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipFuncCache_t(hip.hipify.IntEnum):
+class hipFuncCache_t(enum.IntEnum):
     hipFuncCachePreferNone = chip.hipFuncCachePreferNone
     hipFuncCachePreferShared = chip.hipFuncCachePreferShared
     hipFuncCachePreferL1 = chip.hipFuncCachePreferL1
@@ -19481,7 +19480,7 @@ class hipFuncCache_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipSharedMemConfig(hip.hipify.IntEnum):
+class hipSharedMemConfig(enum.IntEnum):
     hipSharedMemBankSizeDefault = chip.hipSharedMemBankSizeDefault
     hipSharedMemBankSizeFourByte = chip.hipSharedMemBankSizeFourByte
     hipSharedMemBankSizeEightByte = chip.hipSharedMemBankSizeEightByte
@@ -19887,7 +19886,7 @@ cdef class hipLaunchParams_t:
 
 hipLaunchParams = hipLaunchParams_t
 
-class hipExternalMemoryHandleType_enum(hip.hipify.IntEnum):
+class hipExternalMemoryHandleType_enum(enum.IntEnum):
     hipExternalMemoryHandleTypeOpaqueFd = chip.hipExternalMemoryHandleTypeOpaqueFd
     hipExternalMemoryHandleTypeOpaqueWin32 = chip.hipExternalMemoryHandleTypeOpaqueWin32
     hipExternalMemoryHandleTypeOpaqueWin32Kmt = chip.hipExternalMemoryHandleTypeOpaqueWin32Kmt
@@ -20605,7 +20604,7 @@ cdef class hipExternalMemoryBufferDesc_st:
 
 hipExternalMemoryBufferDesc = hipExternalMemoryBufferDesc_st
 
-class hipExternalSemaphoreHandleType_enum(hip.hipify.IntEnum):
+class hipExternalSemaphoreHandleType_enum(enum.IntEnum):
     hipExternalSemaphoreHandleTypeOpaqueFd = chip.hipExternalSemaphoreHandleTypeOpaqueFd
     hipExternalSemaphoreHandleTypeOpaqueWin32 = chip.hipExternalSemaphoreHandleTypeOpaqueWin32
     hipExternalSemaphoreHandleTypeOpaqueWin32Kmt = chip.hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
@@ -22428,7 +22427,7 @@ cdef class hipExternalSemaphoreWaitParams_st:
 
 hipExternalSemaphoreWaitParams = hipExternalSemaphoreWaitParams_st
 
-class hipGLDeviceList(hip.hipify.IntEnum):
+class hipGLDeviceList(enum.IntEnum):
     hipGLDeviceListAll = chip.hipGLDeviceListAll
     hipGLDeviceListCurrentFrame = chip.hipGLDeviceListCurrentFrame
     hipGLDeviceListNextFrame = chip.hipGLDeviceListNextFrame
@@ -22438,7 +22437,7 @@ class hipGLDeviceList(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipGraphicsRegisterFlags(hip.hipify.IntEnum):
+class hipGraphicsRegisterFlags(enum.IntEnum):
     hipGraphicsRegisterFlagsNone = chip.hipGraphicsRegisterFlagsNone
     hipGraphicsRegisterFlagsReadOnly = chip.hipGraphicsRegisterFlagsReadOnly
     hipGraphicsRegisterFlagsWriteDiscard = chip.hipGraphicsRegisterFlagsWriteDiscard
@@ -22932,7 +22931,7 @@ cdef class hipUserObject:
 
 hipUserObject_t = hipUserObject
 
-class hipGraphNodeType(hip.hipify.IntEnum):
+class hipGraphNodeType(enum.IntEnum):
     hipGraphNodeTypeKernel = chip.hipGraphNodeTypeKernel
     hipGraphNodeTypeMemcpy = chip.hipGraphNodeTypeMemcpy
     hipGraphNodeTypeMemset = chip.hipGraphNodeTypeMemset
@@ -23646,7 +23645,7 @@ cdef class hipMemsetParams:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipKernelNodeAttrID(hip.hipify.IntEnum):
+class hipKernelNodeAttrID(enum.IntEnum):
     hipKernelNodeAttributeAccessPolicyWindow = chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = chip.hipKernelNodeAttributeCooperative
     @staticmethod
@@ -23655,7 +23654,7 @@ class hipKernelNodeAttrID(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipAccessProperty(hip.hipify.IntEnum):
+class hipAccessProperty(enum.IntEnum):
     hipAccessPropertyNormal = chip.hipAccessPropertyNormal
     hipAccessPropertyStreaming = chip.hipAccessPropertyStreaming
     hipAccessPropertyPersisting = chip.hipAccessPropertyPersisting
@@ -24033,7 +24032,7 @@ cdef class hipKernelNodeAttrValue:
         return ["accessPolicyWindow","cooperative"]
 
 
-class hipGraphExecUpdateResult(hip.hipify.IntEnum):
+class hipGraphExecUpdateResult(enum.IntEnum):
     hipGraphExecUpdateSuccess = chip.hipGraphExecUpdateSuccess
     hipGraphExecUpdateError = chip.hipGraphExecUpdateError
     hipGraphExecUpdateErrorTopologyChanged = chip.hipGraphExecUpdateErrorTopologyChanged
@@ -24048,7 +24047,7 @@ class hipGraphExecUpdateResult(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipStreamCaptureMode(hip.hipify.IntEnum):
+class hipStreamCaptureMode(enum.IntEnum):
     hipStreamCaptureModeGlobal = chip.hipStreamCaptureModeGlobal
     hipStreamCaptureModeThreadLocal = chip.hipStreamCaptureModeThreadLocal
     hipStreamCaptureModeRelaxed = chip.hipStreamCaptureModeRelaxed
@@ -24058,7 +24057,7 @@ class hipStreamCaptureMode(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipStreamCaptureStatus(hip.hipify.IntEnum):
+class hipStreamCaptureStatus(enum.IntEnum):
     hipStreamCaptureStatusNone = chip.hipStreamCaptureStatusNone
     hipStreamCaptureStatusActive = chip.hipStreamCaptureStatusActive
     hipStreamCaptureStatusInvalidated = chip.hipStreamCaptureStatusInvalidated
@@ -24068,7 +24067,7 @@ class hipStreamCaptureStatus(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipStreamUpdateCaptureDependenciesFlags(hip.hipify.IntEnum):
+class hipStreamUpdateCaptureDependenciesFlags(enum.IntEnum):
     hipStreamAddCaptureDependencies = chip.hipStreamAddCaptureDependencies
     hipStreamSetCaptureDependencies = chip.hipStreamSetCaptureDependencies
     @staticmethod
@@ -24077,7 +24076,7 @@ class hipStreamUpdateCaptureDependenciesFlags(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipGraphMemAttributeType(hip.hipify.IntEnum):
+class hipGraphMemAttributeType(enum.IntEnum):
     hipGraphMemAttrUsedMemCurrent = chip.hipGraphMemAttrUsedMemCurrent
     hipGraphMemAttrUsedMemHigh = chip.hipGraphMemAttrUsedMemHigh
     hipGraphMemAttrReservedMemCurrent = chip.hipGraphMemAttrReservedMemCurrent
@@ -24088,7 +24087,7 @@ class hipGraphMemAttributeType(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipUserObjectFlags(hip.hipify.IntEnum):
+class hipUserObjectFlags(enum.IntEnum):
     hipUserObjectNoDestructorSync = chip.hipUserObjectNoDestructorSync
     @staticmethod
     def ctypes_type():
@@ -24096,7 +24095,7 @@ class hipUserObjectFlags(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipUserObjectRetainFlags(hip.hipify.IntEnum):
+class hipUserObjectRetainFlags(enum.IntEnum):
     hipGraphUserObjectMove = chip.hipGraphUserObjectMove
     @staticmethod
     def ctypes_type():
@@ -24104,7 +24103,7 @@ class hipUserObjectRetainFlags(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipGraphInstantiateFlags(hip.hipify.IntEnum):
+class hipGraphInstantiateFlags(enum.IntEnum):
     hipGraphInstantiateFlagAutoFreeOnLaunch = chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     @staticmethod
     def ctypes_type():
@@ -24597,7 +24596,7 @@ cdef class ihipMemGenericAllocationHandle:
 
 hipMemGenericAllocationHandle_t = ihipMemGenericAllocationHandle
 
-class hipMemAllocationGranularity_flags(hip.hipify.IntEnum):
+class hipMemAllocationGranularity_flags(enum.IntEnum):
     hipMemAllocationGranularityMinimum = chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityRecommended = chip.hipMemAllocationGranularityRecommended
     @staticmethod
@@ -24606,7 +24605,7 @@ class hipMemAllocationGranularity_flags(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemHandleType(hip.hipify.IntEnum):
+class hipMemHandleType(enum.IntEnum):
     hipMemHandleTypeGeneric = chip.hipMemHandleTypeGeneric
     @staticmethod
     def ctypes_type():
@@ -24614,7 +24613,7 @@ class hipMemHandleType(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemOperationType(hip.hipify.IntEnum):
+class hipMemOperationType(enum.IntEnum):
     hipMemOperationTypeMap = chip.hipMemOperationTypeMap
     hipMemOperationTypeUnmap = chip.hipMemOperationTypeUnmap
     @staticmethod
@@ -24623,7 +24622,7 @@ class hipMemOperationType(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipArraySparseSubresourceType(hip.hipify.IntEnum):
+class hipArraySparseSubresourceType(enum.IntEnum):
     hipArraySparseSubresourceTypeSparseLevel = chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeMiptail = chip.hipArraySparseSubresourceTypeMiptail
     @staticmethod
@@ -32419,7 +32418,7 @@ def hipLaunchHostFunc_spt(object stream, object fn, object userData):
     return (_hipLaunchHostFunc_spt__retval,)
 
 
-class hipDataType(hip.hipify.IntEnum):
+class hipDataType(enum.IntEnum):
     HIP_R_16F = chip.HIP_R_16F
     HIP_R_32F = chip.HIP_R_32F
     HIP_R_64F = chip.HIP_R_64F
@@ -32432,7 +32431,7 @@ class hipDataType(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipLibraryPropertyType(hip.hipify.IntEnum):
+class hipLibraryPropertyType(enum.IntEnum):
     HIP_LIBRARY_MAJOR_VERSION = chip.HIP_LIBRARY_MAJOR_VERSION
     HIP_LIBRARY_MINOR_VERSION = chip.HIP_LIBRARY_MINOR_VERSION
     HIP_LIBRARY_PATCH_LEVEL = chip.HIP_LIBRARY_PATCH_LEVEL
