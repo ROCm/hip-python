@@ -3,48 +3,6 @@ import cython
 import ctypes
 import enum
 import hip.hipify
-@cython.embedsignature(True)
-def hipMemGetInfo(object free, object total):
-    """@brief Query memory info.
-    Return snapshot of free memory, and total allocatable memory on the device.
-    Returns in *free a snapshot of the current free memory.
-    @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-    @warning On HCC, the free memory only accounts for memory allocated by this process and may be
-    optimistic.
-    """
-    _hipMemGetInfo__retval = hipError_t(chipsparse.hipMemGetInfo(
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(free)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(total)._ptr))    # fully specified
-    return (_hipMemGetInfo__retval,)
-
-
-@cython.embedsignature(True)
-def hipMemPtrGetInfo(object ptr, object size):
-    """
-    """
-    _hipMemPtrGetInfo__retval = hipError_t(chipsparse.hipMemPtrGetInfo(
-        <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,
-        <unsigned long *>hip._util.types.DataHandle.from_pyobj(size)._ptr))    # fully specified
-    return (_hipMemPtrGetInfo__retval,)
-
-
-@cython.embedsignature(True)
-def hipStreamGetCaptureInfo(object stream, object pCaptureStatus, object pId):
-    """@brief Get capture status of a stream.
-    @param [in] stream - Stream under capture.
-    @param [out] pCaptureStatus - returns current status of the capture.
-    @param [out] pId - unique ID of the capture.
-    @returns #hipSuccess, #hipErrorStreamCaptureImplicit
-    @warning : This API is marked as beta, meaning, while this is feature complete,
-    it is still open to changes and may have outstanding issues.
-    """
-    _hipStreamGetCaptureInfo__retval = hipError_t(chipsparse.hipStreamGetCaptureInfo(
-        ihipStream_t.from_pyobj(stream)._ptr,
-        <chipsparse.hipStreamCaptureStatus *>hip._util.types.DataHandle.from_pyobj(pCaptureStatus)._ptr,
-        <unsigned long long *>hip._util.types.DataHandle.from_pyobj(pId)._ptr))    # fully specified
-    return (_hipStreamGetCaptureInfo__retval,)
-
-
 cdef class bsrsv2Info:
     # members declared in pxd file
 
