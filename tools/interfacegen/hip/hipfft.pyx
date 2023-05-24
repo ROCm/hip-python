@@ -2,12 +2,11 @@
 import cython
 import ctypes
 import enum
-import hip.hipify
 HIPFFT_FORWARD = chipfft.HIPFFT_FORWARD
 
 HIPFFT_BACKWARD = chipfft.HIPFFT_BACKWARD
 
-class hipfftResult_t(hip.hipify.IntEnum):
+class hipfftResult_t(enum.IntEnum):
     HIPFFT_SUCCESS = chipfft.HIPFFT_SUCCESS
     HIPFFT_INVALID_PLAN = chipfft.HIPFFT_INVALID_PLAN
     HIPFFT_ALLOC_FAILED = chipfft.HIPFFT_ALLOC_FAILED
@@ -32,7 +31,7 @@ class hipfftResult_t(hip.hipify.IntEnum):
 
 hipfftResult = hipfftResult_t
 
-class hipfftType_t(hip.hipify.IntEnum):
+class hipfftType_t(enum.IntEnum):
     HIPFFT_R2C = chipfft.HIPFFT_R2C
     HIPFFT_C2R = chipfft.HIPFFT_C2R
     HIPFFT_C2C = chipfft.HIPFFT_C2C
@@ -47,7 +46,7 @@ class hipfftType_t(hip.hipify.IntEnum):
 
 hipfftType = hipfftType_t
 
-class hipfftLibraryPropertyType_t(hip.hipify.IntEnum):
+class hipfftLibraryPropertyType_t(enum.IntEnum):
     HIPFFT_MAJOR_VERSION = chipfft.HIPFFT_MAJOR_VERSION
     HIPFFT_MINOR_VERSION = chipfft.HIPFFT_MINOR_VERSION
     HIPFFT_PATCH_LEVEL = chipfft.HIPFFT_PATCH_LEVEL

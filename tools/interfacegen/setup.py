@@ -8,14 +8,24 @@ modules. The generated Cython declaration files can be used
 by Cython users of this project.
 """
 
+__author__ = "AMD_AUTHOR"
+
 import os
 import warnings
 import enum
 import textwrap
 
-from _codegen import cython
+try:
+    # package to calculate word distances
+    import Levenshtein
 
-cython.python_interface_int_enum_base_class = "hip.hipify.IntEnum"
+    HAVE_LEVENSHTEIN = True
+except ImportError:
+    HAVE_LEVENSHTEIN = False
+
+print(f"{HAVE_LEVENSHTEIN=}")
+
+from _codegen import cython
 
 from _codegen.cython import (
     CythonPackageGenerator,
@@ -26,12 +36,13 @@ from _codegen.cparser import TypeHandler
 
 TypeCategory = TypeHandler.TypeCategory
 
-from clang.cindex import TypeKind
-
 from _codegen.tree import (
     Node,
     MacroDefinition,
     Function,
+    Typedef,
+    Enum,
+    AnonymousEnum,
     Parm,
     Field,
     Record,
@@ -39,9 +50,7 @@ from _codegen.tree import (
 
 from _codegen.control import PointerParamIntent
 
-from _parse_hipify_perl import render_hipify_perl_info
-
-__author__ = "AMD_AUTHOR"
+from _parse_hipify_perl import render_hipify_perl_info, parse_hipify_perl
 
 # Configuration
 ROCM_PATH = os.environ.get("ROCM_PATH", None)
@@ -50,6 +59,8 @@ if not ROCM_PATH:
 if not ROCM_PATH:
     raise RuntimeError("Environment variable ROCM_PATH is not set")
 ROCM_INC = os.path.join(ROCM_PATH, "include")
+HIPIFY_PERL_PATH = os.path.join(ROCM_PATH, "bin", "hipify-perl")
+
 CFLAGS = os.environ.get("CFLAGS", None)
 
 HIP_PLATFORM = os.environ.get("HIP_PLATFORM", "amd")
@@ -98,7 +109,7 @@ def get_bool_environ_var(env_var, default):
 
 
 HIP_PYTHON_GENERATE = get_bool_environ_var("HIP_PYTHON_GENERATE", "true")
-HIP_PYTHON_LIBS = os.environ.get("HIP_PYTHON_LIBS", "hip,hiprtc,hipify")
+HIP_PYTHON_LIBS = os.environ.get("HIP_PYTHON_LIBS", "hip,hiprtc")
 HIP_PYTHON_ERR_IF_LIB_NOT_FOUND = get_bool_environ_var(
     "HIP_PYTHON_ERR_IF_LIB_NOT_FOUND", "true"
 )
@@ -144,11 +155,270 @@ if HIP_PYTHON_VERBOSE:
 
 
 CYTHON_EXT_MODULES = []
+LIBRARIES = []
 
 HIP_VERSION_MAJOR = 0
 HIP_VERSION_MINOR = 0
 HIP_VERSION_PATCH = 0
 HIP_VERSION_GITHASH = ""
+
+(CUDA_2_HIP, HIP_2_CUDA) = parse_hipify_perl(HIPIFY_PERL_PATH)
+
+
+def generate_cuda_interop_package_files(
+    cuda_pkg_name: str, generator: CythonPackageGenerator, warn: bool = True
+):
+    global HIP_2_CUDA
+    global HAVE_LEVENSHTEIN
+    global CYTHON_EXT_MODULES
+    output_dir = "cuda"
+    pkg_name = generator.pkg_name
+    backend = generator.backend
+    python_interface_impl_part = [
+        textwrap.dedent(
+            f"""\
+            # AMD_COPYRIGHT
+
+            __author__ = "AMD_AUTHOR"
+
+            import hip.{pkg_name}
+            cimport hip.c{pkg_name}
+            """
+        ),
+        textwrap.dedent(
+            """
+            def _hip_python_get_bool_environ_var(env_var, default):
+                yes_vals = ("true", "1", "t", "y", "yes")
+                no_vals = ("false", "0", "f", "n", "no")
+                value = os.environ.get(env_var, default).lower()
+                if value in yes_vals:
+                    return True
+                elif value in no_vals:
+                    return False
+                else:
+                    allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals)+list(no_vals))])
+                    raise RuntimeError(f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}")
+            """
+        ),
+    ]
+    python_interface_decl_part = [
+        textwrap.dedent(
+            f"""\
+            # AMD_COPYRIGHT
+
+            __author__ = "AMD_AUTHOR"
+
+            import hip.{pkg_name}
+            cimport hip.c{pkg_name}
+            import os
+            import enum
+            cimport hip.{pkg_name}
+            """
+        ),
+        f"cimport {output_dir}.c{cuda_pkg_name}",  # for checking compiler errors
+    ]
+    c_interface_decl_part = [
+        textwrap.dedent(
+            f"""\
+            # AMD_COPYRIGHT
+            
+            cimport hip.c{pkg_name}
+            """
+        ),
+    ]
+
+    # impl part is always empty
+    def warn_(hip_name):
+        global HAVE_LEVENSHTEIN
+        global HIP_2_CUDA
+        msg = f"hipify-perl: no CUDA symbol found for HIP symbol {hip_name}"
+        if HAVE_LEVENSHTEIN:
+            cutoff = 0.9
+            candidates = []
+            for other_hip_name in HIP_2_CUDA:
+                if (
+                    Levenshtein.ratio(
+                        hip_name,
+                        other_hip_name,
+                        processor=lambda tk: tk.lower(),  # do everything in lowercase
+                        score_cutoff=cutoff,  # everything below cutoff is set to 0
+                    )
+                    > 0
+                ):
+                    candidates.append(other_hip_name)
+            candidates_formatted = ", ".join(["'" + c + "'" for c in candidates])
+            msg += f"; most similar hipify-perl HIP symbols (Levenshtein ratio > {cutoff}): [{candidates_formatted}]"
+        warnings.warn(msg)
+
+    def handle_enum_(node,cuda_name):
+        global HIP_2_CUDA
+        nonlocal c_interface_decl_part
+        nonlocal python_interface_impl_part
+        enum = (
+            node if isinstance(node, Enum) else node.lookup_innermost_type()
+        )
+        constants = []
+        for child_cursor in enum.cursor.get_children():
+            hip_constant_name = child_cursor.spelling
+            if hip_constant_name in HIP_2_CUDA:
+                for cuda_constant_name in HIP_2_CUDA[hip_constant_name]:
+                    constants.append(
+                        f"{cuda_constant_name} = hip.c{pkg_name}.{hip_constant_name}"
+                    )
+            else:
+                warn_(hip_constant_name)
+            # append hip constant too, to help workarounds
+            constants.append(
+                f"{hip_constant_name} = hip.c{pkg_name}.{hip_constant_name}"
+            )
+        indent = " " * 4
+        if isinstance(node, AnonymousEnum): # cannot be typedefed
+            python_interface_impl_part += constants
+        else:
+            python_enum_metaclass_name = f"_{cuda_name}_EnumMeta"
+            python_enum_hallucinate_var_name = (
+                f"HIP_PYTHON_{cuda_name}_HALLUCINATE_CONSTANTS"
+            )
+            python_enum_metaclass = textwrap.dedent(
+                f"""\
+                
+                {python_enum_hallucinate_var_name} = _hip_python_get_bool_environ_var("{python_enum_hallucinate_var_name}","false")
+
+                class {python_enum_metaclass_name}(enum.EnumMeta):
+                
+                    class FakeEnumType():
+                        \"""Mimicks the orginal enum type this 
+                        is derived from.
+                        \"""
+                        
+                        def __init__(self):
+                            pass
+                        
+                        @property
+                        def name(self):
+                            return self._name_
+
+                        @property
+                        def value(self):
+                            return self._value_
+                            
+                        def __eq__(self,other):
+                            if isinstance(other,self._orig_enum_type_):
+                                return self.value == other.value
+                            return False
+                        
+                        @property
+                        def __class__(self):
+                            \"""Overwrite __class__ to satisfy __isinstance__ check.
+                            \"""
+                            return self._orig_enum_type_
+
+                        def __repr__(self):        
+                            \"""Mimicks enum.Enum.__repr__\"""
+                            return "<%s.%s: %r>" % (
+                                    self.__class__.__name__, self._name_, self._value_)
+                                    
+                        def __str__(self):
+                            \"""Mimicks enum.Enum.__str__\"""
+                            return "%s.%s" % (self.__class__.__name__, self._name_)
+
+                        def __hash__(self):
+                            return hash(str(self))
+
+                    def __getattribute__(cls,name):
+                        global _get_hip_name
+                        global {python_enum_hallucinate_var_name}
+                        try:
+                            result = super().__getattribute__(name)
+                            return result
+                        except AttributeError as ae:
+                            if not {python_enum_hallucinate_var_name}:
+                                raise ae
+                            else:
+                                used_vals = list(cls._value2member_map_.keys())
+                                if not len(used_vals):
+                                    raise ae
+                                new_val = min(used_vals)
+                                while new_val in used_vals: # find a free enum value
+                                    new_val += 1
+                                enum_types = list(cls._member_map_.values())
+                                enum_class = enum_types[0].__class__
+                                fake_enum = type(
+                                    name,
+                                    (cls.FakeEnumType,),
+                                    {{"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}}
+                                )()
+                                return fake_enum
+                """
+            )
+
+            python_enum = (
+                f"class {cuda_name}(enum.IntEnum,metaclass={python_enum_metaclass_name}):\n"
+                + textwrap.indent("\n".join(constants), indent)
+            )
+            python_interface_impl_part.append(python_enum_metaclass)
+            python_interface_impl_part.append(python_enum)
+
+        if isinstance(node, Enum) and i == 0:
+            cython_enum = f"cdef enum {cuda_name}:\n" + textwrap.indent(
+                "\n".join(constants), indent
+            )
+            c_interface_decl_part.append(cython_enum)
+        else:  # if it is a typedef or there are multiple CUDA names
+            hip_underlying_type_name = enum.name
+            if hip_underlying_type_name in HIP_2_CUDA:
+                cuda_underlying_type_name = HIP_2_CUDA[
+                    hip_underlying_type_name
+                ][
+                    0
+                ]  # take first
+                cython_enum = (
+                    f"ctypedef {cuda_underlying_type_name} {cuda_name}"
+                )
+                c_interface_decl_part.append(cython_enum)
+            else:
+                warn_(hip_underlying_type_name)
+
+    # main loop over nodes
+    for node in backend.walk_filtered_nodes():
+        hip_name = node.name
+        if isinstance(node,AnonymousEnum):
+            handle_enum_(node,hip_name) # hip_name is auto_generated in this case
+        if hip_name in HIP_2_CUDA:
+            for i, cuda_name in enumerate(HIP_2_CUDA[hip_name]):
+                if isinstance(node, Enum) or (
+                    isinstance(node, Typedef)
+                    and node.is_pointer_to_enum(degree=(0, -1))
+                ):
+                    handle_enum_(node,cuda_name)
+                elif isinstance(node, Typedef) and node.is_pointer_to_record(
+                    degree=(0, -1)
+                ):
+                    python_interface_impl_part.append(
+                        f"{cuda_name} = hip.{pkg_name}.{hip_name}"
+                    )
+                else:
+                    c_interface_decl_part.append(
+                        f"from hip.c{pkg_name} cimport {hip_name} as {cuda_name}"
+                    )
+                    python_interface_decl_part.append(
+                        f"from hip.c{pkg_name} cimport {hip_name} as {cuda_name}"
+                    )
+        elif warn:
+            warn_(hip_name)
+
+    python_interface_decl_path = os.path.join(output_dir, f"{cuda_pkg_name}.pxd")
+    python_interface_impl_path = os.path.join(output_dir, f"{cuda_pkg_name}.pyx")
+    c_interface_decl_path = os.path.join(output_dir, f"c{cuda_pkg_name}.pxd")
+    with open(c_interface_decl_path, "w") as outfile:
+        outfile.write("\n".join(c_interface_decl_part))
+    with open(python_interface_decl_path, "w") as outfile:
+        outfile.write("\n".join(python_interface_decl_part))
+    with open(python_interface_impl_path, "w") as outfile:
+        outfile.write("\n".join(python_interface_impl_part))
+    CYTHON_EXT_MODULES += [
+        (f"{output_dir}.{cuda_pkg_name}", [python_interface_impl_path]),
+    ]
 
 
 def generate_hiprtc_package_files():
@@ -232,7 +502,10 @@ def generate_hiprtc_package_files():
         ("hip.chiprtc", ["./hip/chiprtc.pyx"]),
         ("hip.hiprtc", ["./hip/hiprtc.pyx"]),
     ]
+    LIBRARIES.append("hiprtc")
+    generate_cuda_interop_package_files("nvrtc", generator)
     return generator
+
 
 def generate_hip_package_files():
     global ROCM_INC
@@ -472,7 +745,14 @@ def generate_hip_package_files():
         ("hip._hip_helpers", ["./hip/_hip_helpers.pyx"]),
         ("hip.hip", ["./hip/hip.pyx"]),
     ]
+    LIBRARIES.append("amdhip64")
+
+    generate_cuda_interop_package_files("cuda", generator)
+    generate_cuda_interop_package_files(
+        "cudart", generator, warn=False
+    )  # already warned before, regenerate to have correctly named pxd/pyx files too. Could be done via symlinks & __init__.py mod too.
     return generator
+
 
 # hipblas
 def generate_hipblas_package_files():
@@ -586,6 +866,7 @@ def generate_hipblas_package_files():
         ("hip.chipblas", ["./hip/chipblas.pyx"]),
         ("hip.hipblas", ["./hip/hipblas.pyx"]),
     ]
+    LIBRARIES.append("hipblas")
     return generator
 
 
@@ -626,7 +907,7 @@ def generate_rccl_package_files():
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         if node.is_pointer_to_record(degree=2):
-            if ( node.parent.name, node.name ) in (
+            if (node.parent.name, node.name) in (
                 ("ncclCommInitAll", "comm"),
                 ("pncclCommInitAll", "comm"),
             ):
@@ -653,7 +934,7 @@ def generate_rccl_package_files():
             if node.is_pointer_to_record(degree=1):
                 return 0
             if node.is_pointer_to_record(degree=2):
-                if ( node.parent.name, node.name ) in (
+                if (node.parent.name, node.name) in (
                     ("ncclCommInitAll", "comm"),
                     ("pncclCommInitAll", "comm"),
                 ):
@@ -696,7 +977,9 @@ def generate_rccl_package_files():
         ("hip.crccl", ["./hip/crccl.pyx"]),
         ("hip.rccl", ["./hip/rccl.pyx"]),
     ]
+    LIBRARIES.append("rccl")
     return generator
+
 
 # hiprand
 def generate_hiprand_package_files():
@@ -777,7 +1060,9 @@ def generate_hiprand_package_files():
         ("hip.chiprand", ["./hip/chiprand.pyx"]),
         ("hip.hiprand", ["./hip/hiprand.pyx"]),
     ]
+    LIBRARIES.append("hiprand")
     return generator
+
 
 # hipfft
 def generate_hipfft_package_files():
@@ -791,8 +1076,8 @@ def generate_hipfft_package_files():
             if node.name.startswith("hipfft"):
                 return True
         elif node.name in (
-             "HIPFFT_FORWARD",
-             "HIPFFT_BACKWARD",
+            "HIPFFT_FORWARD",
+            "HIPFFT_BACKWARD",
         ):
             return True
         return False
@@ -811,10 +1096,9 @@ def generate_hipfft_package_files():
         return PointerParamIntent.IN
 
     def hipfft_ptr_rank(node: Node):
-        """Actual rank of the variables underlying pointer indirections.
-        """
+        """Actual rank of the variables underlying pointer indirections."""
         if isinstance(node, Parm):
-            if node.is_pointer_to_record(degree=(1,2)):
+            if node.is_pointer_to_record(degree=(1, 2)):
                 return 0
             elif node.is_pointer_to_basic_type(degree=1):
                 return 0
@@ -846,7 +1130,9 @@ def generate_hipfft_package_files():
         ("hip.chipfft", ["./hip/chipfft.pyx"]),
         ("hip.hipfft", ["./hip/hipfft.pyx"]),
     ]
+    LIBRARIES.append("hipfft")
     return generator
+
 
 # hipsparse
 def generate_hipsparse_package_files():
@@ -857,11 +1143,12 @@ def generate_hipsparse_package_files():
 
     def hipsparse_node_filter(node: Node):
         if not isinstance(node, MacroDefinition):
-            if ( 
-                node.name.startswith("hipsparse") 
+            if (
+                node.name.startswith("hipsparse")
                 or node.name.endswith("Info_t")
-                or (node.name.endswith("Info")
-                    and not isinstance(node,Function)
+                or (
+                    node.name.endswith("Info")
+                    and not isinstance(node, Function)
                     and not node.name == "hipArrayMapInfo"
                 )
             ):
@@ -885,7 +1172,7 @@ def generate_hipsparse_package_files():
         Most of the parameter names follow LAPACK convention.
         """
         if isinstance(node, Parm):
-            if node.is_pointer_to_record(degree=(1,2)):
+            if node.is_pointer_to_record(degree=(1, 2)):
                 return 0
             elif node.is_pointer_to_basic_type(degree=1):
                 return 0
@@ -920,18 +1207,8 @@ def generate_hipsparse_package_files():
         ("hip.chipsparse", ["./hip/chipsparse.pyx"]),
         ("hip.hipsparse", ["./hip/hipsparse.pyx"]),
     ]
+    LIBRARIES.append("hipsparse")
     return generator
-
-def generate_hipify_file():
-    template = open(os.path.join("hip", "hipify.py.in"), "r").read()
-    with open(os.path.join("hip", "hipify.py"), "w") as outfile:
-        outfile.write(
-            template.replace(
-                "{{fields}}",
-                render_hipify_perl_info(os.path.join(ROCM_PATH, "bin", "hipify-perl")),
-            )
-        )
-    return None
 
 
 AVAILABLE_GENERATORS = dict(
@@ -942,7 +1219,6 @@ AVAILABLE_GENERATORS = dict(
     hiprand=generate_hiprand_package_files,
     hipfft=generate_hipfft_package_files,
     hipsparse=generate_hipsparse_package_files,
-    hipify=generate_hipify_file,
 )
 
 if len(HIP_PYTHON_LIBS.strip()):
@@ -964,10 +1240,6 @@ for entry in lib_names:
             warnings.warn(msg, RuntimeWarning)
     generator = AVAILABLE_GENERATORS[libname]()
     if generator != None and HIP_PYTHON_GENERATE:
-        generator.python_interface_impl_preamble += textwrap.dedent("""\
-        import hip.hipify
-        """
-        )
         generator.write_package_files(output_dir="hip")
 
 HIP_VERSION_NAME = (
@@ -1000,11 +1272,11 @@ if HIP_PYTHON_BUILD:
     from Cython.Build import cythonize
 
     if HIP_PYTHON_RUNTIME_LINKING:
-        libraries = []
         library_dirs = []
+        libraries = []
     else:
         library_dirs = [os.path.join(ROCM_PATH, "lib")]
-        libraries = ["hiprtc", "amdhip64"]
+        libraries = LIBRARIES
 
     extra_compile_args = hip_platform.cflags
     if CFLAGS == None:
@@ -1025,7 +1297,7 @@ if HIP_PYTHON_BUILD:
         CYTHON_EXT_MODULES.insert(
             0, ("hip._util.posixloader", ["./hip/_util/posixloader.pyx"])
         )
-        CYTHON_EXT_MODULES.insert(0, ("hip._util.types", ["./hip/_util/types.pyx"]))
+    CYTHON_EXT_MODULES.insert(0, ("hip._util.types", ["./hip/_util/types.pyx"]))
 
     ext_modules = []
     for name, sources in CYTHON_EXT_MODULES:

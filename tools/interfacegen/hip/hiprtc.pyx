@@ -2,8 +2,7 @@
 import cython
 import ctypes
 import enum
-import hip.hipify
-class hiprtcResult(hip.hipify.IntEnum):
+class hiprtcResult(enum.IntEnum):
     HIPRTC_SUCCESS = chiprtc.HIPRTC_SUCCESS
     HIPRTC_ERROR_OUT_OF_MEMORY = chiprtc.HIPRTC_ERROR_OUT_OF_MEMORY
     HIPRTC_ERROR_PROGRAM_CREATION_FAILURE = chiprtc.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
@@ -23,7 +22,7 @@ class hiprtcResult(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hiprtcJIT_option(hip.hipify.IntEnum):
+class hiprtcJIT_option(enum.IntEnum):
     HIPRTC_JIT_MAX_REGISTERS = chiprtc.HIPRTC_JIT_MAX_REGISTERS
     HIPRTC_JIT_THREADS_PER_BLOCK = chiprtc.HIPRTC_JIT_THREADS_PER_BLOCK
     HIPRTC_JIT_WALL_TIME = chiprtc.HIPRTC_JIT_WALL_TIME
@@ -56,7 +55,7 @@ class hiprtcJIT_option(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hiprtcJITInputType(hip.hipify.IntEnum):
+class hiprtcJITInputType(enum.IntEnum):
     HIPRTC_JIT_INPUT_CUBIN = chiprtc.HIPRTC_JIT_INPUT_CUBIN
     HIPRTC_JIT_INPUT_PTX = chiprtc.HIPRTC_JIT_INPUT_PTX
     HIPRTC_JIT_INPUT_FATBINARY = chiprtc.HIPRTC_JIT_INPUT_FATBINARY
