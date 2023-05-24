@@ -861,6 +861,7 @@ def generate_hipsparse_package_files():
                 node.name.startswith("hipsparse") 
                 or node.name.endswith("Info_t")
                 or (node.name.endswith("Info")
+                    and not isinstance(node,Function)
                     and not node.name == "hipArrayMapInfo"
                 )
             ):

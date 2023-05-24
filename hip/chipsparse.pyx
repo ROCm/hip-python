@@ -17,40 +17,6 @@ cdef void __init_symbol(void** result, const char* name) nogil:
             result[0] = loader.load_symbol(_lib_handle, name) 
 
 
-cdef void* _hipMemGetInfo__funptr = NULL
-# @brief Query memory info.
-# Return snapshot of free memory, and total allocatable memory on the device.
-# Returns in *free a snapshot of the current free memory.
-# @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-# @warning On HCC, the free memory only accounts for memory allocated by this process and may be
-# optimistic.
-cdef hipError_t hipMemGetInfo(unsigned long * free,unsigned long * total) nogil:
-    global _hipMemGetInfo__funptr
-    __init_symbol(&_hipMemGetInfo__funptr,"hipMemGetInfo")
-    return (<hipError_t (*)(unsigned long *,unsigned long *) nogil> _hipMemGetInfo__funptr)(free,total)
-
-
-cdef void* _hipMemPtrGetInfo__funptr = NULL
-cdef hipError_t hipMemPtrGetInfo(void * ptr,unsigned long * size) nogil:
-    global _hipMemPtrGetInfo__funptr
-    __init_symbol(&_hipMemPtrGetInfo__funptr,"hipMemPtrGetInfo")
-    return (<hipError_t (*)(void *,unsigned long *) nogil> _hipMemPtrGetInfo__funptr)(ptr,size)
-
-
-cdef void* _hipStreamGetCaptureInfo__funptr = NULL
-# @brief Get capture status of a stream.
-# @param [in] stream - Stream under capture.
-# @param [out] pCaptureStatus - returns current status of the capture.
-# @param [out] pId - unique ID of the capture.
-# @returns #hipSuccess, #hipErrorStreamCaptureImplicit
-# @warning : This API is marked as beta, meaning, while this is feature complete,
-# it is still open to changes and may have outstanding issues.
-cdef hipError_t hipStreamGetCaptureInfo(hipStream_t stream,hipStreamCaptureStatus * pCaptureStatus,unsigned long long * pId) nogil:
-    global _hipStreamGetCaptureInfo__funptr
-    __init_symbol(&_hipStreamGetCaptureInfo__funptr,"hipStreamGetCaptureInfo")
-    return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *) nogil> _hipStreamGetCaptureInfo__funptr)(stream,pCaptureStatus,pId)
-
-
 cdef void* _hipsparseCreate__funptr = NULL
 # ! \ingroup aux_module
 # \brief Create a hipsparse handle
