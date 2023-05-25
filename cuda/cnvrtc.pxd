@@ -48,25 +48,48 @@ cdef enum CUjitInputType:
     HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE = hip.chiprtc.HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE
     HIPRTC_JIT_NUM_INPUT_TYPES = hip.chiprtc.HIPRTC_JIT_NUM_INPUT_TYPES
 ctypedef CUjitInputType CUjitInputType_enum
+from hip.chiprtc cimport ihiprtcLinkState
 from hip.chiprtc cimport ihiprtcLinkState as CUlinkState_st
+from hip.chiprtc cimport hiprtcLinkState
+from hip.chiprtc cimport hiprtcLinkState as CUlinkState
+from hip.chiprtc cimport hiprtcGetErrorString
 from hip.chiprtc cimport hiprtcGetErrorString as nvrtcGetErrorString
+from hip.chiprtc cimport hiprtcVersion
 from hip.chiprtc cimport hiprtcVersion as nvrtcVersion
+from hip.chiprtc cimport hiprtcProgram
+from hip.chiprtc cimport hiprtcProgram as nvrtcProgram
+from hip.chiprtc cimport hiprtcAddNameExpression
 from hip.chiprtc cimport hiprtcAddNameExpression as nvrtcAddNameExpression
+from hip.chiprtc cimport hiprtcCompileProgram
 from hip.chiprtc cimport hiprtcCompileProgram as nvrtcCompileProgram
+from hip.chiprtc cimport hiprtcCreateProgram
 from hip.chiprtc cimport hiprtcCreateProgram as nvrtcCreateProgram
+from hip.chiprtc cimport hiprtcDestroyProgram
 from hip.chiprtc cimport hiprtcDestroyProgram as nvrtcDestroyProgram
+from hip.chiprtc cimport hiprtcGetLoweredName
 from hip.chiprtc cimport hiprtcGetLoweredName as nvrtcGetLoweredName
+from hip.chiprtc cimport hiprtcGetProgramLog
 from hip.chiprtc cimport hiprtcGetProgramLog as nvrtcGetProgramLog
+from hip.chiprtc cimport hiprtcGetProgramLogSize
 from hip.chiprtc cimport hiprtcGetProgramLogSize as nvrtcGetProgramLogSize
+from hip.chiprtc cimport hiprtcGetCode
 from hip.chiprtc cimport hiprtcGetCode as nvrtcGetPTX
+from hip.chiprtc cimport hiprtcGetCodeSize
 from hip.chiprtc cimport hiprtcGetCodeSize as nvrtcGetPTXSize
+from hip.chiprtc cimport hiprtcGetBitcode
 from hip.chiprtc cimport hiprtcGetBitcode as nvrtcGetCUBIN
+from hip.chiprtc cimport hiprtcGetBitcodeSize
 from hip.chiprtc cimport hiprtcGetBitcodeSize as nvrtcGetCUBINSize
+from hip.chiprtc cimport hiprtcLinkCreate
 from hip.chiprtc cimport hiprtcLinkCreate as cuLinkCreate
 from hip.chiprtc cimport hiprtcLinkCreate as cuLinkCreate_v2
+from hip.chiprtc cimport hiprtcLinkAddFile
 from hip.chiprtc cimport hiprtcLinkAddFile as cuLinkAddFile
 from hip.chiprtc cimport hiprtcLinkAddFile as cuLinkAddFile_v2
+from hip.chiprtc cimport hiprtcLinkAddData
 from hip.chiprtc cimport hiprtcLinkAddData as cuLinkAddData
 from hip.chiprtc cimport hiprtcLinkAddData as cuLinkAddData_v2
+from hip.chiprtc cimport hiprtcLinkComplete
 from hip.chiprtc cimport hiprtcLinkComplete as cuLinkComplete
+from hip.chiprtc cimport hiprtcLinkDestroy
 from hip.chiprtc cimport hiprtcLinkDestroy as cuLinkDestroy
