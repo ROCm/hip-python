@@ -1,41 +1,15 @@
 # AMD_COPYRIGHT
-# c imports
 from libc cimport stdlib
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer
-# python imports
-import cython
-import ctypes
-import enum
-from hip._util.datahandle cimport DataHandle
+cimport hip._util.types
+ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 #ctypedef int16_t __int16_t
 #ctypedef uint16_t __uint16_t
 from .hip cimport ihipStream_t
 
 from . cimport chipblas
-ctypedef short __int16_t
-
-ctypedef unsigned short __uint16_t
-
-cdef class hipblasHandle_t:
-    cdef void * _ptr
-    cdef bint ptr_owner
-    cdef Py_buffer _py_buffer
-    cdef bint _py_buffer_acquired
-
-    @staticmethod
-    cdef hipblasHandle_t from_ptr(void * ptr, bint owner=*)
-    @staticmethod
-    cdef hipblasHandle_t from_pyobj(object pyobj)
-
-
-ctypedef uint16_t hipblasHalf
-
-ctypedef int8_t hipblasInt8
-
-ctypedef int64_t hipblasStride
-
 cdef class hipblasBfloat16:
     cdef chipblas.hipblasBfloat16* _ptr
     cdef bint ptr_owner
