@@ -2,9 +2,13 @@
 
 __author__ = "AMD_AUTHOR"
 
-import hip.hiprtc
-cimport hip.chiprtc
+import os
+import enum
 
+import hip.hiprtc
+
+hiprtc = hip.hiprtc # makes hiprtc types and routines accessible without import
+                            # allows checks such as `hasattr(cuda.nvrtc,"hiprtc")`
 
 def _hip_python_get_bool_environ_var(env_var, default):
     yes_vals = ("true", "1", "t", "y", "yes")
@@ -87,7 +91,13 @@ class _nvrtcResult_EnumMeta(enum.EnumMeta):
                 )()
                 return fake_enum
 
+
 class nvrtcResult(enum.IntEnum,metaclass=_nvrtcResult_EnumMeta):
+    @property
+    def __class__(self):
+        """Overwrite __class__ to satisfy __isinstance__ check.
+        """
+        return hip.hiprtc.hiprtcResult
     NVRTC_SUCCESS = hip.chiprtc.HIPRTC_SUCCESS
     HIPRTC_SUCCESS = hip.chiprtc.HIPRTC_SUCCESS
     NVRTC_ERROR_OUT_OF_MEMORY = hip.chiprtc.HIPRTC_ERROR_OUT_OF_MEMORY
@@ -182,7 +192,13 @@ class _CUjitInputType_EnumMeta(enum.EnumMeta):
                 )()
                 return fake_enum
 
+
 class CUjitInputType(enum.IntEnum,metaclass=_CUjitInputType_EnumMeta):
+    @property
+    def __class__(self):
+        """Overwrite __class__ to satisfy __isinstance__ check.
+        """
+        return hip.hiprtc.hiprtcJITInputType
     CU_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     HIPRTC_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     CU_JIT_INPUT_PTX = hip.chiprtc.HIPRTC_JIT_INPUT_PTX
@@ -270,7 +286,13 @@ class _CUjitInputType_enum_EnumMeta(enum.EnumMeta):
                 )()
                 return fake_enum
 
+
 class CUjitInputType_enum(enum.IntEnum,metaclass=_CUjitInputType_enum_EnumMeta):
+    @property
+    def __class__(self):
+        """Overwrite __class__ to satisfy __isinstance__ check.
+        """
+        return hip.hiprtc.hiprtcJITInputType
     CU_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     HIPRTC_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     CU_JIT_INPUT_PTX = hip.chiprtc.HIPRTC_JIT_INPUT_PTX
@@ -289,5 +311,28 @@ class CUjitInputType_enum(enum.IntEnum,metaclass=_CUjitInputType_enum_EnumMeta):
     HIPRTC_JIT_INPUT_LLVM_BUNDLED_BITCODE = hip.chiprtc.HIPRTC_JIT_INPUT_LLVM_BUNDLED_BITCODE
     HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE = hip.chiprtc.HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE
     HIPRTC_JIT_NUM_INPUT_TYPES = hip.chiprtc.HIPRTC_JIT_NUM_INPUT_TYPES
+cdef class CUlinkState_st(hip.hiprtc.ihiprtcLinkState):
+    pass
 CUlinkState = hip.hiprtc.hiprtcLinkState
+nvrtcGetErrorString = hip.hiprtc.hiprtcGetErrorString
+nvrtcVersion = hip.hiprtc.hiprtcVersion
 nvrtcProgram = hip.hiprtc.hiprtcProgram
+nvrtcAddNameExpression = hip.hiprtc.hiprtcAddNameExpression
+nvrtcCompileProgram = hip.hiprtc.hiprtcCompileProgram
+nvrtcCreateProgram = hip.hiprtc.hiprtcCreateProgram
+nvrtcDestroyProgram = hip.hiprtc.hiprtcDestroyProgram
+nvrtcGetLoweredName = hip.hiprtc.hiprtcGetLoweredName
+nvrtcGetProgramLog = hip.hiprtc.hiprtcGetProgramLog
+nvrtcGetProgramLogSize = hip.hiprtc.hiprtcGetProgramLogSize
+nvrtcGetPTX = hip.hiprtc.hiprtcGetCode
+nvrtcGetPTXSize = hip.hiprtc.hiprtcGetCodeSize
+nvrtcGetCUBIN = hip.hiprtc.hiprtcGetBitcode
+nvrtcGetCUBINSize = hip.hiprtc.hiprtcGetBitcodeSize
+cuLinkCreate = hip.hiprtc.hiprtcLinkCreate
+cuLinkCreate_v2 = hip.hiprtc.hiprtcLinkCreate
+cuLinkAddFile = hip.hiprtc.hiprtcLinkAddFile
+cuLinkAddFile_v2 = hip.hiprtc.hiprtcLinkAddFile
+cuLinkAddData = hip.hiprtc.hiprtcLinkAddData
+cuLinkAddData_v2 = hip.hiprtc.hiprtcLinkAddData
+cuLinkComplete = hip.hiprtc.hiprtcLinkComplete
+cuLinkDestroy = hip.hiprtc.hiprtcLinkDestroy
