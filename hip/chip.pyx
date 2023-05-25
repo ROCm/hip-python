@@ -1,19 +1,26 @@
 # AMD_COPYRIGHT
-from libc.stdint cimport *
-
 cimport hip._util.posixloader as loader
+cdef void* _lib_handle = NULL
 
+cdef void __init() nogil:
+    global _lib_handle
+    if _lib_handle == NULL:
+        with gil:
+            _lib_handle = loader.open_library("libamdhip64.so")
 
-cdef void* _lib_handle = loader.open_library("libamdhip64.so")
+cdef void __init_symbol(void** result, const char* name) nogil:
+    global _lib_handle
+    if _lib_handle == NULL:
+        __init()
+    if result[0] == NULL:
+        with gil:
+            result[0] = loader.load_symbol(_lib_handle, name) 
 
 
 cdef void* _hipCreateChannelDesc__funptr = NULL
 cdef hipChannelFormatDesc hipCreateChannelDesc(int x,int y,int z,int w,hipChannelFormatKind f) nogil:
-    global _lib_handle
     global _hipCreateChannelDesc__funptr
-    if _hipCreateChannelDesc__funptr == NULL:
-        with gil:
-            _hipCreateChannelDesc__funptr = loader.load_symbol(_lib_handle, "hipCreateChannelDesc")
+    __init_symbol(&_hipCreateChannelDesc__funptr,"hipCreateChannelDesc")
     return (<hipChannelFormatDesc (*)(int,int,int,int,hipChannelFormatKind) nogil> _hipCreateChannelDesc__funptr)(x,y,z,w,f)
 
 
@@ -28,11 +35,8 @@ cdef void* _hipInit__funptr = NULL
 # Most HIP APIs implicitly initialize the HIP runtime.
 # This API provides control over the timing of the initialization.
 cdef hipError_t hipInit(unsigned int flags) nogil:
-    global _lib_handle
     global _hipInit__funptr
-    if _hipInit__funptr == NULL:
-        with gil:
-            _hipInit__funptr = loader.load_symbol(_lib_handle, "hipInit")
+    __init_symbol(&_hipInit__funptr,"hipInit")
     return (<hipError_t (*)(unsigned int) nogil> _hipInit__funptr)(flags)
 
 
@@ -47,11 +51,8 @@ cdef void* _hipDriverGetVersion__funptr = NULL
 # use arch feature flags to test device capabilities or conditional compilation.
 # @see hipRuntimeGetVersion
 cdef hipError_t hipDriverGetVersion(int * driverVersion) nogil:
-    global _lib_handle
     global _hipDriverGetVersion__funptr
-    if _hipDriverGetVersion__funptr == NULL:
-        with gil:
-            _hipDriverGetVersion__funptr = loader.load_symbol(_lib_handle, "hipDriverGetVersion")
+    __init_symbol(&_hipDriverGetVersion__funptr,"hipDriverGetVersion")
     return (<hipError_t (*)(int *) nogil> _hipDriverGetVersion__funptr)(driverVersion)
 
 
@@ -65,11 +66,8 @@ cdef void* _hipRuntimeGetVersion__funptr = NULL
 # And there is no mapping/correlation between HIP version and CUDA version.
 # @see hipDriverGetVersion
 cdef hipError_t hipRuntimeGetVersion(int * runtimeVersion) nogil:
-    global _lib_handle
     global _hipRuntimeGetVersion__funptr
-    if _hipRuntimeGetVersion__funptr == NULL:
-        with gil:
-            _hipRuntimeGetVersion__funptr = loader.load_symbol(_lib_handle, "hipRuntimeGetVersion")
+    __init_symbol(&_hipRuntimeGetVersion__funptr,"hipRuntimeGetVersion")
     return (<hipError_t (*)(int *) nogil> _hipRuntimeGetVersion__funptr)(runtimeVersion)
 
 
@@ -78,13 +76,10 @@ cdef void* _hipDeviceGet__funptr = NULL
 # @param [out] device
 # @param [in] ordinal
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceGet(hipDevice_t * device,int ordinal) nogil:
-    global _lib_handle
+cdef hipError_t hipDeviceGet(int * device,int ordinal) nogil:
     global _hipDeviceGet__funptr
-    if _hipDeviceGet__funptr == NULL:
-        with gil:
-            _hipDeviceGet__funptr = loader.load_symbol(_lib_handle, "hipDeviceGet")
-    return (<hipError_t (*)(hipDevice_t *,int) nogil> _hipDeviceGet__funptr)(device,ordinal)
+    __init_symbol(&_hipDeviceGet__funptr,"hipDeviceGet")
+    return (<hipError_t (*)(int *,int) nogil> _hipDeviceGet__funptr)(device,ordinal)
 
 
 cdef void* _hipDeviceComputeCapability__funptr = NULL
@@ -93,13 +88,10 @@ cdef void* _hipDeviceComputeCapability__funptr = NULL
 # @param [out] minor
 # @param [in] device
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceComputeCapability(int * major,int * minor,hipDevice_t device) nogil:
-    global _lib_handle
+cdef hipError_t hipDeviceComputeCapability(int * major,int * minor,int device) nogil:
     global _hipDeviceComputeCapability__funptr
-    if _hipDeviceComputeCapability__funptr == NULL:
-        with gil:
-            _hipDeviceComputeCapability__funptr = loader.load_symbol(_lib_handle, "hipDeviceComputeCapability")
-    return (<hipError_t (*)(int *,int *,hipDevice_t) nogil> _hipDeviceComputeCapability__funptr)(major,minor,device)
+    __init_symbol(&_hipDeviceComputeCapability__funptr,"hipDeviceComputeCapability")
+    return (<hipError_t (*)(int *,int *,int) nogil> _hipDeviceComputeCapability__funptr)(major,minor,device)
 
 
 cdef void* _hipDeviceGetName__funptr = NULL
@@ -108,13 +100,10 @@ cdef void* _hipDeviceGetName__funptr = NULL
 # @param [in] len
 # @param [in] device
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceGetName(char * name,int len,hipDevice_t device) nogil:
-    global _lib_handle
+cdef hipError_t hipDeviceGetName(char * name,int len,int device) nogil:
     global _hipDeviceGetName__funptr
-    if _hipDeviceGetName__funptr == NULL:
-        with gil:
-            _hipDeviceGetName__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetName")
-    return (<hipError_t (*)(char *,int,hipDevice_t) nogil> _hipDeviceGetName__funptr)(name,len,device)
+    __init_symbol(&_hipDeviceGetName__funptr,"hipDeviceGetName")
+    return (<hipError_t (*)(char *,int,int) nogil> _hipDeviceGetName__funptr)(name,len,device)
 
 
 cdef void* _hipDeviceGetUuid__funptr = NULL
@@ -125,13 +114,10 @@ cdef void* _hipDeviceGetUuid__funptr = NULL
 # it is still open to changes and may have outstanding issues.
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotInitialized,
 # #hipErrorDeinitialized
-cdef hipError_t hipDeviceGetUuid(hipUUID_t * uuid,hipDevice_t device) nogil:
-    global _lib_handle
+cdef hipError_t hipDeviceGetUuid(hipUUID_t * uuid,int device) nogil:
     global _hipDeviceGetUuid__funptr
-    if _hipDeviceGetUuid__funptr == NULL:
-        with gil:
-            _hipDeviceGetUuid__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetUuid")
-    return (<hipError_t (*)(hipUUID_t *,hipDevice_t) nogil> _hipDeviceGetUuid__funptr)(uuid,device)
+    __init_symbol(&_hipDeviceGetUuid__funptr,"hipDeviceGetUuid")
+    return (<hipError_t (*)(hipUUID_t *,int) nogil> _hipDeviceGetUuid__funptr)(uuid,device)
 
 
 cdef void* _hipDeviceGetP2PAttribute__funptr = NULL
@@ -142,11 +128,8 @@ cdef void* _hipDeviceGetP2PAttribute__funptr = NULL
 # @param [in] dstDevice
 # @returns #hipSuccess, #hipErrorInvalidDevice
 cdef hipError_t hipDeviceGetP2PAttribute(int * value,hipDeviceP2PAttr attr,int srcDevice,int dstDevice) nogil:
-    global _lib_handle
     global _hipDeviceGetP2PAttribute__funptr
-    if _hipDeviceGetP2PAttribute__funptr == NULL:
-        with gil:
-            _hipDeviceGetP2PAttribute__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetP2PAttribute")
+    __init_symbol(&_hipDeviceGetP2PAttribute__funptr,"hipDeviceGetP2PAttribute")
     return (<hipError_t (*)(int *,hipDeviceP2PAttr,int,int) nogil> _hipDeviceGetP2PAttribute__funptr)(value,attr,srcDevice,dstDevice)
 
 
@@ -157,11 +140,8 @@ cdef void* _hipDeviceGetPCIBusId__funptr = NULL
 # @param [in] device
 # @returns #hipSuccess, #hipErrorInvalidDevice
 cdef hipError_t hipDeviceGetPCIBusId(char * pciBusId,int len,int device) nogil:
-    global _lib_handle
     global _hipDeviceGetPCIBusId__funptr
-    if _hipDeviceGetPCIBusId__funptr == NULL:
-        with gil:
-            _hipDeviceGetPCIBusId__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetPCIBusId")
+    __init_symbol(&_hipDeviceGetPCIBusId__funptr,"hipDeviceGetPCIBusId")
     return (<hipError_t (*)(char *,int,int) nogil> _hipDeviceGetPCIBusId__funptr)(pciBusId,len,device)
 
 
@@ -171,11 +151,8 @@ cdef void* _hipDeviceGetByPCIBusId__funptr = NULL
 # @param [in] PCI Bus ID
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 cdef hipError_t hipDeviceGetByPCIBusId(int * device,const char * pciBusId) nogil:
-    global _lib_handle
     global _hipDeviceGetByPCIBusId__funptr
-    if _hipDeviceGetByPCIBusId__funptr == NULL:
-        with gil:
-            _hipDeviceGetByPCIBusId__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetByPCIBusId")
+    __init_symbol(&_hipDeviceGetByPCIBusId__funptr,"hipDeviceGetByPCIBusId")
     return (<hipError_t (*)(int *,const char *) nogil> _hipDeviceGetByPCIBusId__funptr)(device,pciBusId)
 
 
@@ -184,13 +161,10 @@ cdef void* _hipDeviceTotalMem__funptr = NULL
 # @param [out] bytes
 # @param [in] device
 # @returns #hipSuccess, #hipErrorInvalidDevice
-cdef hipError_t hipDeviceTotalMem(int * bytes,hipDevice_t device) nogil:
-    global _lib_handle
+cdef hipError_t hipDeviceTotalMem(unsigned long * bytes,int device) nogil:
     global _hipDeviceTotalMem__funptr
-    if _hipDeviceTotalMem__funptr == NULL:
-        with gil:
-            _hipDeviceTotalMem__funptr = loader.load_symbol(_lib_handle, "hipDeviceTotalMem")
-    return (<hipError_t (*)(int *,hipDevice_t) nogil> _hipDeviceTotalMem__funptr)(bytes,device)
+    __init_symbol(&_hipDeviceTotalMem__funptr,"hipDeviceTotalMem")
+    return (<hipError_t (*)(unsigned long *,int) nogil> _hipDeviceTotalMem__funptr)(bytes,device)
 
 
 cdef void* _hipDeviceSynchronize__funptr = NULL
@@ -204,11 +178,8 @@ cdef void* _hipDeviceSynchronize__funptr = NULL
 # @returns #hipSuccess
 # @see hipSetDevice, hipDeviceReset
 cdef hipError_t hipDeviceSynchronize() nogil:
-    global _lib_handle
     global _hipDeviceSynchronize__funptr
-    if _hipDeviceSynchronize__funptr == NULL:
-        with gil:
-            _hipDeviceSynchronize__funptr = loader.load_symbol(_lib_handle, "hipDeviceSynchronize")
+    __init_symbol(&_hipDeviceSynchronize__funptr,"hipDeviceSynchronize")
     return (<hipError_t (*)() nogil> _hipDeviceSynchronize__funptr)()
 
 
@@ -220,11 +191,8 @@ cdef void* _hipDeviceReset__funptr = NULL
 # @returns #hipSuccess
 # @see hipDeviceSynchronize
 cdef hipError_t hipDeviceReset() nogil:
-    global _lib_handle
     global _hipDeviceReset__funptr
-    if _hipDeviceReset__funptr == NULL:
-        with gil:
-            _hipDeviceReset__funptr = loader.load_symbol(_lib_handle, "hipDeviceReset")
+    __init_symbol(&_hipDeviceReset__funptr,"hipDeviceReset")
     return (<hipError_t (*)() nogil> _hipDeviceReset__funptr)()
 
 
@@ -251,11 +219,8 @@ cdef void* _hipSetDevice__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorDeviceAlreadyInUse
 # @see hipGetDevice, hipGetDeviceCount
 cdef hipError_t hipSetDevice(int deviceId) nogil:
-    global _lib_handle
     global _hipSetDevice__funptr
-    if _hipSetDevice__funptr == NULL:
-        with gil:
-            _hipSetDevice__funptr = loader.load_symbol(_lib_handle, "hipSetDevice")
+    __init_symbol(&_hipSetDevice__funptr,"hipSetDevice")
     return (<hipError_t (*)(int) nogil> _hipSetDevice__funptr)(deviceId)
 
 
@@ -268,11 +233,8 @@ cdef void* _hipGetDevice__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see hipSetDevice, hipGetDevicesizeBytes
 cdef hipError_t hipGetDevice(int * deviceId) nogil:
-    global _lib_handle
     global _hipGetDevice__funptr
-    if _hipGetDevice__funptr == NULL:
-        with gil:
-            _hipGetDevice__funptr = loader.load_symbol(_lib_handle, "hipGetDevice")
+    __init_symbol(&_hipGetDevice__funptr,"hipGetDevice")
     return (<hipError_t (*)(int *) nogil> _hipGetDevice__funptr)(deviceId)
 
 
@@ -284,11 +246,8 @@ cdef void* _hipGetDeviceCount__funptr = NULL
 # are no such devices, then @ref hipGetDeviceCount will return #hipErrorNoDevice. If 1 or more
 # devices can be found, then hipGetDeviceCount returns #hipSuccess.
 cdef hipError_t hipGetDeviceCount(int * count) nogil:
-    global _lib_handle
     global _hipGetDeviceCount__funptr
-    if _hipGetDeviceCount__funptr == NULL:
-        with gil:
-            _hipGetDeviceCount__funptr = loader.load_symbol(_lib_handle, "hipGetDeviceCount")
+    __init_symbol(&_hipGetDeviceCount__funptr,"hipGetDeviceCount")
     return (<hipError_t (*)(int *) nogil> _hipGetDeviceCount__funptr)(count)
 
 
@@ -299,11 +258,8 @@ cdef void* _hipDeviceGetAttribute__funptr = NULL
 # @param [in] deviceId which device to query for information
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 cdef hipError_t hipDeviceGetAttribute(int * pi,hipDeviceAttribute_t attr,int deviceId) nogil:
-    global _lib_handle
     global _hipDeviceGetAttribute__funptr
-    if _hipDeviceGetAttribute__funptr == NULL:
-        with gil:
-            _hipDeviceGetAttribute__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetAttribute")
+    __init_symbol(&_hipDeviceGetAttribute__funptr,"hipDeviceGetAttribute")
     return (<hipError_t (*)(int *,hipDeviceAttribute_t,int) nogil> _hipDeviceGetAttribute__funptr)(pi,attr,deviceId)
 
 
@@ -317,11 +273,8 @@ cdef void* _hipDeviceGetDefaultMemPool__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipDeviceGetDefaultMemPool(hipMemPool_t* mem_pool,int device) nogil:
-    global _lib_handle
     global _hipDeviceGetDefaultMemPool__funptr
-    if _hipDeviceGetDefaultMemPool__funptr == NULL:
-        with gil:
-            _hipDeviceGetDefaultMemPool__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetDefaultMemPool")
+    __init_symbol(&_hipDeviceGetDefaultMemPool__funptr,"hipDeviceGetDefaultMemPool")
     return (<hipError_t (*)(hipMemPool_t*,int) nogil> _hipDeviceGetDefaultMemPool__funptr)(mem_pool,device)
 
 
@@ -340,11 +293,8 @@ cdef void* _hipDeviceSetMemPool__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipDeviceSetMemPool(int device,hipMemPool_t mem_pool) nogil:
-    global _lib_handle
     global _hipDeviceSetMemPool__funptr
-    if _hipDeviceSetMemPool__funptr == NULL:
-        with gil:
-            _hipDeviceSetMemPool__funptr = loader.load_symbol(_lib_handle, "hipDeviceSetMemPool")
+    __init_symbol(&_hipDeviceSetMemPool__funptr,"hipDeviceSetMemPool")
     return (<hipError_t (*)(int,hipMemPool_t) nogil> _hipDeviceSetMemPool__funptr)(device,mem_pool)
 
 
@@ -362,11 +312,8 @@ cdef void* _hipDeviceGetMemPool__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipDeviceGetMemPool(hipMemPool_t* mem_pool,int device) nogil:
-    global _lib_handle
     global _hipDeviceGetMemPool__funptr
-    if _hipDeviceGetMemPool__funptr == NULL:
-        with gil:
-            _hipDeviceGetMemPool__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetMemPool")
+    __init_symbol(&_hipDeviceGetMemPool__funptr,"hipDeviceGetMemPool")
     return (<hipError_t (*)(hipMemPool_t*,int) nogil> _hipDeviceGetMemPool__funptr)(mem_pool,device)
 
 
@@ -380,11 +327,8 @@ cdef void* _hipGetDeviceProperties__funptr = NULL
 # @bug HCC always returns 0 for l2CacheSize
 # Populates hipGetDeviceProperties with information for the specified device.
 cdef hipError_t hipGetDeviceProperties(hipDeviceProp_t * prop,int deviceId) nogil:
-    global _lib_handle
     global _hipGetDeviceProperties__funptr
-    if _hipGetDeviceProperties__funptr == NULL:
-        with gil:
-            _hipGetDeviceProperties__funptr = loader.load_symbol(_lib_handle, "hipGetDeviceProperties")
+    __init_symbol(&_hipGetDeviceProperties__funptr,"hipGetDeviceProperties")
     return (<hipError_t (*)(hipDeviceProp_t *,int) nogil> _hipGetDeviceProperties__funptr)(prop,deviceId)
 
 
@@ -395,11 +339,8 @@ cdef void* _hipDeviceSetCacheConfig__funptr = NULL
 # Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
 # on those architectures.
 cdef hipError_t hipDeviceSetCacheConfig(hipFuncCache_t cacheConfig) nogil:
-    global _lib_handle
     global _hipDeviceSetCacheConfig__funptr
-    if _hipDeviceSetCacheConfig__funptr == NULL:
-        with gil:
-            _hipDeviceSetCacheConfig__funptr = loader.load_symbol(_lib_handle, "hipDeviceSetCacheConfig")
+    __init_symbol(&_hipDeviceSetCacheConfig__funptr,"hipDeviceSetCacheConfig")
     return (<hipError_t (*)(hipFuncCache_t) nogil> _hipDeviceSetCacheConfig__funptr)(cacheConfig)
 
 
@@ -410,11 +351,8 @@ cdef void* _hipDeviceGetCacheConfig__funptr = NULL
 # Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
 # on those architectures.
 cdef hipError_t hipDeviceGetCacheConfig(hipFuncCache_t * cacheConfig) nogil:
-    global _lib_handle
     global _hipDeviceGetCacheConfig__funptr
-    if _hipDeviceGetCacheConfig__funptr == NULL:
-        with gil:
-            _hipDeviceGetCacheConfig__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetCacheConfig")
+    __init_symbol(&_hipDeviceGetCacheConfig__funptr,"hipDeviceGetCacheConfig")
     return (<hipError_t (*)(hipFuncCache_t *) nogil> _hipDeviceGetCacheConfig__funptr)(cacheConfig)
 
 
@@ -424,13 +362,10 @@ cdef void* _hipDeviceGetLimit__funptr = NULL
 # @param [in]  limit
 # @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
 # Note: Currently, only hipLimitMallocHeapSize is available
-cdef hipError_t hipDeviceGetLimit(int * pValue,hipLimit_t limit) nogil:
-    global _lib_handle
+cdef hipError_t hipDeviceGetLimit(unsigned long * pValue,hipLimit_t limit) nogil:
     global _hipDeviceGetLimit__funptr
-    if _hipDeviceGetLimit__funptr == NULL:
-        with gil:
-            _hipDeviceGetLimit__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetLimit")
-    return (<hipError_t (*)(int *,hipLimit_t) nogil> _hipDeviceGetLimit__funptr)(pValue,limit)
+    __init_symbol(&_hipDeviceGetLimit__funptr,"hipDeviceGetLimit")
+    return (<hipError_t (*)(unsigned long *,hipLimit_t) nogil> _hipDeviceGetLimit__funptr)(pValue,limit)
 
 
 cdef void* _hipDeviceSetLimit__funptr = NULL
@@ -438,13 +373,10 @@ cdef void* _hipDeviceSetLimit__funptr = NULL
 # @param [in] limit
 # @param [in] value
 # @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
-cdef hipError_t hipDeviceSetLimit(hipLimit_t limit,int value) nogil:
-    global _lib_handle
+cdef hipError_t hipDeviceSetLimit(hipLimit_t limit,unsigned long value) nogil:
     global _hipDeviceSetLimit__funptr
-    if _hipDeviceSetLimit__funptr == NULL:
-        with gil:
-            _hipDeviceSetLimit__funptr = loader.load_symbol(_lib_handle, "hipDeviceSetLimit")
-    return (<hipError_t (*)(hipLimit_t,int) nogil> _hipDeviceSetLimit__funptr)(limit,value)
+    __init_symbol(&_hipDeviceSetLimit__funptr,"hipDeviceSetLimit")
+    return (<hipError_t (*)(hipLimit_t,unsigned long) nogil> _hipDeviceSetLimit__funptr)(limit,value)
 
 
 cdef void* _hipDeviceGetSharedMemConfig__funptr = NULL
@@ -454,11 +386,8 @@ cdef void* _hipDeviceGetSharedMemConfig__funptr = NULL
 # Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
 # ignored on those architectures.
 cdef hipError_t hipDeviceGetSharedMemConfig(hipSharedMemConfig * pConfig) nogil:
-    global _lib_handle
     global _hipDeviceGetSharedMemConfig__funptr
-    if _hipDeviceGetSharedMemConfig__funptr == NULL:
-        with gil:
-            _hipDeviceGetSharedMemConfig__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetSharedMemConfig")
+    __init_symbol(&_hipDeviceGetSharedMemConfig__funptr,"hipDeviceGetSharedMemConfig")
     return (<hipError_t (*)(hipSharedMemConfig *) nogil> _hipDeviceGetSharedMemConfig__funptr)(pConfig)
 
 
@@ -467,11 +396,8 @@ cdef void* _hipGetDeviceFlags__funptr = NULL
 # @param [out] flags
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 cdef hipError_t hipGetDeviceFlags(unsigned int * flags) nogil:
-    global _lib_handle
     global _hipGetDeviceFlags__funptr
-    if _hipGetDeviceFlags__funptr == NULL:
-        with gil:
-            _hipGetDeviceFlags__funptr = loader.load_symbol(_lib_handle, "hipGetDeviceFlags")
+    __init_symbol(&_hipGetDeviceFlags__funptr,"hipGetDeviceFlags")
     return (<hipError_t (*)(unsigned int *) nogil> _hipGetDeviceFlags__funptr)(flags)
 
 
@@ -482,11 +408,8 @@ cdef void* _hipDeviceSetSharedMemConfig__funptr = NULL
 # Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
 # ignored on those architectures.
 cdef hipError_t hipDeviceSetSharedMemConfig(hipSharedMemConfig config) nogil:
-    global _lib_handle
     global _hipDeviceSetSharedMemConfig__funptr
-    if _hipDeviceSetSharedMemConfig__funptr == NULL:
-        with gil:
-            _hipDeviceSetSharedMemConfig__funptr = loader.load_symbol(_lib_handle, "hipDeviceSetSharedMemConfig")
+    __init_symbol(&_hipDeviceSetSharedMemConfig__funptr,"hipDeviceSetSharedMemConfig")
     return (<hipError_t (*)(hipSharedMemConfig) nogil> _hipDeviceSetSharedMemConfig__funptr)(config)
 
 
@@ -507,11 +430,8 @@ cdef void* _hipSetDeviceFlags__funptr = NULL
 # the flag is ignored. hipDeviceLmemResizeToMax      : @warning ROCm silently ignores this flag.
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorSetOnActiveProcess
 cdef hipError_t hipSetDeviceFlags(unsigned int flags) nogil:
-    global _lib_handle
     global _hipSetDeviceFlags__funptr
-    if _hipSetDeviceFlags__funptr == NULL:
-        with gil:
-            _hipSetDeviceFlags__funptr = loader.load_symbol(_lib_handle, "hipSetDeviceFlags")
+    __init_symbol(&_hipSetDeviceFlags__funptr,"hipSetDeviceFlags")
     return (<hipError_t (*)(unsigned int) nogil> _hipSetDeviceFlags__funptr)(flags)
 
 
@@ -521,11 +441,8 @@ cdef void* _hipChooseDevice__funptr = NULL
 # @param [in]  device properties pointer
 # @returns #hipSuccess, #hipErrorInvalidValue
 cdef hipError_t hipChooseDevice(int * device,hipDeviceProp_t * prop) nogil:
-    global _lib_handle
     global _hipChooseDevice__funptr
-    if _hipChooseDevice__funptr == NULL:
-        with gil:
-            _hipChooseDevice__funptr = loader.load_symbol(_lib_handle, "hipChooseDevice")
+    __init_symbol(&_hipChooseDevice__funptr,"hipChooseDevice")
     return (<hipError_t (*)(int *,hipDeviceProp_t *) nogil> _hipChooseDevice__funptr)(device,prop)
 
 
@@ -537,13 +454,10 @@ cdef void* _hipExtGetLinkTypeAndHopCount__funptr = NULL
 # @param [out] hopcount Returns the hop count between the two devices
 # Queries and returns the HSA link type and the hop count between the two specified devices.
 # @returns #hipSuccess, #hipInvalidDevice, #hipErrorRuntimeOther
-cdef hipError_t hipExtGetLinkTypeAndHopCount(int device1,int device2,uint32_t * linktype,uint32_t * hopcount) nogil:
-    global _lib_handle
+cdef hipError_t hipExtGetLinkTypeAndHopCount(int device1,int device2,unsigned int * linktype,unsigned int * hopcount) nogil:
     global _hipExtGetLinkTypeAndHopCount__funptr
-    if _hipExtGetLinkTypeAndHopCount__funptr == NULL:
-        with gil:
-            _hipExtGetLinkTypeAndHopCount__funptr = loader.load_symbol(_lib_handle, "hipExtGetLinkTypeAndHopCount")
-    return (<hipError_t (*)(int,int,uint32_t *,uint32_t *) nogil> _hipExtGetLinkTypeAndHopCount__funptr)(device1,device2,linktype,hopcount)
+    __init_symbol(&_hipExtGetLinkTypeAndHopCount__funptr,"hipExtGetLinkTypeAndHopCount")
+    return (<hipError_t (*)(int,int,unsigned int *,unsigned int *) nogil> _hipExtGetLinkTypeAndHopCount__funptr)(device1,device2,linktype,hopcount)
 
 
 cdef void* _hipIpcGetMemHandle__funptr = NULL
@@ -566,11 +480,8 @@ cdef void* _hipIpcGetMemHandle__funptr = NULL
 # hipErrorOutOfMemory,
 # hipErrorMapFailed,
 cdef hipError_t hipIpcGetMemHandle(hipIpcMemHandle_st * handle,void * devPtr) nogil:
-    global _lib_handle
     global _hipIpcGetMemHandle__funptr
-    if _hipIpcGetMemHandle__funptr == NULL:
-        with gil:
-            _hipIpcGetMemHandle__funptr = loader.load_symbol(_lib_handle, "hipIpcGetMemHandle")
+    __init_symbol(&_hipIpcGetMemHandle__funptr,"hipIpcGetMemHandle")
     return (<hipError_t (*)(hipIpcMemHandle_st *,void *) nogil> _hipIpcGetMemHandle__funptr)(handle,devPtr)
 
 
@@ -603,11 +514,8 @@ cdef void* _hipIpcOpenMemHandle__funptr = NULL
 # there is no guarantee that the same device poiter will be returned in @p *devPtr.
 # This is diffrent from CUDA.
 cdef hipError_t hipIpcOpenMemHandle(void ** devPtr,hipIpcMemHandle_st handle,unsigned int flags) nogil:
-    global _lib_handle
     global _hipIpcOpenMemHandle__funptr
-    if _hipIpcOpenMemHandle__funptr == NULL:
-        with gil:
-            _hipIpcOpenMemHandle__funptr = loader.load_symbol(_lib_handle, "hipIpcOpenMemHandle")
+    __init_symbol(&_hipIpcOpenMemHandle__funptr,"hipIpcOpenMemHandle")
     return (<hipError_t (*)(void **,hipIpcMemHandle_st,unsigned int) nogil> _hipIpcOpenMemHandle__funptr)(devPtr,handle,flags)
 
 
@@ -624,11 +532,8 @@ cdef void* _hipIpcCloseMemHandle__funptr = NULL
 # hipErrorMapFailed,
 # hipErrorInvalidHandle,
 cdef hipError_t hipIpcCloseMemHandle(void * devPtr) nogil:
-    global _lib_handle
     global _hipIpcCloseMemHandle__funptr
-    if _hipIpcCloseMemHandle__funptr == NULL:
-        with gil:
-            _hipIpcCloseMemHandle__funptr = loader.load_symbol(_lib_handle, "hipIpcCloseMemHandle")
+    __init_symbol(&_hipIpcCloseMemHandle__funptr,"hipIpcCloseMemHandle")
     return (<hipError_t (*)(void *) nogil> _hipIpcCloseMemHandle__funptr)(devPtr)
 
 
@@ -642,11 +547,8 @@ cdef void* _hipIpcGetEventHandle__funptr = NULL
 # @param[in]   event  Event allocated with hipEventInterprocess and hipEventDisableTiming flags
 # @returns #hipSuccess, #hipErrorInvalidConfiguration, #hipErrorInvalidValue
 cdef hipError_t hipIpcGetEventHandle(hipIpcEventHandle_st * handle,hipEvent_t event) nogil:
-    global _lib_handle
     global _hipIpcGetEventHandle__funptr
-    if _hipIpcGetEventHandle__funptr == NULL:
-        with gil:
-            _hipIpcGetEventHandle__funptr = loader.load_symbol(_lib_handle, "hipIpcGetEventHandle")
+    __init_symbol(&_hipIpcGetEventHandle__funptr,"hipIpcGetEventHandle")
     return (<hipError_t (*)(hipIpcEventHandle_st *,hipEvent_t) nogil> _hipIpcGetEventHandle__funptr)(handle,event)
 
 
@@ -661,11 +563,8 @@ cdef void* _hipIpcOpenEventHandle__funptr = NULL
 # @param[in]   handle The opaque interprocess handle to open
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext
 cdef hipError_t hipIpcOpenEventHandle(hipEvent_t* event,hipIpcEventHandle_st handle) nogil:
-    global _lib_handle
     global _hipIpcOpenEventHandle__funptr
-    if _hipIpcOpenEventHandle__funptr == NULL:
-        with gil:
-            _hipIpcOpenEventHandle__funptr = loader.load_symbol(_lib_handle, "hipIpcOpenEventHandle")
+    __init_symbol(&_hipIpcOpenEventHandle__funptr,"hipIpcOpenEventHandle")
     return (<hipError_t (*)(hipEvent_t*,hipIpcEventHandle_st) nogil> _hipIpcOpenEventHandle__funptr)(event,handle)
 
 
@@ -682,11 +581,8 @@ cdef void* _hipFuncSetAttribute__funptr = NULL
 # Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
 # ignored on those architectures.
 cdef hipError_t hipFuncSetAttribute(const void * func,hipFuncAttribute attr,int value) nogil:
-    global _lib_handle
     global _hipFuncSetAttribute__funptr
-    if _hipFuncSetAttribute__funptr == NULL:
-        with gil:
-            _hipFuncSetAttribute__funptr = loader.load_symbol(_lib_handle, "hipFuncSetAttribute")
+    __init_symbol(&_hipFuncSetAttribute__funptr,"hipFuncSetAttribute")
     return (<hipError_t (*)(const void *,hipFuncAttribute,int) nogil> _hipFuncSetAttribute__funptr)(func,attr,value)
 
 
@@ -697,11 +593,8 @@ cdef void* _hipFuncSetCacheConfig__funptr = NULL
 # Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
 # on those architectures.
 cdef hipError_t hipFuncSetCacheConfig(const void * func,hipFuncCache_t config) nogil:
-    global _lib_handle
     global _hipFuncSetCacheConfig__funptr
-    if _hipFuncSetCacheConfig__funptr == NULL:
-        with gil:
-            _hipFuncSetCacheConfig__funptr = loader.load_symbol(_lib_handle, "hipFuncSetCacheConfig")
+    __init_symbol(&_hipFuncSetCacheConfig__funptr,"hipFuncSetCacheConfig")
     return (<hipError_t (*)(const void *,hipFuncCache_t) nogil> _hipFuncSetCacheConfig__funptr)(func,config)
 
 
@@ -713,11 +606,8 @@ cdef void* _hipFuncSetSharedMemConfig__funptr = NULL
 # Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
 # ignored on those architectures.
 cdef hipError_t hipFuncSetSharedMemConfig(const void * func,hipSharedMemConfig config) nogil:
-    global _lib_handle
     global _hipFuncSetSharedMemConfig__funptr
-    if _hipFuncSetSharedMemConfig__funptr == NULL:
-        with gil:
-            _hipFuncSetSharedMemConfig__funptr = loader.load_symbol(_lib_handle, "hipFuncSetSharedMemConfig")
+    __init_symbol(&_hipFuncSetSharedMemConfig__funptr,"hipFuncSetSharedMemConfig")
     return (<hipError_t (*)(const void *,hipSharedMemConfig) nogil> _hipFuncSetSharedMemConfig__funptr)(func,config)
 
 
@@ -735,11 +625,8 @@ cdef void* _hipGetLastError__funptr = NULL
 # thread, and then resets the saved error to #hipSuccess.
 # @see hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
 cdef hipError_t hipGetLastError() nogil:
-    global _lib_handle
     global _hipGetLastError__funptr
-    if _hipGetLastError__funptr == NULL:
-        with gil:
-            _hipGetLastError__funptr = loader.load_symbol(_lib_handle, "hipGetLastError")
+    __init_symbol(&_hipGetLastError__funptr,"hipGetLastError")
     return (<hipError_t (*)() nogil> _hipGetLastError__funptr)()
 
 
@@ -750,11 +637,8 @@ cdef void* _hipPeekAtLastError__funptr = NULL
 # thread. Unlike hipGetLastError, this function does not reset the saved error code.
 # @see hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
 cdef hipError_t hipPeekAtLastError() nogil:
-    global _lib_handle
     global _hipPeekAtLastError__funptr
-    if _hipPeekAtLastError__funptr == NULL:
-        with gil:
-            _hipPeekAtLastError__funptr = loader.load_symbol(_lib_handle, "hipPeekAtLastError")
+    __init_symbol(&_hipPeekAtLastError__funptr,"hipPeekAtLastError")
     return (<hipError_t (*)() nogil> _hipPeekAtLastError__funptr)()
 
 
@@ -764,11 +648,8 @@ cdef void* _hipGetErrorName__funptr = NULL
 # @return const char pointer to the NULL-terminated error name
 # @see hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
 cdef const char * hipGetErrorName(hipError_t hip_error) nogil:
-    global _lib_handle
     global _hipGetErrorName__funptr
-    if _hipGetErrorName__funptr == NULL:
-        with gil:
-            _hipGetErrorName__funptr = loader.load_symbol(_lib_handle, "hipGetErrorName")
+    __init_symbol(&_hipGetErrorName__funptr,"hipGetErrorName")
     return (<const char * (*)(hipError_t) nogil> _hipGetErrorName__funptr)(hip_error)
 
 
@@ -778,11 +659,8 @@ cdef void* _hipGetErrorString__funptr = NULL
 # @return const char pointer to the NULL-terminated error string
 # @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
 cdef const char * hipGetErrorString(hipError_t hipError) nogil:
-    global _lib_handle
     global _hipGetErrorString__funptr
-    if _hipGetErrorString__funptr == NULL:
-        with gil:
-            _hipGetErrorString__funptr = loader.load_symbol(_lib_handle, "hipGetErrorString")
+    __init_symbol(&_hipGetErrorString__funptr,"hipGetErrorString")
     return (<const char * (*)(hipError_t) nogil> _hipGetErrorString__funptr)(hipError)
 
 
@@ -793,11 +671,8 @@ cdef void* _hipDrvGetErrorName__funptr = NULL
 # @return #hipSuccess, #hipErrorInvalidValue
 # @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
 cdef hipError_t hipDrvGetErrorName(hipError_t hipError,const char ** errorString) nogil:
-    global _lib_handle
     global _hipDrvGetErrorName__funptr
-    if _hipDrvGetErrorName__funptr == NULL:
-        with gil:
-            _hipDrvGetErrorName__funptr = loader.load_symbol(_lib_handle, "hipDrvGetErrorName")
+    __init_symbol(&_hipDrvGetErrorName__funptr,"hipDrvGetErrorName")
     return (<hipError_t (*)(hipError_t,const char **) nogil> _hipDrvGetErrorName__funptr)(hipError,errorString)
 
 
@@ -808,11 +683,8 @@ cdef void* _hipDrvGetErrorString__funptr = NULL
 # @return #hipSuccess, #hipErrorInvalidValue
 # @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
 cdef hipError_t hipDrvGetErrorString(hipError_t hipError,const char ** errorString) nogil:
-    global _lib_handle
     global _hipDrvGetErrorString__funptr
-    if _hipDrvGetErrorString__funptr == NULL:
-        with gil:
-            _hipDrvGetErrorString__funptr = loader.load_symbol(_lib_handle, "hipDrvGetErrorString")
+    __init_symbol(&_hipDrvGetErrorString__funptr,"hipDrvGetErrorString")
     return (<hipError_t (*)(hipError_t,const char **) nogil> _hipDrvGetErrorString__funptr)(hipError,errorString)
 
 
@@ -828,11 +700,8 @@ cdef void* _hipStreamCreate__funptr = NULL
 # @return #hipSuccess, #hipErrorInvalidValue
 # @see hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 cdef hipError_t hipStreamCreate(hipStream_t* stream) nogil:
-    global _lib_handle
     global _hipStreamCreate__funptr
-    if _hipStreamCreate__funptr == NULL:
-        with gil:
-            _hipStreamCreate__funptr = loader.load_symbol(_lib_handle, "hipStreamCreate")
+    __init_symbol(&_hipStreamCreate__funptr,"hipStreamCreate")
     return (<hipError_t (*)(hipStream_t*) nogil> _hipStreamCreate__funptr)(stream)
 
 
@@ -848,11 +717,8 @@ cdef void* _hipStreamCreateWithFlags__funptr = NULL
 # stream.  See #hipStreamDefault, #hipStreamNonBlocking.
 # @see hipStreamCreate, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 cdef hipError_t hipStreamCreateWithFlags(hipStream_t* stream,unsigned int flags) nogil:
-    global _lib_handle
     global _hipStreamCreateWithFlags__funptr
-    if _hipStreamCreateWithFlags__funptr == NULL:
-        with gil:
-            _hipStreamCreateWithFlags__funptr = loader.load_symbol(_lib_handle, "hipStreamCreateWithFlags")
+    __init_symbol(&_hipStreamCreateWithFlags__funptr,"hipStreamCreateWithFlags")
     return (<hipError_t (*)(hipStream_t*,unsigned int) nogil> _hipStreamCreateWithFlags__funptr)(stream,flags)
 
 
@@ -869,11 +735,8 @@ cdef void* _hipStreamCreateWithPriority__funptr = NULL
 # behavior of the stream.  See #hipStreamDefault, #hipStreamNonBlocking.
 # @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 cdef hipError_t hipStreamCreateWithPriority(hipStream_t* stream,unsigned int flags,int priority) nogil:
-    global _lib_handle
     global _hipStreamCreateWithPriority__funptr
-    if _hipStreamCreateWithPriority__funptr == NULL:
-        with gil:
-            _hipStreamCreateWithPriority__funptr = loader.load_symbol(_lib_handle, "hipStreamCreateWithPriority")
+    __init_symbol(&_hipStreamCreateWithPriority__funptr,"hipStreamCreateWithPriority")
     return (<hipError_t (*)(hipStream_t*,unsigned int,int) nogil> _hipStreamCreateWithPriority__funptr)(stream,flags,priority)
 
 
@@ -888,11 +751,8 @@ cdef void* _hipDeviceGetStreamPriorityRange__funptr = NULL
 # that is outside the the meaningful range as specified by this API, the priority is automatically
 # clamped to within the valid range.
 cdef hipError_t hipDeviceGetStreamPriorityRange(int * leastPriority,int * greatestPriority) nogil:
-    global _lib_handle
     global _hipDeviceGetStreamPriorityRange__funptr
-    if _hipDeviceGetStreamPriorityRange__funptr == NULL:
-        with gil:
-            _hipDeviceGetStreamPriorityRange__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetStreamPriorityRange")
+    __init_symbol(&_hipDeviceGetStreamPriorityRange__funptr,"hipDeviceGetStreamPriorityRange")
     return (<hipError_t (*)(int *,int *) nogil> _hipDeviceGetStreamPriorityRange__funptr)(leastPriority,greatestPriority)
 
 
@@ -909,11 +769,8 @@ cdef void* _hipStreamDestroy__funptr = NULL
 # @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamQuery, hipStreamWaitEvent,
 # hipStreamSynchronize
 cdef hipError_t hipStreamDestroy(hipStream_t stream) nogil:
-    global _lib_handle
     global _hipStreamDestroy__funptr
-    if _hipStreamDestroy__funptr == NULL:
-        with gil:
-            _hipStreamDestroy__funptr = loader.load_symbol(_lib_handle, "hipStreamDestroy")
+    __init_symbol(&_hipStreamDestroy__funptr,"hipStreamDestroy")
     return (<hipError_t (*)(hipStream_t) nogil> _hipStreamDestroy__funptr)(stream)
 
 
@@ -928,11 +785,8 @@ cdef void* _hipStreamQuery__funptr = NULL
 # @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamSynchronize,
 # hipStreamDestroy
 cdef hipError_t hipStreamQuery(hipStream_t stream) nogil:
-    global _lib_handle
     global _hipStreamQuery__funptr
-    if _hipStreamQuery__funptr == NULL:
-        with gil:
-            _hipStreamQuery__funptr = loader.load_symbol(_lib_handle, "hipStreamQuery")
+    __init_symbol(&_hipStreamQuery__funptr,"hipStreamQuery")
     return (<hipError_t (*)(hipStream_t) nogil> _hipStreamQuery__funptr)(stream)
 
 
@@ -948,11 +802,8 @@ cdef void* _hipStreamSynchronize__funptr = NULL
 # or blocking.
 # @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamDestroy
 cdef hipError_t hipStreamSynchronize(hipStream_t stream) nogil:
-    global _lib_handle
     global _hipStreamSynchronize__funptr
-    if _hipStreamSynchronize__funptr == NULL:
-        with gil:
-            _hipStreamSynchronize__funptr = loader.load_symbol(_lib_handle, "hipStreamSynchronize")
+    __init_symbol(&_hipStreamSynchronize__funptr,"hipStreamSynchronize")
     return (<hipError_t (*)(hipStream_t) nogil> _hipStreamSynchronize__funptr)(stream)
 
 
@@ -970,11 +821,8 @@ cdef void* _hipStreamWaitEvent__funptr = NULL
 # stream is created with hipStreamNonBlocking = 0.
 # @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamDestroy
 cdef hipError_t hipStreamWaitEvent(hipStream_t stream,hipEvent_t event,unsigned int flags) nogil:
-    global _lib_handle
     global _hipStreamWaitEvent__funptr
-    if _hipStreamWaitEvent__funptr == NULL:
-        with gil:
-            _hipStreamWaitEvent__funptr = loader.load_symbol(_lib_handle, "hipStreamWaitEvent")
+    __init_symbol(&_hipStreamWaitEvent__funptr,"hipStreamWaitEvent")
     return (<hipError_t (*)(hipStream_t,hipEvent_t,unsigned int) nogil> _hipStreamWaitEvent__funptr)(stream,event,flags)
 
 
@@ -987,11 +835,8 @@ cdef void* _hipStreamGetFlags__funptr = NULL
 # Return flags associated with this stream in *@p flags.
 # @see hipStreamCreateWithFlags
 cdef hipError_t hipStreamGetFlags(hipStream_t stream,unsigned int * flags) nogil:
-    global _lib_handle
     global _hipStreamGetFlags__funptr
-    if _hipStreamGetFlags__funptr == NULL:
-        with gil:
-            _hipStreamGetFlags__funptr = loader.load_symbol(_lib_handle, "hipStreamGetFlags")
+    __init_symbol(&_hipStreamGetFlags__funptr,"hipStreamGetFlags")
     return (<hipError_t (*)(hipStream_t,unsigned int *) nogil> _hipStreamGetFlags__funptr)(stream,flags)
 
 
@@ -1004,11 +849,8 @@ cdef void* _hipStreamGetPriority__funptr = NULL
 # Query the priority of a stream. The priority is returned in in priority.
 # @see hipStreamCreateWithFlags
 cdef hipError_t hipStreamGetPriority(hipStream_t stream,int * priority) nogil:
-    global _lib_handle
     global _hipStreamGetPriority__funptr
-    if _hipStreamGetPriority__funptr == NULL:
-        with gil:
-            _hipStreamGetPriority__funptr = loader.load_symbol(_lib_handle, "hipStreamGetPriority")
+    __init_symbol(&_hipStreamGetPriority__funptr,"hipStreamGetPriority")
     return (<hipError_t (*)(hipStream_t,int *) nogil> _hipStreamGetPriority__funptr)(stream,priority)
 
 
@@ -1026,13 +868,10 @@ cdef void* _hipExtStreamCreateWithCUMask__funptr = NULL
 # stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
 # To release the memory used by the stream, application must call hipStreamDestroy.
 # @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-cdef hipError_t hipExtStreamCreateWithCUMask(hipStream_t* stream,uint32_t cuMaskSize,uint32_t * cuMask) nogil:
-    global _lib_handle
+cdef hipError_t hipExtStreamCreateWithCUMask(hipStream_t* stream,unsigned int cuMaskSize,const unsigned int * cuMask) nogil:
     global _hipExtStreamCreateWithCUMask__funptr
-    if _hipExtStreamCreateWithCUMask__funptr == NULL:
-        with gil:
-            _hipExtStreamCreateWithCUMask__funptr = loader.load_symbol(_lib_handle, "hipExtStreamCreateWithCUMask")
-    return (<hipError_t (*)(hipStream_t*,uint32_t,uint32_t *) nogil> _hipExtStreamCreateWithCUMask__funptr)(stream,cuMaskSize,cuMask)
+    __init_symbol(&_hipExtStreamCreateWithCUMask__funptr,"hipExtStreamCreateWithCUMask")
+    return (<hipError_t (*)(hipStream_t*,unsigned int,const unsigned int *) nogil> _hipExtStreamCreateWithCUMask__funptr)(stream,cuMaskSize,cuMask)
 
 
 cdef void* _hipExtStreamGetCUMask__funptr = NULL
@@ -1044,13 +883,10 @@ cdef void* _hipExtStreamGetCUMask__funptr = NULL
 # each active bit represents one active CU
 # @return #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
 # @see hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-cdef hipError_t hipExtStreamGetCUMask(hipStream_t stream,uint32_t cuMaskSize,uint32_t * cuMask) nogil:
-    global _lib_handle
+cdef hipError_t hipExtStreamGetCUMask(hipStream_t stream,unsigned int cuMaskSize,unsigned int * cuMask) nogil:
     global _hipExtStreamGetCUMask__funptr
-    if _hipExtStreamGetCUMask__funptr == NULL:
-        with gil:
-            _hipExtStreamGetCUMask__funptr = loader.load_symbol(_lib_handle, "hipExtStreamGetCUMask")
-    return (<hipError_t (*)(hipStream_t,uint32_t,uint32_t *) nogil> _hipExtStreamGetCUMask__funptr)(stream,cuMaskSize,cuMask)
+    __init_symbol(&_hipExtStreamGetCUMask__funptr,"hipExtStreamGetCUMask")
+    return (<hipError_t (*)(hipStream_t,unsigned int,unsigned int *) nogil> _hipExtStreamGetCUMask__funptr)(stream,cuMaskSize,cuMask)
 
 
 cdef void* _hipStreamAddCallback__funptr = NULL
@@ -1065,13 +901,10 @@ cdef void* _hipStreamAddCallback__funptr = NULL
 # @return #hipSuccess, #hipErrorInvalidHandle, #hipErrorNotSupported
 # @see hipStreamCreate, hipStreamCreateWithFlags, hipStreamQuery, hipStreamSynchronize,
 # hipStreamWaitEvent, hipStreamDestroy, hipStreamCreateWithPriority
-cdef hipError_t hipStreamAddCallback(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipStreamAddCallback(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags):
     global _hipStreamAddCallback__funptr
-    if _hipStreamAddCallback__funptr == NULL:
-        with gil:
-            _hipStreamAddCallback__funptr = loader.load_symbol(_lib_handle, "hipStreamAddCallback")
-    return (<hipError_t (*)(hipStream_t,hipStreamCallback_t,void *,unsigned int) nogil> _hipStreamAddCallback__funptr)(stream,callback,userData,flags)
+    __init_symbol(&_hipStreamAddCallback__funptr,"hipStreamAddCallback")
+    return (<hipError_t (*)(hipStream_t,hipStreamCallback_t,void *,unsigned int)> _hipStreamAddCallback__funptr)(stream,callback,userData,flags)
 
 
 cdef void* _hipStreamWaitValue32__funptr = NULL
@@ -1103,13 +936,10 @@ cdef void* _hipStreamWaitValue32__funptr = NULL
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWaitValue64, hipStreamWriteValue64,
 # hipStreamWriteValue32, hipDeviceGetAttribute
-cdef hipError_t hipStreamWaitValue32(hipStream_t stream,void * ptr,uint32_t value,unsigned int flags,uint32_t mask) nogil:
-    global _lib_handle
+cdef hipError_t hipStreamWaitValue32(hipStream_t stream,void * ptr,unsigned int value,unsigned int flags,unsigned int mask) nogil:
     global _hipStreamWaitValue32__funptr
-    if _hipStreamWaitValue32__funptr == NULL:
-        with gil:
-            _hipStreamWaitValue32__funptr = loader.load_symbol(_lib_handle, "hipStreamWaitValue32")
-    return (<hipError_t (*)(hipStream_t,void *,uint32_t,unsigned int,uint32_t) nogil> _hipStreamWaitValue32__funptr)(stream,ptr,value,flags,mask)
+    __init_symbol(&_hipStreamWaitValue32__funptr,"hipStreamWaitValue32")
+    return (<hipError_t (*)(hipStream_t,void *,unsigned int,unsigned int,unsigned int) nogil> _hipStreamWaitValue32__funptr)(stream,ptr,value,flags,mask)
 
 
 cdef void* _hipStreamWaitValue64__funptr = NULL
@@ -1135,13 +965,10 @@ cdef void* _hipStreamWaitValue64__funptr = NULL
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWaitValue32, hipStreamWriteValue64,
 # hipStreamWriteValue32, hipDeviceGetAttribute
-cdef hipError_t hipStreamWaitValue64(hipStream_t stream,void * ptr,uint64_t value,unsigned int flags,uint64_t mask) nogil:
-    global _lib_handle
+cdef hipError_t hipStreamWaitValue64(hipStream_t stream,void * ptr,unsigned long value,unsigned int flags,unsigned long mask) nogil:
     global _hipStreamWaitValue64__funptr
-    if _hipStreamWaitValue64__funptr == NULL:
-        with gil:
-            _hipStreamWaitValue64__funptr = loader.load_symbol(_lib_handle, "hipStreamWaitValue64")
-    return (<hipError_t (*)(hipStream_t,void *,uint64_t,unsigned int,uint64_t) nogil> _hipStreamWaitValue64__funptr)(stream,ptr,value,flags,mask)
+    __init_symbol(&_hipStreamWaitValue64__funptr,"hipStreamWaitValue64")
+    return (<hipError_t (*)(hipStream_t,void *,unsigned long,unsigned int,unsigned long) nogil> _hipStreamWaitValue64__funptr)(stream,ptr,value,flags,mask)
 
 
 cdef void* _hipStreamWriteValue32__funptr = NULL
@@ -1157,13 +984,10 @@ cdef void* _hipStreamWriteValue32__funptr = NULL
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
 # hipStreamWaitValue64
-cdef hipError_t hipStreamWriteValue32(hipStream_t stream,void * ptr,uint32_t value,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipStreamWriteValue32(hipStream_t stream,void * ptr,unsigned int value,unsigned int flags) nogil:
     global _hipStreamWriteValue32__funptr
-    if _hipStreamWriteValue32__funptr == NULL:
-        with gil:
-            _hipStreamWriteValue32__funptr = loader.load_symbol(_lib_handle, "hipStreamWriteValue32")
-    return (<hipError_t (*)(hipStream_t,void *,uint32_t,unsigned int) nogil> _hipStreamWriteValue32__funptr)(stream,ptr,value,flags)
+    __init_symbol(&_hipStreamWriteValue32__funptr,"hipStreamWriteValue32")
+    return (<hipError_t (*)(hipStream_t,void *,unsigned int,unsigned int) nogil> _hipStreamWriteValue32__funptr)(stream,ptr,value,flags)
 
 
 cdef void* _hipStreamWriteValue64__funptr = NULL
@@ -1179,13 +1003,10 @@ cdef void* _hipStreamWriteValue64__funptr = NULL
 # it is still open to changes and may have outstanding issues.
 # @see hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
 # hipStreamWaitValue64
-cdef hipError_t hipStreamWriteValue64(hipStream_t stream,void * ptr,uint64_t value,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipStreamWriteValue64(hipStream_t stream,void * ptr,unsigned long value,unsigned int flags) nogil:
     global _hipStreamWriteValue64__funptr
-    if _hipStreamWriteValue64__funptr == NULL:
-        with gil:
-            _hipStreamWriteValue64__funptr = loader.load_symbol(_lib_handle, "hipStreamWriteValue64")
-    return (<hipError_t (*)(hipStream_t,void *,uint64_t,unsigned int) nogil> _hipStreamWriteValue64__funptr)(stream,ptr,value,flags)
+    __init_symbol(&_hipStreamWriteValue64__funptr,"hipStreamWriteValue64")
+    return (<hipError_t (*)(hipStream_t,void *,unsigned long,unsigned int) nogil> _hipStreamWriteValue64__funptr)(stream,ptr,value,flags)
 
 
 cdef void* _hipEventCreateWithFlags__funptr = NULL
@@ -1213,11 +1034,8 @@ cdef void* _hipEventCreateWithFlags__funptr = NULL
 #  #hipErrorLaunchFailure, #hipErrorOutOfMemory
 # @see hipEventCreate, hipEventSynchronize, hipEventDestroy, hipEventElapsedTime
 cdef hipError_t hipEventCreateWithFlags(hipEvent_t* event,unsigned int flags) nogil:
-    global _lib_handle
     global _hipEventCreateWithFlags__funptr
-    if _hipEventCreateWithFlags__funptr == NULL:
-        with gil:
-            _hipEventCreateWithFlags__funptr = loader.load_symbol(_lib_handle, "hipEventCreateWithFlags")
+    __init_symbol(&_hipEventCreateWithFlags__funptr,"hipEventCreateWithFlags")
     return (<hipError_t (*)(hipEvent_t*,unsigned int) nogil> _hipEventCreateWithFlags__funptr)(event,flags)
 
 
@@ -1229,21 +1047,15 @@ cdef void* _hipEventCreate__funptr = NULL
 # @see hipEventCreateWithFlags, hipEventRecord, hipEventQuery, hipEventSynchronize,
 # hipEventDestroy, hipEventElapsedTime
 cdef hipError_t hipEventCreate(hipEvent_t* event) nogil:
-    global _lib_handle
     global _hipEventCreate__funptr
-    if _hipEventCreate__funptr == NULL:
-        with gil:
-            _hipEventCreate__funptr = loader.load_symbol(_lib_handle, "hipEventCreate")
+    __init_symbol(&_hipEventCreate__funptr,"hipEventCreate")
     return (<hipError_t (*)(hipEvent_t*) nogil> _hipEventCreate__funptr)(event)
 
 
 cdef void* _hipEventRecord__funptr = NULL
 cdef hipError_t hipEventRecord(hipEvent_t event,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipEventRecord__funptr
-    if _hipEventRecord__funptr == NULL:
-        with gil:
-            _hipEventRecord__funptr = loader.load_symbol(_lib_handle, "hipEventRecord")
+    __init_symbol(&_hipEventRecord__funptr,"hipEventRecord")
     return (<hipError_t (*)(hipEvent_t,hipStream_t) nogil> _hipEventRecord__funptr)(event,stream)
 
 
@@ -1259,11 +1071,8 @@ cdef void* _hipEventDestroy__funptr = NULL
 # hipEventElapsedTime
 # @returns #hipSuccess
 cdef hipError_t hipEventDestroy(hipEvent_t event) nogil:
-    global _lib_handle
     global _hipEventDestroy__funptr
-    if _hipEventDestroy__funptr == NULL:
-        with gil:
-            _hipEventDestroy__funptr = loader.load_symbol(_lib_handle, "hipEventDestroy")
+    __init_symbol(&_hipEventDestroy__funptr,"hipEventDestroy")
     return (<hipError_t (*)(hipEvent_t) nogil> _hipEventDestroy__funptr)(event)
 
 
@@ -1279,11 +1088,8 @@ cdef void* _hipEventSynchronize__funptr = NULL
 # @see hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
 # hipEventElapsedTime
 cdef hipError_t hipEventSynchronize(hipEvent_t event) nogil:
-    global _lib_handle
     global _hipEventSynchronize__funptr
-    if _hipEventSynchronize__funptr == NULL:
-        with gil:
-            _hipEventSynchronize__funptr = loader.load_symbol(_lib_handle, "hipEventSynchronize")
+    __init_symbol(&_hipEventSynchronize__funptr,"hipEventSynchronize")
     return (<hipError_t (*)(hipEvent_t) nogil> _hipEventSynchronize__funptr)(event)
 
 
@@ -1309,11 +1115,8 @@ cdef void* _hipEventElapsedTime__funptr = NULL
 # @see hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
 # hipEventSynchronize
 cdef hipError_t hipEventElapsedTime(float * ms,hipEvent_t start,hipEvent_t stop) nogil:
-    global _lib_handle
     global _hipEventElapsedTime__funptr
-    if _hipEventElapsedTime__funptr == NULL:
-        with gil:
-            _hipEventElapsedTime__funptr = loader.load_symbol(_lib_handle, "hipEventElapsedTime")
+    __init_symbol(&_hipEventElapsedTime__funptr,"hipEventElapsedTime")
     return (<hipError_t (*)(float *,hipEvent_t,hipEvent_t) nogil> _hipEventElapsedTime__funptr)(ms,start,stop)
 
 
@@ -1329,11 +1132,8 @@ cdef void* _hipEventQuery__funptr = NULL
 # @see hipEventCreate, hipEventCreateWithFlags, hipEventRecord, hipEventDestroy,
 # hipEventSynchronize, hipEventElapsedTime
 cdef hipError_t hipEventQuery(hipEvent_t event) nogil:
-    global _lib_handle
     global _hipEventQuery__funptr
-    if _hipEventQuery__funptr == NULL:
-        with gil:
-            _hipEventQuery__funptr = loader.load_symbol(_lib_handle, "hipEventQuery")
+    __init_symbol(&_hipEventQuery__funptr,"hipEventQuery")
     return (<hipError_t (*)(hipEvent_t) nogil> _hipEventQuery__funptr)(event)
 
 
@@ -1354,11 +1154,8 @@ cdef void* _hipPointerGetAttributes__funptr = NULL
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see hipPointerGetAttribute
 cdef hipError_t hipPointerGetAttributes(hipPointerAttribute_t * attributes,const void * ptr) nogil:
-    global _lib_handle
     global _hipPointerGetAttributes__funptr
-    if _hipPointerGetAttributes__funptr == NULL:
-        with gil:
-            _hipPointerGetAttributes__funptr = loader.load_symbol(_lib_handle, "hipPointerGetAttributes")
+    __init_symbol(&_hipPointerGetAttributes__funptr,"hipPointerGetAttributes")
     return (<hipError_t (*)(hipPointerAttribute_t *,const void *) nogil> _hipPointerGetAttributes__funptr)(attributes,ptr)
 
 
@@ -1371,13 +1168,10 @@ cdef void* _hipPointerGetAttribute__funptr = NULL
 # @beta This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 # @see hipPointerGetAttributes
-cdef hipError_t hipPointerGetAttribute(void * data,hipPointer_attribute attribute,hipDeviceptr_t ptr) nogil:
-    global _lib_handle
+cdef hipError_t hipPointerGetAttribute(void * data,hipPointer_attribute attribute,void * ptr) nogil:
     global _hipPointerGetAttribute__funptr
-    if _hipPointerGetAttribute__funptr == NULL:
-        with gil:
-            _hipPointerGetAttribute__funptr = loader.load_symbol(_lib_handle, "hipPointerGetAttribute")
-    return (<hipError_t (*)(void *,hipPointer_attribute,hipDeviceptr_t) nogil> _hipPointerGetAttribute__funptr)(data,attribute,ptr)
+    __init_symbol(&_hipPointerGetAttribute__funptr,"hipPointerGetAttribute")
+    return (<hipError_t (*)(void *,hipPointer_attribute,void *) nogil> _hipPointerGetAttribute__funptr)(data,attribute,ptr)
 
 
 cdef void* _hipDrvPointerGetAttributes__funptr = NULL
@@ -1391,13 +1185,10 @@ cdef void* _hipDrvPointerGetAttributes__funptr = NULL
 # @beta This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 # @see hipPointerGetAttribute
-cdef hipError_t hipDrvPointerGetAttributes(unsigned int numAttributes,hipPointer_attribute * attributes,void ** data,hipDeviceptr_t ptr) nogil:
-    global _lib_handle
+cdef hipError_t hipDrvPointerGetAttributes(unsigned int numAttributes,hipPointer_attribute * attributes,void ** data,void * ptr) nogil:
     global _hipDrvPointerGetAttributes__funptr
-    if _hipDrvPointerGetAttributes__funptr == NULL:
-        with gil:
-            _hipDrvPointerGetAttributes__funptr = loader.load_symbol(_lib_handle, "hipDrvPointerGetAttributes")
-    return (<hipError_t (*)(unsigned int,hipPointer_attribute *,void **,hipDeviceptr_t) nogil> _hipDrvPointerGetAttributes__funptr)(numAttributes,attributes,data,ptr)
+    __init_symbol(&_hipDrvPointerGetAttributes__funptr,"hipDrvPointerGetAttributes")
+    return (<hipError_t (*)(unsigned int,hipPointer_attribute *,void **,void *) nogil> _hipDrvPointerGetAttributes__funptr)(numAttributes,attributes,data,ptr)
 
 
 cdef void* _hipImportExternalSemaphore__funptr = NULL
@@ -1406,13 +1197,10 @@ cdef void* _hipImportExternalSemaphore__funptr = NULL
 # @param[in] semHandleDesc Semaphore import handle descriptor
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipImportExternalSemaphore(hipExternalSemaphore_t* extSem_out,hipExternalSemaphoreHandleDesc_st * semHandleDesc) nogil:
-    global _lib_handle
+cdef hipError_t hipImportExternalSemaphore(void ** extSem_out,hipExternalSemaphoreHandleDesc_st * semHandleDesc) nogil:
     global _hipImportExternalSemaphore__funptr
-    if _hipImportExternalSemaphore__funptr == NULL:
-        with gil:
-            _hipImportExternalSemaphore__funptr = loader.load_symbol(_lib_handle, "hipImportExternalSemaphore")
-    return (<hipError_t (*)(hipExternalSemaphore_t*,hipExternalSemaphoreHandleDesc_st *) nogil> _hipImportExternalSemaphore__funptr)(extSem_out,semHandleDesc)
+    __init_symbol(&_hipImportExternalSemaphore__funptr,"hipImportExternalSemaphore")
+    return (<hipError_t (*)(void **,hipExternalSemaphoreHandleDesc_st *) nogil> _hipImportExternalSemaphore__funptr)(extSem_out,semHandleDesc)
 
 
 cdef void* _hipSignalExternalSemaphoresAsync__funptr = NULL
@@ -1423,13 +1211,10 @@ cdef void* _hipSignalExternalSemaphoresAsync__funptr = NULL
 # @param[in] stream Stream to enqueue the wait operations in
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipSignalExternalSemaphoresAsync(hipExternalSemaphore_t * extSemArray,hipExternalSemaphoreSignalParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipSignalExternalSemaphoresAsync(void *const * extSemArray,hipExternalSemaphoreSignalParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil:
     global _hipSignalExternalSemaphoresAsync__funptr
-    if _hipSignalExternalSemaphoresAsync__funptr == NULL:
-        with gil:
-            _hipSignalExternalSemaphoresAsync__funptr = loader.load_symbol(_lib_handle, "hipSignalExternalSemaphoresAsync")
-    return (<hipError_t (*)(hipExternalSemaphore_t *,hipExternalSemaphoreSignalParams_st *,unsigned int,hipStream_t) nogil> _hipSignalExternalSemaphoresAsync__funptr)(extSemArray,paramsArray,numExtSems,stream)
+    __init_symbol(&_hipSignalExternalSemaphoresAsync__funptr,"hipSignalExternalSemaphoresAsync")
+    return (<hipError_t (*)(void *const *,hipExternalSemaphoreSignalParams_st *,unsigned int,hipStream_t) nogil> _hipSignalExternalSemaphoresAsync__funptr)(extSemArray,paramsArray,numExtSems,stream)
 
 
 cdef void* _hipWaitExternalSemaphoresAsync__funptr = NULL
@@ -1440,13 +1225,10 @@ cdef void* _hipWaitExternalSemaphoresAsync__funptr = NULL
 # @param[in] stream Stream to enqueue the wait operations in
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipWaitExternalSemaphoresAsync(hipExternalSemaphore_t * extSemArray,hipExternalSemaphoreWaitParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipWaitExternalSemaphoresAsync(void *const * extSemArray,hipExternalSemaphoreWaitParams_st * paramsArray,unsigned int numExtSems,hipStream_t stream) nogil:
     global _hipWaitExternalSemaphoresAsync__funptr
-    if _hipWaitExternalSemaphoresAsync__funptr == NULL:
-        with gil:
-            _hipWaitExternalSemaphoresAsync__funptr = loader.load_symbol(_lib_handle, "hipWaitExternalSemaphoresAsync")
-    return (<hipError_t (*)(hipExternalSemaphore_t *,hipExternalSemaphoreWaitParams_st *,unsigned int,hipStream_t) nogil> _hipWaitExternalSemaphoresAsync__funptr)(extSemArray,paramsArray,numExtSems,stream)
+    __init_symbol(&_hipWaitExternalSemaphoresAsync__funptr,"hipWaitExternalSemaphoresAsync")
+    return (<hipError_t (*)(void *const *,hipExternalSemaphoreWaitParams_st *,unsigned int,hipStream_t) nogil> _hipWaitExternalSemaphoresAsync__funptr)(extSemArray,paramsArray,numExtSems,stream)
 
 
 cdef void* _hipDestroyExternalSemaphore__funptr = NULL
@@ -1454,13 +1236,10 @@ cdef void* _hipDestroyExternalSemaphore__funptr = NULL
 # @param[in] extSem handle to an external memory object
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipDestroyExternalSemaphore(hipExternalSemaphore_t extSem) nogil:
-    global _lib_handle
+cdef hipError_t hipDestroyExternalSemaphore(void * extSem) nogil:
     global _hipDestroyExternalSemaphore__funptr
-    if _hipDestroyExternalSemaphore__funptr == NULL:
-        with gil:
-            _hipDestroyExternalSemaphore__funptr = loader.load_symbol(_lib_handle, "hipDestroyExternalSemaphore")
-    return (<hipError_t (*)(hipExternalSemaphore_t) nogil> _hipDestroyExternalSemaphore__funptr)(extSem)
+    __init_symbol(&_hipDestroyExternalSemaphore__funptr,"hipDestroyExternalSemaphore")
+    return (<hipError_t (*)(void *) nogil> _hipDestroyExternalSemaphore__funptr)(extSem)
 
 
 cdef void* _hipImportExternalMemory__funptr = NULL
@@ -1469,13 +1248,10 @@ cdef void* _hipImportExternalMemory__funptr = NULL
 # @param[in]  memHandleDesc Memory import handle descriptor
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipImportExternalMemory(hipExternalMemory_t* extMem_out,hipExternalMemoryHandleDesc_st * memHandleDesc) nogil:
-    global _lib_handle
+cdef hipError_t hipImportExternalMemory(void ** extMem_out,hipExternalMemoryHandleDesc_st * memHandleDesc) nogil:
     global _hipImportExternalMemory__funptr
-    if _hipImportExternalMemory__funptr == NULL:
-        with gil:
-            _hipImportExternalMemory__funptr = loader.load_symbol(_lib_handle, "hipImportExternalMemory")
-    return (<hipError_t (*)(hipExternalMemory_t*,hipExternalMemoryHandleDesc_st *) nogil> _hipImportExternalMemory__funptr)(extMem_out,memHandleDesc)
+    __init_symbol(&_hipImportExternalMemory__funptr,"hipImportExternalMemory")
+    return (<hipError_t (*)(void **,hipExternalMemoryHandleDesc_st *) nogil> _hipImportExternalMemory__funptr)(extMem_out,memHandleDesc)
 
 
 cdef void* _hipExternalMemoryGetMappedBuffer__funptr = NULL
@@ -1485,13 +1261,10 @@ cdef void* _hipExternalMemoryGetMappedBuffer__funptr = NULL
 # @param[in]  bufferDesc  Buffer descriptor
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipExternalMemoryGetMappedBuffer(void ** devPtr,hipExternalMemory_t extMem,hipExternalMemoryBufferDesc_st * bufferDesc) nogil:
-    global _lib_handle
+cdef hipError_t hipExternalMemoryGetMappedBuffer(void ** devPtr,void * extMem,hipExternalMemoryBufferDesc_st * bufferDesc) nogil:
     global _hipExternalMemoryGetMappedBuffer__funptr
-    if _hipExternalMemoryGetMappedBuffer__funptr == NULL:
-        with gil:
-            _hipExternalMemoryGetMappedBuffer__funptr = loader.load_symbol(_lib_handle, "hipExternalMemoryGetMappedBuffer")
-    return (<hipError_t (*)(void **,hipExternalMemory_t,hipExternalMemoryBufferDesc_st *) nogil> _hipExternalMemoryGetMappedBuffer__funptr)(devPtr,extMem,bufferDesc)
+    __init_symbol(&_hipExternalMemoryGetMappedBuffer__funptr,"hipExternalMemoryGetMappedBuffer")
+    return (<hipError_t (*)(void **,void *,hipExternalMemoryBufferDesc_st *) nogil> _hipExternalMemoryGetMappedBuffer__funptr)(devPtr,extMem,bufferDesc)
 
 
 cdef void* _hipDestroyExternalMemory__funptr = NULL
@@ -1499,13 +1272,10 @@ cdef void* _hipDestroyExternalMemory__funptr = NULL
 # @param[in] extMem  External memory object to be destroyed
 # @return #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @see
-cdef hipError_t hipDestroyExternalMemory(hipExternalMemory_t extMem) nogil:
-    global _lib_handle
+cdef hipError_t hipDestroyExternalMemory(void * extMem) nogil:
     global _hipDestroyExternalMemory__funptr
-    if _hipDestroyExternalMemory__funptr == NULL:
-        with gil:
-            _hipDestroyExternalMemory__funptr = loader.load_symbol(_lib_handle, "hipDestroyExternalMemory")
-    return (<hipError_t (*)(hipExternalMemory_t) nogil> _hipDestroyExternalMemory__funptr)(extMem)
+    __init_symbol(&_hipDestroyExternalMemory__funptr,"hipDestroyExternalMemory")
+    return (<hipError_t (*)(void *) nogil> _hipDestroyExternalMemory__funptr)(extMem)
 
 
 cdef void* _hipMalloc__funptr = NULL
@@ -1516,13 +1286,10 @@ cdef void* _hipMalloc__funptr = NULL
 # @return #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
 # @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
 # hipHostFree, hipHostMalloc
-cdef hipError_t hipMalloc(void ** ptr,int size) nogil:
-    global _lib_handle
+cdef hipError_t hipMalloc(void ** ptr,unsigned long size) nogil:
     global _hipMalloc__funptr
-    if _hipMalloc__funptr == NULL:
-        with gil:
-            _hipMalloc__funptr = loader.load_symbol(_lib_handle, "hipMalloc")
-    return (<hipError_t (*)(void **,int) nogil> _hipMalloc__funptr)(ptr,size)
+    __init_symbol(&_hipMalloc__funptr,"hipMalloc")
+    return (<hipError_t (*)(void **,unsigned long) nogil> _hipMalloc__funptr)(ptr,size)
 
 
 cdef void* _hipExtMallocWithFlags__funptr = NULL
@@ -1534,13 +1301,10 @@ cdef void* _hipExtMallocWithFlags__funptr = NULL
 # @return #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
 # @see hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
 # hipHostFree, hipHostMalloc
-cdef hipError_t hipExtMallocWithFlags(void ** ptr,int sizeBytes,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipExtMallocWithFlags(void ** ptr,unsigned long sizeBytes,unsigned int flags) nogil:
     global _hipExtMallocWithFlags__funptr
-    if _hipExtMallocWithFlags__funptr == NULL:
-        with gil:
-            _hipExtMallocWithFlags__funptr = loader.load_symbol(_lib_handle, "hipExtMallocWithFlags")
-    return (<hipError_t (*)(void **,int,unsigned int) nogil> _hipExtMallocWithFlags__funptr)(ptr,sizeBytes,flags)
+    __init_symbol(&_hipExtMallocWithFlags__funptr,"hipExtMallocWithFlags")
+    return (<hipError_t (*)(void **,unsigned long,unsigned int) nogil> _hipExtMallocWithFlags__funptr)(ptr,sizeBytes,flags)
 
 
 cdef void* _hipMallocHost__funptr = NULL
@@ -1550,13 +1314,10 @@ cdef void* _hipMallocHost__funptr = NULL
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @deprecated use hipHostMalloc() instead
-cdef hipError_t hipMallocHost(void ** ptr,int size) nogil:
-    global _lib_handle
+cdef hipError_t hipMallocHost(void ** ptr,unsigned long size) nogil:
     global _hipMallocHost__funptr
-    if _hipMallocHost__funptr == NULL:
-        with gil:
-            _hipMallocHost__funptr = loader.load_symbol(_lib_handle, "hipMallocHost")
-    return (<hipError_t (*)(void **,int) nogil> _hipMallocHost__funptr)(ptr,size)
+    __init_symbol(&_hipMallocHost__funptr,"hipMallocHost")
+    return (<hipError_t (*)(void **,unsigned long) nogil> _hipMallocHost__funptr)(ptr,size)
 
 
 cdef void* _hipMemAllocHost__funptr = NULL
@@ -1566,13 +1327,10 @@ cdef void* _hipMemAllocHost__funptr = NULL
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @deprecated use hipHostMalloc() instead
-cdef hipError_t hipMemAllocHost(void ** ptr,int size) nogil:
-    global _lib_handle
+cdef hipError_t hipMemAllocHost(void ** ptr,unsigned long size) nogil:
     global _hipMemAllocHost__funptr
-    if _hipMemAllocHost__funptr == NULL:
-        with gil:
-            _hipMemAllocHost__funptr = loader.load_symbol(_lib_handle, "hipMemAllocHost")
-    return (<hipError_t (*)(void **,int) nogil> _hipMemAllocHost__funptr)(ptr,size)
+    __init_symbol(&_hipMemAllocHost__funptr,"hipMemAllocHost")
+    return (<hipError_t (*)(void **,unsigned long) nogil> _hipMemAllocHost__funptr)(ptr,size)
 
 
 cdef void* _hipHostMalloc__funptr = NULL
@@ -1583,13 +1341,10 @@ cdef void* _hipHostMalloc__funptr = NULL
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @see hipSetDeviceFlags, hipHostFree
-cdef hipError_t hipHostMalloc(void ** ptr,int size,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipHostMalloc(void ** ptr,unsigned long size,unsigned int flags) nogil:
     global _hipHostMalloc__funptr
-    if _hipHostMalloc__funptr == NULL:
-        with gil:
-            _hipHostMalloc__funptr = loader.load_symbol(_lib_handle, "hipHostMalloc")
-    return (<hipError_t (*)(void **,int,unsigned int) nogil> _hipHostMalloc__funptr)(ptr,size,flags)
+    __init_symbol(&_hipHostMalloc__funptr,"hipHostMalloc")
+    return (<hipError_t (*)(void **,unsigned long,unsigned int) nogil> _hipHostMalloc__funptr)(ptr,size,flags)
 
 
 cdef void* _hipMallocManaged__funptr = NULL
@@ -1605,13 +1360,10 @@ cdef void* _hipMallocManaged__funptr = NULL
 # @param [in]  flags   - must be either hipMemAttachGlobal or hipMemAttachHost
 # (defaults to hipMemAttachGlobal)
 # @returns #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
-cdef hipError_t hipMallocManaged(void ** dev_ptr,int size,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipMallocManaged(void ** dev_ptr,unsigned long size,unsigned int flags) nogil:
     global _hipMallocManaged__funptr
-    if _hipMallocManaged__funptr == NULL:
-        with gil:
-            _hipMallocManaged__funptr = loader.load_symbol(_lib_handle, "hipMallocManaged")
-    return (<hipError_t (*)(void **,int,unsigned int) nogil> _hipMallocManaged__funptr)(dev_ptr,size,flags)
+    __init_symbol(&_hipMallocManaged__funptr,"hipMallocManaged")
+    return (<hipError_t (*)(void **,unsigned long,unsigned int) nogil> _hipMallocManaged__funptr)(dev_ptr,size,flags)
 
 
 cdef void* _hipMemPrefetchAsync__funptr = NULL
@@ -1621,13 +1373,10 @@ cdef void* _hipMemPrefetchAsync__funptr = NULL
 # @param [in] device   destination device to prefetch to
 # @param [in] stream   stream to enqueue prefetch operation
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemPrefetchAsync(const void * dev_ptr,int count,int device,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemPrefetchAsync(const void * dev_ptr,unsigned long count,int device,hipStream_t stream) nogil:
     global _hipMemPrefetchAsync__funptr
-    if _hipMemPrefetchAsync__funptr == NULL:
-        with gil:
-            _hipMemPrefetchAsync__funptr = loader.load_symbol(_lib_handle, "hipMemPrefetchAsync")
-    return (<hipError_t (*)(const void *,int,int,hipStream_t) nogil> _hipMemPrefetchAsync__funptr)(dev_ptr,count,device,stream)
+    __init_symbol(&_hipMemPrefetchAsync__funptr,"hipMemPrefetchAsync")
+    return (<hipError_t (*)(const void *,unsigned long,int,hipStream_t) nogil> _hipMemPrefetchAsync__funptr)(dev_ptr,count,device,stream)
 
 
 cdef void* _hipMemAdvise__funptr = NULL
@@ -1637,13 +1386,10 @@ cdef void* _hipMemAdvise__funptr = NULL
 # @param [in] advice   advice to be applied for the specified memory range
 # @param [in] device   device to apply the advice for
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemAdvise(const void * dev_ptr,int count,hipMemoryAdvise advice,int device) nogil:
-    global _lib_handle
+cdef hipError_t hipMemAdvise(const void * dev_ptr,unsigned long count,hipMemoryAdvise advice,int device) nogil:
     global _hipMemAdvise__funptr
-    if _hipMemAdvise__funptr == NULL:
-        with gil:
-            _hipMemAdvise__funptr = loader.load_symbol(_lib_handle, "hipMemAdvise")
-    return (<hipError_t (*)(const void *,int,hipMemoryAdvise,int) nogil> _hipMemAdvise__funptr)(dev_ptr,count,advice,device)
+    __init_symbol(&_hipMemAdvise__funptr,"hipMemAdvise")
+    return (<hipError_t (*)(const void *,unsigned long,hipMemoryAdvise,int) nogil> _hipMemAdvise__funptr)(dev_ptr,count,advice,device)
 
 
 cdef void* _hipMemRangeGetAttribute__funptr = NULL
@@ -1655,13 +1401,10 @@ cdef void* _hipMemRangeGetAttribute__funptr = NULL
 # @param [in] dev_ptr    start of the range to query
 # @param [in] count      size of the range to query
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemRangeGetAttribute(void * data,int data_size,hipMemRangeAttribute attribute,const void * dev_ptr,int count) nogil:
-    global _lib_handle
+cdef hipError_t hipMemRangeGetAttribute(void * data,unsigned long data_size,hipMemRangeAttribute attribute,const void * dev_ptr,unsigned long count) nogil:
     global _hipMemRangeGetAttribute__funptr
-    if _hipMemRangeGetAttribute__funptr == NULL:
-        with gil:
-            _hipMemRangeGetAttribute__funptr = loader.load_symbol(_lib_handle, "hipMemRangeGetAttribute")
-    return (<hipError_t (*)(void *,int,hipMemRangeAttribute,const void *,int) nogil> _hipMemRangeGetAttribute__funptr)(data,data_size,attribute,dev_ptr,count)
+    __init_symbol(&_hipMemRangeGetAttribute__funptr,"hipMemRangeGetAttribute")
+    return (<hipError_t (*)(void *,unsigned long,hipMemRangeAttribute,const void *,unsigned long) nogil> _hipMemRangeGetAttribute__funptr)(data,data_size,attribute,dev_ptr,count)
 
 
 cdef void* _hipMemRangeGetAttributes__funptr = NULL
@@ -1675,13 +1418,10 @@ cdef void* _hipMemRangeGetAttributes__funptr = NULL
 # @param [in] dev_ptr      start of the range to query
 # @param [in] count        size of the range to query
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemRangeGetAttributes(void ** data,int * data_sizes,hipMemRangeAttribute * attributes,int num_attributes,const void * dev_ptr,int count) nogil:
-    global _lib_handle
+cdef hipError_t hipMemRangeGetAttributes(void ** data,unsigned long * data_sizes,hipMemRangeAttribute * attributes,unsigned long num_attributes,const void * dev_ptr,unsigned long count) nogil:
     global _hipMemRangeGetAttributes__funptr
-    if _hipMemRangeGetAttributes__funptr == NULL:
-        with gil:
-            _hipMemRangeGetAttributes__funptr = loader.load_symbol(_lib_handle, "hipMemRangeGetAttributes")
-    return (<hipError_t (*)(void **,int *,hipMemRangeAttribute *,int,const void *,int) nogil> _hipMemRangeGetAttributes__funptr)(data,data_sizes,attributes,num_attributes,dev_ptr,count)
+    __init_symbol(&_hipMemRangeGetAttributes__funptr,"hipMemRangeGetAttributes")
+    return (<hipError_t (*)(void **,unsigned long *,hipMemRangeAttribute *,unsigned long,const void *,unsigned long) nogil> _hipMemRangeGetAttributes__funptr)(data,data_sizes,attributes,num_attributes,dev_ptr,count)
 
 
 cdef void* _hipStreamAttachMemAsync__funptr = NULL
@@ -1693,13 +1433,10 @@ cdef void* _hipStreamAttachMemAsync__funptr = NULL
 # @param [in] flags      - must be one of hipMemAttachGlobal, hipMemAttachHost or
 # hipMemAttachSingle (defaults to hipMemAttachSingle)
 # @returns #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipStreamAttachMemAsync(hipStream_t stream,void * dev_ptr,int length,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipStreamAttachMemAsync(hipStream_t stream,void * dev_ptr,unsigned long length,unsigned int flags) nogil:
     global _hipStreamAttachMemAsync__funptr
-    if _hipStreamAttachMemAsync__funptr == NULL:
-        with gil:
-            _hipStreamAttachMemAsync__funptr = loader.load_symbol(_lib_handle, "hipStreamAttachMemAsync")
-    return (<hipError_t (*)(hipStream_t,void *,int,unsigned int) nogil> _hipStreamAttachMemAsync__funptr)(stream,dev_ptr,length,flags)
+    __init_symbol(&_hipStreamAttachMemAsync__funptr,"hipStreamAttachMemAsync")
+    return (<hipError_t (*)(hipStream_t,void *,unsigned long,unsigned int) nogil> _hipStreamAttachMemAsync__funptr)(stream,dev_ptr,length,flags)
 
 
 cdef void* _hipMallocAsync__funptr = NULL
@@ -1724,13 +1461,10 @@ cdef void* _hipMallocAsync__funptr = NULL
 # hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMallocAsync(void ** dev_ptr,int size,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMallocAsync(void ** dev_ptr,unsigned long size,hipStream_t stream) nogil:
     global _hipMallocAsync__funptr
-    if _hipMallocAsync__funptr == NULL:
-        with gil:
-            _hipMallocAsync__funptr = loader.load_symbol(_lib_handle, "hipMallocAsync")
-    return (<hipError_t (*)(void **,int,hipStream_t) nogil> _hipMallocAsync__funptr)(dev_ptr,size,stream)
+    __init_symbol(&_hipMallocAsync__funptr,"hipMallocAsync")
+    return (<hipError_t (*)(void **,unsigned long,hipStream_t) nogil> _hipMallocAsync__funptr)(dev_ptr,size,stream)
 
 
 cdef void* _hipFreeAsync__funptr = NULL
@@ -1749,11 +1483,8 @@ cdef void* _hipFreeAsync__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipFreeAsync(void * dev_ptr,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipFreeAsync__funptr
-    if _hipFreeAsync__funptr == NULL:
-        with gil:
-            _hipFreeAsync__funptr = loader.load_symbol(_lib_handle, "hipFreeAsync")
+    __init_symbol(&_hipFreeAsync__funptr,"hipFreeAsync")
     return (<hipError_t (*)(void *,hipStream_t) nogil> _hipFreeAsync__funptr)(dev_ptr,stream)
 
 
@@ -1775,13 +1506,10 @@ cdef void* _hipMemPoolTrimTo__funptr = NULL
 # hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemPoolTrimTo(hipMemPool_t mem_pool,int min_bytes_to_hold) nogil:
-    global _lib_handle
+cdef hipError_t hipMemPoolTrimTo(hipMemPool_t mem_pool,unsigned long min_bytes_to_hold) nogil:
     global _hipMemPoolTrimTo__funptr
-    if _hipMemPoolTrimTo__funptr == NULL:
-        with gil:
-            _hipMemPoolTrimTo__funptr = loader.load_symbol(_lib_handle, "hipMemPoolTrimTo")
-    return (<hipError_t (*)(hipMemPool_t,int) nogil> _hipMemPoolTrimTo__funptr)(mem_pool,min_bytes_to_hold)
+    __init_symbol(&_hipMemPoolTrimTo__funptr,"hipMemPoolTrimTo")
+    return (<hipError_t (*)(hipMemPool_t,unsigned long) nogil> _hipMemPoolTrimTo__funptr)(mem_pool,min_bytes_to_hold)
 
 
 cdef void* _hipMemPoolSetAttribute__funptr = NULL
@@ -1815,11 +1543,8 @@ cdef void* _hipMemPoolSetAttribute__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemPoolSetAttribute(hipMemPool_t mem_pool,hipMemPoolAttr attr,void * value) nogil:
-    global _lib_handle
     global _hipMemPoolSetAttribute__funptr
-    if _hipMemPoolSetAttribute__funptr == NULL:
-        with gil:
-            _hipMemPoolSetAttribute__funptr = loader.load_symbol(_lib_handle, "hipMemPoolSetAttribute")
+    __init_symbol(&_hipMemPoolSetAttribute__funptr,"hipMemPoolSetAttribute")
     return (<hipError_t (*)(hipMemPool_t,hipMemPoolAttr,void *) nogil> _hipMemPoolSetAttribute__funptr)(mem_pool,attr,value)
 
 
@@ -1854,11 +1579,8 @@ cdef void* _hipMemPoolGetAttribute__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemPoolGetAttribute(hipMemPool_t mem_pool,hipMemPoolAttr attr,void * value) nogil:
-    global _lib_handle
     global _hipMemPoolGetAttribute__funptr
-    if _hipMemPoolGetAttribute__funptr == NULL:
-        with gil:
-            _hipMemPoolGetAttribute__funptr = loader.load_symbol(_lib_handle, "hipMemPoolGetAttribute")
+    __init_symbol(&_hipMemPoolGetAttribute__funptr,"hipMemPoolGetAttribute")
     return (<hipError_t (*)(hipMemPool_t,hipMemPoolAttr,void *) nogil> _hipMemPoolGetAttribute__funptr)(mem_pool,attr,value)
 
 
@@ -1872,13 +1594,10 @@ cdef void* _hipMemPoolSetAccess__funptr = NULL
 # hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolGetAccess
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemPoolSetAccess(hipMemPool_t mem_pool,hipMemAccessDesc * desc_list,int count) nogil:
-    global _lib_handle
+cdef hipError_t hipMemPoolSetAccess(hipMemPool_t mem_pool,hipMemAccessDesc * desc_list,unsigned long count) nogil:
     global _hipMemPoolSetAccess__funptr
-    if _hipMemPoolSetAccess__funptr == NULL:
-        with gil:
-            _hipMemPoolSetAccess__funptr = loader.load_symbol(_lib_handle, "hipMemPoolSetAccess")
-    return (<hipError_t (*)(hipMemPool_t,hipMemAccessDesc *,int) nogil> _hipMemPoolSetAccess__funptr)(mem_pool,desc_list,count)
+    __init_symbol(&_hipMemPoolSetAccess__funptr,"hipMemPoolSetAccess")
+    return (<hipError_t (*)(hipMemPool_t,hipMemAccessDesc *,unsigned long) nogil> _hipMemPoolSetAccess__funptr)(mem_pool,desc_list,count)
 
 
 cdef void* _hipMemPoolGetAccess__funptr = NULL
@@ -1893,11 +1612,8 @@ cdef void* _hipMemPoolGetAccess__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemPoolGetAccess(hipMemAccessFlags * flags,hipMemPool_t mem_pool,hipMemLocation * location) nogil:
-    global _lib_handle
     global _hipMemPoolGetAccess__funptr
-    if _hipMemPoolGetAccess__funptr == NULL:
-        with gil:
-            _hipMemPoolGetAccess__funptr = loader.load_symbol(_lib_handle, "hipMemPoolGetAccess")
+    __init_symbol(&_hipMemPoolGetAccess__funptr,"hipMemPoolGetAccess")
     return (<hipError_t (*)(hipMemAccessFlags *,hipMemPool_t,hipMemLocation *) nogil> _hipMemPoolGetAccess__funptr)(flags,mem_pool,location)
 
 
@@ -1915,11 +1631,8 @@ cdef void* _hipMemPoolCreate__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemPoolCreate(hipMemPool_t* mem_pool,hipMemPoolProps * pool_props) nogil:
-    global _lib_handle
     global _hipMemPoolCreate__funptr
-    if _hipMemPoolCreate__funptr == NULL:
-        with gil:
-            _hipMemPoolCreate__funptr = loader.load_symbol(_lib_handle, "hipMemPoolCreate")
+    __init_symbol(&_hipMemPoolCreate__funptr,"hipMemPoolCreate")
     return (<hipError_t (*)(hipMemPool_t*,hipMemPoolProps *) nogil> _hipMemPoolCreate__funptr)(mem_pool,pool_props)
 
 
@@ -1940,11 +1653,8 @@ cdef void* _hipMemPoolDestroy__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemPoolDestroy(hipMemPool_t mem_pool) nogil:
-    global _lib_handle
     global _hipMemPoolDestroy__funptr
-    if _hipMemPoolDestroy__funptr == NULL:
-        with gil:
-            _hipMemPoolDestroy__funptr = loader.load_symbol(_lib_handle, "hipMemPoolDestroy")
+    __init_symbol(&_hipMemPoolDestroy__funptr,"hipMemPoolDestroy")
     return (<hipError_t (*)(hipMemPool_t) nogil> _hipMemPoolDestroy__funptr)(mem_pool)
 
 
@@ -1970,13 +1680,10 @@ cdef void* _hipMallocFromPoolAsync__funptr = NULL
 # hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess,
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMallocFromPoolAsync(void ** dev_ptr,int size,hipMemPool_t mem_pool,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMallocFromPoolAsync(void ** dev_ptr,unsigned long size,hipMemPool_t mem_pool,hipStream_t stream) nogil:
     global _hipMallocFromPoolAsync__funptr
-    if _hipMallocFromPoolAsync__funptr == NULL:
-        with gil:
-            _hipMallocFromPoolAsync__funptr = loader.load_symbol(_lib_handle, "hipMallocFromPoolAsync")
-    return (<hipError_t (*)(void **,int,hipMemPool_t,hipStream_t) nogil> _hipMallocFromPoolAsync__funptr)(dev_ptr,size,mem_pool,stream)
+    __init_symbol(&_hipMallocFromPoolAsync__funptr,"hipMallocFromPoolAsync")
+    return (<hipError_t (*)(void **,unsigned long,hipMemPool_t,hipStream_t) nogil> _hipMallocFromPoolAsync__funptr)(dev_ptr,size,mem_pool,stream)
 
 
 cdef void* _hipMemPoolExportToShareableHandle__funptr = NULL
@@ -1997,11 +1704,8 @@ cdef void* _hipMemPoolExportToShareableHandle__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemPoolExportToShareableHandle(void * shared_handle,hipMemPool_t mem_pool,hipMemAllocationHandleType handle_type,unsigned int flags) nogil:
-    global _lib_handle
     global _hipMemPoolExportToShareableHandle__funptr
-    if _hipMemPoolExportToShareableHandle__funptr == NULL:
-        with gil:
-            _hipMemPoolExportToShareableHandle__funptr = loader.load_symbol(_lib_handle, "hipMemPoolExportToShareableHandle")
+    __init_symbol(&_hipMemPoolExportToShareableHandle__funptr,"hipMemPoolExportToShareableHandle")
     return (<hipError_t (*)(void *,hipMemPool_t,hipMemAllocationHandleType,unsigned int) nogil> _hipMemPoolExportToShareableHandle__funptr)(shared_handle,mem_pool,handle_type,flags)
 
 
@@ -2020,11 +1724,8 @@ cdef void* _hipMemPoolImportFromShareableHandle__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemPoolImportFromShareableHandle(hipMemPool_t* mem_pool,void * shared_handle,hipMemAllocationHandleType handle_type,unsigned int flags) nogil:
-    global _lib_handle
     global _hipMemPoolImportFromShareableHandle__funptr
-    if _hipMemPoolImportFromShareableHandle__funptr == NULL:
-        with gil:
-            _hipMemPoolImportFromShareableHandle__funptr = loader.load_symbol(_lib_handle, "hipMemPoolImportFromShareableHandle")
+    __init_symbol(&_hipMemPoolImportFromShareableHandle__funptr,"hipMemPoolImportFromShareableHandle")
     return (<hipError_t (*)(hipMemPool_t*,void *,hipMemAllocationHandleType,unsigned int) nogil> _hipMemPoolImportFromShareableHandle__funptr)(mem_pool,shared_handle,handle_type,flags)
 
 
@@ -2040,11 +1741,8 @@ cdef void* _hipMemPoolExportPointer__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemPoolExportPointer(hipMemPoolPtrExportData * export_data,void * dev_ptr) nogil:
-    global _lib_handle
     global _hipMemPoolExportPointer__funptr
-    if _hipMemPoolExportPointer__funptr == NULL:
-        with gil:
-            _hipMemPoolExportPointer__funptr = loader.load_symbol(_lib_handle, "hipMemPoolExportPointer")
+    __init_symbol(&_hipMemPoolExportPointer__funptr,"hipMemPoolExportPointer")
     return (<hipError_t (*)(hipMemPoolPtrExportData *,void *) nogil> _hipMemPoolExportPointer__funptr)(export_data,dev_ptr)
 
 
@@ -2068,11 +1766,8 @@ cdef void* _hipMemPoolImportPointer__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemPoolImportPointer(void ** dev_ptr,hipMemPool_t mem_pool,hipMemPoolPtrExportData * export_data) nogil:
-    global _lib_handle
     global _hipMemPoolImportPointer__funptr
-    if _hipMemPoolImportPointer__funptr == NULL:
-        with gil:
-            _hipMemPoolImportPointer__funptr = loader.load_symbol(_lib_handle, "hipMemPoolImportPointer")
+    __init_symbol(&_hipMemPoolImportPointer__funptr,"hipMemPoolImportPointer")
     return (<hipError_t (*)(void **,hipMemPool_t,hipMemPoolPtrExportData *) nogil> _hipMemPoolImportPointer__funptr)(dev_ptr,mem_pool,export_data)
 
 
@@ -2084,13 +1779,10 @@ cdef void* _hipHostAlloc__funptr = NULL
 # If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @deprecated use hipHostMalloc() instead
-cdef hipError_t hipHostAlloc(void ** ptr,int size,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipHostAlloc(void ** ptr,unsigned long size,unsigned int flags) nogil:
     global _hipHostAlloc__funptr
-    if _hipHostAlloc__funptr == NULL:
-        with gil:
-            _hipHostAlloc__funptr = loader.load_symbol(_lib_handle, "hipHostAlloc")
-    return (<hipError_t (*)(void **,int,unsigned int) nogil> _hipHostAlloc__funptr)(ptr,size,flags)
+    __init_symbol(&_hipHostAlloc__funptr,"hipHostAlloc")
+    return (<hipError_t (*)(void **,unsigned long,unsigned int) nogil> _hipHostAlloc__funptr)(ptr,size,flags)
 
 
 cdef void* _hipHostGetDevicePointer__funptr = NULL
@@ -2101,11 +1793,8 @@ cdef void* _hipHostGetDevicePointer__funptr = NULL
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
 # @see hipSetDeviceFlags, hipHostMalloc
 cdef hipError_t hipHostGetDevicePointer(void ** devPtr,void * hstPtr,unsigned int flags) nogil:
-    global _lib_handle
     global _hipHostGetDevicePointer__funptr
-    if _hipHostGetDevicePointer__funptr == NULL:
-        with gil:
-            _hipHostGetDevicePointer__funptr = loader.load_symbol(_lib_handle, "hipHostGetDevicePointer")
+    __init_symbol(&_hipHostGetDevicePointer__funptr,"hipHostGetDevicePointer")
     return (<hipError_t (*)(void **,void *,unsigned int) nogil> _hipHostGetDevicePointer__funptr)(devPtr,hstPtr,flags)
 
 
@@ -2116,11 +1805,8 @@ cdef void* _hipHostGetFlags__funptr = NULL
 # @return #hipSuccess, #hipErrorInvalidValue
 # @see hipHostMalloc
 cdef hipError_t hipHostGetFlags(unsigned int * flagsPtr,void * hostPtr) nogil:
-    global _lib_handle
     global _hipHostGetFlags__funptr
-    if _hipHostGetFlags__funptr == NULL:
-        with gil:
-            _hipHostGetFlags__funptr = loader.load_symbol(_lib_handle, "hipHostGetFlags")
+    __init_symbol(&_hipHostGetFlags__funptr,"hipHostGetFlags")
     return (<hipError_t (*)(unsigned int *,void *) nogil> _hipHostGetFlags__funptr)(flagsPtr,hostPtr)
 
 
@@ -2150,13 +1836,10 @@ cdef void* _hipHostRegister__funptr = NULL
 # region.
 # @return #hipSuccess, #hipErrorOutOfMemory
 # @see hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
-cdef hipError_t hipHostRegister(void * hostPtr,int sizeBytes,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipHostRegister(void * hostPtr,unsigned long sizeBytes,unsigned int flags) nogil:
     global _hipHostRegister__funptr
-    if _hipHostRegister__funptr == NULL:
-        with gil:
-            _hipHostRegister__funptr = loader.load_symbol(_lib_handle, "hipHostRegister")
-    return (<hipError_t (*)(void *,int,unsigned int) nogil> _hipHostRegister__funptr)(hostPtr,sizeBytes,flags)
+    __init_symbol(&_hipHostRegister__funptr,"hipHostRegister")
+    return (<hipError_t (*)(void *,unsigned long,unsigned int) nogil> _hipHostRegister__funptr)(hostPtr,sizeBytes,flags)
 
 
 cdef void* _hipHostUnregister__funptr = NULL
@@ -2165,11 +1848,8 @@ cdef void* _hipHostUnregister__funptr = NULL
 # @return Error code
 # @see hipHostRegister
 cdef hipError_t hipHostUnregister(void * hostPtr) nogil:
-    global _lib_handle
     global _hipHostUnregister__funptr
-    if _hipHostUnregister__funptr == NULL:
-        with gil:
-            _hipHostUnregister__funptr = loader.load_symbol(_lib_handle, "hipHostUnregister")
+    __init_symbol(&_hipHostUnregister__funptr,"hipHostUnregister")
     return (<hipError_t (*)(void *) nogil> _hipHostUnregister__funptr)(hostPtr)
 
 
@@ -2186,13 +1866,10 @@ cdef void* _hipMallocPitch__funptr = NULL
 # @return Error code
 # @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
 # hipMalloc3DArray, hipHostMalloc
-cdef hipError_t hipMallocPitch(void ** ptr,int * pitch,int width,int height) nogil:
-    global _lib_handle
+cdef hipError_t hipMallocPitch(void ** ptr,unsigned long * pitch,unsigned long width,unsigned long height) nogil:
     global _hipMallocPitch__funptr
-    if _hipMallocPitch__funptr == NULL:
-        with gil:
-            _hipMallocPitch__funptr = loader.load_symbol(_lib_handle, "hipMallocPitch")
-    return (<hipError_t (*)(void **,int *,int,int) nogil> _hipMallocPitch__funptr)(ptr,pitch,width,height)
+    __init_symbol(&_hipMallocPitch__funptr,"hipMallocPitch")
+    return (<hipError_t (*)(void **,unsigned long *,unsigned long,unsigned long) nogil> _hipMallocPitch__funptr)(ptr,pitch,width,height)
 
 
 cdef void* _hipMemAllocPitch__funptr = NULL
@@ -2211,13 +1888,10 @@ cdef void* _hipMemAllocPitch__funptr = NULL
 # @return Error code
 # @see hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
 # hipMalloc3DArray, hipHostMalloc
-cdef hipError_t hipMemAllocPitch(hipDeviceptr_t* dptr,int * pitch,int widthInBytes,int height,unsigned int elementSizeBytes) nogil:
-    global _lib_handle
+cdef hipError_t hipMemAllocPitch(void ** dptr,unsigned long * pitch,unsigned long widthInBytes,unsigned long height,unsigned int elementSizeBytes) nogil:
     global _hipMemAllocPitch__funptr
-    if _hipMemAllocPitch__funptr == NULL:
-        with gil:
-            _hipMemAllocPitch__funptr = loader.load_symbol(_lib_handle, "hipMemAllocPitch")
-    return (<hipError_t (*)(hipDeviceptr_t*,int *,int,int,unsigned int) nogil> _hipMemAllocPitch__funptr)(dptr,pitch,widthInBytes,height,elementSizeBytes)
+    __init_symbol(&_hipMemAllocPitch__funptr,"hipMemAllocPitch")
+    return (<hipError_t (*)(void **,unsigned long *,unsigned long,unsigned long,unsigned int) nogil> _hipMemAllocPitch__funptr)(dptr,pitch,widthInBytes,height,elementSizeBytes)
 
 
 cdef void* _hipFree__funptr = NULL
@@ -2231,11 +1905,8 @@ cdef void* _hipFree__funptr = NULL
 # @see hipMalloc, hipMallocPitch, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
 # hipMalloc3DArray, hipHostMalloc
 cdef hipError_t hipFree(void * ptr) nogil:
-    global _lib_handle
     global _hipFree__funptr
-    if _hipFree__funptr == NULL:
-        with gil:
-            _hipFree__funptr = loader.load_symbol(_lib_handle, "hipFree")
+    __init_symbol(&_hipFree__funptr,"hipFree")
     return (<hipError_t (*)(void *) nogil> _hipFree__funptr)(ptr)
 
 
@@ -2247,11 +1918,8 @@ cdef void* _hipFreeHost__funptr = NULL
 #  hipMalloc)
 # @deprecated use hipHostFree() instead
 cdef hipError_t hipFreeHost(void * ptr) nogil:
-    global _lib_handle
     global _hipFreeHost__funptr
-    if _hipFreeHost__funptr == NULL:
-        with gil:
-            _hipFreeHost__funptr = loader.load_symbol(_lib_handle, "hipFreeHost")
+    __init_symbol(&_hipFreeHost__funptr,"hipFreeHost")
     return (<hipError_t (*)(void *) nogil> _hipFreeHost__funptr)(ptr)
 
 
@@ -2266,11 +1934,8 @@ cdef void* _hipHostFree__funptr = NULL
 # @see hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D,
 # hipMalloc3DArray, hipHostMalloc
 cdef hipError_t hipHostFree(void * ptr) nogil:
-    global _lib_handle
     global _hipHostFree__funptr
-    if _hipHostFree__funptr == NULL:
-        with gil:
-            _hipHostFree__funptr = loader.load_symbol(_lib_handle, "hipHostFree")
+    __init_symbol(&_hipHostFree__funptr,"hipHostFree")
     return (<hipError_t (*)(void *) nogil> _hipHostFree__funptr)(ptr)
 
 
@@ -2298,23 +1963,17 @@ cdef void* _hipMemcpy__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpy(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind) nogil:
     global _hipMemcpy__funptr
-    if _hipMemcpy__funptr == NULL:
-        with gil:
-            _hipMemcpy__funptr = loader.load_symbol(_lib_handle, "hipMemcpy")
-    return (<hipError_t (*)(void *,const void *,int,hipMemcpyKind) nogil> _hipMemcpy__funptr)(dst,src,sizeBytes,kind)
+    __init_symbol(&_hipMemcpy__funptr,"hipMemcpy")
+    return (<hipError_t (*)(void *,const void *,unsigned long,hipMemcpyKind) nogil> _hipMemcpy__funptr)(dst,src,sizeBytes,kind)
 
 
 cdef void* _hipMemcpyWithStream__funptr = NULL
-cdef hipError_t hipMemcpyWithStream(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyWithStream(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyWithStream__funptr
-    if _hipMemcpyWithStream__funptr == NULL:
-        with gil:
-            _hipMemcpyWithStream__funptr = loader.load_symbol(_lib_handle, "hipMemcpyWithStream")
-    return (<hipError_t (*)(void *,const void *,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyWithStream__funptr)(dst,src,sizeBytes,kind,stream)
+    __init_symbol(&_hipMemcpyWithStream__funptr,"hipMemcpyWithStream")
+    return (<hipError_t (*)(void *,const void *,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyWithStream__funptr)(dst,src,sizeBytes,kind,stream)
 
 
 cdef void* _hipMemcpyHtoD__funptr = NULL
@@ -2330,13 +1989,10 @@ cdef void* _hipMemcpyHtoD__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyHtoD(hipDeviceptr_t dst,void * src,int sizeBytes) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyHtoD(void * dst,void * src,unsigned long sizeBytes) nogil:
     global _hipMemcpyHtoD__funptr
-    if _hipMemcpyHtoD__funptr == NULL:
-        with gil:
-            _hipMemcpyHtoD__funptr = loader.load_symbol(_lib_handle, "hipMemcpyHtoD")
-    return (<hipError_t (*)(hipDeviceptr_t,void *,int) nogil> _hipMemcpyHtoD__funptr)(dst,src,sizeBytes)
+    __init_symbol(&_hipMemcpyHtoD__funptr,"hipMemcpyHtoD")
+    return (<hipError_t (*)(void *,void *,unsigned long) nogil> _hipMemcpyHtoD__funptr)(dst,src,sizeBytes)
 
 
 cdef void* _hipMemcpyDtoH__funptr = NULL
@@ -2352,13 +2008,10 @@ cdef void* _hipMemcpyDtoH__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoH(void * dst,hipDeviceptr_t src,int sizeBytes) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyDtoH(void * dst,void * src,unsigned long sizeBytes) nogil:
     global _hipMemcpyDtoH__funptr
-    if _hipMemcpyDtoH__funptr == NULL:
-        with gil:
-            _hipMemcpyDtoH__funptr = loader.load_symbol(_lib_handle, "hipMemcpyDtoH")
-    return (<hipError_t (*)(void *,hipDeviceptr_t,int) nogil> _hipMemcpyDtoH__funptr)(dst,src,sizeBytes)
+    __init_symbol(&_hipMemcpyDtoH__funptr,"hipMemcpyDtoH")
+    return (<hipError_t (*)(void *,void *,unsigned long) nogil> _hipMemcpyDtoH__funptr)(dst,src,sizeBytes)
 
 
 cdef void* _hipMemcpyDtoD__funptr = NULL
@@ -2374,13 +2027,10 @@ cdef void* _hipMemcpyDtoD__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoD(hipDeviceptr_t dst,hipDeviceptr_t src,int sizeBytes) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyDtoD(void * dst,void * src,unsigned long sizeBytes) nogil:
     global _hipMemcpyDtoD__funptr
-    if _hipMemcpyDtoD__funptr == NULL:
-        with gil:
-            _hipMemcpyDtoD__funptr = loader.load_symbol(_lib_handle, "hipMemcpyDtoD")
-    return (<hipError_t (*)(hipDeviceptr_t,hipDeviceptr_t,int) nogil> _hipMemcpyDtoD__funptr)(dst,src,sizeBytes)
+    __init_symbol(&_hipMemcpyDtoD__funptr,"hipMemcpyDtoD")
+    return (<hipError_t (*)(void *,void *,unsigned long) nogil> _hipMemcpyDtoD__funptr)(dst,src,sizeBytes)
 
 
 cdef void* _hipMemcpyHtoDAsync__funptr = NULL
@@ -2396,13 +2046,10 @@ cdef void* _hipMemcpyHtoDAsync__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyHtoDAsync(hipDeviceptr_t dst,void * src,int sizeBytes,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyHtoDAsync(void * dst,void * src,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemcpyHtoDAsync__funptr
-    if _hipMemcpyHtoDAsync__funptr == NULL:
-        with gil:
-            _hipMemcpyHtoDAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpyHtoDAsync")
-    return (<hipError_t (*)(hipDeviceptr_t,void *,int,hipStream_t) nogil> _hipMemcpyHtoDAsync__funptr)(dst,src,sizeBytes,stream)
+    __init_symbol(&_hipMemcpyHtoDAsync__funptr,"hipMemcpyHtoDAsync")
+    return (<hipError_t (*)(void *,void *,unsigned long,hipStream_t) nogil> _hipMemcpyHtoDAsync__funptr)(dst,src,sizeBytes,stream)
 
 
 cdef void* _hipMemcpyDtoHAsync__funptr = NULL
@@ -2418,13 +2065,10 @@ cdef void* _hipMemcpyDtoHAsync__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoHAsync(void * dst,hipDeviceptr_t src,int sizeBytes,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyDtoHAsync(void * dst,void * src,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemcpyDtoHAsync__funptr
-    if _hipMemcpyDtoHAsync__funptr == NULL:
-        with gil:
-            _hipMemcpyDtoHAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpyDtoHAsync")
-    return (<hipError_t (*)(void *,hipDeviceptr_t,int,hipStream_t) nogil> _hipMemcpyDtoHAsync__funptr)(dst,src,sizeBytes,stream)
+    __init_symbol(&_hipMemcpyDtoHAsync__funptr,"hipMemcpyDtoHAsync")
+    return (<hipError_t (*)(void *,void *,unsigned long,hipStream_t) nogil> _hipMemcpyDtoHAsync__funptr)(dst,src,sizeBytes,stream)
 
 
 cdef void* _hipMemcpyDtoDAsync__funptr = NULL
@@ -2440,13 +2084,10 @@ cdef void* _hipMemcpyDtoDAsync__funptr = NULL
 # hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
 # hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
 # hipMemHostAlloc, hipMemHostGetDevicePointer
-cdef hipError_t hipMemcpyDtoDAsync(hipDeviceptr_t dst,hipDeviceptr_t src,int sizeBytes,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyDtoDAsync(void * dst,void * src,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemcpyDtoDAsync__funptr
-    if _hipMemcpyDtoDAsync__funptr == NULL:
-        with gil:
-            _hipMemcpyDtoDAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpyDtoDAsync")
-    return (<hipError_t (*)(hipDeviceptr_t,hipDeviceptr_t,int,hipStream_t) nogil> _hipMemcpyDtoDAsync__funptr)(dst,src,sizeBytes,stream)
+    __init_symbol(&_hipMemcpyDtoDAsync__funptr,"hipMemcpyDtoDAsync")
+    return (<hipError_t (*)(void *,void *,unsigned long,hipStream_t) nogil> _hipMemcpyDtoDAsync__funptr)(dst,src,sizeBytes,stream)
 
 
 cdef void* _hipModuleGetGlobal__funptr = NULL
@@ -2459,13 +2100,10 @@ cdef void* _hipModuleGetGlobal__funptr = NULL
 # @param[in]   hmod  Module to retrieve global from
 # @param[in]   name  Name of global to retrieve
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
-cdef hipError_t hipModuleGetGlobal(hipDeviceptr_t* dptr,int * bytes,hipModule_t hmod,const char * name) nogil:
-    global _lib_handle
+cdef hipError_t hipModuleGetGlobal(void ** dptr,unsigned long * bytes,hipModule_t hmod,const char * name) nogil:
     global _hipModuleGetGlobal__funptr
-    if _hipModuleGetGlobal__funptr == NULL:
-        with gil:
-            _hipModuleGetGlobal__funptr = loader.load_symbol(_lib_handle, "hipModuleGetGlobal")
-    return (<hipError_t (*)(hipDeviceptr_t*,int *,hipModule_t,const char *) nogil> _hipModuleGetGlobal__funptr)(dptr,bytes,hmod,name)
+    __init_symbol(&_hipModuleGetGlobal__funptr,"hipModuleGetGlobal")
+    return (<hipError_t (*)(void **,unsigned long *,hipModule_t,const char *) nogil> _hipModuleGetGlobal__funptr)(dptr,bytes,hmod,name)
 
 
 cdef void* _hipGetSymbolAddress__funptr = NULL
@@ -2474,11 +2112,8 @@ cdef void* _hipGetSymbolAddress__funptr = NULL
 # @param[in]   symbol  pointer to the symbole of the device
 # @return #hipSuccess, #hipErrorInvalidValue
 cdef hipError_t hipGetSymbolAddress(void ** devPtr,const void * symbol) nogil:
-    global _lib_handle
     global _hipGetSymbolAddress__funptr
-    if _hipGetSymbolAddress__funptr == NULL:
-        with gil:
-            _hipGetSymbolAddress__funptr = loader.load_symbol(_lib_handle, "hipGetSymbolAddress")
+    __init_symbol(&_hipGetSymbolAddress__funptr,"hipGetSymbolAddress")
     return (<hipError_t (*)(void **,const void *) nogil> _hipGetSymbolAddress__funptr)(devPtr,symbol)
 
 
@@ -2487,13 +2122,10 @@ cdef void* _hipGetSymbolSize__funptr = NULL
 # @param[in]   symbol  pointer to the device symbole
 # @param[out]  size  pointer to the size
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipGetSymbolSize(int * size,const void * symbol) nogil:
-    global _lib_handle
+cdef hipError_t hipGetSymbolSize(unsigned long * size,const void * symbol) nogil:
     global _hipGetSymbolSize__funptr
-    if _hipGetSymbolSize__funptr == NULL:
-        with gil:
-            _hipGetSymbolSize__funptr = loader.load_symbol(_lib_handle, "hipGetSymbolSize")
-    return (<hipError_t (*)(int *,const void *) nogil> _hipGetSymbolSize__funptr)(size,symbol)
+    __init_symbol(&_hipGetSymbolSize__funptr,"hipGetSymbolSize")
+    return (<hipError_t (*)(unsigned long *,const void *) nogil> _hipGetSymbolSize__funptr)(size,symbol)
 
 
 cdef void* _hipMemcpyToSymbol__funptr = NULL
@@ -2510,13 +2142,10 @@ cdef void* _hipMemcpyToSymbol__funptr = NULL
 # @param[in]   offset  offset in bytes from start of symbole
 # @param[in]   kind  type of memory transfer
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyToSymbol(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyToSymbol(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipMemcpyToSymbol__funptr
-    if _hipMemcpyToSymbol__funptr == NULL:
-        with gil:
-            _hipMemcpyToSymbol__funptr = loader.load_symbol(_lib_handle, "hipMemcpyToSymbol")
-    return (<hipError_t (*)(const void *,const void *,int,int,hipMemcpyKind) nogil> _hipMemcpyToSymbol__funptr)(symbol,src,sizeBytes,offset,kind)
+    __init_symbol(&_hipMemcpyToSymbol__funptr,"hipMemcpyToSymbol")
+    return (<hipError_t (*)(const void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyToSymbol__funptr)(symbol,src,sizeBytes,offset,kind)
 
 
 cdef void* _hipMemcpyToSymbolAsync__funptr = NULL
@@ -2528,13 +2157,10 @@ cdef void* _hipMemcpyToSymbolAsync__funptr = NULL
 # @param[in]   kind  type of memory transfer
 # @param[in]   stream  stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyToSymbolAsync(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyToSymbolAsync(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyToSymbolAsync__funptr
-    if _hipMemcpyToSymbolAsync__funptr == NULL:
-        with gil:
-            _hipMemcpyToSymbolAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpyToSymbolAsync")
-    return (<hipError_t (*)(const void *,const void *,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyToSymbolAsync__funptr)(symbol,src,sizeBytes,offset,kind,stream)
+    __init_symbol(&_hipMemcpyToSymbolAsync__funptr,"hipMemcpyToSymbolAsync")
+    return (<hipError_t (*)(const void *,const void *,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyToSymbolAsync__funptr)(symbol,src,sizeBytes,offset,kind,stream)
 
 
 cdef void* _hipMemcpyFromSymbol__funptr = NULL
@@ -2545,13 +2171,10 @@ cdef void* _hipMemcpyFromSymbol__funptr = NULL
 # @param[in]   offset  offset in bytes from the start of symbole
 # @param[in]   kind  type of memory transfer
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyFromSymbol(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyFromSymbol(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipMemcpyFromSymbol__funptr
-    if _hipMemcpyFromSymbol__funptr == NULL:
-        with gil:
-            _hipMemcpyFromSymbol__funptr = loader.load_symbol(_lib_handle, "hipMemcpyFromSymbol")
-    return (<hipError_t (*)(void *,const void *,int,int,hipMemcpyKind) nogil> _hipMemcpyFromSymbol__funptr)(dst,symbol,sizeBytes,offset,kind)
+    __init_symbol(&_hipMemcpyFromSymbol__funptr,"hipMemcpyFromSymbol")
+    return (<hipError_t (*)(void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyFromSymbol__funptr)(dst,symbol,sizeBytes,offset,kind)
 
 
 cdef void* _hipMemcpyFromSymbolAsync__funptr = NULL
@@ -2563,13 +2186,10 @@ cdef void* _hipMemcpyFromSymbolAsync__funptr = NULL
 # @param[in]   kind  type of memory transfer
 # @param[in]   stream  stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue
-cdef hipError_t hipMemcpyFromSymbolAsync(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyFromSymbolAsync(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyFromSymbolAsync__funptr
-    if _hipMemcpyFromSymbolAsync__funptr == NULL:
-        with gil:
-            _hipMemcpyFromSymbolAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpyFromSymbolAsync")
-    return (<hipError_t (*)(void *,const void *,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyFromSymbolAsync__funptr)(dst,symbol,sizeBytes,offset,kind,stream)
+    __init_symbol(&_hipMemcpyFromSymbolAsync__funptr,"hipMemcpyFromSymbolAsync")
+    return (<hipError_t (*)(void *,const void *,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyFromSymbolAsync__funptr)(dst,symbol,sizeBytes,offset,kind,stream)
 
 
 cdef void* _hipMemcpyAsync__funptr = NULL
@@ -2594,13 +2214,10 @@ cdef void* _hipMemcpyAsync__funptr = NULL
 # hipMemcpyFromSymbol, hipMemcpy2DAsync, hipMemcpyToArrayAsync, hipMemcpy2DToArrayAsync,
 # hipMemcpyFromArrayAsync, hipMemcpy2DFromArrayAsync, hipMemcpyToSymbolAsync,
 # hipMemcpyFromSymbolAsync
-cdef hipError_t hipMemcpyAsync(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyAsync(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyAsync__funptr
-    if _hipMemcpyAsync__funptr == NULL:
-        with gil:
-            _hipMemcpyAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpyAsync")
-    return (<hipError_t (*)(void *,const void *,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyAsync__funptr)(dst,src,sizeBytes,kind,stream)
+    __init_symbol(&_hipMemcpyAsync__funptr,"hipMemcpyAsync")
+    return (<hipError_t (*)(void *,const void *,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyAsync__funptr)(dst,src,sizeBytes,kind,stream)
 
 
 cdef void* _hipMemset__funptr = NULL
@@ -2610,13 +2227,10 @@ cdef void* _hipMemset__funptr = NULL
 # @param[in]  constant value to be set
 # @param[in]  sizeBytes Data size in bytes
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemset(void * dst,int value,int sizeBytes) nogil:
-    global _lib_handle
+cdef hipError_t hipMemset(void * dst,int value,unsigned long sizeBytes) nogil:
     global _hipMemset__funptr
-    if _hipMemset__funptr == NULL:
-        with gil:
-            _hipMemset__funptr = loader.load_symbol(_lib_handle, "hipMemset")
-    return (<hipError_t (*)(void *,int,int) nogil> _hipMemset__funptr)(dst,value,sizeBytes)
+    __init_symbol(&_hipMemset__funptr,"hipMemset")
+    return (<hipError_t (*)(void *,int,unsigned long) nogil> _hipMemset__funptr)(dst,value,sizeBytes)
 
 
 cdef void* _hipMemsetD8__funptr = NULL
@@ -2626,13 +2240,10 @@ cdef void* _hipMemsetD8__funptr = NULL
 # @param[in]  constant value to be set
 # @param[in]  number of values to be set
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD8(hipDeviceptr_t dest,unsigned char value,int count) nogil:
-    global _lib_handle
+cdef hipError_t hipMemsetD8(void * dest,unsigned char value,unsigned long count) nogil:
     global _hipMemsetD8__funptr
-    if _hipMemsetD8__funptr == NULL:
-        with gil:
-            _hipMemsetD8__funptr = loader.load_symbol(_lib_handle, "hipMemsetD8")
-    return (<hipError_t (*)(hipDeviceptr_t,unsigned char,int) nogil> _hipMemsetD8__funptr)(dest,value,count)
+    __init_symbol(&_hipMemsetD8__funptr,"hipMemsetD8")
+    return (<hipError_t (*)(void *,unsigned char,unsigned long) nogil> _hipMemsetD8__funptr)(dest,value,count)
 
 
 cdef void* _hipMemsetD8Async__funptr = NULL
@@ -2647,13 +2258,10 @@ cdef void* _hipMemsetD8Async__funptr = NULL
 # @param[in]  number of values to be set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD8Async(hipDeviceptr_t dest,unsigned char value,int count,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemsetD8Async(void * dest,unsigned char value,unsigned long count,hipStream_t stream) nogil:
     global _hipMemsetD8Async__funptr
-    if _hipMemsetD8Async__funptr == NULL:
-        with gil:
-            _hipMemsetD8Async__funptr = loader.load_symbol(_lib_handle, "hipMemsetD8Async")
-    return (<hipError_t (*)(hipDeviceptr_t,unsigned char,int,hipStream_t) nogil> _hipMemsetD8Async__funptr)(dest,value,count,stream)
+    __init_symbol(&_hipMemsetD8Async__funptr,"hipMemsetD8Async")
+    return (<hipError_t (*)(void *,unsigned char,unsigned long,hipStream_t) nogil> _hipMemsetD8Async__funptr)(dest,value,count,stream)
 
 
 cdef void* _hipMemsetD16__funptr = NULL
@@ -2663,13 +2271,10 @@ cdef void* _hipMemsetD16__funptr = NULL
 # @param[in]  constant value to be set
 # @param[in]  number of values to be set
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD16(hipDeviceptr_t dest,unsigned short value,int count) nogil:
-    global _lib_handle
+cdef hipError_t hipMemsetD16(void * dest,unsigned short value,unsigned long count) nogil:
     global _hipMemsetD16__funptr
-    if _hipMemsetD16__funptr == NULL:
-        with gil:
-            _hipMemsetD16__funptr = loader.load_symbol(_lib_handle, "hipMemsetD16")
-    return (<hipError_t (*)(hipDeviceptr_t,unsigned short,int) nogil> _hipMemsetD16__funptr)(dest,value,count)
+    __init_symbol(&_hipMemsetD16__funptr,"hipMemsetD16")
+    return (<hipError_t (*)(void *,unsigned short,unsigned long) nogil> _hipMemsetD16__funptr)(dest,value,count)
 
 
 cdef void* _hipMemsetD16Async__funptr = NULL
@@ -2684,13 +2289,10 @@ cdef void* _hipMemsetD16Async__funptr = NULL
 # @param[in]  number of values to be set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD16Async(hipDeviceptr_t dest,unsigned short value,int count,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemsetD16Async(void * dest,unsigned short value,unsigned long count,hipStream_t stream) nogil:
     global _hipMemsetD16Async__funptr
-    if _hipMemsetD16Async__funptr == NULL:
-        with gil:
-            _hipMemsetD16Async__funptr = loader.load_symbol(_lib_handle, "hipMemsetD16Async")
-    return (<hipError_t (*)(hipDeviceptr_t,unsigned short,int,hipStream_t) nogil> _hipMemsetD16Async__funptr)(dest,value,count,stream)
+    __init_symbol(&_hipMemsetD16Async__funptr,"hipMemsetD16Async")
+    return (<hipError_t (*)(void *,unsigned short,unsigned long,hipStream_t) nogil> _hipMemsetD16Async__funptr)(dest,value,count,stream)
 
 
 cdef void* _hipMemsetD32__funptr = NULL
@@ -2700,13 +2302,10 @@ cdef void* _hipMemsetD32__funptr = NULL
 # @param[in]  constant value to be set
 # @param[in]  number of values to be set
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-cdef hipError_t hipMemsetD32(hipDeviceptr_t dest,int value,int count) nogil:
-    global _lib_handle
+cdef hipError_t hipMemsetD32(void * dest,int value,unsigned long count) nogil:
     global _hipMemsetD32__funptr
-    if _hipMemsetD32__funptr == NULL:
-        with gil:
-            _hipMemsetD32__funptr = loader.load_symbol(_lib_handle, "hipMemsetD32")
-    return (<hipError_t (*)(hipDeviceptr_t,int,int) nogil> _hipMemsetD32__funptr)(dest,value,count)
+    __init_symbol(&_hipMemsetD32__funptr,"hipMemsetD32")
+    return (<hipError_t (*)(void *,int,unsigned long) nogil> _hipMemsetD32__funptr)(dest,value,count)
 
 
 cdef void* _hipMemsetAsync__funptr = NULL
@@ -2721,13 +2320,10 @@ cdef void* _hipMemsetAsync__funptr = NULL
 # @param[in]  sizeBytes - Size in bytes to set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemsetAsync(void * dst,int value,int sizeBytes,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemsetAsync(void * dst,int value,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemsetAsync__funptr
-    if _hipMemsetAsync__funptr == NULL:
-        with gil:
-            _hipMemsetAsync__funptr = loader.load_symbol(_lib_handle, "hipMemsetAsync")
-    return (<hipError_t (*)(void *,int,int,hipStream_t) nogil> _hipMemsetAsync__funptr)(dst,value,sizeBytes,stream)
+    __init_symbol(&_hipMemsetAsync__funptr,"hipMemsetAsync")
+    return (<hipError_t (*)(void *,int,unsigned long,hipStream_t) nogil> _hipMemsetAsync__funptr)(dst,value,sizeBytes,stream)
 
 
 cdef void* _hipMemsetD32Async__funptr = NULL
@@ -2742,13 +2338,10 @@ cdef void* _hipMemsetD32Async__funptr = NULL
 # @param[in]  count - number of values to be set
 # @param[in]  stream - Stream identifier
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemsetD32Async(hipDeviceptr_t dst,int value,int count,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemsetD32Async(void * dst,int value,unsigned long count,hipStream_t stream) nogil:
     global _hipMemsetD32Async__funptr
-    if _hipMemsetD32Async__funptr == NULL:
-        with gil:
-            _hipMemsetD32Async__funptr = loader.load_symbol(_lib_handle, "hipMemsetD32Async")
-    return (<hipError_t (*)(hipDeviceptr_t,int,int,hipStream_t) nogil> _hipMemsetD32Async__funptr)(dst,value,count,stream)
+    __init_symbol(&_hipMemsetD32Async__funptr,"hipMemsetD32Async")
+    return (<hipError_t (*)(void *,int,unsigned long,hipStream_t) nogil> _hipMemsetD32Async__funptr)(dst,value,count,stream)
 
 
 cdef void* _hipMemset2D__funptr = NULL
@@ -2759,13 +2352,10 @@ cdef void* _hipMemset2D__funptr = NULL
 # @param[in]  width
 # @param[in]  height
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemset2D(void * dst,int pitch,int value,int width,int height) nogil:
-    global _lib_handle
+cdef hipError_t hipMemset2D(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height) nogil:
     global _hipMemset2D__funptr
-    if _hipMemset2D__funptr == NULL:
-        with gil:
-            _hipMemset2D__funptr = loader.load_symbol(_lib_handle, "hipMemset2D")
-    return (<hipError_t (*)(void *,int,int,int,int) nogil> _hipMemset2D__funptr)(dst,pitch,value,width,height)
+    __init_symbol(&_hipMemset2D__funptr,"hipMemset2D")
+    return (<hipError_t (*)(void *,unsigned long,int,unsigned long,unsigned long) nogil> _hipMemset2D__funptr)(dst,pitch,value,width,height)
 
 
 cdef void* _hipMemset2DAsync__funptr = NULL
@@ -2777,13 +2367,10 @@ cdef void* _hipMemset2DAsync__funptr = NULL
 # @param[in]  height
 # @param[in]  stream
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-cdef hipError_t hipMemset2DAsync(void * dst,int pitch,int value,int width,int height,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemset2DAsync(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height,hipStream_t stream) nogil:
     global _hipMemset2DAsync__funptr
-    if _hipMemset2DAsync__funptr == NULL:
-        with gil:
-            _hipMemset2DAsync__funptr = loader.load_symbol(_lib_handle, "hipMemset2DAsync")
-    return (<hipError_t (*)(void *,int,int,int,int,hipStream_t) nogil> _hipMemset2DAsync__funptr)(dst,pitch,value,width,height,stream)
+    __init_symbol(&_hipMemset2DAsync__funptr,"hipMemset2DAsync")
+    return (<hipError_t (*)(void *,unsigned long,int,unsigned long,unsigned long,hipStream_t) nogil> _hipMemset2DAsync__funptr)(dst,pitch,value,width,height,stream)
 
 
 cdef void* _hipMemset3D__funptr = NULL
@@ -2793,11 +2380,8 @@ cdef void* _hipMemset3D__funptr = NULL
 # @param[in]  extent
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
 cdef hipError_t hipMemset3D(hipPitchedPtr pitchedDevPtr,int value,hipExtent extent) nogil:
-    global _lib_handle
     global _hipMemset3D__funptr
-    if _hipMemset3D__funptr == NULL:
-        with gil:
-            _hipMemset3D__funptr = loader.load_symbol(_lib_handle, "hipMemset3D")
+    __init_symbol(&_hipMemset3D__funptr,"hipMemset3D")
     return (<hipError_t (*)(hipPitchedPtr,int,hipExtent) nogil> _hipMemset3D__funptr)(pitchedDevPtr,value,extent)
 
 
@@ -2809,11 +2393,8 @@ cdef void* _hipMemset3DAsync__funptr = NULL
 # @param[in]  stream
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
 cdef hipError_t hipMemset3DAsync(hipPitchedPtr pitchedDevPtr,int value,hipExtent extent,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipMemset3DAsync__funptr
-    if _hipMemset3DAsync__funptr == NULL:
-        with gil:
-            _hipMemset3DAsync__funptr = loader.load_symbol(_lib_handle, "hipMemset3DAsync")
+    __init_symbol(&_hipMemset3DAsync__funptr,"hipMemset3DAsync")
     return (<hipError_t (*)(hipPitchedPtr,int,hipExtent,hipStream_t) nogil> _hipMemset3DAsync__funptr)(pitchedDevPtr,value,extent,stream)
 
 
@@ -2824,23 +2405,17 @@ cdef void* _hipMemGetInfo__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 # @warning On HCC, the free memory only accounts for memory allocated by this process and may be
 # optimistic.
-cdef hipError_t hipMemGetInfo(int * free,int * total) nogil:
-    global _lib_handle
+cdef hipError_t hipMemGetInfo(unsigned long * free,unsigned long * total) nogil:
     global _hipMemGetInfo__funptr
-    if _hipMemGetInfo__funptr == NULL:
-        with gil:
-            _hipMemGetInfo__funptr = loader.load_symbol(_lib_handle, "hipMemGetInfo")
-    return (<hipError_t (*)(int *,int *) nogil> _hipMemGetInfo__funptr)(free,total)
+    __init_symbol(&_hipMemGetInfo__funptr,"hipMemGetInfo")
+    return (<hipError_t (*)(unsigned long *,unsigned long *) nogil> _hipMemGetInfo__funptr)(free,total)
 
 
 cdef void* _hipMemPtrGetInfo__funptr = NULL
-cdef hipError_t hipMemPtrGetInfo(void * ptr,int * size) nogil:
-    global _lib_handle
+cdef hipError_t hipMemPtrGetInfo(void * ptr,unsigned long * size) nogil:
     global _hipMemPtrGetInfo__funptr
-    if _hipMemPtrGetInfo__funptr == NULL:
-        with gil:
-            _hipMemPtrGetInfo__funptr = loader.load_symbol(_lib_handle, "hipMemPtrGetInfo")
-    return (<hipError_t (*)(void *,int *) nogil> _hipMemPtrGetInfo__funptr)(ptr,size)
+    __init_symbol(&_hipMemPtrGetInfo__funptr,"hipMemPtrGetInfo")
+    return (<hipError_t (*)(void *,unsigned long *) nogil> _hipMemPtrGetInfo__funptr)(ptr,size)
 
 
 cdef void* _hipMallocArray__funptr = NULL
@@ -2852,52 +2427,37 @@ cdef void* _hipMallocArray__funptr = NULL
 # @param[in]   flags  Requested properties of allocated array
 # @return      #hipSuccess, #hipErrorOutOfMemory
 # @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
-cdef hipError_t hipMallocArray(hipArray ** array,hipChannelFormatDesc * desc,int width,int height,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipMallocArray(hipArray ** array,hipChannelFormatDesc * desc,unsigned long width,unsigned long height,unsigned int flags) nogil:
     global _hipMallocArray__funptr
-    if _hipMallocArray__funptr == NULL:
-        with gil:
-            _hipMallocArray__funptr = loader.load_symbol(_lib_handle, "hipMallocArray")
-    return (<hipError_t (*)(hipArray **,hipChannelFormatDesc *,int,int,unsigned int) nogil> _hipMallocArray__funptr)(array,desc,width,height,flags)
+    __init_symbol(&_hipMallocArray__funptr,"hipMallocArray")
+    return (<hipError_t (*)(hipArray **,hipChannelFormatDesc *,unsigned long,unsigned long,unsigned int) nogil> _hipMallocArray__funptr)(array,desc,width,height,flags)
 
 
 cdef void* _hipArrayCreate__funptr = NULL
 cdef hipError_t hipArrayCreate(hipArray ** pHandle,HIP_ARRAY_DESCRIPTOR * pAllocateArray) nogil:
-    global _lib_handle
     global _hipArrayCreate__funptr
-    if _hipArrayCreate__funptr == NULL:
-        with gil:
-            _hipArrayCreate__funptr = loader.load_symbol(_lib_handle, "hipArrayCreate")
+    __init_symbol(&_hipArrayCreate__funptr,"hipArrayCreate")
     return (<hipError_t (*)(hipArray **,HIP_ARRAY_DESCRIPTOR *) nogil> _hipArrayCreate__funptr)(pHandle,pAllocateArray)
 
 
 cdef void* _hipArrayDestroy__funptr = NULL
 cdef hipError_t hipArrayDestroy(hipArray * array) nogil:
-    global _lib_handle
     global _hipArrayDestroy__funptr
-    if _hipArrayDestroy__funptr == NULL:
-        with gil:
-            _hipArrayDestroy__funptr = loader.load_symbol(_lib_handle, "hipArrayDestroy")
+    __init_symbol(&_hipArrayDestroy__funptr,"hipArrayDestroy")
     return (<hipError_t (*)(hipArray *) nogil> _hipArrayDestroy__funptr)(array)
 
 
 cdef void* _hipArray3DCreate__funptr = NULL
 cdef hipError_t hipArray3DCreate(hipArray ** array,HIP_ARRAY3D_DESCRIPTOR * pAllocateArray) nogil:
-    global _lib_handle
     global _hipArray3DCreate__funptr
-    if _hipArray3DCreate__funptr == NULL:
-        with gil:
-            _hipArray3DCreate__funptr = loader.load_symbol(_lib_handle, "hipArray3DCreate")
+    __init_symbol(&_hipArray3DCreate__funptr,"hipArray3DCreate")
     return (<hipError_t (*)(hipArray **,HIP_ARRAY3D_DESCRIPTOR *) nogil> _hipArray3DCreate__funptr)(array,pAllocateArray)
 
 
 cdef void* _hipMalloc3D__funptr = NULL
 cdef hipError_t hipMalloc3D(hipPitchedPtr * pitchedDevPtr,hipExtent extent) nogil:
-    global _lib_handle
     global _hipMalloc3D__funptr
-    if _hipMalloc3D__funptr == NULL:
-        with gil:
-            _hipMalloc3D__funptr = loader.load_symbol(_lib_handle, "hipMalloc3D")
+    __init_symbol(&_hipMalloc3D__funptr,"hipMalloc3D")
     return (<hipError_t (*)(hipPitchedPtr *,hipExtent) nogil> _hipMalloc3D__funptr)(pitchedDevPtr,extent)
 
 
@@ -2907,11 +2467,8 @@ cdef void* _hipFreeArray__funptr = NULL
 # @return     #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 # @see hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipHostMalloc, hipHostFree
 cdef hipError_t hipFreeArray(hipArray * array) nogil:
-    global _lib_handle
     global _hipFreeArray__funptr
-    if _hipFreeArray__funptr == NULL:
-        with gil:
-            _hipFreeArray__funptr = loader.load_symbol(_lib_handle, "hipFreeArray")
+    __init_symbol(&_hipFreeArray__funptr,"hipFreeArray")
     return (<hipError_t (*)(hipArray *) nogil> _hipFreeArray__funptr)(array)
 
 
@@ -2920,11 +2477,8 @@ cdef void* _hipFreeMipmappedArray__funptr = NULL
 # @param[in] mipmappedArray - Pointer to mipmapped array to free
 # @return #hipSuccess, #hipErrorInvalidValue
 cdef hipError_t hipFreeMipmappedArray(hipMipmappedArray_t mipmappedArray) nogil:
-    global _lib_handle
     global _hipFreeMipmappedArray__funptr
-    if _hipFreeMipmappedArray__funptr == NULL:
-        with gil:
-            _hipFreeMipmappedArray__funptr = loader.load_symbol(_lib_handle, "hipFreeMipmappedArray")
+    __init_symbol(&_hipFreeMipmappedArray__funptr,"hipFreeMipmappedArray")
     return (<hipError_t (*)(hipMipmappedArray_t) nogil> _hipFreeMipmappedArray__funptr)(mipmappedArray)
 
 
@@ -2937,11 +2491,8 @@ cdef void* _hipMalloc3DArray__funptr = NULL
 # @return      #hipSuccess, #hipErrorOutOfMemory
 # @see hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
 cdef hipError_t hipMalloc3DArray(hipArray ** array,hipChannelFormatDesc * desc,hipExtent extent,unsigned int flags) nogil:
-    global _lib_handle
     global _hipMalloc3DArray__funptr
-    if _hipMalloc3DArray__funptr == NULL:
-        with gil:
-            _hipMalloc3DArray__funptr = loader.load_symbol(_lib_handle, "hipMalloc3DArray")
+    __init_symbol(&_hipMalloc3DArray__funptr,"hipMalloc3DArray")
     return (<hipError_t (*)(hipArray **,hipChannelFormatDesc *,hipExtent,unsigned int) nogil> _hipMalloc3DArray__funptr)(array,desc,extent,flags)
 
 
@@ -2954,11 +2505,8 @@ cdef void* _hipMallocMipmappedArray__funptr = NULL
 # @param[in]  flags           - Flags for extensions
 # @return #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
 cdef hipError_t hipMallocMipmappedArray(hipMipmappedArray_t* mipmappedArray,hipChannelFormatDesc * desc,hipExtent extent,unsigned int numLevels,unsigned int flags) nogil:
-    global _lib_handle
     global _hipMallocMipmappedArray__funptr
-    if _hipMallocMipmappedArray__funptr == NULL:
-        with gil:
-            _hipMallocMipmappedArray__funptr = loader.load_symbol(_lib_handle, "hipMallocMipmappedArray")
+    __init_symbol(&_hipMallocMipmappedArray__funptr,"hipMallocMipmappedArray")
     return (<hipError_t (*)(hipMipmappedArray_t*,hipChannelFormatDesc *,hipExtent,unsigned int,unsigned int) nogil> _hipMallocMipmappedArray__funptr)(mipmappedArray,desc,extent,numLevels,flags)
 
 
@@ -2969,11 +2517,8 @@ cdef void* _hipGetMipmappedArrayLevel__funptr = NULL
 # @param[in]  level          - Mipmap level
 # @return #hipSuccess, #hipErrorInvalidValue
 cdef hipError_t hipGetMipmappedArrayLevel(hipArray_t* levelArray,hipMipmappedArray_const_t mipmappedArray,unsigned int level) nogil:
-    global _lib_handle
     global _hipGetMipmappedArrayLevel__funptr
-    if _hipGetMipmappedArrayLevel__funptr == NULL:
-        with gil:
-            _hipGetMipmappedArrayLevel__funptr = loader.load_symbol(_lib_handle, "hipGetMipmappedArrayLevel")
+    __init_symbol(&_hipGetMipmappedArrayLevel__funptr,"hipGetMipmappedArrayLevel")
     return (<hipError_t (*)(hipArray_t*,hipMipmappedArray_const_t,unsigned int) nogil> _hipGetMipmappedArrayLevel__funptr)(levelArray,mipmappedArray,level)
 
 
@@ -2990,13 +2535,10 @@ cdef void* _hipMemcpy2D__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2D(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2D(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2D__funptr
-    if _hipMemcpy2D__funptr == NULL:
-        with gil:
-            _hipMemcpy2D__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2D")
-    return (<hipError_t (*)(void *,int,const void *,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2D__funptr)(dst,dpitch,src,spitch,width,height,kind)
+    __init_symbol(&_hipMemcpy2D__funptr,"hipMemcpy2D")
+    return (<hipError_t (*)(void *,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2D__funptr)(dst,dpitch,src,spitch,width,height,kind)
 
 
 cdef void* _hipMemcpyParam2D__funptr = NULL
@@ -3007,11 +2549,8 @@ cdef void* _hipMemcpyParam2D__funptr = NULL
 # @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
 # hipMemcpyToSymbol, hipMemcpyAsync
 cdef hipError_t hipMemcpyParam2D(hip_Memcpy2D * pCopy) nogil:
-    global _lib_handle
     global _hipMemcpyParam2D__funptr
-    if _hipMemcpyParam2D__funptr == NULL:
-        with gil:
-            _hipMemcpyParam2D__funptr = loader.load_symbol(_lib_handle, "hipMemcpyParam2D")
+    __init_symbol(&_hipMemcpyParam2D__funptr,"hipMemcpyParam2D")
     return (<hipError_t (*)(hip_Memcpy2D *) nogil> _hipMemcpyParam2D__funptr)(pCopy)
 
 
@@ -3024,11 +2563,8 @@ cdef void* _hipMemcpyParam2DAsync__funptr = NULL
 # @see hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
 # hipMemcpyToSymbol, hipMemcpyAsync
 cdef hipError_t hipMemcpyParam2DAsync(hip_Memcpy2D * pCopy,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipMemcpyParam2DAsync__funptr
-    if _hipMemcpyParam2DAsync__funptr == NULL:
-        with gil:
-            _hipMemcpyParam2DAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpyParam2DAsync")
+    __init_symbol(&_hipMemcpyParam2DAsync__funptr,"hipMemcpyParam2DAsync")
     return (<hipError_t (*)(hip_Memcpy2D *,hipStream_t) nogil> _hipMemcpyParam2DAsync__funptr)(pCopy,stream)
 
 
@@ -3046,13 +2582,10 @@ cdef void* _hipMemcpy2DAsync__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DAsync(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2DAsync(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DAsync__funptr
-    if _hipMemcpy2DAsync__funptr == NULL:
-        with gil:
-            _hipMemcpy2DAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2DAsync")
-    return (<hipError_t (*)(void *,int,const void *,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DAsync__funptr)(dst,dpitch,src,spitch,width,height,kind,stream)
+    __init_symbol(&_hipMemcpy2DAsync__funptr,"hipMemcpy2DAsync")
+    return (<hipError_t (*)(void *,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DAsync__funptr)(dst,dpitch,src,spitch,width,height,kind,stream)
 
 
 cdef void* _hipMemcpy2DToArray__funptr = NULL
@@ -3069,13 +2602,10 @@ cdef void* _hipMemcpy2DToArray__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DToArray(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2DToArray(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2DToArray__funptr
-    if _hipMemcpy2DToArray__funptr == NULL:
-        with gil:
-            _hipMemcpy2DToArray__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2DToArray")
-    return (<hipError_t (*)(hipArray *,int,int,const void *,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2DToArray__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind)
+    __init_symbol(&_hipMemcpy2DToArray__funptr,"hipMemcpy2DToArray")
+    return (<hipError_t (*)(hipArray *,unsigned long,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2DToArray__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind)
 
 
 cdef void* _hipMemcpy2DToArrayAsync__funptr = NULL
@@ -3093,13 +2623,10 @@ cdef void* _hipMemcpy2DToArrayAsync__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DToArrayAsync(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2DToArrayAsync(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DToArrayAsync__funptr
-    if _hipMemcpy2DToArrayAsync__funptr == NULL:
-        with gil:
-            _hipMemcpy2DToArrayAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2DToArrayAsync")
-    return (<hipError_t (*)(hipArray *,int,int,const void *,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DToArrayAsync__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind,stream)
+    __init_symbol(&_hipMemcpy2DToArrayAsync__funptr,"hipMemcpy2DToArrayAsync")
+    return (<hipError_t (*)(hipArray *,unsigned long,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DToArrayAsync__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind,stream)
 
 
 cdef void* _hipMemcpyToArray__funptr = NULL
@@ -3114,13 +2641,10 @@ cdef void* _hipMemcpyToArray__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyToArray(hipArray * dst,int wOffset,int hOffset,const void * src,int count,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyToArray(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipMemcpyToArray__funptr
-    if _hipMemcpyToArray__funptr == NULL:
-        with gil:
-            _hipMemcpyToArray__funptr = loader.load_symbol(_lib_handle, "hipMemcpyToArray")
-    return (<hipError_t (*)(hipArray *,int,int,const void *,int,hipMemcpyKind) nogil> _hipMemcpyToArray__funptr)(dst,wOffset,hOffset,src,count,kind)
+    __init_symbol(&_hipMemcpyToArray__funptr,"hipMemcpyToArray")
+    return (<hipError_t (*)(hipArray *,unsigned long,unsigned long,const void *,unsigned long,hipMemcpyKind) nogil> _hipMemcpyToArray__funptr)(dst,wOffset,hOffset,src,count,kind)
 
 
 cdef void* _hipMemcpyFromArray__funptr = NULL
@@ -3135,13 +2659,10 @@ cdef void* _hipMemcpyFromArray__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyFromArray(void * dst,hipArray_const_t srcArray,int wOffset,int hOffset,int count,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyFromArray(void * dst,hipArray_const_t srcArray,unsigned long wOffset,unsigned long hOffset,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipMemcpyFromArray__funptr
-    if _hipMemcpyFromArray__funptr == NULL:
-        with gil:
-            _hipMemcpyFromArray__funptr = loader.load_symbol(_lib_handle, "hipMemcpyFromArray")
-    return (<hipError_t (*)(void *,hipArray_const_t,int,int,int,hipMemcpyKind) nogil> _hipMemcpyFromArray__funptr)(dst,srcArray,wOffset,hOffset,count,kind)
+    __init_symbol(&_hipMemcpyFromArray__funptr,"hipMemcpyFromArray")
+    return (<hipError_t (*)(void *,hipArray_const_t,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyFromArray__funptr)(dst,srcArray,wOffset,hOffset,count,kind)
 
 
 cdef void* _hipMemcpy2DFromArray__funptr = NULL
@@ -3158,13 +2679,10 @@ cdef void* _hipMemcpy2DFromArray__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DFromArray(void * dst,int dpitch,hipArray_const_t src,int wOffset,int hOffset,int width,int height,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2DFromArray(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffset,unsigned long hOffset,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2DFromArray__funptr
-    if _hipMemcpy2DFromArray__funptr == NULL:
-        with gil:
-            _hipMemcpy2DFromArray__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2DFromArray")
-    return (<hipError_t (*)(void *,int,hipArray_const_t,int,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2DFromArray__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind)
+    __init_symbol(&_hipMemcpy2DFromArray__funptr,"hipMemcpy2DFromArray")
+    return (<hipError_t (*)(void *,unsigned long,hipArray_const_t,unsigned long,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2DFromArray__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind)
 
 
 cdef void* _hipMemcpy2DFromArrayAsync__funptr = NULL
@@ -3182,13 +2700,10 @@ cdef void* _hipMemcpy2DFromArrayAsync__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpy2DFromArrayAsync(void * dst,int dpitch,hipArray_const_t src,int wOffset,int hOffset,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2DFromArrayAsync(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffset,unsigned long hOffset,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DFromArrayAsync__funptr
-    if _hipMemcpy2DFromArrayAsync__funptr == NULL:
-        with gil:
-            _hipMemcpy2DFromArrayAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2DFromArrayAsync")
-    return (<hipError_t (*)(void *,int,hipArray_const_t,int,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DFromArrayAsync__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind,stream)
+    __init_symbol(&_hipMemcpy2DFromArrayAsync__funptr,"hipMemcpy2DFromArrayAsync")
+    return (<hipError_t (*)(void *,unsigned long,hipArray_const_t,unsigned long,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DFromArrayAsync__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind,stream)
 
 
 cdef void* _hipMemcpyAtoH__funptr = NULL
@@ -3201,13 +2716,10 @@ cdef void* _hipMemcpyAtoH__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyAtoH(void * dst,hipArray * srcArray,int srcOffset,int count) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyAtoH(void * dst,hipArray * srcArray,unsigned long srcOffset,unsigned long count) nogil:
     global _hipMemcpyAtoH__funptr
-    if _hipMemcpyAtoH__funptr == NULL:
-        with gil:
-            _hipMemcpyAtoH__funptr = loader.load_symbol(_lib_handle, "hipMemcpyAtoH")
-    return (<hipError_t (*)(void *,hipArray *,int,int) nogil> _hipMemcpyAtoH__funptr)(dst,srcArray,srcOffset,count)
+    __init_symbol(&_hipMemcpyAtoH__funptr,"hipMemcpyAtoH")
+    return (<hipError_t (*)(void *,hipArray *,unsigned long,unsigned long) nogil> _hipMemcpyAtoH__funptr)(dst,srcArray,srcOffset,count)
 
 
 cdef void* _hipMemcpyHtoA__funptr = NULL
@@ -3220,13 +2732,10 @@ cdef void* _hipMemcpyHtoA__funptr = NULL
 # #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
-cdef hipError_t hipMemcpyHtoA(hipArray * dstArray,int dstOffset,const void * srcHost,int count) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyHtoA(hipArray * dstArray,unsigned long dstOffset,const void * srcHost,unsigned long count) nogil:
     global _hipMemcpyHtoA__funptr
-    if _hipMemcpyHtoA__funptr == NULL:
-        with gil:
-            _hipMemcpyHtoA__funptr = loader.load_symbol(_lib_handle, "hipMemcpyHtoA")
-    return (<hipError_t (*)(hipArray *,int,const void *,int) nogil> _hipMemcpyHtoA__funptr)(dstArray,dstOffset,srcHost,count)
+    __init_symbol(&_hipMemcpyHtoA__funptr,"hipMemcpyHtoA")
+    return (<hipError_t (*)(hipArray *,unsigned long,const void *,unsigned long) nogil> _hipMemcpyHtoA__funptr)(dstArray,dstOffset,srcHost,count)
 
 
 cdef void* _hipMemcpy3D__funptr = NULL
@@ -3237,11 +2746,8 @@ cdef void* _hipMemcpy3D__funptr = NULL
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
 cdef hipError_t hipMemcpy3D(hipMemcpy3DParms * p) nogil:
-    global _lib_handle
     global _hipMemcpy3D__funptr
-    if _hipMemcpy3D__funptr == NULL:
-        with gil:
-            _hipMemcpy3D__funptr = loader.load_symbol(_lib_handle, "hipMemcpy3D")
+    __init_symbol(&_hipMemcpy3D__funptr,"hipMemcpy3D")
     return (<hipError_t (*)(hipMemcpy3DParms *) nogil> _hipMemcpy3D__funptr)(p)
 
 
@@ -3254,11 +2760,8 @@ cdef void* _hipMemcpy3DAsync__funptr = NULL
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
 cdef hipError_t hipMemcpy3DAsync(hipMemcpy3DParms * p,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipMemcpy3DAsync__funptr
-    if _hipMemcpy3DAsync__funptr == NULL:
-        with gil:
-            _hipMemcpy3DAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpy3DAsync")
+    __init_symbol(&_hipMemcpy3DAsync__funptr,"hipMemcpy3DAsync")
     return (<hipError_t (*)(hipMemcpy3DParms *,hipStream_t) nogil> _hipMemcpy3DAsync__funptr)(p,stream)
 
 
@@ -3270,11 +2773,8 @@ cdef void* _hipDrvMemcpy3D__funptr = NULL
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
 cdef hipError_t hipDrvMemcpy3D(HIP_MEMCPY3D * pCopy) nogil:
-    global _lib_handle
     global _hipDrvMemcpy3D__funptr
-    if _hipDrvMemcpy3D__funptr == NULL:
-        with gil:
-            _hipDrvMemcpy3D__funptr = loader.load_symbol(_lib_handle, "hipDrvMemcpy3D")
+    __init_symbol(&_hipDrvMemcpy3D__funptr,"hipDrvMemcpy3D")
     return (<hipError_t (*)(HIP_MEMCPY3D *) nogil> _hipDrvMemcpy3D__funptr)(pCopy)
 
 
@@ -3287,11 +2787,8 @@ cdef void* _hipDrvMemcpy3DAsync__funptr = NULL
 # @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
 # hipMemcpyAsync
 cdef hipError_t hipDrvMemcpy3DAsync(HIP_MEMCPY3D * pCopy,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipDrvMemcpy3DAsync__funptr
-    if _hipDrvMemcpy3DAsync__funptr == NULL:
-        with gil:
-            _hipDrvMemcpy3DAsync__funptr = loader.load_symbol(_lib_handle, "hipDrvMemcpy3DAsync")
+    __init_symbol(&_hipDrvMemcpy3DAsync__funptr,"hipDrvMemcpy3DAsync")
     return (<hipError_t (*)(HIP_MEMCPY3D *,hipStream_t) nogil> _hipDrvMemcpy3DAsync__funptr)(pCopy,stream)
 
 
@@ -3314,11 +2811,8 @@ cdef void* _hipDeviceCanAccessPeer__funptr = NULL
 # @returns #hipSuccess,
 # @returns #hipErrorInvalidDevice if deviceId or peerDeviceId are not valid devices
 cdef hipError_t hipDeviceCanAccessPeer(int * canAccessPeer,int deviceId,int peerDeviceId) nogil:
-    global _lib_handle
     global _hipDeviceCanAccessPeer__funptr
-    if _hipDeviceCanAccessPeer__funptr == NULL:
-        with gil:
-            _hipDeviceCanAccessPeer__funptr = loader.load_symbol(_lib_handle, "hipDeviceCanAccessPeer")
+    __init_symbol(&_hipDeviceCanAccessPeer__funptr,"hipDeviceCanAccessPeer")
     return (<hipError_t (*)(int *,int,int) nogil> _hipDeviceCanAccessPeer__funptr)(canAccessPeer,deviceId,peerDeviceId)
 
 
@@ -3334,11 +2828,8 @@ cdef void* _hipDeviceEnablePeerAccess__funptr = NULL
 # Returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
 # @returns #hipErrorPeerAccessAlreadyEnabled if peer access is already enabled for this device.
 cdef hipError_t hipDeviceEnablePeerAccess(int peerDeviceId,unsigned int flags) nogil:
-    global _lib_handle
     global _hipDeviceEnablePeerAccess__funptr
-    if _hipDeviceEnablePeerAccess__funptr == NULL:
-        with gil:
-            _hipDeviceEnablePeerAccess__funptr = loader.load_symbol(_lib_handle, "hipDeviceEnablePeerAccess")
+    __init_symbol(&_hipDeviceEnablePeerAccess__funptr,"hipDeviceEnablePeerAccess")
     return (<hipError_t (*)(int,unsigned int) nogil> _hipDeviceEnablePeerAccess__funptr)(peerDeviceId,flags)
 
 
@@ -3350,11 +2841,8 @@ cdef void* _hipDeviceDisablePeerAccess__funptr = NULL
 # @param [in] peerDeviceId
 # @returns #hipSuccess, #hipErrorPeerAccessNotEnabled
 cdef hipError_t hipDeviceDisablePeerAccess(int peerDeviceId) nogil:
-    global _lib_handle
     global _hipDeviceDisablePeerAccess__funptr
-    if _hipDeviceDisablePeerAccess__funptr == NULL:
-        with gil:
-            _hipDeviceDisablePeerAccess__funptr = loader.load_symbol(_lib_handle, "hipDeviceDisablePeerAccess")
+    __init_symbol(&_hipDeviceDisablePeerAccess__funptr,"hipDeviceDisablePeerAccess")
     return (<hipError_t (*)(int) nogil> _hipDeviceDisablePeerAccess__funptr)(peerDeviceId)
 
 
@@ -3366,13 +2854,10 @@ cdef void* _hipMemGetAddressRange__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidDevicePointer
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipMemGetAddressRange(hipDeviceptr_t* pbase,int * psize,hipDeviceptr_t dptr) nogil:
-    global _lib_handle
+cdef hipError_t hipMemGetAddressRange(void ** pbase,unsigned long * psize,void * dptr) nogil:
     global _hipMemGetAddressRange__funptr
-    if _hipMemGetAddressRange__funptr == NULL:
-        with gil:
-            _hipMemGetAddressRange__funptr = loader.load_symbol(_lib_handle, "hipMemGetAddressRange")
-    return (<hipError_t (*)(hipDeviceptr_t*,int *,hipDeviceptr_t) nogil> _hipMemGetAddressRange__funptr)(pbase,psize,dptr)
+    __init_symbol(&_hipMemGetAddressRange__funptr,"hipMemGetAddressRange")
+    return (<hipError_t (*)(void **,unsigned long *,void *) nogil> _hipMemGetAddressRange__funptr)(pbase,psize,dptr)
 
 
 cdef void* _hipMemcpyPeer__funptr = NULL
@@ -3383,13 +2868,10 @@ cdef void* _hipMemcpyPeer__funptr = NULL
 # @param [in] srcDeviceId - Source device
 # @param [in] sizeBytes - Size of memory copy in bytes
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
-cdef hipError_t hipMemcpyPeer(void * dst,int dstDeviceId,const void * src,int srcDeviceId,int sizeBytes) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyPeer(void * dst,int dstDeviceId,const void * src,int srcDeviceId,unsigned long sizeBytes) nogil:
     global _hipMemcpyPeer__funptr
-    if _hipMemcpyPeer__funptr == NULL:
-        with gil:
-            _hipMemcpyPeer__funptr = loader.load_symbol(_lib_handle, "hipMemcpyPeer")
-    return (<hipError_t (*)(void *,int,const void *,int,int) nogil> _hipMemcpyPeer__funptr)(dst,dstDeviceId,src,srcDeviceId,sizeBytes)
+    __init_symbol(&_hipMemcpyPeer__funptr,"hipMemcpyPeer")
+    return (<hipError_t (*)(void *,int,const void *,int,unsigned long) nogil> _hipMemcpyPeer__funptr)(dst,dstDeviceId,src,srcDeviceId,sizeBytes)
 
 
 cdef void* _hipMemcpyPeerAsync__funptr = NULL
@@ -3401,13 +2883,10 @@ cdef void* _hipMemcpyPeerAsync__funptr = NULL
 # @param [in] sizeBytes - Size of memory copy in bytes
 # @param [in] stream - Stream identifier
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
-cdef hipError_t hipMemcpyPeerAsync(void * dst,int dstDeviceId,const void * src,int srcDevice,int sizeBytes,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyPeerAsync(void * dst,int dstDeviceId,const void * src,int srcDevice,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemcpyPeerAsync__funptr
-    if _hipMemcpyPeerAsync__funptr == NULL:
-        with gil:
-            _hipMemcpyPeerAsync__funptr = loader.load_symbol(_lib_handle, "hipMemcpyPeerAsync")
-    return (<hipError_t (*)(void *,int,const void *,int,int,hipStream_t) nogil> _hipMemcpyPeerAsync__funptr)(dst,dstDeviceId,src,srcDevice,sizeBytes,stream)
+    __init_symbol(&_hipMemcpyPeerAsync__funptr,"hipMemcpyPeerAsync")
+    return (<hipError_t (*)(void *,int,const void *,int,unsigned long,hipStream_t) nogil> _hipMemcpyPeerAsync__funptr)(dst,dstDeviceId,src,srcDevice,sizeBytes,stream)
 
 
 cdef void* _hipCtxCreate__funptr = NULL
@@ -3428,13 +2907,10 @@ cdef void* _hipCtxCreate__funptr = NULL
 # @return #hipSuccess
 # @see hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
 # hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipCtxCreate(hipCtx_t* ctx,unsigned int flags,hipDevice_t device) nogil:
-    global _lib_handle
+cdef hipError_t hipCtxCreate(hipCtx_t* ctx,unsigned int flags,int device) nogil:
     global _hipCtxCreate__funptr
-    if _hipCtxCreate__funptr == NULL:
-        with gil:
-            _hipCtxCreate__funptr = loader.load_symbol(_lib_handle, "hipCtxCreate")
-    return (<hipError_t (*)(hipCtx_t*,unsigned int,hipDevice_t) nogil> _hipCtxCreate__funptr)(ctx,flags,device)
+    __init_symbol(&_hipCtxCreate__funptr,"hipCtxCreate")
+    return (<hipError_t (*)(hipCtx_t*,unsigned int,int) nogil> _hipCtxCreate__funptr)(ctx,flags,device)
 
 
 cdef void* _hipCtxDestroy__funptr = NULL
@@ -3444,11 +2920,8 @@ cdef void* _hipCtxDestroy__funptr = NULL
 # @see hipCtxCreate, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,hipCtxSetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 cdef hipError_t hipCtxDestroy(hipCtx_t ctx) nogil:
-    global _lib_handle
     global _hipCtxDestroy__funptr
-    if _hipCtxDestroy__funptr == NULL:
-        with gil:
-            _hipCtxDestroy__funptr = loader.load_symbol(_lib_handle, "hipCtxDestroy")
+    __init_symbol(&_hipCtxDestroy__funptr,"hipCtxDestroy")
     return (<hipError_t (*)(hipCtx_t) nogil> _hipCtxDestroy__funptr)(ctx)
 
 
@@ -3459,11 +2932,8 @@ cdef void* _hipCtxPopCurrent__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxSetCurrent, hipCtxGetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 cdef hipError_t hipCtxPopCurrent(hipCtx_t* ctx) nogil:
-    global _lib_handle
     global _hipCtxPopCurrent__funptr
-    if _hipCtxPopCurrent__funptr == NULL:
-        with gil:
-            _hipCtxPopCurrent__funptr = loader.load_symbol(_lib_handle, "hipCtxPopCurrent")
+    __init_symbol(&_hipCtxPopCurrent__funptr,"hipCtxPopCurrent")
     return (<hipError_t (*)(hipCtx_t*) nogil> _hipCtxPopCurrent__funptr)(ctx)
 
 
@@ -3474,11 +2944,8 @@ cdef void* _hipCtxPushCurrent__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 cdef hipError_t hipCtxPushCurrent(hipCtx_t ctx) nogil:
-    global _lib_handle
     global _hipCtxPushCurrent__funptr
-    if _hipCtxPushCurrent__funptr == NULL:
-        with gil:
-            _hipCtxPushCurrent__funptr = loader.load_symbol(_lib_handle, "hipCtxPushCurrent")
+    __init_symbol(&_hipCtxPushCurrent__funptr,"hipCtxPushCurrent")
     return (<hipError_t (*)(hipCtx_t) nogil> _hipCtxPushCurrent__funptr)(ctx)
 
 
@@ -3489,11 +2956,8 @@ cdef void* _hipCtxSetCurrent__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 cdef hipError_t hipCtxSetCurrent(hipCtx_t ctx) nogil:
-    global _lib_handle
     global _hipCtxSetCurrent__funptr
-    if _hipCtxSetCurrent__funptr == NULL:
-        with gil:
-            _hipCtxSetCurrent__funptr = loader.load_symbol(_lib_handle, "hipCtxSetCurrent")
+    __init_symbol(&_hipCtxSetCurrent__funptr,"hipCtxSetCurrent")
     return (<hipError_t (*)(hipCtx_t) nogil> _hipCtxSetCurrent__funptr)(ctx)
 
 
@@ -3504,11 +2968,8 @@ cdef void* _hipCtxGetCurrent__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 cdef hipError_t hipCtxGetCurrent(hipCtx_t* ctx) nogil:
-    global _lib_handle
     global _hipCtxGetCurrent__funptr
-    if _hipCtxGetCurrent__funptr == NULL:
-        with gil:
-            _hipCtxGetCurrent__funptr = loader.load_symbol(_lib_handle, "hipCtxGetCurrent")
+    __init_symbol(&_hipCtxGetCurrent__funptr,"hipCtxGetCurrent")
     return (<hipError_t (*)(hipCtx_t*) nogil> _hipCtxGetCurrent__funptr)(ctx)
 
 
@@ -3518,13 +2979,10 @@ cdef void* _hipCtxGetDevice__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidContext
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
-cdef hipError_t hipCtxGetDevice(hipDevice_t * device) nogil:
-    global _lib_handle
+cdef hipError_t hipCtxGetDevice(int * device) nogil:
     global _hipCtxGetDevice__funptr
-    if _hipCtxGetDevice__funptr == NULL:
-        with gil:
-            _hipCtxGetDevice__funptr = loader.load_symbol(_lib_handle, "hipCtxGetDevice")
-    return (<hipError_t (*)(hipDevice_t *) nogil> _hipCtxGetDevice__funptr)(device)
+    __init_symbol(&_hipCtxGetDevice__funptr,"hipCtxGetDevice")
+    return (<hipError_t (*)(int *) nogil> _hipCtxGetDevice__funptr)(device)
 
 
 cdef void* _hipCtxGetApiVersion__funptr = NULL
@@ -3540,11 +2998,8 @@ cdef void* _hipCtxGetApiVersion__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
 # hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 cdef hipError_t hipCtxGetApiVersion(hipCtx_t ctx,int * apiVersion) nogil:
-    global _lib_handle
     global _hipCtxGetApiVersion__funptr
-    if _hipCtxGetApiVersion__funptr == NULL:
-        with gil:
-            _hipCtxGetApiVersion__funptr = loader.load_symbol(_lib_handle, "hipCtxGetApiVersion")
+    __init_symbol(&_hipCtxGetApiVersion__funptr,"hipCtxGetApiVersion")
     return (<hipError_t (*)(hipCtx_t,int *) nogil> _hipCtxGetApiVersion__funptr)(ctx,apiVersion)
 
 
@@ -3557,11 +3012,8 @@ cdef void* _hipCtxGetCacheConfig__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 cdef hipError_t hipCtxGetCacheConfig(hipFuncCache_t * cacheConfig) nogil:
-    global _lib_handle
     global _hipCtxGetCacheConfig__funptr
-    if _hipCtxGetCacheConfig__funptr == NULL:
-        with gil:
-            _hipCtxGetCacheConfig__funptr = loader.load_symbol(_lib_handle, "hipCtxGetCacheConfig")
+    __init_symbol(&_hipCtxGetCacheConfig__funptr,"hipCtxGetCacheConfig")
     return (<hipError_t (*)(hipFuncCache_t *) nogil> _hipCtxGetCacheConfig__funptr)(cacheConfig)
 
 
@@ -3574,11 +3026,8 @@ cdef void* _hipCtxSetCacheConfig__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 cdef hipError_t hipCtxSetCacheConfig(hipFuncCache_t cacheConfig) nogil:
-    global _lib_handle
     global _hipCtxSetCacheConfig__funptr
-    if _hipCtxSetCacheConfig__funptr == NULL:
-        with gil:
-            _hipCtxSetCacheConfig__funptr = loader.load_symbol(_lib_handle, "hipCtxSetCacheConfig")
+    __init_symbol(&_hipCtxSetCacheConfig__funptr,"hipCtxSetCacheConfig")
     return (<hipError_t (*)(hipFuncCache_t) nogil> _hipCtxSetCacheConfig__funptr)(cacheConfig)
 
 
@@ -3591,11 +3040,8 @@ cdef void* _hipCtxSetSharedMemConfig__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 cdef hipError_t hipCtxSetSharedMemConfig(hipSharedMemConfig config) nogil:
-    global _lib_handle
     global _hipCtxSetSharedMemConfig__funptr
-    if _hipCtxSetSharedMemConfig__funptr == NULL:
-        with gil:
-            _hipCtxSetSharedMemConfig__funptr = loader.load_symbol(_lib_handle, "hipCtxSetSharedMemConfig")
+    __init_symbol(&_hipCtxSetSharedMemConfig__funptr,"hipCtxSetSharedMemConfig")
     return (<hipError_t (*)(hipSharedMemConfig) nogil> _hipCtxSetSharedMemConfig__funptr)(config)
 
 
@@ -3608,11 +3054,8 @@ cdef void* _hipCtxGetSharedMemConfig__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 cdef hipError_t hipCtxGetSharedMemConfig(hipSharedMemConfig * pConfig) nogil:
-    global _lib_handle
     global _hipCtxGetSharedMemConfig__funptr
-    if _hipCtxGetSharedMemConfig__funptr == NULL:
-        with gil:
-            _hipCtxGetSharedMemConfig__funptr = loader.load_symbol(_lib_handle, "hipCtxGetSharedMemConfig")
+    __init_symbol(&_hipCtxGetSharedMemConfig__funptr,"hipCtxGetSharedMemConfig")
     return (<hipError_t (*)(hipSharedMemConfig *) nogil> _hipCtxGetSharedMemConfig__funptr)(pConfig)
 
 
@@ -3624,11 +3067,8 @@ cdef void* _hipCtxSynchronize__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxGetDevice
 cdef hipError_t hipCtxSynchronize() nogil:
-    global _lib_handle
     global _hipCtxSynchronize__funptr
-    if _hipCtxSynchronize__funptr == NULL:
-        with gil:
-            _hipCtxSynchronize__funptr = loader.load_symbol(_lib_handle, "hipCtxSynchronize")
+    __init_symbol(&_hipCtxSynchronize__funptr,"hipCtxSynchronize")
     return (<hipError_t (*)() nogil> _hipCtxSynchronize__funptr)()
 
 
@@ -3639,11 +3079,8 @@ cdef void* _hipCtxGetFlags__funptr = NULL
 # @see hipCtxCreate, hipCtxDestroy, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 cdef hipError_t hipCtxGetFlags(unsigned int * flags) nogil:
-    global _lib_handle
     global _hipCtxGetFlags__funptr
-    if _hipCtxGetFlags__funptr == NULL:
-        with gil:
-            _hipCtxGetFlags__funptr = loader.load_symbol(_lib_handle, "hipCtxGetFlags")
+    __init_symbol(&_hipCtxGetFlags__funptr,"hipCtxGetFlags")
     return (<hipError_t (*)(unsigned int *) nogil> _hipCtxGetFlags__funptr)(flags)
 
 
@@ -3661,11 +3098,8 @@ cdef void* _hipCtxEnablePeerAccess__funptr = NULL
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 # @warning PeerToPeer support is experimental.
 cdef hipError_t hipCtxEnablePeerAccess(hipCtx_t peerCtx,unsigned int flags) nogil:
-    global _lib_handle
     global _hipCtxEnablePeerAccess__funptr
-    if _hipCtxEnablePeerAccess__funptr == NULL:
-        with gil:
-            _hipCtxEnablePeerAccess__funptr = loader.load_symbol(_lib_handle, "hipCtxEnablePeerAccess")
+    __init_symbol(&_hipCtxEnablePeerAccess__funptr,"hipCtxEnablePeerAccess")
     return (<hipError_t (*)(hipCtx_t,unsigned int) nogil> _hipCtxEnablePeerAccess__funptr)(peerCtx,flags)
 
 
@@ -3681,11 +3115,8 @@ cdef void* _hipCtxDisablePeerAccess__funptr = NULL
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 # @warning PeerToPeer support is experimental.
 cdef hipError_t hipCtxDisablePeerAccess(hipCtx_t peerCtx) nogil:
-    global _lib_handle
     global _hipCtxDisablePeerAccess__funptr
-    if _hipCtxDisablePeerAccess__funptr == NULL:
-        with gil:
-            _hipCtxDisablePeerAccess__funptr = loader.load_symbol(_lib_handle, "hipCtxDisablePeerAccess")
+    __init_symbol(&_hipCtxDisablePeerAccess__funptr,"hipCtxDisablePeerAccess")
     return (<hipError_t (*)(hipCtx_t) nogil> _hipCtxDisablePeerAccess__funptr)(peerCtx)
 
 
@@ -3698,13 +3129,10 @@ cdef void* _hipDevicePrimaryCtxGetState__funptr = NULL
 # @returns #hipSuccess
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxGetState(hipDevice_t dev,unsigned int * flags,int * active) nogil:
-    global _lib_handle
+cdef hipError_t hipDevicePrimaryCtxGetState(int dev,unsigned int * flags,int * active) nogil:
     global _hipDevicePrimaryCtxGetState__funptr
-    if _hipDevicePrimaryCtxGetState__funptr == NULL:
-        with gil:
-            _hipDevicePrimaryCtxGetState__funptr = loader.load_symbol(_lib_handle, "hipDevicePrimaryCtxGetState")
-    return (<hipError_t (*)(hipDevice_t,unsigned int *,int *) nogil> _hipDevicePrimaryCtxGetState__funptr)(dev,flags,active)
+    __init_symbol(&_hipDevicePrimaryCtxGetState__funptr,"hipDevicePrimaryCtxGetState")
+    return (<hipError_t (*)(int,unsigned int *,int *) nogil> _hipDevicePrimaryCtxGetState__funptr)(dev,flags,active)
 
 
 cdef void* _hipDevicePrimaryCtxRelease__funptr = NULL
@@ -3715,13 +3143,10 @@ cdef void* _hipDevicePrimaryCtxRelease__funptr = NULL
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 # @warning This function return #hipSuccess though doesn't release the primaryCtx by design on
 # HIP/HCC path.
-cdef hipError_t hipDevicePrimaryCtxRelease(hipDevice_t dev) nogil:
-    global _lib_handle
+cdef hipError_t hipDevicePrimaryCtxRelease(int dev) nogil:
     global _hipDevicePrimaryCtxRelease__funptr
-    if _hipDevicePrimaryCtxRelease__funptr == NULL:
-        with gil:
-            _hipDevicePrimaryCtxRelease__funptr = loader.load_symbol(_lib_handle, "hipDevicePrimaryCtxRelease")
-    return (<hipError_t (*)(hipDevice_t) nogil> _hipDevicePrimaryCtxRelease__funptr)(dev)
+    __init_symbol(&_hipDevicePrimaryCtxRelease__funptr,"hipDevicePrimaryCtxRelease")
+    return (<hipError_t (*)(int) nogil> _hipDevicePrimaryCtxRelease__funptr)(dev)
 
 
 cdef void* _hipDevicePrimaryCtxRetain__funptr = NULL
@@ -3731,13 +3156,10 @@ cdef void* _hipDevicePrimaryCtxRetain__funptr = NULL
 # @returns #hipSuccess
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxRetain(hipCtx_t* pctx,hipDevice_t dev) nogil:
-    global _lib_handle
+cdef hipError_t hipDevicePrimaryCtxRetain(hipCtx_t* pctx,int dev) nogil:
     global _hipDevicePrimaryCtxRetain__funptr
-    if _hipDevicePrimaryCtxRetain__funptr == NULL:
-        with gil:
-            _hipDevicePrimaryCtxRetain__funptr = loader.load_symbol(_lib_handle, "hipDevicePrimaryCtxRetain")
-    return (<hipError_t (*)(hipCtx_t*,hipDevice_t) nogil> _hipDevicePrimaryCtxRetain__funptr)(pctx,dev)
+    __init_symbol(&_hipDevicePrimaryCtxRetain__funptr,"hipDevicePrimaryCtxRetain")
+    return (<hipError_t (*)(hipCtx_t*,int) nogil> _hipDevicePrimaryCtxRetain__funptr)(pctx,dev)
 
 
 cdef void* _hipDevicePrimaryCtxReset__funptr = NULL
@@ -3746,13 +3168,10 @@ cdef void* _hipDevicePrimaryCtxReset__funptr = NULL
 # @returns #hipSuccess
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxReset(hipDevice_t dev) nogil:
-    global _lib_handle
+cdef hipError_t hipDevicePrimaryCtxReset(int dev) nogil:
     global _hipDevicePrimaryCtxReset__funptr
-    if _hipDevicePrimaryCtxReset__funptr == NULL:
-        with gil:
-            _hipDevicePrimaryCtxReset__funptr = loader.load_symbol(_lib_handle, "hipDevicePrimaryCtxReset")
-    return (<hipError_t (*)(hipDevice_t) nogil> _hipDevicePrimaryCtxReset__funptr)(dev)
+    __init_symbol(&_hipDevicePrimaryCtxReset__funptr,"hipDevicePrimaryCtxReset")
+    return (<hipError_t (*)(int) nogil> _hipDevicePrimaryCtxReset__funptr)(dev)
 
 
 cdef void* _hipDevicePrimaryCtxSetFlags__funptr = NULL
@@ -3762,13 +3181,10 @@ cdef void* _hipDevicePrimaryCtxSetFlags__funptr = NULL
 # @returns #hipSuccess, #hipErrorContextAlreadyInUse
 # @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
 # hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-cdef hipError_t hipDevicePrimaryCtxSetFlags(hipDevice_t dev,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipDevicePrimaryCtxSetFlags(int dev,unsigned int flags) nogil:
     global _hipDevicePrimaryCtxSetFlags__funptr
-    if _hipDevicePrimaryCtxSetFlags__funptr == NULL:
-        with gil:
-            _hipDevicePrimaryCtxSetFlags__funptr = loader.load_symbol(_lib_handle, "hipDevicePrimaryCtxSetFlags")
-    return (<hipError_t (*)(hipDevice_t,unsigned int) nogil> _hipDevicePrimaryCtxSetFlags__funptr)(dev,flags)
+    __init_symbol(&_hipDevicePrimaryCtxSetFlags__funptr,"hipDevicePrimaryCtxSetFlags")
+    return (<hipError_t (*)(int,unsigned int) nogil> _hipDevicePrimaryCtxSetFlags__funptr)(dev,flags)
 
 
 cdef void* _hipModuleLoad__funptr = NULL
@@ -3783,11 +3199,8 @@ cdef void* _hipModuleLoad__funptr = NULL
 # @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorFileNotFound,
 # hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
 cdef hipError_t hipModuleLoad(hipModule_t* module,const char * fname) nogil:
-    global _lib_handle
     global _hipModuleLoad__funptr
-    if _hipModuleLoad__funptr == NULL:
-        with gil:
-            _hipModuleLoad__funptr = loader.load_symbol(_lib_handle, "hipModuleLoad")
+    __init_symbol(&_hipModuleLoad__funptr,"hipModuleLoad")
     return (<hipError_t (*)(hipModule_t*,const char *) nogil> _hipModuleLoad__funptr)(module,fname)
 
 
@@ -3797,11 +3210,8 @@ cdef void* _hipModuleUnload__funptr = NULL
 # @returns hipSuccess, hipInvalidValue
 # module is freed and the code objects associated with it are destroyed
 cdef hipError_t hipModuleUnload(hipModule_t module) nogil:
-    global _lib_handle
     global _hipModuleUnload__funptr
-    if _hipModuleUnload__funptr == NULL:
-        with gil:
-            _hipModuleUnload__funptr = loader.load_symbol(_lib_handle, "hipModuleUnload")
+    __init_symbol(&_hipModuleUnload__funptr,"hipModuleUnload")
     return (<hipError_t (*)(hipModule_t) nogil> _hipModuleUnload__funptr)(module)
 
 
@@ -3813,11 +3223,8 @@ cdef void* _hipModuleGetFunction__funptr = NULL
 # @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorNotInitialized,
 # hipErrorNotFound,
 cdef hipError_t hipModuleGetFunction(hipFunction_t* function,hipModule_t module,const char * kname) nogil:
-    global _lib_handle
     global _hipModuleGetFunction__funptr
-    if _hipModuleGetFunction__funptr == NULL:
-        with gil:
-            _hipModuleGetFunction__funptr = loader.load_symbol(_lib_handle, "hipModuleGetFunction")
+    __init_symbol(&_hipModuleGetFunction__funptr,"hipModuleGetFunction")
     return (<hipError_t (*)(hipFunction_t*,hipModule_t,const char *) nogil> _hipModuleGetFunction__funptr)(function,module,kname)
 
 
@@ -3827,11 +3234,8 @@ cdef void* _hipFuncGetAttributes__funptr = NULL
 # @param [in] func
 # @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
 cdef hipError_t hipFuncGetAttributes(hipFuncAttributes * attr,const void * func) nogil:
-    global _lib_handle
     global _hipFuncGetAttributes__funptr
-    if _hipFuncGetAttributes__funptr == NULL:
-        with gil:
-            _hipFuncGetAttributes__funptr = loader.load_symbol(_lib_handle, "hipFuncGetAttributes")
+    __init_symbol(&_hipFuncGetAttributes__funptr,"hipFuncGetAttributes")
     return (<hipError_t (*)(hipFuncAttributes *,const void *) nogil> _hipFuncGetAttributes__funptr)(attr,func)
 
 
@@ -3842,11 +3246,8 @@ cdef void* _hipFuncGetAttribute__funptr = NULL
 # @param [in]  hfunc
 # @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
 cdef hipError_t hipFuncGetAttribute(int * value,hipFunction_attribute attrib,hipFunction_t hfunc) nogil:
-    global _lib_handle
     global _hipFuncGetAttribute__funptr
-    if _hipFuncGetAttribute__funptr == NULL:
-        with gil:
-            _hipFuncGetAttribute__funptr = loader.load_symbol(_lib_handle, "hipFuncGetAttribute")
+    __init_symbol(&_hipFuncGetAttribute__funptr,"hipFuncGetAttribute")
     return (<hipError_t (*)(int *,hipFunction_attribute,hipFunction_t) nogil> _hipFuncGetAttribute__funptr)(value,attrib,hfunc)
 
 
@@ -3857,11 +3258,8 @@ cdef void* _hipModuleGetTexRef__funptr = NULL
 # @param [out] texRef
 # @returns hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
 cdef hipError_t hipModuleGetTexRef(textureReference ** texRef,hipModule_t hmod,const char * name) nogil:
-    global _lib_handle
     global _hipModuleGetTexRef__funptr
-    if _hipModuleGetTexRef__funptr == NULL:
-        with gil:
-            _hipModuleGetTexRef__funptr = loader.load_symbol(_lib_handle, "hipModuleGetTexRef")
+    __init_symbol(&_hipModuleGetTexRef__funptr,"hipModuleGetTexRef")
     return (<hipError_t (*)(textureReference **,hipModule_t,const char *) nogil> _hipModuleGetTexRef__funptr)(texRef,hmod,name)
 
 
@@ -3872,11 +3270,8 @@ cdef void* _hipModuleLoadData__funptr = NULL
 # @param [out] module
 # @returns hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
 cdef hipError_t hipModuleLoadData(hipModule_t* module,const void * image) nogil:
-    global _lib_handle
     global _hipModuleLoadData__funptr
-    if _hipModuleLoadData__funptr == NULL:
-        with gil:
-            _hipModuleLoadData__funptr = loader.load_symbol(_lib_handle, "hipModuleLoadData")
+    __init_symbol(&_hipModuleLoadData__funptr,"hipModuleLoadData")
     return (<hipError_t (*)(hipModule_t*,const void *) nogil> _hipModuleLoadData__funptr)(module,image)
 
 
@@ -3890,11 +3285,8 @@ cdef void* _hipModuleLoadDataEx__funptr = NULL
 # @param [in] option values for JIT
 # @returns hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
 cdef hipError_t hipModuleLoadDataEx(hipModule_t* module,const void * image,unsigned int numOptions,hipJitOption * options,void ** optionValues) nogil:
-    global _lib_handle
     global _hipModuleLoadDataEx__funptr
-    if _hipModuleLoadDataEx__funptr == NULL:
-        with gil:
-            _hipModuleLoadDataEx__funptr = loader.load_symbol(_lib_handle, "hipModuleLoadDataEx")
+    __init_symbol(&_hipModuleLoadDataEx__funptr,"hipModuleLoadDataEx")
     return (<hipError_t (*)(hipModule_t*,const void *,unsigned int,hipJitOption *,void **) nogil> _hipModuleLoadDataEx__funptr)(module,image,numOptions,options,optionValues)
 
 
@@ -3922,11 +3314,8 @@ cdef void* _hipModuleLaunchKernel__funptr = NULL
 # @warning kernellParams argument is not yet implemented in HIP. Please use extra instead. Please
 # refer to hip_porting_driver_api.md for sample usage.
 cdef hipError_t hipModuleLaunchKernel(hipFunction_t f,unsigned int gridDimX,unsigned int gridDimY,unsigned int gridDimZ,unsigned int blockDimX,unsigned int blockDimY,unsigned int blockDimZ,unsigned int sharedMemBytes,hipStream_t stream,void ** kernelParams,void ** extra) nogil:
-    global _lib_handle
     global _hipModuleLaunchKernel__funptr
-    if _hipModuleLaunchKernel__funptr == NULL:
-        with gil:
-            _hipModuleLaunchKernel__funptr = loader.load_symbol(_lib_handle, "hipModuleLaunchKernel")
+    __init_symbol(&_hipModuleLaunchKernel__funptr,"hipModuleLaunchKernel")
     return (<hipError_t (*)(hipFunction_t,unsigned int,unsigned int,unsigned int,unsigned int,unsigned int,unsigned int,unsigned int,hipStream_t,void **,void **) nogil> _hipModuleLaunchKernel__funptr)(f,gridDimX,gridDimY,gridDimZ,blockDimX,blockDimY,blockDimZ,sharedMemBytes,stream,kernelParams,extra)
 
 
@@ -3945,11 +3334,8 @@ cdef void* _hipLaunchCooperativeKernel__funptr = NULL
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
 cdef hipError_t hipLaunchCooperativeKernel(const void * f,dim3 gridDim,dim3 blockDimX,void ** kernelParams,unsigned int sharedMemBytes,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipLaunchCooperativeKernel__funptr
-    if _hipLaunchCooperativeKernel__funptr == NULL:
-        with gil:
-            _hipLaunchCooperativeKernel__funptr = loader.load_symbol(_lib_handle, "hipLaunchCooperativeKernel")
+    __init_symbol(&_hipLaunchCooperativeKernel__funptr,"hipLaunchCooperativeKernel")
     return (<hipError_t (*)(const void *,dim3,dim3,void **,unsigned int,hipStream_t) nogil> _hipLaunchCooperativeKernel__funptr)(f,gridDim,blockDimX,kernelParams,sharedMemBytes,stream)
 
 
@@ -3961,11 +3347,8 @@ cdef void* _hipLaunchCooperativeKernelMultiDevice__funptr = NULL
 # @param [in] flags                    Flags to control launch behavior.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
 cdef hipError_t hipLaunchCooperativeKernelMultiDevice(hipLaunchParams_t * launchParamsList,int numDevices,unsigned int flags) nogil:
-    global _lib_handle
     global _hipLaunchCooperativeKernelMultiDevice__funptr
-    if _hipLaunchCooperativeKernelMultiDevice__funptr == NULL:
-        with gil:
-            _hipLaunchCooperativeKernelMultiDevice__funptr = loader.load_symbol(_lib_handle, "hipLaunchCooperativeKernelMultiDevice")
+    __init_symbol(&_hipLaunchCooperativeKernelMultiDevice__funptr,"hipLaunchCooperativeKernelMultiDevice")
     return (<hipError_t (*)(hipLaunchParams_t *,int,unsigned int) nogil> _hipLaunchCooperativeKernelMultiDevice__funptr)(launchParamsList,numDevices,flags)
 
 
@@ -3977,11 +3360,8 @@ cdef void* _hipExtLaunchMultiKernelMultiDevice__funptr = NULL
 # @param [in] flags                    Flags to control launch behavior.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
 cdef hipError_t hipExtLaunchMultiKernelMultiDevice(hipLaunchParams_t * launchParamsList,int numDevices,unsigned int flags) nogil:
-    global _lib_handle
     global _hipExtLaunchMultiKernelMultiDevice__funptr
-    if _hipExtLaunchMultiKernelMultiDevice__funptr == NULL:
-        with gil:
-            _hipExtLaunchMultiKernelMultiDevice__funptr = loader.load_symbol(_lib_handle, "hipExtLaunchMultiKernelMultiDevice")
+    __init_symbol(&_hipExtLaunchMultiKernelMultiDevice__funptr,"hipExtLaunchMultiKernelMultiDevice")
     return (<hipError_t (*)(hipLaunchParams_t *,int,unsigned int) nogil> _hipExtLaunchMultiKernelMultiDevice__funptr)(launchParamsList,numDevices,flags)
 
 
@@ -3999,13 +3379,10 @@ cdef void* _hipModuleOccupancyMaxPotentialBlockSize__funptr = NULL
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-cdef hipError_t hipModuleOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,hipFunction_t f,int dynSharedMemPerBlk,int blockSizeLimit) nogil:
-    global _lib_handle
+cdef hipError_t hipModuleOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,hipFunction_t f,unsigned long dynSharedMemPerBlk,int blockSizeLimit) nogil:
     global _hipModuleOccupancyMaxPotentialBlockSize__funptr
-    if _hipModuleOccupancyMaxPotentialBlockSize__funptr == NULL:
-        with gil:
-            _hipModuleOccupancyMaxPotentialBlockSize__funptr = loader.load_symbol(_lib_handle, "hipModuleOccupancyMaxPotentialBlockSize")
-    return (<hipError_t (*)(int *,int *,hipFunction_t,int,int) nogil> _hipModuleOccupancyMaxPotentialBlockSize__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit)
+    __init_symbol(&_hipModuleOccupancyMaxPotentialBlockSize__funptr,"hipModuleOccupancyMaxPotentialBlockSize")
+    return (<hipError_t (*)(int *,int *,hipFunction_t,unsigned long,int) nogil> _hipModuleOccupancyMaxPotentialBlockSize__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit)
 
 
 cdef void* _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr = NULL
@@ -4019,13 +3396,10 @@ cdef void* _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr = NULL
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-cdef hipError_t hipModuleOccupancyMaxPotentialBlockSizeWithFlags(int * gridSize,int * blockSize,hipFunction_t f,int dynSharedMemPerBlk,int blockSizeLimit,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipModuleOccupancyMaxPotentialBlockSizeWithFlags(int * gridSize,int * blockSize,hipFunction_t f,unsigned long dynSharedMemPerBlk,int blockSizeLimit,unsigned int flags) nogil:
     global _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr
-    if _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr == NULL:
-        with gil:
-            _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr = loader.load_symbol(_lib_handle, "hipModuleOccupancyMaxPotentialBlockSizeWithFlags")
-    return (<hipError_t (*)(int *,int *,hipFunction_t,int,int,unsigned int) nogil> _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit,flags)
+    __init_symbol(&_hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr,"hipModuleOccupancyMaxPotentialBlockSizeWithFlags")
+    return (<hipError_t (*)(int *,int *,hipFunction_t,unsigned long,int,unsigned int) nogil> _hipModuleOccupancyMaxPotentialBlockSizeWithFlags__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit,flags)
 
 
 cdef void* _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr = NULL
@@ -4034,13 +3408,10 @@ cdef void* _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr = NULL
 # @param [in]  func             Kernel function (hipFunction) for which occupancy is calulated
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
-cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,hipFunction_t f,int blockSize,int dynSharedMemPerBlk) nogil:
-    global _lib_handle
+cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,hipFunction_t f,int blockSize,unsigned long dynSharedMemPerBlk) nogil:
     global _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr
-    if _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr == NULL:
-        with gil:
-            _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr = loader.load_symbol(_lib_handle, "hipModuleOccupancyMaxActiveBlocksPerMultiprocessor")
-    return (<hipError_t (*)(int *,hipFunction_t,int,int) nogil> _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk)
+    __init_symbol(&_hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr,"hipModuleOccupancyMaxActiveBlocksPerMultiprocessor")
+    return (<hipError_t (*)(int *,hipFunction_t,int,unsigned long) nogil> _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk)
 
 
 cdef void* _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr = NULL
@@ -4050,13 +3421,10 @@ cdef void* _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr 
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
 # @param [in]  flags            Extra flags for occupancy calculation (only default supported)
-cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,hipFunction_t f,int blockSize,int dynSharedMemPerBlk,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,hipFunction_t f,int blockSize,unsigned long dynSharedMemPerBlk,unsigned int flags) nogil:
     global _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr
-    if _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr == NULL:
-        with gil:
-            _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr = loader.load_symbol(_lib_handle, "hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags")
-    return (<hipError_t (*)(int *,hipFunction_t,int,int,unsigned int) nogil> _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk,flags)
+    __init_symbol(&_hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr,"hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags")
+    return (<hipError_t (*)(int *,hipFunction_t,int,unsigned long,unsigned int) nogil> _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk,flags)
 
 
 cdef void* _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr = NULL
@@ -4065,13 +3433,10 @@ cdef void* _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr = NULL
 # @param [in]  func             Kernel function for which occupancy is calulated
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
-cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,const void * f,int blockSize,int dynSharedMemPerBlk) nogil:
-    global _lib_handle
+cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessor(int * numBlocks,const void * f,int blockSize,unsigned long dynSharedMemPerBlk) nogil:
     global _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr
-    if _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr == NULL:
-        with gil:
-            _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr = loader.load_symbol(_lib_handle, "hipOccupancyMaxActiveBlocksPerMultiprocessor")
-    return (<hipError_t (*)(int *,const void *,int,int) nogil> _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk)
+    __init_symbol(&_hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr,"hipOccupancyMaxActiveBlocksPerMultiprocessor")
+    return (<hipError_t (*)(int *,const void *,int,unsigned long) nogil> _hipOccupancyMaxActiveBlocksPerMultiprocessor__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk)
 
 
 cdef void* _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr = NULL
@@ -4081,13 +3446,10 @@ cdef void* _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr = NULL
 # @param [in]  blockSize        Block size the kernel is intended to be launched with
 # @param [in]  dynSharedMemPerBlk dynamic shared memory usage (in bytes) intended for each block
 # @param [in]  flags            Extra flags for occupancy calculation (currently ignored)
-cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,const void * f,int blockSize,int dynSharedMemPerBlk,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int * numBlocks,const void * f,int blockSize,unsigned long dynSharedMemPerBlk,unsigned int flags) nogil:
     global _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr
-    if _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr == NULL:
-        with gil:
-            _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr = loader.load_symbol(_lib_handle, "hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags")
-    return (<hipError_t (*)(int *,const void *,int,int,unsigned int) nogil> _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk,flags)
+    __init_symbol(&_hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr,"hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags")
+    return (<hipError_t (*)(int *,const void *,int,unsigned long,unsigned int) nogil> _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__funptr)(numBlocks,f,blockSize,dynSharedMemPerBlk,flags)
 
 
 cdef void* _hipOccupancyMaxPotentialBlockSize__funptr = NULL
@@ -4100,13 +3462,10 @@ cdef void* _hipOccupancyMaxPotentialBlockSize__funptr = NULL
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-cdef hipError_t hipOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,const void * f,int dynSharedMemPerBlk,int blockSizeLimit) nogil:
-    global _lib_handle
+cdef hipError_t hipOccupancyMaxPotentialBlockSize(int * gridSize,int * blockSize,const void * f,unsigned long dynSharedMemPerBlk,int blockSizeLimit) nogil:
     global _hipOccupancyMaxPotentialBlockSize__funptr
-    if _hipOccupancyMaxPotentialBlockSize__funptr == NULL:
-        with gil:
-            _hipOccupancyMaxPotentialBlockSize__funptr = loader.load_symbol(_lib_handle, "hipOccupancyMaxPotentialBlockSize")
-    return (<hipError_t (*)(int *,int *,const void *,int,int) nogil> _hipOccupancyMaxPotentialBlockSize__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit)
+    __init_symbol(&_hipOccupancyMaxPotentialBlockSize__funptr,"hipOccupancyMaxPotentialBlockSize")
+    return (<hipError_t (*)(int *,int *,const void *,unsigned long,int) nogil> _hipOccupancyMaxPotentialBlockSize__funptr)(gridSize,blockSize,f,dynSharedMemPerBlk,blockSizeLimit)
 
 
 cdef void* _hipProfilerStart__funptr = NULL
@@ -4114,11 +3473,8 @@ cdef void* _hipProfilerStart__funptr = NULL
 # When using this API, start the profiler with profiling disabled.  (--startdisabled)
 # @warning : hipProfilerStart API is under development.
 cdef hipError_t hipProfilerStart() nogil:
-    global _lib_handle
     global _hipProfilerStart__funptr
-    if _hipProfilerStart__funptr == NULL:
-        with gil:
-            _hipProfilerStart__funptr = loader.load_symbol(_lib_handle, "hipProfilerStart")
+    __init_symbol(&_hipProfilerStart__funptr,"hipProfilerStart")
     return (<hipError_t (*)() nogil> _hipProfilerStart__funptr)()
 
 
@@ -4127,11 +3483,8 @@ cdef void* _hipProfilerStop__funptr = NULL
 # When using this API, start the profiler with profiling disabled.  (--startdisabled)
 # @warning : hipProfilerStop API is under development.
 cdef hipError_t hipProfilerStop() nogil:
-    global _lib_handle
     global _hipProfilerStop__funptr
-    if _hipProfilerStop__funptr == NULL:
-        with gil:
-            _hipProfilerStop__funptr = loader.load_symbol(_lib_handle, "hipProfilerStop")
+    __init_symbol(&_hipProfilerStop__funptr,"hipProfilerStop")
     return (<hipError_t (*)() nogil> _hipProfilerStop__funptr)()
 
 
@@ -4152,13 +3505,10 @@ cdef void* _hipConfigureCall__funptr = NULL
 # Please note, HIP does not support kernel launch with total work items defined in dimension with
 # size gridDim x blockDim >= 2^32.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
-cdef hipError_t hipConfigureCall(dim3 gridDim,dim3 blockDim,int sharedMem,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipConfigureCall(dim3 gridDim,dim3 blockDim,unsigned long sharedMem,hipStream_t stream) nogil:
     global _hipConfigureCall__funptr
-    if _hipConfigureCall__funptr == NULL:
-        with gil:
-            _hipConfigureCall__funptr = loader.load_symbol(_lib_handle, "hipConfigureCall")
-    return (<hipError_t (*)(dim3,dim3,int,hipStream_t) nogil> _hipConfigureCall__funptr)(gridDim,blockDim,sharedMem,stream)
+    __init_symbol(&_hipConfigureCall__funptr,"hipConfigureCall")
+    return (<hipError_t (*)(dim3,dim3,unsigned long,hipStream_t) nogil> _hipConfigureCall__funptr)(gridDim,blockDim,sharedMem,stream)
 
 
 cdef void* _hipSetupArgument__funptr = NULL
@@ -4167,13 +3517,10 @@ cdef void* _hipSetupArgument__funptr = NULL
 # @param [in] arg    Pointer the argument in host memory.
 # @param [in] size   Size of the argument.
 # @param [in] offset Offset of the argument on the argument stack.
-cdef hipError_t hipSetupArgument(const void * arg,int size,int offset) nogil:
-    global _lib_handle
+cdef hipError_t hipSetupArgument(const void * arg,unsigned long size,unsigned long offset) nogil:
     global _hipSetupArgument__funptr
-    if _hipSetupArgument__funptr == NULL:
-        with gil:
-            _hipSetupArgument__funptr = loader.load_symbol(_lib_handle, "hipSetupArgument")
-    return (<hipError_t (*)(const void *,int,int) nogil> _hipSetupArgument__funptr)(arg,size,offset)
+    __init_symbol(&_hipSetupArgument__funptr,"hipSetupArgument")
+    return (<hipError_t (*)(const void *,unsigned long,unsigned long) nogil> _hipSetupArgument__funptr)(arg,size,offset)
 
 
 cdef void* _hipLaunchByPtr__funptr = NULL
@@ -4181,11 +3528,8 @@ cdef void* _hipLaunchByPtr__funptr = NULL
 # @param [in] func Kernel to launch.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
 cdef hipError_t hipLaunchByPtr(const void * func) nogil:
-    global _lib_handle
     global _hipLaunchByPtr__funptr
-    if _hipLaunchByPtr__funptr == NULL:
-        with gil:
-            _hipLaunchByPtr__funptr = loader.load_symbol(_lib_handle, "hipLaunchByPtr")
+    __init_symbol(&_hipLaunchByPtr__funptr,"hipLaunchByPtr")
     return (<hipError_t (*)(const void *) nogil> _hipLaunchByPtr__funptr)(func)
 
 
@@ -4200,13 +3544,10 @@ cdef void* _hipLaunchKernel__funptr = NULL
 # @param [in] stream - Stream where the kernel should be dispatched.  May be 0, in which case th
 # default stream is used with associated synchronization rules.
 # @returns #hipSuccess, #hipErrorInvalidValue, hipInvalidDevice
-cdef hipError_t hipLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,int sharedMemBytes,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,unsigned long sharedMemBytes,hipStream_t stream) nogil:
     global _hipLaunchKernel__funptr
-    if _hipLaunchKernel__funptr == NULL:
-        with gil:
-            _hipLaunchKernel__funptr = loader.load_symbol(_lib_handle, "hipLaunchKernel")
-    return (<hipError_t (*)(const void *,dim3,dim3,void **,int,hipStream_t) nogil> _hipLaunchKernel__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream)
+    __init_symbol(&_hipLaunchKernel__funptr,"hipLaunchKernel")
+    return (<hipError_t (*)(const void *,dim3,dim3,void **,unsigned long,hipStream_t) nogil> _hipLaunchKernel__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream)
 
 
 cdef void* _hipLaunchHostFunc__funptr = NULL
@@ -4218,13 +3559,10 @@ cdef void* _hipLaunchHostFunc__funptr = NULL
 # #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipLaunchHostFunc(hipStream_t stream,hipHostFn_t fn,void * userData) nogil:
-    global _lib_handle
+cdef hipError_t hipLaunchHostFunc(hipStream_t stream,hipHostFn_t fn,void * userData):
     global _hipLaunchHostFunc__funptr
-    if _hipLaunchHostFunc__funptr == NULL:
-        with gil:
-            _hipLaunchHostFunc__funptr = loader.load_symbol(_lib_handle, "hipLaunchHostFunc")
-    return (<hipError_t (*)(hipStream_t,hipHostFn_t,void *) nogil> _hipLaunchHostFunc__funptr)(stream,fn,userData)
+    __init_symbol(&_hipLaunchHostFunc__funptr,"hipLaunchHostFunc")
+    return (<hipError_t (*)(hipStream_t,hipHostFn_t,void *)> _hipLaunchHostFunc__funptr)(stream,fn,userData)
 
 
 cdef void* _hipDrvMemcpy2DUnaligned__funptr = NULL
@@ -4232,11 +3570,8 @@ cdef void* _hipDrvMemcpy2DUnaligned__funptr = NULL
 # @param pCopy           - Parameters for the memory copy
 # @returns #hipSuccess, #hipErrorInvalidValue
 cdef hipError_t hipDrvMemcpy2DUnaligned(hip_Memcpy2D * pCopy) nogil:
-    global _lib_handle
     global _hipDrvMemcpy2DUnaligned__funptr
-    if _hipDrvMemcpy2DUnaligned__funptr == NULL:
-        with gil:
-            _hipDrvMemcpy2DUnaligned__funptr = loader.load_symbol(_lib_handle, "hipDrvMemcpy2DUnaligned")
+    __init_symbol(&_hipDrvMemcpy2DUnaligned__funptr,"hipDrvMemcpy2DUnaligned")
     return (<hipError_t (*)(hip_Memcpy2D *) nogil> _hipDrvMemcpy2DUnaligned__funptr)(pCopy)
 
 
@@ -4257,13 +3592,10 @@ cdef void* _hipExtLaunchKernel__funptr = NULL
 # @param [in] flags. The value of hipExtAnyOrderLaunch, signifies if kernel can be
 # launched in any order.
 # @returns hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
-cdef hipError_t hipExtLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,int sharedMemBytes,hipStream_t stream,hipEvent_t startEvent,hipEvent_t stopEvent,int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipExtLaunchKernel(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,unsigned long sharedMemBytes,hipStream_t stream,hipEvent_t startEvent,hipEvent_t stopEvent,int flags) nogil:
     global _hipExtLaunchKernel__funptr
-    if _hipExtLaunchKernel__funptr == NULL:
-        with gil:
-            _hipExtLaunchKernel__funptr = loader.load_symbol(_lib_handle, "hipExtLaunchKernel")
-    return (<hipError_t (*)(const void *,dim3,dim3,void **,int,hipStream_t,hipEvent_t,hipEvent_t,int) nogil> _hipExtLaunchKernel__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream,startEvent,stopEvent,flags)
+    __init_symbol(&_hipExtLaunchKernel__funptr,"hipExtLaunchKernel")
+    return (<hipError_t (*)(const void *,dim3,dim3,void **,unsigned long,hipStream_t,hipEvent_t,hipEvent_t,int) nogil> _hipExtLaunchKernel__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream,startEvent,stopEvent,flags)
 
 
 cdef void* _hipBindTextureToMipmappedArray__funptr = NULL
@@ -4273,11 +3605,8 @@ cdef void* _hipBindTextureToMipmappedArray__funptr = NULL
 # @param [in] desc  opointer to the channel format
 # @returns hipSuccess, hipErrorInvalidValue
 cdef hipError_t hipBindTextureToMipmappedArray(textureReference * tex,hipMipmappedArray_const_t mipmappedArray,hipChannelFormatDesc * desc) nogil:
-    global _lib_handle
     global _hipBindTextureToMipmappedArray__funptr
-    if _hipBindTextureToMipmappedArray__funptr == NULL:
-        with gil:
-            _hipBindTextureToMipmappedArray__funptr = loader.load_symbol(_lib_handle, "hipBindTextureToMipmappedArray")
+    __init_symbol(&_hipBindTextureToMipmappedArray__funptr,"hipBindTextureToMipmappedArray")
     return (<hipError_t (*)(textureReference *,hipMipmappedArray_const_t,hipChannelFormatDesc *) nogil> _hipBindTextureToMipmappedArray__funptr)(tex,mipmappedArray,desc)
 
 
@@ -4291,11 +3620,8 @@ cdef void* _hipCreateTextureObject__funptr = NULL
 # @note 3D liner filter isn't supported on GFX90A boards, on which the API @p hipCreateTextureObject will
 # return hipErrorNotSupported.
 cdef hipError_t hipCreateTextureObject(hipTextureObject_t* pTexObject,hipResourceDesc * pResDesc,hipTextureDesc * pTexDesc,hipResourceViewDesc * pResViewDesc) nogil:
-    global _lib_handle
     global _hipCreateTextureObject__funptr
-    if _hipCreateTextureObject__funptr == NULL:
-        with gil:
-            _hipCreateTextureObject__funptr = loader.load_symbol(_lib_handle, "hipCreateTextureObject")
+    __init_symbol(&_hipCreateTextureObject__funptr,"hipCreateTextureObject")
     return (<hipError_t (*)(hipTextureObject_t*,hipResourceDesc *,hipTextureDesc *,hipResourceViewDesc *) nogil> _hipCreateTextureObject__funptr)(pTexObject,pResDesc,pTexDesc,pResViewDesc)
 
 
@@ -4304,11 +3630,8 @@ cdef void* _hipDestroyTextureObject__funptr = NULL
 # @param [in] textureObject  texture object to destroy
 # @returns hipSuccess, hipErrorInvalidValue
 cdef hipError_t hipDestroyTextureObject(hipTextureObject_t textureObject) nogil:
-    global _lib_handle
     global _hipDestroyTextureObject__funptr
-    if _hipDestroyTextureObject__funptr == NULL:
-        with gil:
-            _hipDestroyTextureObject__funptr = loader.load_symbol(_lib_handle, "hipDestroyTextureObject")
+    __init_symbol(&_hipDestroyTextureObject__funptr,"hipDestroyTextureObject")
     return (<hipError_t (*)(hipTextureObject_t) nogil> _hipDestroyTextureObject__funptr)(textureObject)
 
 
@@ -4318,11 +3641,8 @@ cdef void* _hipGetChannelDesc__funptr = NULL
 # @param [out] array  memory array on the device
 # @returns hipSuccess, hipErrorInvalidValue
 cdef hipError_t hipGetChannelDesc(hipChannelFormatDesc * desc,hipArray_const_t array) nogil:
-    global _lib_handle
     global _hipGetChannelDesc__funptr
-    if _hipGetChannelDesc__funptr == NULL:
-        with gil:
-            _hipGetChannelDesc__funptr = loader.load_symbol(_lib_handle, "hipGetChannelDesc")
+    __init_symbol(&_hipGetChannelDesc__funptr,"hipGetChannelDesc")
     return (<hipError_t (*)(hipChannelFormatDesc *,hipArray_const_t) nogil> _hipGetChannelDesc__funptr)(desc,array)
 
 
@@ -4332,11 +3652,8 @@ cdef void* _hipGetTextureObjectResourceDesc__funptr = NULL
 # @param [in] textureObject  texture object
 # @returns hipSuccess, hipErrorInvalidValue
 cdef hipError_t hipGetTextureObjectResourceDesc(hipResourceDesc * pResDesc,hipTextureObject_t textureObject) nogil:
-    global _lib_handle
     global _hipGetTextureObjectResourceDesc__funptr
-    if _hipGetTextureObjectResourceDesc__funptr == NULL:
-        with gil:
-            _hipGetTextureObjectResourceDesc__funptr = loader.load_symbol(_lib_handle, "hipGetTextureObjectResourceDesc")
+    __init_symbol(&_hipGetTextureObjectResourceDesc__funptr,"hipGetTextureObjectResourceDesc")
     return (<hipError_t (*)(hipResourceDesc *,hipTextureObject_t) nogil> _hipGetTextureObjectResourceDesc__funptr)(pResDesc,textureObject)
 
 
@@ -4346,11 +3663,8 @@ cdef void* _hipGetTextureObjectResourceViewDesc__funptr = NULL
 # @param [in] textureObject  texture object
 # @returns hipSuccess, hipErrorInvalidValue
 cdef hipError_t hipGetTextureObjectResourceViewDesc(hipResourceViewDesc * pResViewDesc,hipTextureObject_t textureObject) nogil:
-    global _lib_handle
     global _hipGetTextureObjectResourceViewDesc__funptr
-    if _hipGetTextureObjectResourceViewDesc__funptr == NULL:
-        with gil:
-            _hipGetTextureObjectResourceViewDesc__funptr = loader.load_symbol(_lib_handle, "hipGetTextureObjectResourceViewDesc")
+    __init_symbol(&_hipGetTextureObjectResourceViewDesc__funptr,"hipGetTextureObjectResourceViewDesc")
     return (<hipError_t (*)(hipResourceViewDesc *,hipTextureObject_t) nogil> _hipGetTextureObjectResourceViewDesc__funptr)(pResViewDesc,textureObject)
 
 
@@ -4360,11 +3674,8 @@ cdef void* _hipGetTextureObjectTextureDesc__funptr = NULL
 # @param [in] textureObject  texture object
 # @returns hipSuccess, hipErrorInvalidValue
 cdef hipError_t hipGetTextureObjectTextureDesc(hipTextureDesc * pTexDesc,hipTextureObject_t textureObject) nogil:
-    global _lib_handle
     global _hipGetTextureObjectTextureDesc__funptr
-    if _hipGetTextureObjectTextureDesc__funptr == NULL:
-        with gil:
-            _hipGetTextureObjectTextureDesc__funptr = loader.load_symbol(_lib_handle, "hipGetTextureObjectTextureDesc")
+    __init_symbol(&_hipGetTextureObjectTextureDesc__funptr,"hipGetTextureObjectTextureDesc")
     return (<hipError_t (*)(hipTextureDesc *,hipTextureObject_t) nogil> _hipGetTextureObjectTextureDesc__funptr)(pTexDesc,textureObject)
 
 
@@ -4376,11 +3687,8 @@ cdef void* _hipTexObjectCreate__funptr = NULL
 # @param [in] pResViewDesc  pointer to resource view descriptor
 # @returns hipSuccess, hipErrorInvalidValue
 cdef hipError_t hipTexObjectCreate(hipTextureObject_t* pTexObject,HIP_RESOURCE_DESC_st * pResDesc,HIP_TEXTURE_DESC_st * pTexDesc,HIP_RESOURCE_VIEW_DESC_st * pResViewDesc) nogil:
-    global _lib_handle
     global _hipTexObjectCreate__funptr
-    if _hipTexObjectCreate__funptr == NULL:
-        with gil:
-            _hipTexObjectCreate__funptr = loader.load_symbol(_lib_handle, "hipTexObjectCreate")
+    __init_symbol(&_hipTexObjectCreate__funptr,"hipTexObjectCreate")
     return (<hipError_t (*)(hipTextureObject_t*,HIP_RESOURCE_DESC_st *,HIP_TEXTURE_DESC_st *,HIP_RESOURCE_VIEW_DESC_st *) nogil> _hipTexObjectCreate__funptr)(pTexObject,pResDesc,pTexDesc,pResViewDesc)
 
 
@@ -4389,11 +3697,8 @@ cdef void* _hipTexObjectDestroy__funptr = NULL
 # @param [in] texObject  texture object to destroy
 # @returns hipSuccess, hipErrorInvalidValue
 cdef hipError_t hipTexObjectDestroy(hipTextureObject_t texObject) nogil:
-    global _lib_handle
     global _hipTexObjectDestroy__funptr
-    if _hipTexObjectDestroy__funptr == NULL:
-        with gil:
-            _hipTexObjectDestroy__funptr = loader.load_symbol(_lib_handle, "hipTexObjectDestroy")
+    __init_symbol(&_hipTexObjectDestroy__funptr,"hipTexObjectDestroy")
     return (<hipError_t (*)(hipTextureObject_t) nogil> _hipTexObjectDestroy__funptr)(texObject)
 
 
@@ -4403,11 +3708,8 @@ cdef void* _hipTexObjectGetResourceDesc__funptr = NULL
 # @param [in] texObject  texture object
 # @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
 cdef hipError_t hipTexObjectGetResourceDesc(HIP_RESOURCE_DESC_st * pResDesc,hipTextureObject_t texObject) nogil:
-    global _lib_handle
     global _hipTexObjectGetResourceDesc__funptr
-    if _hipTexObjectGetResourceDesc__funptr == NULL:
-        with gil:
-            _hipTexObjectGetResourceDesc__funptr = loader.load_symbol(_lib_handle, "hipTexObjectGetResourceDesc")
+    __init_symbol(&_hipTexObjectGetResourceDesc__funptr,"hipTexObjectGetResourceDesc")
     return (<hipError_t (*)(HIP_RESOURCE_DESC_st *,hipTextureObject_t) nogil> _hipTexObjectGetResourceDesc__funptr)(pResDesc,texObject)
 
 
@@ -4417,11 +3719,8 @@ cdef void* _hipTexObjectGetResourceViewDesc__funptr = NULL
 # @param [in] texObject  texture object
 # @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
 cdef hipError_t hipTexObjectGetResourceViewDesc(HIP_RESOURCE_VIEW_DESC_st * pResViewDesc,hipTextureObject_t texObject) nogil:
-    global _lib_handle
     global _hipTexObjectGetResourceViewDesc__funptr
-    if _hipTexObjectGetResourceViewDesc__funptr == NULL:
-        with gil:
-            _hipTexObjectGetResourceViewDesc__funptr = loader.load_symbol(_lib_handle, "hipTexObjectGetResourceViewDesc")
+    __init_symbol(&_hipTexObjectGetResourceViewDesc__funptr,"hipTexObjectGetResourceViewDesc")
     return (<hipError_t (*)(HIP_RESOURCE_VIEW_DESC_st *,hipTextureObject_t) nogil> _hipTexObjectGetResourceViewDesc__funptr)(pResViewDesc,texObject)
 
 
@@ -4431,11 +3730,8 @@ cdef void* _hipTexObjectGetTextureDesc__funptr = NULL
 # @param [in] texObject  texture object
 # @returns hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
 cdef hipError_t hipTexObjectGetTextureDesc(HIP_TEXTURE_DESC_st * pTexDesc,hipTextureObject_t texObject) nogil:
-    global _lib_handle
     global _hipTexObjectGetTextureDesc__funptr
-    if _hipTexObjectGetTextureDesc__funptr == NULL:
-        with gil:
-            _hipTexObjectGetTextureDesc__funptr = loader.load_symbol(_lib_handle, "hipTexObjectGetTextureDesc")
+    __init_symbol(&_hipTexObjectGetTextureDesc__funptr,"hipTexObjectGetTextureDesc")
     return (<hipError_t (*)(HIP_TEXTURE_DESC_st *,hipTextureObject_t) nogil> _hipTexObjectGetTextureDesc__funptr)(pTexDesc,texObject)
 
 
@@ -4449,291 +3745,204 @@ cdef void* _hipGetTextureReference__funptr = NULL
 # @param [in] symbol  pointer to the symbol related with the texture for the reference
 # @returns hipSuccess, hipErrorInvalidValue
 cdef hipError_t hipGetTextureReference(textureReference ** texref,const void * symbol) nogil:
-    global _lib_handle
     global _hipGetTextureReference__funptr
-    if _hipGetTextureReference__funptr == NULL:
-        with gil:
-            _hipGetTextureReference__funptr = loader.load_symbol(_lib_handle, "hipGetTextureReference")
+    __init_symbol(&_hipGetTextureReference__funptr,"hipGetTextureReference")
     return (<hipError_t (*)(textureReference **,const void *) nogil> _hipGetTextureReference__funptr)(texref,symbol)
 
 
 cdef void* _hipTexRefSetAddressMode__funptr = NULL
 cdef hipError_t hipTexRefSetAddressMode(textureReference * texRef,int dim,hipTextureAddressMode am) nogil:
-    global _lib_handle
     global _hipTexRefSetAddressMode__funptr
-    if _hipTexRefSetAddressMode__funptr == NULL:
-        with gil:
-            _hipTexRefSetAddressMode__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetAddressMode")
+    __init_symbol(&_hipTexRefSetAddressMode__funptr,"hipTexRefSetAddressMode")
     return (<hipError_t (*)(textureReference *,int,hipTextureAddressMode) nogil> _hipTexRefSetAddressMode__funptr)(texRef,dim,am)
 
 
 cdef void* _hipTexRefSetArray__funptr = NULL
 cdef hipError_t hipTexRefSetArray(textureReference * tex,hipArray_const_t array,unsigned int flags) nogil:
-    global _lib_handle
     global _hipTexRefSetArray__funptr
-    if _hipTexRefSetArray__funptr == NULL:
-        with gil:
-            _hipTexRefSetArray__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetArray")
+    __init_symbol(&_hipTexRefSetArray__funptr,"hipTexRefSetArray")
     return (<hipError_t (*)(textureReference *,hipArray_const_t,unsigned int) nogil> _hipTexRefSetArray__funptr)(tex,array,flags)
 
 
 cdef void* _hipTexRefSetFilterMode__funptr = NULL
 cdef hipError_t hipTexRefSetFilterMode(textureReference * texRef,hipTextureFilterMode fm) nogil:
-    global _lib_handle
     global _hipTexRefSetFilterMode__funptr
-    if _hipTexRefSetFilterMode__funptr == NULL:
-        with gil:
-            _hipTexRefSetFilterMode__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetFilterMode")
+    __init_symbol(&_hipTexRefSetFilterMode__funptr,"hipTexRefSetFilterMode")
     return (<hipError_t (*)(textureReference *,hipTextureFilterMode) nogil> _hipTexRefSetFilterMode__funptr)(texRef,fm)
 
 
 cdef void* _hipTexRefSetFlags__funptr = NULL
 cdef hipError_t hipTexRefSetFlags(textureReference * texRef,unsigned int Flags) nogil:
-    global _lib_handle
     global _hipTexRefSetFlags__funptr
-    if _hipTexRefSetFlags__funptr == NULL:
-        with gil:
-            _hipTexRefSetFlags__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetFlags")
+    __init_symbol(&_hipTexRefSetFlags__funptr,"hipTexRefSetFlags")
     return (<hipError_t (*)(textureReference *,unsigned int) nogil> _hipTexRefSetFlags__funptr)(texRef,Flags)
 
 
 cdef void* _hipTexRefSetFormat__funptr = NULL
 cdef hipError_t hipTexRefSetFormat(textureReference * texRef,hipArray_Format fmt,int NumPackedComponents) nogil:
-    global _lib_handle
     global _hipTexRefSetFormat__funptr
-    if _hipTexRefSetFormat__funptr == NULL:
-        with gil:
-            _hipTexRefSetFormat__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetFormat")
+    __init_symbol(&_hipTexRefSetFormat__funptr,"hipTexRefSetFormat")
     return (<hipError_t (*)(textureReference *,hipArray_Format,int) nogil> _hipTexRefSetFormat__funptr)(texRef,fmt,NumPackedComponents)
 
 
 cdef void* _hipBindTexture__funptr = NULL
-cdef hipError_t hipBindTexture(int * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,int size) nogil:
-    global _lib_handle
+cdef hipError_t hipBindTexture(unsigned long * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,unsigned long size) nogil:
     global _hipBindTexture__funptr
-    if _hipBindTexture__funptr == NULL:
-        with gil:
-            _hipBindTexture__funptr = loader.load_symbol(_lib_handle, "hipBindTexture")
-    return (<hipError_t (*)(int *,textureReference *,const void *,hipChannelFormatDesc *,int) nogil> _hipBindTexture__funptr)(offset,tex,devPtr,desc,size)
+    __init_symbol(&_hipBindTexture__funptr,"hipBindTexture")
+    return (<hipError_t (*)(unsigned long *,textureReference *,const void *,hipChannelFormatDesc *,unsigned long) nogil> _hipBindTexture__funptr)(offset,tex,devPtr,desc,size)
 
 
 cdef void* _hipBindTexture2D__funptr = NULL
-cdef hipError_t hipBindTexture2D(int * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,int width,int height,int pitch) nogil:
-    global _lib_handle
+cdef hipError_t hipBindTexture2D(unsigned long * offset,textureReference * tex,const void * devPtr,hipChannelFormatDesc * desc,unsigned long width,unsigned long height,unsigned long pitch) nogil:
     global _hipBindTexture2D__funptr
-    if _hipBindTexture2D__funptr == NULL:
-        with gil:
-            _hipBindTexture2D__funptr = loader.load_symbol(_lib_handle, "hipBindTexture2D")
-    return (<hipError_t (*)(int *,textureReference *,const void *,hipChannelFormatDesc *,int,int,int) nogil> _hipBindTexture2D__funptr)(offset,tex,devPtr,desc,width,height,pitch)
+    __init_symbol(&_hipBindTexture2D__funptr,"hipBindTexture2D")
+    return (<hipError_t (*)(unsigned long *,textureReference *,const void *,hipChannelFormatDesc *,unsigned long,unsigned long,unsigned long) nogil> _hipBindTexture2D__funptr)(offset,tex,devPtr,desc,width,height,pitch)
 
 
 cdef void* _hipBindTextureToArray__funptr = NULL
 cdef hipError_t hipBindTextureToArray(textureReference * tex,hipArray_const_t array,hipChannelFormatDesc * desc) nogil:
-    global _lib_handle
     global _hipBindTextureToArray__funptr
-    if _hipBindTextureToArray__funptr == NULL:
-        with gil:
-            _hipBindTextureToArray__funptr = loader.load_symbol(_lib_handle, "hipBindTextureToArray")
+    __init_symbol(&_hipBindTextureToArray__funptr,"hipBindTextureToArray")
     return (<hipError_t (*)(textureReference *,hipArray_const_t,hipChannelFormatDesc *) nogil> _hipBindTextureToArray__funptr)(tex,array,desc)
 
 
 cdef void* _hipGetTextureAlignmentOffset__funptr = NULL
-cdef hipError_t hipGetTextureAlignmentOffset(int * offset,textureReference * texref) nogil:
-    global _lib_handle
+cdef hipError_t hipGetTextureAlignmentOffset(unsigned long * offset,textureReference * texref) nogil:
     global _hipGetTextureAlignmentOffset__funptr
-    if _hipGetTextureAlignmentOffset__funptr == NULL:
-        with gil:
-            _hipGetTextureAlignmentOffset__funptr = loader.load_symbol(_lib_handle, "hipGetTextureAlignmentOffset")
-    return (<hipError_t (*)(int *,textureReference *) nogil> _hipGetTextureAlignmentOffset__funptr)(offset,texref)
+    __init_symbol(&_hipGetTextureAlignmentOffset__funptr,"hipGetTextureAlignmentOffset")
+    return (<hipError_t (*)(unsigned long *,textureReference *) nogil> _hipGetTextureAlignmentOffset__funptr)(offset,texref)
 
 
 cdef void* _hipUnbindTexture__funptr = NULL
 cdef hipError_t hipUnbindTexture(textureReference * tex) nogil:
-    global _lib_handle
     global _hipUnbindTexture__funptr
-    if _hipUnbindTexture__funptr == NULL:
-        with gil:
-            _hipUnbindTexture__funptr = loader.load_symbol(_lib_handle, "hipUnbindTexture")
+    __init_symbol(&_hipUnbindTexture__funptr,"hipUnbindTexture")
     return (<hipError_t (*)(textureReference *) nogil> _hipUnbindTexture__funptr)(tex)
 
 
 cdef void* _hipTexRefGetAddress__funptr = NULL
-cdef hipError_t hipTexRefGetAddress(hipDeviceptr_t* dev_ptr,textureReference * texRef) nogil:
-    global _lib_handle
+cdef hipError_t hipTexRefGetAddress(void ** dev_ptr,textureReference * texRef) nogil:
     global _hipTexRefGetAddress__funptr
-    if _hipTexRefGetAddress__funptr == NULL:
-        with gil:
-            _hipTexRefGetAddress__funptr = loader.load_symbol(_lib_handle, "hipTexRefGetAddress")
-    return (<hipError_t (*)(hipDeviceptr_t*,textureReference *) nogil> _hipTexRefGetAddress__funptr)(dev_ptr,texRef)
+    __init_symbol(&_hipTexRefGetAddress__funptr,"hipTexRefGetAddress")
+    return (<hipError_t (*)(void **,textureReference *) nogil> _hipTexRefGetAddress__funptr)(dev_ptr,texRef)
 
 
 cdef void* _hipTexRefGetAddressMode__funptr = NULL
 cdef hipError_t hipTexRefGetAddressMode(hipTextureAddressMode * pam,textureReference * texRef,int dim) nogil:
-    global _lib_handle
     global _hipTexRefGetAddressMode__funptr
-    if _hipTexRefGetAddressMode__funptr == NULL:
-        with gil:
-            _hipTexRefGetAddressMode__funptr = loader.load_symbol(_lib_handle, "hipTexRefGetAddressMode")
+    __init_symbol(&_hipTexRefGetAddressMode__funptr,"hipTexRefGetAddressMode")
     return (<hipError_t (*)(hipTextureAddressMode *,textureReference *,int) nogil> _hipTexRefGetAddressMode__funptr)(pam,texRef,dim)
 
 
 cdef void* _hipTexRefGetFilterMode__funptr = NULL
 cdef hipError_t hipTexRefGetFilterMode(hipTextureFilterMode * pfm,textureReference * texRef) nogil:
-    global _lib_handle
     global _hipTexRefGetFilterMode__funptr
-    if _hipTexRefGetFilterMode__funptr == NULL:
-        with gil:
-            _hipTexRefGetFilterMode__funptr = loader.load_symbol(_lib_handle, "hipTexRefGetFilterMode")
+    __init_symbol(&_hipTexRefGetFilterMode__funptr,"hipTexRefGetFilterMode")
     return (<hipError_t (*)(hipTextureFilterMode *,textureReference *) nogil> _hipTexRefGetFilterMode__funptr)(pfm,texRef)
 
 
 cdef void* _hipTexRefGetFlags__funptr = NULL
 cdef hipError_t hipTexRefGetFlags(unsigned int * pFlags,textureReference * texRef) nogil:
-    global _lib_handle
     global _hipTexRefGetFlags__funptr
-    if _hipTexRefGetFlags__funptr == NULL:
-        with gil:
-            _hipTexRefGetFlags__funptr = loader.load_symbol(_lib_handle, "hipTexRefGetFlags")
+    __init_symbol(&_hipTexRefGetFlags__funptr,"hipTexRefGetFlags")
     return (<hipError_t (*)(unsigned int *,textureReference *) nogil> _hipTexRefGetFlags__funptr)(pFlags,texRef)
 
 
 cdef void* _hipTexRefGetFormat__funptr = NULL
 cdef hipError_t hipTexRefGetFormat(hipArray_Format * pFormat,int * pNumChannels,textureReference * texRef) nogil:
-    global _lib_handle
     global _hipTexRefGetFormat__funptr
-    if _hipTexRefGetFormat__funptr == NULL:
-        with gil:
-            _hipTexRefGetFormat__funptr = loader.load_symbol(_lib_handle, "hipTexRefGetFormat")
+    __init_symbol(&_hipTexRefGetFormat__funptr,"hipTexRefGetFormat")
     return (<hipError_t (*)(hipArray_Format *,int *,textureReference *) nogil> _hipTexRefGetFormat__funptr)(pFormat,pNumChannels,texRef)
 
 
 cdef void* _hipTexRefGetMaxAnisotropy__funptr = NULL
 cdef hipError_t hipTexRefGetMaxAnisotropy(int * pmaxAnsio,textureReference * texRef) nogil:
-    global _lib_handle
     global _hipTexRefGetMaxAnisotropy__funptr
-    if _hipTexRefGetMaxAnisotropy__funptr == NULL:
-        with gil:
-            _hipTexRefGetMaxAnisotropy__funptr = loader.load_symbol(_lib_handle, "hipTexRefGetMaxAnisotropy")
+    __init_symbol(&_hipTexRefGetMaxAnisotropy__funptr,"hipTexRefGetMaxAnisotropy")
     return (<hipError_t (*)(int *,textureReference *) nogil> _hipTexRefGetMaxAnisotropy__funptr)(pmaxAnsio,texRef)
 
 
 cdef void* _hipTexRefGetMipmapFilterMode__funptr = NULL
 cdef hipError_t hipTexRefGetMipmapFilterMode(hipTextureFilterMode * pfm,textureReference * texRef) nogil:
-    global _lib_handle
     global _hipTexRefGetMipmapFilterMode__funptr
-    if _hipTexRefGetMipmapFilterMode__funptr == NULL:
-        with gil:
-            _hipTexRefGetMipmapFilterMode__funptr = loader.load_symbol(_lib_handle, "hipTexRefGetMipmapFilterMode")
+    __init_symbol(&_hipTexRefGetMipmapFilterMode__funptr,"hipTexRefGetMipmapFilterMode")
     return (<hipError_t (*)(hipTextureFilterMode *,textureReference *) nogil> _hipTexRefGetMipmapFilterMode__funptr)(pfm,texRef)
 
 
 cdef void* _hipTexRefGetMipmapLevelBias__funptr = NULL
 cdef hipError_t hipTexRefGetMipmapLevelBias(float * pbias,textureReference * texRef) nogil:
-    global _lib_handle
     global _hipTexRefGetMipmapLevelBias__funptr
-    if _hipTexRefGetMipmapLevelBias__funptr == NULL:
-        with gil:
-            _hipTexRefGetMipmapLevelBias__funptr = loader.load_symbol(_lib_handle, "hipTexRefGetMipmapLevelBias")
+    __init_symbol(&_hipTexRefGetMipmapLevelBias__funptr,"hipTexRefGetMipmapLevelBias")
     return (<hipError_t (*)(float *,textureReference *) nogil> _hipTexRefGetMipmapLevelBias__funptr)(pbias,texRef)
 
 
 cdef void* _hipTexRefGetMipmapLevelClamp__funptr = NULL
 cdef hipError_t hipTexRefGetMipmapLevelClamp(float * pminMipmapLevelClamp,float * pmaxMipmapLevelClamp,textureReference * texRef) nogil:
-    global _lib_handle
     global _hipTexRefGetMipmapLevelClamp__funptr
-    if _hipTexRefGetMipmapLevelClamp__funptr == NULL:
-        with gil:
-            _hipTexRefGetMipmapLevelClamp__funptr = loader.load_symbol(_lib_handle, "hipTexRefGetMipmapLevelClamp")
+    __init_symbol(&_hipTexRefGetMipmapLevelClamp__funptr,"hipTexRefGetMipmapLevelClamp")
     return (<hipError_t (*)(float *,float *,textureReference *) nogil> _hipTexRefGetMipmapLevelClamp__funptr)(pminMipmapLevelClamp,pmaxMipmapLevelClamp,texRef)
 
 
 cdef void* _hipTexRefGetMipMappedArray__funptr = NULL
 cdef hipError_t hipTexRefGetMipMappedArray(hipMipmappedArray_t* pArray,textureReference * texRef) nogil:
-    global _lib_handle
     global _hipTexRefGetMipMappedArray__funptr
-    if _hipTexRefGetMipMappedArray__funptr == NULL:
-        with gil:
-            _hipTexRefGetMipMappedArray__funptr = loader.load_symbol(_lib_handle, "hipTexRefGetMipMappedArray")
+    __init_symbol(&_hipTexRefGetMipMappedArray__funptr,"hipTexRefGetMipMappedArray")
     return (<hipError_t (*)(hipMipmappedArray_t*,textureReference *) nogil> _hipTexRefGetMipMappedArray__funptr)(pArray,texRef)
 
 
 cdef void* _hipTexRefSetAddress__funptr = NULL
-cdef hipError_t hipTexRefSetAddress(int * ByteOffset,textureReference * texRef,hipDeviceptr_t dptr,int bytes) nogil:
-    global _lib_handle
+cdef hipError_t hipTexRefSetAddress(unsigned long * ByteOffset,textureReference * texRef,void * dptr,unsigned long bytes) nogil:
     global _hipTexRefSetAddress__funptr
-    if _hipTexRefSetAddress__funptr == NULL:
-        with gil:
-            _hipTexRefSetAddress__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetAddress")
-    return (<hipError_t (*)(int *,textureReference *,hipDeviceptr_t,int) nogil> _hipTexRefSetAddress__funptr)(ByteOffset,texRef,dptr,bytes)
+    __init_symbol(&_hipTexRefSetAddress__funptr,"hipTexRefSetAddress")
+    return (<hipError_t (*)(unsigned long *,textureReference *,void *,unsigned long) nogil> _hipTexRefSetAddress__funptr)(ByteOffset,texRef,dptr,bytes)
 
 
 cdef void* _hipTexRefSetAddress2D__funptr = NULL
-cdef hipError_t hipTexRefSetAddress2D(textureReference * texRef,HIP_ARRAY_DESCRIPTOR * desc,hipDeviceptr_t dptr,int Pitch) nogil:
-    global _lib_handle
+cdef hipError_t hipTexRefSetAddress2D(textureReference * texRef,HIP_ARRAY_DESCRIPTOR * desc,void * dptr,unsigned long Pitch) nogil:
     global _hipTexRefSetAddress2D__funptr
-    if _hipTexRefSetAddress2D__funptr == NULL:
-        with gil:
-            _hipTexRefSetAddress2D__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetAddress2D")
-    return (<hipError_t (*)(textureReference *,HIP_ARRAY_DESCRIPTOR *,hipDeviceptr_t,int) nogil> _hipTexRefSetAddress2D__funptr)(texRef,desc,dptr,Pitch)
+    __init_symbol(&_hipTexRefSetAddress2D__funptr,"hipTexRefSetAddress2D")
+    return (<hipError_t (*)(textureReference *,HIP_ARRAY_DESCRIPTOR *,void *,unsigned long) nogil> _hipTexRefSetAddress2D__funptr)(texRef,desc,dptr,Pitch)
 
 
 cdef void* _hipTexRefSetMaxAnisotropy__funptr = NULL
 cdef hipError_t hipTexRefSetMaxAnisotropy(textureReference * texRef,unsigned int maxAniso) nogil:
-    global _lib_handle
     global _hipTexRefSetMaxAnisotropy__funptr
-    if _hipTexRefSetMaxAnisotropy__funptr == NULL:
-        with gil:
-            _hipTexRefSetMaxAnisotropy__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetMaxAnisotropy")
+    __init_symbol(&_hipTexRefSetMaxAnisotropy__funptr,"hipTexRefSetMaxAnisotropy")
     return (<hipError_t (*)(textureReference *,unsigned int) nogil> _hipTexRefSetMaxAnisotropy__funptr)(texRef,maxAniso)
 
 
 cdef void* _hipTexRefSetBorderColor__funptr = NULL
 cdef hipError_t hipTexRefSetBorderColor(textureReference * texRef,float * pBorderColor) nogil:
-    global _lib_handle
     global _hipTexRefSetBorderColor__funptr
-    if _hipTexRefSetBorderColor__funptr == NULL:
-        with gil:
-            _hipTexRefSetBorderColor__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetBorderColor")
+    __init_symbol(&_hipTexRefSetBorderColor__funptr,"hipTexRefSetBorderColor")
     return (<hipError_t (*)(textureReference *,float *) nogil> _hipTexRefSetBorderColor__funptr)(texRef,pBorderColor)
 
 
 cdef void* _hipTexRefSetMipmapFilterMode__funptr = NULL
 cdef hipError_t hipTexRefSetMipmapFilterMode(textureReference * texRef,hipTextureFilterMode fm) nogil:
-    global _lib_handle
     global _hipTexRefSetMipmapFilterMode__funptr
-    if _hipTexRefSetMipmapFilterMode__funptr == NULL:
-        with gil:
-            _hipTexRefSetMipmapFilterMode__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetMipmapFilterMode")
+    __init_symbol(&_hipTexRefSetMipmapFilterMode__funptr,"hipTexRefSetMipmapFilterMode")
     return (<hipError_t (*)(textureReference *,hipTextureFilterMode) nogil> _hipTexRefSetMipmapFilterMode__funptr)(texRef,fm)
 
 
 cdef void* _hipTexRefSetMipmapLevelBias__funptr = NULL
 cdef hipError_t hipTexRefSetMipmapLevelBias(textureReference * texRef,float bias) nogil:
-    global _lib_handle
     global _hipTexRefSetMipmapLevelBias__funptr
-    if _hipTexRefSetMipmapLevelBias__funptr == NULL:
-        with gil:
-            _hipTexRefSetMipmapLevelBias__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetMipmapLevelBias")
+    __init_symbol(&_hipTexRefSetMipmapLevelBias__funptr,"hipTexRefSetMipmapLevelBias")
     return (<hipError_t (*)(textureReference *,float) nogil> _hipTexRefSetMipmapLevelBias__funptr)(texRef,bias)
 
 
 cdef void* _hipTexRefSetMipmapLevelClamp__funptr = NULL
 cdef hipError_t hipTexRefSetMipmapLevelClamp(textureReference * texRef,float minMipMapLevelClamp,float maxMipMapLevelClamp) nogil:
-    global _lib_handle
     global _hipTexRefSetMipmapLevelClamp__funptr
-    if _hipTexRefSetMipmapLevelClamp__funptr == NULL:
-        with gil:
-            _hipTexRefSetMipmapLevelClamp__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetMipmapLevelClamp")
+    __init_symbol(&_hipTexRefSetMipmapLevelClamp__funptr,"hipTexRefSetMipmapLevelClamp")
     return (<hipError_t (*)(textureReference *,float,float) nogil> _hipTexRefSetMipmapLevelClamp__funptr)(texRef,minMipMapLevelClamp,maxMipMapLevelClamp)
 
 
 cdef void* _hipTexRefSetMipmappedArray__funptr = NULL
 cdef hipError_t hipTexRefSetMipmappedArray(textureReference * texRef,hipMipmappedArray * mipmappedArray,unsigned int Flags) nogil:
-    global _lib_handle
     global _hipTexRefSetMipmappedArray__funptr
-    if _hipTexRefSetMipmappedArray__funptr == NULL:
-        with gil:
-            _hipTexRefSetMipmappedArray__funptr = loader.load_symbol(_lib_handle, "hipTexRefSetMipmappedArray")
+    __init_symbol(&_hipTexRefSetMipmappedArray__funptr,"hipTexRefSetMipmappedArray")
     return (<hipError_t (*)(textureReference *,hipMipmappedArray *,unsigned int) nogil> _hipTexRefSetMipmappedArray__funptr)(texRef,mipmappedArray,Flags)
 
 
@@ -4743,31 +3952,22 @@ cdef void* _hipMipmappedArrayCreate__funptr = NULL
 # @ingroup Texture
 # This section describes the texture management functions currently unsupported in HIP runtime.
 cdef hipError_t hipMipmappedArrayCreate(hipMipmappedArray_t* pHandle,HIP_ARRAY3D_DESCRIPTOR * pMipmappedArrayDesc,unsigned int numMipmapLevels) nogil:
-    global _lib_handle
     global _hipMipmappedArrayCreate__funptr
-    if _hipMipmappedArrayCreate__funptr == NULL:
-        with gil:
-            _hipMipmappedArrayCreate__funptr = loader.load_symbol(_lib_handle, "hipMipmappedArrayCreate")
+    __init_symbol(&_hipMipmappedArrayCreate__funptr,"hipMipmappedArrayCreate")
     return (<hipError_t (*)(hipMipmappedArray_t*,HIP_ARRAY3D_DESCRIPTOR *,unsigned int) nogil> _hipMipmappedArrayCreate__funptr)(pHandle,pMipmappedArrayDesc,numMipmapLevels)
 
 
 cdef void* _hipMipmappedArrayDestroy__funptr = NULL
 cdef hipError_t hipMipmappedArrayDestroy(hipMipmappedArray_t hMipmappedArray) nogil:
-    global _lib_handle
     global _hipMipmappedArrayDestroy__funptr
-    if _hipMipmappedArrayDestroy__funptr == NULL:
-        with gil:
-            _hipMipmappedArrayDestroy__funptr = loader.load_symbol(_lib_handle, "hipMipmappedArrayDestroy")
+    __init_symbol(&_hipMipmappedArrayDestroy__funptr,"hipMipmappedArrayDestroy")
     return (<hipError_t (*)(hipMipmappedArray_t) nogil> _hipMipmappedArrayDestroy__funptr)(hMipmappedArray)
 
 
 cdef void* _hipMipmappedArrayGetLevel__funptr = NULL
 cdef hipError_t hipMipmappedArrayGetLevel(hipArray_t* pLevelArray,hipMipmappedArray_t hMipMappedArray,unsigned int level) nogil:
-    global _lib_handle
     global _hipMipmappedArrayGetLevel__funptr
-    if _hipMipmappedArrayGetLevel__funptr == NULL:
-        with gil:
-            _hipMipmappedArrayGetLevel__funptr = loader.load_symbol(_lib_handle, "hipMipmappedArrayGetLevel")
+    __init_symbol(&_hipMipmappedArrayGetLevel__funptr,"hipMipmappedArrayGetLevel")
     return (<hipError_t (*)(hipArray_t*,hipMipmappedArray_t,unsigned int) nogil> _hipMipmappedArrayGetLevel__funptr)(pLevelArray,hMipMappedArray,level)
 
 
@@ -4775,42 +3975,30 @@ cdef void* _hipApiName__funptr = NULL
 # @defgroup Callback Callback Activity APIs
 # @{
 # This section describes the callback/Activity of HIP runtime API.
-cdef const char * hipApiName(uint32_t id) nogil:
-    global _lib_handle
+cdef const char * hipApiName(unsigned int id) nogil:
     global _hipApiName__funptr
-    if _hipApiName__funptr == NULL:
-        with gil:
-            _hipApiName__funptr = loader.load_symbol(_lib_handle, "hipApiName")
-    return (<const char * (*)(uint32_t) nogil> _hipApiName__funptr)(id)
+    __init_symbol(&_hipApiName__funptr,"hipApiName")
+    return (<const char * (*)(unsigned int) nogil> _hipApiName__funptr)(id)
 
 
 cdef void* _hipKernelNameRef__funptr = NULL
 cdef const char * hipKernelNameRef(hipFunction_t f) nogil:
-    global _lib_handle
     global _hipKernelNameRef__funptr
-    if _hipKernelNameRef__funptr == NULL:
-        with gil:
-            _hipKernelNameRef__funptr = loader.load_symbol(_lib_handle, "hipKernelNameRef")
+    __init_symbol(&_hipKernelNameRef__funptr,"hipKernelNameRef")
     return (<const char * (*)(hipFunction_t) nogil> _hipKernelNameRef__funptr)(f)
 
 
 cdef void* _hipKernelNameRefByPtr__funptr = NULL
 cdef const char * hipKernelNameRefByPtr(const void * hostFunction,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipKernelNameRefByPtr__funptr
-    if _hipKernelNameRefByPtr__funptr == NULL:
-        with gil:
-            _hipKernelNameRefByPtr__funptr = loader.load_symbol(_lib_handle, "hipKernelNameRefByPtr")
+    __init_symbol(&_hipKernelNameRefByPtr__funptr,"hipKernelNameRefByPtr")
     return (<const char * (*)(const void *,hipStream_t) nogil> _hipKernelNameRefByPtr__funptr)(hostFunction,stream)
 
 
 cdef void* _hipGetStreamDeviceId__funptr = NULL
 cdef int hipGetStreamDeviceId(hipStream_t stream) nogil:
-    global _lib_handle
     global _hipGetStreamDeviceId__funptr
-    if _hipGetStreamDeviceId__funptr == NULL:
-        with gil:
-            _hipGetStreamDeviceId__funptr = loader.load_symbol(_lib_handle, "hipGetStreamDeviceId")
+    __init_symbol(&_hipGetStreamDeviceId__funptr,"hipGetStreamDeviceId")
     return (<int (*)(hipStream_t) nogil> _hipGetStreamDeviceId__funptr)(stream)
 
 
@@ -4823,11 +4011,8 @@ cdef void* _hipStreamBeginCapture__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipStreamBeginCapture(hipStream_t stream,hipStreamCaptureMode mode) nogil:
-    global _lib_handle
     global _hipStreamBeginCapture__funptr
-    if _hipStreamBeginCapture__funptr == NULL:
-        with gil:
-            _hipStreamBeginCapture__funptr = loader.load_symbol(_lib_handle, "hipStreamBeginCapture")
+    __init_symbol(&_hipStreamBeginCapture__funptr,"hipStreamBeginCapture")
     return (<hipError_t (*)(hipStream_t,hipStreamCaptureMode) nogil> _hipStreamBeginCapture__funptr)(stream,mode)
 
 
@@ -4839,11 +4024,8 @@ cdef void* _hipStreamEndCapture__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipStreamEndCapture(hipStream_t stream,hipGraph_t* pGraph) nogil:
-    global _lib_handle
     global _hipStreamEndCapture__funptr
-    if _hipStreamEndCapture__funptr == NULL:
-        with gil:
-            _hipStreamEndCapture__funptr = loader.load_symbol(_lib_handle, "hipStreamEndCapture")
+    __init_symbol(&_hipStreamEndCapture__funptr,"hipStreamEndCapture")
     return (<hipError_t (*)(hipStream_t,hipGraph_t*) nogil> _hipStreamEndCapture__funptr)(stream,pGraph)
 
 
@@ -4856,11 +4038,8 @@ cdef void* _hipStreamGetCaptureInfo__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipStreamGetCaptureInfo(hipStream_t stream,hipStreamCaptureStatus * pCaptureStatus,unsigned long long * pId) nogil:
-    global _lib_handle
     global _hipStreamGetCaptureInfo__funptr
-    if _hipStreamGetCaptureInfo__funptr == NULL:
-        with gil:
-            _hipStreamGetCaptureInfo__funptr = loader.load_symbol(_lib_handle, "hipStreamGetCaptureInfo")
+    __init_symbol(&_hipStreamGetCaptureInfo__funptr,"hipStreamGetCaptureInfo")
     return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *) nogil> _hipStreamGetCaptureInfo__funptr)(stream,pCaptureStatus,pId)
 
 
@@ -4875,13 +4054,10 @@ cdef void* _hipStreamGetCaptureInfo_v2__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipStreamGetCaptureInfo_v2(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,int * numDependencies_out) nogil:
-    global _lib_handle
+cdef hipError_t hipStreamGetCaptureInfo_v2(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,unsigned long * numDependencies_out) nogil:
     global _hipStreamGetCaptureInfo_v2__funptr
-    if _hipStreamGetCaptureInfo_v2__funptr == NULL:
-        with gil:
-            _hipStreamGetCaptureInfo_v2__funptr = loader.load_symbol(_lib_handle, "hipStreamGetCaptureInfo_v2")
-    return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *,hipGraph_t*,hipGraphNode_t **,int *) nogil> _hipStreamGetCaptureInfo_v2__funptr)(stream,captureStatus_out,id_out,graph_out,dependencies_out,numDependencies_out)
+    __init_symbol(&_hipStreamGetCaptureInfo_v2__funptr,"hipStreamGetCaptureInfo_v2")
+    return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *,hipGraph_t*,hipGraphNode_t **,unsigned long *) nogil> _hipStreamGetCaptureInfo_v2__funptr)(stream,captureStatus_out,id_out,graph_out,dependencies_out,numDependencies_out)
 
 
 cdef void* _hipStreamIsCapturing__funptr = NULL
@@ -4892,11 +4068,8 @@ cdef void* _hipStreamIsCapturing__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipStreamIsCapturing(hipStream_t stream,hipStreamCaptureStatus * pCaptureStatus) nogil:
-    global _lib_handle
     global _hipStreamIsCapturing__funptr
-    if _hipStreamIsCapturing__funptr == NULL:
-        with gil:
-            _hipStreamIsCapturing__funptr = loader.load_symbol(_lib_handle, "hipStreamIsCapturing")
+    __init_symbol(&_hipStreamIsCapturing__funptr,"hipStreamIsCapturing")
     return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *) nogil> _hipStreamIsCapturing__funptr)(stream,pCaptureStatus)
 
 
@@ -4908,13 +4081,10 @@ cdef void* _hipStreamUpdateCaptureDependencies__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorIllegalState
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipStreamUpdateCaptureDependencies(hipStream_t stream,hipGraphNode_t* dependencies,int numDependencies,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipStreamUpdateCaptureDependencies(hipStream_t stream,hipGraphNode_t* dependencies,unsigned long numDependencies,unsigned int flags) nogil:
     global _hipStreamUpdateCaptureDependencies__funptr
-    if _hipStreamUpdateCaptureDependencies__funptr == NULL:
-        with gil:
-            _hipStreamUpdateCaptureDependencies__funptr = loader.load_symbol(_lib_handle, "hipStreamUpdateCaptureDependencies")
-    return (<hipError_t (*)(hipStream_t,hipGraphNode_t*,int,unsigned int) nogil> _hipStreamUpdateCaptureDependencies__funptr)(stream,dependencies,numDependencies,flags)
+    __init_symbol(&_hipStreamUpdateCaptureDependencies__funptr,"hipStreamUpdateCaptureDependencies")
+    return (<hipError_t (*)(hipStream_t,hipGraphNode_t*,unsigned long,unsigned int) nogil> _hipStreamUpdateCaptureDependencies__funptr)(stream,dependencies,numDependencies,flags)
 
 
 cdef void* _hipThreadExchangeStreamCaptureMode__funptr = NULL
@@ -4924,11 +4094,8 @@ cdef void* _hipThreadExchangeStreamCaptureMode__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipThreadExchangeStreamCaptureMode(hipStreamCaptureMode * mode) nogil:
-    global _lib_handle
     global _hipThreadExchangeStreamCaptureMode__funptr
-    if _hipThreadExchangeStreamCaptureMode__funptr == NULL:
-        with gil:
-            _hipThreadExchangeStreamCaptureMode__funptr = loader.load_symbol(_lib_handle, "hipThreadExchangeStreamCaptureMode")
+    __init_symbol(&_hipThreadExchangeStreamCaptureMode__funptr,"hipThreadExchangeStreamCaptureMode")
     return (<hipError_t (*)(hipStreamCaptureMode *) nogil> _hipThreadExchangeStreamCaptureMode__funptr)(mode)
 
 
@@ -4940,11 +4107,8 @@ cdef void* _hipGraphCreate__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphCreate(hipGraph_t* pGraph,unsigned int flags) nogil:
-    global _lib_handle
     global _hipGraphCreate__funptr
-    if _hipGraphCreate__funptr == NULL:
-        with gil:
-            _hipGraphCreate__funptr = loader.load_symbol(_lib_handle, "hipGraphCreate")
+    __init_symbol(&_hipGraphCreate__funptr,"hipGraphCreate")
     return (<hipError_t (*)(hipGraph_t*,unsigned int) nogil> _hipGraphCreate__funptr)(pGraph,flags)
 
 
@@ -4955,11 +4119,8 @@ cdef void* _hipGraphDestroy__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphDestroy(hipGraph_t graph) nogil:
-    global _lib_handle
     global _hipGraphDestroy__funptr
-    if _hipGraphDestroy__funptr == NULL:
-        with gil:
-            _hipGraphDestroy__funptr = loader.load_symbol(_lib_handle, "hipGraphDestroy")
+    __init_symbol(&_hipGraphDestroy__funptr,"hipGraphDestroy")
     return (<hipError_t (*)(hipGraph_t) nogil> _hipGraphDestroy__funptr)(graph)
 
 
@@ -4972,13 +4133,10 @@ cdef void* _hipGraphAddDependencies__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,int numDependencies) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,unsigned long numDependencies) nogil:
     global _hipGraphAddDependencies__funptr
-    if _hipGraphAddDependencies__funptr == NULL:
-        with gil:
-            _hipGraphAddDependencies__funptr = loader.load_symbol(_lib_handle, "hipGraphAddDependencies")
-    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t *,hipGraphNode_t *,int) nogil> _hipGraphAddDependencies__funptr)(graph,from_,to,numDependencies)
+    __init_symbol(&_hipGraphAddDependencies__funptr,"hipGraphAddDependencies")
+    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t *,hipGraphNode_t *,unsigned long) nogil> _hipGraphAddDependencies__funptr)(graph,from_,to,numDependencies)
 
 
 cdef void* _hipGraphRemoveDependencies__funptr = NULL
@@ -4990,13 +4148,10 @@ cdef void* _hipGraphRemoveDependencies__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphRemoveDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,int numDependencies) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphRemoveDependencies(hipGraph_t graph,hipGraphNode_t * from_,hipGraphNode_t * to,unsigned long numDependencies) nogil:
     global _hipGraphRemoveDependencies__funptr
-    if _hipGraphRemoveDependencies__funptr == NULL:
-        with gil:
-            _hipGraphRemoveDependencies__funptr = loader.load_symbol(_lib_handle, "hipGraphRemoveDependencies")
-    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t *,hipGraphNode_t *,int) nogil> _hipGraphRemoveDependencies__funptr)(graph,from_,to,numDependencies)
+    __init_symbol(&_hipGraphRemoveDependencies__funptr,"hipGraphRemoveDependencies")
+    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t *,hipGraphNode_t *,unsigned long) nogil> _hipGraphRemoveDependencies__funptr)(graph,from_,to,numDependencies)
 
 
 cdef void* _hipGraphGetEdges__funptr = NULL
@@ -5012,13 +4167,10 @@ cdef void* _hipGraphGetEdges__funptr = NULL
 # edges actually returned will be written to numEdges
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphGetEdges(hipGraph_t graph,hipGraphNode_t* from_,hipGraphNode_t* to,int * numEdges) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphGetEdges(hipGraph_t graph,hipGraphNode_t* from_,hipGraphNode_t* to,unsigned long * numEdges) nogil:
     global _hipGraphGetEdges__funptr
-    if _hipGraphGetEdges__funptr == NULL:
-        with gil:
-            _hipGraphGetEdges__funptr = loader.load_symbol(_lib_handle, "hipGraphGetEdges")
-    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,hipGraphNode_t*,int *) nogil> _hipGraphGetEdges__funptr)(graph,from_,to,numEdges)
+    __init_symbol(&_hipGraphGetEdges__funptr,"hipGraphGetEdges")
+    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,hipGraphNode_t*,unsigned long *) nogil> _hipGraphGetEdges__funptr)(graph,from_,to,numEdges)
 
 
 cdef void* _hipGraphGetNodes__funptr = NULL
@@ -5033,13 +4185,10 @@ cdef void* _hipGraphGetNodes__funptr = NULL
 # obtained will be returned in numNodes.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphGetNodes(hipGraph_t graph,hipGraphNode_t* nodes,int * numNodes) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphGetNodes(hipGraph_t graph,hipGraphNode_t* nodes,unsigned long * numNodes) nogil:
     global _hipGraphGetNodes__funptr
-    if _hipGraphGetNodes__funptr == NULL:
-        with gil:
-            _hipGraphGetNodes__funptr = loader.load_symbol(_lib_handle, "hipGraphGetNodes")
-    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,int *) nogil> _hipGraphGetNodes__funptr)(graph,nodes,numNodes)
+    __init_symbol(&_hipGraphGetNodes__funptr,"hipGraphGetNodes")
+    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,unsigned long *) nogil> _hipGraphGetNodes__funptr)(graph,nodes,numNodes)
 
 
 cdef void* _hipGraphGetRootNodes__funptr = NULL
@@ -5054,13 +4203,10 @@ cdef void* _hipGraphGetRootNodes__funptr = NULL
 # and the number of nodes actually obtained will be returned in pNumRootNodes.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphGetRootNodes(hipGraph_t graph,hipGraphNode_t* pRootNodes,int * pNumRootNodes) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphGetRootNodes(hipGraph_t graph,hipGraphNode_t* pRootNodes,unsigned long * pNumRootNodes) nogil:
     global _hipGraphGetRootNodes__funptr
-    if _hipGraphGetRootNodes__funptr == NULL:
-        with gil:
-            _hipGraphGetRootNodes__funptr = loader.load_symbol(_lib_handle, "hipGraphGetRootNodes")
-    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,int *) nogil> _hipGraphGetRootNodes__funptr)(graph,pRootNodes,pNumRootNodes)
+    __init_symbol(&_hipGraphGetRootNodes__funptr,"hipGraphGetRootNodes")
+    return (<hipError_t (*)(hipGraph_t,hipGraphNode_t*,unsigned long *) nogil> _hipGraphGetRootNodes__funptr)(graph,pRootNodes,pNumRootNodes)
 
 
 cdef void* _hipGraphNodeGetDependencies__funptr = NULL
@@ -5075,13 +4221,10 @@ cdef void* _hipGraphNodeGetDependencies__funptr = NULL
 # to NULL, and the number of nodes actually obtained will be returned in pNumDependencies.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphNodeGetDependencies(hipGraphNode_t node,hipGraphNode_t* pDependencies,int * pNumDependencies) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphNodeGetDependencies(hipGraphNode_t node,hipGraphNode_t* pDependencies,unsigned long * pNumDependencies) nogil:
     global _hipGraphNodeGetDependencies__funptr
-    if _hipGraphNodeGetDependencies__funptr == NULL:
-        with gil:
-            _hipGraphNodeGetDependencies__funptr = loader.load_symbol(_lib_handle, "hipGraphNodeGetDependencies")
-    return (<hipError_t (*)(hipGraphNode_t,hipGraphNode_t*,int *) nogil> _hipGraphNodeGetDependencies__funptr)(node,pDependencies,pNumDependencies)
+    __init_symbol(&_hipGraphNodeGetDependencies__funptr,"hipGraphNodeGetDependencies")
+    return (<hipError_t (*)(hipGraphNode_t,hipGraphNode_t*,unsigned long *) nogil> _hipGraphNodeGetDependencies__funptr)(node,pDependencies,pNumDependencies)
 
 
 cdef void* _hipGraphNodeGetDependentNodes__funptr = NULL
@@ -5097,13 +4240,10 @@ cdef void* _hipGraphNodeGetDependentNodes__funptr = NULL
 # in pNumDependentNodes.
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphNodeGetDependentNodes(hipGraphNode_t node,hipGraphNode_t* pDependentNodes,int * pNumDependentNodes) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphNodeGetDependentNodes(hipGraphNode_t node,hipGraphNode_t* pDependentNodes,unsigned long * pNumDependentNodes) nogil:
     global _hipGraphNodeGetDependentNodes__funptr
-    if _hipGraphNodeGetDependentNodes__funptr == NULL:
-        with gil:
-            _hipGraphNodeGetDependentNodes__funptr = loader.load_symbol(_lib_handle, "hipGraphNodeGetDependentNodes")
-    return (<hipError_t (*)(hipGraphNode_t,hipGraphNode_t*,int *) nogil> _hipGraphNodeGetDependentNodes__funptr)(node,pDependentNodes,pNumDependentNodes)
+    __init_symbol(&_hipGraphNodeGetDependentNodes__funptr,"hipGraphNodeGetDependentNodes")
+    return (<hipError_t (*)(hipGraphNode_t,hipGraphNode_t*,unsigned long *) nogil> _hipGraphNodeGetDependentNodes__funptr)(node,pDependentNodes,pNumDependentNodes)
 
 
 cdef void* _hipGraphNodeGetType__funptr = NULL
@@ -5114,11 +4254,8 @@ cdef void* _hipGraphNodeGetType__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphNodeGetType(hipGraphNode_t node,hipGraphNodeType * pType) nogil:
-    global _lib_handle
     global _hipGraphNodeGetType__funptr
-    if _hipGraphNodeGetType__funptr == NULL:
-        with gil:
-            _hipGraphNodeGetType__funptr = loader.load_symbol(_lib_handle, "hipGraphNodeGetType")
+    __init_symbol(&_hipGraphNodeGetType__funptr,"hipGraphNodeGetType")
     return (<hipError_t (*)(hipGraphNode_t,hipGraphNodeType *) nogil> _hipGraphNodeGetType__funptr)(node,pType)
 
 
@@ -5129,11 +4266,8 @@ cdef void* _hipGraphDestroyNode__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphDestroyNode(hipGraphNode_t node) nogil:
-    global _lib_handle
     global _hipGraphDestroyNode__funptr
-    if _hipGraphDestroyNode__funptr == NULL:
-        with gil:
-            _hipGraphDestroyNode__funptr = loader.load_symbol(_lib_handle, "hipGraphDestroyNode")
+    __init_symbol(&_hipGraphDestroyNode__funptr,"hipGraphDestroyNode")
     return (<hipError_t (*)(hipGraphNode_t) nogil> _hipGraphDestroyNode__funptr)(node)
 
 
@@ -5145,11 +4279,8 @@ cdef void* _hipGraphClone__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphClone(hipGraph_t* pGraphClone,hipGraph_t originalGraph) nogil:
-    global _lib_handle
     global _hipGraphClone__funptr
-    if _hipGraphClone__funptr == NULL:
-        with gil:
-            _hipGraphClone__funptr = loader.load_symbol(_lib_handle, "hipGraphClone")
+    __init_symbol(&_hipGraphClone__funptr,"hipGraphClone")
     return (<hipError_t (*)(hipGraph_t*,hipGraph_t) nogil> _hipGraphClone__funptr)(pGraphClone,originalGraph)
 
 
@@ -5162,11 +4293,8 @@ cdef void* _hipGraphNodeFindInClone__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphNodeFindInClone(hipGraphNode_t* pNode,hipGraphNode_t originalNode,hipGraph_t clonedGraph) nogil:
-    global _lib_handle
     global _hipGraphNodeFindInClone__funptr
-    if _hipGraphNodeFindInClone__funptr == NULL:
-        with gil:
-            _hipGraphNodeFindInClone__funptr = loader.load_symbol(_lib_handle, "hipGraphNodeFindInClone")
+    __init_symbol(&_hipGraphNodeFindInClone__funptr,"hipGraphNodeFindInClone")
     return (<hipError_t (*)(hipGraphNode_t*,hipGraphNode_t,hipGraph_t) nogil> _hipGraphNodeFindInClone__funptr)(pNode,originalNode,clonedGraph)
 
 
@@ -5181,13 +4309,10 @@ cdef void* _hipGraphInstantiate__funptr = NULL
 # @returns #hipSuccess, #hipErrorOutOfMemory
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphInstantiate(hipGraphExec_t* pGraphExec,hipGraph_t graph,hipGraphNode_t* pErrorNode,char * pLogBuffer,int bufferSize) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphInstantiate(hipGraphExec_t* pGraphExec,hipGraph_t graph,hipGraphNode_t* pErrorNode,char * pLogBuffer,unsigned long bufferSize) nogil:
     global _hipGraphInstantiate__funptr
-    if _hipGraphInstantiate__funptr == NULL:
-        with gil:
-            _hipGraphInstantiate__funptr = loader.load_symbol(_lib_handle, "hipGraphInstantiate")
-    return (<hipError_t (*)(hipGraphExec_t*,hipGraph_t,hipGraphNode_t*,char *,int) nogil> _hipGraphInstantiate__funptr)(pGraphExec,graph,pErrorNode,pLogBuffer,bufferSize)
+    __init_symbol(&_hipGraphInstantiate__funptr,"hipGraphInstantiate")
+    return (<hipError_t (*)(hipGraphExec_t*,hipGraph_t,hipGraphNode_t*,char *,unsigned long) nogil> _hipGraphInstantiate__funptr)(pGraphExec,graph,pErrorNode,pLogBuffer,bufferSize)
 
 
 cdef void* _hipGraphInstantiateWithFlags__funptr = NULL
@@ -5199,11 +4324,8 @@ cdef void* _hipGraphInstantiateWithFlags__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphInstantiateWithFlags(hipGraphExec_t* pGraphExec,hipGraph_t graph,unsigned long long flags) nogil:
-    global _lib_handle
     global _hipGraphInstantiateWithFlags__funptr
-    if _hipGraphInstantiateWithFlags__funptr == NULL:
-        with gil:
-            _hipGraphInstantiateWithFlags__funptr = loader.load_symbol(_lib_handle, "hipGraphInstantiateWithFlags")
+    __init_symbol(&_hipGraphInstantiateWithFlags__funptr,"hipGraphInstantiateWithFlags")
     return (<hipError_t (*)(hipGraphExec_t*,hipGraph_t,unsigned long long) nogil> _hipGraphInstantiateWithFlags__funptr)(pGraphExec,graph,flags)
 
 
@@ -5215,11 +4337,8 @@ cdef void* _hipGraphLaunch__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphLaunch(hipGraphExec_t graphExec,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipGraphLaunch__funptr
-    if _hipGraphLaunch__funptr == NULL:
-        with gil:
-            _hipGraphLaunch__funptr = loader.load_symbol(_lib_handle, "hipGraphLaunch")
+    __init_symbol(&_hipGraphLaunch__funptr,"hipGraphLaunch")
     return (<hipError_t (*)(hipGraphExec_t,hipStream_t) nogil> _hipGraphLaunch__funptr)(graphExec,stream)
 
 
@@ -5231,11 +4350,8 @@ cdef void* _hipGraphUpload__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphUpload(hipGraphExec_t graphExec,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipGraphUpload__funptr
-    if _hipGraphUpload__funptr == NULL:
-        with gil:
-            _hipGraphUpload__funptr = loader.load_symbol(_lib_handle, "hipGraphUpload")
+    __init_symbol(&_hipGraphUpload__funptr,"hipGraphUpload")
     return (<hipError_t (*)(hipGraphExec_t,hipStream_t) nogil> _hipGraphUpload__funptr)(graphExec,stream)
 
 
@@ -5246,11 +4362,8 @@ cdef void* _hipGraphExecDestroy__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphExecDestroy(hipGraphExec_t graphExec) nogil:
-    global _lib_handle
     global _hipGraphExecDestroy__funptr
-    if _hipGraphExecDestroy__funptr == NULL:
-        with gil:
-            _hipGraphExecDestroy__funptr = loader.load_symbol(_lib_handle, "hipGraphExecDestroy")
+    __init_symbol(&_hipGraphExecDestroy__funptr,"hipGraphExecDestroy")
     return (<hipError_t (*)(hipGraphExec_t) nogil> _hipGraphExecDestroy__funptr)(graphExec)
 
 
@@ -5265,11 +4378,8 @@ cdef void* _hipGraphExecUpdate__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphExecUpdate(hipGraphExec_t hGraphExec,hipGraph_t hGraph,hipGraphNode_t* hErrorNode_out,hipGraphExecUpdateResult * updateResult_out) nogil:
-    global _lib_handle
     global _hipGraphExecUpdate__funptr
-    if _hipGraphExecUpdate__funptr == NULL:
-        with gil:
-            _hipGraphExecUpdate__funptr = loader.load_symbol(_lib_handle, "hipGraphExecUpdate")
+    __init_symbol(&_hipGraphExecUpdate__funptr,"hipGraphExecUpdate")
     return (<hipError_t (*)(hipGraphExec_t,hipGraph_t,hipGraphNode_t*,hipGraphExecUpdateResult *) nogil> _hipGraphExecUpdate__funptr)(hGraphExec,hGraph,hErrorNode_out,updateResult_out)
 
 
@@ -5283,13 +4393,10 @@ cdef void* _hipGraphAddKernelNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddKernelNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipKernelNodeParams * pNodeParams) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddKernelNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipKernelNodeParams * pNodeParams) nogil:
     global _hipGraphAddKernelNode__funptr
-    if _hipGraphAddKernelNode__funptr == NULL:
-        with gil:
-            _hipGraphAddKernelNode__funptr = loader.load_symbol(_lib_handle, "hipGraphAddKernelNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipKernelNodeParams *) nogil> _hipGraphAddKernelNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pNodeParams)
+    __init_symbol(&_hipGraphAddKernelNode__funptr,"hipGraphAddKernelNode")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipKernelNodeParams *) nogil> _hipGraphAddKernelNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pNodeParams)
 
 
 cdef void* _hipGraphKernelNodeGetParams__funptr = NULL
@@ -5300,11 +4407,8 @@ cdef void* _hipGraphKernelNodeGetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphKernelNodeGetParams(hipGraphNode_t node,hipKernelNodeParams * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphKernelNodeGetParams__funptr
-    if _hipGraphKernelNodeGetParams__funptr == NULL:
-        with gil:
-            _hipGraphKernelNodeGetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphKernelNodeGetParams")
+    __init_symbol(&_hipGraphKernelNodeGetParams__funptr,"hipGraphKernelNodeGetParams")
     return (<hipError_t (*)(hipGraphNode_t,hipKernelNodeParams *) nogil> _hipGraphKernelNodeGetParams__funptr)(node,pNodeParams)
 
 
@@ -5316,11 +4420,8 @@ cdef void* _hipGraphKernelNodeSetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphKernelNodeSetParams(hipGraphNode_t node,hipKernelNodeParams * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphKernelNodeSetParams__funptr
-    if _hipGraphKernelNodeSetParams__funptr == NULL:
-        with gil:
-            _hipGraphKernelNodeSetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphKernelNodeSetParams")
+    __init_symbol(&_hipGraphKernelNodeSetParams__funptr,"hipGraphKernelNodeSetParams")
     return (<hipError_t (*)(hipGraphNode_t,hipKernelNodeParams *) nogil> _hipGraphKernelNodeSetParams__funptr)(node,pNodeParams)
 
 
@@ -5333,11 +4434,8 @@ cdef void* _hipGraphExecKernelNodeSetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphExecKernelNodeSetParams(hipGraphExec_t hGraphExec,hipGraphNode_t node,hipKernelNodeParams * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphExecKernelNodeSetParams__funptr
-    if _hipGraphExecKernelNodeSetParams__funptr == NULL:
-        with gil:
-            _hipGraphExecKernelNodeSetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphExecKernelNodeSetParams")
+    __init_symbol(&_hipGraphExecKernelNodeSetParams__funptr,"hipGraphExecKernelNodeSetParams")
     return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,hipKernelNodeParams *) nogil> _hipGraphExecKernelNodeSetParams__funptr)(hGraphExec,node,pNodeParams)
 
 
@@ -5351,13 +4449,10 @@ cdef void* _hipGraphAddMemcpyNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipMemcpy3DParms * pCopyParams) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddMemcpyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipMemcpy3DParms * pCopyParams) nogil:
     global _hipGraphAddMemcpyNode__funptr
-    if _hipGraphAddMemcpyNode__funptr == NULL:
-        with gil:
-            _hipGraphAddMemcpyNode__funptr = loader.load_symbol(_lib_handle, "hipGraphAddMemcpyNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipMemcpy3DParms *) nogil> _hipGraphAddMemcpyNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pCopyParams)
+    __init_symbol(&_hipGraphAddMemcpyNode__funptr,"hipGraphAddMemcpyNode")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipMemcpy3DParms *) nogil> _hipGraphAddMemcpyNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pCopyParams)
 
 
 cdef void* _hipGraphMemcpyNodeGetParams__funptr = NULL
@@ -5368,11 +4463,8 @@ cdef void* _hipGraphMemcpyNodeGetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphMemcpyNodeGetParams(hipGraphNode_t node,hipMemcpy3DParms * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphMemcpyNodeGetParams__funptr
-    if _hipGraphMemcpyNodeGetParams__funptr == NULL:
-        with gil:
-            _hipGraphMemcpyNodeGetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphMemcpyNodeGetParams")
+    __init_symbol(&_hipGraphMemcpyNodeGetParams__funptr,"hipGraphMemcpyNodeGetParams")
     return (<hipError_t (*)(hipGraphNode_t,hipMemcpy3DParms *) nogil> _hipGraphMemcpyNodeGetParams__funptr)(node,pNodeParams)
 
 
@@ -5384,11 +4476,8 @@ cdef void* _hipGraphMemcpyNodeSetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphMemcpyNodeSetParams(hipGraphNode_t node,hipMemcpy3DParms * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphMemcpyNodeSetParams__funptr
-    if _hipGraphMemcpyNodeSetParams__funptr == NULL:
-        with gil:
-            _hipGraphMemcpyNodeSetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphMemcpyNodeSetParams")
+    __init_symbol(&_hipGraphMemcpyNodeSetParams__funptr,"hipGraphMemcpyNodeSetParams")
     return (<hipError_t (*)(hipGraphNode_t,hipMemcpy3DParms *) nogil> _hipGraphMemcpyNodeSetParams__funptr)(node,pNodeParams)
 
 
@@ -5401,11 +4490,8 @@ cdef void* _hipGraphKernelNodeSetAttribute__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphKernelNodeSetAttribute(hipGraphNode_t hNode,hipKernelNodeAttrID attr,hipKernelNodeAttrValue * value) nogil:
-    global _lib_handle
     global _hipGraphKernelNodeSetAttribute__funptr
-    if _hipGraphKernelNodeSetAttribute__funptr == NULL:
-        with gil:
-            _hipGraphKernelNodeSetAttribute__funptr = loader.load_symbol(_lib_handle, "hipGraphKernelNodeSetAttribute")
+    __init_symbol(&_hipGraphKernelNodeSetAttribute__funptr,"hipGraphKernelNodeSetAttribute")
     return (<hipError_t (*)(hipGraphNode_t,hipKernelNodeAttrID,hipKernelNodeAttrValue *) nogil> _hipGraphKernelNodeSetAttribute__funptr)(hNode,attr,value)
 
 
@@ -5418,11 +4504,8 @@ cdef void* _hipGraphKernelNodeGetAttribute__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphKernelNodeGetAttribute(hipGraphNode_t hNode,hipKernelNodeAttrID attr,hipKernelNodeAttrValue * value) nogil:
-    global _lib_handle
     global _hipGraphKernelNodeGetAttribute__funptr
-    if _hipGraphKernelNodeGetAttribute__funptr == NULL:
-        with gil:
-            _hipGraphKernelNodeGetAttribute__funptr = loader.load_symbol(_lib_handle, "hipGraphKernelNodeGetAttribute")
+    __init_symbol(&_hipGraphKernelNodeGetAttribute__funptr,"hipGraphKernelNodeGetAttribute")
     return (<hipError_t (*)(hipGraphNode_t,hipKernelNodeAttrID,hipKernelNodeAttrValue *) nogil> _hipGraphKernelNodeGetAttribute__funptr)(hNode,attr,value)
 
 
@@ -5435,11 +4518,8 @@ cdef void* _hipGraphExecMemcpyNodeSetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphExecMemcpyNodeSetParams(hipGraphExec_t hGraphExec,hipGraphNode_t node,hipMemcpy3DParms * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphExecMemcpyNodeSetParams__funptr
-    if _hipGraphExecMemcpyNodeSetParams__funptr == NULL:
-        with gil:
-            _hipGraphExecMemcpyNodeSetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphExecMemcpyNodeSetParams")
+    __init_symbol(&_hipGraphExecMemcpyNodeSetParams__funptr,"hipGraphExecMemcpyNodeSetParams")
     return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,hipMemcpy3DParms *) nogil> _hipGraphExecMemcpyNodeSetParams__funptr)(hGraphExec,node,pNodeParams)
 
 
@@ -5456,13 +4536,10 @@ cdef void* _hipGraphAddMemcpyNode1D__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNode1D(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,void * dst,const void * src,int count,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddMemcpyNode1D(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,void * dst,const void * src,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipGraphAddMemcpyNode1D__funptr
-    if _hipGraphAddMemcpyNode1D__funptr == NULL:
-        with gil:
-            _hipGraphAddMemcpyNode1D__funptr = loader.load_symbol(_lib_handle, "hipGraphAddMemcpyNode1D")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,void *,const void *,int,hipMemcpyKind) nogil> _hipGraphAddMemcpyNode1D__funptr)(pGraphNode,graph,pDependencies,numDependencies,dst,src,count,kind)
+    __init_symbol(&_hipGraphAddMemcpyNode1D__funptr,"hipGraphAddMemcpyNode1D")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,void *,const void *,unsigned long,hipMemcpyKind) nogil> _hipGraphAddMemcpyNode1D__funptr)(pGraphNode,graph,pDependencies,numDependencies,dst,src,count,kind)
 
 
 cdef void* _hipGraphMemcpyNodeSetParams1D__funptr = NULL
@@ -5475,13 +4552,10 @@ cdef void* _hipGraphMemcpyNodeSetParams1D__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphMemcpyNodeSetParams1D(hipGraphNode_t node,void * dst,const void * src,int count,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphMemcpyNodeSetParams1D(hipGraphNode_t node,void * dst,const void * src,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipGraphMemcpyNodeSetParams1D__funptr
-    if _hipGraphMemcpyNodeSetParams1D__funptr == NULL:
-        with gil:
-            _hipGraphMemcpyNodeSetParams1D__funptr = loader.load_symbol(_lib_handle, "hipGraphMemcpyNodeSetParams1D")
-    return (<hipError_t (*)(hipGraphNode_t,void *,const void *,int,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParams1D__funptr)(node,dst,src,count,kind)
+    __init_symbol(&_hipGraphMemcpyNodeSetParams1D__funptr,"hipGraphMemcpyNodeSetParams1D")
+    return (<hipError_t (*)(hipGraphNode_t,void *,const void *,unsigned long,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParams1D__funptr)(node,dst,src,count,kind)
 
 
 cdef void* _hipGraphExecMemcpyNodeSetParams1D__funptr = NULL
@@ -5496,13 +4570,10 @@ cdef void* _hipGraphExecMemcpyNodeSetParams1D__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphExecMemcpyNodeSetParams1D(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * src,int count,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphExecMemcpyNodeSetParams1D(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * src,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipGraphExecMemcpyNodeSetParams1D__funptr
-    if _hipGraphExecMemcpyNodeSetParams1D__funptr == NULL:
-        with gil:
-            _hipGraphExecMemcpyNodeSetParams1D__funptr = loader.load_symbol(_lib_handle, "hipGraphExecMemcpyNodeSetParams1D")
-    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,void *,const void *,int,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParams1D__funptr)(hGraphExec,node,dst,src,count,kind)
+    __init_symbol(&_hipGraphExecMemcpyNodeSetParams1D__funptr,"hipGraphExecMemcpyNodeSetParams1D")
+    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,void *,const void *,unsigned long,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParams1D__funptr)(hGraphExec,node,dst,src,count,kind)
 
 
 cdef void* _hipGraphAddMemcpyNodeFromSymbol__funptr = NULL
@@ -5519,13 +4590,10 @@ cdef void* _hipGraphAddMemcpyNodeFromSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNodeFromSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,void * dst,const void * symbol,int count,int offset,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddMemcpyNodeFromSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,void * dst,const void * symbol,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphAddMemcpyNodeFromSymbol__funptr
-    if _hipGraphAddMemcpyNodeFromSymbol__funptr == NULL:
-        with gil:
-            _hipGraphAddMemcpyNodeFromSymbol__funptr = loader.load_symbol(_lib_handle, "hipGraphAddMemcpyNodeFromSymbol")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphAddMemcpyNodeFromSymbol__funptr)(pGraphNode,graph,pDependencies,numDependencies,dst,symbol,count,offset,kind)
+    __init_symbol(&_hipGraphAddMemcpyNodeFromSymbol__funptr,"hipGraphAddMemcpyNodeFromSymbol")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphAddMemcpyNodeFromSymbol__funptr)(pGraphNode,graph,pDependencies,numDependencies,dst,symbol,count,offset,kind)
 
 
 cdef void* _hipGraphMemcpyNodeSetParamsFromSymbol__funptr = NULL
@@ -5539,13 +4607,10 @@ cdef void* _hipGraphMemcpyNodeSetParamsFromSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphMemcpyNodeSetParamsFromSymbol(hipGraphNode_t node,void * dst,const void * symbol,int count,int offset,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphMemcpyNodeSetParamsFromSymbol(hipGraphNode_t node,void * dst,const void * symbol,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphMemcpyNodeSetParamsFromSymbol__funptr
-    if _hipGraphMemcpyNodeSetParamsFromSymbol__funptr == NULL:
-        with gil:
-            _hipGraphMemcpyNodeSetParamsFromSymbol__funptr = loader.load_symbol(_lib_handle, "hipGraphMemcpyNodeSetParamsFromSymbol")
-    return (<hipError_t (*)(hipGraphNode_t,void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParamsFromSymbol__funptr)(node,dst,symbol,count,offset,kind)
+    __init_symbol(&_hipGraphMemcpyNodeSetParamsFromSymbol__funptr,"hipGraphMemcpyNodeSetParamsFromSymbol")
+    return (<hipError_t (*)(hipGraphNode_t,void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParamsFromSymbol__funptr)(node,dst,symbol,count,offset,kind)
 
 
 cdef void* _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr = NULL
@@ -5561,13 +4626,10 @@ cdef void* _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphExecMemcpyNodeSetParamsFromSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * symbol,int count,int offset,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphExecMemcpyNodeSetParamsFromSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,void * dst,const void * symbol,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr
-    if _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr == NULL:
-        with gil:
-            _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr = loader.load_symbol(_lib_handle, "hipGraphExecMemcpyNodeSetParamsFromSymbol")
-    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr)(hGraphExec,node,dst,symbol,count,offset,kind)
+    __init_symbol(&_hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr,"hipGraphExecMemcpyNodeSetParamsFromSymbol")
+    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParamsFromSymbol__funptr)(hGraphExec,node,dst,symbol,count,offset,kind)
 
 
 cdef void* _hipGraphAddMemcpyNodeToSymbol__funptr = NULL
@@ -5584,13 +4646,10 @@ cdef void* _hipGraphAddMemcpyNodeToSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemcpyNodeToSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,const void * symbol,const void * src,int count,int offset,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddMemcpyNodeToSymbol(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,const void * symbol,const void * src,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphAddMemcpyNodeToSymbol__funptr
-    if _hipGraphAddMemcpyNodeToSymbol__funptr == NULL:
-        with gil:
-            _hipGraphAddMemcpyNodeToSymbol__funptr = loader.load_symbol(_lib_handle, "hipGraphAddMemcpyNodeToSymbol")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,const void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphAddMemcpyNodeToSymbol__funptr)(pGraphNode,graph,pDependencies,numDependencies,symbol,src,count,offset,kind)
+    __init_symbol(&_hipGraphAddMemcpyNodeToSymbol__funptr,"hipGraphAddMemcpyNodeToSymbol")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,const void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphAddMemcpyNodeToSymbol__funptr)(pGraphNode,graph,pDependencies,numDependencies,symbol,src,count,offset,kind)
 
 
 cdef void* _hipGraphMemcpyNodeSetParamsToSymbol__funptr = NULL
@@ -5604,13 +4663,10 @@ cdef void* _hipGraphMemcpyNodeSetParamsToSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphMemcpyNodeSetParamsToSymbol(hipGraphNode_t node,const void * symbol,const void * src,int count,int offset,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphMemcpyNodeSetParamsToSymbol(hipGraphNode_t node,const void * symbol,const void * src,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphMemcpyNodeSetParamsToSymbol__funptr
-    if _hipGraphMemcpyNodeSetParamsToSymbol__funptr == NULL:
-        with gil:
-            _hipGraphMemcpyNodeSetParamsToSymbol__funptr = loader.load_symbol(_lib_handle, "hipGraphMemcpyNodeSetParamsToSymbol")
-    return (<hipError_t (*)(hipGraphNode_t,const void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParamsToSymbol__funptr)(node,symbol,src,count,offset,kind)
+    __init_symbol(&_hipGraphMemcpyNodeSetParamsToSymbol__funptr,"hipGraphMemcpyNodeSetParamsToSymbol")
+    return (<hipError_t (*)(hipGraphNode_t,const void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphMemcpyNodeSetParamsToSymbol__funptr)(node,symbol,src,count,offset,kind)
 
 
 cdef void* _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr = NULL
@@ -5626,13 +4682,10 @@ cdef void* _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphExecMemcpyNodeSetParamsToSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,const void * symbol,const void * src,int count,int offset,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphExecMemcpyNodeSetParamsToSymbol(hipGraphExec_t hGraphExec,hipGraphNode_t node,const void * symbol,const void * src,unsigned long count,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr
-    if _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr == NULL:
-        with gil:
-            _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr = loader.load_symbol(_lib_handle, "hipGraphExecMemcpyNodeSetParamsToSymbol")
-    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,const void *,const void *,int,int,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr)(hGraphExec,node,symbol,src,count,offset,kind)
+    __init_symbol(&_hipGraphExecMemcpyNodeSetParamsToSymbol__funptr,"hipGraphExecMemcpyNodeSetParamsToSymbol")
+    return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,const void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipGraphExecMemcpyNodeSetParamsToSymbol__funptr)(hGraphExec,node,symbol,src,count,offset,kind)
 
 
 cdef void* _hipGraphAddMemsetNode__funptr = NULL
@@ -5645,13 +4698,10 @@ cdef void* _hipGraphAddMemsetNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddMemsetNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipMemsetParams * pMemsetParams) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddMemsetNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipMemsetParams * pMemsetParams) nogil:
     global _hipGraphAddMemsetNode__funptr
-    if _hipGraphAddMemsetNode__funptr == NULL:
-        with gil:
-            _hipGraphAddMemsetNode__funptr = loader.load_symbol(_lib_handle, "hipGraphAddMemsetNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipMemsetParams *) nogil> _hipGraphAddMemsetNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pMemsetParams)
+    __init_symbol(&_hipGraphAddMemsetNode__funptr,"hipGraphAddMemsetNode")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipMemsetParams *) nogil> _hipGraphAddMemsetNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pMemsetParams)
 
 
 cdef void* _hipGraphMemsetNodeGetParams__funptr = NULL
@@ -5662,11 +4712,8 @@ cdef void* _hipGraphMemsetNodeGetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphMemsetNodeGetParams(hipGraphNode_t node,hipMemsetParams * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphMemsetNodeGetParams__funptr
-    if _hipGraphMemsetNodeGetParams__funptr == NULL:
-        with gil:
-            _hipGraphMemsetNodeGetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphMemsetNodeGetParams")
+    __init_symbol(&_hipGraphMemsetNodeGetParams__funptr,"hipGraphMemsetNodeGetParams")
     return (<hipError_t (*)(hipGraphNode_t,hipMemsetParams *) nogil> _hipGraphMemsetNodeGetParams__funptr)(node,pNodeParams)
 
 
@@ -5678,11 +4725,8 @@ cdef void* _hipGraphMemsetNodeSetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphMemsetNodeSetParams(hipGraphNode_t node,hipMemsetParams * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphMemsetNodeSetParams__funptr
-    if _hipGraphMemsetNodeSetParams__funptr == NULL:
-        with gil:
-            _hipGraphMemsetNodeSetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphMemsetNodeSetParams")
+    __init_symbol(&_hipGraphMemsetNodeSetParams__funptr,"hipGraphMemsetNodeSetParams")
     return (<hipError_t (*)(hipGraphNode_t,hipMemsetParams *) nogil> _hipGraphMemsetNodeSetParams__funptr)(node,pNodeParams)
 
 
@@ -5695,11 +4739,8 @@ cdef void* _hipGraphExecMemsetNodeSetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphExecMemsetNodeSetParams(hipGraphExec_t hGraphExec,hipGraphNode_t node,hipMemsetParams * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphExecMemsetNodeSetParams__funptr
-    if _hipGraphExecMemsetNodeSetParams__funptr == NULL:
-        with gil:
-            _hipGraphExecMemsetNodeSetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphExecMemsetNodeSetParams")
+    __init_symbol(&_hipGraphExecMemsetNodeSetParams__funptr,"hipGraphExecMemsetNodeSetParams")
     return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,hipMemsetParams *) nogil> _hipGraphExecMemsetNodeSetParams__funptr)(hGraphExec,node,pNodeParams)
 
 
@@ -5713,13 +4754,10 @@ cdef void* _hipGraphAddHostNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddHostNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipHostNodeParams * pNodeParams) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddHostNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipHostNodeParams * pNodeParams) nogil:
     global _hipGraphAddHostNode__funptr
-    if _hipGraphAddHostNode__funptr == NULL:
-        with gil:
-            _hipGraphAddHostNode__funptr = loader.load_symbol(_lib_handle, "hipGraphAddHostNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipHostNodeParams *) nogil> _hipGraphAddHostNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pNodeParams)
+    __init_symbol(&_hipGraphAddHostNode__funptr,"hipGraphAddHostNode")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipHostNodeParams *) nogil> _hipGraphAddHostNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,pNodeParams)
 
 
 cdef void* _hipGraphHostNodeGetParams__funptr = NULL
@@ -5730,11 +4768,8 @@ cdef void* _hipGraphHostNodeGetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphHostNodeGetParams(hipGraphNode_t node,hipHostNodeParams * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphHostNodeGetParams__funptr
-    if _hipGraphHostNodeGetParams__funptr == NULL:
-        with gil:
-            _hipGraphHostNodeGetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphHostNodeGetParams")
+    __init_symbol(&_hipGraphHostNodeGetParams__funptr,"hipGraphHostNodeGetParams")
     return (<hipError_t (*)(hipGraphNode_t,hipHostNodeParams *) nogil> _hipGraphHostNodeGetParams__funptr)(node,pNodeParams)
 
 
@@ -5746,11 +4781,8 @@ cdef void* _hipGraphHostNodeSetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphHostNodeSetParams(hipGraphNode_t node,hipHostNodeParams * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphHostNodeSetParams__funptr
-    if _hipGraphHostNodeSetParams__funptr == NULL:
-        with gil:
-            _hipGraphHostNodeSetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphHostNodeSetParams")
+    __init_symbol(&_hipGraphHostNodeSetParams__funptr,"hipGraphHostNodeSetParams")
     return (<hipError_t (*)(hipGraphNode_t,hipHostNodeParams *) nogil> _hipGraphHostNodeSetParams__funptr)(node,pNodeParams)
 
 
@@ -5763,11 +4795,8 @@ cdef void* _hipGraphExecHostNodeSetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphExecHostNodeSetParams(hipGraphExec_t hGraphExec,hipGraphNode_t node,hipHostNodeParams * pNodeParams) nogil:
-    global _lib_handle
     global _hipGraphExecHostNodeSetParams__funptr
-    if _hipGraphExecHostNodeSetParams__funptr == NULL:
-        with gil:
-            _hipGraphExecHostNodeSetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphExecHostNodeSetParams")
+    __init_symbol(&_hipGraphExecHostNodeSetParams__funptr,"hipGraphExecHostNodeSetParams")
     return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,hipHostNodeParams *) nogil> _hipGraphExecHostNodeSetParams__funptr)(hGraphExec,node,pNodeParams)
 
 
@@ -5781,13 +4810,10 @@ cdef void* _hipGraphAddChildGraphNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddChildGraphNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipGraph_t childGraph) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddChildGraphNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipGraph_t childGraph) nogil:
     global _hipGraphAddChildGraphNode__funptr
-    if _hipGraphAddChildGraphNode__funptr == NULL:
-        with gil:
-            _hipGraphAddChildGraphNode__funptr = loader.load_symbol(_lib_handle, "hipGraphAddChildGraphNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipGraph_t) nogil> _hipGraphAddChildGraphNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,childGraph)
+    __init_symbol(&_hipGraphAddChildGraphNode__funptr,"hipGraphAddChildGraphNode")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipGraph_t) nogil> _hipGraphAddChildGraphNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,childGraph)
 
 
 cdef void* _hipGraphChildGraphNodeGetGraph__funptr = NULL
@@ -5798,11 +4824,8 @@ cdef void* _hipGraphChildGraphNodeGetGraph__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphChildGraphNodeGetGraph(hipGraphNode_t node,hipGraph_t* pGraph) nogil:
-    global _lib_handle
     global _hipGraphChildGraphNodeGetGraph__funptr
-    if _hipGraphChildGraphNodeGetGraph__funptr == NULL:
-        with gil:
-            _hipGraphChildGraphNodeGetGraph__funptr = loader.load_symbol(_lib_handle, "hipGraphChildGraphNodeGetGraph")
+    __init_symbol(&_hipGraphChildGraphNodeGetGraph__funptr,"hipGraphChildGraphNodeGetGraph")
     return (<hipError_t (*)(hipGraphNode_t,hipGraph_t*) nogil> _hipGraphChildGraphNodeGetGraph__funptr)(node,pGraph)
 
 
@@ -5815,11 +4838,8 @@ cdef void* _hipGraphExecChildGraphNodeSetParams__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphExecChildGraphNodeSetParams(hipGraphExec_t hGraphExec,hipGraphNode_t node,hipGraph_t childGraph) nogil:
-    global _lib_handle
     global _hipGraphExecChildGraphNodeSetParams__funptr
-    if _hipGraphExecChildGraphNodeSetParams__funptr == NULL:
-        with gil:
-            _hipGraphExecChildGraphNodeSetParams__funptr = loader.load_symbol(_lib_handle, "hipGraphExecChildGraphNodeSetParams")
+    __init_symbol(&_hipGraphExecChildGraphNodeSetParams__funptr,"hipGraphExecChildGraphNodeSetParams")
     return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,hipGraph_t) nogil> _hipGraphExecChildGraphNodeSetParams__funptr)(hGraphExec,node,childGraph)
 
 
@@ -5832,13 +4852,10 @@ cdef void* _hipGraphAddEmptyNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddEmptyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddEmptyNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies) nogil:
     global _hipGraphAddEmptyNode__funptr
-    if _hipGraphAddEmptyNode__funptr == NULL:
-        with gil:
-            _hipGraphAddEmptyNode__funptr = loader.load_symbol(_lib_handle, "hipGraphAddEmptyNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int) nogil> _hipGraphAddEmptyNode__funptr)(pGraphNode,graph,pDependencies,numDependencies)
+    __init_symbol(&_hipGraphAddEmptyNode__funptr,"hipGraphAddEmptyNode")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long) nogil> _hipGraphAddEmptyNode__funptr)(pGraphNode,graph,pDependencies,numDependencies)
 
 
 cdef void* _hipGraphAddEventRecordNode__funptr = NULL
@@ -5851,13 +4868,10 @@ cdef void* _hipGraphAddEventRecordNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddEventRecordNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipEvent_t event) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddEventRecordNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipEvent_t event) nogil:
     global _hipGraphAddEventRecordNode__funptr
-    if _hipGraphAddEventRecordNode__funptr == NULL:
-        with gil:
-            _hipGraphAddEventRecordNode__funptr = loader.load_symbol(_lib_handle, "hipGraphAddEventRecordNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipEvent_t) nogil> _hipGraphAddEventRecordNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,event)
+    __init_symbol(&_hipGraphAddEventRecordNode__funptr,"hipGraphAddEventRecordNode")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipEvent_t) nogil> _hipGraphAddEventRecordNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,event)
 
 
 cdef void* _hipGraphEventRecordNodeGetEvent__funptr = NULL
@@ -5868,11 +4882,8 @@ cdef void* _hipGraphEventRecordNodeGetEvent__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphEventRecordNodeGetEvent(hipGraphNode_t node,hipEvent_t* event_out) nogil:
-    global _lib_handle
     global _hipGraphEventRecordNodeGetEvent__funptr
-    if _hipGraphEventRecordNodeGetEvent__funptr == NULL:
-        with gil:
-            _hipGraphEventRecordNodeGetEvent__funptr = loader.load_symbol(_lib_handle, "hipGraphEventRecordNodeGetEvent")
+    __init_symbol(&_hipGraphEventRecordNodeGetEvent__funptr,"hipGraphEventRecordNodeGetEvent")
     return (<hipError_t (*)(hipGraphNode_t,hipEvent_t*) nogil> _hipGraphEventRecordNodeGetEvent__funptr)(node,event_out)
 
 
@@ -5884,11 +4895,8 @@ cdef void* _hipGraphEventRecordNodeSetEvent__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphEventRecordNodeSetEvent(hipGraphNode_t node,hipEvent_t event) nogil:
-    global _lib_handle
     global _hipGraphEventRecordNodeSetEvent__funptr
-    if _hipGraphEventRecordNodeSetEvent__funptr == NULL:
-        with gil:
-            _hipGraphEventRecordNodeSetEvent__funptr = loader.load_symbol(_lib_handle, "hipGraphEventRecordNodeSetEvent")
+    __init_symbol(&_hipGraphEventRecordNodeSetEvent__funptr,"hipGraphEventRecordNodeSetEvent")
     return (<hipError_t (*)(hipGraphNode_t,hipEvent_t) nogil> _hipGraphEventRecordNodeSetEvent__funptr)(node,event)
 
 
@@ -5901,11 +4909,8 @@ cdef void* _hipGraphExecEventRecordNodeSetEvent__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphExecEventRecordNodeSetEvent(hipGraphExec_t hGraphExec,hipGraphNode_t hNode,hipEvent_t event) nogil:
-    global _lib_handle
     global _hipGraphExecEventRecordNodeSetEvent__funptr
-    if _hipGraphExecEventRecordNodeSetEvent__funptr == NULL:
-        with gil:
-            _hipGraphExecEventRecordNodeSetEvent__funptr = loader.load_symbol(_lib_handle, "hipGraphExecEventRecordNodeSetEvent")
+    __init_symbol(&_hipGraphExecEventRecordNodeSetEvent__funptr,"hipGraphExecEventRecordNodeSetEvent")
     return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,hipEvent_t) nogil> _hipGraphExecEventRecordNodeSetEvent__funptr)(hGraphExec,hNode,event)
 
 
@@ -5919,13 +4924,10 @@ cdef void* _hipGraphAddEventWaitNode__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipGraphAddEventWaitNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,int numDependencies,hipEvent_t event) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphAddEventWaitNode(hipGraphNode_t* pGraphNode,hipGraph_t graph,hipGraphNode_t * pDependencies,unsigned long numDependencies,hipEvent_t event) nogil:
     global _hipGraphAddEventWaitNode__funptr
-    if _hipGraphAddEventWaitNode__funptr == NULL:
-        with gil:
-            _hipGraphAddEventWaitNode__funptr = loader.load_symbol(_lib_handle, "hipGraphAddEventWaitNode")
-    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,int,hipEvent_t) nogil> _hipGraphAddEventWaitNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,event)
+    __init_symbol(&_hipGraphAddEventWaitNode__funptr,"hipGraphAddEventWaitNode")
+    return (<hipError_t (*)(hipGraphNode_t*,hipGraph_t,hipGraphNode_t *,unsigned long,hipEvent_t) nogil> _hipGraphAddEventWaitNode__funptr)(pGraphNode,graph,pDependencies,numDependencies,event)
 
 
 cdef void* _hipGraphEventWaitNodeGetEvent__funptr = NULL
@@ -5936,11 +4938,8 @@ cdef void* _hipGraphEventWaitNodeGetEvent__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphEventWaitNodeGetEvent(hipGraphNode_t node,hipEvent_t* event_out) nogil:
-    global _lib_handle
     global _hipGraphEventWaitNodeGetEvent__funptr
-    if _hipGraphEventWaitNodeGetEvent__funptr == NULL:
-        with gil:
-            _hipGraphEventWaitNodeGetEvent__funptr = loader.load_symbol(_lib_handle, "hipGraphEventWaitNodeGetEvent")
+    __init_symbol(&_hipGraphEventWaitNodeGetEvent__funptr,"hipGraphEventWaitNodeGetEvent")
     return (<hipError_t (*)(hipGraphNode_t,hipEvent_t*) nogil> _hipGraphEventWaitNodeGetEvent__funptr)(node,event_out)
 
 
@@ -5952,11 +4951,8 @@ cdef void* _hipGraphEventWaitNodeSetEvent__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphEventWaitNodeSetEvent(hipGraphNode_t node,hipEvent_t event) nogil:
-    global _lib_handle
     global _hipGraphEventWaitNodeSetEvent__funptr
-    if _hipGraphEventWaitNodeSetEvent__funptr == NULL:
-        with gil:
-            _hipGraphEventWaitNodeSetEvent__funptr = loader.load_symbol(_lib_handle, "hipGraphEventWaitNodeSetEvent")
+    __init_symbol(&_hipGraphEventWaitNodeSetEvent__funptr,"hipGraphEventWaitNodeSetEvent")
     return (<hipError_t (*)(hipGraphNode_t,hipEvent_t) nogil> _hipGraphEventWaitNodeSetEvent__funptr)(node,event)
 
 
@@ -5969,11 +4965,8 @@ cdef void* _hipGraphExecEventWaitNodeSetEvent__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphExecEventWaitNodeSetEvent(hipGraphExec_t hGraphExec,hipGraphNode_t hNode,hipEvent_t event) nogil:
-    global _lib_handle
     global _hipGraphExecEventWaitNodeSetEvent__funptr
-    if _hipGraphExecEventWaitNodeSetEvent__funptr == NULL:
-        with gil:
-            _hipGraphExecEventWaitNodeSetEvent__funptr = loader.load_symbol(_lib_handle, "hipGraphExecEventWaitNodeSetEvent")
+    __init_symbol(&_hipGraphExecEventWaitNodeSetEvent__funptr,"hipGraphExecEventWaitNodeSetEvent")
     return (<hipError_t (*)(hipGraphExec_t,hipGraphNode_t,hipEvent_t) nogil> _hipGraphExecEventWaitNodeSetEvent__funptr)(hGraphExec,hNode,event)
 
 
@@ -5986,11 +4979,8 @@ cdef void* _hipDeviceGetGraphMemAttribute__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipDeviceGetGraphMemAttribute(int device,hipGraphMemAttributeType attr,void * value) nogil:
-    global _lib_handle
     global _hipDeviceGetGraphMemAttribute__funptr
-    if _hipDeviceGetGraphMemAttribute__funptr == NULL:
-        with gil:
-            _hipDeviceGetGraphMemAttribute__funptr = loader.load_symbol(_lib_handle, "hipDeviceGetGraphMemAttribute")
+    __init_symbol(&_hipDeviceGetGraphMemAttribute__funptr,"hipDeviceGetGraphMemAttribute")
     return (<hipError_t (*)(int,hipGraphMemAttributeType,void *) nogil> _hipDeviceGetGraphMemAttribute__funptr)(device,attr,value)
 
 
@@ -6003,11 +4993,8 @@ cdef void* _hipDeviceSetGraphMemAttribute__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipDeviceSetGraphMemAttribute(int device,hipGraphMemAttributeType attr,void * value) nogil:
-    global _lib_handle
     global _hipDeviceSetGraphMemAttribute__funptr
-    if _hipDeviceSetGraphMemAttribute__funptr == NULL:
-        with gil:
-            _hipDeviceSetGraphMemAttribute__funptr = loader.load_symbol(_lib_handle, "hipDeviceSetGraphMemAttribute")
+    __init_symbol(&_hipDeviceSetGraphMemAttribute__funptr,"hipDeviceSetGraphMemAttribute")
     return (<hipError_t (*)(int,hipGraphMemAttributeType,void *) nogil> _hipDeviceSetGraphMemAttribute__funptr)(device,attr,value)
 
 
@@ -6017,11 +5004,8 @@ cdef void* _hipDeviceGraphMemTrim__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipDeviceGraphMemTrim(int device) nogil:
-    global _lib_handle
     global _hipDeviceGraphMemTrim__funptr
-    if _hipDeviceGraphMemTrim__funptr == NULL:
-        with gil:
-            _hipDeviceGraphMemTrim__funptr = loader.load_symbol(_lib_handle, "hipDeviceGraphMemTrim")
+    __init_symbol(&_hipDeviceGraphMemTrim__funptr,"hipDeviceGraphMemTrim")
     return (<hipError_t (*)(int) nogil> _hipDeviceGraphMemTrim__funptr)(device)
 
 
@@ -6035,13 +5019,10 @@ cdef void* _hipUserObjectCreate__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipUserObjectCreate(hipUserObject_t* object_out,void * ptr,hipHostFn_t destroy,unsigned int initialRefcount,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipUserObjectCreate(hipUserObject_t* object_out,void * ptr,hipHostFn_t destroy,unsigned int initialRefcount,unsigned int flags):
     global _hipUserObjectCreate__funptr
-    if _hipUserObjectCreate__funptr == NULL:
-        with gil:
-            _hipUserObjectCreate__funptr = loader.load_symbol(_lib_handle, "hipUserObjectCreate")
-    return (<hipError_t (*)(hipUserObject_t*,void *,hipHostFn_t,unsigned int,unsigned int) nogil> _hipUserObjectCreate__funptr)(object_out,ptr,destroy,initialRefcount,flags)
+    __init_symbol(&_hipUserObjectCreate__funptr,"hipUserObjectCreate")
+    return (<hipError_t (*)(hipUserObject_t*,void *,hipHostFn_t,unsigned int,unsigned int)> _hipUserObjectCreate__funptr)(object_out,ptr,destroy,initialRefcount,flags)
 
 
 cdef void* _hipUserObjectRelease__funptr = NULL
@@ -6052,11 +5033,8 @@ cdef void* _hipUserObjectRelease__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipUserObjectRelease(hipUserObject_t object,unsigned int count) nogil:
-    global _lib_handle
     global _hipUserObjectRelease__funptr
-    if _hipUserObjectRelease__funptr == NULL:
-        with gil:
-            _hipUserObjectRelease__funptr = loader.load_symbol(_lib_handle, "hipUserObjectRelease")
+    __init_symbol(&_hipUserObjectRelease__funptr,"hipUserObjectRelease")
     return (<hipError_t (*)(hipUserObject_t,unsigned int) nogil> _hipUserObjectRelease__funptr)(object,count)
 
 
@@ -6068,11 +5046,8 @@ cdef void* _hipUserObjectRetain__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipUserObjectRetain(hipUserObject_t object,unsigned int count) nogil:
-    global _lib_handle
     global _hipUserObjectRetain__funptr
-    if _hipUserObjectRetain__funptr == NULL:
-        with gil:
-            _hipUserObjectRetain__funptr = loader.load_symbol(_lib_handle, "hipUserObjectRetain")
+    __init_symbol(&_hipUserObjectRetain__funptr,"hipUserObjectRetain")
     return (<hipError_t (*)(hipUserObject_t,unsigned int) nogil> _hipUserObjectRetain__funptr)(object,count)
 
 
@@ -6086,11 +5061,8 @@ cdef void* _hipGraphRetainUserObject__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphRetainUserObject(hipGraph_t graph,hipUserObject_t object,unsigned int count,unsigned int flags) nogil:
-    global _lib_handle
     global _hipGraphRetainUserObject__funptr
-    if _hipGraphRetainUserObject__funptr == NULL:
-        with gil:
-            _hipGraphRetainUserObject__funptr = loader.load_symbol(_lib_handle, "hipGraphRetainUserObject")
+    __init_symbol(&_hipGraphRetainUserObject__funptr,"hipGraphRetainUserObject")
     return (<hipError_t (*)(hipGraph_t,hipUserObject_t,unsigned int,unsigned int) nogil> _hipGraphRetainUserObject__funptr)(graph,object,count,flags)
 
 
@@ -6103,11 +5075,8 @@ cdef void* _hipGraphReleaseUserObject__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipGraphReleaseUserObject(hipGraph_t graph,hipUserObject_t object,unsigned int count) nogil:
-    global _lib_handle
     global _hipGraphReleaseUserObject__funptr
-    if _hipGraphReleaseUserObject__funptr == NULL:
-        with gil:
-            _hipGraphReleaseUserObject__funptr = loader.load_symbol(_lib_handle, "hipGraphReleaseUserObject")
+    __init_symbol(&_hipGraphReleaseUserObject__funptr,"hipGraphReleaseUserObject")
     return (<hipError_t (*)(hipGraph_t,hipUserObject_t,unsigned int) nogil> _hipGraphReleaseUserObject__funptr)(graph,object,count)
 
 
@@ -6118,13 +5087,10 @@ cdef void* _hipMemAddressFree__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemAddressFree(void * devPtr,int size) nogil:
-    global _lib_handle
+cdef hipError_t hipMemAddressFree(void * devPtr,unsigned long size) nogil:
     global _hipMemAddressFree__funptr
-    if _hipMemAddressFree__funptr == NULL:
-        with gil:
-            _hipMemAddressFree__funptr = loader.load_symbol(_lib_handle, "hipMemAddressFree")
-    return (<hipError_t (*)(void *,int) nogil> _hipMemAddressFree__funptr)(devPtr,size)
+    __init_symbol(&_hipMemAddressFree__funptr,"hipMemAddressFree")
+    return (<hipError_t (*)(void *,unsigned long) nogil> _hipMemAddressFree__funptr)(devPtr,size)
 
 
 cdef void* _hipMemAddressReserve__funptr = NULL
@@ -6137,13 +5103,10 @@ cdef void* _hipMemAddressReserve__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemAddressReserve(void ** ptr,int size,int alignment,void * addr,unsigned long long flags) nogil:
-    global _lib_handle
+cdef hipError_t hipMemAddressReserve(void ** ptr,unsigned long size,unsigned long alignment,void * addr,unsigned long long flags) nogil:
     global _hipMemAddressReserve__funptr
-    if _hipMemAddressReserve__funptr == NULL:
-        with gil:
-            _hipMemAddressReserve__funptr = loader.load_symbol(_lib_handle, "hipMemAddressReserve")
-    return (<hipError_t (*)(void **,int,int,void *,unsigned long long) nogil> _hipMemAddressReserve__funptr)(ptr,size,alignment,addr,flags)
+    __init_symbol(&_hipMemAddressReserve__funptr,"hipMemAddressReserve")
+    return (<hipError_t (*)(void **,unsigned long,unsigned long,void *,unsigned long long) nogil> _hipMemAddressReserve__funptr)(ptr,size,alignment,addr,flags)
 
 
 cdef void* _hipMemCreate__funptr = NULL
@@ -6155,13 +5118,10 @@ cdef void* _hipMemCreate__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemCreate(hipMemGenericAllocationHandle_t* handle,int size,hipMemAllocationProp * prop,unsigned long long flags) nogil:
-    global _lib_handle
+cdef hipError_t hipMemCreate(hipMemGenericAllocationHandle_t* handle,unsigned long size,hipMemAllocationProp * prop,unsigned long long flags) nogil:
     global _hipMemCreate__funptr
-    if _hipMemCreate__funptr == NULL:
-        with gil:
-            _hipMemCreate__funptr = loader.load_symbol(_lib_handle, "hipMemCreate")
-    return (<hipError_t (*)(hipMemGenericAllocationHandle_t*,int,hipMemAllocationProp *,unsigned long long) nogil> _hipMemCreate__funptr)(handle,size,prop,flags)
+    __init_symbol(&_hipMemCreate__funptr,"hipMemCreate")
+    return (<hipError_t (*)(hipMemGenericAllocationHandle_t*,unsigned long,hipMemAllocationProp *,unsigned long long) nogil> _hipMemCreate__funptr)(handle,size,prop,flags)
 
 
 cdef void* _hipMemExportToShareableHandle__funptr = NULL
@@ -6174,11 +5134,8 @@ cdef void* _hipMemExportToShareableHandle__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemExportToShareableHandle(void * shareableHandle,hipMemGenericAllocationHandle_t handle,hipMemAllocationHandleType handleType,unsigned long long flags) nogil:
-    global _lib_handle
     global _hipMemExportToShareableHandle__funptr
-    if _hipMemExportToShareableHandle__funptr == NULL:
-        with gil:
-            _hipMemExportToShareableHandle__funptr = loader.load_symbol(_lib_handle, "hipMemExportToShareableHandle")
+    __init_symbol(&_hipMemExportToShareableHandle__funptr,"hipMemExportToShareableHandle")
     return (<hipError_t (*)(void *,hipMemGenericAllocationHandle_t,hipMemAllocationHandleType,unsigned long long) nogil> _hipMemExportToShareableHandle__funptr)(shareableHandle,handle,handleType,flags)
 
 
@@ -6191,11 +5148,8 @@ cdef void* _hipMemGetAccess__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemGetAccess(unsigned long long * flags,hipMemLocation * location,void * ptr) nogil:
-    global _lib_handle
     global _hipMemGetAccess__funptr
-    if _hipMemGetAccess__funptr == NULL:
-        with gil:
-            _hipMemGetAccess__funptr = loader.load_symbol(_lib_handle, "hipMemGetAccess")
+    __init_symbol(&_hipMemGetAccess__funptr,"hipMemGetAccess")
     return (<hipError_t (*)(unsigned long long *,hipMemLocation *,void *) nogil> _hipMemGetAccess__funptr)(flags,location,ptr)
 
 
@@ -6207,13 +5161,10 @@ cdef void* _hipMemGetAllocationGranularity__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemGetAllocationGranularity(int * granularity,hipMemAllocationProp * prop,hipMemAllocationGranularity_flags option) nogil:
-    global _lib_handle
+cdef hipError_t hipMemGetAllocationGranularity(unsigned long * granularity,hipMemAllocationProp * prop,hipMemAllocationGranularity_flags option) nogil:
     global _hipMemGetAllocationGranularity__funptr
-    if _hipMemGetAllocationGranularity__funptr == NULL:
-        with gil:
-            _hipMemGetAllocationGranularity__funptr = loader.load_symbol(_lib_handle, "hipMemGetAllocationGranularity")
-    return (<hipError_t (*)(int *,hipMemAllocationProp *,hipMemAllocationGranularity_flags) nogil> _hipMemGetAllocationGranularity__funptr)(granularity,prop,option)
+    __init_symbol(&_hipMemGetAllocationGranularity__funptr,"hipMemGetAllocationGranularity")
+    return (<hipError_t (*)(unsigned long *,hipMemAllocationProp *,hipMemAllocationGranularity_flags) nogil> _hipMemGetAllocationGranularity__funptr)(granularity,prop,option)
 
 
 cdef void* _hipMemGetAllocationPropertiesFromHandle__funptr = NULL
@@ -6224,11 +5175,8 @@ cdef void* _hipMemGetAllocationPropertiesFromHandle__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemGetAllocationPropertiesFromHandle(hipMemAllocationProp * prop,hipMemGenericAllocationHandle_t handle) nogil:
-    global _lib_handle
     global _hipMemGetAllocationPropertiesFromHandle__funptr
-    if _hipMemGetAllocationPropertiesFromHandle__funptr == NULL:
-        with gil:
-            _hipMemGetAllocationPropertiesFromHandle__funptr = loader.load_symbol(_lib_handle, "hipMemGetAllocationPropertiesFromHandle")
+    __init_symbol(&_hipMemGetAllocationPropertiesFromHandle__funptr,"hipMemGetAllocationPropertiesFromHandle")
     return (<hipError_t (*)(hipMemAllocationProp *,hipMemGenericAllocationHandle_t) nogil> _hipMemGetAllocationPropertiesFromHandle__funptr)(prop,handle)
 
 
@@ -6241,11 +5189,8 @@ cdef void* _hipMemImportFromShareableHandle__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemImportFromShareableHandle(hipMemGenericAllocationHandle_t* handle,void * osHandle,hipMemAllocationHandleType shHandleType) nogil:
-    global _lib_handle
     global _hipMemImportFromShareableHandle__funptr
-    if _hipMemImportFromShareableHandle__funptr == NULL:
-        with gil:
-            _hipMemImportFromShareableHandle__funptr = loader.load_symbol(_lib_handle, "hipMemImportFromShareableHandle")
+    __init_symbol(&_hipMemImportFromShareableHandle__funptr,"hipMemImportFromShareableHandle")
     return (<hipError_t (*)(hipMemGenericAllocationHandle_t*,void *,hipMemAllocationHandleType) nogil> _hipMemImportFromShareableHandle__funptr)(handle,osHandle,shHandleType)
 
 
@@ -6259,13 +5204,10 @@ cdef void* _hipMemMap__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemMap(void * ptr,int size,int offset,hipMemGenericAllocationHandle_t handle,unsigned long long flags) nogil:
-    global _lib_handle
+cdef hipError_t hipMemMap(void * ptr,unsigned long size,unsigned long offset,hipMemGenericAllocationHandle_t handle,unsigned long long flags) nogil:
     global _hipMemMap__funptr
-    if _hipMemMap__funptr == NULL:
-        with gil:
-            _hipMemMap__funptr = loader.load_symbol(_lib_handle, "hipMemMap")
-    return (<hipError_t (*)(void *,int,int,hipMemGenericAllocationHandle_t,unsigned long long) nogil> _hipMemMap__funptr)(ptr,size,offset,handle,flags)
+    __init_symbol(&_hipMemMap__funptr,"hipMemMap")
+    return (<hipError_t (*)(void *,unsigned long,unsigned long,hipMemGenericAllocationHandle_t,unsigned long long) nogil> _hipMemMap__funptr)(ptr,size,offset,handle,flags)
 
 
 cdef void* _hipMemMapArrayAsync__funptr = NULL
@@ -6277,11 +5219,8 @@ cdef void* _hipMemMapArrayAsync__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemMapArrayAsync(hipArrayMapInfo * mapInfoList,unsigned int count,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipMemMapArrayAsync__funptr
-    if _hipMemMapArrayAsync__funptr == NULL:
-        with gil:
-            _hipMemMapArrayAsync__funptr = loader.load_symbol(_lib_handle, "hipMemMapArrayAsync")
+    __init_symbol(&_hipMemMapArrayAsync__funptr,"hipMemMapArrayAsync")
     return (<hipError_t (*)(hipArrayMapInfo *,unsigned int,hipStream_t) nogil> _hipMemMapArrayAsync__funptr)(mapInfoList,count,stream)
 
 
@@ -6292,11 +5231,8 @@ cdef void* _hipMemRelease__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemRelease(hipMemGenericAllocationHandle_t handle) nogil:
-    global _lib_handle
     global _hipMemRelease__funptr
-    if _hipMemRelease__funptr == NULL:
-        with gil:
-            _hipMemRelease__funptr = loader.load_symbol(_lib_handle, "hipMemRelease")
+    __init_symbol(&_hipMemRelease__funptr,"hipMemRelease")
     return (<hipError_t (*)(hipMemGenericAllocationHandle_t) nogil> _hipMemRelease__funptr)(handle)
 
 
@@ -6308,11 +5244,8 @@ cdef void* _hipMemRetainAllocationHandle__funptr = NULL
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
 cdef hipError_t hipMemRetainAllocationHandle(hipMemGenericAllocationHandle_t* handle,void * addr) nogil:
-    global _lib_handle
     global _hipMemRetainAllocationHandle__funptr
-    if _hipMemRetainAllocationHandle__funptr == NULL:
-        with gil:
-            _hipMemRetainAllocationHandle__funptr = loader.load_symbol(_lib_handle, "hipMemRetainAllocationHandle")
+    __init_symbol(&_hipMemRetainAllocationHandle__funptr,"hipMemRetainAllocationHandle")
     return (<hipError_t (*)(hipMemGenericAllocationHandle_t*,void *) nogil> _hipMemRetainAllocationHandle__funptr)(handle,addr)
 
 
@@ -6325,13 +5258,10 @@ cdef void* _hipMemSetAccess__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemSetAccess(void * ptr,int size,hipMemAccessDesc * desc,int count) nogil:
-    global _lib_handle
+cdef hipError_t hipMemSetAccess(void * ptr,unsigned long size,hipMemAccessDesc * desc,unsigned long count) nogil:
     global _hipMemSetAccess__funptr
-    if _hipMemSetAccess__funptr == NULL:
-        with gil:
-            _hipMemSetAccess__funptr = loader.load_symbol(_lib_handle, "hipMemSetAccess")
-    return (<hipError_t (*)(void *,int,hipMemAccessDesc *,int) nogil> _hipMemSetAccess__funptr)(ptr,size,desc,count)
+    __init_symbol(&_hipMemSetAccess__funptr,"hipMemSetAccess")
+    return (<hipError_t (*)(void *,unsigned long,hipMemAccessDesc *,unsigned long) nogil> _hipMemSetAccess__funptr)(ptr,size,desc,count)
 
 
 cdef void* _hipMemUnmap__funptr = NULL
@@ -6341,460 +5271,322 @@ cdef void* _hipMemUnmap__funptr = NULL
 # @returns #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 # @warning : This API is marked as beta, meaning, while this is feature complete,
 # it is still open to changes and may have outstanding issues.
-cdef hipError_t hipMemUnmap(void * ptr,int size) nogil:
-    global _lib_handle
+cdef hipError_t hipMemUnmap(void * ptr,unsigned long size) nogil:
     global _hipMemUnmap__funptr
-    if _hipMemUnmap__funptr == NULL:
-        with gil:
-            _hipMemUnmap__funptr = loader.load_symbol(_lib_handle, "hipMemUnmap")
-    return (<hipError_t (*)(void *,int) nogil> _hipMemUnmap__funptr)(ptr,size)
+    __init_symbol(&_hipMemUnmap__funptr,"hipMemUnmap")
+    return (<hipError_t (*)(void *,unsigned long) nogil> _hipMemUnmap__funptr)(ptr,size)
 
 
 cdef void* _hipGLGetDevices__funptr = NULL
 cdef hipError_t hipGLGetDevices(unsigned int * pHipDeviceCount,int * pHipDevices,unsigned int hipDeviceCount,hipGLDeviceList deviceList) nogil:
-    global _lib_handle
     global _hipGLGetDevices__funptr
-    if _hipGLGetDevices__funptr == NULL:
-        with gil:
-            _hipGLGetDevices__funptr = loader.load_symbol(_lib_handle, "hipGLGetDevices")
+    __init_symbol(&_hipGLGetDevices__funptr,"hipGLGetDevices")
     return (<hipError_t (*)(unsigned int *,int *,unsigned int,hipGLDeviceList) nogil> _hipGLGetDevices__funptr)(pHipDeviceCount,pHipDevices,hipDeviceCount,deviceList)
 
 
 cdef void* _hipGraphicsGLRegisterBuffer__funptr = NULL
-cdef hipError_t hipGraphicsGLRegisterBuffer(_hipGraphicsResource ** resource,GLuint buffer,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphicsGLRegisterBuffer(_hipGraphicsResource ** resource,unsigned int buffer,unsigned int flags) nogil:
     global _hipGraphicsGLRegisterBuffer__funptr
-    if _hipGraphicsGLRegisterBuffer__funptr == NULL:
-        with gil:
-            _hipGraphicsGLRegisterBuffer__funptr = loader.load_symbol(_lib_handle, "hipGraphicsGLRegisterBuffer")
-    return (<hipError_t (*)(_hipGraphicsResource **,GLuint,unsigned int) nogil> _hipGraphicsGLRegisterBuffer__funptr)(resource,buffer,flags)
+    __init_symbol(&_hipGraphicsGLRegisterBuffer__funptr,"hipGraphicsGLRegisterBuffer")
+    return (<hipError_t (*)(_hipGraphicsResource **,unsigned int,unsigned int) nogil> _hipGraphicsGLRegisterBuffer__funptr)(resource,buffer,flags)
 
 
 cdef void* _hipGraphicsGLRegisterImage__funptr = NULL
-cdef hipError_t hipGraphicsGLRegisterImage(_hipGraphicsResource ** resource,GLuint image,GLenum target,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphicsGLRegisterImage(_hipGraphicsResource ** resource,unsigned int image,unsigned int target,unsigned int flags) nogil:
     global _hipGraphicsGLRegisterImage__funptr
-    if _hipGraphicsGLRegisterImage__funptr == NULL:
-        with gil:
-            _hipGraphicsGLRegisterImage__funptr = loader.load_symbol(_lib_handle, "hipGraphicsGLRegisterImage")
-    return (<hipError_t (*)(_hipGraphicsResource **,GLuint,GLenum,unsigned int) nogil> _hipGraphicsGLRegisterImage__funptr)(resource,image,target,flags)
+    __init_symbol(&_hipGraphicsGLRegisterImage__funptr,"hipGraphicsGLRegisterImage")
+    return (<hipError_t (*)(_hipGraphicsResource **,unsigned int,unsigned int,unsigned int) nogil> _hipGraphicsGLRegisterImage__funptr)(resource,image,target,flags)
 
 
 cdef void* _hipGraphicsMapResources__funptr = NULL
 cdef hipError_t hipGraphicsMapResources(int count,hipGraphicsResource_t* resources,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipGraphicsMapResources__funptr
-    if _hipGraphicsMapResources__funptr == NULL:
-        with gil:
-            _hipGraphicsMapResources__funptr = loader.load_symbol(_lib_handle, "hipGraphicsMapResources")
+    __init_symbol(&_hipGraphicsMapResources__funptr,"hipGraphicsMapResources")
     return (<hipError_t (*)(int,hipGraphicsResource_t*,hipStream_t) nogil> _hipGraphicsMapResources__funptr)(count,resources,stream)
 
 
 cdef void* _hipGraphicsSubResourceGetMappedArray__funptr = NULL
 cdef hipError_t hipGraphicsSubResourceGetMappedArray(hipArray_t* array,hipGraphicsResource_t resource,unsigned int arrayIndex,unsigned int mipLevel) nogil:
-    global _lib_handle
     global _hipGraphicsSubResourceGetMappedArray__funptr
-    if _hipGraphicsSubResourceGetMappedArray__funptr == NULL:
-        with gil:
-            _hipGraphicsSubResourceGetMappedArray__funptr = loader.load_symbol(_lib_handle, "hipGraphicsSubResourceGetMappedArray")
+    __init_symbol(&_hipGraphicsSubResourceGetMappedArray__funptr,"hipGraphicsSubResourceGetMappedArray")
     return (<hipError_t (*)(hipArray_t*,hipGraphicsResource_t,unsigned int,unsigned int) nogil> _hipGraphicsSubResourceGetMappedArray__funptr)(array,resource,arrayIndex,mipLevel)
 
 
 cdef void* _hipGraphicsResourceGetMappedPointer__funptr = NULL
-cdef hipError_t hipGraphicsResourceGetMappedPointer(void ** devPtr,int * size,hipGraphicsResource_t resource) nogil:
-    global _lib_handle
+cdef hipError_t hipGraphicsResourceGetMappedPointer(void ** devPtr,unsigned long * size,hipGraphicsResource_t resource) nogil:
     global _hipGraphicsResourceGetMappedPointer__funptr
-    if _hipGraphicsResourceGetMappedPointer__funptr == NULL:
-        with gil:
-            _hipGraphicsResourceGetMappedPointer__funptr = loader.load_symbol(_lib_handle, "hipGraphicsResourceGetMappedPointer")
-    return (<hipError_t (*)(void **,int *,hipGraphicsResource_t) nogil> _hipGraphicsResourceGetMappedPointer__funptr)(devPtr,size,resource)
+    __init_symbol(&_hipGraphicsResourceGetMappedPointer__funptr,"hipGraphicsResourceGetMappedPointer")
+    return (<hipError_t (*)(void **,unsigned long *,hipGraphicsResource_t) nogil> _hipGraphicsResourceGetMappedPointer__funptr)(devPtr,size,resource)
 
 
 cdef void* _hipGraphicsUnmapResources__funptr = NULL
 cdef hipError_t hipGraphicsUnmapResources(int count,hipGraphicsResource_t* resources,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipGraphicsUnmapResources__funptr
-    if _hipGraphicsUnmapResources__funptr == NULL:
-        with gil:
-            _hipGraphicsUnmapResources__funptr = loader.load_symbol(_lib_handle, "hipGraphicsUnmapResources")
+    __init_symbol(&_hipGraphicsUnmapResources__funptr,"hipGraphicsUnmapResources")
     return (<hipError_t (*)(int,hipGraphicsResource_t*,hipStream_t) nogil> _hipGraphicsUnmapResources__funptr)(count,resources,stream)
 
 
 cdef void* _hipGraphicsUnregisterResource__funptr = NULL
 cdef hipError_t hipGraphicsUnregisterResource(hipGraphicsResource_t resource) nogil:
-    global _lib_handle
     global _hipGraphicsUnregisterResource__funptr
-    if _hipGraphicsUnregisterResource__funptr == NULL:
-        with gil:
-            _hipGraphicsUnregisterResource__funptr = loader.load_symbol(_lib_handle, "hipGraphicsUnregisterResource")
+    __init_symbol(&_hipGraphicsUnregisterResource__funptr,"hipGraphicsUnregisterResource")
     return (<hipError_t (*)(hipGraphicsResource_t) nogil> _hipGraphicsUnregisterResource__funptr)(resource)
 
 
 cdef void* _hipMemcpy_spt__funptr = NULL
-cdef hipError_t hipMemcpy_spt(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy_spt(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind) nogil:
     global _hipMemcpy_spt__funptr
-    if _hipMemcpy_spt__funptr == NULL:
-        with gil:
-            _hipMemcpy_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpy_spt")
-    return (<hipError_t (*)(void *,const void *,int,hipMemcpyKind) nogil> _hipMemcpy_spt__funptr)(dst,src,sizeBytes,kind)
+    __init_symbol(&_hipMemcpy_spt__funptr,"hipMemcpy_spt")
+    return (<hipError_t (*)(void *,const void *,unsigned long,hipMemcpyKind) nogil> _hipMemcpy_spt__funptr)(dst,src,sizeBytes,kind)
 
 
 cdef void* _hipMemcpyToSymbol_spt__funptr = NULL
-cdef hipError_t hipMemcpyToSymbol_spt(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyToSymbol_spt(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipMemcpyToSymbol_spt__funptr
-    if _hipMemcpyToSymbol_spt__funptr == NULL:
-        with gil:
-            _hipMemcpyToSymbol_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpyToSymbol_spt")
-    return (<hipError_t (*)(const void *,const void *,int,int,hipMemcpyKind) nogil> _hipMemcpyToSymbol_spt__funptr)(symbol,src,sizeBytes,offset,kind)
+    __init_symbol(&_hipMemcpyToSymbol_spt__funptr,"hipMemcpyToSymbol_spt")
+    return (<hipError_t (*)(const void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyToSymbol_spt__funptr)(symbol,src,sizeBytes,offset,kind)
 
 
 cdef void* _hipMemcpyFromSymbol_spt__funptr = NULL
-cdef hipError_t hipMemcpyFromSymbol_spt(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyFromSymbol_spt(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind) nogil:
     global _hipMemcpyFromSymbol_spt__funptr
-    if _hipMemcpyFromSymbol_spt__funptr == NULL:
-        with gil:
-            _hipMemcpyFromSymbol_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpyFromSymbol_spt")
-    return (<hipError_t (*)(void *,const void *,int,int,hipMemcpyKind) nogil> _hipMemcpyFromSymbol_spt__funptr)(dst,symbol,sizeBytes,offset,kind)
+    __init_symbol(&_hipMemcpyFromSymbol_spt__funptr,"hipMemcpyFromSymbol_spt")
+    return (<hipError_t (*)(void *,const void *,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyFromSymbol_spt__funptr)(dst,symbol,sizeBytes,offset,kind)
 
 
 cdef void* _hipMemcpy2D_spt__funptr = NULL
-cdef hipError_t hipMemcpy2D_spt(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2D_spt(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2D_spt__funptr
-    if _hipMemcpy2D_spt__funptr == NULL:
-        with gil:
-            _hipMemcpy2D_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2D_spt")
-    return (<hipError_t (*)(void *,int,const void *,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2D_spt__funptr)(dst,dpitch,src,spitch,width,height,kind)
+    __init_symbol(&_hipMemcpy2D_spt__funptr,"hipMemcpy2D_spt")
+    return (<hipError_t (*)(void *,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2D_spt__funptr)(dst,dpitch,src,spitch,width,height,kind)
 
 
 cdef void* _hipMemcpy2DFromArray_spt__funptr = NULL
-cdef hipError_t hipMemcpy2DFromArray_spt(void * dst,int dpitch,hipArray_const_t src,int wOffset,int hOffset,int width,int height,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2DFromArray_spt(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffset,unsigned long hOffset,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2DFromArray_spt__funptr
-    if _hipMemcpy2DFromArray_spt__funptr == NULL:
-        with gil:
-            _hipMemcpy2DFromArray_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2DFromArray_spt")
-    return (<hipError_t (*)(void *,int,hipArray_const_t,int,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2DFromArray_spt__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind)
+    __init_symbol(&_hipMemcpy2DFromArray_spt__funptr,"hipMemcpy2DFromArray_spt")
+    return (<hipError_t (*)(void *,unsigned long,hipArray_const_t,unsigned long,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2DFromArray_spt__funptr)(dst,dpitch,src,wOffset,hOffset,width,height,kind)
 
 
 cdef void* _hipMemcpy3D_spt__funptr = NULL
 cdef hipError_t hipMemcpy3D_spt(hipMemcpy3DParms * p) nogil:
-    global _lib_handle
     global _hipMemcpy3D_spt__funptr
-    if _hipMemcpy3D_spt__funptr == NULL:
-        with gil:
-            _hipMemcpy3D_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpy3D_spt")
+    __init_symbol(&_hipMemcpy3D_spt__funptr,"hipMemcpy3D_spt")
     return (<hipError_t (*)(hipMemcpy3DParms *) nogil> _hipMemcpy3D_spt__funptr)(p)
 
 
 cdef void* _hipMemset_spt__funptr = NULL
-cdef hipError_t hipMemset_spt(void * dst,int value,int sizeBytes) nogil:
-    global _lib_handle
+cdef hipError_t hipMemset_spt(void * dst,int value,unsigned long sizeBytes) nogil:
     global _hipMemset_spt__funptr
-    if _hipMemset_spt__funptr == NULL:
-        with gil:
-            _hipMemset_spt__funptr = loader.load_symbol(_lib_handle, "hipMemset_spt")
-    return (<hipError_t (*)(void *,int,int) nogil> _hipMemset_spt__funptr)(dst,value,sizeBytes)
+    __init_symbol(&_hipMemset_spt__funptr,"hipMemset_spt")
+    return (<hipError_t (*)(void *,int,unsigned long) nogil> _hipMemset_spt__funptr)(dst,value,sizeBytes)
 
 
 cdef void* _hipMemsetAsync_spt__funptr = NULL
-cdef hipError_t hipMemsetAsync_spt(void * dst,int value,int sizeBytes,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemsetAsync_spt(void * dst,int value,unsigned long sizeBytes,hipStream_t stream) nogil:
     global _hipMemsetAsync_spt__funptr
-    if _hipMemsetAsync_spt__funptr == NULL:
-        with gil:
-            _hipMemsetAsync_spt__funptr = loader.load_symbol(_lib_handle, "hipMemsetAsync_spt")
-    return (<hipError_t (*)(void *,int,int,hipStream_t) nogil> _hipMemsetAsync_spt__funptr)(dst,value,sizeBytes,stream)
+    __init_symbol(&_hipMemsetAsync_spt__funptr,"hipMemsetAsync_spt")
+    return (<hipError_t (*)(void *,int,unsigned long,hipStream_t) nogil> _hipMemsetAsync_spt__funptr)(dst,value,sizeBytes,stream)
 
 
 cdef void* _hipMemset2D_spt__funptr = NULL
-cdef hipError_t hipMemset2D_spt(void * dst,int pitch,int value,int width,int height) nogil:
-    global _lib_handle
+cdef hipError_t hipMemset2D_spt(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height) nogil:
     global _hipMemset2D_spt__funptr
-    if _hipMemset2D_spt__funptr == NULL:
-        with gil:
-            _hipMemset2D_spt__funptr = loader.load_symbol(_lib_handle, "hipMemset2D_spt")
-    return (<hipError_t (*)(void *,int,int,int,int) nogil> _hipMemset2D_spt__funptr)(dst,pitch,value,width,height)
+    __init_symbol(&_hipMemset2D_spt__funptr,"hipMemset2D_spt")
+    return (<hipError_t (*)(void *,unsigned long,int,unsigned long,unsigned long) nogil> _hipMemset2D_spt__funptr)(dst,pitch,value,width,height)
 
 
 cdef void* _hipMemset2DAsync_spt__funptr = NULL
-cdef hipError_t hipMemset2DAsync_spt(void * dst,int pitch,int value,int width,int height,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemset2DAsync_spt(void * dst,unsigned long pitch,int value,unsigned long width,unsigned long height,hipStream_t stream) nogil:
     global _hipMemset2DAsync_spt__funptr
-    if _hipMemset2DAsync_spt__funptr == NULL:
-        with gil:
-            _hipMemset2DAsync_spt__funptr = loader.load_symbol(_lib_handle, "hipMemset2DAsync_spt")
-    return (<hipError_t (*)(void *,int,int,int,int,hipStream_t) nogil> _hipMemset2DAsync_spt__funptr)(dst,pitch,value,width,height,stream)
+    __init_symbol(&_hipMemset2DAsync_spt__funptr,"hipMemset2DAsync_spt")
+    return (<hipError_t (*)(void *,unsigned long,int,unsigned long,unsigned long,hipStream_t) nogil> _hipMemset2DAsync_spt__funptr)(dst,pitch,value,width,height,stream)
 
 
 cdef void* _hipMemset3DAsync_spt__funptr = NULL
 cdef hipError_t hipMemset3DAsync_spt(hipPitchedPtr pitchedDevPtr,int value,hipExtent extent,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipMemset3DAsync_spt__funptr
-    if _hipMemset3DAsync_spt__funptr == NULL:
-        with gil:
-            _hipMemset3DAsync_spt__funptr = loader.load_symbol(_lib_handle, "hipMemset3DAsync_spt")
+    __init_symbol(&_hipMemset3DAsync_spt__funptr,"hipMemset3DAsync_spt")
     return (<hipError_t (*)(hipPitchedPtr,int,hipExtent,hipStream_t) nogil> _hipMemset3DAsync_spt__funptr)(pitchedDevPtr,value,extent,stream)
 
 
 cdef void* _hipMemset3D_spt__funptr = NULL
 cdef hipError_t hipMemset3D_spt(hipPitchedPtr pitchedDevPtr,int value,hipExtent extent) nogil:
-    global _lib_handle
     global _hipMemset3D_spt__funptr
-    if _hipMemset3D_spt__funptr == NULL:
-        with gil:
-            _hipMemset3D_spt__funptr = loader.load_symbol(_lib_handle, "hipMemset3D_spt")
+    __init_symbol(&_hipMemset3D_spt__funptr,"hipMemset3D_spt")
     return (<hipError_t (*)(hipPitchedPtr,int,hipExtent) nogil> _hipMemset3D_spt__funptr)(pitchedDevPtr,value,extent)
 
 
 cdef void* _hipMemcpyAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpyAsync_spt(void * dst,const void * src,int sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyAsync_spt(void * dst,const void * src,unsigned long sizeBytes,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyAsync_spt__funptr
-    if _hipMemcpyAsync_spt__funptr == NULL:
-        with gil:
-            _hipMemcpyAsync_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpyAsync_spt")
-    return (<hipError_t (*)(void *,const void *,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyAsync_spt__funptr)(dst,src,sizeBytes,kind,stream)
+    __init_symbol(&_hipMemcpyAsync_spt__funptr,"hipMemcpyAsync_spt")
+    return (<hipError_t (*)(void *,const void *,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyAsync_spt__funptr)(dst,src,sizeBytes,kind,stream)
 
 
 cdef void* _hipMemcpy3DAsync_spt__funptr = NULL
 cdef hipError_t hipMemcpy3DAsync_spt(hipMemcpy3DParms * p,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipMemcpy3DAsync_spt__funptr
-    if _hipMemcpy3DAsync_spt__funptr == NULL:
-        with gil:
-            _hipMemcpy3DAsync_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpy3DAsync_spt")
+    __init_symbol(&_hipMemcpy3DAsync_spt__funptr,"hipMemcpy3DAsync_spt")
     return (<hipError_t (*)(hipMemcpy3DParms *,hipStream_t) nogil> _hipMemcpy3DAsync_spt__funptr)(p,stream)
 
 
 cdef void* _hipMemcpy2DAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpy2DAsync_spt(void * dst,int dpitch,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2DAsync_spt(void * dst,unsigned long dpitch,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DAsync_spt__funptr
-    if _hipMemcpy2DAsync_spt__funptr == NULL:
-        with gil:
-            _hipMemcpy2DAsync_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2DAsync_spt")
-    return (<hipError_t (*)(void *,int,const void *,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DAsync_spt__funptr)(dst,dpitch,src,spitch,width,height,kind,stream)
+    __init_symbol(&_hipMemcpy2DAsync_spt__funptr,"hipMemcpy2DAsync_spt")
+    return (<hipError_t (*)(void *,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DAsync_spt__funptr)(dst,dpitch,src,spitch,width,height,kind,stream)
 
 
 cdef void* _hipMemcpyFromSymbolAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpyFromSymbolAsync_spt(void * dst,const void * symbol,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyFromSymbolAsync_spt(void * dst,const void * symbol,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyFromSymbolAsync_spt__funptr
-    if _hipMemcpyFromSymbolAsync_spt__funptr == NULL:
-        with gil:
-            _hipMemcpyFromSymbolAsync_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpyFromSymbolAsync_spt")
-    return (<hipError_t (*)(void *,const void *,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyFromSymbolAsync_spt__funptr)(dst,symbol,sizeBytes,offset,kind,stream)
+    __init_symbol(&_hipMemcpyFromSymbolAsync_spt__funptr,"hipMemcpyFromSymbolAsync_spt")
+    return (<hipError_t (*)(void *,const void *,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyFromSymbolAsync_spt__funptr)(dst,symbol,sizeBytes,offset,kind,stream)
 
 
 cdef void* _hipMemcpyToSymbolAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpyToSymbolAsync_spt(const void * symbol,const void * src,int sizeBytes,int offset,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyToSymbolAsync_spt(const void * symbol,const void * src,unsigned long sizeBytes,unsigned long offset,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpyToSymbolAsync_spt__funptr
-    if _hipMemcpyToSymbolAsync_spt__funptr == NULL:
-        with gil:
-            _hipMemcpyToSymbolAsync_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpyToSymbolAsync_spt")
-    return (<hipError_t (*)(const void *,const void *,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyToSymbolAsync_spt__funptr)(symbol,src,sizeBytes,offset,kind,stream)
+    __init_symbol(&_hipMemcpyToSymbolAsync_spt__funptr,"hipMemcpyToSymbolAsync_spt")
+    return (<hipError_t (*)(const void *,const void *,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpyToSymbolAsync_spt__funptr)(symbol,src,sizeBytes,offset,kind,stream)
 
 
 cdef void* _hipMemcpyFromArray_spt__funptr = NULL
-cdef hipError_t hipMemcpyFromArray_spt(void * dst,hipArray_const_t src,int wOffsetSrc,int hOffset,int count,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpyFromArray_spt(void * dst,hipArray_const_t src,unsigned long wOffsetSrc,unsigned long hOffset,unsigned long count,hipMemcpyKind kind) nogil:
     global _hipMemcpyFromArray_spt__funptr
-    if _hipMemcpyFromArray_spt__funptr == NULL:
-        with gil:
-            _hipMemcpyFromArray_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpyFromArray_spt")
-    return (<hipError_t (*)(void *,hipArray_const_t,int,int,int,hipMemcpyKind) nogil> _hipMemcpyFromArray_spt__funptr)(dst,src,wOffsetSrc,hOffset,count,kind)
+    __init_symbol(&_hipMemcpyFromArray_spt__funptr,"hipMemcpyFromArray_spt")
+    return (<hipError_t (*)(void *,hipArray_const_t,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpyFromArray_spt__funptr)(dst,src,wOffsetSrc,hOffset,count,kind)
 
 
 cdef void* _hipMemcpy2DToArray_spt__funptr = NULL
-cdef hipError_t hipMemcpy2DToArray_spt(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2DToArray_spt(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind) nogil:
     global _hipMemcpy2DToArray_spt__funptr
-    if _hipMemcpy2DToArray_spt__funptr == NULL:
-        with gil:
-            _hipMemcpy2DToArray_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2DToArray_spt")
-    return (<hipError_t (*)(hipArray *,int,int,const void *,int,int,int,hipMemcpyKind) nogil> _hipMemcpy2DToArray_spt__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind)
+    __init_symbol(&_hipMemcpy2DToArray_spt__funptr,"hipMemcpy2DToArray_spt")
+    return (<hipError_t (*)(hipArray *,unsigned long,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind) nogil> _hipMemcpy2DToArray_spt__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind)
 
 
 cdef void* _hipMemcpy2DFromArrayAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpy2DFromArrayAsync_spt(void * dst,int dpitch,hipArray_const_t src,int wOffsetSrc,int hOffsetSrc,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2DFromArrayAsync_spt(void * dst,unsigned long dpitch,hipArray_const_t src,unsigned long wOffsetSrc,unsigned long hOffsetSrc,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DFromArrayAsync_spt__funptr
-    if _hipMemcpy2DFromArrayAsync_spt__funptr == NULL:
-        with gil:
-            _hipMemcpy2DFromArrayAsync_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2DFromArrayAsync_spt")
-    return (<hipError_t (*)(void *,int,hipArray_const_t,int,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DFromArrayAsync_spt__funptr)(dst,dpitch,src,wOffsetSrc,hOffsetSrc,width,height,kind,stream)
+    __init_symbol(&_hipMemcpy2DFromArrayAsync_spt__funptr,"hipMemcpy2DFromArrayAsync_spt")
+    return (<hipError_t (*)(void *,unsigned long,hipArray_const_t,unsigned long,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DFromArrayAsync_spt__funptr)(dst,dpitch,src,wOffsetSrc,hOffsetSrc,width,height,kind,stream)
 
 
 cdef void* _hipMemcpy2DToArrayAsync_spt__funptr = NULL
-cdef hipError_t hipMemcpy2DToArrayAsync_spt(hipArray * dst,int wOffset,int hOffset,const void * src,int spitch,int width,int height,hipMemcpyKind kind,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipMemcpy2DToArrayAsync_spt(hipArray * dst,unsigned long wOffset,unsigned long hOffset,const void * src,unsigned long spitch,unsigned long width,unsigned long height,hipMemcpyKind kind,hipStream_t stream) nogil:
     global _hipMemcpy2DToArrayAsync_spt__funptr
-    if _hipMemcpy2DToArrayAsync_spt__funptr == NULL:
-        with gil:
-            _hipMemcpy2DToArrayAsync_spt__funptr = loader.load_symbol(_lib_handle, "hipMemcpy2DToArrayAsync_spt")
-    return (<hipError_t (*)(hipArray *,int,int,const void *,int,int,int,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DToArrayAsync_spt__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind,stream)
+    __init_symbol(&_hipMemcpy2DToArrayAsync_spt__funptr,"hipMemcpy2DToArrayAsync_spt")
+    return (<hipError_t (*)(hipArray *,unsigned long,unsigned long,const void *,unsigned long,unsigned long,unsigned long,hipMemcpyKind,hipStream_t) nogil> _hipMemcpy2DToArrayAsync_spt__funptr)(dst,wOffset,hOffset,src,spitch,width,height,kind,stream)
 
 
 cdef void* _hipStreamQuery_spt__funptr = NULL
 cdef hipError_t hipStreamQuery_spt(hipStream_t stream) nogil:
-    global _lib_handle
     global _hipStreamQuery_spt__funptr
-    if _hipStreamQuery_spt__funptr == NULL:
-        with gil:
-            _hipStreamQuery_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamQuery_spt")
+    __init_symbol(&_hipStreamQuery_spt__funptr,"hipStreamQuery_spt")
     return (<hipError_t (*)(hipStream_t) nogil> _hipStreamQuery_spt__funptr)(stream)
 
 
 cdef void* _hipStreamSynchronize_spt__funptr = NULL
 cdef hipError_t hipStreamSynchronize_spt(hipStream_t stream) nogil:
-    global _lib_handle
     global _hipStreamSynchronize_spt__funptr
-    if _hipStreamSynchronize_spt__funptr == NULL:
-        with gil:
-            _hipStreamSynchronize_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamSynchronize_spt")
+    __init_symbol(&_hipStreamSynchronize_spt__funptr,"hipStreamSynchronize_spt")
     return (<hipError_t (*)(hipStream_t) nogil> _hipStreamSynchronize_spt__funptr)(stream)
 
 
 cdef void* _hipStreamGetPriority_spt__funptr = NULL
 cdef hipError_t hipStreamGetPriority_spt(hipStream_t stream,int * priority) nogil:
-    global _lib_handle
     global _hipStreamGetPriority_spt__funptr
-    if _hipStreamGetPriority_spt__funptr == NULL:
-        with gil:
-            _hipStreamGetPriority_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamGetPriority_spt")
+    __init_symbol(&_hipStreamGetPriority_spt__funptr,"hipStreamGetPriority_spt")
     return (<hipError_t (*)(hipStream_t,int *) nogil> _hipStreamGetPriority_spt__funptr)(stream,priority)
 
 
 cdef void* _hipStreamWaitEvent_spt__funptr = NULL
 cdef hipError_t hipStreamWaitEvent_spt(hipStream_t stream,hipEvent_t event,unsigned int flags) nogil:
-    global _lib_handle
     global _hipStreamWaitEvent_spt__funptr
-    if _hipStreamWaitEvent_spt__funptr == NULL:
-        with gil:
-            _hipStreamWaitEvent_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamWaitEvent_spt")
+    __init_symbol(&_hipStreamWaitEvent_spt__funptr,"hipStreamWaitEvent_spt")
     return (<hipError_t (*)(hipStream_t,hipEvent_t,unsigned int) nogil> _hipStreamWaitEvent_spt__funptr)(stream,event,flags)
 
 
 cdef void* _hipStreamGetFlags_spt__funptr = NULL
 cdef hipError_t hipStreamGetFlags_spt(hipStream_t stream,unsigned int * flags) nogil:
-    global _lib_handle
     global _hipStreamGetFlags_spt__funptr
-    if _hipStreamGetFlags_spt__funptr == NULL:
-        with gil:
-            _hipStreamGetFlags_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamGetFlags_spt")
+    __init_symbol(&_hipStreamGetFlags_spt__funptr,"hipStreamGetFlags_spt")
     return (<hipError_t (*)(hipStream_t,unsigned int *) nogil> _hipStreamGetFlags_spt__funptr)(stream,flags)
 
 
 cdef void* _hipStreamAddCallback_spt__funptr = NULL
-cdef hipError_t hipStreamAddCallback_spt(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags) nogil:
-    global _lib_handle
+cdef hipError_t hipStreamAddCallback_spt(hipStream_t stream,hipStreamCallback_t callback,void * userData,unsigned int flags):
     global _hipStreamAddCallback_spt__funptr
-    if _hipStreamAddCallback_spt__funptr == NULL:
-        with gil:
-            _hipStreamAddCallback_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamAddCallback_spt")
-    return (<hipError_t (*)(hipStream_t,hipStreamCallback_t,void *,unsigned int) nogil> _hipStreamAddCallback_spt__funptr)(stream,callback,userData,flags)
+    __init_symbol(&_hipStreamAddCallback_spt__funptr,"hipStreamAddCallback_spt")
+    return (<hipError_t (*)(hipStream_t,hipStreamCallback_t,void *,unsigned int)> _hipStreamAddCallback_spt__funptr)(stream,callback,userData,flags)
 
 
 cdef void* _hipEventRecord_spt__funptr = NULL
 cdef hipError_t hipEventRecord_spt(hipEvent_t event,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipEventRecord_spt__funptr
-    if _hipEventRecord_spt__funptr == NULL:
-        with gil:
-            _hipEventRecord_spt__funptr = loader.load_symbol(_lib_handle, "hipEventRecord_spt")
+    __init_symbol(&_hipEventRecord_spt__funptr,"hipEventRecord_spt")
     return (<hipError_t (*)(hipEvent_t,hipStream_t) nogil> _hipEventRecord_spt__funptr)(event,stream)
 
 
 cdef void* _hipLaunchCooperativeKernel_spt__funptr = NULL
-cdef hipError_t hipLaunchCooperativeKernel_spt(const void * f,dim3 gridDim,dim3 blockDim,void ** kernelParams,uint32_t sharedMemBytes,hipStream_t hStream) nogil:
-    global _lib_handle
+cdef hipError_t hipLaunchCooperativeKernel_spt(const void * f,dim3 gridDim,dim3 blockDim,void ** kernelParams,unsigned int sharedMemBytes,hipStream_t hStream) nogil:
     global _hipLaunchCooperativeKernel_spt__funptr
-    if _hipLaunchCooperativeKernel_spt__funptr == NULL:
-        with gil:
-            _hipLaunchCooperativeKernel_spt__funptr = loader.load_symbol(_lib_handle, "hipLaunchCooperativeKernel_spt")
-    return (<hipError_t (*)(const void *,dim3,dim3,void **,uint32_t,hipStream_t) nogil> _hipLaunchCooperativeKernel_spt__funptr)(f,gridDim,blockDim,kernelParams,sharedMemBytes,hStream)
+    __init_symbol(&_hipLaunchCooperativeKernel_spt__funptr,"hipLaunchCooperativeKernel_spt")
+    return (<hipError_t (*)(const void *,dim3,dim3,void **,unsigned int,hipStream_t) nogil> _hipLaunchCooperativeKernel_spt__funptr)(f,gridDim,blockDim,kernelParams,sharedMemBytes,hStream)
 
 
 cdef void* _hipLaunchKernel_spt__funptr = NULL
-cdef hipError_t hipLaunchKernel_spt(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,int sharedMemBytes,hipStream_t stream) nogil:
-    global _lib_handle
+cdef hipError_t hipLaunchKernel_spt(const void * function_address,dim3 numBlocks,dim3 dimBlocks,void ** args,unsigned long sharedMemBytes,hipStream_t stream) nogil:
     global _hipLaunchKernel_spt__funptr
-    if _hipLaunchKernel_spt__funptr == NULL:
-        with gil:
-            _hipLaunchKernel_spt__funptr = loader.load_symbol(_lib_handle, "hipLaunchKernel_spt")
-    return (<hipError_t (*)(const void *,dim3,dim3,void **,int,hipStream_t) nogil> _hipLaunchKernel_spt__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream)
+    __init_symbol(&_hipLaunchKernel_spt__funptr,"hipLaunchKernel_spt")
+    return (<hipError_t (*)(const void *,dim3,dim3,void **,unsigned long,hipStream_t) nogil> _hipLaunchKernel_spt__funptr)(function_address,numBlocks,dimBlocks,args,sharedMemBytes,stream)
 
 
 cdef void* _hipGraphLaunch_spt__funptr = NULL
 cdef hipError_t hipGraphLaunch_spt(hipGraphExec_t graphExec,hipStream_t stream) nogil:
-    global _lib_handle
     global _hipGraphLaunch_spt__funptr
-    if _hipGraphLaunch_spt__funptr == NULL:
-        with gil:
-            _hipGraphLaunch_spt__funptr = loader.load_symbol(_lib_handle, "hipGraphLaunch_spt")
+    __init_symbol(&_hipGraphLaunch_spt__funptr,"hipGraphLaunch_spt")
     return (<hipError_t (*)(hipGraphExec_t,hipStream_t) nogil> _hipGraphLaunch_spt__funptr)(graphExec,stream)
 
 
 cdef void* _hipStreamBeginCapture_spt__funptr = NULL
 cdef hipError_t hipStreamBeginCapture_spt(hipStream_t stream,hipStreamCaptureMode mode) nogil:
-    global _lib_handle
     global _hipStreamBeginCapture_spt__funptr
-    if _hipStreamBeginCapture_spt__funptr == NULL:
-        with gil:
-            _hipStreamBeginCapture_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamBeginCapture_spt")
+    __init_symbol(&_hipStreamBeginCapture_spt__funptr,"hipStreamBeginCapture_spt")
     return (<hipError_t (*)(hipStream_t,hipStreamCaptureMode) nogil> _hipStreamBeginCapture_spt__funptr)(stream,mode)
 
 
 cdef void* _hipStreamEndCapture_spt__funptr = NULL
 cdef hipError_t hipStreamEndCapture_spt(hipStream_t stream,hipGraph_t* pGraph) nogil:
-    global _lib_handle
     global _hipStreamEndCapture_spt__funptr
-    if _hipStreamEndCapture_spt__funptr == NULL:
-        with gil:
-            _hipStreamEndCapture_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamEndCapture_spt")
+    __init_symbol(&_hipStreamEndCapture_spt__funptr,"hipStreamEndCapture_spt")
     return (<hipError_t (*)(hipStream_t,hipGraph_t*) nogil> _hipStreamEndCapture_spt__funptr)(stream,pGraph)
 
 
 cdef void* _hipStreamIsCapturing_spt__funptr = NULL
 cdef hipError_t hipStreamIsCapturing_spt(hipStream_t stream,hipStreamCaptureStatus * pCaptureStatus) nogil:
-    global _lib_handle
     global _hipStreamIsCapturing_spt__funptr
-    if _hipStreamIsCapturing_spt__funptr == NULL:
-        with gil:
-            _hipStreamIsCapturing_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamIsCapturing_spt")
+    __init_symbol(&_hipStreamIsCapturing_spt__funptr,"hipStreamIsCapturing_spt")
     return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *) nogil> _hipStreamIsCapturing_spt__funptr)(stream,pCaptureStatus)
 
 
 cdef void* _hipStreamGetCaptureInfo_spt__funptr = NULL
 cdef hipError_t hipStreamGetCaptureInfo_spt(hipStream_t stream,hipStreamCaptureStatus * pCaptureStatus,unsigned long long * pId) nogil:
-    global _lib_handle
     global _hipStreamGetCaptureInfo_spt__funptr
-    if _hipStreamGetCaptureInfo_spt__funptr == NULL:
-        with gil:
-            _hipStreamGetCaptureInfo_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamGetCaptureInfo_spt")
+    __init_symbol(&_hipStreamGetCaptureInfo_spt__funptr,"hipStreamGetCaptureInfo_spt")
     return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *) nogil> _hipStreamGetCaptureInfo_spt__funptr)(stream,pCaptureStatus,pId)
 
 
 cdef void* _hipStreamGetCaptureInfo_v2_spt__funptr = NULL
-cdef hipError_t hipStreamGetCaptureInfo_v2_spt(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,int * numDependencies_out) nogil:
-    global _lib_handle
+cdef hipError_t hipStreamGetCaptureInfo_v2_spt(hipStream_t stream,hipStreamCaptureStatus * captureStatus_out,unsigned long long * id_out,hipGraph_t* graph_out,hipGraphNode_t ** dependencies_out,unsigned long * numDependencies_out) nogil:
     global _hipStreamGetCaptureInfo_v2_spt__funptr
-    if _hipStreamGetCaptureInfo_v2_spt__funptr == NULL:
-        with gil:
-            _hipStreamGetCaptureInfo_v2_spt__funptr = loader.load_symbol(_lib_handle, "hipStreamGetCaptureInfo_v2_spt")
-    return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *,hipGraph_t*,hipGraphNode_t **,int *) nogil> _hipStreamGetCaptureInfo_v2_spt__funptr)(stream,captureStatus_out,id_out,graph_out,dependencies_out,numDependencies_out)
+    __init_symbol(&_hipStreamGetCaptureInfo_v2_spt__funptr,"hipStreamGetCaptureInfo_v2_spt")
+    return (<hipError_t (*)(hipStream_t,hipStreamCaptureStatus *,unsigned long long *,hipGraph_t*,hipGraphNode_t **,unsigned long *) nogil> _hipStreamGetCaptureInfo_v2_spt__funptr)(stream,captureStatus_out,id_out,graph_out,dependencies_out,numDependencies_out)
 
 
 cdef void* _hipLaunchHostFunc_spt__funptr = NULL
-cdef hipError_t hipLaunchHostFunc_spt(hipStream_t stream,hipHostFn_t fn,void * userData) nogil:
-    global _lib_handle
+cdef hipError_t hipLaunchHostFunc_spt(hipStream_t stream,hipHostFn_t fn,void * userData):
     global _hipLaunchHostFunc_spt__funptr
-    if _hipLaunchHostFunc_spt__funptr == NULL:
-        with gil:
-            _hipLaunchHostFunc_spt__funptr = loader.load_symbol(_lib_handle, "hipLaunchHostFunc_spt")
-    return (<hipError_t (*)(hipStream_t,hipHostFn_t,void *) nogil> _hipLaunchHostFunc_spt__funptr)(stream,fn,userData)
+    __init_symbol(&_hipLaunchHostFunc_spt__funptr,"hipLaunchHostFunc_spt")
+    return (<hipError_t (*)(hipStream_t,hipHostFn_t,void *)> _hipLaunchHostFunc_spt__funptr)(stream,fn,userData)

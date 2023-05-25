@@ -1,0 +1,98 @@
+import enum
+import os
+
+{{fields}}
+
+def get_bool_environ_var(env_var, default):
+    yes_vals = ("true", "1", "t", "y", "yes")
+    no_vals = ("false", "0", "f", "n", "no")
+    value = os.environ.get(env_var, default).lower()
+    if value in yes_vals:
+        return True
+    elif value in no_vals:
+        return False
+    else:
+        allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals)+list(no_vals))])
+        raise RuntimeError(f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}")
+
+accept_cuda_enum_names = get_bool_environ_var("HIP_PYTHON_ENUM_ACCEPT_CUDA_NAMES","true") # Accept CUDA enum names in addition to HIP ones
+generate_fake_enums = get_bool_environ_var("HIP_PYTHON_ENUM_HALLUCINATE_MEMBERS","false")  # Hallucinate fake enum constants if member does not exist
+
+def _get_hip_name(cuda_name):
+    global cuda2hip
+    return cuda2hip.get(cuda_name,None)
+
+class FakeEnumType():
+    """Mimicks the orginal enum type this 
+    is derived from.
+    """
+    
+    def __init__(self):
+        pass
+    
+    @property
+    def name(self):
+        return self._name_
+
+    @property
+    def value(self):
+        return self._value_
+        
+    def __eq__(self,other):
+        if isinstance(other,self._orig_enum_type_):
+            return self.value == other.value
+        return False
+    
+    @property
+    def __class__(self):
+        """Overwrite __class__ to satisfy __isinstance__ check.
+        """
+        return self._orig_enum_type_
+
+    def __repr__(self):        
+        """Mimicks enum.Enum.__repr__"""
+        return "<%s.%s: %r>" % (
+                self.__class__.__name__, self._name_, self._value_)
+                
+    def __str__(self):
+        """Mimicks enum.Enum.__str__"""
+        return "%s.%s" % (self.__class__.__name__, self._name_)
+
+    def __hash__(self):
+        return hash(str(self))
+
+class _EnumMeta(enum.EnumMeta):
+        
+    def __getattribute__(cls,name):
+        global _get_hip_name
+        global accept_cuda_enum_names
+        global generate_fake_enums
+        try:
+            result = super().__getattribute__(name)
+            return result
+        except AttributeError as ae:
+            if not accept_cuda_enum_names:
+                raise ae
+            hip_name = _get_hip_name(name)
+            if hip_name != None:
+                return super().__getattribute__(hip_name)
+            elif not generate_fake_enums:
+                raise ae
+            else:
+                used_vals = list(cls._value2member_map_.keys())
+                if not len(used_vals):
+                    raise ae
+                new_val = min(used_vals)
+                while new_val in used_vals: # find a free enum value
+                    new_val += 1
+                enum_types = list(cls._member_map_.values())
+                enum_class = enum_types[0].__class__
+                new = type(
+                    name, 
+                    (FakeEnumType,),
+                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
+                )()
+                return new
+        
+class IntEnum(enum.IntEnum,metaclass=_EnumMeta):
+    pass

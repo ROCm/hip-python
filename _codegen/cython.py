@@ -20,6 +20,13 @@ c_interface_funptr_name_template = "_{name}__funptr"
 
 python_interface_retval_template = "_{name}__retval"
 
+python_interface_int_enum_base_class = "enum.IntEnum"
+
+# Always return a tuple if there is at least one return value
+python_interface_always_return_tuple = True
+
+python_interface_record_properties_name = "PROPERTIES"
+
 restricted_names = keyword.kwlist + [
     "cdef",
     "cpdef",  # TODO extend
@@ -30,6 +37,8 @@ def DEFAULT_RENAMER(name):  # backend-specific
     result = name
     while result in restricted_names:
         result += "_"
+    if "[]" in result: # Cython does not like this in certain signatures
+        result = result.replace("[]","*")
     return result
 
 
@@ -37,23 +46,48 @@ def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
 
 
-default_c_interface_preamble = """\
+def DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(parm_or_field):
+    from . import tree
+
+    assert isinstance(parm_or_field,tree.Typed)
+    if parm_or_field.actual_rank == 1:
+        innermost_type_kind = next(parm_or_field.clang_type_layer_kinds(postorder=-1,canonical=True))
+        if innermost_type_kind == clang.cindex.TypeKind.INT:
+            return "hip._util.types.ListOfInt"
+        elif innermost_type_kind == clang.cindex.TypeKind.UINT:
+            return "hip._util.types.ListOfUnsigned"
+        elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
+            return "hip._util.types.ListOfUnsignedLong"
+    if parm_or_field.actual_rank == 2:
+        return "hip._util.types.ListOfDataHandle"
+    return "hip._util.types.DataHandle"
+
+
+default_c_interface_decl_preamble = """\
 # AMD_COPYRIGHT
 from libc.stdint cimport *
+ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 """
 
-default_python_interface_preamble = """\
+default_c_interface_impl_preamble = """\
 # AMD_COPYRIGHT
-# c imports
+"""
+
+default_python_interface_decl_preamble = """\
+# AMD_COPYRIGHT
 from libc cimport stdlib
 from libc.stdint cimport *
 cimport cpython.long
 cimport cpython.buffer
-# python imports
+cimport hip._util.types
+ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
+"""
+
+default_python_interface_impl_preamble = """\
+# AMD_COPYRIGHT
 import cython
 import ctypes
 import enum
-from hip._util.datahandle cimport DataHandle
 """
 
 # Note: wrapper_class_decl_template must declare all ``@staticmethod`` ``cdef`` functions
@@ -85,8 +119,13 @@ cdef class {{name}}:
 
 wrapper_class_impl_base_template = """
 {{default cptr_type = cname + "*"}}
+{{default is_funptr = False}}
+{{default is_union = False}}
 {{default has_new = True}}
 {{default has_from_pyobj = True}}
+{{default defaults = dict()}}
+{{default properties_name = None}}
+{{default all_properties_rendered = False}}
 cdef class {{name}}:
     # members declared in pxd file
 
@@ -130,6 +169,8 @@ cdef class {{name}}:
             if ``pyobj`` is an instance of {{name}}!
         \"""
         cdef {{name}} wrapper = {{name}}.__new__({{name}})
+        cdef dict cuda_array_interface = getattr(pyobj, "__cuda_array_interface__", None)
+
         if pyobj is None:
             wrapper._ptr = NULL
         elif isinstance(pyobj,{{name}}):
@@ -137,10 +178,19 @@ cdef class {{name}}:
         elif isinstance(pyobj,int):
             wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(pyobj)
         elif isinstance(pyobj,ctypes.c_void_p):
-            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(pyobj.value)
+            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(pyobj.value) if pyobj.value != None else NULL
+        {{if is_funptr}}
+        elif str(type(pyobj)).startswith("<class 'ctypes.CFUNCTYPE.") and str(type(pyobj)).endswith(".CFunctionType'>" ):
+            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(ctypes.cast(pyobj, ctypes.c_void_p).value)
+        {{else}}
+        elif cuda_array_interface != None:
+            if not "data" in cuda_array_interface:
+                raise ValueError("input object has '__cuda_array_interface__' attribute but the dict has no 'data' key")
+            ptr_as_int = cuda_array_interface["data"][0]
+            wrapper._ptr = <{{cptr_type}}>cpython.long.PyLong_AsVoidPtr(ptr_as_int)
         elif cpython.buffer.PyObject_CheckBuffer(pyobj):
             err = cpython.buffer.PyObject_GetBuffer( 
-                wrapper.ptr,
+                pyobj,
                 &wrapper._py_buffer, 
                 cpython.buffer.PyBUF_SIMPLE | cpython.buffer.PyBUF_ANY_CONTIGUOUS
             )
@@ -148,6 +198,7 @@ cdef class {{name}}:
                 raise RuntimeError("failed to create simple, contiguous Py_buffer from Python object")
             wrapper._py_buffer_acquired = True
             wrapper._ptr = <{{cptr_type}}>wrapper._py_buffer.buf
+        {{endif}}
         else:
             raise TypeError(f"unsupported input type: '{str(type(pyobj))}'")
         return wrapper
@@ -177,27 +228,53 @@ cdef class {{name}}:
     cdef {{name}} new():
         \"""Factory function to create {{name}} objects with
         newly allocated {{cname}}\"""
-        cdef {{cptr_type}} ptr;
+        cdef {{cptr_type}} ptr
         {{name}}.__allocate(&ptr)
         return {{name}}.from_ptr(ptr, owner=True)
-    
-    def __init__(self):
-       {{name}}.__allocate(&self._ptr)
-       self.ptr_owner = True
+   
+    {{py: all_properties_and_is_no_union = all_properties_rendered and not is_union}}
+    {{if all_properties_and_is_no_union}}
+    def __init__(self,*args,**kwargs):
+    {{else}}
+    # {{all_properties_rendered}}
+    # {{is_union}}
+    def __init__(self,**kwargs):
+    {{endif}}
+        {{name}}.__allocate(&self._ptr)
+        self.ptr_owner = True
+        {{for k,v in defaults.items()}}
+        self.{{k}} = {{v}}
+        {{endfor}}
+        attribs = self.{{properties_name}}()
+        used_attribs = set()
+        {{if all_properties_and_is_no_union}}
+        if len(args) > len(attribs):
+            raise ValueError("More positional arguments specified than this type has properties.")
+        for i,v in enumerate(args):
+            setattr(self,attribs[i],v)
+            used_attribs.add(attribs[i])
+        {{endif}}
+        {{if is_union}}
+        if len(kwargs) > 1:
+            raise ValueError("Not more than one attribute might specified for Python types derived from C union types.")
+        {{endif}}
+        valid_names = ", ".join(["'"+p+"'" for p in attribs])
+        for k,v in kwargs.items():
+            if k in used_attribs:
+                raise KeyError(f"argument '{k}' has already been specified as positional argument.")
+            elif k not in attribs:
+                raise KeyError(f"'{k}' is no valid property name. Valid names: {valid_names}")
+            setattr(self,k,v)
     {{endif}}
     
-    @property
-    def ptr(self):
+    def __int__(self):
         \"""Returns the data's address as long integer.\"""
         return cpython.long.PyLong_FromVoidPtr(self._ptr)
-    def __int__(self):
-        return self.ptr
     def __repr__(self):
-        return f"<{{name}} object, self.ptr={self.ptr()}>"
-    @property
+        return f"<{{name}} object, self.ptr={int(self)}>"
     def as_c_void_p(self):
         \"""Returns the data's address as `ctypes.c_void_p`\"""
-        return ctypes.c_void_p(self.ptr)
+        return ctypes.c_void_p(int(self))
 """
 
 wrapper_class_property_template = """\
@@ -216,15 +293,47 @@ def {{attr}}(self):
 @{{attr}}.setter
 def {{attr}}(self, {{typename}} value):
     self.set_{{attr}}(0,value)
+{{elif is_pointer_to_basic_type_or_void}}
+def get_{{attr}}(self, i):
+    \"""Get value ``{{attr}}`` of ``self._ptr[i]``.
+    \"""
+    return {{handler}}.from_ptr(self._ptr[i].{{attr}})
+def set_{{attr}}(self, i, object value):
+    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
+
+    Note:
+        This can be dangerous if the pointer is from a python object
+        that is later on garbage collected.
+    \"""
+    self._ptr[i].{{attr}} = <{{typename}}>cpython.long.PyLong_AsVoidPtr(int({{handler}}.from_pyobj(value)))
+@property
+def {{attr}}(self):
+    \"""
+    Note:
+        Setting this {{attr}} can be dangerous if the underlying pointer is from a python object that
+        is later on garbage collected.
+    \"""
+    return self.get_{{attr}}(0)
+@{{attr}}.setter
+def {{attr}}(self, object value):
+    self.set_{{attr}}(0,value)
 {{elif is_basic_type_constantarray}}
 def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
     \"""
     return self._ptr[i].{{attr}}
+# TODO add setters
+#def set_{{attr}}(self, i, {{typename}} value):
+#    \"""Set value ``{{attr}}`` of ``self._ptr[i]``.
+#    \"""
+#    self._ptr[i].{{attr}} = value
 @property
 def {{attr}}(self):
     return self.get_{{attr}}(0)
-# TODO is_basic_type_constantarray: add setters
+# TODO add setters
+#@{{attr}}.setter
+#def {{attr}}(self, {{typename}} value):
+#    self.set_{{attr}}(0,value)
 {{elif is_enum}}
 def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
@@ -242,8 +351,6 @@ def {{attr}}(self):
 @{{attr}}.setter
 def {{attr}}(self, value):
     self.set_{{attr}}(0,value)
-{{elif is_enum_constantarray}}
-# TODO is_enum_constantarray: add
 {{elif is_record}}
 def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``self._ptr[i]``.
@@ -286,11 +393,11 @@ class CythonMixin:
         """Render a Cython interface for external C code."""
         return None
 
-    def render_python_interface_decl(self,cprefix: str):
+    def render_python_interface_decl(self, cprefix: str):
         """Render the declaration part for the Python interface."""
         return None
 
-    def render_python_interface_impl(self,cprefix: str):
+    def render_python_interface_impl(self, cprefix: str):
         """Render the implementation part for the Python interface."""
         return None
 
@@ -321,7 +428,18 @@ class Typed:
         from . import tree
 
         assert isinstance(self, tree.Typed)
-        return self.global_typename(self.sep, self.renamer)
+        result = self.global_typename(
+            self.sep, self.renamer, prefer_canonical=True
+        )
+        #if "[]" in result: # Cython does not like this in signatures
+        #    result = result.replace("[]", "*")
+        return result
+
+    @property
+    def actual_rank(self):
+        """The actual rank of the parameter, if this is an indirection.
+        """
+        return self.ptr_rank(self)
 
     @property
     def has_array_rank(self):
@@ -331,15 +449,63 @@ class Typed:
         if self.is_any_array:
             return True
         else:
-            return self.ptr_rank(self) > 0
+            return self.actual_rank(self)
+    
+    @property
+    def is_ptr(self):
+        from . import tree
+
+        assert isinstance(self, tree.Parm)
+        return self.get_pointer_degree(incomplete_array=True) > 0
+
+    @property
+    def is_indirection(self):
+        """If this is not the actual value but an indirection.
+
+        Returns:
+            bool: If this is not the actual value but an indirection.
+        """
+        from . import tree
+
+        actual_rank = self.ptr_rank(self)
+        assert isinstance(self, tree.Parm)
+        return self.get_pointer_degree() > actual_rank
+
+    @property
+    def actual_rank(self):
+        """The actual rank of the parameter, if this is an indirection.
+        """
+        return self.ptr_rank(self)
+
+    @property
+    def is_out_ptr(self):
+        """If this parameter has been specified as out parameter."""
+        assert self.is_ptr
+        return self.ptr_intent(self) == control.PointerParamIntent.OUT
+
+    @property
+    def is_inout_ptr(self):
+        """If this is an inout parameter."""
+        assert self.is_ptr
+        return self.ptr_intent(self) == control.PointerParamIntent.INOUT
+
+    @property
+    def is_in_ptr(self):
+        """If this is an inout parameter."""
+        assert self.is_ptr
+        return self.ptr_intent(self) == control.PointerParamIntent.IN
+
 
     @property
     def is_autoconverted_by_cython(self):
+        from . import tree
+
+        assert isinstance(self,tree.Typed)
+
         return (
             self.is_basic_type
             or self.is_basic_type_constarray
-            or self.is_pointer_to_char()
-            or self.is_char_incompletearray
+            or self.is_pointer_to_char(incomplete_array=True)
         )
 
 
@@ -347,12 +513,14 @@ class FieldMixin(CythonMixin, Typed):
     def __init__(self):
         CythonMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
+        self.ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
 
+    @property
     def cython_repr(self):
         from . import tree
 
         assert isinstance(self, tree.Field)
-        typename = self.global_typename(self.sep, self.renamer)
+        typename = self.global_typename(self.sep, self.renamer, prefer_canonical=True)
         name = self._cython_and_c_name(self.name)
         return f"{typename} {name}"
 
@@ -363,7 +531,10 @@ class FieldMixin(CythonMixin, Typed):
         attr = self.renamer(self.name)
         template = Cython.Tempita.Template(wrapper_class_property_template)
         return template.substitute(
-            typename=self.global_typename(self.sep, self.renamer),
+            handler=self.ptr_complicated_type_handler(self),
+            typename=self.global_typename(
+                self.sep, self.renamer, prefer_canonical=True
+            ),
             attr=attr,
             is_basic_type=(
                 self.is_basic_type
@@ -374,6 +545,12 @@ class FieldMixin(CythonMixin, Typed):
             is_enum=self.is_enum,
             is_enum_constantarray=self.is_enum_constantarray,
             is_record_constantarray=self.is_record_constantarray,
+            is_pointer_to_basic_type_or_void=(
+                self.is_pointer_to_basic_type(degree=-1)
+                or self.is_pointer_to_void(degree=-1)
+            ),
+            # is_pointer_to_record ... # TODO
+            # is_pointer_to_function_proto ...
         )
 
 
@@ -410,13 +587,12 @@ class RecordMixin(CythonMixin):
         fields = list(self.fields)
         if len(fields):
             result += textwrap.indent(
-                "\n".join([field.cython_repr() for field in fields]), indent
+                "\n".join([field.cython_repr for field in fields]), indent
             )
         else:
             result += f"{indent}pass"
         return result
 
-    
     def render_python_interface_decl(self, cprefix: str) -> str:
         from . import tree
 
@@ -430,28 +606,93 @@ class RecordMixin(CythonMixin):
             has_new=not self.is_incomplete,
         )
 
-    def _render_python_interface_head(self, cprefix: str) -> str:
+    def _render_python_interface_head(
+        self, cprefix: str, all_propertys_rendered: bool = False
+    ) -> str:
         from . import tree
 
         assert isinstance(self, tree.Record)
         global wrapper_class_impl_base_template
+        global python_interface_record_properties_name
         name = self.renamer(self.global_name(self.sep))
         template = Cython.Tempita.Template(wrapper_class_impl_base_template)
         return template.substitute(
             name=name,
             cname=cprefix + name,
             has_new=not self.is_incomplete,
+            defaults=self._defaults if self.has_defaults else {},
+            properties_name=python_interface_record_properties_name,
+            all_properties_rendered=all_propertys_rendered,
+            is_union=self.c_record_kind == "union",
         )
+
+    def set_defaults(self, **kwargs):
+        """Set the defaults for certain variables."""
+        setattr(self, "_defaults", kwargs)
+
+    @property
+    def has_defaults(self):
+        return hasattr(self, "_defaults")
+
+    @property
+    def has_python_body_epilog(self):
+        return hasattr(self, "_python_body_epilog")
+
+    def append_to_python_body(self, code: str):
+        """Append additional code to the generated Python type's body.
+
+        Append additional code to the Python type's body
+        Provide dedented input, the correct indent is added by this routine.
+        """
+        if not self.has_python_body_epilog:
+            setattr(self, "_python_body_epilog", [])
+        self._python_body_epilog.append(code)
 
     def render_python_interface_impl(self, cprefix: str) -> str:
         from . import tree
 
         assert isinstance(self, tree.Record)
+        global python_interface_record_properties_name
         global indent
 
-        result = self._render_python_interface_head(cprefix)
+        rendered_property_names = []
+        all_properties_rendered = True
         for field in self.fields:
-            result += textwrap.indent(field.render_python_property(cprefix), indent)
+            prop = field.render_python_property(cprefix)
+            if len(prop.strip()):
+                rendered_property_names.append(field.cython_name)
+                self.append_to_python_body(prop)
+            else:
+                all_properties_rendered = False
+        self.append_to_python_body(
+            textwrap.dedent(
+                f"""\
+        @staticmethod
+        def {python_interface_record_properties_name}():
+            return [{','.join(['"'+a+'"' for a in rendered_property_names])}]
+        """
+            )
+        )
+        if self.c_record_kind == "struct":
+            self.append_to_python_body(
+                textwrap.dedent(
+                    f"""\
+            def __contains__(self,item):
+                properties = self.{python_interface_record_properties_name}()
+                return item in properties
+                
+            def __getitem__(self,item):
+                properties = self.{python_interface_record_properties_name}()
+                if isinstance(item,int):
+                    if item < 0 or item >= len(properties):
+                        raise IndexError()
+                    return getattr(self,properties[item])
+                raise ValueError("'item' type must be 'int'")
+            """
+                )
+            )
+        result = self._render_python_interface_head(cprefix, all_properties_rendered)
+        result += textwrap.indent("\n".join(self._python_body_epilog), indent)
         return result
 
 
@@ -511,13 +752,35 @@ class EnumMixin(CythonMixin):
 
         assert isinstance(self, tree.Enum)
         global indent
+        global python_interface_int_enum_base_class
         if self.is_anonymous:
             return "\n".join(self._render_python_enums(cprefix))
         else:
             name = self._cython_and_c_name(self.global_name(self.sep))
-            return f"class {name}(enum.IntEnum):\n" + textwrap.indent(
+            result = f"class {name}({python_interface_int_enum_base_class}):\n" + textwrap.indent(
                 "\n".join(self._render_python_enums(cprefix)), indent
             )
+            # add methods
+            enum_type = self.cursor.enum_type.get_canonical().spelling
+            ctypes_map = {
+                "short": "ctypes.c_short",
+                "unsigned short": "ctypes.c_ushort",
+                "int": "ctypes.c_int",
+                "unsigned int": "ctypes.c_uint",
+            }
+            result += textwrap.indent(
+                textwrap.dedent(
+                    f"""\
+                
+                @staticmethod
+                def ctypes_type():
+                    \"""The type of the enum constants as ctypes type.\"""
+                    return {ctypes_map[enum_type]} 
+                """
+                ),
+                indent,
+            )
+            return result
 
 
 class TypedefMixin(CythonMixin, Typed):
@@ -536,49 +799,16 @@ class TypedefMixin(CythonMixin, Typed):
         from . import tree
 
         assert isinstance(self, tree.Typedef)
-        name = self.cython_global_name
-        if self.is_pointer_to_record() or self.is_pointer_to_enum():
-            pass # cannot typedef to prevent name conflict with Python type
-        elif self.is_pointer_to_basic_type(degree=-1) or self.is_pointer_to_void(
-            degree=-1
-        ):
-            template = Cython.Tempita.Template(wrapper_class_decl_template)
-            return template.substitute(
-                name=name,
-                cname=self._type_handler.create_from_layer(
-                    layer=1, canonical=True
-                ).clang_type.spelling,
-                cptr_type=self.cursor.type.get_canonical().spelling,
-                has_new=False,
-            )
-        elif self.is_autoconverted_by_cython:
-            return self.render_c_interface()
-        else:
-            return None
+        return None
 
     def render_python_interface_impl(self, cprefix: str) -> str:
         from . import tree
 
         assert isinstance(self, tree.Typedef)
         name = self.cython_global_name
-        if self.is_pointer_to_record(degree=-1) or self.is_pointer_to_enum(degree=-1):
+        if self.is_pointer_to_record(degree=(0,-1)) or self.is_pointer_to_enum(degree=(0,-1)):
             return f"{name} = {self.renamer(self.typeref.global_name(self.sep))}"
-        elif self.is_pointer_to_basic_type(degree=-1) or self.is_pointer_to_void(
-            degree=-1
-        ):
-            template = Cython.Tempita.Template(wrapper_class_impl_base_template)
-            return template.substitute(
-                name=name,
-                cname=self._type_handler.create_from_layer(
-                    layer=1, canonical=True
-                ).clang_type.spelling,
-                cptr_type=self.cursor.type.get_canonical().spelling,
-                has_new=False,
-            )
-        elif self.is_autoconverted_by_cython:
-            pass # in decl file
-        else:
-            return None
+        return None
 
 
 class FunctionPointerMixin(CythonMixin):
@@ -587,7 +817,7 @@ class FunctionPointerMixin(CythonMixin):
         from . import tree
 
         assert isinstance(self, tree.FunctionPointer)
-        parm_types = ",".join(self.global_parm_types(self.sep, self.renamer))
+        parm_types = ",".join([parm.cython_global_typename for parm in self.parms])
         underlying_type_name = self.renamer(self.canonical_result_typename)
         typename = self.cython_global_name  # might be AnonymousFunctionPointer
         return f"ctypedef {underlying_type_name} (*{typename}) ({parm_types})"
@@ -598,10 +828,12 @@ class FunctionPointerMixin(CythonMixin):
         assert isinstance(self, tree.FunctionPointer)
         global wrapper_class_decl_template
         name = self.cython_global_name
+        cname = cprefix + name
         template = Cython.Tempita.Template(wrapper_class_decl_template)
         return template.substitute(
             name=name,
-            cname=cprefix + name,
+            cname=cname,
+            cptr_type=cname,  # type is already a pointer
             has_new=False,
         )
 
@@ -611,10 +843,13 @@ class FunctionPointerMixin(CythonMixin):
         assert isinstance(self, tree.FunctionPointer)
         global wrapper_class_impl_base_template
         name = self.cython_global_name
+        cname = cprefix + name
         template = Cython.Tempita.Template(wrapper_class_impl_base_template)
         return template.substitute(
             name=name,
-            cname=cprefix + name,
+            cname=cname,
+            cptr_type=cname,  # type is already a pointer
+            is_funptr=True,
             has_new=False,
         )
 
@@ -629,9 +864,11 @@ class AnonymousFunctionPointerMixin(FunctionPointerMixin):
 
 class ParmMixin(CythonMixin, Typed):
     def __init__(self):
+        global DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
         CythonMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
-        self.ptr_create = control.DEFAULT_PTR_PARAM_INTENT
+        self.ptr_intent = control.DEFAULT_PTR_PARAM_INTENT
+        self.ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
 
     @property
     def cython_repr(self):
@@ -641,34 +878,6 @@ class ParmMixin(CythonMixin, Typed):
         typename = self.cython_global_typename
         name = self.cython_name
         return f"{typename} {name}"
-
-    @property
-    def is_indirection(self):
-        """If this is not the actual value but an indirection.
-
-        Returns:
-            bool: If this is not the actual value but an indirection.
-        """
-        from . import tree
-
-        actual_rank = self.ptr_rank(self)
-        assert isinstance(self, tree.Parm)
-        return self.get_pointer_degree() > actual_rank
-
-    @property
-    def is_return_value(self):
-        """If this is an indirection and has
-        been specified as out parameter.
-
-        Note:
-            While it is clear that an indirection of a basic type or enum parameter
-            is an out parameter, it is not clear for struct and union parameters.
-        """
-        return (
-            self.is_indirection
-            and self.ptr_create(self) == control.PointerParamIntent.OUT
-        )
-
 
 class FunctionMixin(CythonMixin, Typed):
     def _raw_comment_as_python_comment(self):
@@ -681,6 +890,24 @@ class FunctionMixin(CythonMixin, Typed):
         else:
             return ""
 
+    @property
+    def has_python_body_prolog(self):
+        return hasattr(self, "_python_body_prolog")
+    
+    @property
+    def has_python_body_epilog(self):
+        return hasattr(self, "_python_body_epilog")
+
+    def python_body_prepend_before_c_interface_call(self,code: str):
+        if not self.has_python_body_prolog:
+            setattr(self, "_python_body_prolog", [])
+        self._python_body_prolog.append(code)
+
+    def python_body_prepend_before_return(self,code: str):
+        if not self.has_python_body_epilog:
+            setattr(self, "_python_body_epilog", [])
+        self._python_body_epilog.append(code)
+
     # TODO Identify and extract doxygen params and other sections to create higher quality docstring
     # doxygen param is terminated by blank line or new section/paragraph
     # Can be used to build parser for args
@@ -691,19 +918,31 @@ class FunctionMixin(CythonMixin, Typed):
         assert isinstance(self, tree.Function)
         return f'"""{"".join(self._raw_comment_stripped()).rstrip()}\n"""'
 
-    def render_c_interface(self, modifiers=" nogil", modifiers_front=""):
+    @property
+    def _has_funptr_parm(self):
+        from . import tree
+
+        assert isinstance(self, tree.Function)
+        for node in self.walk():
+            if isinstance(node, tree.Parm):
+                if isinstance(node.typeref, tree.FunctionPointer):
+                    return True
+        return False
+
+    def render_c_interface(self, modifiers_front=""):
         from . import tree
 
         assert isinstance(self, tree.Function)
         typename = self.cython_global_typename
         name = self.cython_name
-        parm_decls = ",".join([arg.cython_repr for arg in self.parms])
+        parm_decls = ",".join([parm.cython_repr for parm in self.parms])
+        modifiers = "" if self._has_funptr_parm else " nogil"
         return f"""\
 {self._raw_comment_as_python_comment().rstrip()}
 {modifiers_front}{typename} {name}({parm_decls}){modifiers}
 """
 
-    def render_cython_lazy_loader_decl(self, modifiers=" nogil"):
+    def render_cython_lazy_loader_decl(self):
         return self.render_c_interface(modifiers_front="cdef ")
 
     @property
@@ -711,87 +950,134 @@ class FunctionMixin(CythonMixin, Typed):
         global c_interface_funptr_name_template
         return c_interface_funptr_name_template.format(name=self.cython_name)
 
-    def render_cython_lazy_loader_def(
-        self, lib_handle: str = "__lib_handle", modifiers="nogil"
-    ):
+    def render_cython_lazy_loader_def(self):
         from . import tree
 
         assert isinstance(self, tree.Function)
         funptr_name = self.cython_funptr_name
-        parm_types = ",".join(self.global_parm_types(self.sep, self.renamer))
+
+        parm_types = ",".join([parm.cython_global_typename for parm in self.parms])
         parm_names = ",".join(self.parm_names(self.renamer))
-        typename = self.global_typename(self.sep, self.renamer)
+        typename = self.global_typename(self.sep, self.renamer, prefer_canonical=True)
+        modifiers = "" if self._has_funptr_parm else " nogil"
         return f"""\
 cdef void* {funptr_name} = NULL
-{self.render_cython_lazy_loader_decl(modifiers).strip()}:
-    global {lib_handle}
+{self.render_cython_lazy_loader_decl().strip()}:
     global {funptr_name}
-    if {funptr_name} == NULL:
-        with gil:
-            {funptr_name} = loader.load_symbol({lib_handle}, "{self.name}")
-    return (<{typename} (*)({parm_types}) nogil> {funptr_name})({parm_names})
+    __init_symbol(&{funptr_name},"{self.name}")
+    return (<{typename} (*)({parm_types}){modifiers}> {funptr_name})({parm_names})
 """
 
     def _analyze_parms(self, cprefix: str):
         from . import tree
 
-        sig_args = []
-        out_args = []
-        c_interface_call_args = []
-        prolog = []
-        epilog = []
+        sig_args = []  # argument definitions that appear in the signature
+        out_args = []  # return values, might include conversions
+        out_arg_names = (
+            []
+        )  # names of the return values, required for identifying doxygen parameters
+        c_interface_call_args = []  # arguments that are passed to the C interface
+        prolog = []  # additional code before the C interface call
 
-        def emit_datahandle_(
-            parm_typename: str, parm_name: str, cprefix: str = ""
-        ):
+        def emit_datahandle_(parm_typename: str, parm: tree.Parm, cprefix: str = ""):
             global indent
             nonlocal sig_args
             nonlocal c_interface_call_args
+
+            parm_name = parm.cython_name
+            handler_name = parm.ptr_complicated_type_handler(parm)
             sig_args.append(f"object {parm_name}")
             c_interface_call_args.append(
-                f"\n{indent*2}<{cprefix}{parm_typename}>DataHandle.from_pyobj({parm_name})._ptr"
+                f"\n{indent*2}<{cprefix}{parm_typename}>{handler_name}.from_pyobj({parm_name})._ptr"
             )
 
-        for parm in self.parms:
-            assert isinstance(parm, ParmMixin)
+        def emit_data_handle_for_ptr_to_void_basic_enum_type_(parm: tree.Parm, cprefix: str):
+            parm_typename = (
+                parm.cython_global_typename
+                if parm.has_typeref
+                else parm.renamer(parm.cursor.type.get_canonical().spelling)  # TODO verify might be no Python/Cython keyword
+            )
+            emit_datahandle_(
+                parm_typename,
+                parm,
+                cprefix=cprefix
+                if not parm.is_innermost_canonical_type_layer_of_basic_type_or_void
+                else "",
+            )
+
+        def handle_out_ptr_parm(parm: tree.Parm):
+            nonlocal out_args
+            nonlocal out_arg_names
+            nonlocal c_interface_call_args
+            nonlocal prolog
+            nonlocal cprefix
+
             parm_name = parm.cython_name
-            if parm.is_return_value:  # out arg
-                assert isinstance(parm, tree.Parm)
-                if parm.is_pointer_to_basic_type(degree=1):
-                    typehandler = parm._type_handler.create_from_layer(
-                        1, canonical=True
-                    )
-                    parm_typename = typehandler.clang_type.spelling
-                    prolog.append(f"cdef {parm_typename} {parm_name}")
-                    out_args.append(parm_name)
-                    c_interface_call_args.append(f"&{parm_name}")
-                elif parm.is_pointer_to_enum(degree=1):
-                    parm_typename = parm.lookup_innermost_type().cython_name
-                    prolog.append(f"cdef {cprefix}{parm_typename} {parm_name}")
-                    c_interface_call_args.append(f"&{parm_name}")
-                    out_args.append(f"{parm_typename}({parm_name})")
-                elif (
-                    parm.is_pointer_to_record(degree=2)
-                ):
-                    parm_typename = parm.lookup_innermost_type().cython_name
-                    prolog.append(
-                        f"{parm_name} = {parm_typename}.from_ptr(NULL)"
-                    )
-                    c_interface_call_args.append(f"&{parm_name}._ptr")
-                    out_args.append(parm_name)
-                elif (
-                    parm.is_pointer_to_basic_type(degree=2)
-                    or parm.is_pointer_to_void(degree=2)
-                ):
-                    parm_typename = parm.cursor.type.get_canonical().spelling
-                    prolog.append(
-                        f"{parm_name} = DataHandle.from_ptr(NULL)"
-                    )
-                    c_interface_call_args.append(f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr")
-                    out_args.append(parm_name)
+
+            if parm.is_pointer_to_basic_type(degree=1) or parm.is_pointer_to_char(
+                degree=2
+            ):
+                typehandler = parm._type_handler.create_from_layer(1, canonical=True)
+                parm_typename = typehandler.clang_type.spelling
+                prolog.append(f"cdef {parm_typename} {parm_name}")
+                out_args.append(parm_name)
+                c_interface_call_args.append(f"&{parm_name}")
+            elif parm.is_pointer_to_enum(degree=1):
+                parm_typename = parm.lookup_innermost_type().cython_name
+                prolog.append(f"cdef {cprefix}{parm_typename} {parm_name}")
+                c_interface_call_args.append(f"&{parm_name}")
+                out_args.append(
+                    f"{parm_typename}({parm_name})"
+                )  # conversion from c... type required
+            elif parm.is_pointer_to_record(
+                degree=2
+            ) or parm.is_pointer_to_function_proto(degree=2):
+                parm_typename = parm.lookup_innermost_type().cython_name
+                prolog.append(f"{parm_name} = {parm_typename}.from_ptr(NULL)")
+                c_interface_call_args.append(f"&{parm_name}._ptr")
+                out_args.append(parm_name)
+            elif parm.is_pointer_to_basic_type(degree=-2) or parm.is_pointer_to_void(
+                degree=-2
+            ):
+                parm_typename = parm.cursor.type.get_canonical().spelling
+                handler_name = parm.ptr_complicated_type_handler(parm)
+                prolog.append(f"{parm_name} = {handler_name}.from_ptr(NULL)")
+                c_interface_call_args.append(
+                    f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr"
+                )
+                out_args.append(parm_name)
+
+        def handle_in_inout_ptr_no_char_ptr_(parm: tree.Parm):
+            global indent
+            nonlocal c_interface_call_args
+            nonlocal sig_args
+            nonlocal cprefix
+
+            parm_name = parm.cython_name
+            if parm.is_pointer_to_record(
+                degree=1, incomplete_array=True
+            ) or parm.is_pointer_to_function_proto(degree=1, incomplete_array=True):
+                parm_typename = parm.lookup_innermost_type().cython_name
+                sig_args.append(f"object {parm_name}")
+                c_interface_call_args.append(
+                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name})._ptr"
+                )
+            elif parm.is_pointer_to_record(
+                degree=-2, incomplete_array=True
+            ) or parm.is_pointer_to_function_proto(degree=-2, incomplete_array=True):
+                parm_typename = parm.cython_global_typename
+                emit_datahandle_(parm_typename, parm, cprefix)
             elif (
-                parm.is_autoconverted_by_cython
-            ):  # includes char* (!) which is also indirection
+                parm.is_pointer_to_void(degree=-1, incomplete_array=True)
+                or parm.is_pointer_to_basic_type(degree=-1, incomplete_array=True)
+                or parm.is_pointer_to_enum(degree=-1, incomplete_array=True)
+            ):
+                emit_data_handle_for_ptr_to_void_basic_enum_type_(parm, cprefix)
+            else:
+                assert False, "should not be entered"
+
+        def handle_value_parm_(parm: tree.Parm):
+            if parm.is_autoconverted_by_cython:
                 c_interface_call_args.append(f"{parm_name}")
                 sig_args.append(parm.cython_repr)
             elif (
@@ -808,44 +1094,30 @@ cdef void* {funptr_name} = NULL
                     )
                 )
                 c_interface_call_args.append(f"{parm_name}.value")
-            elif parm.is_indirection:
-                assert isinstance(parm, tree.Parm)
-                if parm.is_pointer_to_record(degree=1):
-                    parm_typename = parm.lookup_innermost_type().cython_name
-                    sig_args.append(f"object {parm_name}")
-                    c_interface_call_args.append(
-                      f"\n{indent*2}{parm_typename}.from_pyobj({parm_name})._ptr"
-                    )
-                else:
-                    parm_typename = (
-                        parm.cython_global_typename
-                        if parm.has_typeref
-                        else parm.cursor.type.get_canonical().spelling # TODO verify might be no Python/Cython keyword
-                    )
-                    emit_datahandle_(
-                        parm_typename,
-                        parm_name,
-                        cprefix=cprefix if parm.has_typeref else "",
-                    )
-            elif parm.is_pointer_to_basic_type(degree=-1) or parm.is_pointer_to_void(
-                degree=-1
-            ):
-                parm_typename = (
-                    parm.cython_global_typename
-                    if parm.has_typeref
-                    else parm.cursor.type.get_canonical().spelling # TODO verify might be no Python/Cython keyword
-                )
-                emit_datahandle_(
-                    parm_typename,
-                    parm_name,
-                    cprefix=cprefix if parm.has_typeref else "",
-                )
-            elif parm.is_pointer_to_record(degree=1):
+            elif parm.is_record:
                 parm_typename = parm.lookup_innermost_type().cython_name
                 sig_args.append(f"object {parm_name}")
                 c_interface_call_args.append(
-                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name})._ptr"
+                    f"\n{indent*2}{parm_typename}.from_pyobj({parm_name})._ptr[0]"
                 )
+
+        for parm in self.parms:
+            parm_name = parm.cython_name
+            assert isinstance(parm, ParmMixin)
+            if parm.is_ptr:
+                if parm.is_out_ptr:
+                    assert parm.is_indirection  # make exception
+                    handle_out_ptr_parm(parm)
+                elif parm.is_inout_ptr:
+                    handle_in_inout_ptr_no_char_ptr_(parm)
+                else:  # in ptr
+                    if parm.is_pointer_to_char(degree=1):  # autoconverted by Cython
+                        c_interface_call_args.append(parm_name)
+                        sig_args.append(parm.cython_repr)
+                    else:
+                        handle_in_inout_ptr_no_char_ptr_(parm)
+            else:  # no ptr
+                handle_value_parm_(parm)
 
         fully_specified = len(list(self.parms)) == len(c_interface_call_args)
         setattr(self, "is_python_code_complete", fully_specified)
@@ -854,9 +1126,9 @@ cdef void* {funptr_name} = NULL
             fully_specified,
             sig_args,
             out_args,
+            out_arg_names,
             c_interface_call_args,
             prolog,
-            epilog,
         )
 
     @property
@@ -880,6 +1152,7 @@ cdef void* {funptr_name} = NULL
             out_args.insert(0, retvalname)
             return f"cdef {typename} {retvalname} = {c_interface_call}"
         elif self.is_pointer_to_char(degree=1):
+            out_args.insert(0, retvalname)
             return f"cdef {typename} {retvalname} = {c_interface_call}"
         elif self.is_enum:
             out_args.insert(0, retvalname)
@@ -892,10 +1165,12 @@ cdef void* {funptr_name} = NULL
             fully_specified,
             sig_args,
             out_args,
+            out_arg_names,  # required for parsing parameter documentation
             call_args,
             prolog,
-            epilog,
         ) = self._analyze_parms(cprefix)
+
+        global python_interface_always_return_tuple
 
         result = "@cython.embedsignature(True)\n"
         result += (
@@ -903,16 +1178,26 @@ cdef void* {funptr_name} = NULL
             + textwrap.indent(self._raw_comment_as_docstring(), indent).rstrip()
             + "\n"
         )
+        if self.has_python_body_prolog:
+            prolog += self._python_body_prolog
+        epilog = []
+        if self.has_python_body_epilog:
+            epilog += self._python_body_epilog
         if len(prolog):
             result += textwrap.indent("\n".join(prolog), indent).rstrip() + "\n"
         if fully_specified:
             result += f"{indent}{self._render_python_interface_c_interface_call(cprefix,call_args,out_args)}"
             result += f"{indent}# fully specified\n"
+            if len(epilog):
+                result += textwrap.indent("\n".join(epilog), indent).rstrip() + "\n"
             if len(out_args) > 1:
                 comma = ","
                 result += f"{indent}return ({comma.join(out_args)})\n"
             elif len(out_args):
-                result += f"{indent}return {out_args[0]}\n"
+                if python_interface_always_return_tuple:
+                    result += f"{indent}return ({out_args[0]},)\n"
+                else:
+                    result += f"{indent}return {out_args[0]}\n"
         else:
             result += f"{indent}pass"
         return result
@@ -926,6 +1211,7 @@ class CythonBackend:
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
+        ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
         warnings: control.Warnings = control.Warnings.IGNORE,
     ):
@@ -933,7 +1219,14 @@ class CythonBackend:
 
         root = tree.from_libclang_translation_unit(translation_unit, warnings)
         return CythonBackend(
-            root, filename, node_filter, macro_type, ptr_parm_intent, ptr_rank, renamer
+            root,
+            filename,
+            node_filter,
+            macro_type,
+            ptr_parm_intent,
+            ptr_rank,
+            ptr_complicated_type_handler,
+            renamer,
         )
 
     def __init__(
@@ -944,6 +1237,7 @@ class CythonBackend:
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
+        ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
     ):
         """
@@ -958,10 +1252,9 @@ class CythonBackend:
         self.filename = filename
         self.node_filter = node_filter
         self.macro_type = macro_type
-        self.ptr_parm_intent = (
-            ptr_parm_intent  # TODO use for FunctionMixin.render_python_interface_impl
-        )
-        self.ptr_rank = ptr_rank  # TODO use for FunctionMixin.render_python_interface_impl
+        self.ptr_parm_intent = ptr_parm_intent
+        self.ptr_rank = ptr_rank
+        self.ptr_complicated_type_handler = ptr_complicated_type_handler
         self.renamer = renamer
 
     def _walk_filtered_nodes(self):
@@ -981,9 +1274,19 @@ class CythonBackend:
                     setattr(node, "macro_type", self.macro_type)
                 elif isinstance(node, (FieldMixin)):
                     setattr(node, "ptr_rank", self.ptr_rank)
+                    setattr(
+                        node,
+                        "ptr_complicated_type_handler",
+                        self.ptr_complicated_type_handler,
+                    )
                 elif isinstance(node, (ParmMixin)):
                     setattr(node, "ptr_rank", self.ptr_rank)
-                    setattr(node, "ptr_create", self.ptr_parm_intent)
+                    setattr(node, "ptr_intent", self.ptr_parm_intent)
+                    setattr(
+                        node,
+                        "ptr_complicated_type_handler",
+                        self.ptr_complicated_type_handler,
+                    )
                 # yield relevant nodes
                 if not isinstance(node, (FieldMixin, ParmMixin)):
                     if self.node_filter(node):
@@ -1049,19 +1352,36 @@ class CythonBackend:
     def create_cython_lazy_loader_defs(self, dll: str):
         # TODO: Add compiler? switch to switch between MS and Linux loaders
         # TODO: Add compiler? switch to switch between HIP and CUDA backends?
-        # Should be possible to implement this via the renamer and generating multiple modules
+        # Might be possible to implement this via the renamer and generating multiple modules
+        result = []
         lib_handle = "_lib_handle"
-        result = f"""\
-cimport hip._util.posixloader as loader
-cdef void* {lib_handle} = loader.open_library(\"{dll}\")
-""".splitlines(
-            keepends=True
+        result.append(
+            textwrap.dedent(
+                f"""\
+            cimport hip._util.posixloader as loader
+            cdef void* {lib_handle} = NULL
+            
+            cdef void __init() nogil:
+                global {lib_handle}
+                if {lib_handle} == NULL:
+                    with gil:
+                        {lib_handle} = loader.open_library(\"{dll}\")
+
+            cdef void __init_symbol(void** result, const char* name) nogil:
+                global {lib_handle}
+                if {lib_handle} == NULL:
+                    __init()
+                if result[0] == NULL:
+                    with gil:
+                        result[0] = loader.load_symbol({lib_handle}, name) 
+            """
+            )
         )
         for node in self._walk_filtered_nodes():
             if isinstance(node, FunctionMixin):
-                result.append(node.render_cython_lazy_loader_def(lib_handle=lib_handle))
+                result.append("\n" + node.render_cython_lazy_loader_def())
         return result
-    
+
     def render_c_interface_decl_part(self, runtime_linking: bool = False):
         """Returns the Cython bindings file content for the given headers."""
         nl = "\n\n"
@@ -1071,7 +1391,7 @@ cdef void* {lib_handle} = loader.open_library(\"{dll}\")
         self, runtime_linking: bool = False, dll: str = None
     ):
         """Returns the Cython bindings file content for the given headers."""
-        nl = "\n\n"
+        nl = "\n"
         if runtime_linking:
             if dll is None:
                 raise ValueError(
@@ -1080,7 +1400,7 @@ cdef void* {lib_handle} = loader.open_library(\"{dll}\")
             return nl.join(self.create_cython_lazy_loader_defs(dll))
         else:
             return ""
-        
+
     def create_python_interface_decl_part(self, cmodule):
         """Renders Python interfaces in Cython."""
         from . import tree
@@ -1092,7 +1412,7 @@ cdef void* {lib_handle} = loader.open_library(\"{dll}\")
             if contrib != None:
                 result.append(contrib)
         return result
-    
+
     def create_python_interface_impl_part(self, cmodule):
         """Renders Python interfaces in Cython."""
         from . import tree
@@ -1139,6 +1459,7 @@ class CythonPackageGenerator:
         macro_type: callable = DEFAULT_MACRO_TYPE,
         ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
+        ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
         warnings=control.Warnings.WARN,
         cflags=[],
@@ -1160,16 +1481,18 @@ class CythonPackageGenerator:
                                             Defaults to `lambda parm: cython.Intent.ANY`.
             cflags (list(str), optional): Flags to pass to the C parser.
         """
-        global default_c_interface_preamble
-        global default_python_interface_preamble
+        global default_c_interface_decl_preamble
+        global default_python_interface_decl_preamble
         self.pkg_name = pkg_name
         self.include_dir = include_dir
         self.header = header
         self.runtime_linking = runtime_linking
         self.dll = dll
         self.cflags = cflags
-        self.c_interface_preamble = default_c_interface_preamble
-        self.python_interface_preamble = default_python_interface_preamble
+        self.c_interface_decl_preamble = default_c_interface_decl_preamble
+        self.c_interface_impl_preamble = default_c_interface_impl_preamble
+        self.python_interface_decl_preamble = default_python_interface_decl_preamble
+        self.python_interface_impl_preamble = default_python_interface_impl_preamble
 
         if isinstance(header, str):
             filename = header
@@ -1197,6 +1520,7 @@ class CythonPackageGenerator:
             macro_type,
             ptr_parm_intent,
             ptr_rank,
+            ptr_complicated_type_handler,
             renamer,
             warnings,
         )
@@ -1207,29 +1531,32 @@ class CythonPackageGenerator:
         Args:
             pkg_name (str): Name of the package that should be generated. Influences filesnames.
         """
-        c_interface_preamble = self.c_interface_preamble + "\n"
-        python_interface_preamble = (
-            self.python_interface_preamble + f"\nfrom . cimport c{self.pkg_name}\n"
+        python_interface_decl_preamble = (
+            self.python_interface_decl_preamble + f"\nfrom . cimport c{self.pkg_name}\n"
         )
 
         with open(f"{output_dir}/c{self.pkg_name}.pxd", "w") as outfile:
-            outfile.write(c_interface_preamble)
+            outfile.write(self.c_interface_decl_preamble)
             outfile.write(
                 self.backend.render_c_interface_decl_part(
                     runtime_linking=self.runtime_linking
                 )
             )
         with open(f"{output_dir}/c{self.pkg_name}.pyx", "w") as outfile:
-            outfile.write(c_interface_preamble)
+            outfile.write(self.c_interface_impl_preamble)
             outfile.write(
                 self.backend.render_c_interface_impl_part(
                     runtime_linking=self.runtime_linking, dll=self.dll
                 )
             )
         with open(f"{output_dir}/{self.pkg_name}.pxd", "w") as outfile:
-            outfile.write(python_interface_preamble)
-            outfile.write(self.backend.render_python_interface_decl_part(f"c{self.pkg_name}"))
+            outfile.write(python_interface_decl_preamble)
+            outfile.write(
+                self.backend.render_python_interface_decl_part(f"c{self.pkg_name}")
+            )
 
         with open(f"{output_dir}/{self.pkg_name}.pyx", "w") as outfile:
-            outfile.write(python_interface_preamble)
-            outfile.write(self.backend.render_python_interface_impl_part(f"c{self.pkg_name}"))
+            outfile.write(self.python_interface_impl_preamble)
+            outfile.write(
+                self.backend.render_python_interface_impl_part(f"c{self.pkg_name}")
+            )

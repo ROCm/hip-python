@@ -5,6 +5,7 @@ __author__ = "AMD_AUTHOR"
 import collections
 import re
 import sys
+import warnings
 import clang.cindex
 
 from . import control
@@ -279,29 +280,44 @@ class Typed:
                 f"typename '{searched_canonical_typename}' is no part of '{canonical_type_to_modify}'"
             )
 
-    def global_typename(self, sep: str, renamer: callable = lambda name: name):
+    def global_typename(self, sep: str, renamer: callable = lambda name: name, prefer_canonical:bool = False):
+        """_summary_
+
+        Args:
+            sep (str): _description_
+            renamer (_type_, optional): _description_. Defaults to lambdaname:name.
+            use_canonical (bool, optional): If the canonical name should be preferred.
+
+        Raises:
+            ValueError: _description_
+
+        Returns:
+            _type_: _description_
+        """
+        use_canonical = prefer_canonical and self.is_innermost_canonical_type_layer_of_basic_type_or_void
         if sep == None:
             raise ValueError("sep may not be None")
-        if self.typeref is not None:
+        if self.typeref is not None and not use_canonical:
             searched_typename = self.typeref.cursor.type.get_canonical().spelling
             repl_typename = renamer(self.typeref.global_name(sep))
         else:
             searched_typename = None
             repl_typename = None
-        return Typed.canonical_typename(
+        return renamer(Typed.canonical_typename(
             self._type_handler, searched_typename, repl_typename
-        )
+        ))
 
-    def typename(self, renamer: callable = lambda name: name):
-        if self.typeref is not None:
+    def typename(self, renamer: callable = lambda name: name, prefer_canonical:bool = False):
+        use_canonical = prefer_canonical and self.is_innermost_canonical_type_layer_of_basic_type_or_void
+        if self.typeref is not None and not use_canonical:
             searched_typename = self.typeref.cursor.type.get_canonical().spelling
             repl_typename = renamer(self.typeref.name)
         else:
             searched_typename = None
             repl_typename = None
-        return Typed.canonical_typename(
+        return renamer(Typed.canonical_typename(
             self._type_handler, searched_typename, repl_typename
-        )
+        ))
 
     def clang_type_layer_kinds(self, postorder=False, canonical=False):
         return self._type_handler.clang_type_layer_kinds(
@@ -370,7 +386,6 @@ class Typed:
         """
         from clang.cindex import TypeKind
 
-        TypeCategory = cparser.TypeHandler.TypeCategory
         rank_counted: int = 0
         for kind in self._type_handler.clang_type_layer_kinds(canonical=True):
             if constant_array and kind == TypeKind.CONSTANTARRAY:
@@ -400,18 +415,24 @@ class Typed:
         """
         return self.get_rank(constant_array,incomplete_array,pointer) == rank
             
-    def get_pointer_degree(self) -> int:
+    def get_pointer_degree(self,incomplete_array=False) -> int:
         """Returns number of outer type layers which are of TypeKind.POINTER.
+        Args:
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
         """
-        return self.get_rank(constant_array=False,incomplete_array=False,pointer=True)
+        return self.get_rank(constant_array=False,
+                             incomplete_array=incomplete_array,
+                             pointer=True)
 
     def _is_pointer_to_kind(self,
                             type_kind,
-                            degree: int = 1):
+                            degree = 1,
+                            incomplete_array: bool=False):
         """If this is a pointerof the given ``degree`` to the given type kind.
         
         Args:
             degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
 
         Note:
             Does not check for any const modifiers.
@@ -422,21 +443,34 @@ class Typed:
             assert isinstance(type_kind,clang.cindex.TypeKind)
             type_kinds = (type_kind,)
 
-        if degree >= 0:
-            if list(self._type_handler.clang_type_layer_kinds(canonical=True))[-1] in type_kinds:
-                return self.get_pointer_degree() == degree
-        else:
-            if list(self._type_handler.clang_type_layer_kinds(canonical=True))[-1] in type_kinds:
-                return self.get_pointer_degree() >= abs(degree)
+        layers = list(self._type_handler.clang_type_layer_kinds(canonical=True))
+        found_pointer_degree = self.get_pointer_degree(incomplete_array)
+        if layers[found_pointer_degree] in type_kinds:
+            if isinstance(degree,int):
+                degrees = (degree,)
+            elif isinstance(degree,tuple):
+                degrees = degree
+            else:
+                raise RuntimeError("degree: expected int or tuple of int")
+            for d in degrees:
+                if d >= 0:
+                    if found_pointer_degree == d:
+                        return True
+                else:
+                    if found_pointer_degree >= abs(d):
+                        return True
+        return False
         
     def _is_pointer_to_category(self,
                                type_category,
-                               degree: int = 1,
+                               degree = 1,
+                               incomplete_array: bool=False,
                                subdivide_categories:bool = False):
         """If this is a pointerof the given ``degree`` to the given type category.
 
         Args:
             degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
 
         Note:
             Does not check for any const modifiers.
@@ -447,12 +481,25 @@ class Typed:
             assert isinstance(type_category,self._type_handler.TypeCategory)
             type_categories = (type_category,)
 
-        if degree >= 0:
-            if list(self._type_handler.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))[-1] in type_categories:
-                return self.get_pointer_degree() == degree
-        else:
-            if list(self._type_handler.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))[-1] in type_categories:
-                return self.get_pointer_degree() >= abs(degree)
+        layers = list(self._type_handler.categorized_type_layer_kinds(subdivide_basic_types=subdivide_categories))
+        found_pointer_degree = self.get_pointer_degree(incomplete_array)
+        if layers[found_pointer_degree] in type_categories:
+            if isinstance(degree,int):
+                degrees = (degree,)
+            elif isinstance(degree,tuple):
+                degrees = degree
+            else:
+                raise RuntimeError("degree: expected int or tuple of int")
+            
+            found_pointer_degree = self.get_pointer_degree(incomplete_array)
+            for d in degrees:
+                if d >= 0:
+                    if found_pointer_degree == d:
+                        return True
+                else:
+                    if found_pointer_degree >= abs(d):
+                        return True
+        return False
 
     @property
     def is_void(self):
@@ -464,50 +511,101 @@ class Typed:
             == TypeKind.VOID
         )
 
-    def is_pointer_to_void(self,degree: int = 1):
+    def is_pointer_to_void(self,degree: int = 1,
+                           incomplete_array: bool=False,):
         """If this is a record (struct, union) pointer of the given degree.
+        
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.VOID,degree)
+        return self._is_pointer_to_kind(TypeKind.VOID,degree,
+                                        incomplete_array=incomplete_array)
     
-    def is_pointer_to_char(self,degree: int = 1):
+    def is_pointer_to_char(self,degree: int = 1,
+                           incomplete_array: bool=False,):
         """If this is a record (struct, union) pointer of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.CHAR_S,degree)
+        return self._is_pointer_to_kind(TypeKind.CHAR_S,degree,
+                                        incomplete_array=incomplete_array)
     
-    def is_pointer_to_basic_type(self,degree: int = 1):
+    def is_pointer_to_basic_type(self,degree: int = 1,
+                                 incomplete_array: bool=False,):
         """If this is a record (struct, union) pointer of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         TypeCategory = cparser.TypeHandler.TypeCategory
 
-        return self._is_pointer_to_category(TypeCategory.BASIC,degree)
+        return self._is_pointer_to_category(TypeCategory.BASIC,degree,
+                                            incomplete_array=incomplete_array)
     
-    def is_pointer_to_record(self,degree: int = 1):
+    def is_pointer_to_record(self,degree: int = 1,
+                                 incomplete_array: bool=False,):
         """If this is a void pointer of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.RECORD,degree)
+        return self._is_pointer_to_kind(TypeKind.RECORD,degree,
+                                        incomplete_array=incomplete_array)
     
-    def is_pointer_to_enum(self,degree: int = 1):
+    def is_pointer_to_enum(self,degree: int = 1,
+                                incomplete_array: bool=False,):
         """If this is a enum pointer of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
         Note:
             Does not check for any const modifiers.
         """
         from clang.cindex import TypeKind
 
-        return self._is_pointer_to_kind(TypeKind.ENUM,degree)
+        return self._is_pointer_to_kind(TypeKind.ENUM,degree,
+                                        incomplete_array=incomplete_array)
+
+    def is_pointer_to_function_proto(self,degree: int = 1,
+                                     incomplete_array: bool=False,):
+        """If this is a void pointer of the given degree.
+
+        Args:
+            degree (int): Pointer degree. Value < 0 implies any degree >= ``degree`` matches. Defaults to 1.
+            incomplete_array (bool, optional): Consider incomplete arrays as pointers too. Defaults to False.
+
+        Note:
+            Does not check for any const modifiers.
+        """
+        from clang.cindex import TypeKind
+
+        return self._is_pointer_to_kind(TypeKind.FUNCTIONPROTO,degree,
+                                        incomplete_array=incomplete_array)
 
     @property
     def is_any_pointer(self):
@@ -577,7 +675,7 @@ class Typed:
     
     @property
     def is_basic_type_constarray(self):
-        """If this is a pointer to a struct or enum."""
+        """If this is a constant array of basic datatype."""
         # TODO multi-dim arrays
         from clang.cindex import TypeKind
 
@@ -628,7 +726,12 @@ class Typed:
             TypeCategory.RECORD,
             TypeCategory.ENUM,
         )
-
+    
+    @property
+    def is_innermost_canonical_type_layer_of_basic_type_or_void(self):
+        """If the innermost type layer is of basic type or void type.
+        """
+        return self._type_handler.is_innermost_canonical_type_layer_of_basic_type_or_void() 
 
 class Field(Node, Typed, *__FieldMixins):
     def __init__(
@@ -840,15 +943,10 @@ class FunctionPointer(Type):  # TODO handle result type
             if isinstance(child, Parm):
                 yield child
 
-    def parm_types(self, renamer: callable = lambda name: name):
+    def global_parm_types(self, sep=None, renamer: callable = lambda name: name, prefer_canonical: bool = False):
         for parm in self.parms:
             assert isinstance(parm, Parm)
-            yield parm.typename(renamer)
-
-    def global_parm_types(self, sep=None, renamer: callable = lambda name: name):
-        for parm in self.parms:
-            assert isinstance(parm, Parm)
-            yield parm.global_typename(sep, renamer)
+            yield parm.global_typename(sep, renamer, prefer_canonical)
 
 
 class TypedefedFunctionPointer(FunctionPointer, *__TypedefedFunctionPointerMixins):
@@ -883,7 +981,7 @@ class AnonymousFunctionPointer(
 
     @property
     def anon_funptr_index(self):
-        return self._orig_index(AnonymousFunctionPointer)
+        return self._index(AnonymousFunctionPointer)
 
     @property
     def name(self):
@@ -899,6 +997,12 @@ class Parm(Node, Typed, *__ParmMixins):
     ):
         Node.__init__(self, cursor, parent)
         Typed.__init__(self, self.cursor.type, typeref)
+
+    @property
+    def parm_index(self):
+        """Index of the parameter in the argument list."""
+        assert self.parent != None
+        return self._index(cls=Parm)
 
 
 class Function(Node, Typed, *__FunctionMixin):
@@ -922,15 +1026,10 @@ class Function(Node, Typed, *__FunctionMixin):
             assert isinstance(parm, Parm)
             yield renamer(parm.name)
 
-    def global_parm_types(self, sep=None, renamer: callable = lambda name: name):
+    def global_parm_types(self, sep=None, renamer: callable = lambda name: name, prefer_canonical: bool = False):
         for parm in self.parms:
             assert isinstance(parm, Parm)
-            yield parm.global_typename(sep, renamer)
-
-    def parm_types(self, renamer: callable = lambda name: name):
-        for parm in self.parms:
-            assert isinstance(parm, Parm)
-            yield parm.typename(renamer)
+            yield parm.global_typename(sep, renamer, prefer_canonical)
 
     @property
     def raw_comment(self):
@@ -956,7 +1055,7 @@ class Function(Node, Typed, *__FunctionMixin):
 
 
 def from_libclang_translation_unit(
-    translation_unit: clang.cindex.TranslationUnit, warnings=control.Warnings.WARN
+    translation_unit: clang.cindex.TranslationUnit, warn=control.Warnings.WARN
 ) -> Root:
     """Create a tree from a libclang translation unit."""
 
@@ -987,17 +1086,19 @@ def from_libclang_translation_unit(
     def handle_top_level_cursor_(cursor: clang.cindex.Cursor, root: Root):
         """Handle cursors whose parent is the cursor of kind TRANSLATION_UNIT."""
         nonlocal structure_types
+        nonlocal warn
+
         if cursor.kind in structure_types.keys():
             handle_nested_record_or_enum_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
             handle_typedef_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.VAR_DECL:
-            if warnings in (control.Warnings.WARN, control.Warnings.ERROR):
+            if warn in (control.Warnings.WARN, control.Warnings.ERROR):
                 msg = (
                     f"VAR_DECL cursor '{cursor.spelling}' not handled (not implemented)"
                 )
-                if warnings == control.Warnings.WARN:
-                    print(f"WARN: {msg}'", file=sys.stderr)
+                if warn == control.Warnings.WARN:
+                    warnings.warn(msg,RuntimeWarning)
                 else:
                     print(f"ERROR: {msg}'", file=sys.stderr)
                     sys.exit(2)
@@ -1066,7 +1167,7 @@ def from_libclang_translation_unit(
             anon_type_decl = root.lookup_type_from_cursor(type_decl_cursor)
             assert anon_type_decl != None and isinstance(anon_type_decl, (Enum, Record))
             type_decl = handle_anon_typedef_child_cursor_(type_decl_cursor, node)
-            descend_into_child_cursors_(node)  # post-order walk
+            descend_into_child_cursors_(type_decl)  # post-order walk
             root.insert(anon_type_decl.index, type_decl)
             root.remove(anon_type_decl)
             # do not append typedef node
@@ -1112,7 +1213,6 @@ def from_libclang_translation_unit(
         nonlocal nested_structure_types
 
         is_anonymous = cursor.spelling == ""
-        root = parent.get_root()
 
         if cursor.kind in structure_types:
             cls = structure_types[cursor.kind]
@@ -1139,10 +1239,9 @@ def from_libclang_translation_unit(
             clang.cindex.CursorKind.FIELD_DECL,
         )
         if AnonymousFunctionPointer.match(cursor.type):
-            root = parent.get_root()
             typeref = AnonymousFunctionPointer(cursor, parent)
             descend_into_child_cursors_(typeref)  # post-order walk
-            root.append(typeref)
+            parent.append(typeref)
         else:
             typeref_cursor = first_child_cursors_of_kinds_(
                 cursor,

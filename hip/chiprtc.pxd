@@ -1,6 +1,6 @@
 # AMD_COPYRIGHT
 from libc.stdint cimport *
-
+ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
 cdef extern from "hip/hiprtc.h":
 
     cdef enum hiprtcResult:
@@ -156,7 +156,7 @@ cdef hiprtcResult hiprtcGetProgramLog(hiprtcProgram prog,char * log) nogil
 # @param [out] logSizeRet  size of generated log.
 # @return HIPRTC_SUCCESS
 # @see hiprtcResult
-cdef hiprtcResult hiprtcGetProgramLogSize(hiprtcProgram prog,int * logSizeRet) nogil
+cdef hiprtcResult hiprtcGetProgramLogSize(hiprtcProgram prog,unsigned long * logSizeRet) nogil
 
 
 # @brief Gets the pointer of compilation binary by the runtime compilation program instance.
@@ -172,7 +172,7 @@ cdef hiprtcResult hiprtcGetCode(hiprtcProgram prog,char * code) nogil
 # @param [out] code  the size of binary.
 # @return HIPRTC_SUCCESS
 # @see hiprtcResult
-cdef hiprtcResult hiprtcGetCodeSize(hiprtcProgram prog,int * codeSizeRet) nogil
+cdef hiprtcResult hiprtcGetCodeSize(hiprtcProgram prog,unsigned long * codeSizeRet) nogil
 
 
 # @brief Gets the pointer of compiled bitcode by the runtime compilation program instance.
@@ -188,7 +188,7 @@ cdef hiprtcResult hiprtcGetBitcode(hiprtcProgram prog,char * bitcode) nogil
 # @param [out] code  the size of bitcode.
 # @return HIPRTC_SUCCESS
 # @see hiprtcResult
-cdef hiprtcResult hiprtcGetBitcodeSize(hiprtcProgram prog,int * bitcode_size) nogil
+cdef hiprtcResult hiprtcGetBitcodeSize(hiprtcProgram prog,unsigned long * bitcode_size) nogil
 
 
 # @brief Creates the link instance via hiprtc APIs.
@@ -218,7 +218,7 @@ cdef hiprtcResult hiprtcLinkAddFile(hiprtcLinkState hip_link_state,hiprtcJITInpu
 # If adding the file fails, it will
 # @return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
 # @see hiprtcResult
-cdef hiprtcResult hiprtcLinkAddData(hiprtcLinkState hip_link_state,hiprtcJITInputType input_type,void * image,int image_size,const char * name,unsigned int num_options,hiprtcJIT_option * options_ptr,void ** option_values) nogil
+cdef hiprtcResult hiprtcLinkAddData(hiprtcLinkState hip_link_state,hiprtcJITInputType input_type,void * image,unsigned long image_size,const char * name,unsigned int num_options,hiprtcJIT_option * options_ptr,void ** option_values) nogil
 
 
 # @brief Completes the linking of the given program.
@@ -228,7 +228,7 @@ cdef hiprtcResult hiprtcLinkAddData(hiprtcLinkState hip_link_state,hiprtcJITInpu
 # If adding the data fails, it will
 # @return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
 # @see hiprtcResult
-cdef hiprtcResult hiprtcLinkComplete(hiprtcLinkState hip_link_state,void ** bin_out,int * size_out) nogil
+cdef hiprtcResult hiprtcLinkComplete(hiprtcLinkState hip_link_state,void ** bin_out,unsigned long * size_out) nogil
 
 
 # @brief Deletes the link instance via hiprtc APIs.
