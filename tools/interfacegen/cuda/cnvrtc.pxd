@@ -2,6 +2,8 @@
 
 cimport hip.chiprtc
 
+DEF HIP_PYTHON = True
+
 cdef enum nvrtcResult:
     NVRTC_SUCCESS = hip.chiprtc.HIPRTC_SUCCESS
     HIPRTC_SUCCESS = hip.chiprtc.HIPRTC_SUCCESS
