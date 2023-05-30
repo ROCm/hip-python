@@ -2,6 +2,8 @@
 
 cimport hip.chip
 
+DEF HIP_PYTHON = True
+
 from hip.chip cimport HIP_TRSA_OVERRIDE_FORMAT
 from hip.chip cimport HIP_TRSA_OVERRIDE_FORMAT as CU_TRSA_OVERRIDE_FORMAT
 from hip.chip cimport HIP_TRSF_READ_AS_INTEGER
