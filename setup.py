@@ -183,6 +183,8 @@ def generate_cuda_interop_package_files(
             # AMD_COPYRIGHT
             
             cimport hip.c{pkg_name}
+
+            DEF HIP_PYTHON = True
             """
         ),
     ]
@@ -195,6 +197,8 @@ def generate_cuda_interop_package_files(
 
             cimport hip.c{pkg_name}
             cimport hip.{pkg_name}
+            
+            DEF HIP_PYTHON = True
             """
         ),
         f"cimport {output_dir}.c{cuda_pkg_name}",  # for checking compiler errors
@@ -213,6 +217,9 @@ def generate_cuda_interop_package_files(
 
             {pkg_name} = hip.{pkg_name} # makes {pkg_name} types and routines accessible without import
                                         # allows checks such as `hasattr(cuda.{cuda_pkg_name},"{pkg_name}")`
+
+            HIP_PYTHON_MOD = {pkg_name}
+            globals()["HIP_PYTHON"] = True
             """
         ),
         textwrap.dedent(
@@ -280,7 +287,7 @@ def generate_cuda_interop_package_files(
         else:
             python_enum_metaclass_name = f"_{cuda_name}_EnumMeta"
             python_enum_hallucinate_var_name = (
-                f"HIP_PYTHON_{cuda_name}_HALLUCINATE_CONSTANTS"
+                f"HIP_PYTHON_{cuda_name}_HALLUCINATE"
             )
             python_enum_metaclass = textwrap.dedent(
                 f"""\
@@ -423,7 +430,6 @@ def generate_cuda_interop_package_files(
                     python_interface_impl_part.append(
                         f"{cuda_name} = hip.{pkg_name}.{hip_name}"
                     )
-                    # TODO what about basic/void types? Should have a c_interface_decl_part
                 elif isinstance(node, Typedef) and (
                     node.is_pointer_to_basic_type(degree=(0, -1))
                     or node.is_pointer_to_void(degree=(0, -1))

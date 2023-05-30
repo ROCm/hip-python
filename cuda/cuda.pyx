@@ -10,6 +10,9 @@ import hip.hip
 hip = hip.hip # makes hip types and routines accessible without import
                             # allows checks such as `hasattr(cuda.cuda,"hip")`
 
+HIP_PYTHON_MOD = hip
+globals()["HIP_PYTHON"] = True
+
 def _hip_python_get_bool_environ_var(env_var, default):
     yes_vals = ("true", "1", "t", "y", "yes")
     no_vals = ("false", "0", "f", "n", "no")
@@ -122,7 +125,7 @@ cudaUUID_t = hip.hip.hipUUID
 cdef class cudaDeviceProp(hip.hip.hipDeviceProp_t):
     pass
 
-HIP_PYTHON_CUmemorytype_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemorytype_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_HALLUCINATE","false")
 
 class _CUmemorytype_EnumMeta(enum.EnumMeta):
 
@@ -167,12 +170,12 @@ class _CUmemorytype_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemorytype_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemorytype_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemorytype_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemorytype_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -210,7 +213,7 @@ class CUmemorytype(enum.IntEnum,metaclass=_CUmemorytype_EnumMeta):
     cudaMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
     hipMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
 
-HIP_PYTHON_CUmemorytype_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemorytype_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_enum_HALLUCINATE","false")
 
 class _CUmemorytype_enum_EnumMeta(enum.EnumMeta):
 
@@ -255,12 +258,12 @@ class _CUmemorytype_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemorytype_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemorytype_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemorytype_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemorytype_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -298,7 +301,7 @@ class CUmemorytype_enum(enum.IntEnum,metaclass=_CUmemorytype_enum_EnumMeta):
     cudaMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
     hipMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
 
-HIP_PYTHON_cudaMemoryType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemoryType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaMemoryType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemoryType_HALLUCINATE","false")
 
 class _cudaMemoryType_EnumMeta(enum.EnumMeta):
 
@@ -343,12 +346,12 @@ class _cudaMemoryType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaMemoryType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaMemoryType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaMemoryType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaMemoryType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -388,7 +391,7 @@ class cudaMemoryType(enum.IntEnum,metaclass=_cudaMemoryType_EnumMeta):
 cdef class cudaPointerAttributes(hip.hip.hipPointerAttribute_t):
     pass
 
-HIP_PYTHON_CUresult_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresult_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUresult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresult_HALLUCINATE","false")
 
 class _CUresult_EnumMeta(enum.EnumMeta):
 
@@ -433,12 +436,12 @@ class _CUresult_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUresult_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUresult_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUresult_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUresult_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -674,7 +677,7 @@ class CUresult(enum.IntEnum,metaclass=_CUresult_EnumMeta):
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
 
-HIP_PYTHON_cudaError_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaError_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_HALLUCINATE","false")
 
 class _cudaError_EnumMeta(enum.EnumMeta):
 
@@ -719,12 +722,12 @@ class _cudaError_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaError_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaError_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaError_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaError_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -960,7 +963,7 @@ class cudaError(enum.IntEnum,metaclass=_cudaError_EnumMeta):
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
 
-HIP_PYTHON_cudaError_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaError_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_enum_HALLUCINATE","false")
 
 class _cudaError_enum_EnumMeta(enum.EnumMeta):
 
@@ -1005,12 +1008,12 @@ class _cudaError_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaError_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaError_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaError_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaError_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -1246,7 +1249,7 @@ class cudaError_enum(enum.IntEnum,metaclass=_cudaError_enum_EnumMeta):
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
 
-HIP_PYTHON_cudaError_t_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_t_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaError_t_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaError_t_HALLUCINATE","false")
 
 class _cudaError_t_EnumMeta(enum.EnumMeta):
 
@@ -1291,12 +1294,12 @@ class _cudaError_t_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaError_t_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaError_t_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaError_t_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaError_t_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -1532,7 +1535,7 @@ class cudaError_t(enum.IntEnum,metaclass=_cudaError_t_EnumMeta):
     hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
     hipErrorTbd = hip.chip.hipErrorTbd
 
-HIP_PYTHON_CUdevice_attribute_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_attribute_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUdevice_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_attribute_HALLUCINATE","false")
 
 class _CUdevice_attribute_EnumMeta(enum.EnumMeta):
 
@@ -1577,12 +1580,12 @@ class _CUdevice_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUdevice_attribute_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUdevice_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUdevice_attribute_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUdevice_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -1907,7 +1910,7 @@ class CUdevice_attribute(enum.IntEnum,metaclass=_CUdevice_attribute_EnumMeta):
     hipDeviceAttributeAmdSpecificEnd = hip.chip.hipDeviceAttributeAmdSpecificEnd
     hipDeviceAttributeVendorSpecificBegin = hip.chip.hipDeviceAttributeVendorSpecificBegin
 
-HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE","false")
 
 class _CUdevice_attribute_enum_EnumMeta(enum.EnumMeta):
 
@@ -1952,12 +1955,12 @@ class _CUdevice_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -2282,7 +2285,7 @@ class CUdevice_attribute_enum(enum.IntEnum,metaclass=_CUdevice_attribute_enum_En
     hipDeviceAttributeAmdSpecificEnd = hip.chip.hipDeviceAttributeAmdSpecificEnd
     hipDeviceAttributeVendorSpecificBegin = hip.chip.hipDeviceAttributeVendorSpecificBegin
 
-HIP_PYTHON_cudaDeviceAttr_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaDeviceAttr_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaDeviceAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaDeviceAttr_HALLUCINATE","false")
 
 class _cudaDeviceAttr_EnumMeta(enum.EnumMeta):
 
@@ -2327,12 +2330,12 @@ class _cudaDeviceAttr_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaDeviceAttr_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaDeviceAttr_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaDeviceAttr_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaDeviceAttr_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -2657,7 +2660,7 @@ class cudaDeviceAttr(enum.IntEnum,metaclass=_cudaDeviceAttr_EnumMeta):
     hipDeviceAttributeAmdSpecificEnd = hip.chip.hipDeviceAttributeAmdSpecificEnd
     hipDeviceAttributeVendorSpecificBegin = hip.chip.hipDeviceAttributeVendorSpecificBegin
 
-HIP_PYTHON_CUcomputemode_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUcomputemode_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUcomputemode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUcomputemode_HALLUCINATE","false")
 
 class _CUcomputemode_EnumMeta(enum.EnumMeta):
 
@@ -2702,12 +2705,12 @@ class _CUcomputemode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUcomputemode_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUcomputemode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUcomputemode_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUcomputemode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -2745,7 +2748,7 @@ class CUcomputemode(enum.IntEnum,metaclass=_CUcomputemode_EnumMeta):
     cudaComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
     hipComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
 
-HIP_PYTHON_CUcomputemode_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUcomputemode_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUcomputemode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUcomputemode_enum_HALLUCINATE","false")
 
 class _CUcomputemode_enum_EnumMeta(enum.EnumMeta):
 
@@ -2790,12 +2793,12 @@ class _CUcomputemode_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUcomputemode_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUcomputemode_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUcomputemode_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUcomputemode_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -2833,7 +2836,7 @@ class CUcomputemode_enum(enum.IntEnum,metaclass=_CUcomputemode_enum_EnumMeta):
     cudaComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
     hipComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
 
-HIP_PYTHON_cudaComputeMode_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaComputeMode_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaComputeMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaComputeMode_HALLUCINATE","false")
 
 class _cudaComputeMode_EnumMeta(enum.EnumMeta):
 
@@ -2878,12 +2881,12 @@ class _cudaComputeMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaComputeMode_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaComputeMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaComputeMode_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaComputeMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -2921,7 +2924,7 @@ class cudaComputeMode(enum.IntEnum,metaclass=_cudaComputeMode_EnumMeta):
     cudaComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
     hipComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
 
-HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE","false")
 
 class _cudaChannelFormatKind_EnumMeta(enum.EnumMeta):
 
@@ -2966,12 +2969,12 @@ class _cudaChannelFormatKind_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3007,7 +3010,7 @@ class cudaChannelFormatKind(enum.IntEnum,metaclass=_cudaChannelFormatKind_EnumMe
 cdef class cudaChannelFormatDesc(hip.hip.hipChannelFormatDesc):
     pass
 
-HIP_PYTHON_CUarray_format_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUarray_format_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_HALLUCINATE","false")
 
 class _CUarray_format_EnumMeta(enum.EnumMeta):
 
@@ -3052,12 +3055,12 @@ class _CUarray_format_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUarray_format_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUarray_format_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUarray_format_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUarray_format_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3099,7 +3102,7 @@ class CUarray_format(enum.IntEnum,metaclass=_CUarray_format_EnumMeta):
     CU_AD_FORMAT_FLOAT = hip.chip.HIP_AD_FORMAT_FLOAT
     HIP_AD_FORMAT_FLOAT = hip.chip.HIP_AD_FORMAT_FLOAT
 
-HIP_PYTHON_CUarray_format_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUarray_format_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_enum_HALLUCINATE","false")
 
 class _CUarray_format_enum_EnumMeta(enum.EnumMeta):
 
@@ -3144,12 +3147,12 @@ class _CUarray_format_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUarray_format_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUarray_format_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUarray_format_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUarray_format_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3231,7 +3234,7 @@ CUmipmappedArray = hip.hip.hipMipmappedArray_t
 cudaMipmappedArray_t = hip.hip.hipMipmappedArray_t
 cudaMipmappedArray_const_t = hip.hip.hipMipmappedArray_const_t
 
-HIP_PYTHON_cudaResourceType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaResourceType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceType_HALLUCINATE","false")
 
 class _cudaResourceType_EnumMeta(enum.EnumMeta):
 
@@ -3276,12 +3279,12 @@ class _cudaResourceType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaResourceType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaResourceType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaResourceType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaResourceType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3315,7 +3318,7 @@ class cudaResourceType(enum.IntEnum,metaclass=_cudaResourceType_EnumMeta):
     cudaResourceTypePitch2D = hip.chip.hipResourceTypePitch2D
     hipResourceTypePitch2D = hip.chip.hipResourceTypePitch2D
 
-HIP_PYTHON_CUresourcetype_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUresourcetype_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_enum_HALLUCINATE","false")
 
 class _CUresourcetype_enum_EnumMeta(enum.EnumMeta):
 
@@ -3360,12 +3363,12 @@ class _CUresourcetype_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUresourcetype_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUresourcetype_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUresourcetype_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUresourcetype_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3399,7 +3402,7 @@ class CUresourcetype_enum(enum.IntEnum,metaclass=_CUresourcetype_enum_EnumMeta):
     CU_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
     HIP_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
 
-HIP_PYTHON_CUresourcetype_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUresourcetype_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_HALLUCINATE","false")
 
 class _CUresourcetype_EnumMeta(enum.EnumMeta):
 
@@ -3444,12 +3447,12 @@ class _CUresourcetype_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUresourcetype_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUresourcetype_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUresourcetype_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUresourcetype_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3483,7 +3486,7 @@ class CUresourcetype(enum.IntEnum,metaclass=_CUresourcetype_EnumMeta):
     CU_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
     HIP_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
 
-HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE","false")
 
 class _CUaddress_mode_enum_EnumMeta(enum.EnumMeta):
 
@@ -3528,12 +3531,12 @@ class _CUaddress_mode_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3567,7 +3570,7 @@ class CUaddress_mode_enum(enum.IntEnum,metaclass=_CUaddress_mode_enum_EnumMeta):
     CU_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
     HIP_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
 
-HIP_PYTHON_CUaddress_mode_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUaddress_mode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_HALLUCINATE","false")
 
 class _CUaddress_mode_EnumMeta(enum.EnumMeta):
 
@@ -3612,12 +3615,12 @@ class _CUaddress_mode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUaddress_mode_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUaddress_mode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUaddress_mode_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUaddress_mode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3651,7 +3654,7 @@ class CUaddress_mode(enum.IntEnum,metaclass=_CUaddress_mode_EnumMeta):
     CU_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
     HIP_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
 
-HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE","false")
 
 class _CUfilter_mode_enum_EnumMeta(enum.EnumMeta):
 
@@ -3696,12 +3699,12 @@ class _CUfilter_mode_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3731,7 +3734,7 @@ class CUfilter_mode_enum(enum.IntEnum,metaclass=_CUfilter_mode_enum_EnumMeta):
     CU_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
     HIP_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
 
-HIP_PYTHON_CUfilter_mode_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUfilter_mode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_HALLUCINATE","false")
 
 class _CUfilter_mode_EnumMeta(enum.EnumMeta):
 
@@ -3776,12 +3779,12 @@ class _CUfilter_mode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUfilter_mode_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUfilter_mode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUfilter_mode_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUfilter_mode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3815,7 +3818,7 @@ cdef class CUDA_TEXTURE_DESC_st(hip.hip.HIP_TEXTURE_DESC_st):
 CUDA_TEXTURE_DESC = hip.hip.HIP_TEXTURE_DESC
 CUDA_TEXTURE_DESC_v1 = hip.hip.HIP_TEXTURE_DESC
 
-HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE","false")
 
 class _cudaResourceViewFormat_EnumMeta(enum.EnumMeta):
 
@@ -3860,12 +3863,12 @@ class _cudaResourceViewFormat_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -3961,7 +3964,7 @@ class cudaResourceViewFormat(enum.IntEnum,metaclass=_cudaResourceViewFormat_Enum
     cudaResViewFormatUnsignedBlockCompressed7 = hip.chip.hipResViewFormatUnsignedBlockCompressed7
     hipResViewFormatUnsignedBlockCompressed7 = hip.chip.hipResViewFormatUnsignedBlockCompressed7
 
-HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE","false")
 
 class _CUresourceViewFormat_enum_EnumMeta(enum.EnumMeta):
 
@@ -4006,12 +4009,12 @@ class _CUresourceViewFormat_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4107,7 +4110,7 @@ class CUresourceViewFormat_enum(enum.IntEnum,metaclass=_CUresourceViewFormat_enu
     CU_RES_VIEW_FORMAT_UNSIGNED_BC7 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
     HIP_RES_VIEW_FORMAT_UNSIGNED_BC7 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
 
-HIP_PYTHON_CUresourceViewFormat_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourceViewFormat_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUresourceViewFormat_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourceViewFormat_HALLUCINATE","false")
 
 class _CUresourceViewFormat_EnumMeta(enum.EnumMeta):
 
@@ -4152,12 +4155,12 @@ class _CUresourceViewFormat_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUresourceViewFormat_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUresourceViewFormat_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUresourceViewFormat_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUresourceViewFormat_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4265,7 +4268,7 @@ cdef class CUDA_RESOURCE_VIEW_DESC_st(hip.hip.HIP_RESOURCE_VIEW_DESC_st):
 CUDA_RESOURCE_VIEW_DESC = hip.hip.HIP_RESOURCE_VIEW_DESC
 CUDA_RESOURCE_VIEW_DESC_v1 = hip.hip.HIP_RESOURCE_VIEW_DESC
 
-HIP_PYTHON_cudaMemcpyKind_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemcpyKind_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaMemcpyKind_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemcpyKind_HALLUCINATE","false")
 
 class _cudaMemcpyKind_EnumMeta(enum.EnumMeta):
 
@@ -4310,12 +4313,12 @@ class _cudaMemcpyKind_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaMemcpyKind_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaMemcpyKind_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaMemcpyKind_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaMemcpyKind_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4369,7 +4372,7 @@ cdef class CUDA_MEMCPY3D_v1_st(hip.hip.HIP_MEMCPY3D):
 cdef class CUDA_MEMCPY3D_v2(hip.hip.HIP_MEMCPY3D):
     pass
 
-HIP_PYTHON_CUfunction_attribute_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunction_attribute_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUfunction_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunction_attribute_HALLUCINATE","false")
 
 class _CUfunction_attribute_EnumMeta(enum.EnumMeta):
 
@@ -4414,12 +4417,12 @@ class _CUfunction_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUfunction_attribute_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUfunction_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUfunction_attribute_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUfunction_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4467,7 +4470,7 @@ class CUfunction_attribute(enum.IntEnum,metaclass=_CUfunction_attribute_EnumMeta
     CU_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
     HIP_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
 
-HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE","false")
 
 class _CUfunction_attribute_enum_EnumMeta(enum.EnumMeta):
 
@@ -4512,12 +4515,12 @@ class _CUfunction_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4565,7 +4568,7 @@ class CUfunction_attribute_enum(enum.IntEnum,metaclass=_CUfunction_attribute_enu
     CU_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
     HIP_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
 
-HIP_PYTHON_CUpointer_attribute_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUpointer_attribute_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUpointer_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUpointer_attribute_HALLUCINATE","false")
 
 class _CUpointer_attribute_EnumMeta(enum.EnumMeta):
 
@@ -4610,12 +4613,12 @@ class _CUpointer_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUpointer_attribute_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUpointer_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUpointer_attribute_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUpointer_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4675,7 +4678,7 @@ class CUpointer_attribute(enum.IntEnum,metaclass=_CUpointer_attribute_EnumMeta):
     CU_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
     HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
 
-HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE","false")
 
 class _CUpointer_attribute_enum_EnumMeta(enum.EnumMeta):
 
@@ -4720,12 +4723,12 @@ class _CUpointer_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4789,7 +4792,7 @@ CUtexObject = hip.hip.hipTextureObject_t
 CUtexObject_v1 = hip.hip.hipTextureObject_t
 cudaTextureObject_t = hip.hip.hipTextureObject_t
 
-HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE","false")
 
 class _cudaTextureAddressMode_EnumMeta(enum.EnumMeta):
 
@@ -4834,12 +4837,12 @@ class _cudaTextureAddressMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4873,7 +4876,7 @@ class cudaTextureAddressMode(enum.IntEnum,metaclass=_cudaTextureAddressMode_Enum
     cudaAddressModeBorder = hip.chip.hipAddressModeBorder
     hipAddressModeBorder = hip.chip.hipAddressModeBorder
 
-HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE","false")
 
 class _cudaTextureFilterMode_EnumMeta(enum.EnumMeta):
 
@@ -4918,12 +4921,12 @@ class _cudaTextureFilterMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -4953,7 +4956,7 @@ class cudaTextureFilterMode(enum.IntEnum,metaclass=_cudaTextureFilterMode_EnumMe
     cudaFilterModeLinear = hip.chip.hipFilterModeLinear
     hipFilterModeLinear = hip.chip.hipFilterModeLinear
 
-HIP_PYTHON_cudaTextureReadMode_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureReadMode_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaTextureReadMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureReadMode_HALLUCINATE","false")
 
 class _cudaTextureReadMode_EnumMeta(enum.EnumMeta):
 
@@ -4998,12 +5001,12 @@ class _cudaTextureReadMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaTextureReadMode_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaTextureReadMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaTextureReadMode_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaTextureReadMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5044,7 +5047,7 @@ cudaSurfaceObject_t = hip.hip.hipSurfaceObject_t
 cdef class surfaceReference(hip.hip.surfaceReference):
     pass
 
-HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE","false")
 
 class _cudaSurfaceBoundaryMode_EnumMeta(enum.EnumMeta):
 
@@ -5089,12 +5092,12 @@ class _cudaSurfaceBoundaryMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5129,7 +5132,7 @@ cdef class CUctx_st(hip.hip.ihipCtx_t):
     pass
 CUcontext = hip.hip.hipCtx_t
 
-HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE","false")
 
 class _CUdevice_P2PAttribute_EnumMeta(enum.EnumMeta):
 
@@ -5174,12 +5177,12 @@ class _CUdevice_P2PAttribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5219,7 +5222,7 @@ class CUdevice_P2PAttribute(enum.IntEnum,metaclass=_CUdevice_P2PAttribute_EnumMe
     cudaDevP2PAttrCudaArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
     hipDevP2PAttrHipArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
 
-HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE","false")
 
 class _CUdevice_P2PAttribute_enum_EnumMeta(enum.EnumMeta):
 
@@ -5264,12 +5267,12 @@ class _CUdevice_P2PAttribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5309,7 +5312,7 @@ class CUdevice_P2PAttribute_enum(enum.IntEnum,metaclass=_CUdevice_P2PAttribute_e
     cudaDevP2PAttrCudaArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
     hipDevP2PAttrHipArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
 
-HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE","false")
 
 class _cudaDeviceP2PAttr_EnumMeta(enum.EnumMeta):
 
@@ -5354,12 +5357,12 @@ class _cudaDeviceP2PAttr_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5434,7 +5437,7 @@ cdef class CUevent_st(hip.hip.ihipEvent_t):
 CUevent = hip.hip.hipEvent_t
 cudaEvent_t = hip.hip.hipEvent_t
 
-HIP_PYTHON_CUlimit_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUlimit_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_HALLUCINATE","false")
 
 class _CUlimit_EnumMeta(enum.EnumMeta):
 
@@ -5479,12 +5482,12 @@ class _CUlimit_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUlimit_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUlimit_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUlimit_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUlimit_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5520,7 +5523,7 @@ class CUlimit(enum.IntEnum,metaclass=_CUlimit_EnumMeta):
     hipLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
     hipLimitRange = hip.chip.hipLimitRange
 
-HIP_PYTHON_CUlimit_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUlimit_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_enum_HALLUCINATE","false")
 
 class _CUlimit_enum_EnumMeta(enum.EnumMeta):
 
@@ -5565,12 +5568,12 @@ class _CUlimit_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUlimit_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUlimit_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUlimit_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUlimit_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5606,7 +5609,7 @@ class CUlimit_enum(enum.IntEnum,metaclass=_CUlimit_enum_EnumMeta):
     hipLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
     hipLimitRange = hip.chip.hipLimitRange
 
-HIP_PYTHON_cudaLimit_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaLimit_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaLimit_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaLimit_HALLUCINATE","false")
 
 class _cudaLimit_EnumMeta(enum.EnumMeta):
 
@@ -5651,12 +5654,12 @@ class _cudaLimit_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaLimit_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaLimit_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaLimit_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaLimit_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5692,7 +5695,7 @@ class cudaLimit(enum.IntEnum,metaclass=_cudaLimit_EnumMeta):
     hipLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
     hipLimitRange = hip.chip.hipLimitRange
 
-HIP_PYTHON_CUmem_advise_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmem_advise_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_HALLUCINATE","false")
 
 class _CUmem_advise_EnumMeta(enum.EnumMeta):
 
@@ -5737,12 +5740,12 @@ class _CUmem_advise_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmem_advise_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmem_advise_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmem_advise_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmem_advise_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5788,7 +5791,7 @@ class CUmem_advise(enum.IntEnum,metaclass=_CUmem_advise_EnumMeta):
     hipMemAdviseSetCoarseGrain = hip.chip.hipMemAdviseSetCoarseGrain
     hipMemAdviseUnsetCoarseGrain = hip.chip.hipMemAdviseUnsetCoarseGrain
 
-HIP_PYTHON_CUmem_advise_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmem_advise_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_enum_HALLUCINATE","false")
 
 class _CUmem_advise_enum_EnumMeta(enum.EnumMeta):
 
@@ -5833,12 +5836,12 @@ class _CUmem_advise_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmem_advise_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmem_advise_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmem_advise_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmem_advise_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5884,7 +5887,7 @@ class CUmem_advise_enum(enum.IntEnum,metaclass=_CUmem_advise_enum_EnumMeta):
     hipMemAdviseSetCoarseGrain = hip.chip.hipMemAdviseSetCoarseGrain
     hipMemAdviseUnsetCoarseGrain = hip.chip.hipMemAdviseUnsetCoarseGrain
 
-HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE","false")
 
 class _cudaMemoryAdvise_EnumMeta(enum.EnumMeta):
 
@@ -5929,12 +5932,12 @@ class _cudaMemoryAdvise_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -5980,7 +5983,7 @@ class cudaMemoryAdvise(enum.IntEnum,metaclass=_cudaMemoryAdvise_EnumMeta):
     hipMemAdviseSetCoarseGrain = hip.chip.hipMemAdviseSetCoarseGrain
     hipMemAdviseUnsetCoarseGrain = hip.chip.hipMemAdviseUnsetCoarseGrain
 
-HIP_PYTHON_CUmem_range_attribute_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_range_attribute_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmem_range_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_range_attribute_HALLUCINATE","false")
 
 class _CUmem_range_attribute_EnumMeta(enum.EnumMeta):
 
@@ -6025,12 +6028,12 @@ class _CUmem_range_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmem_range_attribute_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmem_range_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmem_range_attribute_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmem_range_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6069,7 +6072,7 @@ class CUmem_range_attribute(enum.IntEnum,metaclass=_CUmem_range_attribute_EnumMe
     hipMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     hipMemRangeAttributeCoherencyMode = hip.chip.hipMemRangeAttributeCoherencyMode
 
-HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE","false")
 
 class _CUmem_range_attribute_enum_EnumMeta(enum.EnumMeta):
 
@@ -6114,12 +6117,12 @@ class _CUmem_range_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6158,7 +6161,7 @@ class CUmem_range_attribute_enum(enum.IntEnum,metaclass=_CUmem_range_attribute_e
     hipMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     hipMemRangeAttributeCoherencyMode = hip.chip.hipMemRangeAttributeCoherencyMode
 
-HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE","false")
 
 class _cudaMemRangeAttribute_EnumMeta(enum.EnumMeta):
 
@@ -6203,12 +6206,12 @@ class _cudaMemRangeAttribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6247,7 +6250,7 @@ class cudaMemRangeAttribute(enum.IntEnum,metaclass=_cudaMemRangeAttribute_EnumMe
     hipMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
     hipMemRangeAttributeCoherencyMode = hip.chip.hipMemRangeAttributeCoherencyMode
 
-HIP_PYTHON_CUmemPool_attribute_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemPool_attribute_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemPool_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemPool_attribute_HALLUCINATE","false")
 
 class _CUmemPool_attribute_EnumMeta(enum.EnumMeta):
 
@@ -6292,12 +6295,12 @@ class _CUmemPool_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemPool_attribute_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemPool_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemPool_attribute_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemPool_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6347,7 +6350,7 @@ class CUmemPool_attribute(enum.IntEnum,metaclass=_CUmemPool_attribute_EnumMeta):
     cudaMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
     hipMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
 
-HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE","false")
 
 class _CUmemPool_attribute_enum_EnumMeta(enum.EnumMeta):
 
@@ -6392,12 +6395,12 @@ class _CUmemPool_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6447,7 +6450,7 @@ class CUmemPool_attribute_enum(enum.IntEnum,metaclass=_CUmemPool_attribute_enum_
     cudaMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
     hipMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
 
-HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE","false")
 
 class _cudaMemPoolAttr_EnumMeta(enum.EnumMeta):
 
@@ -6492,12 +6495,12 @@ class _cudaMemPoolAttr_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6547,7 +6550,7 @@ class cudaMemPoolAttr(enum.IntEnum,metaclass=_cudaMemPoolAttr_EnumMeta):
     cudaMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
     hipMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
 
-HIP_PYTHON_CUmemLocationType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemLocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_HALLUCINATE","false")
 
 class _CUmemLocationType_EnumMeta(enum.EnumMeta):
 
@@ -6592,12 +6595,12 @@ class _CUmemLocationType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemLocationType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemLocationType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemLocationType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemLocationType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6629,7 +6632,7 @@ class CUmemLocationType(enum.IntEnum,metaclass=_CUmemLocationType_EnumMeta):
     cudaMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
     hipMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
 
-HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE","false")
 
 class _CUmemLocationType_enum_EnumMeta(enum.EnumMeta):
 
@@ -6674,12 +6677,12 @@ class _CUmemLocationType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6711,7 +6714,7 @@ class CUmemLocationType_enum(enum.IntEnum,metaclass=_CUmemLocationType_enum_Enum
     cudaMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
     hipMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
 
-HIP_PYTHON_cudaMemLocationType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemLocationType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaMemLocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemLocationType_HALLUCINATE","false")
 
 class _cudaMemLocationType_EnumMeta(enum.EnumMeta):
 
@@ -6756,12 +6759,12 @@ class _cudaMemLocationType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaMemLocationType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaMemLocationType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaMemLocationType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaMemLocationType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6801,7 +6804,7 @@ cdef class CUmemLocation_v1(hip.hip.hipMemLocation):
 cdef class cudaMemLocation(hip.hip.hipMemLocation):
     pass
 
-HIP_PYTHON_CUmemAccess_flags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemAccess_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_HALLUCINATE","false")
 
 class _CUmemAccess_flags_EnumMeta(enum.EnumMeta):
 
@@ -6846,12 +6849,12 @@ class _CUmemAccess_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemAccess_flags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemAccess_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemAccess_flags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemAccess_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6886,7 +6889,7 @@ class CUmemAccess_flags(enum.IntEnum,metaclass=_CUmemAccess_flags_EnumMeta):
     cudaMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
     hipMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
 
-HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE","false")
 
 class _CUmemAccess_flags_enum_EnumMeta(enum.EnumMeta):
 
@@ -6931,12 +6934,12 @@ class _CUmemAccess_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -6971,7 +6974,7 @@ class CUmemAccess_flags_enum(enum.IntEnum,metaclass=_CUmemAccess_flags_enum_Enum
     cudaMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
     hipMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
 
-HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE","false")
 
 class _cudaMemAccessFlags_EnumMeta(enum.EnumMeta):
 
@@ -7016,12 +7019,12 @@ class _cudaMemAccessFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7064,7 +7067,7 @@ cdef class CUmemAccessDesc_v1(hip.hip.hipMemAccessDesc):
 cdef class cudaMemAccessDesc(hip.hip.hipMemAccessDesc):
     pass
 
-HIP_PYTHON_CUmemAllocationType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemAllocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_HALLUCINATE","false")
 
 class _CUmemAllocationType_EnumMeta(enum.EnumMeta):
 
@@ -7109,12 +7112,12 @@ class _CUmemAllocationType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemAllocationType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemAllocationType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemAllocationType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemAllocationType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7149,7 +7152,7 @@ class CUmemAllocationType(enum.IntEnum,metaclass=_CUmemAllocationType_EnumMeta):
     cudaMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
     hipMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
 
-HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE","false")
 
 class _CUmemAllocationType_enum_EnumMeta(enum.EnumMeta):
 
@@ -7194,12 +7197,12 @@ class _CUmemAllocationType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7234,7 +7237,7 @@ class CUmemAllocationType_enum(enum.IntEnum,metaclass=_CUmemAllocationType_enum_
     cudaMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
     hipMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
 
-HIP_PYTHON_cudaMemAllocationType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaMemAllocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationType_HALLUCINATE","false")
 
 class _cudaMemAllocationType_EnumMeta(enum.EnumMeta):
 
@@ -7279,12 +7282,12 @@ class _cudaMemAllocationType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaMemAllocationType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaMemAllocationType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaMemAllocationType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaMemAllocationType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7319,7 +7322,7 @@ class cudaMemAllocationType(enum.IntEnum,metaclass=_cudaMemAllocationType_EnumMe
     cudaMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
     hipMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
 
-HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE","false")
 
 class _CUmemAllocationHandleType_EnumMeta(enum.EnumMeta):
 
@@ -7364,12 +7367,12 @@ class _CUmemAllocationHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7407,7 +7410,7 @@ class CUmemAllocationHandleType(enum.IntEnum,metaclass=_CUmemAllocationHandleTyp
     cudaMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
     hipMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
 
-HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE","false")
 
 class _CUmemAllocationHandleType_enum_EnumMeta(enum.EnumMeta):
 
@@ -7452,12 +7455,12 @@ class _CUmemAllocationHandleType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7495,7 +7498,7 @@ class CUmemAllocationHandleType_enum(enum.IntEnum,metaclass=_CUmemAllocationHand
     cudaMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
     hipMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
 
-HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE","false")
 
 class _cudaMemAllocationHandleType_EnumMeta(enum.EnumMeta):
 
@@ -7540,12 +7543,12 @@ class _cudaMemAllocationHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7599,7 +7602,7 @@ cdef class CUmemPoolPtrExportData_v1(hip.hip.hipMemPoolPtrExportData):
 cdef class cudaMemPoolPtrExportData(hip.hip.hipMemPoolPtrExportData):
     pass
 
-HIP_PYTHON_CUjit_option_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjit_option_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUjit_option_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjit_option_HALLUCINATE","false")
 
 class _CUjit_option_EnumMeta(enum.EnumMeta):
 
@@ -7644,12 +7647,12 @@ class _CUjit_option_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUjit_option_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUjit_option_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUjit_option_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUjit_option_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7693,7 +7696,7 @@ class CUjit_option(enum.IntEnum,metaclass=_CUjit_option_EnumMeta):
     hipJitOptionFastCompile = hip.chip.hipJitOptionFastCompile
     hipJitOptionNumOptions = hip.chip.hipJitOptionNumOptions
 
-HIP_PYTHON_CUjit_option_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjit_option_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUjit_option_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjit_option_enum_HALLUCINATE","false")
 
 class _CUjit_option_enum_EnumMeta(enum.EnumMeta):
 
@@ -7738,12 +7741,12 @@ class _CUjit_option_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUjit_option_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUjit_option_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUjit_option_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUjit_option_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7787,7 +7790,7 @@ class CUjit_option_enum(enum.IntEnum,metaclass=_CUjit_option_enum_EnumMeta):
     hipJitOptionFastCompile = hip.chip.hipJitOptionFastCompile
     hipJitOptionNumOptions = hip.chip.hipJitOptionNumOptions
 
-HIP_PYTHON_cudaFuncAttribute_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaFuncAttribute_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaFuncAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaFuncAttribute_HALLUCINATE","false")
 
 class _cudaFuncAttribute_EnumMeta(enum.EnumMeta):
 
@@ -7832,12 +7835,12 @@ class _cudaFuncAttribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaFuncAttribute_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaFuncAttribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaFuncAttribute_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaFuncAttribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7869,7 +7872,7 @@ class cudaFuncAttribute(enum.IntEnum,metaclass=_cudaFuncAttribute_EnumMeta):
     cudaFuncAttributeMax = hip.chip.hipFuncAttributeMax
     hipFuncAttributeMax = hip.chip.hipFuncAttributeMax
 
-HIP_PYTHON_CUfunc_cache_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUfunc_cache_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_HALLUCINATE","false")
 
 class _CUfunc_cache_EnumMeta(enum.EnumMeta):
 
@@ -7914,12 +7917,12 @@ class _CUfunc_cache_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUfunc_cache_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUfunc_cache_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUfunc_cache_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUfunc_cache_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -7957,7 +7960,7 @@ class CUfunc_cache(enum.IntEnum,metaclass=_CUfunc_cache_EnumMeta):
     cudaFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
     hipFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
 
-HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE","false")
 
 class _CUfunc_cache_enum_EnumMeta(enum.EnumMeta):
 
@@ -8002,12 +8005,12 @@ class _CUfunc_cache_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8045,7 +8048,7 @@ class CUfunc_cache_enum(enum.IntEnum,metaclass=_CUfunc_cache_enum_EnumMeta):
     cudaFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
     hipFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
 
-HIP_PYTHON_cudaFuncCache_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaFuncCache_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaFuncCache_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaFuncCache_HALLUCINATE","false")
 
 class _cudaFuncCache_EnumMeta(enum.EnumMeta):
 
@@ -8090,12 +8093,12 @@ class _cudaFuncCache_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaFuncCache_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaFuncCache_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaFuncCache_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaFuncCache_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8133,7 +8136,7 @@ class cudaFuncCache(enum.IntEnum,metaclass=_cudaFuncCache_EnumMeta):
     cudaFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
     hipFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
 
-HIP_PYTHON_CUsharedconfig_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUsharedconfig_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_HALLUCINATE","false")
 
 class _CUsharedconfig_EnumMeta(enum.EnumMeta):
 
@@ -8178,12 +8181,12 @@ class _CUsharedconfig_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUsharedconfig_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUsharedconfig_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUsharedconfig_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUsharedconfig_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8218,7 +8221,7 @@ class CUsharedconfig(enum.IntEnum,metaclass=_CUsharedconfig_EnumMeta):
     cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
     hipSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
 
-HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE","false")
 
 class _CUsharedconfig_enum_EnumMeta(enum.EnumMeta):
 
@@ -8263,12 +8266,12 @@ class _CUsharedconfig_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8303,7 +8306,7 @@ class CUsharedconfig_enum(enum.IntEnum,metaclass=_CUsharedconfig_enum_EnumMeta):
     cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
     hipSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
 
-HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE","false")
 
 class _cudaSharedMemConfig_EnumMeta(enum.EnumMeta):
 
@@ -8348,12 +8351,12 @@ class _cudaSharedMemConfig_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8389,7 +8392,7 @@ class cudaSharedMemConfig(enum.IntEnum,metaclass=_cudaSharedMemConfig_EnumMeta):
     hipSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
 cudaLaunchParams = hip.hip.hipLaunchParams
 
-HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE","false")
 
 class _CUexternalMemoryHandleType_enum_EnumMeta(enum.EnumMeta):
 
@@ -8434,12 +8437,12 @@ class _CUexternalMemoryHandleType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8486,7 +8489,7 @@ class CUexternalMemoryHandleType_enum(enum.IntEnum,metaclass=_CUexternalMemoryHa
     cudaExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
     hipExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
 
-HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE","false")
 
 class _CUexternalMemoryHandleType_EnumMeta(enum.EnumMeta):
 
@@ -8531,12 +8534,12 @@ class _CUexternalMemoryHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8583,7 +8586,7 @@ class CUexternalMemoryHandleType(enum.IntEnum,metaclass=_CUexternalMemoryHandleT
     cudaExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
     hipExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
 
-HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE","false")
 
 class _cudaExternalMemoryHandleType_EnumMeta(enum.EnumMeta):
 
@@ -8628,12 +8631,12 @@ class _cudaExternalMemoryHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8690,7 +8693,7 @@ CUDA_EXTERNAL_MEMORY_BUFFER_DESC = hip.hip.hipExternalMemoryBufferDesc
 CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1 = hip.hip.hipExternalMemoryBufferDesc
 cudaExternalMemoryBufferDesc = hip.hip.hipExternalMemoryBufferDesc
 
-HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE","false")
 
 class _CUexternalSemaphoreHandleType_enum_EnumMeta(enum.EnumMeta):
 
@@ -8735,12 +8738,12 @@ class _CUexternalSemaphoreHandleType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8778,7 +8781,7 @@ class CUexternalSemaphoreHandleType_enum(enum.IntEnum,metaclass=_CUexternalSemap
     cudaExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
     hipExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
 
-HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE","false")
 
 class _CUexternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
 
@@ -8823,12 +8826,12 @@ class _CUexternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8866,7 +8869,7 @@ class CUexternalSemaphoreHandleType(enum.IntEnum,metaclass=_CUexternalSemaphoreH
     cudaExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
     hipExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
 
-HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE","false")
 
 class _cudaExternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
 
@@ -8911,12 +8914,12 @@ class _cudaExternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -8971,7 +8974,7 @@ CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1 = hip.hip.hipExternalSemaphoreWaitParams
 cudaExternalSemaphoreWaitParams = hip.hip.hipExternalSemaphoreWaitParams
 cudaExternalSemaphoreWaitParams_v1 = hip.hip.hipExternalSemaphoreWaitParams
 
-HIP_PYTHON_CUGLDeviceList_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUGLDeviceList_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_HALLUCINATE","false")
 
 class _CUGLDeviceList_EnumMeta(enum.EnumMeta):
 
@@ -9016,12 +9019,12 @@ class _CUGLDeviceList_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUGLDeviceList_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUGLDeviceList_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUGLDeviceList_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUGLDeviceList_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9056,7 +9059,7 @@ class CUGLDeviceList(enum.IntEnum,metaclass=_CUGLDeviceList_EnumMeta):
     cudaGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
     hipGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
 
-HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE","false")
 
 class _CUGLDeviceList_enum_EnumMeta(enum.EnumMeta):
 
@@ -9101,12 +9104,12 @@ class _CUGLDeviceList_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9141,7 +9144,7 @@ class CUGLDeviceList_enum(enum.IntEnum,metaclass=_CUGLDeviceList_enum_EnumMeta):
     cudaGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
     hipGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
 
-HIP_PYTHON_cudaGLDeviceList_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGLDeviceList_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaGLDeviceList_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGLDeviceList_HALLUCINATE","false")
 
 class _cudaGLDeviceList_EnumMeta(enum.EnumMeta):
 
@@ -9186,12 +9189,12 @@ class _cudaGLDeviceList_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaGLDeviceList_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaGLDeviceList_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaGLDeviceList_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaGLDeviceList_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9226,7 +9229,7 @@ class cudaGLDeviceList(enum.IntEnum,metaclass=_cudaGLDeviceList_EnumMeta):
     cudaGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
     hipGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
 
-HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE","false")
 
 class _CUgraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
 
@@ -9271,12 +9274,12 @@ class _CUgraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9317,7 +9320,7 @@ class CUgraphicsRegisterFlags(enum.IntEnum,metaclass=_CUgraphicsRegisterFlags_En
     cudaGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
     hipGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
 
-HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE","false")
 
 class _CUgraphicsRegisterFlags_enum_EnumMeta(enum.EnumMeta):
 
@@ -9362,12 +9365,12 @@ class _CUgraphicsRegisterFlags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9408,7 +9411,7 @@ class CUgraphicsRegisterFlags_enum(enum.IntEnum,metaclass=_CUgraphicsRegisterFla
     cudaGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
     hipGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
 
-HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE","false")
 
 class _cudaGraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
 
@@ -9453,12 +9456,12 @@ class _cudaGraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9519,7 +9522,7 @@ cdef class CUuserObject_st(hip.hip.hipUserObject):
 CUuserObject = hip.hip.hipUserObject_t
 cudaUserObject_t = hip.hip.hipUserObject_t
 
-HIP_PYTHON_CUgraphNodeType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUgraphNodeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_HALLUCINATE","false")
 
 class _CUgraphNodeType_EnumMeta(enum.EnumMeta):
 
@@ -9564,12 +9567,12 @@ class _CUgraphNodeType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUgraphNodeType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUgraphNodeType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUgraphNodeType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUgraphNodeType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9630,7 +9633,7 @@ class CUgraphNodeType(enum.IntEnum,metaclass=_CUgraphNodeType_EnumMeta):
     cudaGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
     hipGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
 
-HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE","false")
 
 class _CUgraphNodeType_enum_EnumMeta(enum.EnumMeta):
 
@@ -9675,12 +9678,12 @@ class _CUgraphNodeType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9741,7 +9744,7 @@ class CUgraphNodeType_enum(enum.IntEnum,metaclass=_CUgraphNodeType_enum_EnumMeta
     cudaGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
     hipGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
 
-HIP_PYTHON_cudaGraphNodeType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphNodeType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaGraphNodeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphNodeType_HALLUCINATE","false")
 
 class _cudaGraphNodeType_EnumMeta(enum.EnumMeta):
 
@@ -9786,12 +9789,12 @@ class _cudaGraphNodeType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaGraphNodeType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaGraphNodeType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaGraphNodeType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaGraphNodeType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9880,7 +9883,7 @@ cdef class CUDA_MEMSET_NODE_PARAMS_v1(hip.hip.hipMemsetParams):
 cdef class cudaMemsetParams(hip.hip.hipMemsetParams):
     pass
 
-HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE","false")
 
 class _CUkernelNodeAttrID_EnumMeta(enum.EnumMeta):
 
@@ -9925,12 +9928,12 @@ class _CUkernelNodeAttrID_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -9962,7 +9965,7 @@ class CUkernelNodeAttrID(enum.IntEnum,metaclass=_CUkernelNodeAttrID_EnumMeta):
     cudaKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
     hipKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
 
-HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE","false")
 
 class _CUkernelNodeAttrID_enum_EnumMeta(enum.EnumMeta):
 
@@ -10007,12 +10010,12 @@ class _CUkernelNodeAttrID_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10044,7 +10047,7 @@ class CUkernelNodeAttrID_enum(enum.IntEnum,metaclass=_CUkernelNodeAttrID_enum_En
     cudaKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
     hipKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
 
-HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE","false")
 
 class _cudaKernelNodeAttrID_EnumMeta(enum.EnumMeta):
 
@@ -10089,12 +10092,12 @@ class _cudaKernelNodeAttrID_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10126,7 +10129,7 @@ class cudaKernelNodeAttrID(enum.IntEnum,metaclass=_cudaKernelNodeAttrID_EnumMeta
     cudaKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
     hipKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
 
-HIP_PYTHON_CUaccessProperty_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUaccessProperty_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_HALLUCINATE","false")
 
 class _CUaccessProperty_EnumMeta(enum.EnumMeta):
 
@@ -10171,12 +10174,12 @@ class _CUaccessProperty_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUaccessProperty_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUaccessProperty_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUaccessProperty_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUaccessProperty_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10211,7 +10214,7 @@ class CUaccessProperty(enum.IntEnum,metaclass=_CUaccessProperty_EnumMeta):
     cudaAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
     hipAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
 
-HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE","false")
 
 class _CUaccessProperty_enum_EnumMeta(enum.EnumMeta):
 
@@ -10256,12 +10259,12 @@ class _CUaccessProperty_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10296,7 +10299,7 @@ class CUaccessProperty_enum(enum.IntEnum,metaclass=_CUaccessProperty_enum_EnumMe
     cudaAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
     hipAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
 
-HIP_PYTHON_cudaAccessProperty_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaAccessProperty_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaAccessProperty_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaAccessProperty_HALLUCINATE","false")
 
 class _cudaAccessProperty_EnumMeta(enum.EnumMeta):
 
@@ -10341,12 +10344,12 @@ class _cudaAccessProperty_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaAccessProperty_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaAccessProperty_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaAccessProperty_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaAccessProperty_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10395,7 +10398,7 @@ cdef class CUkernelNodeAttrValue_v1(hip.hip.hipKernelNodeAttrValue):
 cdef class cudaKernelNodeAttrValue(hip.hip.hipKernelNodeAttrValue):
     pass
 
-HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE","false")
 
 class _CUgraphExecUpdateResult_EnumMeta(enum.EnumMeta):
 
@@ -10440,12 +10443,12 @@ class _CUgraphExecUpdateResult_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10495,7 +10498,7 @@ class CUgraphExecUpdateResult(enum.IntEnum,metaclass=_CUgraphExecUpdateResult_En
     cudaGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     hipGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
 
-HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE","false")
 
 class _CUgraphExecUpdateResult_enum_EnumMeta(enum.EnumMeta):
 
@@ -10540,12 +10543,12 @@ class _CUgraphExecUpdateResult_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10595,7 +10598,7 @@ class CUgraphExecUpdateResult_enum(enum.IntEnum,metaclass=_CUgraphExecUpdateResu
     cudaGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     hipGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
 
-HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE","false")
 
 class _cudaGraphExecUpdateResult_EnumMeta(enum.EnumMeta):
 
@@ -10640,12 +10643,12 @@ class _cudaGraphExecUpdateResult_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10695,7 +10698,7 @@ class cudaGraphExecUpdateResult(enum.IntEnum,metaclass=_cudaGraphExecUpdateResul
     cudaGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
     hipGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
 
-HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE","false")
 
 class _CUstreamCaptureMode_EnumMeta(enum.EnumMeta):
 
@@ -10740,12 +10743,12 @@ class _CUstreamCaptureMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10780,7 +10783,7 @@ class CUstreamCaptureMode(enum.IntEnum,metaclass=_CUstreamCaptureMode_EnumMeta):
     cudaStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
     hipStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
 
-HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE","false")
 
 class _CUstreamCaptureMode_enum_EnumMeta(enum.EnumMeta):
 
@@ -10825,12 +10828,12 @@ class _CUstreamCaptureMode_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10865,7 +10868,7 @@ class CUstreamCaptureMode_enum(enum.IntEnum,metaclass=_CUstreamCaptureMode_enum_
     cudaStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
     hipStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
 
-HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE","false")
 
 class _cudaStreamCaptureMode_EnumMeta(enum.EnumMeta):
 
@@ -10910,12 +10913,12 @@ class _cudaStreamCaptureMode_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -10950,7 +10953,7 @@ class cudaStreamCaptureMode(enum.IntEnum,metaclass=_cudaStreamCaptureMode_EnumMe
     cudaStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
     hipStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
 
-HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE","false")
 
 class _CUstreamCaptureStatus_EnumMeta(enum.EnumMeta):
 
@@ -10995,12 +10998,12 @@ class _CUstreamCaptureStatus_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11035,7 +11038,7 @@ class CUstreamCaptureStatus(enum.IntEnum,metaclass=_CUstreamCaptureStatus_EnumMe
     cudaStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
     hipStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
 
-HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE","false")
 
 class _CUstreamCaptureStatus_enum_EnumMeta(enum.EnumMeta):
 
@@ -11080,12 +11083,12 @@ class _CUstreamCaptureStatus_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11120,7 +11123,7 @@ class CUstreamCaptureStatus_enum(enum.IntEnum,metaclass=_CUstreamCaptureStatus_e
     cudaStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
     hipStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
 
-HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE","false")
 
 class _cudaStreamCaptureStatus_EnumMeta(enum.EnumMeta):
 
@@ -11165,12 +11168,12 @@ class _cudaStreamCaptureStatus_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11205,7 +11208,7 @@ class cudaStreamCaptureStatus(enum.IntEnum,metaclass=_cudaStreamCaptureStatus_En
     cudaStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
     hipStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
 
-HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE","false")
 
 class _CUstreamUpdateCaptureDependencies_flags_EnumMeta(enum.EnumMeta):
 
@@ -11250,12 +11253,12 @@ class _CUstreamUpdateCaptureDependencies_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11287,7 +11290,7 @@ class CUstreamUpdateCaptureDependencies_flags(enum.IntEnum,metaclass=_CUstreamUp
     cudaStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
     hipStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
 
-HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE","false")
 
 class _CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta(enum.EnumMeta):
 
@@ -11332,12 +11335,12 @@ class _CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11369,7 +11372,7 @@ class CUstreamUpdateCaptureDependencies_flags_enum(enum.IntEnum,metaclass=_CUstr
     cudaStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
     hipStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
 
-HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE","false")
 
 class _cudaStreamUpdateCaptureDependenciesFlags_EnumMeta(enum.EnumMeta):
 
@@ -11414,12 +11417,12 @@ class _cudaStreamUpdateCaptureDependenciesFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11451,7 +11454,7 @@ class cudaStreamUpdateCaptureDependenciesFlags(enum.IntEnum,metaclass=_cudaStrea
     cudaStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
     hipStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
 
-HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE","false")
 
 class _CUgraphMem_attribute_EnumMeta(enum.EnumMeta):
 
@@ -11496,12 +11499,12 @@ class _CUgraphMem_attribute_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11539,7 +11542,7 @@ class CUgraphMem_attribute(enum.IntEnum,metaclass=_CUgraphMem_attribute_EnumMeta
     cudaGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
     hipGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
 
-HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE","false")
 
 class _CUgraphMem_attribute_enum_EnumMeta(enum.EnumMeta):
 
@@ -11584,12 +11587,12 @@ class _CUgraphMem_attribute_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11627,7 +11630,7 @@ class CUgraphMem_attribute_enum(enum.IntEnum,metaclass=_CUgraphMem_attribute_enu
     cudaGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
     hipGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
 
-HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE","false")
 
 class _cudaGraphMemAttributeType_EnumMeta(enum.EnumMeta):
 
@@ -11672,12 +11675,12 @@ class _cudaGraphMemAttributeType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11715,7 +11718,7 @@ class cudaGraphMemAttributeType(enum.IntEnum,metaclass=_cudaGraphMemAttributeTyp
     cudaGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
     hipGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
 
-HIP_PYTHON_CUuserObject_flags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUuserObject_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_HALLUCINATE","false")
 
 class _CUuserObject_flags_EnumMeta(enum.EnumMeta):
 
@@ -11760,12 +11763,12 @@ class _CUuserObject_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUuserObject_flags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUuserObject_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUuserObject_flags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUuserObject_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11794,7 +11797,7 @@ class CUuserObject_flags(enum.IntEnum,metaclass=_CUuserObject_flags_EnumMeta):
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
 
-HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE","false")
 
 class _CUuserObject_flags_enum_EnumMeta(enum.EnumMeta):
 
@@ -11839,12 +11842,12 @@ class _CUuserObject_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11873,7 +11876,7 @@ class CUuserObject_flags_enum(enum.IntEnum,metaclass=_CUuserObject_flags_enum_En
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
 
-HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE","false")
 
 class _cudaUserObjectFlags_EnumMeta(enum.EnumMeta):
 
@@ -11918,12 +11921,12 @@ class _cudaUserObjectFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -11952,7 +11955,7 @@ class cudaUserObjectFlags(enum.IntEnum,metaclass=_cudaUserObjectFlags_EnumMeta):
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
 
-HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE","false")
 
 class _CUuserObjectRetain_flags_EnumMeta(enum.EnumMeta):
 
@@ -11997,12 +12000,12 @@ class _CUuserObjectRetain_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12031,7 +12034,7 @@ class CUuserObjectRetain_flags(enum.IntEnum,metaclass=_CUuserObjectRetain_flags_
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
 
-HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE","false")
 
 class _CUuserObjectRetain_flags_enum_EnumMeta(enum.EnumMeta):
 
@@ -12076,12 +12079,12 @@ class _CUuserObjectRetain_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12110,7 +12113,7 @@ class CUuserObjectRetain_flags_enum(enum.IntEnum,metaclass=_CUuserObjectRetain_f
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
 
-HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE","false")
 
 class _cudaUserObjectRetainFlags_EnumMeta(enum.EnumMeta):
 
@@ -12155,12 +12158,12 @@ class _cudaUserObjectRetainFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12189,7 +12192,7 @@ class cudaUserObjectRetainFlags(enum.IntEnum,metaclass=_cudaUserObjectRetainFlag
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
 
-HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE","false")
 
 class _CUgraphInstantiate_flags_EnumMeta(enum.EnumMeta):
 
@@ -12234,12 +12237,12 @@ class _CUgraphInstantiate_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12268,7 +12271,7 @@ class CUgraphInstantiate_flags(enum.IntEnum,metaclass=_CUgraphInstantiate_flags_
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
 
-HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE","false")
 
 class _CUgraphInstantiate_flags_enum_EnumMeta(enum.EnumMeta):
 
@@ -12313,12 +12316,12 @@ class _CUgraphInstantiate_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12347,7 +12350,7 @@ class CUgraphInstantiate_flags_enum(enum.IntEnum,metaclass=_CUgraphInstantiate_f
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
 
-HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE","false")
 
 class _cudaGraphInstantiateFlags_EnumMeta(enum.EnumMeta):
 
@@ -12392,12 +12395,12 @@ class _cudaGraphInstantiateFlags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12434,7 +12437,7 @@ cdef class CUmemAllocationProp_v1(hip.hip.hipMemAllocationProp):
 CUmemGenericAllocationHandle = hip.hip.hipMemGenericAllocationHandle_t
 CUmemGenericAllocationHandle_v1 = hip.hip.hipMemGenericAllocationHandle_t
 
-HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE","false")
 
 class _CUmemAllocationGranularity_flags_EnumMeta(enum.EnumMeta):
 
@@ -12479,12 +12482,12 @@ class _CUmemAllocationGranularity_flags_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12514,7 +12517,7 @@ class CUmemAllocationGranularity_flags(enum.IntEnum,metaclass=_CUmemAllocationGr
     CU_MEM_ALLOC_GRANULARITY_RECOMMENDED = hip.chip.hipMemAllocationGranularityRecommended
     hipMemAllocationGranularityRecommended = hip.chip.hipMemAllocationGranularityRecommended
 
-HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE","false")
 
 class _CUmemAllocationGranularity_flags_enum_EnumMeta(enum.EnumMeta):
 
@@ -12559,12 +12562,12 @@ class _CUmemAllocationGranularity_flags_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12594,7 +12597,7 @@ class CUmemAllocationGranularity_flags_enum(enum.IntEnum,metaclass=_CUmemAllocat
     CU_MEM_ALLOC_GRANULARITY_RECOMMENDED = hip.chip.hipMemAllocationGranularityRecommended
     hipMemAllocationGranularityRecommended = hip.chip.hipMemAllocationGranularityRecommended
 
-HIP_PYTHON_CUmemHandleType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_HALLUCINATE","false")
 
 class _CUmemHandleType_EnumMeta(enum.EnumMeta):
 
@@ -12639,12 +12642,12 @@ class _CUmemHandleType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemHandleType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemHandleType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemHandleType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemHandleType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12672,7 +12675,7 @@ class CUmemHandleType(enum.IntEnum,metaclass=_CUmemHandleType_EnumMeta):
     CU_MEM_HANDLE_TYPE_GENERIC = hip.chip.hipMemHandleTypeGeneric
     hipMemHandleTypeGeneric = hip.chip.hipMemHandleTypeGeneric
 
-HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE","false")
 
 class _CUmemHandleType_enum_EnumMeta(enum.EnumMeta):
 
@@ -12717,12 +12720,12 @@ class _CUmemHandleType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12750,7 +12753,7 @@ class CUmemHandleType_enum(enum.IntEnum,metaclass=_CUmemHandleType_enum_EnumMeta
     CU_MEM_HANDLE_TYPE_GENERIC = hip.chip.hipMemHandleTypeGeneric
     hipMemHandleTypeGeneric = hip.chip.hipMemHandleTypeGeneric
 
-HIP_PYTHON_CUmemOperationType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemOperationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_HALLUCINATE","false")
 
 class _CUmemOperationType_EnumMeta(enum.EnumMeta):
 
@@ -12795,12 +12798,12 @@ class _CUmemOperationType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemOperationType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemOperationType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemOperationType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemOperationType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12830,7 +12833,7 @@ class CUmemOperationType(enum.IntEnum,metaclass=_CUmemOperationType_EnumMeta):
     CU_MEM_OPERATION_TYPE_UNMAP = hip.chip.hipMemOperationTypeUnmap
     hipMemOperationTypeUnmap = hip.chip.hipMemOperationTypeUnmap
 
-HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE","false")
 
 class _CUmemOperationType_enum_EnumMeta(enum.EnumMeta):
 
@@ -12875,12 +12878,12 @@ class _CUmemOperationType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12910,7 +12913,7 @@ class CUmemOperationType_enum(enum.IntEnum,metaclass=_CUmemOperationType_enum_En
     CU_MEM_OPERATION_TYPE_UNMAP = hip.chip.hipMemOperationTypeUnmap
     hipMemOperationTypeUnmap = hip.chip.hipMemOperationTypeUnmap
 
-HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE","false")
 
 class _CUarraySparseSubresourceType_EnumMeta(enum.EnumMeta):
 
@@ -12955,12 +12958,12 @@ class _CUarraySparseSubresourceType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -12990,7 +12993,7 @@ class CUarraySparseSubresourceType(enum.IntEnum,metaclass=_CUarraySparseSubresou
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_MIPTAIL = hip.chip.hipArraySparseSubresourceTypeMiptail
     hipArraySparseSubresourceTypeMiptail = hip.chip.hipArraySparseSubresourceTypeMiptail
 
-HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE","false")
 
 class _CUarraySparseSubresourceType_enum_EnumMeta(enum.EnumMeta):
 
@@ -13035,12 +13038,12 @@ class _CUarraySparseSubresourceType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
