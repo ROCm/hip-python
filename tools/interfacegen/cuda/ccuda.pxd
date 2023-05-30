@@ -147,11 +147,10 @@ from hip.chip cimport hipStreamWaitValueAnd
 from hip.chip cimport hipStreamWaitValueAnd as CU_STREAM_WAIT_VALUE_AND
 from hip.chip cimport hipStreamWaitValueNor
 from hip.chip cimport hipStreamWaitValueNor as CU_STREAM_WAIT_VALUE_NOR
-cdef enum enum_1:
-    HIP_SUCCESS = hip.chip.HIP_SUCCESS
-    HIP_ERROR_INVALID_VALUE = hip.chip.HIP_ERROR_INVALID_VALUE
-    HIP_ERROR_NOT_INITIALIZED = hip.chip.HIP_ERROR_NOT_INITIALIZED
-    HIP_ERROR_LAUNCH_OUT_OF_RESOURCES = hip.chip.HIP_ERROR_LAUNCH_OUT_OF_RESOURCES
+from hip.chip cimport HIP_SUCCESS
+from hip.chip cimport HIP_ERROR_INVALID_VALUE
+from hip.chip cimport HIP_ERROR_NOT_INITIALIZED
+from hip.chip cimport HIP_ERROR_LAUNCH_OUT_OF_RESOURCES
 from hip.chip cimport hipUUID_t
 from hip.chip cimport hipUUID_t as CUuuid_st
 from hip.chip cimport hipUUID
@@ -159,585 +158,585 @@ from hip.chip cimport hipUUID as CUuuid
 from hip.chip cimport hipUUID as cudaUUID_t
 from hip.chip cimport hipDeviceProp_t
 from hip.chip cimport hipDeviceProp_t as cudaDeviceProp
-cdef enum CUmemorytype:
-    CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
-    cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
-    hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
-    CU_MEMORYTYPE_DEVICE = hip.chip.hipMemoryTypeDevice
-    cudaMemoryTypeDevice = hip.chip.hipMemoryTypeDevice
-    hipMemoryTypeDevice = hip.chip.hipMemoryTypeDevice
-    CU_MEMORYTYPE_ARRAY = hip.chip.hipMemoryTypeArray
-    hipMemoryTypeArray = hip.chip.hipMemoryTypeArray
-    CU_MEMORYTYPE_UNIFIED = hip.chip.hipMemoryTypeUnified
-    hipMemoryTypeUnified = hip.chip.hipMemoryTypeUnified
-    cudaMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
-    hipMemoryTypeManaged = hip.chip.hipMemoryTypeManaged
+from hip.chip cimport hipMemoryType as CUmemorytype
+from hip.chip cimport hipMemoryTypeHost
+from hip.chip cimport hipMemoryTypeHost as CU_MEMORYTYPE_HOST
+from hip.chip cimport hipMemoryTypeHost as cudaMemoryTypeHost
+from hip.chip cimport hipMemoryTypeDevice
+from hip.chip cimport hipMemoryTypeDevice as CU_MEMORYTYPE_DEVICE
+from hip.chip cimport hipMemoryTypeDevice as cudaMemoryTypeDevice
+from hip.chip cimport hipMemoryTypeArray
+from hip.chip cimport hipMemoryTypeArray as CU_MEMORYTYPE_ARRAY
+from hip.chip cimport hipMemoryTypeUnified
+from hip.chip cimport hipMemoryTypeUnified as CU_MEMORYTYPE_UNIFIED
+from hip.chip cimport hipMemoryTypeManaged
+from hip.chip cimport hipMemoryTypeManaged as cudaMemoryTypeManaged
 ctypedef CUmemorytype CUmemorytype_enum
 ctypedef CUmemorytype cudaMemoryType
 from hip.chip cimport hipPointerAttribute_t
 from hip.chip cimport hipPointerAttribute_t as cudaPointerAttributes
-cdef enum CUresult:
-    CUDA_SUCCESS = hip.chip.hipSuccess
-    cudaSuccess = hip.chip.hipSuccess
-    hipSuccess = hip.chip.hipSuccess
-    CUDA_ERROR_INVALID_VALUE = hip.chip.hipErrorInvalidValue
-    cudaErrorInvalidValue = hip.chip.hipErrorInvalidValue
-    hipErrorInvalidValue = hip.chip.hipErrorInvalidValue
-    CUDA_ERROR_OUT_OF_MEMORY = hip.chip.hipErrorOutOfMemory
-    cudaErrorMemoryAllocation = hip.chip.hipErrorOutOfMemory
-    hipErrorOutOfMemory = hip.chip.hipErrorOutOfMemory
-    hipErrorMemoryAllocation = hip.chip.hipErrorMemoryAllocation
-    CUDA_ERROR_NOT_INITIALIZED = hip.chip.hipErrorNotInitialized
-    cudaErrorInitializationError = hip.chip.hipErrorNotInitialized
-    hipErrorNotInitialized = hip.chip.hipErrorNotInitialized
-    hipErrorInitializationError = hip.chip.hipErrorInitializationError
-    CUDA_ERROR_DEINITIALIZED = hip.chip.hipErrorDeinitialized
-    cudaErrorCudartUnloading = hip.chip.hipErrorDeinitialized
-    hipErrorDeinitialized = hip.chip.hipErrorDeinitialized
-    CUDA_ERROR_PROFILER_DISABLED = hip.chip.hipErrorProfilerDisabled
-    cudaErrorProfilerDisabled = hip.chip.hipErrorProfilerDisabled
-    hipErrorProfilerDisabled = hip.chip.hipErrorProfilerDisabled
-    CUDA_ERROR_PROFILER_NOT_INITIALIZED = hip.chip.hipErrorProfilerNotInitialized
-    cudaErrorProfilerNotInitialized = hip.chip.hipErrorProfilerNotInitialized
-    hipErrorProfilerNotInitialized = hip.chip.hipErrorProfilerNotInitialized
-    CUDA_ERROR_PROFILER_ALREADY_STARTED = hip.chip.hipErrorProfilerAlreadyStarted
-    cudaErrorProfilerAlreadyStarted = hip.chip.hipErrorProfilerAlreadyStarted
-    hipErrorProfilerAlreadyStarted = hip.chip.hipErrorProfilerAlreadyStarted
-    CUDA_ERROR_PROFILER_ALREADY_STOPPED = hip.chip.hipErrorProfilerAlreadyStopped
-    cudaErrorProfilerAlreadyStopped = hip.chip.hipErrorProfilerAlreadyStopped
-    hipErrorProfilerAlreadyStopped = hip.chip.hipErrorProfilerAlreadyStopped
-    cudaErrorInvalidConfiguration = hip.chip.hipErrorInvalidConfiguration
-    hipErrorInvalidConfiguration = hip.chip.hipErrorInvalidConfiguration
-    cudaErrorInvalidPitchValue = hip.chip.hipErrorInvalidPitchValue
-    hipErrorInvalidPitchValue = hip.chip.hipErrorInvalidPitchValue
-    cudaErrorInvalidSymbol = hip.chip.hipErrorInvalidSymbol
-    hipErrorInvalidSymbol = hip.chip.hipErrorInvalidSymbol
-    cudaErrorInvalidDevicePointer = hip.chip.hipErrorInvalidDevicePointer
-    hipErrorInvalidDevicePointer = hip.chip.hipErrorInvalidDevicePointer
-    cudaErrorInvalidMemcpyDirection = hip.chip.hipErrorInvalidMemcpyDirection
-    hipErrorInvalidMemcpyDirection = hip.chip.hipErrorInvalidMemcpyDirection
-    cudaErrorInsufficientDriver = hip.chip.hipErrorInsufficientDriver
-    hipErrorInsufficientDriver = hip.chip.hipErrorInsufficientDriver
-    cudaErrorMissingConfiguration = hip.chip.hipErrorMissingConfiguration
-    hipErrorMissingConfiguration = hip.chip.hipErrorMissingConfiguration
-    cudaErrorPriorLaunchFailure = hip.chip.hipErrorPriorLaunchFailure
-    hipErrorPriorLaunchFailure = hip.chip.hipErrorPriorLaunchFailure
-    cudaErrorInvalidDeviceFunction = hip.chip.hipErrorInvalidDeviceFunction
-    hipErrorInvalidDeviceFunction = hip.chip.hipErrorInvalidDeviceFunction
-    CUDA_ERROR_NO_DEVICE = hip.chip.hipErrorNoDevice
-    cudaErrorNoDevice = hip.chip.hipErrorNoDevice
-    hipErrorNoDevice = hip.chip.hipErrorNoDevice
-    CUDA_ERROR_INVALID_DEVICE = hip.chip.hipErrorInvalidDevice
-    cudaErrorInvalidDevice = hip.chip.hipErrorInvalidDevice
-    hipErrorInvalidDevice = hip.chip.hipErrorInvalidDevice
-    CUDA_ERROR_INVALID_IMAGE = hip.chip.hipErrorInvalidImage
-    cudaErrorInvalidKernelImage = hip.chip.hipErrorInvalidImage
-    hipErrorInvalidImage = hip.chip.hipErrorInvalidImage
-    CUDA_ERROR_INVALID_CONTEXT = hip.chip.hipErrorInvalidContext
-    cudaErrorDeviceUninitialized = hip.chip.hipErrorInvalidContext
-    hipErrorInvalidContext = hip.chip.hipErrorInvalidContext
-    CUDA_ERROR_CONTEXT_ALREADY_CURRENT = hip.chip.hipErrorContextAlreadyCurrent
-    hipErrorContextAlreadyCurrent = hip.chip.hipErrorContextAlreadyCurrent
-    CUDA_ERROR_MAP_FAILED = hip.chip.hipErrorMapFailed
-    cudaErrorMapBufferObjectFailed = hip.chip.hipErrorMapFailed
-    hipErrorMapFailed = hip.chip.hipErrorMapFailed
-    hipErrorMapBufferObjectFailed = hip.chip.hipErrorMapBufferObjectFailed
-    CUDA_ERROR_UNMAP_FAILED = hip.chip.hipErrorUnmapFailed
-    cudaErrorUnmapBufferObjectFailed = hip.chip.hipErrorUnmapFailed
-    hipErrorUnmapFailed = hip.chip.hipErrorUnmapFailed
-    CUDA_ERROR_ARRAY_IS_MAPPED = hip.chip.hipErrorArrayIsMapped
-    cudaErrorArrayIsMapped = hip.chip.hipErrorArrayIsMapped
-    hipErrorArrayIsMapped = hip.chip.hipErrorArrayIsMapped
-    CUDA_ERROR_ALREADY_MAPPED = hip.chip.hipErrorAlreadyMapped
-    cudaErrorAlreadyMapped = hip.chip.hipErrorAlreadyMapped
-    hipErrorAlreadyMapped = hip.chip.hipErrorAlreadyMapped
-    CUDA_ERROR_NO_BINARY_FOR_GPU = hip.chip.hipErrorNoBinaryForGpu
-    cudaErrorNoKernelImageForDevice = hip.chip.hipErrorNoBinaryForGpu
-    hipErrorNoBinaryForGpu = hip.chip.hipErrorNoBinaryForGpu
-    CUDA_ERROR_ALREADY_ACQUIRED = hip.chip.hipErrorAlreadyAcquired
-    cudaErrorAlreadyAcquired = hip.chip.hipErrorAlreadyAcquired
-    hipErrorAlreadyAcquired = hip.chip.hipErrorAlreadyAcquired
-    CUDA_ERROR_NOT_MAPPED = hip.chip.hipErrorNotMapped
-    cudaErrorNotMapped = hip.chip.hipErrorNotMapped
-    hipErrorNotMapped = hip.chip.hipErrorNotMapped
-    CUDA_ERROR_NOT_MAPPED_AS_ARRAY = hip.chip.hipErrorNotMappedAsArray
-    cudaErrorNotMappedAsArray = hip.chip.hipErrorNotMappedAsArray
-    hipErrorNotMappedAsArray = hip.chip.hipErrorNotMappedAsArray
-    CUDA_ERROR_NOT_MAPPED_AS_POINTER = hip.chip.hipErrorNotMappedAsPointer
-    cudaErrorNotMappedAsPointer = hip.chip.hipErrorNotMappedAsPointer
-    hipErrorNotMappedAsPointer = hip.chip.hipErrorNotMappedAsPointer
-    CUDA_ERROR_ECC_UNCORRECTABLE = hip.chip.hipErrorECCNotCorrectable
-    cudaErrorECCUncorrectable = hip.chip.hipErrorECCNotCorrectable
-    hipErrorECCNotCorrectable = hip.chip.hipErrorECCNotCorrectable
-    CUDA_ERROR_UNSUPPORTED_LIMIT = hip.chip.hipErrorUnsupportedLimit
-    cudaErrorUnsupportedLimit = hip.chip.hipErrorUnsupportedLimit
-    hipErrorUnsupportedLimit = hip.chip.hipErrorUnsupportedLimit
-    CUDA_ERROR_CONTEXT_ALREADY_IN_USE = hip.chip.hipErrorContextAlreadyInUse
-    cudaErrorDeviceAlreadyInUse = hip.chip.hipErrorContextAlreadyInUse
-    hipErrorContextAlreadyInUse = hip.chip.hipErrorContextAlreadyInUse
-    CUDA_ERROR_PEER_ACCESS_UNSUPPORTED = hip.chip.hipErrorPeerAccessUnsupported
-    cudaErrorPeerAccessUnsupported = hip.chip.hipErrorPeerAccessUnsupported
-    hipErrorPeerAccessUnsupported = hip.chip.hipErrorPeerAccessUnsupported
-    CUDA_ERROR_INVALID_PTX = hip.chip.hipErrorInvalidKernelFile
-    cudaErrorInvalidPtx = hip.chip.hipErrorInvalidKernelFile
-    hipErrorInvalidKernelFile = hip.chip.hipErrorInvalidKernelFile
-    CUDA_ERROR_INVALID_GRAPHICS_CONTEXT = hip.chip.hipErrorInvalidGraphicsContext
-    cudaErrorInvalidGraphicsContext = hip.chip.hipErrorInvalidGraphicsContext
-    hipErrorInvalidGraphicsContext = hip.chip.hipErrorInvalidGraphicsContext
-    CUDA_ERROR_INVALID_SOURCE = hip.chip.hipErrorInvalidSource
-    cudaErrorInvalidSource = hip.chip.hipErrorInvalidSource
-    hipErrorInvalidSource = hip.chip.hipErrorInvalidSource
-    CUDA_ERROR_FILE_NOT_FOUND = hip.chip.hipErrorFileNotFound
-    cudaErrorFileNotFound = hip.chip.hipErrorFileNotFound
-    hipErrorFileNotFound = hip.chip.hipErrorFileNotFound
-    CUDA_ERROR_SHARED_OBJECT_SYMBOL_NOT_FOUND = hip.chip.hipErrorSharedObjectSymbolNotFound
-    cudaErrorSharedObjectSymbolNotFound = hip.chip.hipErrorSharedObjectSymbolNotFound
-    hipErrorSharedObjectSymbolNotFound = hip.chip.hipErrorSharedObjectSymbolNotFound
-    CUDA_ERROR_SHARED_OBJECT_INIT_FAILED = hip.chip.hipErrorSharedObjectInitFailed
-    cudaErrorSharedObjectInitFailed = hip.chip.hipErrorSharedObjectInitFailed
-    hipErrorSharedObjectInitFailed = hip.chip.hipErrorSharedObjectInitFailed
-    CUDA_ERROR_OPERATING_SYSTEM = hip.chip.hipErrorOperatingSystem
-    cudaErrorOperatingSystem = hip.chip.hipErrorOperatingSystem
-    hipErrorOperatingSystem = hip.chip.hipErrorOperatingSystem
-    CUDA_ERROR_INVALID_HANDLE = hip.chip.hipErrorInvalidHandle
-    cudaErrorInvalidResourceHandle = hip.chip.hipErrorInvalidHandle
-    hipErrorInvalidHandle = hip.chip.hipErrorInvalidHandle
-    hipErrorInvalidResourceHandle = hip.chip.hipErrorInvalidResourceHandle
-    CUDA_ERROR_ILLEGAL_STATE = hip.chip.hipErrorIllegalState
-    cudaErrorIllegalState = hip.chip.hipErrorIllegalState
-    hipErrorIllegalState = hip.chip.hipErrorIllegalState
-    CUDA_ERROR_NOT_FOUND = hip.chip.hipErrorNotFound
-    cudaErrorSymbolNotFound = hip.chip.hipErrorNotFound
-    hipErrorNotFound = hip.chip.hipErrorNotFound
-    CUDA_ERROR_NOT_READY = hip.chip.hipErrorNotReady
-    cudaErrorNotReady = hip.chip.hipErrorNotReady
-    hipErrorNotReady = hip.chip.hipErrorNotReady
-    CUDA_ERROR_ILLEGAL_ADDRESS = hip.chip.hipErrorIllegalAddress
-    cudaErrorIllegalAddress = hip.chip.hipErrorIllegalAddress
-    hipErrorIllegalAddress = hip.chip.hipErrorIllegalAddress
-    CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES = hip.chip.hipErrorLaunchOutOfResources
-    cudaErrorLaunchOutOfResources = hip.chip.hipErrorLaunchOutOfResources
-    hipErrorLaunchOutOfResources = hip.chip.hipErrorLaunchOutOfResources
-    CUDA_ERROR_LAUNCH_TIMEOUT = hip.chip.hipErrorLaunchTimeOut
-    cudaErrorLaunchTimeout = hip.chip.hipErrorLaunchTimeOut
-    hipErrorLaunchTimeOut = hip.chip.hipErrorLaunchTimeOut
-    CUDA_ERROR_PEER_ACCESS_ALREADY_ENABLED = hip.chip.hipErrorPeerAccessAlreadyEnabled
-    cudaErrorPeerAccessAlreadyEnabled = hip.chip.hipErrorPeerAccessAlreadyEnabled
-    hipErrorPeerAccessAlreadyEnabled = hip.chip.hipErrorPeerAccessAlreadyEnabled
-    CUDA_ERROR_PEER_ACCESS_NOT_ENABLED = hip.chip.hipErrorPeerAccessNotEnabled
-    cudaErrorPeerAccessNotEnabled = hip.chip.hipErrorPeerAccessNotEnabled
-    hipErrorPeerAccessNotEnabled = hip.chip.hipErrorPeerAccessNotEnabled
-    CUDA_ERROR_PRIMARY_CONTEXT_ACTIVE = hip.chip.hipErrorSetOnActiveProcess
-    cudaErrorSetOnActiveProcess = hip.chip.hipErrorSetOnActiveProcess
-    hipErrorSetOnActiveProcess = hip.chip.hipErrorSetOnActiveProcess
-    CUDA_ERROR_CONTEXT_IS_DESTROYED = hip.chip.hipErrorContextIsDestroyed
-    cudaErrorContextIsDestroyed = hip.chip.hipErrorContextIsDestroyed
-    hipErrorContextIsDestroyed = hip.chip.hipErrorContextIsDestroyed
-    CUDA_ERROR_ASSERT = hip.chip.hipErrorAssert
-    cudaErrorAssert = hip.chip.hipErrorAssert
-    hipErrorAssert = hip.chip.hipErrorAssert
-    CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED = hip.chip.hipErrorHostMemoryAlreadyRegistered
-    cudaErrorHostMemoryAlreadyRegistered = hip.chip.hipErrorHostMemoryAlreadyRegistered
-    hipErrorHostMemoryAlreadyRegistered = hip.chip.hipErrorHostMemoryAlreadyRegistered
-    CUDA_ERROR_HOST_MEMORY_NOT_REGISTERED = hip.chip.hipErrorHostMemoryNotRegistered
-    cudaErrorHostMemoryNotRegistered = hip.chip.hipErrorHostMemoryNotRegistered
-    hipErrorHostMemoryNotRegistered = hip.chip.hipErrorHostMemoryNotRegistered
-    CUDA_ERROR_LAUNCH_FAILED = hip.chip.hipErrorLaunchFailure
-    cudaErrorLaunchFailure = hip.chip.hipErrorLaunchFailure
-    hipErrorLaunchFailure = hip.chip.hipErrorLaunchFailure
-    CUDA_ERROR_COOPERATIVE_LAUNCH_TOO_LARGE = hip.chip.hipErrorCooperativeLaunchTooLarge
-    cudaErrorCooperativeLaunchTooLarge = hip.chip.hipErrorCooperativeLaunchTooLarge
-    hipErrorCooperativeLaunchTooLarge = hip.chip.hipErrorCooperativeLaunchTooLarge
-    CUDA_ERROR_NOT_SUPPORTED = hip.chip.hipErrorNotSupported
-    cudaErrorNotSupported = hip.chip.hipErrorNotSupported
-    hipErrorNotSupported = hip.chip.hipErrorNotSupported
-    CUDA_ERROR_STREAM_CAPTURE_UNSUPPORTED = hip.chip.hipErrorStreamCaptureUnsupported
-    cudaErrorStreamCaptureUnsupported = hip.chip.hipErrorStreamCaptureUnsupported
-    hipErrorStreamCaptureUnsupported = hip.chip.hipErrorStreamCaptureUnsupported
-    CUDA_ERROR_STREAM_CAPTURE_INVALIDATED = hip.chip.hipErrorStreamCaptureInvalidated
-    cudaErrorStreamCaptureInvalidated = hip.chip.hipErrorStreamCaptureInvalidated
-    hipErrorStreamCaptureInvalidated = hip.chip.hipErrorStreamCaptureInvalidated
-    CUDA_ERROR_STREAM_CAPTURE_MERGE = hip.chip.hipErrorStreamCaptureMerge
-    cudaErrorStreamCaptureMerge = hip.chip.hipErrorStreamCaptureMerge
-    hipErrorStreamCaptureMerge = hip.chip.hipErrorStreamCaptureMerge
-    CUDA_ERROR_STREAM_CAPTURE_UNMATCHED = hip.chip.hipErrorStreamCaptureUnmatched
-    cudaErrorStreamCaptureUnmatched = hip.chip.hipErrorStreamCaptureUnmatched
-    hipErrorStreamCaptureUnmatched = hip.chip.hipErrorStreamCaptureUnmatched
-    CUDA_ERROR_STREAM_CAPTURE_UNJOINED = hip.chip.hipErrorStreamCaptureUnjoined
-    cudaErrorStreamCaptureUnjoined = hip.chip.hipErrorStreamCaptureUnjoined
-    hipErrorStreamCaptureUnjoined = hip.chip.hipErrorStreamCaptureUnjoined
-    CUDA_ERROR_STREAM_CAPTURE_ISOLATION = hip.chip.hipErrorStreamCaptureIsolation
-    cudaErrorStreamCaptureIsolation = hip.chip.hipErrorStreamCaptureIsolation
-    hipErrorStreamCaptureIsolation = hip.chip.hipErrorStreamCaptureIsolation
-    CUDA_ERROR_STREAM_CAPTURE_IMPLICIT = hip.chip.hipErrorStreamCaptureImplicit
-    cudaErrorStreamCaptureImplicit = hip.chip.hipErrorStreamCaptureImplicit
-    hipErrorStreamCaptureImplicit = hip.chip.hipErrorStreamCaptureImplicit
-    CUDA_ERROR_CAPTURED_EVENT = hip.chip.hipErrorCapturedEvent
-    cudaErrorCapturedEvent = hip.chip.hipErrorCapturedEvent
-    hipErrorCapturedEvent = hip.chip.hipErrorCapturedEvent
-    CUDA_ERROR_STREAM_CAPTURE_WRONG_THREAD = hip.chip.hipErrorStreamCaptureWrongThread
-    cudaErrorStreamCaptureWrongThread = hip.chip.hipErrorStreamCaptureWrongThread
-    hipErrorStreamCaptureWrongThread = hip.chip.hipErrorStreamCaptureWrongThread
-    CUDA_ERROR_GRAPH_EXEC_UPDATE_FAILURE = hip.chip.hipErrorGraphExecUpdateFailure
-    cudaErrorGraphExecUpdateFailure = hip.chip.hipErrorGraphExecUpdateFailure
-    hipErrorGraphExecUpdateFailure = hip.chip.hipErrorGraphExecUpdateFailure
-    CUDA_ERROR_UNKNOWN = hip.chip.hipErrorUnknown
-    cudaErrorUnknown = hip.chip.hipErrorUnknown
-    hipErrorUnknown = hip.chip.hipErrorUnknown
-    hipErrorRuntimeMemory = hip.chip.hipErrorRuntimeMemory
-    hipErrorRuntimeOther = hip.chip.hipErrorRuntimeOther
-    hipErrorTbd = hip.chip.hipErrorTbd
+from hip.chip cimport hipError_t as CUresult
+from hip.chip cimport hipSuccess
+from hip.chip cimport hipSuccess as CUDA_SUCCESS
+from hip.chip cimport hipSuccess as cudaSuccess
+from hip.chip cimport hipErrorInvalidValue
+from hip.chip cimport hipErrorInvalidValue as CUDA_ERROR_INVALID_VALUE
+from hip.chip cimport hipErrorInvalidValue as cudaErrorInvalidValue
+from hip.chip cimport hipErrorOutOfMemory
+from hip.chip cimport hipErrorOutOfMemory as CUDA_ERROR_OUT_OF_MEMORY
+from hip.chip cimport hipErrorOutOfMemory as cudaErrorMemoryAllocation
+from hip.chip cimport hipErrorMemoryAllocation
+from hip.chip cimport hipErrorNotInitialized
+from hip.chip cimport hipErrorNotInitialized as CUDA_ERROR_NOT_INITIALIZED
+from hip.chip cimport hipErrorNotInitialized as cudaErrorInitializationError
+from hip.chip cimport hipErrorInitializationError
+from hip.chip cimport hipErrorDeinitialized
+from hip.chip cimport hipErrorDeinitialized as CUDA_ERROR_DEINITIALIZED
+from hip.chip cimport hipErrorDeinitialized as cudaErrorCudartUnloading
+from hip.chip cimport hipErrorProfilerDisabled
+from hip.chip cimport hipErrorProfilerDisabled as CUDA_ERROR_PROFILER_DISABLED
+from hip.chip cimport hipErrorProfilerDisabled as cudaErrorProfilerDisabled
+from hip.chip cimport hipErrorProfilerNotInitialized
+from hip.chip cimport hipErrorProfilerNotInitialized as CUDA_ERROR_PROFILER_NOT_INITIALIZED
+from hip.chip cimport hipErrorProfilerNotInitialized as cudaErrorProfilerNotInitialized
+from hip.chip cimport hipErrorProfilerAlreadyStarted
+from hip.chip cimport hipErrorProfilerAlreadyStarted as CUDA_ERROR_PROFILER_ALREADY_STARTED
+from hip.chip cimport hipErrorProfilerAlreadyStarted as cudaErrorProfilerAlreadyStarted
+from hip.chip cimport hipErrorProfilerAlreadyStopped
+from hip.chip cimport hipErrorProfilerAlreadyStopped as CUDA_ERROR_PROFILER_ALREADY_STOPPED
+from hip.chip cimport hipErrorProfilerAlreadyStopped as cudaErrorProfilerAlreadyStopped
+from hip.chip cimport hipErrorInvalidConfiguration
+from hip.chip cimport hipErrorInvalidConfiguration as cudaErrorInvalidConfiguration
+from hip.chip cimport hipErrorInvalidPitchValue
+from hip.chip cimport hipErrorInvalidPitchValue as cudaErrorInvalidPitchValue
+from hip.chip cimport hipErrorInvalidSymbol
+from hip.chip cimport hipErrorInvalidSymbol as cudaErrorInvalidSymbol
+from hip.chip cimport hipErrorInvalidDevicePointer
+from hip.chip cimport hipErrorInvalidDevicePointer as cudaErrorInvalidDevicePointer
+from hip.chip cimport hipErrorInvalidMemcpyDirection
+from hip.chip cimport hipErrorInvalidMemcpyDirection as cudaErrorInvalidMemcpyDirection
+from hip.chip cimport hipErrorInsufficientDriver
+from hip.chip cimport hipErrorInsufficientDriver as cudaErrorInsufficientDriver
+from hip.chip cimport hipErrorMissingConfiguration
+from hip.chip cimport hipErrorMissingConfiguration as cudaErrorMissingConfiguration
+from hip.chip cimport hipErrorPriorLaunchFailure
+from hip.chip cimport hipErrorPriorLaunchFailure as cudaErrorPriorLaunchFailure
+from hip.chip cimport hipErrorInvalidDeviceFunction
+from hip.chip cimport hipErrorInvalidDeviceFunction as cudaErrorInvalidDeviceFunction
+from hip.chip cimport hipErrorNoDevice
+from hip.chip cimport hipErrorNoDevice as CUDA_ERROR_NO_DEVICE
+from hip.chip cimport hipErrorNoDevice as cudaErrorNoDevice
+from hip.chip cimport hipErrorInvalidDevice
+from hip.chip cimport hipErrorInvalidDevice as CUDA_ERROR_INVALID_DEVICE
+from hip.chip cimport hipErrorInvalidDevice as cudaErrorInvalidDevice
+from hip.chip cimport hipErrorInvalidImage
+from hip.chip cimport hipErrorInvalidImage as CUDA_ERROR_INVALID_IMAGE
+from hip.chip cimport hipErrorInvalidImage as cudaErrorInvalidKernelImage
+from hip.chip cimport hipErrorInvalidContext
+from hip.chip cimport hipErrorInvalidContext as CUDA_ERROR_INVALID_CONTEXT
+from hip.chip cimport hipErrorInvalidContext as cudaErrorDeviceUninitialized
+from hip.chip cimport hipErrorContextAlreadyCurrent
+from hip.chip cimport hipErrorContextAlreadyCurrent as CUDA_ERROR_CONTEXT_ALREADY_CURRENT
+from hip.chip cimport hipErrorMapFailed
+from hip.chip cimport hipErrorMapFailed as CUDA_ERROR_MAP_FAILED
+from hip.chip cimport hipErrorMapFailed as cudaErrorMapBufferObjectFailed
+from hip.chip cimport hipErrorMapBufferObjectFailed
+from hip.chip cimport hipErrorUnmapFailed
+from hip.chip cimport hipErrorUnmapFailed as CUDA_ERROR_UNMAP_FAILED
+from hip.chip cimport hipErrorUnmapFailed as cudaErrorUnmapBufferObjectFailed
+from hip.chip cimport hipErrorArrayIsMapped
+from hip.chip cimport hipErrorArrayIsMapped as CUDA_ERROR_ARRAY_IS_MAPPED
+from hip.chip cimport hipErrorArrayIsMapped as cudaErrorArrayIsMapped
+from hip.chip cimport hipErrorAlreadyMapped
+from hip.chip cimport hipErrorAlreadyMapped as CUDA_ERROR_ALREADY_MAPPED
+from hip.chip cimport hipErrorAlreadyMapped as cudaErrorAlreadyMapped
+from hip.chip cimport hipErrorNoBinaryForGpu
+from hip.chip cimport hipErrorNoBinaryForGpu as CUDA_ERROR_NO_BINARY_FOR_GPU
+from hip.chip cimport hipErrorNoBinaryForGpu as cudaErrorNoKernelImageForDevice
+from hip.chip cimport hipErrorAlreadyAcquired
+from hip.chip cimport hipErrorAlreadyAcquired as CUDA_ERROR_ALREADY_ACQUIRED
+from hip.chip cimport hipErrorAlreadyAcquired as cudaErrorAlreadyAcquired
+from hip.chip cimport hipErrorNotMapped
+from hip.chip cimport hipErrorNotMapped as CUDA_ERROR_NOT_MAPPED
+from hip.chip cimport hipErrorNotMapped as cudaErrorNotMapped
+from hip.chip cimport hipErrorNotMappedAsArray
+from hip.chip cimport hipErrorNotMappedAsArray as CUDA_ERROR_NOT_MAPPED_AS_ARRAY
+from hip.chip cimport hipErrorNotMappedAsArray as cudaErrorNotMappedAsArray
+from hip.chip cimport hipErrorNotMappedAsPointer
+from hip.chip cimport hipErrorNotMappedAsPointer as CUDA_ERROR_NOT_MAPPED_AS_POINTER
+from hip.chip cimport hipErrorNotMappedAsPointer as cudaErrorNotMappedAsPointer
+from hip.chip cimport hipErrorECCNotCorrectable
+from hip.chip cimport hipErrorECCNotCorrectable as CUDA_ERROR_ECC_UNCORRECTABLE
+from hip.chip cimport hipErrorECCNotCorrectable as cudaErrorECCUncorrectable
+from hip.chip cimport hipErrorUnsupportedLimit
+from hip.chip cimport hipErrorUnsupportedLimit as CUDA_ERROR_UNSUPPORTED_LIMIT
+from hip.chip cimport hipErrorUnsupportedLimit as cudaErrorUnsupportedLimit
+from hip.chip cimport hipErrorContextAlreadyInUse
+from hip.chip cimport hipErrorContextAlreadyInUse as CUDA_ERROR_CONTEXT_ALREADY_IN_USE
+from hip.chip cimport hipErrorContextAlreadyInUse as cudaErrorDeviceAlreadyInUse
+from hip.chip cimport hipErrorPeerAccessUnsupported
+from hip.chip cimport hipErrorPeerAccessUnsupported as CUDA_ERROR_PEER_ACCESS_UNSUPPORTED
+from hip.chip cimport hipErrorPeerAccessUnsupported as cudaErrorPeerAccessUnsupported
+from hip.chip cimport hipErrorInvalidKernelFile
+from hip.chip cimport hipErrorInvalidKernelFile as CUDA_ERROR_INVALID_PTX
+from hip.chip cimport hipErrorInvalidKernelFile as cudaErrorInvalidPtx
+from hip.chip cimport hipErrorInvalidGraphicsContext
+from hip.chip cimport hipErrorInvalidGraphicsContext as CUDA_ERROR_INVALID_GRAPHICS_CONTEXT
+from hip.chip cimport hipErrorInvalidGraphicsContext as cudaErrorInvalidGraphicsContext
+from hip.chip cimport hipErrorInvalidSource
+from hip.chip cimport hipErrorInvalidSource as CUDA_ERROR_INVALID_SOURCE
+from hip.chip cimport hipErrorInvalidSource as cudaErrorInvalidSource
+from hip.chip cimport hipErrorFileNotFound
+from hip.chip cimport hipErrorFileNotFound as CUDA_ERROR_FILE_NOT_FOUND
+from hip.chip cimport hipErrorFileNotFound as cudaErrorFileNotFound
+from hip.chip cimport hipErrorSharedObjectSymbolNotFound
+from hip.chip cimport hipErrorSharedObjectSymbolNotFound as CUDA_ERROR_SHARED_OBJECT_SYMBOL_NOT_FOUND
+from hip.chip cimport hipErrorSharedObjectSymbolNotFound as cudaErrorSharedObjectSymbolNotFound
+from hip.chip cimport hipErrorSharedObjectInitFailed
+from hip.chip cimport hipErrorSharedObjectInitFailed as CUDA_ERROR_SHARED_OBJECT_INIT_FAILED
+from hip.chip cimport hipErrorSharedObjectInitFailed as cudaErrorSharedObjectInitFailed
+from hip.chip cimport hipErrorOperatingSystem
+from hip.chip cimport hipErrorOperatingSystem as CUDA_ERROR_OPERATING_SYSTEM
+from hip.chip cimport hipErrorOperatingSystem as cudaErrorOperatingSystem
+from hip.chip cimport hipErrorInvalidHandle
+from hip.chip cimport hipErrorInvalidHandle as CUDA_ERROR_INVALID_HANDLE
+from hip.chip cimport hipErrorInvalidHandle as cudaErrorInvalidResourceHandle
+from hip.chip cimport hipErrorInvalidResourceHandle
+from hip.chip cimport hipErrorIllegalState
+from hip.chip cimport hipErrorIllegalState as CUDA_ERROR_ILLEGAL_STATE
+from hip.chip cimport hipErrorIllegalState as cudaErrorIllegalState
+from hip.chip cimport hipErrorNotFound
+from hip.chip cimport hipErrorNotFound as CUDA_ERROR_NOT_FOUND
+from hip.chip cimport hipErrorNotFound as cudaErrorSymbolNotFound
+from hip.chip cimport hipErrorNotReady
+from hip.chip cimport hipErrorNotReady as CUDA_ERROR_NOT_READY
+from hip.chip cimport hipErrorNotReady as cudaErrorNotReady
+from hip.chip cimport hipErrorIllegalAddress
+from hip.chip cimport hipErrorIllegalAddress as CUDA_ERROR_ILLEGAL_ADDRESS
+from hip.chip cimport hipErrorIllegalAddress as cudaErrorIllegalAddress
+from hip.chip cimport hipErrorLaunchOutOfResources
+from hip.chip cimport hipErrorLaunchOutOfResources as CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES
+from hip.chip cimport hipErrorLaunchOutOfResources as cudaErrorLaunchOutOfResources
+from hip.chip cimport hipErrorLaunchTimeOut
+from hip.chip cimport hipErrorLaunchTimeOut as CUDA_ERROR_LAUNCH_TIMEOUT
+from hip.chip cimport hipErrorLaunchTimeOut as cudaErrorLaunchTimeout
+from hip.chip cimport hipErrorPeerAccessAlreadyEnabled
+from hip.chip cimport hipErrorPeerAccessAlreadyEnabled as CUDA_ERROR_PEER_ACCESS_ALREADY_ENABLED
+from hip.chip cimport hipErrorPeerAccessAlreadyEnabled as cudaErrorPeerAccessAlreadyEnabled
+from hip.chip cimport hipErrorPeerAccessNotEnabled
+from hip.chip cimport hipErrorPeerAccessNotEnabled as CUDA_ERROR_PEER_ACCESS_NOT_ENABLED
+from hip.chip cimport hipErrorPeerAccessNotEnabled as cudaErrorPeerAccessNotEnabled
+from hip.chip cimport hipErrorSetOnActiveProcess
+from hip.chip cimport hipErrorSetOnActiveProcess as CUDA_ERROR_PRIMARY_CONTEXT_ACTIVE
+from hip.chip cimport hipErrorSetOnActiveProcess as cudaErrorSetOnActiveProcess
+from hip.chip cimport hipErrorContextIsDestroyed
+from hip.chip cimport hipErrorContextIsDestroyed as CUDA_ERROR_CONTEXT_IS_DESTROYED
+from hip.chip cimport hipErrorContextIsDestroyed as cudaErrorContextIsDestroyed
+from hip.chip cimport hipErrorAssert
+from hip.chip cimport hipErrorAssert as CUDA_ERROR_ASSERT
+from hip.chip cimport hipErrorAssert as cudaErrorAssert
+from hip.chip cimport hipErrorHostMemoryAlreadyRegistered
+from hip.chip cimport hipErrorHostMemoryAlreadyRegistered as CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED
+from hip.chip cimport hipErrorHostMemoryAlreadyRegistered as cudaErrorHostMemoryAlreadyRegistered
+from hip.chip cimport hipErrorHostMemoryNotRegistered
+from hip.chip cimport hipErrorHostMemoryNotRegistered as CUDA_ERROR_HOST_MEMORY_NOT_REGISTERED
+from hip.chip cimport hipErrorHostMemoryNotRegistered as cudaErrorHostMemoryNotRegistered
+from hip.chip cimport hipErrorLaunchFailure
+from hip.chip cimport hipErrorLaunchFailure as CUDA_ERROR_LAUNCH_FAILED
+from hip.chip cimport hipErrorLaunchFailure as cudaErrorLaunchFailure
+from hip.chip cimport hipErrorCooperativeLaunchTooLarge
+from hip.chip cimport hipErrorCooperativeLaunchTooLarge as CUDA_ERROR_COOPERATIVE_LAUNCH_TOO_LARGE
+from hip.chip cimport hipErrorCooperativeLaunchTooLarge as cudaErrorCooperativeLaunchTooLarge
+from hip.chip cimport hipErrorNotSupported
+from hip.chip cimport hipErrorNotSupported as CUDA_ERROR_NOT_SUPPORTED
+from hip.chip cimport hipErrorNotSupported as cudaErrorNotSupported
+from hip.chip cimport hipErrorStreamCaptureUnsupported
+from hip.chip cimport hipErrorStreamCaptureUnsupported as CUDA_ERROR_STREAM_CAPTURE_UNSUPPORTED
+from hip.chip cimport hipErrorStreamCaptureUnsupported as cudaErrorStreamCaptureUnsupported
+from hip.chip cimport hipErrorStreamCaptureInvalidated
+from hip.chip cimport hipErrorStreamCaptureInvalidated as CUDA_ERROR_STREAM_CAPTURE_INVALIDATED
+from hip.chip cimport hipErrorStreamCaptureInvalidated as cudaErrorStreamCaptureInvalidated
+from hip.chip cimport hipErrorStreamCaptureMerge
+from hip.chip cimport hipErrorStreamCaptureMerge as CUDA_ERROR_STREAM_CAPTURE_MERGE
+from hip.chip cimport hipErrorStreamCaptureMerge as cudaErrorStreamCaptureMerge
+from hip.chip cimport hipErrorStreamCaptureUnmatched
+from hip.chip cimport hipErrorStreamCaptureUnmatched as CUDA_ERROR_STREAM_CAPTURE_UNMATCHED
+from hip.chip cimport hipErrorStreamCaptureUnmatched as cudaErrorStreamCaptureUnmatched
+from hip.chip cimport hipErrorStreamCaptureUnjoined
+from hip.chip cimport hipErrorStreamCaptureUnjoined as CUDA_ERROR_STREAM_CAPTURE_UNJOINED
+from hip.chip cimport hipErrorStreamCaptureUnjoined as cudaErrorStreamCaptureUnjoined
+from hip.chip cimport hipErrorStreamCaptureIsolation
+from hip.chip cimport hipErrorStreamCaptureIsolation as CUDA_ERROR_STREAM_CAPTURE_ISOLATION
+from hip.chip cimport hipErrorStreamCaptureIsolation as cudaErrorStreamCaptureIsolation
+from hip.chip cimport hipErrorStreamCaptureImplicit
+from hip.chip cimport hipErrorStreamCaptureImplicit as CUDA_ERROR_STREAM_CAPTURE_IMPLICIT
+from hip.chip cimport hipErrorStreamCaptureImplicit as cudaErrorStreamCaptureImplicit
+from hip.chip cimport hipErrorCapturedEvent
+from hip.chip cimport hipErrorCapturedEvent as CUDA_ERROR_CAPTURED_EVENT
+from hip.chip cimport hipErrorCapturedEvent as cudaErrorCapturedEvent
+from hip.chip cimport hipErrorStreamCaptureWrongThread
+from hip.chip cimport hipErrorStreamCaptureWrongThread as CUDA_ERROR_STREAM_CAPTURE_WRONG_THREAD
+from hip.chip cimport hipErrorStreamCaptureWrongThread as cudaErrorStreamCaptureWrongThread
+from hip.chip cimport hipErrorGraphExecUpdateFailure
+from hip.chip cimport hipErrorGraphExecUpdateFailure as CUDA_ERROR_GRAPH_EXEC_UPDATE_FAILURE
+from hip.chip cimport hipErrorGraphExecUpdateFailure as cudaErrorGraphExecUpdateFailure
+from hip.chip cimport hipErrorUnknown
+from hip.chip cimport hipErrorUnknown as CUDA_ERROR_UNKNOWN
+from hip.chip cimport hipErrorUnknown as cudaErrorUnknown
+from hip.chip cimport hipErrorRuntimeMemory
+from hip.chip cimport hipErrorRuntimeOther
+from hip.chip cimport hipErrorTbd
 ctypedef CUresult cudaError
 ctypedef CUresult cudaError_enum
 ctypedef CUresult cudaError_t
-cdef enum CUdevice_attribute:
-    hipDeviceAttributeCudaCompatibleBegin = hip.chip.hipDeviceAttributeCudaCompatibleBegin
-    CU_DEVICE_ATTRIBUTE_ECC_ENABLED = hip.chip.hipDeviceAttributeEccEnabled
-    cudaDevAttrEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
-    hipDeviceAttributeEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
-    hipDeviceAttributeAccessPolicyMaxWindowSize = hip.chip.hipDeviceAttributeAccessPolicyMaxWindowSize
-    CU_DEVICE_ATTRIBUTE_ASYNC_ENGINE_COUNT = hip.chip.hipDeviceAttributeAsyncEngineCount
-    CU_DEVICE_ATTRIBUTE_GPU_OVERLAP = hip.chip.hipDeviceAttributeAsyncEngineCount
-    cudaDevAttrAsyncEngineCount = hip.chip.hipDeviceAttributeAsyncEngineCount
-    cudaDevAttrGpuOverlap = hip.chip.hipDeviceAttributeAsyncEngineCount
-    hipDeviceAttributeAsyncEngineCount = hip.chip.hipDeviceAttributeAsyncEngineCount
-    CU_DEVICE_ATTRIBUTE_CAN_MAP_HOST_MEMORY = hip.chip.hipDeviceAttributeCanMapHostMemory
-    cudaDevAttrCanMapHostMemory = hip.chip.hipDeviceAttributeCanMapHostMemory
-    hipDeviceAttributeCanMapHostMemory = hip.chip.hipDeviceAttributeCanMapHostMemory
-    CU_DEVICE_ATTRIBUTE_CAN_USE_HOST_POINTER_FOR_REGISTERED_MEM = hip.chip.hipDeviceAttributeCanUseHostPointerForRegisteredMem
-    cudaDevAttrCanUseHostPointerForRegisteredMem = hip.chip.hipDeviceAttributeCanUseHostPointerForRegisteredMem
-    hipDeviceAttributeCanUseHostPointerForRegisteredMem = hip.chip.hipDeviceAttributeCanUseHostPointerForRegisteredMem
-    CU_DEVICE_ATTRIBUTE_CLOCK_RATE = hip.chip.hipDeviceAttributeClockRate
-    cudaDevAttrClockRate = hip.chip.hipDeviceAttributeClockRate
-    hipDeviceAttributeClockRate = hip.chip.hipDeviceAttributeClockRate
-    CU_DEVICE_ATTRIBUTE_COMPUTE_MODE = hip.chip.hipDeviceAttributeComputeMode
-    cudaDevAttrComputeMode = hip.chip.hipDeviceAttributeComputeMode
-    hipDeviceAttributeComputeMode = hip.chip.hipDeviceAttributeComputeMode
-    CU_DEVICE_ATTRIBUTE_COMPUTE_PREEMPTION_SUPPORTED = hip.chip.hipDeviceAttributeComputePreemptionSupported
-    cudaDevAttrComputePreemptionSupported = hip.chip.hipDeviceAttributeComputePreemptionSupported
-    hipDeviceAttributeComputePreemptionSupported = hip.chip.hipDeviceAttributeComputePreemptionSupported
-    CU_DEVICE_ATTRIBUTE_CONCURRENT_KERNELS = hip.chip.hipDeviceAttributeConcurrentKernels
-    cudaDevAttrConcurrentKernels = hip.chip.hipDeviceAttributeConcurrentKernels
-    hipDeviceAttributeConcurrentKernels = hip.chip.hipDeviceAttributeConcurrentKernels
-    CU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS = hip.chip.hipDeviceAttributeConcurrentManagedAccess
-    cudaDevAttrConcurrentManagedAccess = hip.chip.hipDeviceAttributeConcurrentManagedAccess
-    hipDeviceAttributeConcurrentManagedAccess = hip.chip.hipDeviceAttributeConcurrentManagedAccess
-    CU_DEVICE_ATTRIBUTE_COOPERATIVE_LAUNCH = hip.chip.hipDeviceAttributeCooperativeLaunch
-    cudaDevAttrCooperativeLaunch = hip.chip.hipDeviceAttributeCooperativeLaunch
-    hipDeviceAttributeCooperativeLaunch = hip.chip.hipDeviceAttributeCooperativeLaunch
-    CU_DEVICE_ATTRIBUTE_COOPERATIVE_MULTI_DEVICE_LAUNCH = hip.chip.hipDeviceAttributeCooperativeMultiDeviceLaunch
-    cudaDevAttrCooperativeMultiDeviceLaunch = hip.chip.hipDeviceAttributeCooperativeMultiDeviceLaunch
-    hipDeviceAttributeCooperativeMultiDeviceLaunch = hip.chip.hipDeviceAttributeCooperativeMultiDeviceLaunch
-    hipDeviceAttributeDeviceOverlap = hip.chip.hipDeviceAttributeDeviceOverlap
-    CU_DEVICE_ATTRIBUTE_DIRECT_MANAGED_MEM_ACCESS_FROM_HOST = hip.chip.hipDeviceAttributeDirectManagedMemAccessFromHost
-    cudaDevAttrDirectManagedMemAccessFromHost = hip.chip.hipDeviceAttributeDirectManagedMemAccessFromHost
-    hipDeviceAttributeDirectManagedMemAccessFromHost = hip.chip.hipDeviceAttributeDirectManagedMemAccessFromHost
-    CU_DEVICE_ATTRIBUTE_GLOBAL_L1_CACHE_SUPPORTED = hip.chip.hipDeviceAttributeGlobalL1CacheSupported
-    cudaDevAttrGlobalL1CacheSupported = hip.chip.hipDeviceAttributeGlobalL1CacheSupported
-    hipDeviceAttributeGlobalL1CacheSupported = hip.chip.hipDeviceAttributeGlobalL1CacheSupported
-    CU_DEVICE_ATTRIBUTE_HOST_NATIVE_ATOMIC_SUPPORTED = hip.chip.hipDeviceAttributeHostNativeAtomicSupported
-    cudaDevAttrHostNativeAtomicSupported = hip.chip.hipDeviceAttributeHostNativeAtomicSupported
-    hipDeviceAttributeHostNativeAtomicSupported = hip.chip.hipDeviceAttributeHostNativeAtomicSupported
-    CU_DEVICE_ATTRIBUTE_INTEGRATED = hip.chip.hipDeviceAttributeIntegrated
-    cudaDevAttrIntegrated = hip.chip.hipDeviceAttributeIntegrated
-    hipDeviceAttributeIntegrated = hip.chip.hipDeviceAttributeIntegrated
-    CU_DEVICE_ATTRIBUTE_MULTI_GPU_BOARD = hip.chip.hipDeviceAttributeIsMultiGpuBoard
-    cudaDevAttrIsMultiGpuBoard = hip.chip.hipDeviceAttributeIsMultiGpuBoard
-    hipDeviceAttributeIsMultiGpuBoard = hip.chip.hipDeviceAttributeIsMultiGpuBoard
-    CU_DEVICE_ATTRIBUTE_KERNEL_EXEC_TIMEOUT = hip.chip.hipDeviceAttributeKernelExecTimeout
-    cudaDevAttrKernelExecTimeout = hip.chip.hipDeviceAttributeKernelExecTimeout
-    hipDeviceAttributeKernelExecTimeout = hip.chip.hipDeviceAttributeKernelExecTimeout
-    CU_DEVICE_ATTRIBUTE_L2_CACHE_SIZE = hip.chip.hipDeviceAttributeL2CacheSize
-    cudaDevAttrL2CacheSize = hip.chip.hipDeviceAttributeL2CacheSize
-    hipDeviceAttributeL2CacheSize = hip.chip.hipDeviceAttributeL2CacheSize
-    CU_DEVICE_ATTRIBUTE_LOCAL_L1_CACHE_SUPPORTED = hip.chip.hipDeviceAttributeLocalL1CacheSupported
-    cudaDevAttrLocalL1CacheSupported = hip.chip.hipDeviceAttributeLocalL1CacheSupported
-    hipDeviceAttributeLocalL1CacheSupported = hip.chip.hipDeviceAttributeLocalL1CacheSupported
-    hipDeviceAttributeLuid = hip.chip.hipDeviceAttributeLuid
-    hipDeviceAttributeLuidDeviceNodeMask = hip.chip.hipDeviceAttributeLuidDeviceNodeMask
-    CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR = hip.chip.hipDeviceAttributeComputeCapabilityMajor
-    cudaDevAttrComputeCapabilityMajor = hip.chip.hipDeviceAttributeComputeCapabilityMajor
-    hipDeviceAttributeComputeCapabilityMajor = hip.chip.hipDeviceAttributeComputeCapabilityMajor
-    CU_DEVICE_ATTRIBUTE_MANAGED_MEMORY = hip.chip.hipDeviceAttributeManagedMemory
-    cudaDevAttrManagedMemory = hip.chip.hipDeviceAttributeManagedMemory
-    hipDeviceAttributeManagedMemory = hip.chip.hipDeviceAttributeManagedMemory
-    hipDeviceAttributeMaxBlocksPerMultiProcessor = hip.chip.hipDeviceAttributeMaxBlocksPerMultiProcessor
-    CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_X = hip.chip.hipDeviceAttributeMaxBlockDimX
-    cudaDevAttrMaxBlockDimX = hip.chip.hipDeviceAttributeMaxBlockDimX
-    hipDeviceAttributeMaxBlockDimX = hip.chip.hipDeviceAttributeMaxBlockDimX
-    CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_Y = hip.chip.hipDeviceAttributeMaxBlockDimY
-    cudaDevAttrMaxBlockDimY = hip.chip.hipDeviceAttributeMaxBlockDimY
-    hipDeviceAttributeMaxBlockDimY = hip.chip.hipDeviceAttributeMaxBlockDimY
-    CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_Z = hip.chip.hipDeviceAttributeMaxBlockDimZ
-    cudaDevAttrMaxBlockDimZ = hip.chip.hipDeviceAttributeMaxBlockDimZ
-    hipDeviceAttributeMaxBlockDimZ = hip.chip.hipDeviceAttributeMaxBlockDimZ
-    CU_DEVICE_ATTRIBUTE_MAX_GRID_DIM_X = hip.chip.hipDeviceAttributeMaxGridDimX
-    cudaDevAttrMaxGridDimX = hip.chip.hipDeviceAttributeMaxGridDimX
-    hipDeviceAttributeMaxGridDimX = hip.chip.hipDeviceAttributeMaxGridDimX
-    CU_DEVICE_ATTRIBUTE_MAX_GRID_DIM_Y = hip.chip.hipDeviceAttributeMaxGridDimY
-    cudaDevAttrMaxGridDimY = hip.chip.hipDeviceAttributeMaxGridDimY
-    hipDeviceAttributeMaxGridDimY = hip.chip.hipDeviceAttributeMaxGridDimY
-    CU_DEVICE_ATTRIBUTE_MAX_GRID_DIM_Z = hip.chip.hipDeviceAttributeMaxGridDimZ
-    cudaDevAttrMaxGridDimZ = hip.chip.hipDeviceAttributeMaxGridDimZ
-    hipDeviceAttributeMaxGridDimZ = hip.chip.hipDeviceAttributeMaxGridDimZ
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE1D_WIDTH = hip.chip.hipDeviceAttributeMaxSurface1D
-    cudaDevAttrMaxSurface1DWidth = hip.chip.hipDeviceAttributeMaxSurface1D
-    hipDeviceAttributeMaxSurface1D = hip.chip.hipDeviceAttributeMaxSurface1D
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE1D_LAYERED_WIDTH = hip.chip.hipDeviceAttributeMaxSurface1DLayered
-    cudaDevAttrMaxSurface1DLayeredWidth = hip.chip.hipDeviceAttributeMaxSurface1DLayered
-    hipDeviceAttributeMaxSurface1DLayered = hip.chip.hipDeviceAttributeMaxSurface1DLayered
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_HEIGHT = hip.chip.hipDeviceAttributeMaxSurface2D
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_WIDTH = hip.chip.hipDeviceAttributeMaxSurface2D
-    cudaDevAttrMaxSurface2DHeight = hip.chip.hipDeviceAttributeMaxSurface2D
-    cudaDevAttrMaxSurface2DWidth = hip.chip.hipDeviceAttributeMaxSurface2D
-    hipDeviceAttributeMaxSurface2D = hip.chip.hipDeviceAttributeMaxSurface2D
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_LAYERED_HEIGHT = hip.chip.hipDeviceAttributeMaxSurface2DLayered
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_LAYERED_WIDTH = hip.chip.hipDeviceAttributeMaxSurface2DLayered
-    cudaDevAttrMaxSurface2DLayeredHeight = hip.chip.hipDeviceAttributeMaxSurface2DLayered
-    cudaDevAttrMaxSurface2DLayeredWidth = hip.chip.hipDeviceAttributeMaxSurface2DLayered
-    hipDeviceAttributeMaxSurface2DLayered = hip.chip.hipDeviceAttributeMaxSurface2DLayered
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_DEPTH = hip.chip.hipDeviceAttributeMaxSurface3D
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_HEIGHT = hip.chip.hipDeviceAttributeMaxSurface3D
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_WIDTH = hip.chip.hipDeviceAttributeMaxSurface3D
-    cudaDevAttrMaxSurface3DDepth = hip.chip.hipDeviceAttributeMaxSurface3D
-    cudaDevAttrMaxSurface3DHeight = hip.chip.hipDeviceAttributeMaxSurface3D
-    cudaDevAttrMaxSurface3DWidth = hip.chip.hipDeviceAttributeMaxSurface3D
-    hipDeviceAttributeMaxSurface3D = hip.chip.hipDeviceAttributeMaxSurface3D
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACECUBEMAP_WIDTH = hip.chip.hipDeviceAttributeMaxSurfaceCubemap
-    cudaDevAttrMaxSurfaceCubemapWidth = hip.chip.hipDeviceAttributeMaxSurfaceCubemap
-    hipDeviceAttributeMaxSurfaceCubemap = hip.chip.hipDeviceAttributeMaxSurfaceCubemap
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACECUBEMAP_LAYERED_WIDTH = hip.chip.hipDeviceAttributeMaxSurfaceCubemapLayered
-    cudaDevAttrMaxSurfaceCubemapLayeredWidth = hip.chip.hipDeviceAttributeMaxSurfaceCubemapLayered
-    hipDeviceAttributeMaxSurfaceCubemapLayered = hip.chip.hipDeviceAttributeMaxSurfaceCubemapLayered
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_WIDTH = hip.chip.hipDeviceAttributeMaxTexture1DWidth
-    cudaDevAttrMaxTexture1DWidth = hip.chip.hipDeviceAttributeMaxTexture1DWidth
-    hipDeviceAttributeMaxTexture1DWidth = hip.chip.hipDeviceAttributeMaxTexture1DWidth
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_LAYERED_WIDTH = hip.chip.hipDeviceAttributeMaxTexture1DLayered
-    cudaDevAttrMaxTexture1DLayeredWidth = hip.chip.hipDeviceAttributeMaxTexture1DLayered
-    hipDeviceAttributeMaxTexture1DLayered = hip.chip.hipDeviceAttributeMaxTexture1DLayered
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_LINEAR_WIDTH = hip.chip.hipDeviceAttributeMaxTexture1DLinear
-    cudaDevAttrMaxTexture1DLinearWidth = hip.chip.hipDeviceAttributeMaxTexture1DLinear
-    hipDeviceAttributeMaxTexture1DLinear = hip.chip.hipDeviceAttributeMaxTexture1DLinear
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_MIPMAPPED_WIDTH = hip.chip.hipDeviceAttributeMaxTexture1DMipmap
-    cudaDevAttrMaxTexture1DMipmappedWidth = hip.chip.hipDeviceAttributeMaxTexture1DMipmap
-    hipDeviceAttributeMaxTexture1DMipmap = hip.chip.hipDeviceAttributeMaxTexture1DMipmap
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_WIDTH = hip.chip.hipDeviceAttributeMaxTexture2DWidth
-    cudaDevAttrMaxTexture2DWidth = hip.chip.hipDeviceAttributeMaxTexture2DWidth
-    hipDeviceAttributeMaxTexture2DWidth = hip.chip.hipDeviceAttributeMaxTexture2DWidth
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_HEIGHT = hip.chip.hipDeviceAttributeMaxTexture2DHeight
-    cudaDevAttrMaxTexture2DHeight = hip.chip.hipDeviceAttributeMaxTexture2DHeight
-    hipDeviceAttributeMaxTexture2DHeight = hip.chip.hipDeviceAttributeMaxTexture2DHeight
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_GATHER_HEIGHT = hip.chip.hipDeviceAttributeMaxTexture2DGather
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_GATHER_WIDTH = hip.chip.hipDeviceAttributeMaxTexture2DGather
-    cudaDevAttrMaxTexture2DGatherHeight = hip.chip.hipDeviceAttributeMaxTexture2DGather
-    cudaDevAttrMaxTexture2DGatherWidth = hip.chip.hipDeviceAttributeMaxTexture2DGather
-    hipDeviceAttributeMaxTexture2DGather = hip.chip.hipDeviceAttributeMaxTexture2DGather
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_ARRAY_HEIGHT = hip.chip.hipDeviceAttributeMaxTexture2DLayered
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_ARRAY_WIDTH = hip.chip.hipDeviceAttributeMaxTexture2DLayered
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LAYERED_HEIGHT = hip.chip.hipDeviceAttributeMaxTexture2DLayered
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LAYERED_WIDTH = hip.chip.hipDeviceAttributeMaxTexture2DLayered
-    cudaDevAttrMaxTexture2DLayeredHeight = hip.chip.hipDeviceAttributeMaxTexture2DLayered
-    cudaDevAttrMaxTexture2DLayeredWidth = hip.chip.hipDeviceAttributeMaxTexture2DLayered
-    hipDeviceAttributeMaxTexture2DLayered = hip.chip.hipDeviceAttributeMaxTexture2DLayered
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_HEIGHT = hip.chip.hipDeviceAttributeMaxTexture2DLinear
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_PITCH = hip.chip.hipDeviceAttributeMaxTexture2DLinear
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_WIDTH = hip.chip.hipDeviceAttributeMaxTexture2DLinear
-    cudaDevAttrMaxTexture2DLinearHeight = hip.chip.hipDeviceAttributeMaxTexture2DLinear
-    cudaDevAttrMaxTexture2DLinearPitch = hip.chip.hipDeviceAttributeMaxTexture2DLinear
-    cudaDevAttrMaxTexture2DLinearWidth = hip.chip.hipDeviceAttributeMaxTexture2DLinear
-    hipDeviceAttributeMaxTexture2DLinear = hip.chip.hipDeviceAttributeMaxTexture2DLinear
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_MIPMAPPED_HEIGHT = hip.chip.hipDeviceAttributeMaxTexture2DMipmap
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_MIPMAPPED_WIDTH = hip.chip.hipDeviceAttributeMaxTexture2DMipmap
-    cudaDevAttrMaxTexture2DMipmappedHeight = hip.chip.hipDeviceAttributeMaxTexture2DMipmap
-    cudaDevAttrMaxTexture2DMipmappedWidth = hip.chip.hipDeviceAttributeMaxTexture2DMipmap
-    hipDeviceAttributeMaxTexture2DMipmap = hip.chip.hipDeviceAttributeMaxTexture2DMipmap
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_WIDTH = hip.chip.hipDeviceAttributeMaxTexture3DWidth
-    cudaDevAttrMaxTexture3DWidth = hip.chip.hipDeviceAttributeMaxTexture3DWidth
-    hipDeviceAttributeMaxTexture3DWidth = hip.chip.hipDeviceAttributeMaxTexture3DWidth
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_HEIGHT = hip.chip.hipDeviceAttributeMaxTexture3DHeight
-    cudaDevAttrMaxTexture3DHeight = hip.chip.hipDeviceAttributeMaxTexture3DHeight
-    hipDeviceAttributeMaxTexture3DHeight = hip.chip.hipDeviceAttributeMaxTexture3DHeight
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_DEPTH = hip.chip.hipDeviceAttributeMaxTexture3DDepth
-    cudaDevAttrMaxTexture3DDepth = hip.chip.hipDeviceAttributeMaxTexture3DDepth
-    hipDeviceAttributeMaxTexture3DDepth = hip.chip.hipDeviceAttributeMaxTexture3DDepth
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_DEPTH_ALTERNATE = hip.chip.hipDeviceAttributeMaxTexture3DAlt
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_HEIGHT_ALTERNATE = hip.chip.hipDeviceAttributeMaxTexture3DAlt
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_WIDTH_ALTERNATE = hip.chip.hipDeviceAttributeMaxTexture3DAlt
-    cudaDevAttrMaxTexture3DDepthAlt = hip.chip.hipDeviceAttributeMaxTexture3DAlt
-    cudaDevAttrMaxTexture3DHeightAlt = hip.chip.hipDeviceAttributeMaxTexture3DAlt
-    cudaDevAttrMaxTexture3DWidthAlt = hip.chip.hipDeviceAttributeMaxTexture3DAlt
-    hipDeviceAttributeMaxTexture3DAlt = hip.chip.hipDeviceAttributeMaxTexture3DAlt
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURECUBEMAP_WIDTH = hip.chip.hipDeviceAttributeMaxTextureCubemap
-    cudaDevAttrMaxTextureCubemapWidth = hip.chip.hipDeviceAttributeMaxTextureCubemap
-    hipDeviceAttributeMaxTextureCubemap = hip.chip.hipDeviceAttributeMaxTextureCubemap
-    CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURECUBEMAP_LAYERED_WIDTH = hip.chip.hipDeviceAttributeMaxTextureCubemapLayered
-    cudaDevAttrMaxTextureCubemapLayeredWidth = hip.chip.hipDeviceAttributeMaxTextureCubemapLayered
-    hipDeviceAttributeMaxTextureCubemapLayered = hip.chip.hipDeviceAttributeMaxTextureCubemapLayered
-    hipDeviceAttributeMaxThreadsDim = hip.chip.hipDeviceAttributeMaxThreadsDim
-    CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.hipDeviceAttributeMaxThreadsPerBlock
-    cudaDevAttrMaxThreadsPerBlock = hip.chip.hipDeviceAttributeMaxThreadsPerBlock
-    hipDeviceAttributeMaxThreadsPerBlock = hip.chip.hipDeviceAttributeMaxThreadsPerBlock
-    CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_MULTIPROCESSOR = hip.chip.hipDeviceAttributeMaxThreadsPerMultiProcessor
-    cudaDevAttrMaxThreadsPerMultiProcessor = hip.chip.hipDeviceAttributeMaxThreadsPerMultiProcessor
-    hipDeviceAttributeMaxThreadsPerMultiProcessor = hip.chip.hipDeviceAttributeMaxThreadsPerMultiProcessor
-    CU_DEVICE_ATTRIBUTE_MAX_PITCH = hip.chip.hipDeviceAttributeMaxPitch
-    cudaDevAttrMaxPitch = hip.chip.hipDeviceAttributeMaxPitch
-    hipDeviceAttributeMaxPitch = hip.chip.hipDeviceAttributeMaxPitch
-    CU_DEVICE_ATTRIBUTE_GLOBAL_MEMORY_BUS_WIDTH = hip.chip.hipDeviceAttributeMemoryBusWidth
-    cudaDevAttrGlobalMemoryBusWidth = hip.chip.hipDeviceAttributeMemoryBusWidth
-    hipDeviceAttributeMemoryBusWidth = hip.chip.hipDeviceAttributeMemoryBusWidth
-    CU_DEVICE_ATTRIBUTE_MEMORY_CLOCK_RATE = hip.chip.hipDeviceAttributeMemoryClockRate
-    cudaDevAttrMemoryClockRate = hip.chip.hipDeviceAttributeMemoryClockRate
-    hipDeviceAttributeMemoryClockRate = hip.chip.hipDeviceAttributeMemoryClockRate
-    CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR = hip.chip.hipDeviceAttributeComputeCapabilityMinor
-    cudaDevAttrComputeCapabilityMinor = hip.chip.hipDeviceAttributeComputeCapabilityMinor
-    hipDeviceAttributeComputeCapabilityMinor = hip.chip.hipDeviceAttributeComputeCapabilityMinor
-    cudaDevAttrMultiGpuBoardGroupID = hip.chip.hipDeviceAttributeMultiGpuBoardGroupID
-    hipDeviceAttributeMultiGpuBoardGroupID = hip.chip.hipDeviceAttributeMultiGpuBoardGroupID
-    CU_DEVICE_ATTRIBUTE_MULTIPROCESSOR_COUNT = hip.chip.hipDeviceAttributeMultiprocessorCount
-    cudaDevAttrMultiProcessorCount = hip.chip.hipDeviceAttributeMultiprocessorCount
-    hipDeviceAttributeMultiprocessorCount = hip.chip.hipDeviceAttributeMultiprocessorCount
-    hipDeviceAttributeName = hip.chip.hipDeviceAttributeName
-    CU_DEVICE_ATTRIBUTE_PAGEABLE_MEMORY_ACCESS = hip.chip.hipDeviceAttributePageableMemoryAccess
-    cudaDevAttrPageableMemoryAccess = hip.chip.hipDeviceAttributePageableMemoryAccess
-    hipDeviceAttributePageableMemoryAccess = hip.chip.hipDeviceAttributePageableMemoryAccess
-    CU_DEVICE_ATTRIBUTE_PAGEABLE_MEMORY_ACCESS_USES_HOST_PAGE_TABLES = hip.chip.hipDeviceAttributePageableMemoryAccessUsesHostPageTables
-    cudaDevAttrPageableMemoryAccessUsesHostPageTables = hip.chip.hipDeviceAttributePageableMemoryAccessUsesHostPageTables
-    hipDeviceAttributePageableMemoryAccessUsesHostPageTables = hip.chip.hipDeviceAttributePageableMemoryAccessUsesHostPageTables
-    CU_DEVICE_ATTRIBUTE_PCI_BUS_ID = hip.chip.hipDeviceAttributePciBusId
-    cudaDevAttrPciBusId = hip.chip.hipDeviceAttributePciBusId
-    hipDeviceAttributePciBusId = hip.chip.hipDeviceAttributePciBusId
-    CU_DEVICE_ATTRIBUTE_PCI_DEVICE_ID = hip.chip.hipDeviceAttributePciDeviceId
-    cudaDevAttrPciDeviceId = hip.chip.hipDeviceAttributePciDeviceId
-    hipDeviceAttributePciDeviceId = hip.chip.hipDeviceAttributePciDeviceId
-    CU_DEVICE_ATTRIBUTE_PCI_DOMAIN_ID = hip.chip.hipDeviceAttributePciDomainID
-    cudaDevAttrPciDomainId = hip.chip.hipDeviceAttributePciDomainID
-    hipDeviceAttributePciDomainID = hip.chip.hipDeviceAttributePciDomainID
-    hipDeviceAttributePersistingL2CacheMaxSize = hip.chip.hipDeviceAttributePersistingL2CacheMaxSize
-    CU_DEVICE_ATTRIBUTE_MAX_REGISTERS_PER_BLOCK = hip.chip.hipDeviceAttributeMaxRegistersPerBlock
-    CU_DEVICE_ATTRIBUTE_REGISTERS_PER_BLOCK = hip.chip.hipDeviceAttributeMaxRegistersPerBlock
-    cudaDevAttrMaxRegistersPerBlock = hip.chip.hipDeviceAttributeMaxRegistersPerBlock
-    hipDeviceAttributeMaxRegistersPerBlock = hip.chip.hipDeviceAttributeMaxRegistersPerBlock
-    CU_DEVICE_ATTRIBUTE_MAX_REGISTERS_PER_MULTIPROCESSOR = hip.chip.hipDeviceAttributeMaxRegistersPerMultiprocessor
-    cudaDevAttrMaxRegistersPerMultiprocessor = hip.chip.hipDeviceAttributeMaxRegistersPerMultiprocessor
-    hipDeviceAttributeMaxRegistersPerMultiprocessor = hip.chip.hipDeviceAttributeMaxRegistersPerMultiprocessor
-    hipDeviceAttributeReservedSharedMemPerBlock = hip.chip.hipDeviceAttributeReservedSharedMemPerBlock
-    CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_BLOCK = hip.chip.hipDeviceAttributeMaxSharedMemoryPerBlock
-    CU_DEVICE_ATTRIBUTE_SHARED_MEMORY_PER_BLOCK = hip.chip.hipDeviceAttributeMaxSharedMemoryPerBlock
-    cudaDevAttrMaxSharedMemoryPerBlock = hip.chip.hipDeviceAttributeMaxSharedMemoryPerBlock
-    hipDeviceAttributeMaxSharedMemoryPerBlock = hip.chip.hipDeviceAttributeMaxSharedMemoryPerBlock
-    CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_BLOCK_OPTIN = hip.chip.hipDeviceAttributeSharedMemPerBlockOptin
-    cudaDevAttrMaxSharedMemoryPerBlockOptin = hip.chip.hipDeviceAttributeSharedMemPerBlockOptin
-    hipDeviceAttributeSharedMemPerBlockOptin = hip.chip.hipDeviceAttributeSharedMemPerBlockOptin
-    hipDeviceAttributeSharedMemPerMultiprocessor = hip.chip.hipDeviceAttributeSharedMemPerMultiprocessor
-    CU_DEVICE_ATTRIBUTE_SINGLE_TO_DOUBLE_PRECISION_PERF_RATIO = hip.chip.hipDeviceAttributeSingleToDoublePrecisionPerfRatio
-    cudaDevAttrSingleToDoublePrecisionPerfRatio = hip.chip.hipDeviceAttributeSingleToDoublePrecisionPerfRatio
-    hipDeviceAttributeSingleToDoublePrecisionPerfRatio = hip.chip.hipDeviceAttributeSingleToDoublePrecisionPerfRatio
-    CU_DEVICE_ATTRIBUTE_STREAM_PRIORITIES_SUPPORTED = hip.chip.hipDeviceAttributeStreamPrioritiesSupported
-    cudaDevAttrStreamPrioritiesSupported = hip.chip.hipDeviceAttributeStreamPrioritiesSupported
-    hipDeviceAttributeStreamPrioritiesSupported = hip.chip.hipDeviceAttributeStreamPrioritiesSupported
-    CU_DEVICE_ATTRIBUTE_SURFACE_ALIGNMENT = hip.chip.hipDeviceAttributeSurfaceAlignment
-    cudaDevAttrSurfaceAlignment = hip.chip.hipDeviceAttributeSurfaceAlignment
-    hipDeviceAttributeSurfaceAlignment = hip.chip.hipDeviceAttributeSurfaceAlignment
-    CU_DEVICE_ATTRIBUTE_TCC_DRIVER = hip.chip.hipDeviceAttributeTccDriver
-    cudaDevAttrTccDriver = hip.chip.hipDeviceAttributeTccDriver
-    hipDeviceAttributeTccDriver = hip.chip.hipDeviceAttributeTccDriver
-    CU_DEVICE_ATTRIBUTE_TEXTURE_ALIGNMENT = hip.chip.hipDeviceAttributeTextureAlignment
-    cudaDevAttrTextureAlignment = hip.chip.hipDeviceAttributeTextureAlignment
-    hipDeviceAttributeTextureAlignment = hip.chip.hipDeviceAttributeTextureAlignment
-    CU_DEVICE_ATTRIBUTE_TEXTURE_PITCH_ALIGNMENT = hip.chip.hipDeviceAttributeTexturePitchAlignment
-    cudaDevAttrTexturePitchAlignment = hip.chip.hipDeviceAttributeTexturePitchAlignment
-    hipDeviceAttributeTexturePitchAlignment = hip.chip.hipDeviceAttributeTexturePitchAlignment
-    CU_DEVICE_ATTRIBUTE_TOTAL_CONSTANT_MEMORY = hip.chip.hipDeviceAttributeTotalConstantMemory
-    cudaDevAttrTotalConstantMemory = hip.chip.hipDeviceAttributeTotalConstantMemory
-    hipDeviceAttributeTotalConstantMemory = hip.chip.hipDeviceAttributeTotalConstantMemory
-    hipDeviceAttributeTotalGlobalMem = hip.chip.hipDeviceAttributeTotalGlobalMem
-    CU_DEVICE_ATTRIBUTE_UNIFIED_ADDRESSING = hip.chip.hipDeviceAttributeUnifiedAddressing
-    cudaDevAttrUnifiedAddressing = hip.chip.hipDeviceAttributeUnifiedAddressing
-    hipDeviceAttributeUnifiedAddressing = hip.chip.hipDeviceAttributeUnifiedAddressing
-    hipDeviceAttributeUuid = hip.chip.hipDeviceAttributeUuid
-    CU_DEVICE_ATTRIBUTE_WARP_SIZE = hip.chip.hipDeviceAttributeWarpSize
-    cudaDevAttrWarpSize = hip.chip.hipDeviceAttributeWarpSize
-    hipDeviceAttributeWarpSize = hip.chip.hipDeviceAttributeWarpSize
-    CU_DEVICE_ATTRIBUTE_MEMORY_POOLS_SUPPORTED = hip.chip.hipDeviceAttributeMemoryPoolsSupported
-    cudaDevAttrMemoryPoolsSupported = hip.chip.hipDeviceAttributeMemoryPoolsSupported
-    hipDeviceAttributeMemoryPoolsSupported = hip.chip.hipDeviceAttributeMemoryPoolsSupported
-    CU_DEVICE_ATTRIBUTE_VIRTUAL_MEMORY_MANAGEMENT_SUPPORTED = hip.chip.hipDeviceAttributeVirtualMemoryManagementSupported
-    hipDeviceAttributeVirtualMemoryManagementSupported = hip.chip.hipDeviceAttributeVirtualMemoryManagementSupported
-    hipDeviceAttributeCudaCompatibleEnd = hip.chip.hipDeviceAttributeCudaCompatibleEnd
-    hipDeviceAttributeAmdSpecificBegin = hip.chip.hipDeviceAttributeAmdSpecificBegin
-    hipDeviceAttributeClockInstructionRate = hip.chip.hipDeviceAttributeClockInstructionRate
-    hipDeviceAttributeArch = hip.chip.hipDeviceAttributeArch
-    CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_MULTIPROCESSOR = hip.chip.hipDeviceAttributeMaxSharedMemoryPerMultiprocessor
-    cudaDevAttrMaxSharedMemoryPerMultiprocessor = hip.chip.hipDeviceAttributeMaxSharedMemoryPerMultiprocessor
-    hipDeviceAttributeMaxSharedMemoryPerMultiprocessor = hip.chip.hipDeviceAttributeMaxSharedMemoryPerMultiprocessor
-    hipDeviceAttributeGcnArch = hip.chip.hipDeviceAttributeGcnArch
-    hipDeviceAttributeGcnArchName = hip.chip.hipDeviceAttributeGcnArchName
-    hipDeviceAttributeHdpMemFlushCntl = hip.chip.hipDeviceAttributeHdpMemFlushCntl
-    hipDeviceAttributeHdpRegFlushCntl = hip.chip.hipDeviceAttributeHdpRegFlushCntl
-    hipDeviceAttributeCooperativeMultiDeviceUnmatchedFunc = hip.chip.hipDeviceAttributeCooperativeMultiDeviceUnmatchedFunc
-    hipDeviceAttributeCooperativeMultiDeviceUnmatchedGridDim = hip.chip.hipDeviceAttributeCooperativeMultiDeviceUnmatchedGridDim
-    hipDeviceAttributeCooperativeMultiDeviceUnmatchedBlockDim = hip.chip.hipDeviceAttributeCooperativeMultiDeviceUnmatchedBlockDim
-    hipDeviceAttributeCooperativeMultiDeviceUnmatchedSharedMem = hip.chip.hipDeviceAttributeCooperativeMultiDeviceUnmatchedSharedMem
-    hipDeviceAttributeIsLargeBar = hip.chip.hipDeviceAttributeIsLargeBar
-    hipDeviceAttributeAsicRevision = hip.chip.hipDeviceAttributeAsicRevision
-    CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
-    cudaDevAttrReserved94 = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
-    hipDeviceAttributeCanUseStreamWaitValue = hip.chip.hipDeviceAttributeCanUseStreamWaitValue
-    hipDeviceAttributeImageSupport = hip.chip.hipDeviceAttributeImageSupport
-    hipDeviceAttributePhysicalMultiProcessorCount = hip.chip.hipDeviceAttributePhysicalMultiProcessorCount
-    hipDeviceAttributeFineGrainSupport = hip.chip.hipDeviceAttributeFineGrainSupport
-    hipDeviceAttributeWallClockRate = hip.chip.hipDeviceAttributeWallClockRate
-    hipDeviceAttributeAmdSpecificEnd = hip.chip.hipDeviceAttributeAmdSpecificEnd
-    hipDeviceAttributeVendorSpecificBegin = hip.chip.hipDeviceAttributeVendorSpecificBegin
+from hip.chip cimport hipDeviceAttribute_t as CUdevice_attribute
+from hip.chip cimport hipDeviceAttributeCudaCompatibleBegin
+from hip.chip cimport hipDeviceAttributeEccEnabled
+from hip.chip cimport hipDeviceAttributeEccEnabled as CU_DEVICE_ATTRIBUTE_ECC_ENABLED
+from hip.chip cimport hipDeviceAttributeEccEnabled as cudaDevAttrEccEnabled
+from hip.chip cimport hipDeviceAttributeAccessPolicyMaxWindowSize
+from hip.chip cimport hipDeviceAttributeAsyncEngineCount
+from hip.chip cimport hipDeviceAttributeAsyncEngineCount as CU_DEVICE_ATTRIBUTE_ASYNC_ENGINE_COUNT
+from hip.chip cimport hipDeviceAttributeAsyncEngineCount as CU_DEVICE_ATTRIBUTE_GPU_OVERLAP
+from hip.chip cimport hipDeviceAttributeAsyncEngineCount as cudaDevAttrAsyncEngineCount
+from hip.chip cimport hipDeviceAttributeAsyncEngineCount as cudaDevAttrGpuOverlap
+from hip.chip cimport hipDeviceAttributeCanMapHostMemory
+from hip.chip cimport hipDeviceAttributeCanMapHostMemory as CU_DEVICE_ATTRIBUTE_CAN_MAP_HOST_MEMORY
+from hip.chip cimport hipDeviceAttributeCanMapHostMemory as cudaDevAttrCanMapHostMemory
+from hip.chip cimport hipDeviceAttributeCanUseHostPointerForRegisteredMem
+from hip.chip cimport hipDeviceAttributeCanUseHostPointerForRegisteredMem as CU_DEVICE_ATTRIBUTE_CAN_USE_HOST_POINTER_FOR_REGISTERED_MEM
+from hip.chip cimport hipDeviceAttributeCanUseHostPointerForRegisteredMem as cudaDevAttrCanUseHostPointerForRegisteredMem
+from hip.chip cimport hipDeviceAttributeClockRate
+from hip.chip cimport hipDeviceAttributeClockRate as CU_DEVICE_ATTRIBUTE_CLOCK_RATE
+from hip.chip cimport hipDeviceAttributeClockRate as cudaDevAttrClockRate
+from hip.chip cimport hipDeviceAttributeComputeMode
+from hip.chip cimport hipDeviceAttributeComputeMode as CU_DEVICE_ATTRIBUTE_COMPUTE_MODE
+from hip.chip cimport hipDeviceAttributeComputeMode as cudaDevAttrComputeMode
+from hip.chip cimport hipDeviceAttributeComputePreemptionSupported
+from hip.chip cimport hipDeviceAttributeComputePreemptionSupported as CU_DEVICE_ATTRIBUTE_COMPUTE_PREEMPTION_SUPPORTED
+from hip.chip cimport hipDeviceAttributeComputePreemptionSupported as cudaDevAttrComputePreemptionSupported
+from hip.chip cimport hipDeviceAttributeConcurrentKernels
+from hip.chip cimport hipDeviceAttributeConcurrentKernels as CU_DEVICE_ATTRIBUTE_CONCURRENT_KERNELS
+from hip.chip cimport hipDeviceAttributeConcurrentKernels as cudaDevAttrConcurrentKernels
+from hip.chip cimport hipDeviceAttributeConcurrentManagedAccess
+from hip.chip cimport hipDeviceAttributeConcurrentManagedAccess as CU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS
+from hip.chip cimport hipDeviceAttributeConcurrentManagedAccess as cudaDevAttrConcurrentManagedAccess
+from hip.chip cimport hipDeviceAttributeCooperativeLaunch
+from hip.chip cimport hipDeviceAttributeCooperativeLaunch as CU_DEVICE_ATTRIBUTE_COOPERATIVE_LAUNCH
+from hip.chip cimport hipDeviceAttributeCooperativeLaunch as cudaDevAttrCooperativeLaunch
+from hip.chip cimport hipDeviceAttributeCooperativeMultiDeviceLaunch
+from hip.chip cimport hipDeviceAttributeCooperativeMultiDeviceLaunch as CU_DEVICE_ATTRIBUTE_COOPERATIVE_MULTI_DEVICE_LAUNCH
+from hip.chip cimport hipDeviceAttributeCooperativeMultiDeviceLaunch as cudaDevAttrCooperativeMultiDeviceLaunch
+from hip.chip cimport hipDeviceAttributeDeviceOverlap
+from hip.chip cimport hipDeviceAttributeDirectManagedMemAccessFromHost
+from hip.chip cimport hipDeviceAttributeDirectManagedMemAccessFromHost as CU_DEVICE_ATTRIBUTE_DIRECT_MANAGED_MEM_ACCESS_FROM_HOST
+from hip.chip cimport hipDeviceAttributeDirectManagedMemAccessFromHost as cudaDevAttrDirectManagedMemAccessFromHost
+from hip.chip cimport hipDeviceAttributeGlobalL1CacheSupported
+from hip.chip cimport hipDeviceAttributeGlobalL1CacheSupported as CU_DEVICE_ATTRIBUTE_GLOBAL_L1_CACHE_SUPPORTED
+from hip.chip cimport hipDeviceAttributeGlobalL1CacheSupported as cudaDevAttrGlobalL1CacheSupported
+from hip.chip cimport hipDeviceAttributeHostNativeAtomicSupported
+from hip.chip cimport hipDeviceAttributeHostNativeAtomicSupported as CU_DEVICE_ATTRIBUTE_HOST_NATIVE_ATOMIC_SUPPORTED
+from hip.chip cimport hipDeviceAttributeHostNativeAtomicSupported as cudaDevAttrHostNativeAtomicSupported
+from hip.chip cimport hipDeviceAttributeIntegrated
+from hip.chip cimport hipDeviceAttributeIntegrated as CU_DEVICE_ATTRIBUTE_INTEGRATED
+from hip.chip cimport hipDeviceAttributeIntegrated as cudaDevAttrIntegrated
+from hip.chip cimport hipDeviceAttributeIsMultiGpuBoard
+from hip.chip cimport hipDeviceAttributeIsMultiGpuBoard as CU_DEVICE_ATTRIBUTE_MULTI_GPU_BOARD
+from hip.chip cimport hipDeviceAttributeIsMultiGpuBoard as cudaDevAttrIsMultiGpuBoard
+from hip.chip cimport hipDeviceAttributeKernelExecTimeout
+from hip.chip cimport hipDeviceAttributeKernelExecTimeout as CU_DEVICE_ATTRIBUTE_KERNEL_EXEC_TIMEOUT
+from hip.chip cimport hipDeviceAttributeKernelExecTimeout as cudaDevAttrKernelExecTimeout
+from hip.chip cimport hipDeviceAttributeL2CacheSize
+from hip.chip cimport hipDeviceAttributeL2CacheSize as CU_DEVICE_ATTRIBUTE_L2_CACHE_SIZE
+from hip.chip cimport hipDeviceAttributeL2CacheSize as cudaDevAttrL2CacheSize
+from hip.chip cimport hipDeviceAttributeLocalL1CacheSupported
+from hip.chip cimport hipDeviceAttributeLocalL1CacheSupported as CU_DEVICE_ATTRIBUTE_LOCAL_L1_CACHE_SUPPORTED
+from hip.chip cimport hipDeviceAttributeLocalL1CacheSupported as cudaDevAttrLocalL1CacheSupported
+from hip.chip cimport hipDeviceAttributeLuid
+from hip.chip cimport hipDeviceAttributeLuidDeviceNodeMask
+from hip.chip cimport hipDeviceAttributeComputeCapabilityMajor
+from hip.chip cimport hipDeviceAttributeComputeCapabilityMajor as CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR
+from hip.chip cimport hipDeviceAttributeComputeCapabilityMajor as cudaDevAttrComputeCapabilityMajor
+from hip.chip cimport hipDeviceAttributeManagedMemory
+from hip.chip cimport hipDeviceAttributeManagedMemory as CU_DEVICE_ATTRIBUTE_MANAGED_MEMORY
+from hip.chip cimport hipDeviceAttributeManagedMemory as cudaDevAttrManagedMemory
+from hip.chip cimport hipDeviceAttributeMaxBlocksPerMultiProcessor
+from hip.chip cimport hipDeviceAttributeMaxBlockDimX
+from hip.chip cimport hipDeviceAttributeMaxBlockDimX as CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_X
+from hip.chip cimport hipDeviceAttributeMaxBlockDimX as cudaDevAttrMaxBlockDimX
+from hip.chip cimport hipDeviceAttributeMaxBlockDimY
+from hip.chip cimport hipDeviceAttributeMaxBlockDimY as CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_Y
+from hip.chip cimport hipDeviceAttributeMaxBlockDimY as cudaDevAttrMaxBlockDimY
+from hip.chip cimport hipDeviceAttributeMaxBlockDimZ
+from hip.chip cimport hipDeviceAttributeMaxBlockDimZ as CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_Z
+from hip.chip cimport hipDeviceAttributeMaxBlockDimZ as cudaDevAttrMaxBlockDimZ
+from hip.chip cimport hipDeviceAttributeMaxGridDimX
+from hip.chip cimport hipDeviceAttributeMaxGridDimX as CU_DEVICE_ATTRIBUTE_MAX_GRID_DIM_X
+from hip.chip cimport hipDeviceAttributeMaxGridDimX as cudaDevAttrMaxGridDimX
+from hip.chip cimport hipDeviceAttributeMaxGridDimY
+from hip.chip cimport hipDeviceAttributeMaxGridDimY as CU_DEVICE_ATTRIBUTE_MAX_GRID_DIM_Y
+from hip.chip cimport hipDeviceAttributeMaxGridDimY as cudaDevAttrMaxGridDimY
+from hip.chip cimport hipDeviceAttributeMaxGridDimZ
+from hip.chip cimport hipDeviceAttributeMaxGridDimZ as CU_DEVICE_ATTRIBUTE_MAX_GRID_DIM_Z
+from hip.chip cimport hipDeviceAttributeMaxGridDimZ as cudaDevAttrMaxGridDimZ
+from hip.chip cimport hipDeviceAttributeMaxSurface1D
+from hip.chip cimport hipDeviceAttributeMaxSurface1D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE1D_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxSurface1D as cudaDevAttrMaxSurface1DWidth
+from hip.chip cimport hipDeviceAttributeMaxSurface1DLayered
+from hip.chip cimport hipDeviceAttributeMaxSurface1DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE1D_LAYERED_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxSurface1DLayered as cudaDevAttrMaxSurface1DLayeredWidth
+from hip.chip cimport hipDeviceAttributeMaxSurface2D
+from hip.chip cimport hipDeviceAttributeMaxSurface2D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_HEIGHT
+from hip.chip cimport hipDeviceAttributeMaxSurface2D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxSurface2D as cudaDevAttrMaxSurface2DHeight
+from hip.chip cimport hipDeviceAttributeMaxSurface2D as cudaDevAttrMaxSurface2DWidth
+from hip.chip cimport hipDeviceAttributeMaxSurface2DLayered
+from hip.chip cimport hipDeviceAttributeMaxSurface2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_LAYERED_HEIGHT
+from hip.chip cimport hipDeviceAttributeMaxSurface2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_LAYERED_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxSurface2DLayered as cudaDevAttrMaxSurface2DLayeredHeight
+from hip.chip cimport hipDeviceAttributeMaxSurface2DLayered as cudaDevAttrMaxSurface2DLayeredWidth
+from hip.chip cimport hipDeviceAttributeMaxSurface3D
+from hip.chip cimport hipDeviceAttributeMaxSurface3D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_DEPTH
+from hip.chip cimport hipDeviceAttributeMaxSurface3D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_HEIGHT
+from hip.chip cimport hipDeviceAttributeMaxSurface3D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxSurface3D as cudaDevAttrMaxSurface3DDepth
+from hip.chip cimport hipDeviceAttributeMaxSurface3D as cudaDevAttrMaxSurface3DHeight
+from hip.chip cimport hipDeviceAttributeMaxSurface3D as cudaDevAttrMaxSurface3DWidth
+from hip.chip cimport hipDeviceAttributeMaxSurfaceCubemap
+from hip.chip cimport hipDeviceAttributeMaxSurfaceCubemap as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACECUBEMAP_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxSurfaceCubemap as cudaDevAttrMaxSurfaceCubemapWidth
+from hip.chip cimport hipDeviceAttributeMaxSurfaceCubemapLayered
+from hip.chip cimport hipDeviceAttributeMaxSurfaceCubemapLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACECUBEMAP_LAYERED_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxSurfaceCubemapLayered as cudaDevAttrMaxSurfaceCubemapLayeredWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture1DWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture1DWidth as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture1DWidth as cudaDevAttrMaxTexture1DWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture1DLayered
+from hip.chip cimport hipDeviceAttributeMaxTexture1DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_LAYERED_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture1DLayered as cudaDevAttrMaxTexture1DLayeredWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture1DLinear
+from hip.chip cimport hipDeviceAttributeMaxTexture1DLinear as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_LINEAR_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture1DLinear as cudaDevAttrMaxTexture1DLinearWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture1DMipmap
+from hip.chip cimport hipDeviceAttributeMaxTexture1DMipmap as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_MIPMAPPED_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture1DMipmap as cudaDevAttrMaxTexture1DMipmappedWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture2DWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture2DWidth as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture2DWidth as cudaDevAttrMaxTexture2DWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture2DHeight
+from hip.chip cimport hipDeviceAttributeMaxTexture2DHeight as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_HEIGHT
+from hip.chip cimport hipDeviceAttributeMaxTexture2DHeight as cudaDevAttrMaxTexture2DHeight
+from hip.chip cimport hipDeviceAttributeMaxTexture2DGather
+from hip.chip cimport hipDeviceAttributeMaxTexture2DGather as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_GATHER_HEIGHT
+from hip.chip cimport hipDeviceAttributeMaxTexture2DGather as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_GATHER_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture2DGather as cudaDevAttrMaxTexture2DGatherHeight
+from hip.chip cimport hipDeviceAttributeMaxTexture2DGather as cudaDevAttrMaxTexture2DGatherWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLayered
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_ARRAY_HEIGHT
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_ARRAY_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LAYERED_HEIGHT
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LAYERED_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLayered as cudaDevAttrMaxTexture2DLayeredHeight
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLayered as cudaDevAttrMaxTexture2DLayeredWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLinear
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLinear as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_HEIGHT
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLinear as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_PITCH
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLinear as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLinear as cudaDevAttrMaxTexture2DLinearHeight
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLinear as cudaDevAttrMaxTexture2DLinearPitch
+from hip.chip cimport hipDeviceAttributeMaxTexture2DLinear as cudaDevAttrMaxTexture2DLinearWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture2DMipmap
+from hip.chip cimport hipDeviceAttributeMaxTexture2DMipmap as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_MIPMAPPED_HEIGHT
+from hip.chip cimport hipDeviceAttributeMaxTexture2DMipmap as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_MIPMAPPED_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture2DMipmap as cudaDevAttrMaxTexture2DMipmappedHeight
+from hip.chip cimport hipDeviceAttributeMaxTexture2DMipmap as cudaDevAttrMaxTexture2DMipmappedWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture3DWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture3DWidth as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTexture3DWidth as cudaDevAttrMaxTexture3DWidth
+from hip.chip cimport hipDeviceAttributeMaxTexture3DHeight
+from hip.chip cimport hipDeviceAttributeMaxTexture3DHeight as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_HEIGHT
+from hip.chip cimport hipDeviceAttributeMaxTexture3DHeight as cudaDevAttrMaxTexture3DHeight
+from hip.chip cimport hipDeviceAttributeMaxTexture3DDepth
+from hip.chip cimport hipDeviceAttributeMaxTexture3DDepth as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_DEPTH
+from hip.chip cimport hipDeviceAttributeMaxTexture3DDepth as cudaDevAttrMaxTexture3DDepth
+from hip.chip cimport hipDeviceAttributeMaxTexture3DAlt
+from hip.chip cimport hipDeviceAttributeMaxTexture3DAlt as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_DEPTH_ALTERNATE
+from hip.chip cimport hipDeviceAttributeMaxTexture3DAlt as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_HEIGHT_ALTERNATE
+from hip.chip cimport hipDeviceAttributeMaxTexture3DAlt as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_WIDTH_ALTERNATE
+from hip.chip cimport hipDeviceAttributeMaxTexture3DAlt as cudaDevAttrMaxTexture3DDepthAlt
+from hip.chip cimport hipDeviceAttributeMaxTexture3DAlt as cudaDevAttrMaxTexture3DHeightAlt
+from hip.chip cimport hipDeviceAttributeMaxTexture3DAlt as cudaDevAttrMaxTexture3DWidthAlt
+from hip.chip cimport hipDeviceAttributeMaxTextureCubemap
+from hip.chip cimport hipDeviceAttributeMaxTextureCubemap as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURECUBEMAP_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTextureCubemap as cudaDevAttrMaxTextureCubemapWidth
+from hip.chip cimport hipDeviceAttributeMaxTextureCubemapLayered
+from hip.chip cimport hipDeviceAttributeMaxTextureCubemapLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURECUBEMAP_LAYERED_WIDTH
+from hip.chip cimport hipDeviceAttributeMaxTextureCubemapLayered as cudaDevAttrMaxTextureCubemapLayeredWidth
+from hip.chip cimport hipDeviceAttributeMaxThreadsDim
+from hip.chip cimport hipDeviceAttributeMaxThreadsPerBlock
+from hip.chip cimport hipDeviceAttributeMaxThreadsPerBlock as CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK
+from hip.chip cimport hipDeviceAttributeMaxThreadsPerBlock as cudaDevAttrMaxThreadsPerBlock
+from hip.chip cimport hipDeviceAttributeMaxThreadsPerMultiProcessor
+from hip.chip cimport hipDeviceAttributeMaxThreadsPerMultiProcessor as CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_MULTIPROCESSOR
+from hip.chip cimport hipDeviceAttributeMaxThreadsPerMultiProcessor as cudaDevAttrMaxThreadsPerMultiProcessor
+from hip.chip cimport hipDeviceAttributeMaxPitch
+from hip.chip cimport hipDeviceAttributeMaxPitch as CU_DEVICE_ATTRIBUTE_MAX_PITCH
+from hip.chip cimport hipDeviceAttributeMaxPitch as cudaDevAttrMaxPitch
+from hip.chip cimport hipDeviceAttributeMemoryBusWidth
+from hip.chip cimport hipDeviceAttributeMemoryBusWidth as CU_DEVICE_ATTRIBUTE_GLOBAL_MEMORY_BUS_WIDTH
+from hip.chip cimport hipDeviceAttributeMemoryBusWidth as cudaDevAttrGlobalMemoryBusWidth
+from hip.chip cimport hipDeviceAttributeMemoryClockRate
+from hip.chip cimport hipDeviceAttributeMemoryClockRate as CU_DEVICE_ATTRIBUTE_MEMORY_CLOCK_RATE
+from hip.chip cimport hipDeviceAttributeMemoryClockRate as cudaDevAttrMemoryClockRate
+from hip.chip cimport hipDeviceAttributeComputeCapabilityMinor
+from hip.chip cimport hipDeviceAttributeComputeCapabilityMinor as CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR
+from hip.chip cimport hipDeviceAttributeComputeCapabilityMinor as cudaDevAttrComputeCapabilityMinor
+from hip.chip cimport hipDeviceAttributeMultiGpuBoardGroupID
+from hip.chip cimport hipDeviceAttributeMultiGpuBoardGroupID as cudaDevAttrMultiGpuBoardGroupID
+from hip.chip cimport hipDeviceAttributeMultiprocessorCount
+from hip.chip cimport hipDeviceAttributeMultiprocessorCount as CU_DEVICE_ATTRIBUTE_MULTIPROCESSOR_COUNT
+from hip.chip cimport hipDeviceAttributeMultiprocessorCount as cudaDevAttrMultiProcessorCount
+from hip.chip cimport hipDeviceAttributeName
+from hip.chip cimport hipDeviceAttributePageableMemoryAccess
+from hip.chip cimport hipDeviceAttributePageableMemoryAccess as CU_DEVICE_ATTRIBUTE_PAGEABLE_MEMORY_ACCESS
+from hip.chip cimport hipDeviceAttributePageableMemoryAccess as cudaDevAttrPageableMemoryAccess
+from hip.chip cimport hipDeviceAttributePageableMemoryAccessUsesHostPageTables
+from hip.chip cimport hipDeviceAttributePageableMemoryAccessUsesHostPageTables as CU_DEVICE_ATTRIBUTE_PAGEABLE_MEMORY_ACCESS_USES_HOST_PAGE_TABLES
+from hip.chip cimport hipDeviceAttributePageableMemoryAccessUsesHostPageTables as cudaDevAttrPageableMemoryAccessUsesHostPageTables
+from hip.chip cimport hipDeviceAttributePciBusId
+from hip.chip cimport hipDeviceAttributePciBusId as CU_DEVICE_ATTRIBUTE_PCI_BUS_ID
+from hip.chip cimport hipDeviceAttributePciBusId as cudaDevAttrPciBusId
+from hip.chip cimport hipDeviceAttributePciDeviceId
+from hip.chip cimport hipDeviceAttributePciDeviceId as CU_DEVICE_ATTRIBUTE_PCI_DEVICE_ID
+from hip.chip cimport hipDeviceAttributePciDeviceId as cudaDevAttrPciDeviceId
+from hip.chip cimport hipDeviceAttributePciDomainID
+from hip.chip cimport hipDeviceAttributePciDomainID as CU_DEVICE_ATTRIBUTE_PCI_DOMAIN_ID
+from hip.chip cimport hipDeviceAttributePciDomainID as cudaDevAttrPciDomainId
+from hip.chip cimport hipDeviceAttributePersistingL2CacheMaxSize
+from hip.chip cimport hipDeviceAttributeMaxRegistersPerBlock
+from hip.chip cimport hipDeviceAttributeMaxRegistersPerBlock as CU_DEVICE_ATTRIBUTE_MAX_REGISTERS_PER_BLOCK
+from hip.chip cimport hipDeviceAttributeMaxRegistersPerBlock as CU_DEVICE_ATTRIBUTE_REGISTERS_PER_BLOCK
+from hip.chip cimport hipDeviceAttributeMaxRegistersPerBlock as cudaDevAttrMaxRegistersPerBlock
+from hip.chip cimport hipDeviceAttributeMaxRegistersPerMultiprocessor
+from hip.chip cimport hipDeviceAttributeMaxRegistersPerMultiprocessor as CU_DEVICE_ATTRIBUTE_MAX_REGISTERS_PER_MULTIPROCESSOR
+from hip.chip cimport hipDeviceAttributeMaxRegistersPerMultiprocessor as cudaDevAttrMaxRegistersPerMultiprocessor
+from hip.chip cimport hipDeviceAttributeReservedSharedMemPerBlock
+from hip.chip cimport hipDeviceAttributeMaxSharedMemoryPerBlock
+from hip.chip cimport hipDeviceAttributeMaxSharedMemoryPerBlock as CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_BLOCK
+from hip.chip cimport hipDeviceAttributeMaxSharedMemoryPerBlock as CU_DEVICE_ATTRIBUTE_SHARED_MEMORY_PER_BLOCK
+from hip.chip cimport hipDeviceAttributeMaxSharedMemoryPerBlock as cudaDevAttrMaxSharedMemoryPerBlock
+from hip.chip cimport hipDeviceAttributeSharedMemPerBlockOptin
+from hip.chip cimport hipDeviceAttributeSharedMemPerBlockOptin as CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_BLOCK_OPTIN
+from hip.chip cimport hipDeviceAttributeSharedMemPerBlockOptin as cudaDevAttrMaxSharedMemoryPerBlockOptin
+from hip.chip cimport hipDeviceAttributeSharedMemPerMultiprocessor
+from hip.chip cimport hipDeviceAttributeSingleToDoublePrecisionPerfRatio
+from hip.chip cimport hipDeviceAttributeSingleToDoublePrecisionPerfRatio as CU_DEVICE_ATTRIBUTE_SINGLE_TO_DOUBLE_PRECISION_PERF_RATIO
+from hip.chip cimport hipDeviceAttributeSingleToDoublePrecisionPerfRatio as cudaDevAttrSingleToDoublePrecisionPerfRatio
+from hip.chip cimport hipDeviceAttributeStreamPrioritiesSupported
+from hip.chip cimport hipDeviceAttributeStreamPrioritiesSupported as CU_DEVICE_ATTRIBUTE_STREAM_PRIORITIES_SUPPORTED
+from hip.chip cimport hipDeviceAttributeStreamPrioritiesSupported as cudaDevAttrStreamPrioritiesSupported
+from hip.chip cimport hipDeviceAttributeSurfaceAlignment
+from hip.chip cimport hipDeviceAttributeSurfaceAlignment as CU_DEVICE_ATTRIBUTE_SURFACE_ALIGNMENT
+from hip.chip cimport hipDeviceAttributeSurfaceAlignment as cudaDevAttrSurfaceAlignment
+from hip.chip cimport hipDeviceAttributeTccDriver
+from hip.chip cimport hipDeviceAttributeTccDriver as CU_DEVICE_ATTRIBUTE_TCC_DRIVER
+from hip.chip cimport hipDeviceAttributeTccDriver as cudaDevAttrTccDriver
+from hip.chip cimport hipDeviceAttributeTextureAlignment
+from hip.chip cimport hipDeviceAttributeTextureAlignment as CU_DEVICE_ATTRIBUTE_TEXTURE_ALIGNMENT
+from hip.chip cimport hipDeviceAttributeTextureAlignment as cudaDevAttrTextureAlignment
+from hip.chip cimport hipDeviceAttributeTexturePitchAlignment
+from hip.chip cimport hipDeviceAttributeTexturePitchAlignment as CU_DEVICE_ATTRIBUTE_TEXTURE_PITCH_ALIGNMENT
+from hip.chip cimport hipDeviceAttributeTexturePitchAlignment as cudaDevAttrTexturePitchAlignment
+from hip.chip cimport hipDeviceAttributeTotalConstantMemory
+from hip.chip cimport hipDeviceAttributeTotalConstantMemory as CU_DEVICE_ATTRIBUTE_TOTAL_CONSTANT_MEMORY
+from hip.chip cimport hipDeviceAttributeTotalConstantMemory as cudaDevAttrTotalConstantMemory
+from hip.chip cimport hipDeviceAttributeTotalGlobalMem
+from hip.chip cimport hipDeviceAttributeUnifiedAddressing
+from hip.chip cimport hipDeviceAttributeUnifiedAddressing as CU_DEVICE_ATTRIBUTE_UNIFIED_ADDRESSING
+from hip.chip cimport hipDeviceAttributeUnifiedAddressing as cudaDevAttrUnifiedAddressing
+from hip.chip cimport hipDeviceAttributeUuid
+from hip.chip cimport hipDeviceAttributeWarpSize
+from hip.chip cimport hipDeviceAttributeWarpSize as CU_DEVICE_ATTRIBUTE_WARP_SIZE
+from hip.chip cimport hipDeviceAttributeWarpSize as cudaDevAttrWarpSize
+from hip.chip cimport hipDeviceAttributeMemoryPoolsSupported
+from hip.chip cimport hipDeviceAttributeMemoryPoolsSupported as CU_DEVICE_ATTRIBUTE_MEMORY_POOLS_SUPPORTED
+from hip.chip cimport hipDeviceAttributeMemoryPoolsSupported as cudaDevAttrMemoryPoolsSupported
+from hip.chip cimport hipDeviceAttributeVirtualMemoryManagementSupported
+from hip.chip cimport hipDeviceAttributeVirtualMemoryManagementSupported as CU_DEVICE_ATTRIBUTE_VIRTUAL_MEMORY_MANAGEMENT_SUPPORTED
+from hip.chip cimport hipDeviceAttributeCudaCompatibleEnd
+from hip.chip cimport hipDeviceAttributeAmdSpecificBegin
+from hip.chip cimport hipDeviceAttributeClockInstructionRate
+from hip.chip cimport hipDeviceAttributeArch
+from hip.chip cimport hipDeviceAttributeMaxSharedMemoryPerMultiprocessor
+from hip.chip cimport hipDeviceAttributeMaxSharedMemoryPerMultiprocessor as CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_MULTIPROCESSOR
+from hip.chip cimport hipDeviceAttributeMaxSharedMemoryPerMultiprocessor as cudaDevAttrMaxSharedMemoryPerMultiprocessor
+from hip.chip cimport hipDeviceAttributeGcnArch
+from hip.chip cimport hipDeviceAttributeGcnArchName
+from hip.chip cimport hipDeviceAttributeHdpMemFlushCntl
+from hip.chip cimport hipDeviceAttributeHdpRegFlushCntl
+from hip.chip cimport hipDeviceAttributeCooperativeMultiDeviceUnmatchedFunc
+from hip.chip cimport hipDeviceAttributeCooperativeMultiDeviceUnmatchedGridDim
+from hip.chip cimport hipDeviceAttributeCooperativeMultiDeviceUnmatchedBlockDim
+from hip.chip cimport hipDeviceAttributeCooperativeMultiDeviceUnmatchedSharedMem
+from hip.chip cimport hipDeviceAttributeIsLargeBar
+from hip.chip cimport hipDeviceAttributeAsicRevision
+from hip.chip cimport hipDeviceAttributeCanUseStreamWaitValue
+from hip.chip cimport hipDeviceAttributeCanUseStreamWaitValue as CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR
+from hip.chip cimport hipDeviceAttributeCanUseStreamWaitValue as cudaDevAttrReserved94
+from hip.chip cimport hipDeviceAttributeImageSupport
+from hip.chip cimport hipDeviceAttributePhysicalMultiProcessorCount
+from hip.chip cimport hipDeviceAttributeFineGrainSupport
+from hip.chip cimport hipDeviceAttributeWallClockRate
+from hip.chip cimport hipDeviceAttributeAmdSpecificEnd
+from hip.chip cimport hipDeviceAttributeVendorSpecificBegin
 ctypedef CUdevice_attribute CUdevice_attribute_enum
 ctypedef CUdevice_attribute cudaDeviceAttr
-cdef enum CUcomputemode:
-    CU_COMPUTEMODE_DEFAULT = hip.chip.hipComputeModeDefault
-    cudaComputeModeDefault = hip.chip.hipComputeModeDefault
-    hipComputeModeDefault = hip.chip.hipComputeModeDefault
-    CU_COMPUTEMODE_EXCLUSIVE = hip.chip.hipComputeModeExclusive
-    cudaComputeModeExclusive = hip.chip.hipComputeModeExclusive
-    hipComputeModeExclusive = hip.chip.hipComputeModeExclusive
-    CU_COMPUTEMODE_PROHIBITED = hip.chip.hipComputeModeProhibited
-    cudaComputeModeProhibited = hip.chip.hipComputeModeProhibited
-    hipComputeModeProhibited = hip.chip.hipComputeModeProhibited
-    CU_COMPUTEMODE_EXCLUSIVE_PROCESS = hip.chip.hipComputeModeExclusiveProcess
-    cudaComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
-    hipComputeModeExclusiveProcess = hip.chip.hipComputeModeExclusiveProcess
+from hip.chip cimport hipComputeMode as CUcomputemode
+from hip.chip cimport hipComputeModeDefault
+from hip.chip cimport hipComputeModeDefault as CU_COMPUTEMODE_DEFAULT
+from hip.chip cimport hipComputeModeDefault as cudaComputeModeDefault
+from hip.chip cimport hipComputeModeExclusive
+from hip.chip cimport hipComputeModeExclusive as CU_COMPUTEMODE_EXCLUSIVE
+from hip.chip cimport hipComputeModeExclusive as cudaComputeModeExclusive
+from hip.chip cimport hipComputeModeProhibited
+from hip.chip cimport hipComputeModeProhibited as CU_COMPUTEMODE_PROHIBITED
+from hip.chip cimport hipComputeModeProhibited as cudaComputeModeProhibited
+from hip.chip cimport hipComputeModeExclusiveProcess
+from hip.chip cimport hipComputeModeExclusiveProcess as CU_COMPUTEMODE_EXCLUSIVE_PROCESS
+from hip.chip cimport hipComputeModeExclusiveProcess as cudaComputeModeExclusiveProcess
 ctypedef CUcomputemode CUcomputemode_enum
 ctypedef CUcomputemode cudaComputeMode
 ctypedef void * CUdeviceptr
 ctypedef void * CUdeviceptr_v1
 ctypedef void * CUdeviceptr_v2
-cdef enum cudaChannelFormatKind:
-    cudaChannelFormatKindSigned = hip.chip.hipChannelFormatKindSigned
-    hipChannelFormatKindSigned = hip.chip.hipChannelFormatKindSigned
-    cudaChannelFormatKindUnsigned = hip.chip.hipChannelFormatKindUnsigned
-    hipChannelFormatKindUnsigned = hip.chip.hipChannelFormatKindUnsigned
-    cudaChannelFormatKindFloat = hip.chip.hipChannelFormatKindFloat
-    hipChannelFormatKindFloat = hip.chip.hipChannelFormatKindFloat
-    cudaChannelFormatKindNone = hip.chip.hipChannelFormatKindNone
-    hipChannelFormatKindNone = hip.chip.hipChannelFormatKindNone
+from hip.chip cimport hipChannelFormatKind as cudaChannelFormatKind
+from hip.chip cimport hipChannelFormatKindSigned
+from hip.chip cimport hipChannelFormatKindSigned as cudaChannelFormatKindSigned
+from hip.chip cimport hipChannelFormatKindUnsigned
+from hip.chip cimport hipChannelFormatKindUnsigned as cudaChannelFormatKindUnsigned
+from hip.chip cimport hipChannelFormatKindFloat
+from hip.chip cimport hipChannelFormatKindFloat as cudaChannelFormatKindFloat
+from hip.chip cimport hipChannelFormatKindNone
+from hip.chip cimport hipChannelFormatKindNone as cudaChannelFormatKindNone
 from hip.chip cimport hipChannelFormatDesc
 from hip.chip cimport hipChannelFormatDesc as cudaChannelFormatDesc
-cdef enum CUarray_format:
-    CU_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
-    HIP_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
-    CU_AD_FORMAT_UNSIGNED_INT16 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT16
-    HIP_AD_FORMAT_UNSIGNED_INT16 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT16
-    CU_AD_FORMAT_UNSIGNED_INT32 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT32
-    HIP_AD_FORMAT_UNSIGNED_INT32 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT32
-    CU_AD_FORMAT_SIGNED_INT8 = hip.chip.HIP_AD_FORMAT_SIGNED_INT8
-    HIP_AD_FORMAT_SIGNED_INT8 = hip.chip.HIP_AD_FORMAT_SIGNED_INT8
-    CU_AD_FORMAT_SIGNED_INT16 = hip.chip.HIP_AD_FORMAT_SIGNED_INT16
-    HIP_AD_FORMAT_SIGNED_INT16 = hip.chip.HIP_AD_FORMAT_SIGNED_INT16
-    CU_AD_FORMAT_SIGNED_INT32 = hip.chip.HIP_AD_FORMAT_SIGNED_INT32
-    HIP_AD_FORMAT_SIGNED_INT32 = hip.chip.HIP_AD_FORMAT_SIGNED_INT32
-    CU_AD_FORMAT_HALF = hip.chip.HIP_AD_FORMAT_HALF
-    HIP_AD_FORMAT_HALF = hip.chip.HIP_AD_FORMAT_HALF
-    CU_AD_FORMAT_FLOAT = hip.chip.HIP_AD_FORMAT_FLOAT
-    HIP_AD_FORMAT_FLOAT = hip.chip.HIP_AD_FORMAT_FLOAT
+from hip.chip cimport hipArray_Format as CUarray_format
+from hip.chip cimport HIP_AD_FORMAT_UNSIGNED_INT8
+from hip.chip cimport HIP_AD_FORMAT_UNSIGNED_INT8 as CU_AD_FORMAT_UNSIGNED_INT8
+from hip.chip cimport HIP_AD_FORMAT_UNSIGNED_INT16
+from hip.chip cimport HIP_AD_FORMAT_UNSIGNED_INT16 as CU_AD_FORMAT_UNSIGNED_INT16
+from hip.chip cimport HIP_AD_FORMAT_UNSIGNED_INT32
+from hip.chip cimport HIP_AD_FORMAT_UNSIGNED_INT32 as CU_AD_FORMAT_UNSIGNED_INT32
+from hip.chip cimport HIP_AD_FORMAT_SIGNED_INT8
+from hip.chip cimport HIP_AD_FORMAT_SIGNED_INT8 as CU_AD_FORMAT_SIGNED_INT8
+from hip.chip cimport HIP_AD_FORMAT_SIGNED_INT16
+from hip.chip cimport HIP_AD_FORMAT_SIGNED_INT16 as CU_AD_FORMAT_SIGNED_INT16
+from hip.chip cimport HIP_AD_FORMAT_SIGNED_INT32
+from hip.chip cimport HIP_AD_FORMAT_SIGNED_INT32 as CU_AD_FORMAT_SIGNED_INT32
+from hip.chip cimport HIP_AD_FORMAT_HALF
+from hip.chip cimport HIP_AD_FORMAT_HALF as CU_AD_FORMAT_HALF
+from hip.chip cimport HIP_AD_FORMAT_FLOAT
+from hip.chip cimport HIP_AD_FORMAT_FLOAT as CU_AD_FORMAT_FLOAT
 ctypedef CUarray_format CUarray_format_enum
 from hip.chip cimport HIP_ARRAY_DESCRIPTOR
 from hip.chip cimport HIP_ARRAY_DESCRIPTOR as CUDA_ARRAY_DESCRIPTOR
@@ -771,188 +770,188 @@ from hip.chip cimport hipMipmappedArray_t as CUmipmappedArray
 from hip.chip cimport hipMipmappedArray_t as cudaMipmappedArray_t
 from hip.chip cimport hipMipmappedArray_const_t
 from hip.chip cimport hipMipmappedArray_const_t as cudaMipmappedArray_const_t
-cdef enum cudaResourceType:
-    cudaResourceTypeArray = hip.chip.hipResourceTypeArray
-    hipResourceTypeArray = hip.chip.hipResourceTypeArray
-    cudaResourceTypeMipmappedArray = hip.chip.hipResourceTypeMipmappedArray
-    hipResourceTypeMipmappedArray = hip.chip.hipResourceTypeMipmappedArray
-    cudaResourceTypeLinear = hip.chip.hipResourceTypeLinear
-    hipResourceTypeLinear = hip.chip.hipResourceTypeLinear
-    cudaResourceTypePitch2D = hip.chip.hipResourceTypePitch2D
-    hipResourceTypePitch2D = hip.chip.hipResourceTypePitch2D
-cdef enum CUresourcetype_enum:
-    CU_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
-    HIP_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
-    CU_RESOURCE_TYPE_MIPMAPPED_ARRAY = hip.chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
-    HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY = hip.chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
-    CU_RESOURCE_TYPE_LINEAR = hip.chip.HIP_RESOURCE_TYPE_LINEAR
-    HIP_RESOURCE_TYPE_LINEAR = hip.chip.HIP_RESOURCE_TYPE_LINEAR
-    CU_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
-    HIP_RESOURCE_TYPE_PITCH2D = hip.chip.HIP_RESOURCE_TYPE_PITCH2D
+from hip.chip cimport hipResourceType as cudaResourceType
+from hip.chip cimport hipResourceTypeArray
+from hip.chip cimport hipResourceTypeArray as cudaResourceTypeArray
+from hip.chip cimport hipResourceTypeMipmappedArray
+from hip.chip cimport hipResourceTypeMipmappedArray as cudaResourceTypeMipmappedArray
+from hip.chip cimport hipResourceTypeLinear
+from hip.chip cimport hipResourceTypeLinear as cudaResourceTypeLinear
+from hip.chip cimport hipResourceTypePitch2D
+from hip.chip cimport hipResourceTypePitch2D as cudaResourceTypePitch2D
+from hip.chip cimport HIPresourcetype_enum as CUresourcetype_enum
+from hip.chip cimport HIP_RESOURCE_TYPE_ARRAY
+from hip.chip cimport HIP_RESOURCE_TYPE_ARRAY as CU_RESOURCE_TYPE_ARRAY
+from hip.chip cimport HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
+from hip.chip cimport HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY as CU_RESOURCE_TYPE_MIPMAPPED_ARRAY
+from hip.chip cimport HIP_RESOURCE_TYPE_LINEAR
+from hip.chip cimport HIP_RESOURCE_TYPE_LINEAR as CU_RESOURCE_TYPE_LINEAR
+from hip.chip cimport HIP_RESOURCE_TYPE_PITCH2D
+from hip.chip cimport HIP_RESOURCE_TYPE_PITCH2D as CU_RESOURCE_TYPE_PITCH2D
 ctypedef CUresourcetype_enum CUresourcetype
-cdef enum CUaddress_mode_enum:
-    CU_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
-    HIP_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
-    CU_TR_ADDRESS_MODE_CLAMP = hip.chip.HIP_TR_ADDRESS_MODE_CLAMP
-    HIP_TR_ADDRESS_MODE_CLAMP = hip.chip.HIP_TR_ADDRESS_MODE_CLAMP
-    CU_TR_ADDRESS_MODE_MIRROR = hip.chip.HIP_TR_ADDRESS_MODE_MIRROR
-    HIP_TR_ADDRESS_MODE_MIRROR = hip.chip.HIP_TR_ADDRESS_MODE_MIRROR
-    CU_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
-    HIP_TR_ADDRESS_MODE_BORDER = hip.chip.HIP_TR_ADDRESS_MODE_BORDER
+from hip.chip cimport HIPaddress_mode_enum as CUaddress_mode_enum
+from hip.chip cimport HIP_TR_ADDRESS_MODE_WRAP
+from hip.chip cimport HIP_TR_ADDRESS_MODE_WRAP as CU_TR_ADDRESS_MODE_WRAP
+from hip.chip cimport HIP_TR_ADDRESS_MODE_CLAMP
+from hip.chip cimport HIP_TR_ADDRESS_MODE_CLAMP as CU_TR_ADDRESS_MODE_CLAMP
+from hip.chip cimport HIP_TR_ADDRESS_MODE_MIRROR
+from hip.chip cimport HIP_TR_ADDRESS_MODE_MIRROR as CU_TR_ADDRESS_MODE_MIRROR
+from hip.chip cimport HIP_TR_ADDRESS_MODE_BORDER
+from hip.chip cimport HIP_TR_ADDRESS_MODE_BORDER as CU_TR_ADDRESS_MODE_BORDER
 ctypedef CUaddress_mode_enum CUaddress_mode
-cdef enum CUfilter_mode_enum:
-    CU_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
-    HIP_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
-    CU_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
-    HIP_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
+from hip.chip cimport HIPfilter_mode_enum as CUfilter_mode_enum
+from hip.chip cimport HIP_TR_FILTER_MODE_POINT
+from hip.chip cimport HIP_TR_FILTER_MODE_POINT as CU_TR_FILTER_MODE_POINT
+from hip.chip cimport HIP_TR_FILTER_MODE_LINEAR
+from hip.chip cimport HIP_TR_FILTER_MODE_LINEAR as CU_TR_FILTER_MODE_LINEAR
 ctypedef CUfilter_mode_enum CUfilter_mode
 from hip.chip cimport HIP_TEXTURE_DESC_st
 from hip.chip cimport HIP_TEXTURE_DESC_st as CUDA_TEXTURE_DESC_st
 from hip.chip cimport HIP_TEXTURE_DESC
 from hip.chip cimport HIP_TEXTURE_DESC as CUDA_TEXTURE_DESC
 from hip.chip cimport HIP_TEXTURE_DESC as CUDA_TEXTURE_DESC_v1
-cdef enum cudaResourceViewFormat:
-    cudaResViewFormatNone = hip.chip.hipResViewFormatNone
-    hipResViewFormatNone = hip.chip.hipResViewFormatNone
-    cudaResViewFormatUnsignedChar1 = hip.chip.hipResViewFormatUnsignedChar1
-    hipResViewFormatUnsignedChar1 = hip.chip.hipResViewFormatUnsignedChar1
-    cudaResViewFormatUnsignedChar2 = hip.chip.hipResViewFormatUnsignedChar2
-    hipResViewFormatUnsignedChar2 = hip.chip.hipResViewFormatUnsignedChar2
-    cudaResViewFormatUnsignedChar4 = hip.chip.hipResViewFormatUnsignedChar4
-    hipResViewFormatUnsignedChar4 = hip.chip.hipResViewFormatUnsignedChar4
-    cudaResViewFormatSignedChar1 = hip.chip.hipResViewFormatSignedChar1
-    hipResViewFormatSignedChar1 = hip.chip.hipResViewFormatSignedChar1
-    cudaResViewFormatSignedChar2 = hip.chip.hipResViewFormatSignedChar2
-    hipResViewFormatSignedChar2 = hip.chip.hipResViewFormatSignedChar2
-    cudaResViewFormatSignedChar4 = hip.chip.hipResViewFormatSignedChar4
-    hipResViewFormatSignedChar4 = hip.chip.hipResViewFormatSignedChar4
-    cudaResViewFormatUnsignedShort1 = hip.chip.hipResViewFormatUnsignedShort1
-    hipResViewFormatUnsignedShort1 = hip.chip.hipResViewFormatUnsignedShort1
-    cudaResViewFormatUnsignedShort2 = hip.chip.hipResViewFormatUnsignedShort2
-    hipResViewFormatUnsignedShort2 = hip.chip.hipResViewFormatUnsignedShort2
-    cudaResViewFormatUnsignedShort4 = hip.chip.hipResViewFormatUnsignedShort4
-    hipResViewFormatUnsignedShort4 = hip.chip.hipResViewFormatUnsignedShort4
-    cudaResViewFormatSignedShort1 = hip.chip.hipResViewFormatSignedShort1
-    hipResViewFormatSignedShort1 = hip.chip.hipResViewFormatSignedShort1
-    cudaResViewFormatSignedShort2 = hip.chip.hipResViewFormatSignedShort2
-    hipResViewFormatSignedShort2 = hip.chip.hipResViewFormatSignedShort2
-    cudaResViewFormatSignedShort4 = hip.chip.hipResViewFormatSignedShort4
-    hipResViewFormatSignedShort4 = hip.chip.hipResViewFormatSignedShort4
-    cudaResViewFormatUnsignedInt1 = hip.chip.hipResViewFormatUnsignedInt1
-    hipResViewFormatUnsignedInt1 = hip.chip.hipResViewFormatUnsignedInt1
-    cudaResViewFormatUnsignedInt2 = hip.chip.hipResViewFormatUnsignedInt2
-    hipResViewFormatUnsignedInt2 = hip.chip.hipResViewFormatUnsignedInt2
-    cudaResViewFormatUnsignedInt4 = hip.chip.hipResViewFormatUnsignedInt4
-    hipResViewFormatUnsignedInt4 = hip.chip.hipResViewFormatUnsignedInt4
-    cudaResViewFormatSignedInt1 = hip.chip.hipResViewFormatSignedInt1
-    hipResViewFormatSignedInt1 = hip.chip.hipResViewFormatSignedInt1
-    cudaResViewFormatSignedInt2 = hip.chip.hipResViewFormatSignedInt2
-    hipResViewFormatSignedInt2 = hip.chip.hipResViewFormatSignedInt2
-    cudaResViewFormatSignedInt4 = hip.chip.hipResViewFormatSignedInt4
-    hipResViewFormatSignedInt4 = hip.chip.hipResViewFormatSignedInt4
-    cudaResViewFormatHalf1 = hip.chip.hipResViewFormatHalf1
-    hipResViewFormatHalf1 = hip.chip.hipResViewFormatHalf1
-    cudaResViewFormatHalf2 = hip.chip.hipResViewFormatHalf2
-    hipResViewFormatHalf2 = hip.chip.hipResViewFormatHalf2
-    cudaResViewFormatHalf4 = hip.chip.hipResViewFormatHalf4
-    hipResViewFormatHalf4 = hip.chip.hipResViewFormatHalf4
-    cudaResViewFormatFloat1 = hip.chip.hipResViewFormatFloat1
-    hipResViewFormatFloat1 = hip.chip.hipResViewFormatFloat1
-    cudaResViewFormatFloat2 = hip.chip.hipResViewFormatFloat2
-    hipResViewFormatFloat2 = hip.chip.hipResViewFormatFloat2
-    cudaResViewFormatFloat4 = hip.chip.hipResViewFormatFloat4
-    hipResViewFormatFloat4 = hip.chip.hipResViewFormatFloat4
-    cudaResViewFormatUnsignedBlockCompressed1 = hip.chip.hipResViewFormatUnsignedBlockCompressed1
-    hipResViewFormatUnsignedBlockCompressed1 = hip.chip.hipResViewFormatUnsignedBlockCompressed1
-    cudaResViewFormatUnsignedBlockCompressed2 = hip.chip.hipResViewFormatUnsignedBlockCompressed2
-    hipResViewFormatUnsignedBlockCompressed2 = hip.chip.hipResViewFormatUnsignedBlockCompressed2
-    cudaResViewFormatUnsignedBlockCompressed3 = hip.chip.hipResViewFormatUnsignedBlockCompressed3
-    hipResViewFormatUnsignedBlockCompressed3 = hip.chip.hipResViewFormatUnsignedBlockCompressed3
-    cudaResViewFormatUnsignedBlockCompressed4 = hip.chip.hipResViewFormatUnsignedBlockCompressed4
-    hipResViewFormatUnsignedBlockCompressed4 = hip.chip.hipResViewFormatUnsignedBlockCompressed4
-    cudaResViewFormatSignedBlockCompressed4 = hip.chip.hipResViewFormatSignedBlockCompressed4
-    hipResViewFormatSignedBlockCompressed4 = hip.chip.hipResViewFormatSignedBlockCompressed4
-    cudaResViewFormatUnsignedBlockCompressed5 = hip.chip.hipResViewFormatUnsignedBlockCompressed5
-    hipResViewFormatUnsignedBlockCompressed5 = hip.chip.hipResViewFormatUnsignedBlockCompressed5
-    cudaResViewFormatSignedBlockCompressed5 = hip.chip.hipResViewFormatSignedBlockCompressed5
-    hipResViewFormatSignedBlockCompressed5 = hip.chip.hipResViewFormatSignedBlockCompressed5
-    cudaResViewFormatUnsignedBlockCompressed6H = hip.chip.hipResViewFormatUnsignedBlockCompressed6H
-    hipResViewFormatUnsignedBlockCompressed6H = hip.chip.hipResViewFormatUnsignedBlockCompressed6H
-    cudaResViewFormatSignedBlockCompressed6H = hip.chip.hipResViewFormatSignedBlockCompressed6H
-    hipResViewFormatSignedBlockCompressed6H = hip.chip.hipResViewFormatSignedBlockCompressed6H
-    cudaResViewFormatUnsignedBlockCompressed7 = hip.chip.hipResViewFormatUnsignedBlockCompressed7
-    hipResViewFormatUnsignedBlockCompressed7 = hip.chip.hipResViewFormatUnsignedBlockCompressed7
-cdef enum CUresourceViewFormat_enum:
-    CU_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
-    HIP_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
-    CU_RES_VIEW_FORMAT_UINT_1X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X8
-    HIP_RES_VIEW_FORMAT_UINT_1X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X8
-    CU_RES_VIEW_FORMAT_UINT_2X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_2X8
-    HIP_RES_VIEW_FORMAT_UINT_2X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_2X8
-    CU_RES_VIEW_FORMAT_UINT_4X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_4X8
-    HIP_RES_VIEW_FORMAT_UINT_4X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_4X8
-    CU_RES_VIEW_FORMAT_SINT_1X8 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_1X8
-    HIP_RES_VIEW_FORMAT_SINT_1X8 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_1X8
-    CU_RES_VIEW_FORMAT_SINT_2X8 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_2X8
-    HIP_RES_VIEW_FORMAT_SINT_2X8 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_2X8
-    CU_RES_VIEW_FORMAT_SINT_4X8 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_4X8
-    HIP_RES_VIEW_FORMAT_SINT_4X8 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_4X8
-    CU_RES_VIEW_FORMAT_UINT_1X16 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X16
-    HIP_RES_VIEW_FORMAT_UINT_1X16 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X16
-    CU_RES_VIEW_FORMAT_UINT_2X16 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_2X16
-    HIP_RES_VIEW_FORMAT_UINT_2X16 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_2X16
-    CU_RES_VIEW_FORMAT_UINT_4X16 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_4X16
-    HIP_RES_VIEW_FORMAT_UINT_4X16 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_4X16
-    CU_RES_VIEW_FORMAT_SINT_1X16 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_1X16
-    HIP_RES_VIEW_FORMAT_SINT_1X16 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_1X16
-    CU_RES_VIEW_FORMAT_SINT_2X16 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_2X16
-    HIP_RES_VIEW_FORMAT_SINT_2X16 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_2X16
-    CU_RES_VIEW_FORMAT_SINT_4X16 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_4X16
-    HIP_RES_VIEW_FORMAT_SINT_4X16 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_4X16
-    CU_RES_VIEW_FORMAT_UINT_1X32 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X32
-    HIP_RES_VIEW_FORMAT_UINT_1X32 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X32
-    CU_RES_VIEW_FORMAT_UINT_2X32 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_2X32
-    HIP_RES_VIEW_FORMAT_UINT_2X32 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_2X32
-    CU_RES_VIEW_FORMAT_UINT_4X32 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_4X32
-    HIP_RES_VIEW_FORMAT_UINT_4X32 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_4X32
-    CU_RES_VIEW_FORMAT_SINT_1X32 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_1X32
-    HIP_RES_VIEW_FORMAT_SINT_1X32 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_1X32
-    CU_RES_VIEW_FORMAT_SINT_2X32 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_2X32
-    HIP_RES_VIEW_FORMAT_SINT_2X32 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_2X32
-    CU_RES_VIEW_FORMAT_SINT_4X32 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_4X32
-    HIP_RES_VIEW_FORMAT_SINT_4X32 = hip.chip.HIP_RES_VIEW_FORMAT_SINT_4X32
-    CU_RES_VIEW_FORMAT_FLOAT_1X16 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_1X16
-    HIP_RES_VIEW_FORMAT_FLOAT_1X16 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_1X16
-    CU_RES_VIEW_FORMAT_FLOAT_2X16 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_2X16
-    HIP_RES_VIEW_FORMAT_FLOAT_2X16 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_2X16
-    CU_RES_VIEW_FORMAT_FLOAT_4X16 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_4X16
-    HIP_RES_VIEW_FORMAT_FLOAT_4X16 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_4X16
-    CU_RES_VIEW_FORMAT_FLOAT_1X32 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_1X32
-    HIP_RES_VIEW_FORMAT_FLOAT_1X32 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_1X32
-    CU_RES_VIEW_FORMAT_FLOAT_2X32 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_2X32
-    HIP_RES_VIEW_FORMAT_FLOAT_2X32 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_2X32
-    CU_RES_VIEW_FORMAT_FLOAT_4X32 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_4X32
-    HIP_RES_VIEW_FORMAT_FLOAT_4X32 = hip.chip.HIP_RES_VIEW_FORMAT_FLOAT_4X32
-    CU_RES_VIEW_FORMAT_UNSIGNED_BC1 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC1
-    HIP_RES_VIEW_FORMAT_UNSIGNED_BC1 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC1
-    CU_RES_VIEW_FORMAT_UNSIGNED_BC2 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC2
-    HIP_RES_VIEW_FORMAT_UNSIGNED_BC2 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC2
-    CU_RES_VIEW_FORMAT_UNSIGNED_BC3 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC3
-    HIP_RES_VIEW_FORMAT_UNSIGNED_BC3 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC3
-    CU_RES_VIEW_FORMAT_UNSIGNED_BC4 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC4
-    HIP_RES_VIEW_FORMAT_UNSIGNED_BC4 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC4
-    CU_RES_VIEW_FORMAT_SIGNED_BC4 = hip.chip.HIP_RES_VIEW_FORMAT_SIGNED_BC4
-    HIP_RES_VIEW_FORMAT_SIGNED_BC4 = hip.chip.HIP_RES_VIEW_FORMAT_SIGNED_BC4
-    CU_RES_VIEW_FORMAT_UNSIGNED_BC5 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC5
-    HIP_RES_VIEW_FORMAT_UNSIGNED_BC5 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC5
-    CU_RES_VIEW_FORMAT_SIGNED_BC5 = hip.chip.HIP_RES_VIEW_FORMAT_SIGNED_BC5
-    HIP_RES_VIEW_FORMAT_SIGNED_BC5 = hip.chip.HIP_RES_VIEW_FORMAT_SIGNED_BC5
-    CU_RES_VIEW_FORMAT_UNSIGNED_BC6H = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC6H
-    HIP_RES_VIEW_FORMAT_UNSIGNED_BC6H = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC6H
-    CU_RES_VIEW_FORMAT_SIGNED_BC6H = hip.chip.HIP_RES_VIEW_FORMAT_SIGNED_BC6H
-    HIP_RES_VIEW_FORMAT_SIGNED_BC6H = hip.chip.HIP_RES_VIEW_FORMAT_SIGNED_BC6H
-    CU_RES_VIEW_FORMAT_UNSIGNED_BC7 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
-    HIP_RES_VIEW_FORMAT_UNSIGNED_BC7 = hip.chip.HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
+from hip.chip cimport hipResourceViewFormat as cudaResourceViewFormat
+from hip.chip cimport hipResViewFormatNone
+from hip.chip cimport hipResViewFormatNone as cudaResViewFormatNone
+from hip.chip cimport hipResViewFormatUnsignedChar1
+from hip.chip cimport hipResViewFormatUnsignedChar1 as cudaResViewFormatUnsignedChar1
+from hip.chip cimport hipResViewFormatUnsignedChar2
+from hip.chip cimport hipResViewFormatUnsignedChar2 as cudaResViewFormatUnsignedChar2
+from hip.chip cimport hipResViewFormatUnsignedChar4
+from hip.chip cimport hipResViewFormatUnsignedChar4 as cudaResViewFormatUnsignedChar4
+from hip.chip cimport hipResViewFormatSignedChar1
+from hip.chip cimport hipResViewFormatSignedChar1 as cudaResViewFormatSignedChar1
+from hip.chip cimport hipResViewFormatSignedChar2
+from hip.chip cimport hipResViewFormatSignedChar2 as cudaResViewFormatSignedChar2
+from hip.chip cimport hipResViewFormatSignedChar4
+from hip.chip cimport hipResViewFormatSignedChar4 as cudaResViewFormatSignedChar4
+from hip.chip cimport hipResViewFormatUnsignedShort1
+from hip.chip cimport hipResViewFormatUnsignedShort1 as cudaResViewFormatUnsignedShort1
+from hip.chip cimport hipResViewFormatUnsignedShort2
+from hip.chip cimport hipResViewFormatUnsignedShort2 as cudaResViewFormatUnsignedShort2
+from hip.chip cimport hipResViewFormatUnsignedShort4
+from hip.chip cimport hipResViewFormatUnsignedShort4 as cudaResViewFormatUnsignedShort4
+from hip.chip cimport hipResViewFormatSignedShort1
+from hip.chip cimport hipResViewFormatSignedShort1 as cudaResViewFormatSignedShort1
+from hip.chip cimport hipResViewFormatSignedShort2
+from hip.chip cimport hipResViewFormatSignedShort2 as cudaResViewFormatSignedShort2
+from hip.chip cimport hipResViewFormatSignedShort4
+from hip.chip cimport hipResViewFormatSignedShort4 as cudaResViewFormatSignedShort4
+from hip.chip cimport hipResViewFormatUnsignedInt1
+from hip.chip cimport hipResViewFormatUnsignedInt1 as cudaResViewFormatUnsignedInt1
+from hip.chip cimport hipResViewFormatUnsignedInt2
+from hip.chip cimport hipResViewFormatUnsignedInt2 as cudaResViewFormatUnsignedInt2
+from hip.chip cimport hipResViewFormatUnsignedInt4
+from hip.chip cimport hipResViewFormatUnsignedInt4 as cudaResViewFormatUnsignedInt4
+from hip.chip cimport hipResViewFormatSignedInt1
+from hip.chip cimport hipResViewFormatSignedInt1 as cudaResViewFormatSignedInt1
+from hip.chip cimport hipResViewFormatSignedInt2
+from hip.chip cimport hipResViewFormatSignedInt2 as cudaResViewFormatSignedInt2
+from hip.chip cimport hipResViewFormatSignedInt4
+from hip.chip cimport hipResViewFormatSignedInt4 as cudaResViewFormatSignedInt4
+from hip.chip cimport hipResViewFormatHalf1
+from hip.chip cimport hipResViewFormatHalf1 as cudaResViewFormatHalf1
+from hip.chip cimport hipResViewFormatHalf2
+from hip.chip cimport hipResViewFormatHalf2 as cudaResViewFormatHalf2
+from hip.chip cimport hipResViewFormatHalf4
+from hip.chip cimport hipResViewFormatHalf4 as cudaResViewFormatHalf4
+from hip.chip cimport hipResViewFormatFloat1
+from hip.chip cimport hipResViewFormatFloat1 as cudaResViewFormatFloat1
+from hip.chip cimport hipResViewFormatFloat2
+from hip.chip cimport hipResViewFormatFloat2 as cudaResViewFormatFloat2
+from hip.chip cimport hipResViewFormatFloat4
+from hip.chip cimport hipResViewFormatFloat4 as cudaResViewFormatFloat4
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed1
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed1 as cudaResViewFormatUnsignedBlockCompressed1
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed2
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed2 as cudaResViewFormatUnsignedBlockCompressed2
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed3
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed3 as cudaResViewFormatUnsignedBlockCompressed3
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed4
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed4 as cudaResViewFormatUnsignedBlockCompressed4
+from hip.chip cimport hipResViewFormatSignedBlockCompressed4
+from hip.chip cimport hipResViewFormatSignedBlockCompressed4 as cudaResViewFormatSignedBlockCompressed4
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed5
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed5 as cudaResViewFormatUnsignedBlockCompressed5
+from hip.chip cimport hipResViewFormatSignedBlockCompressed5
+from hip.chip cimport hipResViewFormatSignedBlockCompressed5 as cudaResViewFormatSignedBlockCompressed5
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed6H
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed6H as cudaResViewFormatUnsignedBlockCompressed6H
+from hip.chip cimport hipResViewFormatSignedBlockCompressed6H
+from hip.chip cimport hipResViewFormatSignedBlockCompressed6H as cudaResViewFormatSignedBlockCompressed6H
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed7
+from hip.chip cimport hipResViewFormatUnsignedBlockCompressed7 as cudaResViewFormatUnsignedBlockCompressed7
+from hip.chip cimport HIPresourceViewFormat_enum as CUresourceViewFormat_enum
+from hip.chip cimport HIP_RES_VIEW_FORMAT_NONE
+from hip.chip cimport HIP_RES_VIEW_FORMAT_NONE as CU_RES_VIEW_FORMAT_NONE
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_1X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_1X8 as CU_RES_VIEW_FORMAT_UINT_1X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_2X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_2X8 as CU_RES_VIEW_FORMAT_UINT_2X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_4X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_4X8 as CU_RES_VIEW_FORMAT_UINT_4X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_1X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_1X8 as CU_RES_VIEW_FORMAT_SINT_1X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_2X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_2X8 as CU_RES_VIEW_FORMAT_SINT_2X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_4X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_4X8 as CU_RES_VIEW_FORMAT_SINT_4X8
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_1X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_1X16 as CU_RES_VIEW_FORMAT_UINT_1X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_2X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_2X16 as CU_RES_VIEW_FORMAT_UINT_2X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_4X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_4X16 as CU_RES_VIEW_FORMAT_UINT_4X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_1X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_1X16 as CU_RES_VIEW_FORMAT_SINT_1X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_2X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_2X16 as CU_RES_VIEW_FORMAT_SINT_2X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_4X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_4X16 as CU_RES_VIEW_FORMAT_SINT_4X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_1X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_1X32 as CU_RES_VIEW_FORMAT_UINT_1X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_2X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_2X32 as CU_RES_VIEW_FORMAT_UINT_2X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_4X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UINT_4X32 as CU_RES_VIEW_FORMAT_UINT_4X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_1X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_1X32 as CU_RES_VIEW_FORMAT_SINT_1X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_2X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_2X32 as CU_RES_VIEW_FORMAT_SINT_2X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_4X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SINT_4X32 as CU_RES_VIEW_FORMAT_SINT_4X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_1X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_1X16 as CU_RES_VIEW_FORMAT_FLOAT_1X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_2X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_2X16 as CU_RES_VIEW_FORMAT_FLOAT_2X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_4X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_4X16 as CU_RES_VIEW_FORMAT_FLOAT_4X16
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_1X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_1X32 as CU_RES_VIEW_FORMAT_FLOAT_1X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_2X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_2X32 as CU_RES_VIEW_FORMAT_FLOAT_2X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_4X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_FLOAT_4X32 as CU_RES_VIEW_FORMAT_FLOAT_4X32
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC1
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC1 as CU_RES_VIEW_FORMAT_UNSIGNED_BC1
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC2
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC2 as CU_RES_VIEW_FORMAT_UNSIGNED_BC2
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC3
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC3 as CU_RES_VIEW_FORMAT_UNSIGNED_BC3
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC4
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC4 as CU_RES_VIEW_FORMAT_UNSIGNED_BC4
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC4
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC4 as CU_RES_VIEW_FORMAT_SIGNED_BC4
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC5
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC5 as CU_RES_VIEW_FORMAT_UNSIGNED_BC5
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC5
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC5 as CU_RES_VIEW_FORMAT_SIGNED_BC5
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC6H
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC6H as CU_RES_VIEW_FORMAT_UNSIGNED_BC6H
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC6H
+from hip.chip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC6H as CU_RES_VIEW_FORMAT_SIGNED_BC6H
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
+from hip.chip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC7 as CU_RES_VIEW_FORMAT_UNSIGNED_BC7
 ctypedef CUresourceViewFormat_enum CUresourceViewFormat
 from hip.chip cimport hipResourceDesc
 from hip.chip cimport hipResourceDesc as cudaResourceDesc
@@ -968,17 +967,17 @@ from hip.chip cimport HIP_RESOURCE_VIEW_DESC_st as CUDA_RESOURCE_VIEW_DESC_st
 from hip.chip cimport HIP_RESOURCE_VIEW_DESC
 from hip.chip cimport HIP_RESOURCE_VIEW_DESC as CUDA_RESOURCE_VIEW_DESC
 from hip.chip cimport HIP_RESOURCE_VIEW_DESC as CUDA_RESOURCE_VIEW_DESC_v1
-cdef enum cudaMemcpyKind:
-    cudaMemcpyHostToHost = hip.chip.hipMemcpyHostToHost
-    hipMemcpyHostToHost = hip.chip.hipMemcpyHostToHost
-    cudaMemcpyHostToDevice = hip.chip.hipMemcpyHostToDevice
-    hipMemcpyHostToDevice = hip.chip.hipMemcpyHostToDevice
-    cudaMemcpyDeviceToHost = hip.chip.hipMemcpyDeviceToHost
-    hipMemcpyDeviceToHost = hip.chip.hipMemcpyDeviceToHost
-    cudaMemcpyDeviceToDevice = hip.chip.hipMemcpyDeviceToDevice
-    hipMemcpyDeviceToDevice = hip.chip.hipMemcpyDeviceToDevice
-    cudaMemcpyDefault = hip.chip.hipMemcpyDefault
-    hipMemcpyDefault = hip.chip.hipMemcpyDefault
+from hip.chip cimport hipMemcpyKind as cudaMemcpyKind
+from hip.chip cimport hipMemcpyHostToHost
+from hip.chip cimport hipMemcpyHostToHost as cudaMemcpyHostToHost
+from hip.chip cimport hipMemcpyHostToDevice
+from hip.chip cimport hipMemcpyHostToDevice as cudaMemcpyHostToDevice
+from hip.chip cimport hipMemcpyDeviceToHost
+from hip.chip cimport hipMemcpyDeviceToHost as cudaMemcpyDeviceToHost
+from hip.chip cimport hipMemcpyDeviceToDevice
+from hip.chip cimport hipMemcpyDeviceToDevice as cudaMemcpyDeviceToDevice
+from hip.chip cimport hipMemcpyDefault
+from hip.chip cimport hipMemcpyDefault as cudaMemcpyDefault
 from hip.chip cimport hipPitchedPtr
 from hip.chip cimport hipPitchedPtr as cudaPitchedPtr
 from hip.chip cimport hipExtent
@@ -993,65 +992,65 @@ from hip.chip cimport HIP_MEMCPY3D as CUDA_MEMCPY3D_st
 from hip.chip cimport HIP_MEMCPY3D as CUDA_MEMCPY3D_v1
 from hip.chip cimport HIP_MEMCPY3D as CUDA_MEMCPY3D_v1_st
 from hip.chip cimport HIP_MEMCPY3D as CUDA_MEMCPY3D_v2
-cdef enum CUfunction_attribute:
-    CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
-    HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
-    CU_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
-    HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
-    CU_FUNC_ATTRIBUTE_CONST_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES
-    HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES
-    CU_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES
-    HIP_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES
-    CU_FUNC_ATTRIBUTE_NUM_REGS = hip.chip.HIP_FUNC_ATTRIBUTE_NUM_REGS
-    HIP_FUNC_ATTRIBUTE_NUM_REGS = hip.chip.HIP_FUNC_ATTRIBUTE_NUM_REGS
-    CU_FUNC_ATTRIBUTE_PTX_VERSION = hip.chip.HIP_FUNC_ATTRIBUTE_PTX_VERSION
-    HIP_FUNC_ATTRIBUTE_PTX_VERSION = hip.chip.HIP_FUNC_ATTRIBUTE_PTX_VERSION
-    CU_FUNC_ATTRIBUTE_BINARY_VERSION = hip.chip.HIP_FUNC_ATTRIBUTE_BINARY_VERSION
-    HIP_FUNC_ATTRIBUTE_BINARY_VERSION = hip.chip.HIP_FUNC_ATTRIBUTE_BINARY_VERSION
-    CU_FUNC_ATTRIBUTE_CACHE_MODE_CA = hip.chip.HIP_FUNC_ATTRIBUTE_CACHE_MODE_CA
-    HIP_FUNC_ATTRIBUTE_CACHE_MODE_CA = hip.chip.HIP_FUNC_ATTRIBUTE_CACHE_MODE_CA
-    CU_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES
-    HIP_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES
-    CU_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT = hip.chip.HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
-    HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT = hip.chip.HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
-    CU_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
-    HIP_FUNC_ATTRIBUTE_MAX = hip.chip.HIP_FUNC_ATTRIBUTE_MAX
+from hip.chip cimport hipFunction_attribute as CUfunction_attribute
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK as CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES as CU_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES as CU_FUNC_ATTRIBUTE_CONST_SIZE_BYTES
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES as CU_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_NUM_REGS
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_NUM_REGS as CU_FUNC_ATTRIBUTE_NUM_REGS
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_PTX_VERSION
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_PTX_VERSION as CU_FUNC_ATTRIBUTE_PTX_VERSION
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_BINARY_VERSION
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_BINARY_VERSION as CU_FUNC_ATTRIBUTE_BINARY_VERSION
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_CACHE_MODE_CA
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_CACHE_MODE_CA as CU_FUNC_ATTRIBUTE_CACHE_MODE_CA
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES as CU_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT as CU_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_MAX
+from hip.chip cimport HIP_FUNC_ATTRIBUTE_MAX as CU_FUNC_ATTRIBUTE_MAX
 ctypedef CUfunction_attribute CUfunction_attribute_enum
-cdef enum CUpointer_attribute:
-    CU_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
-    HIP_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
-    CU_POINTER_ATTRIBUTE_MEMORY_TYPE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
-    HIP_POINTER_ATTRIBUTE_MEMORY_TYPE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
-    CU_POINTER_ATTRIBUTE_DEVICE_POINTER = hip.chip.HIP_POINTER_ATTRIBUTE_DEVICE_POINTER
-    HIP_POINTER_ATTRIBUTE_DEVICE_POINTER = hip.chip.HIP_POINTER_ATTRIBUTE_DEVICE_POINTER
-    CU_POINTER_ATTRIBUTE_HOST_POINTER = hip.chip.HIP_POINTER_ATTRIBUTE_HOST_POINTER
-    HIP_POINTER_ATTRIBUTE_HOST_POINTER = hip.chip.HIP_POINTER_ATTRIBUTE_HOST_POINTER
-    CU_POINTER_ATTRIBUTE_P2P_TOKENS = hip.chip.HIP_POINTER_ATTRIBUTE_P2P_TOKENS
-    HIP_POINTER_ATTRIBUTE_P2P_TOKENS = hip.chip.HIP_POINTER_ATTRIBUTE_P2P_TOKENS
-    CU_POINTER_ATTRIBUTE_SYNC_MEMOPS = hip.chip.HIP_POINTER_ATTRIBUTE_SYNC_MEMOPS
-    HIP_POINTER_ATTRIBUTE_SYNC_MEMOPS = hip.chip.HIP_POINTER_ATTRIBUTE_SYNC_MEMOPS
-    CU_POINTER_ATTRIBUTE_BUFFER_ID = hip.chip.HIP_POINTER_ATTRIBUTE_BUFFER_ID
-    HIP_POINTER_ATTRIBUTE_BUFFER_ID = hip.chip.HIP_POINTER_ATTRIBUTE_BUFFER_ID
-    CU_POINTER_ATTRIBUTE_IS_MANAGED = hip.chip.HIP_POINTER_ATTRIBUTE_IS_MANAGED
-    HIP_POINTER_ATTRIBUTE_IS_MANAGED = hip.chip.HIP_POINTER_ATTRIBUTE_IS_MANAGED
-    CU_POINTER_ATTRIBUTE_DEVICE_ORDINAL = hip.chip.HIP_POINTER_ATTRIBUTE_DEVICE_ORDINAL
-    HIP_POINTER_ATTRIBUTE_DEVICE_ORDINAL = hip.chip.HIP_POINTER_ATTRIBUTE_DEVICE_ORDINAL
-    CU_POINTER_ATTRIBUTE_IS_LEGACY_CUDA_IPC_CAPABLE = hip.chip.HIP_POINTER_ATTRIBUTE_IS_LEGACY_HIP_IPC_CAPABLE
-    HIP_POINTER_ATTRIBUTE_IS_LEGACY_HIP_IPC_CAPABLE = hip.chip.HIP_POINTER_ATTRIBUTE_IS_LEGACY_HIP_IPC_CAPABLE
-    CU_POINTER_ATTRIBUTE_RANGE_START_ADDR = hip.chip.HIP_POINTER_ATTRIBUTE_RANGE_START_ADDR
-    HIP_POINTER_ATTRIBUTE_RANGE_START_ADDR = hip.chip.HIP_POINTER_ATTRIBUTE_RANGE_START_ADDR
-    CU_POINTER_ATTRIBUTE_RANGE_SIZE = hip.chip.HIP_POINTER_ATTRIBUTE_RANGE_SIZE
-    HIP_POINTER_ATTRIBUTE_RANGE_SIZE = hip.chip.HIP_POINTER_ATTRIBUTE_RANGE_SIZE
-    CU_POINTER_ATTRIBUTE_MAPPED = hip.chip.HIP_POINTER_ATTRIBUTE_MAPPED
-    HIP_POINTER_ATTRIBUTE_MAPPED = hip.chip.HIP_POINTER_ATTRIBUTE_MAPPED
-    CU_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES = hip.chip.HIP_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES
-    HIP_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES = hip.chip.HIP_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES
-    CU_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE = hip.chip.HIP_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE
-    HIP_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE = hip.chip.HIP_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE
-    CU_POINTER_ATTRIBUTE_ACCESS_FLAGS = hip.chip.HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS
-    HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS = hip.chip.HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS
-    CU_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
-    HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
+from hip.chip cimport hipPointer_attribute as CUpointer_attribute
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_CONTEXT
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_CONTEXT as CU_POINTER_ATTRIBUTE_CONTEXT
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_MEMORY_TYPE as CU_POINTER_ATTRIBUTE_MEMORY_TYPE
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_DEVICE_POINTER
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_DEVICE_POINTER as CU_POINTER_ATTRIBUTE_DEVICE_POINTER
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_HOST_POINTER
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_HOST_POINTER as CU_POINTER_ATTRIBUTE_HOST_POINTER
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_P2P_TOKENS
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_P2P_TOKENS as CU_POINTER_ATTRIBUTE_P2P_TOKENS
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_SYNC_MEMOPS
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_SYNC_MEMOPS as CU_POINTER_ATTRIBUTE_SYNC_MEMOPS
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_BUFFER_ID
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_BUFFER_ID as CU_POINTER_ATTRIBUTE_BUFFER_ID
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_IS_MANAGED
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_IS_MANAGED as CU_POINTER_ATTRIBUTE_IS_MANAGED
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_DEVICE_ORDINAL
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_DEVICE_ORDINAL as CU_POINTER_ATTRIBUTE_DEVICE_ORDINAL
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_IS_LEGACY_HIP_IPC_CAPABLE
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_IS_LEGACY_HIP_IPC_CAPABLE as CU_POINTER_ATTRIBUTE_IS_LEGACY_CUDA_IPC_CAPABLE
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_RANGE_START_ADDR
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_RANGE_START_ADDR as CU_POINTER_ATTRIBUTE_RANGE_START_ADDR
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_RANGE_SIZE
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_RANGE_SIZE as CU_POINTER_ATTRIBUTE_RANGE_SIZE
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_MAPPED
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_MAPPED as CU_POINTER_ATTRIBUTE_MAPPED
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES as CU_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE as CU_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS as CU_POINTER_ATTRIBUTE_ACCESS_FLAGS
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
+from hip.chip cimport HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE as CU_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
 ctypedef CUpointer_attribute CUpointer_attribute_enum
 from hip.chip cimport hipCreateChannelDesc
 from hip.chip cimport hipCreateChannelDesc as cudaCreateChannelDesc
@@ -1059,25 +1058,25 @@ from hip.chip cimport hipTextureObject_t
 from hip.chip cimport hipTextureObject_t as CUtexObject
 from hip.chip cimport hipTextureObject_t as CUtexObject_v1
 from hip.chip cimport hipTextureObject_t as cudaTextureObject_t
-cdef enum cudaTextureAddressMode:
-    cudaAddressModeWrap = hip.chip.hipAddressModeWrap
-    hipAddressModeWrap = hip.chip.hipAddressModeWrap
-    cudaAddressModeClamp = hip.chip.hipAddressModeClamp
-    hipAddressModeClamp = hip.chip.hipAddressModeClamp
-    cudaAddressModeMirror = hip.chip.hipAddressModeMirror
-    hipAddressModeMirror = hip.chip.hipAddressModeMirror
-    cudaAddressModeBorder = hip.chip.hipAddressModeBorder
-    hipAddressModeBorder = hip.chip.hipAddressModeBorder
-cdef enum cudaTextureFilterMode:
-    cudaFilterModePoint = hip.chip.hipFilterModePoint
-    hipFilterModePoint = hip.chip.hipFilterModePoint
-    cudaFilterModeLinear = hip.chip.hipFilterModeLinear
-    hipFilterModeLinear = hip.chip.hipFilterModeLinear
-cdef enum cudaTextureReadMode:
-    cudaReadModeElementType = hip.chip.hipReadModeElementType
-    hipReadModeElementType = hip.chip.hipReadModeElementType
-    cudaReadModeNormalizedFloat = hip.chip.hipReadModeNormalizedFloat
-    hipReadModeNormalizedFloat = hip.chip.hipReadModeNormalizedFloat
+from hip.chip cimport hipTextureAddressMode as cudaTextureAddressMode
+from hip.chip cimport hipAddressModeWrap
+from hip.chip cimport hipAddressModeWrap as cudaAddressModeWrap
+from hip.chip cimport hipAddressModeClamp
+from hip.chip cimport hipAddressModeClamp as cudaAddressModeClamp
+from hip.chip cimport hipAddressModeMirror
+from hip.chip cimport hipAddressModeMirror as cudaAddressModeMirror
+from hip.chip cimport hipAddressModeBorder
+from hip.chip cimport hipAddressModeBorder as cudaAddressModeBorder
+from hip.chip cimport hipTextureFilterMode as cudaTextureFilterMode
+from hip.chip cimport hipFilterModePoint
+from hip.chip cimport hipFilterModePoint as cudaFilterModePoint
+from hip.chip cimport hipFilterModeLinear
+from hip.chip cimport hipFilterModeLinear as cudaFilterModeLinear
+from hip.chip cimport hipTextureReadMode as cudaTextureReadMode
+from hip.chip cimport hipReadModeElementType
+from hip.chip cimport hipReadModeElementType as cudaReadModeElementType
+from hip.chip cimport hipReadModeNormalizedFloat
+from hip.chip cimport hipReadModeNormalizedFloat as cudaReadModeNormalizedFloat
 from hip.chip cimport textureReference
 from hip.chip cimport textureReference as CUtexref_st
 from hip.chip cimport textureReference as textureReference
@@ -1089,34 +1088,34 @@ from hip.chip cimport hipSurfaceObject_t as CUsurfObject_v1
 from hip.chip cimport hipSurfaceObject_t as cudaSurfaceObject_t
 from hip.chip cimport surfaceReference
 from hip.chip cimport surfaceReference as surfaceReference
-cdef enum cudaSurfaceBoundaryMode:
-    cudaBoundaryModeZero = hip.chip.hipBoundaryModeZero
-    hipBoundaryModeZero = hip.chip.hipBoundaryModeZero
-    cudaBoundaryModeTrap = hip.chip.hipBoundaryModeTrap
-    hipBoundaryModeTrap = hip.chip.hipBoundaryModeTrap
-    cudaBoundaryModeClamp = hip.chip.hipBoundaryModeClamp
-    hipBoundaryModeClamp = hip.chip.hipBoundaryModeClamp
+from hip.chip cimport hipSurfaceBoundaryMode as cudaSurfaceBoundaryMode
+from hip.chip cimport hipBoundaryModeZero
+from hip.chip cimport hipBoundaryModeZero as cudaBoundaryModeZero
+from hip.chip cimport hipBoundaryModeTrap
+from hip.chip cimport hipBoundaryModeTrap as cudaBoundaryModeTrap
+from hip.chip cimport hipBoundaryModeClamp
+from hip.chip cimport hipBoundaryModeClamp as cudaBoundaryModeClamp
 from hip.chip cimport ihipCtx_t
 from hip.chip cimport ihipCtx_t as CUctx_st
 from hip.chip cimport hipCtx_t
 from hip.chip cimport hipCtx_t as CUcontext
 ctypedef int CUdevice
 ctypedef int CUdevice_v1
-cdef enum CUdevice_P2PAttribute:
-    CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK = hip.chip.hipDevP2PAttrPerformanceRank
-    cudaDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
-    hipDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
-    CU_DEVICE_P2P_ATTRIBUTE_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrAccessSupported
-    cudaDevP2PAttrAccessSupported = hip.chip.hipDevP2PAttrAccessSupported
-    hipDevP2PAttrAccessSupported = hip.chip.hipDevP2PAttrAccessSupported
-    CU_DEVICE_P2P_ATTRIBUTE_NATIVE_ATOMIC_SUPPORTED = hip.chip.hipDevP2PAttrNativeAtomicSupported
-    cudaDevP2PAttrNativeAtomicSupported = hip.chip.hipDevP2PAttrNativeAtomicSupported
-    hipDevP2PAttrNativeAtomicSupported = hip.chip.hipDevP2PAttrNativeAtomicSupported
-    CU_DEVICE_P2P_ATTRIBUTE_ACCESS_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
-    CU_DEVICE_P2P_ATTRIBUTE_ARRAY_ACCESS_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
-    CU_DEVICE_P2P_ATTRIBUTE_CUDA_ARRAY_ACCESS_SUPPORTED = hip.chip.hipDevP2PAttrHipArrayAccessSupported
-    cudaDevP2PAttrCudaArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
-    hipDevP2PAttrHipArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
+from hip.chip cimport hipDeviceP2PAttr as CUdevice_P2PAttribute
+from hip.chip cimport hipDevP2PAttrPerformanceRank
+from hip.chip cimport hipDevP2PAttrPerformanceRank as CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK
+from hip.chip cimport hipDevP2PAttrPerformanceRank as cudaDevP2PAttrPerformanceRank
+from hip.chip cimport hipDevP2PAttrAccessSupported
+from hip.chip cimport hipDevP2PAttrAccessSupported as CU_DEVICE_P2P_ATTRIBUTE_ACCESS_SUPPORTED
+from hip.chip cimport hipDevP2PAttrAccessSupported as cudaDevP2PAttrAccessSupported
+from hip.chip cimport hipDevP2PAttrNativeAtomicSupported
+from hip.chip cimport hipDevP2PAttrNativeAtomicSupported as CU_DEVICE_P2P_ATTRIBUTE_NATIVE_ATOMIC_SUPPORTED
+from hip.chip cimport hipDevP2PAttrNativeAtomicSupported as cudaDevP2PAttrNativeAtomicSupported
+from hip.chip cimport hipDevP2PAttrHipArrayAccessSupported
+from hip.chip cimport hipDevP2PAttrHipArrayAccessSupported as CU_DEVICE_P2P_ATTRIBUTE_ACCESS_ACCESS_SUPPORTED
+from hip.chip cimport hipDevP2PAttrHipArrayAccessSupported as CU_DEVICE_P2P_ATTRIBUTE_ARRAY_ACCESS_ACCESS_SUPPORTED
+from hip.chip cimport hipDevP2PAttrHipArrayAccessSupported as CU_DEVICE_P2P_ATTRIBUTE_CUDA_ARRAY_ACCESS_SUPPORTED
+from hip.chip cimport hipDevP2PAttrHipArrayAccessSupported as cudaDevP2PAttrCudaArrayAccessSupported
 ctypedef CUdevice_P2PAttribute CUdevice_P2PAttribute_enum
 ctypedef CUdevice_P2PAttribute cudaDeviceP2PAttr
 from hip.chip cimport ihipStream_t
@@ -1159,92 +1158,92 @@ from hip.chip cimport ihipEvent_t as CUevent_st
 from hip.chip cimport hipEvent_t
 from hip.chip cimport hipEvent_t as CUevent
 from hip.chip cimport hipEvent_t as cudaEvent_t
-cdef enum CUlimit:
-    CU_LIMIT_STACK_SIZE = hip.chip.hipLimitStackSize
-    cudaLimitStackSize = hip.chip.hipLimitStackSize
-    hipLimitStackSize = hip.chip.hipLimitStackSize
-    CU_LIMIT_PRINTF_FIFO_SIZE = hip.chip.hipLimitPrintfFifoSize
-    cudaLimitPrintfFifoSize = hip.chip.hipLimitPrintfFifoSize
-    hipLimitPrintfFifoSize = hip.chip.hipLimitPrintfFifoSize
-    CU_LIMIT_MALLOC_HEAP_SIZE = hip.chip.hipLimitMallocHeapSize
-    cudaLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
-    hipLimitMallocHeapSize = hip.chip.hipLimitMallocHeapSize
-    hipLimitRange = hip.chip.hipLimitRange
+from hip.chip cimport hipLimit_t as CUlimit
+from hip.chip cimport hipLimitStackSize
+from hip.chip cimport hipLimitStackSize as CU_LIMIT_STACK_SIZE
+from hip.chip cimport hipLimitStackSize as cudaLimitStackSize
+from hip.chip cimport hipLimitPrintfFifoSize
+from hip.chip cimport hipLimitPrintfFifoSize as CU_LIMIT_PRINTF_FIFO_SIZE
+from hip.chip cimport hipLimitPrintfFifoSize as cudaLimitPrintfFifoSize
+from hip.chip cimport hipLimitMallocHeapSize
+from hip.chip cimport hipLimitMallocHeapSize as CU_LIMIT_MALLOC_HEAP_SIZE
+from hip.chip cimport hipLimitMallocHeapSize as cudaLimitMallocHeapSize
+from hip.chip cimport hipLimitRange
 ctypedef CUlimit CUlimit_enum
 ctypedef CUlimit cudaLimit
-cdef enum CUmem_advise:
-    CU_MEM_ADVISE_SET_READ_MOSTLY = hip.chip.hipMemAdviseSetReadMostly
-    cudaMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
-    hipMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
-    CU_MEM_ADVISE_UNSET_READ_MOSTLY = hip.chip.hipMemAdviseUnsetReadMostly
-    cudaMemAdviseUnsetReadMostly = hip.chip.hipMemAdviseUnsetReadMostly
-    hipMemAdviseUnsetReadMostly = hip.chip.hipMemAdviseUnsetReadMostly
-    CU_MEM_ADVISE_SET_PREFERRED_LOCATION = hip.chip.hipMemAdviseSetPreferredLocation
-    cudaMemAdviseSetPreferredLocation = hip.chip.hipMemAdviseSetPreferredLocation
-    hipMemAdviseSetPreferredLocation = hip.chip.hipMemAdviseSetPreferredLocation
-    CU_MEM_ADVISE_UNSET_PREFERRED_LOCATION = hip.chip.hipMemAdviseUnsetPreferredLocation
-    cudaMemAdviseUnsetPreferredLocation = hip.chip.hipMemAdviseUnsetPreferredLocation
-    hipMemAdviseUnsetPreferredLocation = hip.chip.hipMemAdviseUnsetPreferredLocation
-    CU_MEM_ADVISE_SET_ACCESSED_BY = hip.chip.hipMemAdviseSetAccessedBy
-    cudaMemAdviseSetAccessedBy = hip.chip.hipMemAdviseSetAccessedBy
-    hipMemAdviseSetAccessedBy = hip.chip.hipMemAdviseSetAccessedBy
-    CU_MEM_ADVISE_UNSET_ACCESSED_BY = hip.chip.hipMemAdviseUnsetAccessedBy
-    cudaMemAdviseUnsetAccessedBy = hip.chip.hipMemAdviseUnsetAccessedBy
-    hipMemAdviseUnsetAccessedBy = hip.chip.hipMemAdviseUnsetAccessedBy
-    hipMemAdviseSetCoarseGrain = hip.chip.hipMemAdviseSetCoarseGrain
-    hipMemAdviseUnsetCoarseGrain = hip.chip.hipMemAdviseUnsetCoarseGrain
+from hip.chip cimport hipMemoryAdvise as CUmem_advise
+from hip.chip cimport hipMemAdviseSetReadMostly
+from hip.chip cimport hipMemAdviseSetReadMostly as CU_MEM_ADVISE_SET_READ_MOSTLY
+from hip.chip cimport hipMemAdviseSetReadMostly as cudaMemAdviseSetReadMostly
+from hip.chip cimport hipMemAdviseUnsetReadMostly
+from hip.chip cimport hipMemAdviseUnsetReadMostly as CU_MEM_ADVISE_UNSET_READ_MOSTLY
+from hip.chip cimport hipMemAdviseUnsetReadMostly as cudaMemAdviseUnsetReadMostly
+from hip.chip cimport hipMemAdviseSetPreferredLocation
+from hip.chip cimport hipMemAdviseSetPreferredLocation as CU_MEM_ADVISE_SET_PREFERRED_LOCATION
+from hip.chip cimport hipMemAdviseSetPreferredLocation as cudaMemAdviseSetPreferredLocation
+from hip.chip cimport hipMemAdviseUnsetPreferredLocation
+from hip.chip cimport hipMemAdviseUnsetPreferredLocation as CU_MEM_ADVISE_UNSET_PREFERRED_LOCATION
+from hip.chip cimport hipMemAdviseUnsetPreferredLocation as cudaMemAdviseUnsetPreferredLocation
+from hip.chip cimport hipMemAdviseSetAccessedBy
+from hip.chip cimport hipMemAdviseSetAccessedBy as CU_MEM_ADVISE_SET_ACCESSED_BY
+from hip.chip cimport hipMemAdviseSetAccessedBy as cudaMemAdviseSetAccessedBy
+from hip.chip cimport hipMemAdviseUnsetAccessedBy
+from hip.chip cimport hipMemAdviseUnsetAccessedBy as CU_MEM_ADVISE_UNSET_ACCESSED_BY
+from hip.chip cimport hipMemAdviseUnsetAccessedBy as cudaMemAdviseUnsetAccessedBy
+from hip.chip cimport hipMemAdviseSetCoarseGrain
+from hip.chip cimport hipMemAdviseUnsetCoarseGrain
 ctypedef CUmem_advise CUmem_advise_enum
 ctypedef CUmem_advise cudaMemoryAdvise
-cdef enum CUmem_range_attribute:
-    CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY = hip.chip.hipMemRangeAttributeReadMostly
-    cudaMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
-    hipMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
-    CU_MEM_RANGE_ATTRIBUTE_PREFERRED_LOCATION = hip.chip.hipMemRangeAttributePreferredLocation
-    cudaMemRangeAttributePreferredLocation = hip.chip.hipMemRangeAttributePreferredLocation
-    hipMemRangeAttributePreferredLocation = hip.chip.hipMemRangeAttributePreferredLocation
-    CU_MEM_RANGE_ATTRIBUTE_ACCESSED_BY = hip.chip.hipMemRangeAttributeAccessedBy
-    cudaMemRangeAttributeAccessedBy = hip.chip.hipMemRangeAttributeAccessedBy
-    hipMemRangeAttributeAccessedBy = hip.chip.hipMemRangeAttributeAccessedBy
-    CU_MEM_RANGE_ATTRIBUTE_LAST_PREFETCH_LOCATION = hip.chip.hipMemRangeAttributeLastPrefetchLocation
-    cudaMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
-    hipMemRangeAttributeLastPrefetchLocation = hip.chip.hipMemRangeAttributeLastPrefetchLocation
-    hipMemRangeAttributeCoherencyMode = hip.chip.hipMemRangeAttributeCoherencyMode
+from hip.chip cimport hipMemRangeAttribute as CUmem_range_attribute
+from hip.chip cimport hipMemRangeAttributeReadMostly
+from hip.chip cimport hipMemRangeAttributeReadMostly as CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY
+from hip.chip cimport hipMemRangeAttributeReadMostly as cudaMemRangeAttributeReadMostly
+from hip.chip cimport hipMemRangeAttributePreferredLocation
+from hip.chip cimport hipMemRangeAttributePreferredLocation as CU_MEM_RANGE_ATTRIBUTE_PREFERRED_LOCATION
+from hip.chip cimport hipMemRangeAttributePreferredLocation as cudaMemRangeAttributePreferredLocation
+from hip.chip cimport hipMemRangeAttributeAccessedBy
+from hip.chip cimport hipMemRangeAttributeAccessedBy as CU_MEM_RANGE_ATTRIBUTE_ACCESSED_BY
+from hip.chip cimport hipMemRangeAttributeAccessedBy as cudaMemRangeAttributeAccessedBy
+from hip.chip cimport hipMemRangeAttributeLastPrefetchLocation
+from hip.chip cimport hipMemRangeAttributeLastPrefetchLocation as CU_MEM_RANGE_ATTRIBUTE_LAST_PREFETCH_LOCATION
+from hip.chip cimport hipMemRangeAttributeLastPrefetchLocation as cudaMemRangeAttributeLastPrefetchLocation
+from hip.chip cimport hipMemRangeAttributeCoherencyMode
 ctypedef CUmem_range_attribute CUmem_range_attribute_enum
 ctypedef CUmem_range_attribute cudaMemRangeAttribute
-cdef enum CUmemPool_attribute:
-    CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES = hip.chip.hipMemPoolReuseFollowEventDependencies
-    cudaMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
-    hipMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
-    CU_MEMPOOL_ATTR_REUSE_ALLOW_OPPORTUNISTIC = hip.chip.hipMemPoolReuseAllowOpportunistic
-    cudaMemPoolReuseAllowOpportunistic = hip.chip.hipMemPoolReuseAllowOpportunistic
-    hipMemPoolReuseAllowOpportunistic = hip.chip.hipMemPoolReuseAllowOpportunistic
-    CU_MEMPOOL_ATTR_REUSE_ALLOW_INTERNAL_DEPENDENCIES = hip.chip.hipMemPoolReuseAllowInternalDependencies
-    cudaMemPoolReuseAllowInternalDependencies = hip.chip.hipMemPoolReuseAllowInternalDependencies
-    hipMemPoolReuseAllowInternalDependencies = hip.chip.hipMemPoolReuseAllowInternalDependencies
-    CU_MEMPOOL_ATTR_RELEASE_THRESHOLD = hip.chip.hipMemPoolAttrReleaseThreshold
-    cudaMemPoolAttrReleaseThreshold = hip.chip.hipMemPoolAttrReleaseThreshold
-    hipMemPoolAttrReleaseThreshold = hip.chip.hipMemPoolAttrReleaseThreshold
-    CU_MEMPOOL_ATTR_RESERVED_MEM_CURRENT = hip.chip.hipMemPoolAttrReservedMemCurrent
-    cudaMemPoolAttrReservedMemCurrent = hip.chip.hipMemPoolAttrReservedMemCurrent
-    hipMemPoolAttrReservedMemCurrent = hip.chip.hipMemPoolAttrReservedMemCurrent
-    CU_MEMPOOL_ATTR_RESERVED_MEM_HIGH = hip.chip.hipMemPoolAttrReservedMemHigh
-    cudaMemPoolAttrReservedMemHigh = hip.chip.hipMemPoolAttrReservedMemHigh
-    hipMemPoolAttrReservedMemHigh = hip.chip.hipMemPoolAttrReservedMemHigh
-    CU_MEMPOOL_ATTR_USED_MEM_CURRENT = hip.chip.hipMemPoolAttrUsedMemCurrent
-    cudaMemPoolAttrUsedMemCurrent = hip.chip.hipMemPoolAttrUsedMemCurrent
-    hipMemPoolAttrUsedMemCurrent = hip.chip.hipMemPoolAttrUsedMemCurrent
-    CU_MEMPOOL_ATTR_USED_MEM_HIGH = hip.chip.hipMemPoolAttrUsedMemHigh
-    cudaMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
-    hipMemPoolAttrUsedMemHigh = hip.chip.hipMemPoolAttrUsedMemHigh
+from hip.chip cimport hipMemPoolAttr as CUmemPool_attribute
+from hip.chip cimport hipMemPoolReuseFollowEventDependencies
+from hip.chip cimport hipMemPoolReuseFollowEventDependencies as CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES
+from hip.chip cimport hipMemPoolReuseFollowEventDependencies as cudaMemPoolReuseFollowEventDependencies
+from hip.chip cimport hipMemPoolReuseAllowOpportunistic
+from hip.chip cimport hipMemPoolReuseAllowOpportunistic as CU_MEMPOOL_ATTR_REUSE_ALLOW_OPPORTUNISTIC
+from hip.chip cimport hipMemPoolReuseAllowOpportunistic as cudaMemPoolReuseAllowOpportunistic
+from hip.chip cimport hipMemPoolReuseAllowInternalDependencies
+from hip.chip cimport hipMemPoolReuseAllowInternalDependencies as CU_MEMPOOL_ATTR_REUSE_ALLOW_INTERNAL_DEPENDENCIES
+from hip.chip cimport hipMemPoolReuseAllowInternalDependencies as cudaMemPoolReuseAllowInternalDependencies
+from hip.chip cimport hipMemPoolAttrReleaseThreshold
+from hip.chip cimport hipMemPoolAttrReleaseThreshold as CU_MEMPOOL_ATTR_RELEASE_THRESHOLD
+from hip.chip cimport hipMemPoolAttrReleaseThreshold as cudaMemPoolAttrReleaseThreshold
+from hip.chip cimport hipMemPoolAttrReservedMemCurrent
+from hip.chip cimport hipMemPoolAttrReservedMemCurrent as CU_MEMPOOL_ATTR_RESERVED_MEM_CURRENT
+from hip.chip cimport hipMemPoolAttrReservedMemCurrent as cudaMemPoolAttrReservedMemCurrent
+from hip.chip cimport hipMemPoolAttrReservedMemHigh
+from hip.chip cimport hipMemPoolAttrReservedMemHigh as CU_MEMPOOL_ATTR_RESERVED_MEM_HIGH
+from hip.chip cimport hipMemPoolAttrReservedMemHigh as cudaMemPoolAttrReservedMemHigh
+from hip.chip cimport hipMemPoolAttrUsedMemCurrent
+from hip.chip cimport hipMemPoolAttrUsedMemCurrent as CU_MEMPOOL_ATTR_USED_MEM_CURRENT
+from hip.chip cimport hipMemPoolAttrUsedMemCurrent as cudaMemPoolAttrUsedMemCurrent
+from hip.chip cimport hipMemPoolAttrUsedMemHigh
+from hip.chip cimport hipMemPoolAttrUsedMemHigh as CU_MEMPOOL_ATTR_USED_MEM_HIGH
+from hip.chip cimport hipMemPoolAttrUsedMemHigh as cudaMemPoolAttrUsedMemHigh
 ctypedef CUmemPool_attribute CUmemPool_attribute_enum
 ctypedef CUmemPool_attribute cudaMemPoolAttr
-cdef enum CUmemLocationType:
-    CU_MEM_LOCATION_TYPE_INVALID = hip.chip.hipMemLocationTypeInvalid
-    cudaMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
-    hipMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
-    CU_MEM_LOCATION_TYPE_DEVICE = hip.chip.hipMemLocationTypeDevice
-    cudaMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
-    hipMemLocationTypeDevice = hip.chip.hipMemLocationTypeDevice
+from hip.chip cimport hipMemLocationType as CUmemLocationType
+from hip.chip cimport hipMemLocationTypeInvalid
+from hip.chip cimport hipMemLocationTypeInvalid as CU_MEM_LOCATION_TYPE_INVALID
+from hip.chip cimport hipMemLocationTypeInvalid as cudaMemLocationTypeInvalid
+from hip.chip cimport hipMemLocationTypeDevice
+from hip.chip cimport hipMemLocationTypeDevice as CU_MEM_LOCATION_TYPE_DEVICE
+from hip.chip cimport hipMemLocationTypeDevice as cudaMemLocationTypeDevice
 ctypedef CUmemLocationType CUmemLocationType_enum
 ctypedef CUmemLocationType cudaMemLocationType
 from hip.chip cimport hipMemLocation
@@ -1252,16 +1251,16 @@ from hip.chip cimport hipMemLocation as CUmemLocation
 from hip.chip cimport hipMemLocation as CUmemLocation_st
 from hip.chip cimport hipMemLocation as CUmemLocation_v1
 from hip.chip cimport hipMemLocation as cudaMemLocation
-cdef enum CUmemAccess_flags:
-    CU_MEM_ACCESS_FLAGS_PROT_NONE = hip.chip.hipMemAccessFlagsProtNone
-    cudaMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
-    hipMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
-    CU_MEM_ACCESS_FLAGS_PROT_READ = hip.chip.hipMemAccessFlagsProtRead
-    cudaMemAccessFlagsProtRead = hip.chip.hipMemAccessFlagsProtRead
-    hipMemAccessFlagsProtRead = hip.chip.hipMemAccessFlagsProtRead
-    CU_MEM_ACCESS_FLAGS_PROT_READWRITE = hip.chip.hipMemAccessFlagsProtReadWrite
-    cudaMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
-    hipMemAccessFlagsProtReadWrite = hip.chip.hipMemAccessFlagsProtReadWrite
+from hip.chip cimport hipMemAccessFlags as CUmemAccess_flags
+from hip.chip cimport hipMemAccessFlagsProtNone
+from hip.chip cimport hipMemAccessFlagsProtNone as CU_MEM_ACCESS_FLAGS_PROT_NONE
+from hip.chip cimport hipMemAccessFlagsProtNone as cudaMemAccessFlagsProtNone
+from hip.chip cimport hipMemAccessFlagsProtRead
+from hip.chip cimport hipMemAccessFlagsProtRead as CU_MEM_ACCESS_FLAGS_PROT_READ
+from hip.chip cimport hipMemAccessFlagsProtRead as cudaMemAccessFlagsProtRead
+from hip.chip cimport hipMemAccessFlagsProtReadWrite
+from hip.chip cimport hipMemAccessFlagsProtReadWrite as CU_MEM_ACCESS_FLAGS_PROT_READWRITE
+from hip.chip cimport hipMemAccessFlagsProtReadWrite as cudaMemAccessFlagsProtReadWrite
 ctypedef CUmemAccess_flags CUmemAccess_flags_enum
 ctypedef CUmemAccess_flags cudaMemAccessFlags
 from hip.chip cimport hipMemAccessDesc
@@ -1269,31 +1268,31 @@ from hip.chip cimport hipMemAccessDesc as CUmemAccessDesc
 from hip.chip cimport hipMemAccessDesc as CUmemAccessDesc_st
 from hip.chip cimport hipMemAccessDesc as CUmemAccessDesc_v1
 from hip.chip cimport hipMemAccessDesc as cudaMemAccessDesc
-cdef enum CUmemAllocationType:
-    CU_MEM_ALLOCATION_TYPE_INVALID = hip.chip.hipMemAllocationTypeInvalid
-    cudaMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
-    hipMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
-    CU_MEM_ALLOCATION_TYPE_PINNED = hip.chip.hipMemAllocationTypePinned
-    cudaMemAllocationTypePinned = hip.chip.hipMemAllocationTypePinned
-    hipMemAllocationTypePinned = hip.chip.hipMemAllocationTypePinned
-    CU_MEM_ALLOCATION_TYPE_MAX = hip.chip.hipMemAllocationTypeMax
-    cudaMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
-    hipMemAllocationTypeMax = hip.chip.hipMemAllocationTypeMax
+from hip.chip cimport hipMemAllocationType as CUmemAllocationType
+from hip.chip cimport hipMemAllocationTypeInvalid
+from hip.chip cimport hipMemAllocationTypeInvalid as CU_MEM_ALLOCATION_TYPE_INVALID
+from hip.chip cimport hipMemAllocationTypeInvalid as cudaMemAllocationTypeInvalid
+from hip.chip cimport hipMemAllocationTypePinned
+from hip.chip cimport hipMemAllocationTypePinned as CU_MEM_ALLOCATION_TYPE_PINNED
+from hip.chip cimport hipMemAllocationTypePinned as cudaMemAllocationTypePinned
+from hip.chip cimport hipMemAllocationTypeMax
+from hip.chip cimport hipMemAllocationTypeMax as CU_MEM_ALLOCATION_TYPE_MAX
+from hip.chip cimport hipMemAllocationTypeMax as cudaMemAllocationTypeMax
 ctypedef CUmemAllocationType CUmemAllocationType_enum
 ctypedef CUmemAllocationType cudaMemAllocationType
-cdef enum CUmemAllocationHandleType:
-    CU_MEM_HANDLE_TYPE_NONE = hip.chip.hipMemHandleTypeNone
-    cudaMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
-    hipMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
-    CU_MEM_HANDLE_TYPE_POSIX_FILE_DESCRIPTOR = hip.chip.hipMemHandleTypePosixFileDescriptor
-    cudaMemHandleTypePosixFileDescriptor = hip.chip.hipMemHandleTypePosixFileDescriptor
-    hipMemHandleTypePosixFileDescriptor = hip.chip.hipMemHandleTypePosixFileDescriptor
-    CU_MEM_HANDLE_TYPE_WIN32 = hip.chip.hipMemHandleTypeWin32
-    cudaMemHandleTypeWin32 = hip.chip.hipMemHandleTypeWin32
-    hipMemHandleTypeWin32 = hip.chip.hipMemHandleTypeWin32
-    CU_MEM_HANDLE_TYPE_WIN32_KMT = hip.chip.hipMemHandleTypeWin32Kmt
-    cudaMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
-    hipMemHandleTypeWin32Kmt = hip.chip.hipMemHandleTypeWin32Kmt
+from hip.chip cimport hipMemAllocationHandleType as CUmemAllocationHandleType
+from hip.chip cimport hipMemHandleTypeNone
+from hip.chip cimport hipMemHandleTypeNone as CU_MEM_HANDLE_TYPE_NONE
+from hip.chip cimport hipMemHandleTypeNone as cudaMemHandleTypeNone
+from hip.chip cimport hipMemHandleTypePosixFileDescriptor
+from hip.chip cimport hipMemHandleTypePosixFileDescriptor as CU_MEM_HANDLE_TYPE_POSIX_FILE_DESCRIPTOR
+from hip.chip cimport hipMemHandleTypePosixFileDescriptor as cudaMemHandleTypePosixFileDescriptor
+from hip.chip cimport hipMemHandleTypeWin32
+from hip.chip cimport hipMemHandleTypeWin32 as CU_MEM_HANDLE_TYPE_WIN32
+from hip.chip cimport hipMemHandleTypeWin32 as cudaMemHandleTypeWin32
+from hip.chip cimport hipMemHandleTypeWin32Kmt
+from hip.chip cimport hipMemHandleTypeWin32Kmt as CU_MEM_HANDLE_TYPE_WIN32_KMT
+from hip.chip cimport hipMemHandleTypeWin32Kmt as cudaMemHandleTypeWin32Kmt
 ctypedef CUmemAllocationHandleType CUmemAllocationHandleType_enum
 ctypedef CUmemAllocationHandleType cudaMemAllocationHandleType
 from hip.chip cimport hipMemPoolProps
@@ -1306,84 +1305,84 @@ from hip.chip cimport hipMemPoolPtrExportData as CUmemPoolPtrExportData
 from hip.chip cimport hipMemPoolPtrExportData as CUmemPoolPtrExportData_st
 from hip.chip cimport hipMemPoolPtrExportData as CUmemPoolPtrExportData_v1
 from hip.chip cimport hipMemPoolPtrExportData as cudaMemPoolPtrExportData
-cdef enum CUjit_option:
-    hipJitOptionMaxRegisters = hip.chip.hipJitOptionMaxRegisters
-    hipJitOptionThreadsPerBlock = hip.chip.hipJitOptionThreadsPerBlock
-    hipJitOptionWallTime = hip.chip.hipJitOptionWallTime
-    hipJitOptionInfoLogBuffer = hip.chip.hipJitOptionInfoLogBuffer
-    hipJitOptionInfoLogBufferSizeBytes = hip.chip.hipJitOptionInfoLogBufferSizeBytes
-    hipJitOptionErrorLogBuffer = hip.chip.hipJitOptionErrorLogBuffer
-    hipJitOptionErrorLogBufferSizeBytes = hip.chip.hipJitOptionErrorLogBufferSizeBytes
-    hipJitOptionOptimizationLevel = hip.chip.hipJitOptionOptimizationLevel
-    hipJitOptionTargetFromContext = hip.chip.hipJitOptionTargetFromContext
-    hipJitOptionTarget = hip.chip.hipJitOptionTarget
-    hipJitOptionFallbackStrategy = hip.chip.hipJitOptionFallbackStrategy
-    hipJitOptionGenerateDebugInfo = hip.chip.hipJitOptionGenerateDebugInfo
-    hipJitOptionLogVerbose = hip.chip.hipJitOptionLogVerbose
-    hipJitOptionGenerateLineInfo = hip.chip.hipJitOptionGenerateLineInfo
-    hipJitOptionCacheMode = hip.chip.hipJitOptionCacheMode
-    hipJitOptionSm3xOpt = hip.chip.hipJitOptionSm3xOpt
-    hipJitOptionFastCompile = hip.chip.hipJitOptionFastCompile
-    hipJitOptionNumOptions = hip.chip.hipJitOptionNumOptions
+from hip.chip cimport hipJitOption as CUjit_option
+from hip.chip cimport hipJitOptionMaxRegisters
+from hip.chip cimport hipJitOptionThreadsPerBlock
+from hip.chip cimport hipJitOptionWallTime
+from hip.chip cimport hipJitOptionInfoLogBuffer
+from hip.chip cimport hipJitOptionInfoLogBufferSizeBytes
+from hip.chip cimport hipJitOptionErrorLogBuffer
+from hip.chip cimport hipJitOptionErrorLogBufferSizeBytes
+from hip.chip cimport hipJitOptionOptimizationLevel
+from hip.chip cimport hipJitOptionTargetFromContext
+from hip.chip cimport hipJitOptionTarget
+from hip.chip cimport hipJitOptionFallbackStrategy
+from hip.chip cimport hipJitOptionGenerateDebugInfo
+from hip.chip cimport hipJitOptionLogVerbose
+from hip.chip cimport hipJitOptionGenerateLineInfo
+from hip.chip cimport hipJitOptionCacheMode
+from hip.chip cimport hipJitOptionSm3xOpt
+from hip.chip cimport hipJitOptionFastCompile
+from hip.chip cimport hipJitOptionNumOptions
 ctypedef CUjit_option CUjit_option_enum
-cdef enum cudaFuncAttribute:
-    cudaFuncAttributeMaxDynamicSharedMemorySize = hip.chip.hipFuncAttributeMaxDynamicSharedMemorySize
-    hipFuncAttributeMaxDynamicSharedMemorySize = hip.chip.hipFuncAttributeMaxDynamicSharedMemorySize
-    cudaFuncAttributePreferredSharedMemoryCarveout = hip.chip.hipFuncAttributePreferredSharedMemoryCarveout
-    hipFuncAttributePreferredSharedMemoryCarveout = hip.chip.hipFuncAttributePreferredSharedMemoryCarveout
-    cudaFuncAttributeMax = hip.chip.hipFuncAttributeMax
-    hipFuncAttributeMax = hip.chip.hipFuncAttributeMax
-cdef enum CUfunc_cache:
-    CU_FUNC_CACHE_PREFER_NONE = hip.chip.hipFuncCachePreferNone
-    cudaFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
-    hipFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
-    CU_FUNC_CACHE_PREFER_SHARED = hip.chip.hipFuncCachePreferShared
-    cudaFuncCachePreferShared = hip.chip.hipFuncCachePreferShared
-    hipFuncCachePreferShared = hip.chip.hipFuncCachePreferShared
-    CU_FUNC_CACHE_PREFER_L1 = hip.chip.hipFuncCachePreferL1
-    cudaFuncCachePreferL1 = hip.chip.hipFuncCachePreferL1
-    hipFuncCachePreferL1 = hip.chip.hipFuncCachePreferL1
-    CU_FUNC_CACHE_PREFER_EQUAL = hip.chip.hipFuncCachePreferEqual
-    cudaFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
-    hipFuncCachePreferEqual = hip.chip.hipFuncCachePreferEqual
+from hip.chip cimport hipFuncAttribute as cudaFuncAttribute
+from hip.chip cimport hipFuncAttributeMaxDynamicSharedMemorySize
+from hip.chip cimport hipFuncAttributeMaxDynamicSharedMemorySize as cudaFuncAttributeMaxDynamicSharedMemorySize
+from hip.chip cimport hipFuncAttributePreferredSharedMemoryCarveout
+from hip.chip cimport hipFuncAttributePreferredSharedMemoryCarveout as cudaFuncAttributePreferredSharedMemoryCarveout
+from hip.chip cimport hipFuncAttributeMax
+from hip.chip cimport hipFuncAttributeMax as cudaFuncAttributeMax
+from hip.chip cimport hipFuncCache_t as CUfunc_cache
+from hip.chip cimport hipFuncCachePreferNone
+from hip.chip cimport hipFuncCachePreferNone as CU_FUNC_CACHE_PREFER_NONE
+from hip.chip cimport hipFuncCachePreferNone as cudaFuncCachePreferNone
+from hip.chip cimport hipFuncCachePreferShared
+from hip.chip cimport hipFuncCachePreferShared as CU_FUNC_CACHE_PREFER_SHARED
+from hip.chip cimport hipFuncCachePreferShared as cudaFuncCachePreferShared
+from hip.chip cimport hipFuncCachePreferL1
+from hip.chip cimport hipFuncCachePreferL1 as CU_FUNC_CACHE_PREFER_L1
+from hip.chip cimport hipFuncCachePreferL1 as cudaFuncCachePreferL1
+from hip.chip cimport hipFuncCachePreferEqual
+from hip.chip cimport hipFuncCachePreferEqual as CU_FUNC_CACHE_PREFER_EQUAL
+from hip.chip cimport hipFuncCachePreferEqual as cudaFuncCachePreferEqual
 ctypedef CUfunc_cache CUfunc_cache_enum
 ctypedef CUfunc_cache cudaFuncCache
-cdef enum CUsharedconfig:
-    CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE = hip.chip.hipSharedMemBankSizeDefault
-    cudaSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
-    hipSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
-    CU_SHARED_MEM_CONFIG_FOUR_BYTE_BANK_SIZE = hip.chip.hipSharedMemBankSizeFourByte
-    cudaSharedMemBankSizeFourByte = hip.chip.hipSharedMemBankSizeFourByte
-    hipSharedMemBankSizeFourByte = hip.chip.hipSharedMemBankSizeFourByte
-    CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE = hip.chip.hipSharedMemBankSizeEightByte
-    cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
-    hipSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
+from hip.chip cimport hipSharedMemConfig as CUsharedconfig
+from hip.chip cimport hipSharedMemBankSizeDefault
+from hip.chip cimport hipSharedMemBankSizeDefault as CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE
+from hip.chip cimport hipSharedMemBankSizeDefault as cudaSharedMemBankSizeDefault
+from hip.chip cimport hipSharedMemBankSizeFourByte
+from hip.chip cimport hipSharedMemBankSizeFourByte as CU_SHARED_MEM_CONFIG_FOUR_BYTE_BANK_SIZE
+from hip.chip cimport hipSharedMemBankSizeFourByte as cudaSharedMemBankSizeFourByte
+from hip.chip cimport hipSharedMemBankSizeEightByte
+from hip.chip cimport hipSharedMemBankSizeEightByte as CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE
+from hip.chip cimport hipSharedMemBankSizeEightByte as cudaSharedMemBankSizeEightByte
 ctypedef CUsharedconfig CUsharedconfig_enum
 ctypedef CUsharedconfig cudaSharedMemConfig
 from hip.chip cimport hipLaunchParams
 from hip.chip cimport hipLaunchParams as cudaLaunchParams
-cdef enum CUexternalMemoryHandleType_enum:
-    CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
-    cudaExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
-    hipExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
-    CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32 = hip.chip.hipExternalMemoryHandleTypeOpaqueWin32
-    cudaExternalMemoryHandleTypeOpaqueWin32 = hip.chip.hipExternalMemoryHandleTypeOpaqueWin32
-    hipExternalMemoryHandleTypeOpaqueWin32 = hip.chip.hipExternalMemoryHandleTypeOpaqueWin32
-    CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT = hip.chip.hipExternalMemoryHandleTypeOpaqueWin32Kmt
-    cudaExternalMemoryHandleTypeOpaqueWin32Kmt = hip.chip.hipExternalMemoryHandleTypeOpaqueWin32Kmt
-    hipExternalMemoryHandleTypeOpaqueWin32Kmt = hip.chip.hipExternalMemoryHandleTypeOpaqueWin32Kmt
-    CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP = hip.chip.hipExternalMemoryHandleTypeD3D12Heap
-    cudaExternalMemoryHandleTypeD3D12Heap = hip.chip.hipExternalMemoryHandleTypeD3D12Heap
-    hipExternalMemoryHandleTypeD3D12Heap = hip.chip.hipExternalMemoryHandleTypeD3D12Heap
-    CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE = hip.chip.hipExternalMemoryHandleTypeD3D12Resource
-    cudaExternalMemoryHandleTypeD3D12Resource = hip.chip.hipExternalMemoryHandleTypeD3D12Resource
-    hipExternalMemoryHandleTypeD3D12Resource = hip.chip.hipExternalMemoryHandleTypeD3D12Resource
-    CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE = hip.chip.hipExternalMemoryHandleTypeD3D11Resource
-    cudaExternalMemoryHandleTypeD3D11Resource = hip.chip.hipExternalMemoryHandleTypeD3D11Resource
-    hipExternalMemoryHandleTypeD3D11Resource = hip.chip.hipExternalMemoryHandleTypeD3D11Resource
-    CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE_KMT = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
-    cudaExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
-    hipExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
+from hip.chip cimport hipExternalMemoryHandleType_enum as CUexternalMemoryHandleType_enum
+from hip.chip cimport hipExternalMemoryHandleTypeOpaqueFd
+from hip.chip cimport hipExternalMemoryHandleTypeOpaqueFd as CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD
+from hip.chip cimport hipExternalMemoryHandleTypeOpaqueFd as cudaExternalMemoryHandleTypeOpaqueFd
+from hip.chip cimport hipExternalMemoryHandleTypeOpaqueWin32
+from hip.chip cimport hipExternalMemoryHandleTypeOpaqueWin32 as CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32
+from hip.chip cimport hipExternalMemoryHandleTypeOpaqueWin32 as cudaExternalMemoryHandleTypeOpaqueWin32
+from hip.chip cimport hipExternalMemoryHandleTypeOpaqueWin32Kmt
+from hip.chip cimport hipExternalMemoryHandleTypeOpaqueWin32Kmt as CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT
+from hip.chip cimport hipExternalMemoryHandleTypeOpaqueWin32Kmt as cudaExternalMemoryHandleTypeOpaqueWin32Kmt
+from hip.chip cimport hipExternalMemoryHandleTypeD3D12Heap
+from hip.chip cimport hipExternalMemoryHandleTypeD3D12Heap as CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP
+from hip.chip cimport hipExternalMemoryHandleTypeD3D12Heap as cudaExternalMemoryHandleTypeD3D12Heap
+from hip.chip cimport hipExternalMemoryHandleTypeD3D12Resource
+from hip.chip cimport hipExternalMemoryHandleTypeD3D12Resource as CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE
+from hip.chip cimport hipExternalMemoryHandleTypeD3D12Resource as cudaExternalMemoryHandleTypeD3D12Resource
+from hip.chip cimport hipExternalMemoryHandleTypeD3D11Resource
+from hip.chip cimport hipExternalMemoryHandleTypeD3D11Resource as CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE
+from hip.chip cimport hipExternalMemoryHandleTypeD3D11Resource as cudaExternalMemoryHandleTypeD3D11Resource
+from hip.chip cimport hipExternalMemoryHandleTypeD3D11ResourceKmt
+from hip.chip cimport hipExternalMemoryHandleTypeD3D11ResourceKmt as CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE_KMT
+from hip.chip cimport hipExternalMemoryHandleTypeD3D11ResourceKmt as cudaExternalMemoryHandleTypeD3D11ResourceKmt
 ctypedef CUexternalMemoryHandleType_enum CUexternalMemoryHandleType
 ctypedef CUexternalMemoryHandleType_enum cudaExternalMemoryHandleType
 from hip.chip cimport hipExternalMemoryHandleDesc_st
@@ -1400,19 +1399,19 @@ from hip.chip cimport hipExternalMemoryBufferDesc as CUDA_EXTERNAL_MEMORY_BUFFER
 from hip.chip cimport hipExternalMemoryBufferDesc as cudaExternalMemoryBufferDesc
 ctypedef void * CUexternalMemory
 ctypedef void * cudaExternalMemory_t
-cdef enum CUexternalSemaphoreHandleType_enum:
-    CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
-    cudaExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
-    hipExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
-    CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32 = hip.chip.hipExternalSemaphoreHandleTypeOpaqueWin32
-    cudaExternalSemaphoreHandleTypeOpaqueWin32 = hip.chip.hipExternalSemaphoreHandleTypeOpaqueWin32
-    hipExternalSemaphoreHandleTypeOpaqueWin32 = hip.chip.hipExternalSemaphoreHandleTypeOpaqueWin32
-    CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT = hip.chip.hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
-    cudaExternalSemaphoreHandleTypeOpaqueWin32Kmt = hip.chip.hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
-    hipExternalSemaphoreHandleTypeOpaqueWin32Kmt = hip.chip.hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
-    CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
-    cudaExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
-    hipExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
+from hip.chip cimport hipExternalSemaphoreHandleType_enum as CUexternalSemaphoreHandleType_enum
+from hip.chip cimport hipExternalSemaphoreHandleTypeOpaqueFd
+from hip.chip cimport hipExternalSemaphoreHandleTypeOpaqueFd as CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD
+from hip.chip cimport hipExternalSemaphoreHandleTypeOpaqueFd as cudaExternalSemaphoreHandleTypeOpaqueFd
+from hip.chip cimport hipExternalSemaphoreHandleTypeOpaqueWin32
+from hip.chip cimport hipExternalSemaphoreHandleTypeOpaqueWin32 as CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32
+from hip.chip cimport hipExternalSemaphoreHandleTypeOpaqueWin32 as cudaExternalSemaphoreHandleTypeOpaqueWin32
+from hip.chip cimport hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
+from hip.chip cimport hipExternalSemaphoreHandleTypeOpaqueWin32Kmt as CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT
+from hip.chip cimport hipExternalSemaphoreHandleTypeOpaqueWin32Kmt as cudaExternalSemaphoreHandleTypeOpaqueWin32Kmt
+from hip.chip cimport hipExternalSemaphoreHandleTypeD3D12Fence
+from hip.chip cimport hipExternalSemaphoreHandleTypeD3D12Fence as CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE
+from hip.chip cimport hipExternalSemaphoreHandleTypeD3D12Fence as cudaExternalSemaphoreHandleTypeD3D12Fence
 ctypedef CUexternalSemaphoreHandleType_enum CUexternalSemaphoreHandleType
 ctypedef CUexternalSemaphoreHandleType_enum cudaExternalSemaphoreHandleType
 from hip.chip cimport hipExternalSemaphoreHandleDesc_st
@@ -1437,34 +1436,34 @@ from hip.chip cimport hipExternalSemaphoreWaitParams as CUDA_EXTERNAL_SEMAPHORE_
 from hip.chip cimport hipExternalSemaphoreWaitParams as CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1
 from hip.chip cimport hipExternalSemaphoreWaitParams as cudaExternalSemaphoreWaitParams
 from hip.chip cimport hipExternalSemaphoreWaitParams as cudaExternalSemaphoreWaitParams_v1
-cdef enum CUGLDeviceList:
-    CU_GL_DEVICE_LIST_ALL = hip.chip.hipGLDeviceListAll
-    cudaGLDeviceListAll = hip.chip.hipGLDeviceListAll
-    hipGLDeviceListAll = hip.chip.hipGLDeviceListAll
-    CU_GL_DEVICE_LIST_CURRENT_FRAME = hip.chip.hipGLDeviceListCurrentFrame
-    cudaGLDeviceListCurrentFrame = hip.chip.hipGLDeviceListCurrentFrame
-    hipGLDeviceListCurrentFrame = hip.chip.hipGLDeviceListCurrentFrame
-    CU_GL_DEVICE_LIST_NEXT_FRAME = hip.chip.hipGLDeviceListNextFrame
-    cudaGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
-    hipGLDeviceListNextFrame = hip.chip.hipGLDeviceListNextFrame
+from hip.chip cimport hipGLDeviceList as CUGLDeviceList
+from hip.chip cimport hipGLDeviceListAll
+from hip.chip cimport hipGLDeviceListAll as CU_GL_DEVICE_LIST_ALL
+from hip.chip cimport hipGLDeviceListAll as cudaGLDeviceListAll
+from hip.chip cimport hipGLDeviceListCurrentFrame
+from hip.chip cimport hipGLDeviceListCurrentFrame as CU_GL_DEVICE_LIST_CURRENT_FRAME
+from hip.chip cimport hipGLDeviceListCurrentFrame as cudaGLDeviceListCurrentFrame
+from hip.chip cimport hipGLDeviceListNextFrame
+from hip.chip cimport hipGLDeviceListNextFrame as CU_GL_DEVICE_LIST_NEXT_FRAME
+from hip.chip cimport hipGLDeviceListNextFrame as cudaGLDeviceListNextFrame
 ctypedef CUGLDeviceList CUGLDeviceList_enum
 ctypedef CUGLDeviceList cudaGLDeviceList
-cdef enum CUgraphicsRegisterFlags:
-    CU_GRAPHICS_REGISTER_FLAGS_NONE = hip.chip.hipGraphicsRegisterFlagsNone
-    cudaGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
-    hipGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
-    CU_GRAPHICS_REGISTER_FLAGS_READ_ONLY = hip.chip.hipGraphicsRegisterFlagsReadOnly
-    cudaGraphicsRegisterFlagsReadOnly = hip.chip.hipGraphicsRegisterFlagsReadOnly
-    hipGraphicsRegisterFlagsReadOnly = hip.chip.hipGraphicsRegisterFlagsReadOnly
-    CU_GRAPHICS_REGISTER_FLAGS_WRITE_DISCARD = hip.chip.hipGraphicsRegisterFlagsWriteDiscard
-    cudaGraphicsRegisterFlagsWriteDiscard = hip.chip.hipGraphicsRegisterFlagsWriteDiscard
-    hipGraphicsRegisterFlagsWriteDiscard = hip.chip.hipGraphicsRegisterFlagsWriteDiscard
-    CU_GRAPHICS_REGISTER_FLAGS_SURFACE_LDST = hip.chip.hipGraphicsRegisterFlagsSurfaceLoadStore
-    cudaGraphicsRegisterFlagsSurfaceLoadStore = hip.chip.hipGraphicsRegisterFlagsSurfaceLoadStore
-    hipGraphicsRegisterFlagsSurfaceLoadStore = hip.chip.hipGraphicsRegisterFlagsSurfaceLoadStore
-    CU_GRAPHICS_REGISTER_FLAGS_TEXTURE_GATHER = hip.chip.hipGraphicsRegisterFlagsTextureGather
-    cudaGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
-    hipGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
+from hip.chip cimport hipGraphicsRegisterFlags as CUgraphicsRegisterFlags
+from hip.chip cimport hipGraphicsRegisterFlagsNone
+from hip.chip cimport hipGraphicsRegisterFlagsNone as CU_GRAPHICS_REGISTER_FLAGS_NONE
+from hip.chip cimport hipGraphicsRegisterFlagsNone as cudaGraphicsRegisterFlagsNone
+from hip.chip cimport hipGraphicsRegisterFlagsReadOnly
+from hip.chip cimport hipGraphicsRegisterFlagsReadOnly as CU_GRAPHICS_REGISTER_FLAGS_READ_ONLY
+from hip.chip cimport hipGraphicsRegisterFlagsReadOnly as cudaGraphicsRegisterFlagsReadOnly
+from hip.chip cimport hipGraphicsRegisterFlagsWriteDiscard
+from hip.chip cimport hipGraphicsRegisterFlagsWriteDiscard as CU_GRAPHICS_REGISTER_FLAGS_WRITE_DISCARD
+from hip.chip cimport hipGraphicsRegisterFlagsWriteDiscard as cudaGraphicsRegisterFlagsWriteDiscard
+from hip.chip cimport hipGraphicsRegisterFlagsSurfaceLoadStore
+from hip.chip cimport hipGraphicsRegisterFlagsSurfaceLoadStore as CU_GRAPHICS_REGISTER_FLAGS_SURFACE_LDST
+from hip.chip cimport hipGraphicsRegisterFlagsSurfaceLoadStore as cudaGraphicsRegisterFlagsSurfaceLoadStore
+from hip.chip cimport hipGraphicsRegisterFlagsTextureGather
+from hip.chip cimport hipGraphicsRegisterFlagsTextureGather as CU_GRAPHICS_REGISTER_FLAGS_TEXTURE_GATHER
+from hip.chip cimport hipGraphicsRegisterFlagsTextureGather as cudaGraphicsRegisterFlagsTextureGather
 ctypedef CUgraphicsRegisterFlags CUgraphicsRegisterFlags_enum
 ctypedef CUgraphicsRegisterFlags cudaGraphicsRegisterFlags
 from hip.chip cimport hipGraphicsResource
@@ -1493,42 +1492,42 @@ from hip.chip cimport hipUserObject as CUuserObject_st
 from hip.chip cimport hipUserObject_t
 from hip.chip cimport hipUserObject_t as CUuserObject
 from hip.chip cimport hipUserObject_t as cudaUserObject_t
-cdef enum CUgraphNodeType:
-    CU_GRAPH_NODE_TYPE_KERNEL = hip.chip.hipGraphNodeTypeKernel
-    cudaGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
-    hipGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
-    CU_GRAPH_NODE_TYPE_MEMCPY = hip.chip.hipGraphNodeTypeMemcpy
-    cudaGraphNodeTypeMemcpy = hip.chip.hipGraphNodeTypeMemcpy
-    hipGraphNodeTypeMemcpy = hip.chip.hipGraphNodeTypeMemcpy
-    CU_GRAPH_NODE_TYPE_MEMSET = hip.chip.hipGraphNodeTypeMemset
-    cudaGraphNodeTypeMemset = hip.chip.hipGraphNodeTypeMemset
-    hipGraphNodeTypeMemset = hip.chip.hipGraphNodeTypeMemset
-    CU_GRAPH_NODE_TYPE_HOST = hip.chip.hipGraphNodeTypeHost
-    cudaGraphNodeTypeHost = hip.chip.hipGraphNodeTypeHost
-    hipGraphNodeTypeHost = hip.chip.hipGraphNodeTypeHost
-    CU_GRAPH_NODE_TYPE_GRAPH = hip.chip.hipGraphNodeTypeGraph
-    cudaGraphNodeTypeGraph = hip.chip.hipGraphNodeTypeGraph
-    hipGraphNodeTypeGraph = hip.chip.hipGraphNodeTypeGraph
-    CU_GRAPH_NODE_TYPE_EMPTY = hip.chip.hipGraphNodeTypeEmpty
-    cudaGraphNodeTypeEmpty = hip.chip.hipGraphNodeTypeEmpty
-    hipGraphNodeTypeEmpty = hip.chip.hipGraphNodeTypeEmpty
-    CU_GRAPH_NODE_TYPE_WAIT_EVENT = hip.chip.hipGraphNodeTypeWaitEvent
-    cudaGraphNodeTypeWaitEvent = hip.chip.hipGraphNodeTypeWaitEvent
-    hipGraphNodeTypeWaitEvent = hip.chip.hipGraphNodeTypeWaitEvent
-    CU_GRAPH_NODE_TYPE_EVENT_RECORD = hip.chip.hipGraphNodeTypeEventRecord
-    cudaGraphNodeTypeEventRecord = hip.chip.hipGraphNodeTypeEventRecord
-    hipGraphNodeTypeEventRecord = hip.chip.hipGraphNodeTypeEventRecord
-    CU_GRAPH_NODE_TYPE_EXT_SEMAS_SIGNAL = hip.chip.hipGraphNodeTypeExtSemaphoreSignal
-    cudaGraphNodeTypeExtSemaphoreSignal = hip.chip.hipGraphNodeTypeExtSemaphoreSignal
-    hipGraphNodeTypeExtSemaphoreSignal = hip.chip.hipGraphNodeTypeExtSemaphoreSignal
-    CU_GRAPH_NODE_TYPE_EXT_SEMAS_WAIT = hip.chip.hipGraphNodeTypeExtSemaphoreWait
-    cudaGraphNodeTypeExtSemaphoreWait = hip.chip.hipGraphNodeTypeExtSemaphoreWait
-    hipGraphNodeTypeExtSemaphoreWait = hip.chip.hipGraphNodeTypeExtSemaphoreWait
-    hipGraphNodeTypeMemcpyFromSymbol = hip.chip.hipGraphNodeTypeMemcpyFromSymbol
-    hipGraphNodeTypeMemcpyToSymbol = hip.chip.hipGraphNodeTypeMemcpyToSymbol
-    CU_GRAPH_NODE_TYPE_COUNT = hip.chip.hipGraphNodeTypeCount
-    cudaGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
-    hipGraphNodeTypeCount = hip.chip.hipGraphNodeTypeCount
+from hip.chip cimport hipGraphNodeType as CUgraphNodeType
+from hip.chip cimport hipGraphNodeTypeKernel
+from hip.chip cimport hipGraphNodeTypeKernel as CU_GRAPH_NODE_TYPE_KERNEL
+from hip.chip cimport hipGraphNodeTypeKernel as cudaGraphNodeTypeKernel
+from hip.chip cimport hipGraphNodeTypeMemcpy
+from hip.chip cimport hipGraphNodeTypeMemcpy as CU_GRAPH_NODE_TYPE_MEMCPY
+from hip.chip cimport hipGraphNodeTypeMemcpy as cudaGraphNodeTypeMemcpy
+from hip.chip cimport hipGraphNodeTypeMemset
+from hip.chip cimport hipGraphNodeTypeMemset as CU_GRAPH_NODE_TYPE_MEMSET
+from hip.chip cimport hipGraphNodeTypeMemset as cudaGraphNodeTypeMemset
+from hip.chip cimport hipGraphNodeTypeHost
+from hip.chip cimport hipGraphNodeTypeHost as CU_GRAPH_NODE_TYPE_HOST
+from hip.chip cimport hipGraphNodeTypeHost as cudaGraphNodeTypeHost
+from hip.chip cimport hipGraphNodeTypeGraph
+from hip.chip cimport hipGraphNodeTypeGraph as CU_GRAPH_NODE_TYPE_GRAPH
+from hip.chip cimport hipGraphNodeTypeGraph as cudaGraphNodeTypeGraph
+from hip.chip cimport hipGraphNodeTypeEmpty
+from hip.chip cimport hipGraphNodeTypeEmpty as CU_GRAPH_NODE_TYPE_EMPTY
+from hip.chip cimport hipGraphNodeTypeEmpty as cudaGraphNodeTypeEmpty
+from hip.chip cimport hipGraphNodeTypeWaitEvent
+from hip.chip cimport hipGraphNodeTypeWaitEvent as CU_GRAPH_NODE_TYPE_WAIT_EVENT
+from hip.chip cimport hipGraphNodeTypeWaitEvent as cudaGraphNodeTypeWaitEvent
+from hip.chip cimport hipGraphNodeTypeEventRecord
+from hip.chip cimport hipGraphNodeTypeEventRecord as CU_GRAPH_NODE_TYPE_EVENT_RECORD
+from hip.chip cimport hipGraphNodeTypeEventRecord as cudaGraphNodeTypeEventRecord
+from hip.chip cimport hipGraphNodeTypeExtSemaphoreSignal
+from hip.chip cimport hipGraphNodeTypeExtSemaphoreSignal as CU_GRAPH_NODE_TYPE_EXT_SEMAS_SIGNAL
+from hip.chip cimport hipGraphNodeTypeExtSemaphoreSignal as cudaGraphNodeTypeExtSemaphoreSignal
+from hip.chip cimport hipGraphNodeTypeExtSemaphoreWait
+from hip.chip cimport hipGraphNodeTypeExtSemaphoreWait as CU_GRAPH_NODE_TYPE_EXT_SEMAS_WAIT
+from hip.chip cimport hipGraphNodeTypeExtSemaphoreWait as cudaGraphNodeTypeExtSemaphoreWait
+from hip.chip cimport hipGraphNodeTypeMemcpyFromSymbol
+from hip.chip cimport hipGraphNodeTypeMemcpyToSymbol
+from hip.chip cimport hipGraphNodeTypeCount
+from hip.chip cimport hipGraphNodeTypeCount as CU_GRAPH_NODE_TYPE_COUNT
+from hip.chip cimport hipGraphNodeTypeCount as cudaGraphNodeTypeCount
 ctypedef CUgraphNodeType CUgraphNodeType_enum
 ctypedef CUgraphNodeType cudaGraphNodeType
 from hip.chip cimport hipHostFn_t
@@ -1549,25 +1548,25 @@ from hip.chip cimport hipMemsetParams as CUDA_MEMSET_NODE_PARAMS
 from hip.chip cimport hipMemsetParams as CUDA_MEMSET_NODE_PARAMS_st
 from hip.chip cimport hipMemsetParams as CUDA_MEMSET_NODE_PARAMS_v1
 from hip.chip cimport hipMemsetParams as cudaMemsetParams
-cdef enum CUkernelNodeAttrID:
-    CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
-    cudaKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
-    hipKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
-    CU_KERNEL_NODE_ATTRIBUTE_COOPERATIVE = hip.chip.hipKernelNodeAttributeCooperative
-    cudaKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
-    hipKernelNodeAttributeCooperative = hip.chip.hipKernelNodeAttributeCooperative
+from hip.chip cimport hipKernelNodeAttrID as CUkernelNodeAttrID
+from hip.chip cimport hipKernelNodeAttributeAccessPolicyWindow
+from hip.chip cimport hipKernelNodeAttributeAccessPolicyWindow as CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW
+from hip.chip cimport hipKernelNodeAttributeAccessPolicyWindow as cudaKernelNodeAttributeAccessPolicyWindow
+from hip.chip cimport hipKernelNodeAttributeCooperative
+from hip.chip cimport hipKernelNodeAttributeCooperative as CU_KERNEL_NODE_ATTRIBUTE_COOPERATIVE
+from hip.chip cimport hipKernelNodeAttributeCooperative as cudaKernelNodeAttributeCooperative
 ctypedef CUkernelNodeAttrID CUkernelNodeAttrID_enum
 ctypedef CUkernelNodeAttrID cudaKernelNodeAttrID
-cdef enum CUaccessProperty:
-    CU_ACCESS_PROPERTY_NORMAL = hip.chip.hipAccessPropertyNormal
-    cudaAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
-    hipAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
-    CU_ACCESS_PROPERTY_STREAMING = hip.chip.hipAccessPropertyStreaming
-    cudaAccessPropertyStreaming = hip.chip.hipAccessPropertyStreaming
-    hipAccessPropertyStreaming = hip.chip.hipAccessPropertyStreaming
-    CU_ACCESS_PROPERTY_PERSISTING = hip.chip.hipAccessPropertyPersisting
-    cudaAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
-    hipAccessPropertyPersisting = hip.chip.hipAccessPropertyPersisting
+from hip.chip cimport hipAccessProperty as CUaccessProperty
+from hip.chip cimport hipAccessPropertyNormal
+from hip.chip cimport hipAccessPropertyNormal as CU_ACCESS_PROPERTY_NORMAL
+from hip.chip cimport hipAccessPropertyNormal as cudaAccessPropertyNormal
+from hip.chip cimport hipAccessPropertyStreaming
+from hip.chip cimport hipAccessPropertyStreaming as CU_ACCESS_PROPERTY_STREAMING
+from hip.chip cimport hipAccessPropertyStreaming as cudaAccessPropertyStreaming
+from hip.chip cimport hipAccessPropertyPersisting
+from hip.chip cimport hipAccessPropertyPersisting as CU_ACCESS_PROPERTY_PERSISTING
+from hip.chip cimport hipAccessPropertyPersisting as cudaAccessPropertyPersisting
 ctypedef CUaccessProperty CUaccessProperty_enum
 ctypedef CUaccessProperty cudaAccessProperty
 from hip.chip cimport hipAccessPolicyWindow
@@ -1579,97 +1578,97 @@ from hip.chip cimport hipKernelNodeAttrValue as CUkernelNodeAttrValue
 from hip.chip cimport hipKernelNodeAttrValue as CUkernelNodeAttrValue_union
 from hip.chip cimport hipKernelNodeAttrValue as CUkernelNodeAttrValue_v1
 from hip.chip cimport hipKernelNodeAttrValue as cudaKernelNodeAttrValue
-cdef enum CUgraphExecUpdateResult:
-    CU_GRAPH_EXEC_UPDATE_SUCCESS = hip.chip.hipGraphExecUpdateSuccess
-    cudaGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
-    hipGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
-    CU_GRAPH_EXEC_UPDATE_ERROR = hip.chip.hipGraphExecUpdateError
-    cudaGraphExecUpdateError = hip.chip.hipGraphExecUpdateError
-    hipGraphExecUpdateError = hip.chip.hipGraphExecUpdateError
-    CU_GRAPH_EXEC_UPDATE_ERROR_TOPOLOGY_CHANGED = hip.chip.hipGraphExecUpdateErrorTopologyChanged
-    cudaGraphExecUpdateErrorTopologyChanged = hip.chip.hipGraphExecUpdateErrorTopologyChanged
-    hipGraphExecUpdateErrorTopologyChanged = hip.chip.hipGraphExecUpdateErrorTopologyChanged
-    CU_GRAPH_EXEC_UPDATE_ERROR_NODE_TYPE_CHANGED = hip.chip.hipGraphExecUpdateErrorNodeTypeChanged
-    cudaGraphExecUpdateErrorNodeTypeChanged = hip.chip.hipGraphExecUpdateErrorNodeTypeChanged
-    hipGraphExecUpdateErrorNodeTypeChanged = hip.chip.hipGraphExecUpdateErrorNodeTypeChanged
-    CU_GRAPH_EXEC_UPDATE_ERROR_FUNCTION_CHANGED = hip.chip.hipGraphExecUpdateErrorFunctionChanged
-    cudaGraphExecUpdateErrorFunctionChanged = hip.chip.hipGraphExecUpdateErrorFunctionChanged
-    hipGraphExecUpdateErrorFunctionChanged = hip.chip.hipGraphExecUpdateErrorFunctionChanged
-    CU_GRAPH_EXEC_UPDATE_ERROR_PARAMETERS_CHANGED = hip.chip.hipGraphExecUpdateErrorParametersChanged
-    cudaGraphExecUpdateErrorParametersChanged = hip.chip.hipGraphExecUpdateErrorParametersChanged
-    hipGraphExecUpdateErrorParametersChanged = hip.chip.hipGraphExecUpdateErrorParametersChanged
-    CU_GRAPH_EXEC_UPDATE_ERROR_NOT_SUPPORTED = hip.chip.hipGraphExecUpdateErrorNotSupported
-    cudaGraphExecUpdateErrorNotSupported = hip.chip.hipGraphExecUpdateErrorNotSupported
-    hipGraphExecUpdateErrorNotSupported = hip.chip.hipGraphExecUpdateErrorNotSupported
-    CU_GRAPH_EXEC_UPDATE_ERROR_UNSUPPORTED_FUNCTION_CHANGE = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
-    cudaGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
-    hipGraphExecUpdateErrorUnsupportedFunctionChange = hip.chip.hipGraphExecUpdateErrorUnsupportedFunctionChange
+from hip.chip cimport hipGraphExecUpdateResult as CUgraphExecUpdateResult
+from hip.chip cimport hipGraphExecUpdateSuccess
+from hip.chip cimport hipGraphExecUpdateSuccess as CU_GRAPH_EXEC_UPDATE_SUCCESS
+from hip.chip cimport hipGraphExecUpdateSuccess as cudaGraphExecUpdateSuccess
+from hip.chip cimport hipGraphExecUpdateError
+from hip.chip cimport hipGraphExecUpdateError as CU_GRAPH_EXEC_UPDATE_ERROR
+from hip.chip cimport hipGraphExecUpdateError as cudaGraphExecUpdateError
+from hip.chip cimport hipGraphExecUpdateErrorTopologyChanged
+from hip.chip cimport hipGraphExecUpdateErrorTopologyChanged as CU_GRAPH_EXEC_UPDATE_ERROR_TOPOLOGY_CHANGED
+from hip.chip cimport hipGraphExecUpdateErrorTopologyChanged as cudaGraphExecUpdateErrorTopologyChanged
+from hip.chip cimport hipGraphExecUpdateErrorNodeTypeChanged
+from hip.chip cimport hipGraphExecUpdateErrorNodeTypeChanged as CU_GRAPH_EXEC_UPDATE_ERROR_NODE_TYPE_CHANGED
+from hip.chip cimport hipGraphExecUpdateErrorNodeTypeChanged as cudaGraphExecUpdateErrorNodeTypeChanged
+from hip.chip cimport hipGraphExecUpdateErrorFunctionChanged
+from hip.chip cimport hipGraphExecUpdateErrorFunctionChanged as CU_GRAPH_EXEC_UPDATE_ERROR_FUNCTION_CHANGED
+from hip.chip cimport hipGraphExecUpdateErrorFunctionChanged as cudaGraphExecUpdateErrorFunctionChanged
+from hip.chip cimport hipGraphExecUpdateErrorParametersChanged
+from hip.chip cimport hipGraphExecUpdateErrorParametersChanged as CU_GRAPH_EXEC_UPDATE_ERROR_PARAMETERS_CHANGED
+from hip.chip cimport hipGraphExecUpdateErrorParametersChanged as cudaGraphExecUpdateErrorParametersChanged
+from hip.chip cimport hipGraphExecUpdateErrorNotSupported
+from hip.chip cimport hipGraphExecUpdateErrorNotSupported as CU_GRAPH_EXEC_UPDATE_ERROR_NOT_SUPPORTED
+from hip.chip cimport hipGraphExecUpdateErrorNotSupported as cudaGraphExecUpdateErrorNotSupported
+from hip.chip cimport hipGraphExecUpdateErrorUnsupportedFunctionChange
+from hip.chip cimport hipGraphExecUpdateErrorUnsupportedFunctionChange as CU_GRAPH_EXEC_UPDATE_ERROR_UNSUPPORTED_FUNCTION_CHANGE
+from hip.chip cimport hipGraphExecUpdateErrorUnsupportedFunctionChange as cudaGraphExecUpdateErrorUnsupportedFunctionChange
 ctypedef CUgraphExecUpdateResult CUgraphExecUpdateResult_enum
 ctypedef CUgraphExecUpdateResult cudaGraphExecUpdateResult
-cdef enum CUstreamCaptureMode:
-    CU_STREAM_CAPTURE_MODE_GLOBAL = hip.chip.hipStreamCaptureModeGlobal
-    cudaStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
-    hipStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
-    CU_STREAM_CAPTURE_MODE_THREAD_LOCAL = hip.chip.hipStreamCaptureModeThreadLocal
-    cudaStreamCaptureModeThreadLocal = hip.chip.hipStreamCaptureModeThreadLocal
-    hipStreamCaptureModeThreadLocal = hip.chip.hipStreamCaptureModeThreadLocal
-    CU_STREAM_CAPTURE_MODE_RELAXED = hip.chip.hipStreamCaptureModeRelaxed
-    cudaStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
-    hipStreamCaptureModeRelaxed = hip.chip.hipStreamCaptureModeRelaxed
+from hip.chip cimport hipStreamCaptureMode as CUstreamCaptureMode
+from hip.chip cimport hipStreamCaptureModeGlobal
+from hip.chip cimport hipStreamCaptureModeGlobal as CU_STREAM_CAPTURE_MODE_GLOBAL
+from hip.chip cimport hipStreamCaptureModeGlobal as cudaStreamCaptureModeGlobal
+from hip.chip cimport hipStreamCaptureModeThreadLocal
+from hip.chip cimport hipStreamCaptureModeThreadLocal as CU_STREAM_CAPTURE_MODE_THREAD_LOCAL
+from hip.chip cimport hipStreamCaptureModeThreadLocal as cudaStreamCaptureModeThreadLocal
+from hip.chip cimport hipStreamCaptureModeRelaxed
+from hip.chip cimport hipStreamCaptureModeRelaxed as CU_STREAM_CAPTURE_MODE_RELAXED
+from hip.chip cimport hipStreamCaptureModeRelaxed as cudaStreamCaptureModeRelaxed
 ctypedef CUstreamCaptureMode CUstreamCaptureMode_enum
 ctypedef CUstreamCaptureMode cudaStreamCaptureMode
-cdef enum CUstreamCaptureStatus:
-    CU_STREAM_CAPTURE_STATUS_NONE = hip.chip.hipStreamCaptureStatusNone
-    cudaStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
-    hipStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
-    CU_STREAM_CAPTURE_STATUS_ACTIVE = hip.chip.hipStreamCaptureStatusActive
-    cudaStreamCaptureStatusActive = hip.chip.hipStreamCaptureStatusActive
-    hipStreamCaptureStatusActive = hip.chip.hipStreamCaptureStatusActive
-    CU_STREAM_CAPTURE_STATUS_INVALIDATED = hip.chip.hipStreamCaptureStatusInvalidated
-    cudaStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
-    hipStreamCaptureStatusInvalidated = hip.chip.hipStreamCaptureStatusInvalidated
+from hip.chip cimport hipStreamCaptureStatus as CUstreamCaptureStatus
+from hip.chip cimport hipStreamCaptureStatusNone
+from hip.chip cimport hipStreamCaptureStatusNone as CU_STREAM_CAPTURE_STATUS_NONE
+from hip.chip cimport hipStreamCaptureStatusNone as cudaStreamCaptureStatusNone
+from hip.chip cimport hipStreamCaptureStatusActive
+from hip.chip cimport hipStreamCaptureStatusActive as CU_STREAM_CAPTURE_STATUS_ACTIVE
+from hip.chip cimport hipStreamCaptureStatusActive as cudaStreamCaptureStatusActive
+from hip.chip cimport hipStreamCaptureStatusInvalidated
+from hip.chip cimport hipStreamCaptureStatusInvalidated as CU_STREAM_CAPTURE_STATUS_INVALIDATED
+from hip.chip cimport hipStreamCaptureStatusInvalidated as cudaStreamCaptureStatusInvalidated
 ctypedef CUstreamCaptureStatus CUstreamCaptureStatus_enum
 ctypedef CUstreamCaptureStatus cudaStreamCaptureStatus
-cdef enum CUstreamUpdateCaptureDependencies_flags:
-    CU_STREAM_ADD_CAPTURE_DEPENDENCIES = hip.chip.hipStreamAddCaptureDependencies
-    cudaStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
-    hipStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
-    CU_STREAM_SET_CAPTURE_DEPENDENCIES = hip.chip.hipStreamSetCaptureDependencies
-    cudaStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
-    hipStreamSetCaptureDependencies = hip.chip.hipStreamSetCaptureDependencies
+from hip.chip cimport hipStreamUpdateCaptureDependenciesFlags as CUstreamUpdateCaptureDependencies_flags
+from hip.chip cimport hipStreamAddCaptureDependencies
+from hip.chip cimport hipStreamAddCaptureDependencies as CU_STREAM_ADD_CAPTURE_DEPENDENCIES
+from hip.chip cimport hipStreamAddCaptureDependencies as cudaStreamAddCaptureDependencies
+from hip.chip cimport hipStreamSetCaptureDependencies
+from hip.chip cimport hipStreamSetCaptureDependencies as CU_STREAM_SET_CAPTURE_DEPENDENCIES
+from hip.chip cimport hipStreamSetCaptureDependencies as cudaStreamSetCaptureDependencies
 ctypedef CUstreamUpdateCaptureDependencies_flags CUstreamUpdateCaptureDependencies_flags_enum
 ctypedef CUstreamUpdateCaptureDependencies_flags cudaStreamUpdateCaptureDependenciesFlags
-cdef enum CUgraphMem_attribute:
-    CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT = hip.chip.hipGraphMemAttrUsedMemCurrent
-    cudaGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
-    hipGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
-    CU_GRAPH_MEM_ATTR_USED_MEM_HIGH = hip.chip.hipGraphMemAttrUsedMemHigh
-    cudaGraphMemAttrUsedMemHigh = hip.chip.hipGraphMemAttrUsedMemHigh
-    hipGraphMemAttrUsedMemHigh = hip.chip.hipGraphMemAttrUsedMemHigh
-    CU_GRAPH_MEM_ATTR_RESERVED_MEM_CURRENT = hip.chip.hipGraphMemAttrReservedMemCurrent
-    cudaGraphMemAttrReservedMemCurrent = hip.chip.hipGraphMemAttrReservedMemCurrent
-    hipGraphMemAttrReservedMemCurrent = hip.chip.hipGraphMemAttrReservedMemCurrent
-    CU_GRAPH_MEM_ATTR_RESERVED_MEM_HIGH = hip.chip.hipGraphMemAttrReservedMemHigh
-    cudaGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
-    hipGraphMemAttrReservedMemHigh = hip.chip.hipGraphMemAttrReservedMemHigh
+from hip.chip cimport hipGraphMemAttributeType as CUgraphMem_attribute
+from hip.chip cimport hipGraphMemAttrUsedMemCurrent
+from hip.chip cimport hipGraphMemAttrUsedMemCurrent as CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT
+from hip.chip cimport hipGraphMemAttrUsedMemCurrent as cudaGraphMemAttrUsedMemCurrent
+from hip.chip cimport hipGraphMemAttrUsedMemHigh
+from hip.chip cimport hipGraphMemAttrUsedMemHigh as CU_GRAPH_MEM_ATTR_USED_MEM_HIGH
+from hip.chip cimport hipGraphMemAttrUsedMemHigh as cudaGraphMemAttrUsedMemHigh
+from hip.chip cimport hipGraphMemAttrReservedMemCurrent
+from hip.chip cimport hipGraphMemAttrReservedMemCurrent as CU_GRAPH_MEM_ATTR_RESERVED_MEM_CURRENT
+from hip.chip cimport hipGraphMemAttrReservedMemCurrent as cudaGraphMemAttrReservedMemCurrent
+from hip.chip cimport hipGraphMemAttrReservedMemHigh
+from hip.chip cimport hipGraphMemAttrReservedMemHigh as CU_GRAPH_MEM_ATTR_RESERVED_MEM_HIGH
+from hip.chip cimport hipGraphMemAttrReservedMemHigh as cudaGraphMemAttrReservedMemHigh
 ctypedef CUgraphMem_attribute CUgraphMem_attribute_enum
 ctypedef CUgraphMem_attribute cudaGraphMemAttributeType
-cdef enum CUuserObject_flags:
-    CU_USER_OBJECT_NO_DESTRUCTOR_SYNC = hip.chip.hipUserObjectNoDestructorSync
-    cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
-    hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
+from hip.chip cimport hipUserObjectFlags as CUuserObject_flags
+from hip.chip cimport hipUserObjectNoDestructorSync
+from hip.chip cimport hipUserObjectNoDestructorSync as CU_USER_OBJECT_NO_DESTRUCTOR_SYNC
+from hip.chip cimport hipUserObjectNoDestructorSync as cudaUserObjectNoDestructorSync
 ctypedef CUuserObject_flags CUuserObject_flags_enum
 ctypedef CUuserObject_flags cudaUserObjectFlags
-cdef enum CUuserObjectRetain_flags:
-    CU_GRAPH_USER_OBJECT_MOVE = hip.chip.hipGraphUserObjectMove
-    cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
-    hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
+from hip.chip cimport hipUserObjectRetainFlags as CUuserObjectRetain_flags
+from hip.chip cimport hipGraphUserObjectMove
+from hip.chip cimport hipGraphUserObjectMove as CU_GRAPH_USER_OBJECT_MOVE
+from hip.chip cimport hipGraphUserObjectMove as cudaGraphUserObjectMove
 ctypedef CUuserObjectRetain_flags CUuserObjectRetain_flags_enum
 ctypedef CUuserObjectRetain_flags cudaUserObjectRetainFlags
-cdef enum CUgraphInstantiate_flags:
-    CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
-    cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
-    hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
+from hip.chip cimport hipGraphInstantiateFlags as CUgraphInstantiate_flags
+from hip.chip cimport hipGraphInstantiateFlagAutoFreeOnLaunch
+from hip.chip cimport hipGraphInstantiateFlagAutoFreeOnLaunch as CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH
+from hip.chip cimport hipGraphInstantiateFlagAutoFreeOnLaunch as cudaGraphInstantiateFlagAutoFreeOnLaunch
 ctypedef CUgraphInstantiate_flags CUgraphInstantiate_flags_enum
 ctypedef CUgraphInstantiate_flags cudaGraphInstantiateFlags
 from hip.chip cimport hipMemAllocationProp
@@ -1679,27 +1678,27 @@ from hip.chip cimport hipMemAllocationProp as CUmemAllocationProp_v1
 from hip.chip cimport hipMemGenericAllocationHandle_t
 from hip.chip cimport hipMemGenericAllocationHandle_t as CUmemGenericAllocationHandle
 from hip.chip cimport hipMemGenericAllocationHandle_t as CUmemGenericAllocationHandle_v1
-cdef enum CUmemAllocationGranularity_flags:
-    CU_MEM_ALLOC_GRANULARITY_MINIMUM = hip.chip.hipMemAllocationGranularityMinimum
-    hipMemAllocationGranularityMinimum = hip.chip.hipMemAllocationGranularityMinimum
-    CU_MEM_ALLOC_GRANULARITY_RECOMMENDED = hip.chip.hipMemAllocationGranularityRecommended
-    hipMemAllocationGranularityRecommended = hip.chip.hipMemAllocationGranularityRecommended
+from hip.chip cimport hipMemAllocationGranularity_flags as CUmemAllocationGranularity_flags
+from hip.chip cimport hipMemAllocationGranularityMinimum
+from hip.chip cimport hipMemAllocationGranularityMinimum as CU_MEM_ALLOC_GRANULARITY_MINIMUM
+from hip.chip cimport hipMemAllocationGranularityRecommended
+from hip.chip cimport hipMemAllocationGranularityRecommended as CU_MEM_ALLOC_GRANULARITY_RECOMMENDED
 ctypedef CUmemAllocationGranularity_flags CUmemAllocationGranularity_flags_enum
-cdef enum CUmemHandleType:
-    CU_MEM_HANDLE_TYPE_GENERIC = hip.chip.hipMemHandleTypeGeneric
-    hipMemHandleTypeGeneric = hip.chip.hipMemHandleTypeGeneric
+from hip.chip cimport hipMemHandleType as CUmemHandleType
+from hip.chip cimport hipMemHandleTypeGeneric
+from hip.chip cimport hipMemHandleTypeGeneric as CU_MEM_HANDLE_TYPE_GENERIC
 ctypedef CUmemHandleType CUmemHandleType_enum
-cdef enum CUmemOperationType:
-    CU_MEM_OPERATION_TYPE_MAP = hip.chip.hipMemOperationTypeMap
-    hipMemOperationTypeMap = hip.chip.hipMemOperationTypeMap
-    CU_MEM_OPERATION_TYPE_UNMAP = hip.chip.hipMemOperationTypeUnmap
-    hipMemOperationTypeUnmap = hip.chip.hipMemOperationTypeUnmap
+from hip.chip cimport hipMemOperationType as CUmemOperationType
+from hip.chip cimport hipMemOperationTypeMap
+from hip.chip cimport hipMemOperationTypeMap as CU_MEM_OPERATION_TYPE_MAP
+from hip.chip cimport hipMemOperationTypeUnmap
+from hip.chip cimport hipMemOperationTypeUnmap as CU_MEM_OPERATION_TYPE_UNMAP
 ctypedef CUmemOperationType CUmemOperationType_enum
-cdef enum CUarraySparseSubresourceType:
-    CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_SPARSE_LEVEL = hip.chip.hipArraySparseSubresourceTypeSparseLevel
-    hipArraySparseSubresourceTypeSparseLevel = hip.chip.hipArraySparseSubresourceTypeSparseLevel
-    CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_MIPTAIL = hip.chip.hipArraySparseSubresourceTypeMiptail
-    hipArraySparseSubresourceTypeMiptail = hip.chip.hipArraySparseSubresourceTypeMiptail
+from hip.chip cimport hipArraySparseSubresourceType as CUarraySparseSubresourceType
+from hip.chip cimport hipArraySparseSubresourceTypeSparseLevel
+from hip.chip cimport hipArraySparseSubresourceTypeSparseLevel as CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_SPARSE_LEVEL
+from hip.chip cimport hipArraySparseSubresourceTypeMiptail
+from hip.chip cimport hipArraySparseSubresourceTypeMiptail as CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_MIPTAIL
 ctypedef CUarraySparseSubresourceType CUarraySparseSubresourceType_enum
 from hip.chip cimport hipArrayMapInfo
 from hip.chip cimport hipArrayMapInfo as CUarrayMapInfo

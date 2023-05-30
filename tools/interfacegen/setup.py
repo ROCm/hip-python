@@ -263,28 +263,35 @@ def generate_cuda_interop_package_files(
             msg += f"; most similar hipify-perl HIP symbols (Levenshtein ratio > {cutoff}): [{candidates_formatted}]"
         warnings.warn(msg)
 
-    def handle_enum_(node, cuda_name):
+    def handle_enum_(node, hip_name, cuda_name):
         global HIP_2_CUDA
         nonlocal indent
         nonlocal c_interface_decl_part
         nonlocal python_interface_impl_part
         enum = node if isinstance(node, Enum) else node.lookup_innermost_type()
-        constants = []
+        c_constants = []
+        python_constants = []
         for child_cursor in enum.cursor.get_children():
             hip_constant_name = child_cursor.spelling
+            # append hip constant too, to help workarounds
+            c_constants.append(
+                f"from {cpkg_name} cimport {hip_constant_name}"
+            )
+            python_constants.append(
+                f"{hip_constant_name} = {cpkg_name}.{hip_constant_name}"
+            )
             if hip_constant_name in HIP_2_CUDA:
                 for cuda_constant_name in HIP_2_CUDA[hip_constant_name]:
-                    constants.append(
+                    c_constants.append(
+                        f"from {cpkg_name} cimport {hip_constant_name} as {cuda_constant_name}"
+                    )
+                    python_constants.append(
                         f"{cuda_constant_name} = {cpkg_name}.{hip_constant_name}"
                     )
             else:
                 warn_(hip_constant_name)
-            # append hip constant too, to help workarounds
-            constants.append(
-                f"{hip_constant_name} = {cpkg_name}.{hip_constant_name}"
-            )
         if isinstance(node, AnonymousEnum):  # cannot be typedefed
-            python_interface_impl_part += constants
+            python_interface_impl_part += python_constants
         else:
             python_enum_metaclass_name = f"_{cuda_name}_EnumMeta"
             python_enum_hallucinate_var_name = (
@@ -361,16 +368,16 @@ def generate_cuda_interop_package_files(
                 class {cuda_name}({pkg_name}.{enum.python_base_class_name},metaclass={python_enum_metaclass_name}):
                 """
             )
-            python_enum_class += textwrap.indent("\n".join(constants), indent)
+            python_enum_class += textwrap.indent("\n".join(python_constants), indent)
 
             python_interface_impl_part.append(python_enum_metaclass)
             python_interface_impl_part.append(python_enum_class)
 
         if isinstance(node, Enum) and i == 0:
-            cython_enum = f"cdef enum {cuda_name}:\n" + textwrap.indent(
-                "\n".join(constants), indent
-            )
-            c_interface_decl_part.append(cython_enum)
+            if not isinstance(node,AnonymousEnum):
+                cython_enum = f"from {cpkg_name} cimport {hip_name} as {cuda_name}"
+                c_interface_decl_part.append(cython_enum)
+            c_interface_decl_part += c_constants
         else:  # if it is a typedef or there are multiple CUDA names
             hip_underlying_type_name = enum.name
             if hip_underlying_type_name in HIP_2_CUDA:
@@ -387,7 +394,7 @@ def generate_cuda_interop_package_files(
         hip_name = node.name
         if isinstance(node, AnonymousEnum):
             # Anonymous enums won't have a different CUDA name but their constants might
-            handle_enum_(node, hip_name)  # hip_name is auto_generated in this case
+            handle_enum_(node, hip_name, hip_name)  # hip_name is auto_generated in this case
         if hip_name in HIP_2_CUDA:
             cuda_names = HIP_2_CUDA[hip_name]
             for i, cuda_name in enumerate(cuda_names):
@@ -397,7 +404,7 @@ def generate_cuda_interop_package_files(
                 ):
                     # enums require special care as they are modelled as "class <type>"
                     # and not as "cdef class" in the Python interface, just like in CUDA Python.
-                    handle_enum_(node, cuda_name)
+                    handle_enum_(node, hip_name, cuda_name)
                 elif (
                     isinstance(
                         node,
