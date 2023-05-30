@@ -5,8 +5,9 @@ __author__ = "AMD_AUTHOR"
 cimport hip.chiprtc
 cimport hip.hiprtc
 
+DEF HIP_PYTHON = True
+
 cimport cuda.cnvrtc
-cimport cuda.nvrtc
 from hip.hiprtc cimport ihiprtcLinkState # here
 cdef class CUlinkState_st(hip.hiprtc.ihiprtcLinkState):
     pass

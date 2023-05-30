@@ -10,6 +10,9 @@ import hip.hiprtc
 hiprtc = hip.hiprtc # makes hiprtc types and routines accessible without import
                             # allows checks such as `hasattr(cuda.nvrtc,"hiprtc")`
 
+HIP_PYTHON_MOD = hiprtc
+globals()["HIP_PYTHON"] = True
+
 def _hip_python_get_bool_environ_var(env_var, default):
     yes_vals = ("true", "1", "t", "y", "yes")
     no_vals = ("false", "0", "f", "n", "no")
@@ -23,7 +26,7 @@ def _hip_python_get_bool_environ_var(env_var, default):
         raise RuntimeError(f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}")
 
 
-HIP_PYTHON_nvrtcResult_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_nvrtcResult_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_nvrtcResult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_nvrtcResult_HALLUCINATE","false")
 
 class _nvrtcResult_EnumMeta(enum.EnumMeta):
 
@@ -68,12 +71,12 @@ class _nvrtcResult_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_nvrtcResult_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_nvrtcResult_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_nvrtcResult_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_nvrtcResult_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -124,7 +127,7 @@ class nvrtcResult(enum.IntEnum,metaclass=_nvrtcResult_EnumMeta):
     HIPRTC_ERROR_INTERNAL_ERROR = hip.chiprtc.HIPRTC_ERROR_INTERNAL_ERROR
     HIPRTC_ERROR_LINKING = hip.chiprtc.HIPRTC_ERROR_LINKING
 
-HIP_PYTHON_CUjitInputType_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjitInputType_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUjitInputType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjitInputType_HALLUCINATE","false")
 
 class _CUjitInputType_EnumMeta(enum.EnumMeta):
 
@@ -169,12 +172,12 @@ class _CUjitInputType_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUjitInputType_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUjitInputType_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUjitInputType_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUjitInputType_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
@@ -218,7 +221,7 @@ class CUjitInputType(enum.IntEnum,metaclass=_CUjitInputType_EnumMeta):
     HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE = hip.chiprtc.HIPRTC_JIT_INPUT_LLVM_ARCHIVES_OF_BUNDLED_BITCODE
     HIPRTC_JIT_NUM_INPUT_TYPES = hip.chiprtc.HIPRTC_JIT_NUM_INPUT_TYPES
 
-HIP_PYTHON_CUjitInputType_enum_HALLUCINATE_CONSTANTS = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjitInputType_enum_HALLUCINATE_CONSTANTS","false")
+HIP_PYTHON_CUjitInputType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUjitInputType_enum_HALLUCINATE","false")
 
 class _CUjitInputType_enum_EnumMeta(enum.EnumMeta):
 
@@ -263,12 +266,12 @@ class _CUjitInputType_enum_EnumMeta(enum.EnumMeta):
 
     def __getattribute__(cls,name):
         global _get_hip_name
-        global HIP_PYTHON_CUjitInputType_enum_HALLUCINATE_CONSTANTS
+        global HIP_PYTHON_CUjitInputType_enum_HALLUCINATE
         try:
             result = super().__getattribute__(name)
             return result
         except AttributeError as ae:
-            if not HIP_PYTHON_CUjitInputType_enum_HALLUCINATE_CONSTANTS:
+            if not HIP_PYTHON_CUjitInputType_enum_HALLUCINATE:
                 raise ae
             else:
                 used_vals = list(cls._value2member_map_.keys())
