@@ -22,6 +22,8 @@ python_interface_retval_template = "_{name}__retval"
 
 python_interface_int_enum_base_class = "enum.IntEnum"
 
+python_interface_int_enum_base_class_name_template = "_{name}__Base"
+
 # Always return a tuple if there is at least one return value
 python_interface_always_return_tuple = True
 
@@ -705,6 +707,7 @@ class UnionMixin(RecordMixin):
 
 
 class EnumMixin(CythonMixin):
+
     def _render_cython_enums(self):
         """Yields the enum constants' names."""
         from . import tree
@@ -740,6 +743,11 @@ class EnumMixin(CythonMixin):
             name = self.renamer(child_cursor.spelling)
             yield f"{name} = {cprefix}{name}"
 
+    @property
+    def python_base_class_name(self):
+        global python_interface_int_enum_base_class_name_template
+        return python_interface_int_enum_base_class_name_template.format(name=self.cython_global_name)
+
     def render_python_interface_impl(self, cprefix: str):
         """Renders an enum.IntEnum class.
 
@@ -753,11 +761,22 @@ class EnumMixin(CythonMixin):
         assert isinstance(self, tree.Enum)
         global indent
         global python_interface_int_enum_base_class
+
         if self.is_anonymous:
             return "\n".join(self._render_python_enums(cprefix))
         else:
-            name = self._cython_and_c_name(self.global_name(self.sep))
-            result = f"class {name}({python_interface_int_enum_base_class}):\n" + textwrap.indent(
+            name = self.cython_global_name
+            base_class_name = self.python_base_class_name
+            
+            result = textwrap.dedent(f"""\
+               class {base_class_name}({python_interface_int_enum_base_class}):
+                   \"""Empty enum base class that allows subclassing.
+                   \"""
+                   pass
+               class {name}({base_class_name}):
+               """
+            )
+            result += textwrap.indent(
                 "\n".join(self._render_python_enums(cprefix)), indent
             )
             # add methods
@@ -1083,13 +1102,13 @@ cdef void* {funptr_name} = NULL
             elif (
                 parm.is_enum
             ):  # enums are not modelled as cdef class, so we cannot specify them as type
-                parm_typename = parm.lookup_innermost_type().cython_name
+                parm_base_class_name = parm.lookup_innermost_type().python_base_class_name
                 sig_args.append(f"object {parm_name}")
                 prolog.append(
                     textwrap.dedent(
                         f"""\
-                    if not isinstance({parm_name},{parm_typename}):
-                        raise TypeError("argument '{parm_name}' must be of type '{parm_typename}'")\
+                    if not isinstance({parm_name},{parm_base_class_name}):
+                        raise TypeError("argument '{parm_name}' must be of type '{parm_base_class_name}'")\
                     """
                     )
                 )

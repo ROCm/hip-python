@@ -5,7 +5,7 @@ cimport cpython.long
 cimport cpython.buffer
 cimport hip._util.types
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
-from .hip import hipError_t, hipDataType # PY import enums
+from .hip import hipError_t, _hipDataType__Base # PY import enums
 from .hip cimport ihipStream_t, float2, double2 # C import structs/union types
 
 from . cimport chipsparse

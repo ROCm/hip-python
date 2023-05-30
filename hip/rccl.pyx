@@ -270,7 +270,11 @@ cdef class ncclUniqueId:
         raise ValueError("'item' type must be 'int'")
 
 
-class ncclResult_t(enum.IntEnum):
+class _ncclResult_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class ncclResult_t(_ncclResult_t__Base):
     ncclSuccess = crccl.ncclSuccess
     ncclUnhandledCudaError = crccl.ncclUnhandledCudaError
     ncclSystemError = crccl.ncclSystemError
@@ -462,8 +466,8 @@ def pncclCommAbort(object comm):
 def ncclGetErrorString(object result):
     """! @brief Returns a string for each error code. */
     """
-    if not isinstance(result,ncclResult_t):
-        raise TypeError("argument 'result' must be of type 'ncclResult_t'")
+    if not isinstance(result,_ncclResult_t__Base):
+        raise TypeError("argument 'result' must be of type '_ncclResult_t__Base'")
     cdef const char * _ncclGetErrorString__retval = crccl.ncclGetErrorString(result.value)    # fully specified
     return (_ncclGetErrorString__retval,)
 
@@ -472,8 +476,8 @@ def ncclGetErrorString(object result):
 def pncclGetErrorString(object result):
     """@cond include_hidden
     """
-    if not isinstance(result,ncclResult_t):
-        raise TypeError("argument 'result' must be of type 'ncclResult_t'")
+    if not isinstance(result,_ncclResult_t__Base):
+        raise TypeError("argument 'result' must be of type '_ncclResult_t__Base'")
     cdef const char * _pncclGetErrorString__retval = crccl.pncclGetErrorString(result.value)    # fully specified
     return (_pncclGetErrorString__retval,)
 
@@ -577,7 +581,11 @@ def pncclCommUserRank(object comm):
     return (_pncclCommUserRank__retval,rank)
 
 
-class ncclRedOp_dummy_t(enum.IntEnum):
+class _ncclRedOp_dummy_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class ncclRedOp_dummy_t(_ncclRedOp_dummy_t__Base):
     ncclNumOps_dummy = crccl.ncclNumOps_dummy
     @staticmethod
     def ctypes_type():
@@ -585,7 +593,11 @@ class ncclRedOp_dummy_t(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class ncclRedOp_t(enum.IntEnum):
+class _ncclRedOp_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class ncclRedOp_t(_ncclRedOp_t__Base):
     ncclSum = crccl.ncclSum
     ncclProd = crccl.ncclProd
     ncclMax = crccl.ncclMax
@@ -599,7 +611,11 @@ class ncclRedOp_t(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class ncclDataType_t(enum.IntEnum):
+class _ncclDataType_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class ncclDataType_t(_ncclDataType_t__Base):
     ncclInt8 = crccl.ncclInt8
     ncclChar = crccl.ncclChar
     ncclUint8 = crccl.ncclUint8
@@ -622,7 +638,11 @@ class ncclDataType_t(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class ncclScalarResidence_t(enum.IntEnum):
+class _ncclScalarResidence_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class ncclScalarResidence_t(_ncclScalarResidence_t__Base):
     ncclScalarDevice = crccl.ncclScalarDevice
     ncclScalarHostImmediate = crccl.ncclScalarHostImmediate
     @staticmethod
@@ -635,10 +655,10 @@ class ncclScalarResidence_t(enum.IntEnum):
 def ncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object residence, object comm):
     """
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")                    
-    if not isinstance(residence,ncclScalarResidence_t):
-        raise TypeError("argument 'residence' must be of type 'ncclScalarResidence_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
+    if not isinstance(residence,_ncclScalarResidence_t__Base):
+        raise TypeError("argument 'residence' must be of type '_ncclScalarResidence_t__Base'")
     _ncclRedOpCreatePreMulSum__retval = ncclResult_t(crccl.ncclRedOpCreatePreMulSum(
         <crccl.ncclRedOp_t *>hip._util.types.DataHandle.from_pyobj(op)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(scalar)._ptr,datatype.value,residence.value,
@@ -650,10 +670,10 @@ def ncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object r
 def pncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object residence, object comm):
     """
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")                    
-    if not isinstance(residence,ncclScalarResidence_t):
-        raise TypeError("argument 'residence' must be of type 'ncclScalarResidence_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
+    if not isinstance(residence,_ncclScalarResidence_t__Base):
+        raise TypeError("argument 'residence' must be of type '_ncclScalarResidence_t__Base'")
     _pncclRedOpCreatePreMulSum__retval = ncclResult_t(crccl.pncclRedOpCreatePreMulSum(
         <crccl.ncclRedOp_t *>hip._util.types.DataHandle.from_pyobj(op)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(scalar)._ptr,datatype.value,residence.value,
@@ -665,8 +685,8 @@ def pncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object 
 def ncclRedOpDestroy(object op, object comm):
     """
     """
-    if not isinstance(op,ncclRedOp_t):
-        raise TypeError("argument 'op' must be of type 'ncclRedOp_t'")
+    if not isinstance(op,_ncclRedOp_t__Base):
+        raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _ncclRedOpDestroy__retval = ncclResult_t(crccl.ncclRedOpDestroy(op.value,
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
     return (_ncclRedOpDestroy__retval,)
@@ -676,8 +696,8 @@ def ncclRedOpDestroy(object op, object comm):
 def pncclRedOpDestroy(object op, object comm):
     """
     """
-    if not isinstance(op,ncclRedOp_t):
-        raise TypeError("argument 'op' must be of type 'ncclRedOp_t'")
+    if not isinstance(op,_ncclRedOp_t__Base):
+        raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _pncclRedOpDestroy__retval = ncclResult_t(crccl.pncclRedOpDestroy(op.value,
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
     return (_pncclRedOpDestroy__retval,)
@@ -694,10 +714,10 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
     operation is complete.
     In-place operation will happen if sendbuff == recvbuff.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")                    
-    if not isinstance(op,ncclRedOp_t):
-        raise TypeError("argument 'op' must be of type 'ncclRedOp_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
+    if not isinstance(op,_ncclRedOp_t__Base):
+        raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _ncclReduce__retval = ncclResult_t(crccl.ncclReduce(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,root,
@@ -710,10 +730,10 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
 def pncclReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, int root, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")                    
-    if not isinstance(op,ncclRedOp_t):
-        raise TypeError("argument 'op' must be of type 'ncclRedOp_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
+    if not isinstance(op,_ncclRedOp_t__Base):
+        raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _pncclReduce__retval = ncclResult_t(crccl.pncclReduce(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,root,
@@ -730,8 +750,8 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
     operation is started.
     This operation is implicitely in place.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclBcast__retval = ncclResult_t(crccl.ncclBcast(
         <void *>hip._util.types.DataHandle.from_pyobj(buff)._ptr,count,datatype.value,root,
         ncclComm.from_pyobj(comm)._ptr,
@@ -743,8 +763,8 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
 def pncclBcast(object buff, unsigned long count, object datatype, int root, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclBcast__retval = ncclResult_t(crccl.pncclBcast(
         <void *>hip._util.types.DataHandle.from_pyobj(buff)._ptr,count,datatype.value,root,
         ncclComm.from_pyobj(comm)._ptr,
@@ -760,8 +780,8 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
     operation is started.
     In-place operation will happen if sendbuff == recvbuff.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclBroadcast__retval = ncclResult_t(crccl.ncclBroadcast(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,root,
@@ -774,8 +794,8 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
 def pncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object datatype, int root, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclBroadcast__retval = ncclResult_t(crccl.pncclBroadcast(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,root,
@@ -791,10 +811,10 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
     leaves identical copies of result on each recvbuff.
     In-place operation will happen if sendbuff == recvbuff.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")                    
-    if not isinstance(op,ncclRedOp_t):
-        raise TypeError("argument 'op' must be of type 'ncclRedOp_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
+    if not isinstance(op,_ncclRedOp_t__Base):
+        raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _ncclAllReduce__retval = ncclResult_t(crccl.ncclAllReduce(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,
@@ -807,10 +827,10 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
 def pncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")                    
-    if not isinstance(op,ncclRedOp_t):
-        raise TypeError("argument 'op' must be of type 'ncclRedOp_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
+    if not isinstance(op,_ncclRedOp_t__Base):
+        raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _pncclAllReduce__retval = ncclResult_t(crccl.pncclAllReduce(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,op.value,
@@ -830,10 +850,10 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
     should have a size of at least nranks*recvcount elements.
     In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")                    
-    if not isinstance(op,ncclRedOp_t):
-        raise TypeError("argument 'op' must be of type 'ncclRedOp_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
+    if not isinstance(op,_ncclRedOp_t__Base):
+        raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _ncclReduceScatter__retval = ncclResult_t(crccl.ncclReduceScatter(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,op.value,
@@ -846,10 +866,10 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
 def pncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, object op, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")                    
-    if not isinstance(op,ncclRedOp_t):
-        raise TypeError("argument 'op' must be of type 'ncclRedOp_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
+    if not isinstance(op,_ncclRedOp_t__Base):
+        raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
     _pncclReduceScatter__retval = ncclResult_t(crccl.pncclReduceScatter(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,op.value,
@@ -867,8 +887,8 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
     should have a size of at least nranks*sendcount elements.
     In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclAllGather__retval = ncclResult_t(crccl.ncclAllGather(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,
@@ -881,8 +901,8 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
 def pncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclAllGather__retval = ncclResult_t(crccl.pncclAllGather(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,
@@ -901,8 +921,8 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
     need to progress concurrently to complete, they must be fused within a ncclGroupStart/
     ncclGroupEnd section.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclSend__retval = ncclResult_t(crccl.ncclSend(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,count,datatype.value,peer,
         ncclComm.from_pyobj(comm)._ptr,
@@ -914,8 +934,8 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
 def pncclSend(object sendbuff, unsigned long count, object datatype, int peer, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclSend__retval = ncclResult_t(crccl.pncclSend(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,count,datatype.value,peer,
         ncclComm.from_pyobj(comm)._ptr,
@@ -933,8 +953,8 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
     need to progress concurrently to complete, they must be fused within a ncclGroupStart/
     ncclGroupEnd section.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclRecv__retval = ncclResult_t(crccl.ncclRecv(
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,peer,
         ncclComm.from_pyobj(comm)._ptr,
@@ -946,8 +966,8 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
 def pncclRecv(object recvbuff, unsigned long count, object datatype, int peer, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclRecv__retval = ncclResult_t(crccl.pncclRecv(
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,peer,
         ncclComm.from_pyobj(comm)._ptr,
@@ -964,8 +984,8 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
     should have a size of at least nranks*sendcount elements.
     In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclGather__retval = ncclResult_t(crccl.ncclGather(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,root,
@@ -978,8 +998,8 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
 def pncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, int root, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclGather__retval = ncclResult_t(crccl.pncclGather(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,sendcount,datatype.value,root,
@@ -997,8 +1017,8 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
     should have a size of at least nranks*recvcount elements.
     In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclScatter__retval = ncclResult_t(crccl.ncclScatter(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,root,
@@ -1011,8 +1031,8 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
 def pncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, int root, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclScatter__retval = ncclResult_t(crccl.pncclScatter(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,recvcount,datatype.value,root,
@@ -1029,8 +1049,8 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
     that recvbuff and sendbuff should have a size of nranks*count elements.
     In-place operation will happen if sendbuff == recvbuff.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclAllToAll__retval = ncclResult_t(crccl.ncclAllToAll(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,
@@ -1043,8 +1063,8 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
 def pncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object datatype, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclAllToAll__retval = ncclResult_t(crccl.pncclAllToAll(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(recvbuff)._ptr,count,datatype.value,
@@ -1064,8 +1084,8 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
     of datatype, not bytes.
     In-place operation will happen if sendbuff == recvbuff.
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _ncclAllToAllv__retval = ncclResult_t(crccl.ncclAllToAllv(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(sendcounts)._ptr,
@@ -1082,8 +1102,8 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
 def pncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object recvbuff, object recvcounts, object rdispls, object datatype, object comm, object stream):
     """@cond include_hidden
     """
-    if not isinstance(datatype,ncclDataType_t):
-        raise TypeError("argument 'datatype' must be of type 'ncclDataType_t'")
+    if not isinstance(datatype,_ncclDataType_t__Base):
+        raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
     _pncclAllToAllv__retval = ncclResult_t(crccl.pncclAllToAllv(
         <const void *>hip._util.types.DataHandle.from_pyobj(sendbuff)._ptr,
         <const unsigned long*>hip._util.types.ListOfUnsignedLong.from_pyobj(sendcounts)._ptr,

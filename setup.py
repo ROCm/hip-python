@@ -175,6 +175,8 @@ def generate_cuda_interop_package_files(
     output_dir = "cuda"
     indent = " " * 4
     pkg_name = generator.pkg_name
+    cpkg_name = f"hip.c{pkg_name}"
+    pkg_cimport_name = f"hip.{pkg_name}" 
     backend = generator.backend
 
     c_interface_decl_part = [
@@ -182,7 +184,7 @@ def generate_cuda_interop_package_files(
             f"""\
             # AMD_COPYRIGHT
             
-            cimport hip.c{pkg_name}
+            cimport {cpkg_name}
 
             DEF HIP_PYTHON = True
             """
@@ -195,8 +197,8 @@ def generate_cuda_interop_package_files(
 
             __author__ = "AMD_AUTHOR"
 
-            cimport hip.c{pkg_name}
-            cimport hip.{pkg_name}
+            cimport {cpkg_name}
+            cimport {pkg_cimport_name}
             
             DEF HIP_PYTHON = True
             """
@@ -214,7 +216,6 @@ def generate_cuda_interop_package_files(
             import enum
 
             import hip.{pkg_name}
-
             {pkg_name} = hip.{pkg_name} # makes {pkg_name} types and routines accessible without import
                                         # allows checks such as `hasattr(cuda.{cuda_pkg_name},"{pkg_name}")`
 
@@ -274,13 +275,13 @@ def generate_cuda_interop_package_files(
             if hip_constant_name in HIP_2_CUDA:
                 for cuda_constant_name in HIP_2_CUDA[hip_constant_name]:
                     constants.append(
-                        f"{cuda_constant_name} = hip.c{pkg_name}.{hip_constant_name}"
+                        f"{cuda_constant_name} = {cpkg_name}.{hip_constant_name}"
                     )
             else:
                 warn_(hip_constant_name)
             # append hip constant too, to help workarounds
             constants.append(
-                f"{hip_constant_name} = hip.c{pkg_name}.{hip_constant_name}"
+                f"{hip_constant_name} = {cpkg_name}.{hip_constant_name}"
             )
         if isinstance(node, AnonymousEnum):  # cannot be typedefed
             python_interface_impl_part += constants
@@ -296,45 +297,6 @@ def generate_cuda_interop_package_files(
 
                 class {python_enum_metaclass_name}(enum.EnumMeta):
                 
-                    class FakeEnumType():
-                        \"""Mimicks the orginal enum type this 
-                        is derived from.
-                        \"""
-                        
-                        def __init__(self):
-                            pass
-                        
-                        @property
-                        def name(self):
-                            return self._name_
-
-                        @property
-                        def value(self):
-                            return self._value_
-                            
-                        def __eq__(self,other):
-                            if isinstance(other,self._orig_enum_type_):
-                                return self.value == other.value
-                            return False
-                        
-                        @property
-                        def __class__(self):
-                            \"""Overwrite __class__ to satisfy __isinstance__ check.
-                            \"""
-                            return self._orig_enum_type_
-
-                        def __repr__(self):        
-                            \"""Mimicks enum.Enum.__repr__\"""
-                            return "<%s.%s: %r>" % (
-                                    self.__class__.__name__, self._name_, self._value_)
-                                    
-                        def __str__(self):
-                            \"""Mimicks enum.Enum.__str__\"""
-                            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-                        def __hash__(self):
-                            return hash(str(self))
-
                     def __getattribute__(cls,name):
                         global _get_hip_name
                         global {python_enum_hallucinate_var_name}
@@ -351,24 +313,52 @@ def generate_cuda_interop_package_files(
                                 new_val = min(used_vals)
                                 while new_val in used_vals: # find a free enum value
                                     new_val += 1
-                                enum_types = list(cls._member_map_.values())
-                                enum_class = enum_types[0].__class__
-                                fake_enum = type(
-                                    name,
-                                    (cls.FakeEnumType,),
-                                    {{"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}}
-                                )()
-                                return fake_enum
+                                
+                                class HallucinatedEnumConstant():
+                                    \"""Mimicks the orginal enum type this is derived from.
+                                    \"""
+                                    def __init__(self):
+                                        pass
+                                    
+                                    @property
+                                    def name(self):
+                                        return self._name_
+                                    
+                                    @property
+                                    def value(self):
+                                        return self._value_
+
+                                    def __eq__(self,other):
+                                        if isinstance(other,{pkg_name}.{hip_name}):
+                                            return self.value == other.value
+                                        return False
+
+                                    def __repr__(self):        
+                                        \"""Mimicks enum.Enum.__repr__\"""
+                                        return "<%s.%s: %r>" % (
+                                                self.__class__._name_, self._name_, self._value_)
+                                                
+                                    def __str__(self):
+                                        \"""Mimicks enum.Enum.__str__\"""
+                                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                                    def __hash__(self):
+                                        return hash(str(self))
+
+                                    @property
+                                    def __class__(self):
+                                        \"""Make this type appear as a constant of the actual 
+                                        CUDA enum type in isinstance checks.
+                                        \"""
+                                        return {cuda_name}
+                                setattr(HallucinatedEnumConstant,"_name_",name)
+                                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                                return HallucinatedEnumConstant()
                 """
             )
             python_enum_class = textwrap.dedent(
                 f"""
-                class {cuda_name}(enum.IntEnum,metaclass={python_enum_metaclass_name}):
-                    @property
-                    def __class__(self):
-                        \"""Overwrite __class__ to satisfy __isinstance__ check.
-                        \"""
-                        return hip.{pkg_name}.{hip_name}
+                class {cuda_name}({pkg_name}.{enum.python_base_class_name},metaclass={python_enum_metaclass_name}):
                 """
             )
             python_enum_class += textwrap.indent("\n".join(constants), indent)
@@ -422,13 +412,13 @@ def generate_cuda_interop_package_files(
                     # These are Python objects/functions in the Python interface
                     if i == 0:
                         c_interface_decl_part.append(
-                            f"from hip.c{pkg_name} cimport {hip_name}"
+                            f"from {cpkg_name} cimport {hip_name}"
                         )
                     c_interface_decl_part.append(
-                        f"from hip.c{pkg_name} cimport {hip_name} as {cuda_name}"
+                        f"from {cpkg_name} cimport {hip_name} as {cuda_name}"
                     )
                     python_interface_impl_part.append(
-                        f"{cuda_name} = hip.{pkg_name}.{hip_name}"
+                        f"{cuda_name} = {pkg_name}.{hip_name}"
                     )
                 elif isinstance(node, Typedef) and (
                     node.is_pointer_to_basic_type(degree=(0, -1))
@@ -444,18 +434,17 @@ def generate_cuda_interop_package_files(
                     # and a subclass needs to be created to define a Python object. (TODO other options?)
                     if i == 0:
                         c_interface_decl_part.append(
-                            f"from hip.c{pkg_name} cimport {hip_name}"
+                            f"from {cpkg_name} cimport {hip_name}"
                         )
                     c_interface_decl_part.append(
-                        f"from hip.c{pkg_name} cimport {hip_name} as {cuda_name}"
+                        f"from {cpkg_name} cimport {hip_name} as {cuda_name}"
                     )
                     #
                     if i == 0 and hip_name not in cuda_names:
                         python_interface_decl_part.append(
-                            f"from hip.{pkg_name} cimport {hip_name} # here"
-                        )  # note the missing c prefix
-                    # if hip_name != cuda_name:
-                    cdef_subclass = f"cdef class {cuda_name}(hip.{pkg_name}.{hip_name}):\n{indent}pass"
+                            f"from {pkg_cimport_name} cimport {hip_name} # here"
+                        ) 
+                    cdef_subclass = f"cdef class {cuda_name}({pkg_cimport_name}.{hip_name}):\n{indent}pass"
                     python_interface_decl_part.append(cdef_subclass)
                     python_interface_impl_part.append(cdef_subclass)
         elif warn:
@@ -1253,7 +1242,7 @@ def generate_hipsparse_package_files():
     )
     generator.python_interface_decl_preamble += textwrap.dedent(
         """\
-    from .hip import hipError_t, hipDataType # PY import enums
+    from .hip import hipError_t, _hipDataType__Base # PY import enums
     from .hip cimport ihipStream_t, float2, double2 # C import structs/union types
     """
     )

@@ -6,7 +6,6 @@ import os
 import enum
 
 import hip.hiprtc
-
 hiprtc = hip.hiprtc # makes hiprtc types and routines accessible without import
                             # allows checks such as `hasattr(cuda.nvrtc,"hiprtc")`
 
@@ -30,45 +29,6 @@ HIP_PYTHON_nvrtcResult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHO
 
 class _nvrtcResult_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_nvrtcResult_HALLUCINATE
@@ -85,22 +45,50 @@ class _nvrtcResult_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hiprtc.hiprtcResult):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return nvrtcResult
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class nvrtcResult(enum.IntEnum,metaclass=_nvrtcResult_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hiprtc.hiprtcResult
+class nvrtcResult(hiprtc._hiprtcResult__Base,metaclass=_nvrtcResult_EnumMeta):
     NVRTC_SUCCESS = hip.chiprtc.HIPRTC_SUCCESS
     HIPRTC_SUCCESS = hip.chiprtc.HIPRTC_SUCCESS
     NVRTC_ERROR_OUT_OF_MEMORY = hip.chiprtc.HIPRTC_ERROR_OUT_OF_MEMORY
@@ -131,45 +119,6 @@ HIP_PYTHON_CUjitInputType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PY
 
 class _CUjitInputType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUjitInputType_HALLUCINATE
@@ -186,22 +135,50 @@ class _CUjitInputType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hiprtc.hiprtcJITInputType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUjitInputType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUjitInputType(enum.IntEnum,metaclass=_CUjitInputType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hiprtc.hiprtcJITInputType
+class CUjitInputType(hiprtc._hiprtcJITInputType__Base,metaclass=_CUjitInputType_EnumMeta):
     CU_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     HIPRTC_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     CU_JIT_INPUT_PTX = hip.chiprtc.HIPRTC_JIT_INPUT_PTX
@@ -225,45 +202,6 @@ HIP_PYTHON_CUjitInputType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("H
 
 class _CUjitInputType_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUjitInputType_enum_HALLUCINATE
@@ -280,22 +218,50 @@ class _CUjitInputType_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hiprtc.hiprtcJITInputType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUjitInputType_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUjitInputType_enum(enum.IntEnum,metaclass=_CUjitInputType_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hiprtc.hiprtcJITInputType
+class CUjitInputType_enum(hiprtc._hiprtcJITInputType__Base,metaclass=_CUjitInputType_enum_EnumMeta):
     CU_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     HIPRTC_JIT_INPUT_CUBIN = hip.chiprtc.HIPRTC_JIT_INPUT_CUBIN
     CU_JIT_INPUT_PTX = hip.chiprtc.HIPRTC_JIT_INPUT_PTX
@@ -316,26 +282,26 @@ class CUjitInputType_enum(enum.IntEnum,metaclass=_CUjitInputType_enum_EnumMeta):
     HIPRTC_JIT_NUM_INPUT_TYPES = hip.chiprtc.HIPRTC_JIT_NUM_INPUT_TYPES
 cdef class CUlinkState_st(hip.hiprtc.ihiprtcLinkState):
     pass
-CUlinkState = hip.hiprtc.hiprtcLinkState
-nvrtcGetErrorString = hip.hiprtc.hiprtcGetErrorString
-nvrtcVersion = hip.hiprtc.hiprtcVersion
-nvrtcProgram = hip.hiprtc.hiprtcProgram
-nvrtcAddNameExpression = hip.hiprtc.hiprtcAddNameExpression
-nvrtcCompileProgram = hip.hiprtc.hiprtcCompileProgram
-nvrtcCreateProgram = hip.hiprtc.hiprtcCreateProgram
-nvrtcDestroyProgram = hip.hiprtc.hiprtcDestroyProgram
-nvrtcGetLoweredName = hip.hiprtc.hiprtcGetLoweredName
-nvrtcGetProgramLog = hip.hiprtc.hiprtcGetProgramLog
-nvrtcGetProgramLogSize = hip.hiprtc.hiprtcGetProgramLogSize
-nvrtcGetPTX = hip.hiprtc.hiprtcGetCode
-nvrtcGetPTXSize = hip.hiprtc.hiprtcGetCodeSize
-nvrtcGetCUBIN = hip.hiprtc.hiprtcGetBitcode
-nvrtcGetCUBINSize = hip.hiprtc.hiprtcGetBitcodeSize
-cuLinkCreate = hip.hiprtc.hiprtcLinkCreate
-cuLinkCreate_v2 = hip.hiprtc.hiprtcLinkCreate
-cuLinkAddFile = hip.hiprtc.hiprtcLinkAddFile
-cuLinkAddFile_v2 = hip.hiprtc.hiprtcLinkAddFile
-cuLinkAddData = hip.hiprtc.hiprtcLinkAddData
-cuLinkAddData_v2 = hip.hiprtc.hiprtcLinkAddData
-cuLinkComplete = hip.hiprtc.hiprtcLinkComplete
-cuLinkDestroy = hip.hiprtc.hiprtcLinkDestroy
+CUlinkState = hiprtc.hiprtcLinkState
+nvrtcGetErrorString = hiprtc.hiprtcGetErrorString
+nvrtcVersion = hiprtc.hiprtcVersion
+nvrtcProgram = hiprtc.hiprtcProgram
+nvrtcAddNameExpression = hiprtc.hiprtcAddNameExpression
+nvrtcCompileProgram = hiprtc.hiprtcCompileProgram
+nvrtcCreateProgram = hiprtc.hiprtcCreateProgram
+nvrtcDestroyProgram = hiprtc.hiprtcDestroyProgram
+nvrtcGetLoweredName = hiprtc.hiprtcGetLoweredName
+nvrtcGetProgramLog = hiprtc.hiprtcGetProgramLog
+nvrtcGetProgramLogSize = hiprtc.hiprtcGetProgramLogSize
+nvrtcGetPTX = hiprtc.hiprtcGetCode
+nvrtcGetPTXSize = hiprtc.hiprtcGetCodeSize
+nvrtcGetCUBIN = hiprtc.hiprtcGetBitcode
+nvrtcGetCUBINSize = hiprtc.hiprtcGetBitcodeSize
+cuLinkCreate = hiprtc.hiprtcLinkCreate
+cuLinkCreate_v2 = hiprtc.hiprtcLinkCreate
+cuLinkAddFile = hiprtc.hiprtcLinkAddFile
+cuLinkAddFile_v2 = hiprtc.hiprtcLinkAddFile
+cuLinkAddData = hiprtc.hiprtcLinkAddData
+cuLinkAddData_v2 = hiprtc.hiprtcLinkAddData
+cuLinkComplete = hiprtc.hiprtcLinkComplete
+cuLinkDestroy = hiprtc.hiprtcLinkDestroy

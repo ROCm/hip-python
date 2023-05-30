@@ -6,7 +6,11 @@ HIPFFT_FORWARD = chipfft.HIPFFT_FORWARD
 
 HIPFFT_BACKWARD = chipfft.HIPFFT_BACKWARD
 
-class hipfftResult_t(enum.IntEnum):
+class _hipfftResult_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipfftResult_t(_hipfftResult_t__Base):
     HIPFFT_SUCCESS = chipfft.HIPFFT_SUCCESS
     HIPFFT_INVALID_PLAN = chipfft.HIPFFT_INVALID_PLAN
     HIPFFT_ALLOC_FAILED = chipfft.HIPFFT_ALLOC_FAILED
@@ -31,7 +35,11 @@ class hipfftResult_t(enum.IntEnum):
 
 hipfftResult = hipfftResult_t
 
-class hipfftType_t(enum.IntEnum):
+class _hipfftType_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipfftType_t(_hipfftType_t__Base):
     HIPFFT_R2C = chipfft.HIPFFT_R2C
     HIPFFT_C2R = chipfft.HIPFFT_C2R
     HIPFFT_C2C = chipfft.HIPFFT_C2C
@@ -46,7 +54,11 @@ class hipfftType_t(enum.IntEnum):
 
 hipfftType = hipfftType_t
 
-class hipfftLibraryPropertyType_t(enum.IntEnum):
+class _hipfftLibraryPropertyType_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipfftLibraryPropertyType_t(_hipfftLibraryPropertyType_t__Base):
     HIPFFT_MAJOR_VERSION = chipfft.HIPFFT_MAJOR_VERSION
     HIPFFT_MINOR_VERSION = chipfft.HIPFFT_MINOR_VERSION
     HIPFFT_PATCH_LEVEL = chipfft.HIPFFT_PATCH_LEVEL
@@ -168,8 +180,8 @@ def hipfftPlan1d(int nx, object type, int batch):
     @param[in] batch Number of batched transforms to compute.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")
     _hipfftPlan1d__retval = hipfftResult_t(chipfft.hipfftPlan1d(&plan._ptr,nx,type.value,batch))    # fully specified
     return (_hipfftPlan1d__retval,plan)
 
@@ -187,8 +199,8 @@ def hipfftPlan2d(int nx, int ny, object type):
     @param[in] type FFT type.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")
     _hipfftPlan2d__retval = hipfftResult_t(chipfft.hipfftPlan2d(&plan._ptr,nx,ny,type.value))    # fully specified
     return (_hipfftPlan2d__retval,plan)
 
@@ -207,8 +219,8 @@ def hipfftPlan3d(int nx, int ny, int nz, object type):
     @param[in] type FFT type.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")
     _hipfftPlan3d__retval = hipfftResult_t(chipfft.hipfftPlan3d(&plan._ptr,nx,ny,nz,type.value))    # fully specified
     return (_hipfftPlan3d__retval,plan)
 
@@ -246,8 +258,8 @@ def hipfftPlanMany(int rank, object n, object inembed, int istride, int idist, o
     @param[in] batch Number of batched transforms to perform.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")
     _hipfftPlanMany__retval = hipfftResult_t(chipfft.hipfftPlanMany(&plan._ptr,rank,
         <int *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
         <int *>hip._util.types.DataHandle.from_pyobj(inembed)._ptr,istride,idist,
@@ -288,8 +300,8 @@ def hipfftMakePlan1d(object plan, int nx, object type, int batch):
     @param[in] type FFT type.
     @param[in] batch Number of batched transforms to compute.
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftMakePlan1d__retval = hipfftResult_t(chipfft.hipfftMakePlan1d(
         hipfftHandle_t.from_pyobj(plan)._ptr,nx,type.value,batch,&workSize))    # fully specified
@@ -310,8 +322,8 @@ def hipfftMakePlan2d(object plan, int nx, int ny, object type):
     @param[in] type FFT type.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftMakePlan2d__retval = hipfftResult_t(chipfft.hipfftMakePlan2d(
         hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,type.value,&workSize))    # fully specified
@@ -333,8 +345,8 @@ def hipfftMakePlan3d(object plan, int nx, int ny, int nz, object type):
     @param[in] type FFT type.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftMakePlan3d__retval = hipfftResult_t(chipfft.hipfftMakePlan3d(
         hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,nz,type.value,&workSize))    # fully specified
@@ -375,8 +387,8 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
     @param[in] batch Number of batched transforms to perform.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftMakePlanMany__retval = hipfftResult_t(chipfft.hipfftMakePlanMany(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
@@ -390,8 +402,8 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
 def hipfftMakePlanMany64(object plan, int rank, object n, object inembed, long long istride, long long idist, object onembed, long long ostride, long long odist, object type, long long batch):
     """
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftMakePlanMany64__retval = hipfftResult_t(chipfft.hipfftMakePlanMany64(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
@@ -408,8 +420,8 @@ def hipfftEstimate1d(int nx, object type, int batch):
     @param[in] type FFT type.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftEstimate1d__retval = hipfftResult_t(chipfft.hipfftEstimate1d(nx,type.value,batch,&workSize))    # fully specified
     return (_hipfftEstimate1d__retval,workSize)
@@ -423,8 +435,8 @@ def hipfftEstimate2d(int nx, int ny, object type):
     @param[in] type FFT type.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftEstimate2d__retval = hipfftResult_t(chipfft.hipfftEstimate2d(nx,ny,type.value,&workSize))    # fully specified
     return (_hipfftEstimate2d__retval,workSize)
@@ -439,8 +451,8 @@ def hipfftEstimate3d(int nx, int ny, int nz, object type):
     @param[in] type FFT type.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftEstimate3d__retval = hipfftResult_t(chipfft.hipfftEstimate3d(nx,ny,nz,type.value,&workSize))    # fully specified
     return (_hipfftEstimate3d__retval,workSize)
@@ -461,8 +473,8 @@ def hipfftEstimateMany(int rank, object n, object inembed, int istride, int idis
     @param[in] batch Number of batched transforms to perform.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftEstimateMany__retval = hipfftResult_t(chipfft.hipfftEstimateMany(rank,
         <int *>hip._util.types.DataHandle.from_pyobj(n)._ptr,
@@ -479,8 +491,8 @@ def hipfftGetSize1d(object plan, int nx, object type, int batch):
     @param[in] type FFT type.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftGetSize1d__retval = hipfftResult_t(chipfft.hipfftGetSize1d(
         hipfftHandle_t.from_pyobj(plan)._ptr,nx,type.value,batch,&workSize))    # fully specified
@@ -496,8 +508,8 @@ def hipfftGetSize2d(object plan, int nx, int ny, object type):
     @param[in] type FFT type.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftGetSize2d__retval = hipfftResult_t(chipfft.hipfftGetSize2d(
         hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,type.value,&workSize))    # fully specified
@@ -514,8 +526,8 @@ def hipfftGetSize3d(object plan, int nx, int ny, int nz, object type):
     @param[in] type FFT type.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftGetSize3d__retval = hipfftResult_t(chipfft.hipfftGetSize3d(
         hipfftHandle_t.from_pyobj(plan)._ptr,nx,ny,nz,type.value,&workSize))    # fully specified
@@ -538,8 +550,8 @@ def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istri
     @param[in] batch Number of batched transforms to perform.
     @param[out] workSize Pointer to work area size (returned value).
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftGetSizeMany__retval = hipfftResult_t(chipfft.hipfftGetSizeMany(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
@@ -553,8 +565,8 @@ def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istri
 def hipfftGetSizeMany64(object plan, int rank, object n, object inembed, long long istride, long long idist, object onembed, long long ostride, long long odist, object type, long long batch):
     """
     """
-    if not isinstance(type,hipfftType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftType_t'")                    
+    if not isinstance(type,_hipfftType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
     cdef unsigned long workSize
     _hipfftGetSizeMany64__retval = hipfftResult_t(chipfft.hipfftGetSizeMany64(
         hipfftHandle_t.from_pyobj(plan)._ptr,rank,
@@ -735,8 +747,8 @@ def hipfftGetProperty(object type, object value):
     @param[in] type Property type.
     @param[out] value Returned value.
     """
-    if not isinstance(type,hipfftLibraryPropertyType_t):
-        raise TypeError("argument 'type' must be of type 'hipfftLibraryPropertyType_t'")
+    if not isinstance(type,_hipfftLibraryPropertyType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipfftLibraryPropertyType_t__Base'")
     _hipfftGetProperty__retval = hipfftResult_t(chipfft.hipfftGetProperty(type.value,
         <int *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
     return (_hipfftGetProperty__retval,)
