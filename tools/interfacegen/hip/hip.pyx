@@ -1685,7 +1685,11 @@ cdef class hipDeviceProp_t:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipMemoryType(enum.IntEnum):
+class _hipMemoryType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemoryType(_hipMemoryType__Base):
     hipMemoryTypeHost = chip.hipMemoryTypeHost
     hipMemoryTypeDevice = chip.hipMemoryTypeDevice
     hipMemoryTypeArray = chip.hipMemoryTypeArray
@@ -1942,7 +1946,11 @@ cdef class hipPointerAttribute_t:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipError_t(enum.IntEnum):
+class _hipError_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipError_t(_hipError_t__Base):
     hipSuccess = chip.hipSuccess
     hipErrorInvalidValue = chip.hipErrorInvalidValue
     hipErrorOutOfMemory = chip.hipErrorOutOfMemory
@@ -2027,7 +2035,11 @@ class hipError_t(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipDeviceAttribute_t(enum.IntEnum):
+class _hipDeviceAttribute_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipDeviceAttribute_t(_hipDeviceAttribute_t__Base):
     hipDeviceAttributeCudaCompatibleBegin = chip.hipDeviceAttributeCudaCompatibleBegin
     hipDeviceAttributeEccEnabled = chip.hipDeviceAttributeEccEnabled
     hipDeviceAttributeAccessPolicyMaxWindowSize = chip.hipDeviceAttributeAccessPolicyMaxWindowSize
@@ -2147,7 +2159,11 @@ class hipDeviceAttribute_t(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipComputeMode(enum.IntEnum):
+class _hipComputeMode__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipComputeMode(_hipComputeMode__Base):
     hipComputeModeDefault = chip.hipComputeModeDefault
     hipComputeModeExclusive = chip.hipComputeModeExclusive
     hipComputeModeProhibited = chip.hipComputeModeProhibited
@@ -2158,7 +2174,11 @@ class hipComputeMode(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipChannelFormatKind(enum.IntEnum):
+class _hipChannelFormatKind__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipChannelFormatKind(_hipChannelFormatKind__Base):
     hipChannelFormatKindSigned = chip.hipChannelFormatKindSigned
     hipChannelFormatKindUnsigned = chip.hipChannelFormatKindUnsigned
     hipChannelFormatKindFloat = chip.hipChannelFormatKindFloat
@@ -2381,7 +2401,11 @@ cdef class hipChannelFormatDesc:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipArray_Format(enum.IntEnum):
+class _hipArray_Format__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipArray_Format(_hipArray_Format__Base):
     HIP_AD_FORMAT_UNSIGNED_INT8 = chip.HIP_AD_FORMAT_UNSIGNED_INT8
     HIP_AD_FORMAT_UNSIGNED_INT16 = chip.HIP_AD_FORMAT_UNSIGNED_INT16
     HIP_AD_FORMAT_UNSIGNED_INT32 = chip.HIP_AD_FORMAT_UNSIGNED_INT32
@@ -3790,7 +3814,11 @@ hipMipmappedArray_t = hipMipmappedArray
 
 hipMipmappedArray_const_t = hipMipmappedArray
 
-class hipResourceType(enum.IntEnum):
+class _hipResourceType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipResourceType(_hipResourceType__Base):
     hipResourceTypeArray = chip.hipResourceTypeArray
     hipResourceTypeMipmappedArray = chip.hipResourceTypeMipmappedArray
     hipResourceTypeLinear = chip.hipResourceTypeLinear
@@ -3801,7 +3829,11 @@ class hipResourceType(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class HIPresourcetype_enum(enum.IntEnum):
+class _HIPresourcetype_enum__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class HIPresourcetype_enum(_HIPresourcetype_enum__Base):
     HIP_RESOURCE_TYPE_ARRAY = chip.HIP_RESOURCE_TYPE_ARRAY
     HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY = chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
     HIP_RESOURCE_TYPE_LINEAR = chip.HIP_RESOURCE_TYPE_LINEAR
@@ -3816,7 +3848,11 @@ HIPresourcetype = HIPresourcetype_enum
 
 hipResourcetype = HIPresourcetype_enum
 
-class HIPaddress_mode_enum(enum.IntEnum):
+class _HIPaddress_mode_enum__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class HIPaddress_mode_enum(_HIPaddress_mode_enum__Base):
     HIP_TR_ADDRESS_MODE_WRAP = chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_CLAMP = chip.HIP_TR_ADDRESS_MODE_CLAMP
     HIP_TR_ADDRESS_MODE_MIRROR = chip.HIP_TR_ADDRESS_MODE_MIRROR
@@ -3829,7 +3865,11 @@ class HIPaddress_mode_enum(enum.IntEnum):
 
 HIPaddress_mode = HIPaddress_mode_enum
 
-class HIPfilter_mode_enum(enum.IntEnum):
+class _HIPfilter_mode_enum__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class HIPfilter_mode_enum(_HIPfilter_mode_enum__Base):
     HIP_TR_FILTER_MODE_POINT = chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_LINEAR = chip.HIP_TR_FILTER_MODE_LINEAR
     @staticmethod
@@ -4117,7 +4157,11 @@ cdef class HIP_TEXTURE_DESC_st:
 
 HIP_TEXTURE_DESC = HIP_TEXTURE_DESC_st
 
-class hipResourceViewFormat(enum.IntEnum):
+class _hipResourceViewFormat__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipResourceViewFormat(_hipResourceViewFormat__Base):
     hipResViewFormatNone = chip.hipResViewFormatNone
     hipResViewFormatUnsignedChar1 = chip.hipResViewFormatUnsignedChar1
     hipResViewFormatUnsignedChar2 = chip.hipResViewFormatUnsignedChar2
@@ -4159,7 +4203,11 @@ class hipResourceViewFormat(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class HIPresourceViewFormat_enum(enum.IntEnum):
+class _HIPresourceViewFormat_enum__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class HIPresourceViewFormat_enum(_HIPresourceViewFormat_enum__Base):
     HIP_RES_VIEW_FORMAT_NONE = chip.HIP_RES_VIEW_FORMAT_NONE
     HIP_RES_VIEW_FORMAT_UINT_1X8 = chip.HIP_RES_VIEW_FORMAT_UINT_1X8
     HIP_RES_VIEW_FORMAT_UINT_2X8 = chip.HIP_RES_VIEW_FORMAT_UINT_2X8
@@ -6905,7 +6953,11 @@ cdef class HIP_RESOURCE_VIEW_DESC_st:
 
 HIP_RESOURCE_VIEW_DESC = HIP_RESOURCE_VIEW_DESC_st
 
-class hipMemcpyKind(enum.IntEnum):
+class _hipMemcpyKind__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemcpyKind(_hipMemcpyKind__Base):
     hipMemcpyHostToHost = chip.hipMemcpyHostToHost
     hipMemcpyHostToDevice = chip.hipMemcpyHostToDevice
     hipMemcpyDeviceToHost = chip.hipMemcpyDeviceToHost
@@ -8157,7 +8209,11 @@ cdef class HIP_MEMCPY3D:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipFunction_attribute(enum.IntEnum):
+class _hipFunction_attribute__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipFunction_attribute(_hipFunction_attribute__Base):
     HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
     HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES = chip.HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES
@@ -8175,7 +8231,11 @@ class hipFunction_attribute(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipPointer_attribute(enum.IntEnum):
+class _hipPointer_attribute__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipPointer_attribute(_hipPointer_attribute__Base):
     HIP_POINTER_ATTRIBUTE_CONTEXT = chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     HIP_POINTER_ATTRIBUTE_MEMORY_TYPE = chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
     HIP_POINTER_ATTRIBUTE_DEVICE_POINTER = chip.HIP_POINTER_ATTRIBUTE_DEVICE_POINTER
@@ -16483,8 +16543,8 @@ cdef class double4:
 def hipCreateChannelDesc(int x, int y, int z, int w, object f):
     """
     """
-    if not isinstance(f,hipChannelFormatKind):
-        raise TypeError("argument 'f' must be of type 'hipChannelFormatKind'")
+    if not isinstance(f,_hipChannelFormatKind__Base):
+        raise TypeError("argument 'f' must be of type '_hipChannelFormatKind__Base'")
         # fully specified
 
 
@@ -16584,7 +16644,11 @@ cdef class __hip_texture:
 
 hipTextureObject_t = __hip_texture
 
-class hipTextureAddressMode(enum.IntEnum):
+class _hipTextureAddressMode__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipTextureAddressMode(_hipTextureAddressMode__Base):
     hipAddressModeWrap = chip.hipAddressModeWrap
     hipAddressModeClamp = chip.hipAddressModeClamp
     hipAddressModeMirror = chip.hipAddressModeMirror
@@ -16595,7 +16659,11 @@ class hipTextureAddressMode(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipTextureFilterMode(enum.IntEnum):
+class _hipTextureFilterMode__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipTextureFilterMode(_hipTextureFilterMode__Base):
     hipFilterModePoint = chip.hipFilterModePoint
     hipFilterModeLinear = chip.hipFilterModeLinear
     @staticmethod
@@ -16604,7 +16672,11 @@ class hipTextureFilterMode(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipTextureReadMode(enum.IntEnum):
+class _hipTextureReadMode__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipTextureReadMode(_hipTextureReadMode__Base):
     hipReadModeElementType = chip.hipReadModeElementType
     hipReadModeNormalizedFloat = chip.hipReadModeNormalizedFloat
     @staticmethod
@@ -17444,7 +17516,11 @@ cdef class surfaceReference:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipSurfaceBoundaryMode(enum.IntEnum):
+class _hipSurfaceBoundaryMode__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipSurfaceBoundaryMode(_hipSurfaceBoundaryMode__Base):
     hipBoundaryModeZero = chip.hipBoundaryModeZero
     hipBoundaryModeTrap = chip.hipBoundaryModeTrap
     hipBoundaryModeClamp = chip.hipBoundaryModeClamp
@@ -17550,7 +17626,11 @@ cdef class ihipCtx_t:
 
 hipCtx_t = ihipCtx_t
 
-class hipDeviceP2PAttr(enum.IntEnum):
+class _hipDeviceP2PAttr__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipDeviceP2PAttr(_hipDeviceP2PAttr__Base):
     hipDevP2PAttrPerformanceRank = chip.hipDevP2PAttrPerformanceRank
     hipDevP2PAttrAccessSupported = chip.hipDevP2PAttrAccessSupported
     hipDevP2PAttrNativeAtomicSupported = chip.hipDevP2PAttrNativeAtomicSupported
@@ -18634,7 +18714,11 @@ cdef class ihipEvent_t:
 
 hipEvent_t = ihipEvent_t
 
-class hipLimit_t(enum.IntEnum):
+class _hipLimit_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipLimit_t(_hipLimit_t__Base):
     hipLimitStackSize = chip.hipLimitStackSize
     hipLimitPrintfFifoSize = chip.hipLimitPrintfFifoSize
     hipLimitMallocHeapSize = chip.hipLimitMallocHeapSize
@@ -18645,7 +18729,11 @@ class hipLimit_t(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemoryAdvise(enum.IntEnum):
+class _hipMemoryAdvise__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemoryAdvise(_hipMemoryAdvise__Base):
     hipMemAdviseSetReadMostly = chip.hipMemAdviseSetReadMostly
     hipMemAdviseUnsetReadMostly = chip.hipMemAdviseUnsetReadMostly
     hipMemAdviseSetPreferredLocation = chip.hipMemAdviseSetPreferredLocation
@@ -18660,7 +18748,11 @@ class hipMemoryAdvise(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemRangeCoherencyMode(enum.IntEnum):
+class _hipMemRangeCoherencyMode__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemRangeCoherencyMode(_hipMemRangeCoherencyMode__Base):
     hipMemRangeCoherencyModeFineGrain = chip.hipMemRangeCoherencyModeFineGrain
     hipMemRangeCoherencyModeCoarseGrain = chip.hipMemRangeCoherencyModeCoarseGrain
     hipMemRangeCoherencyModeIndeterminate = chip.hipMemRangeCoherencyModeIndeterminate
@@ -18670,7 +18762,11 @@ class hipMemRangeCoherencyMode(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemRangeAttribute(enum.IntEnum):
+class _hipMemRangeAttribute__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemRangeAttribute(_hipMemRangeAttribute__Base):
     hipMemRangeAttributeReadMostly = chip.hipMemRangeAttributeReadMostly
     hipMemRangeAttributePreferredLocation = chip.hipMemRangeAttributePreferredLocation
     hipMemRangeAttributeAccessedBy = chip.hipMemRangeAttributeAccessedBy
@@ -18682,7 +18778,11 @@ class hipMemRangeAttribute(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemPoolAttr(enum.IntEnum):
+class _hipMemPoolAttr__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemPoolAttr(_hipMemPoolAttr__Base):
     hipMemPoolReuseFollowEventDependencies = chip.hipMemPoolReuseFollowEventDependencies
     hipMemPoolReuseAllowOpportunistic = chip.hipMemPoolReuseAllowOpportunistic
     hipMemPoolReuseAllowInternalDependencies = chip.hipMemPoolReuseAllowInternalDependencies
@@ -18697,7 +18797,11 @@ class hipMemPoolAttr(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemLocationType(enum.IntEnum):
+class _hipMemLocationType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemLocationType(_hipMemLocationType__Base):
     hipMemLocationTypeInvalid = chip.hipMemLocationTypeInvalid
     hipMemLocationTypeDevice = chip.hipMemLocationTypeDevice
     @staticmethod
@@ -18873,7 +18977,11 @@ cdef class hipMemLocation:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipMemAccessFlags(enum.IntEnum):
+class _hipMemAccessFlags__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemAccessFlags(_hipMemAccessFlags__Base):
     hipMemAccessFlagsProtNone = chip.hipMemAccessFlagsProtNone
     hipMemAccessFlagsProtRead = chip.hipMemAccessFlagsProtRead
     hipMemAccessFlagsProtReadWrite = chip.hipMemAccessFlagsProtReadWrite
@@ -19043,7 +19151,11 @@ cdef class hipMemAccessDesc:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipMemAllocationType(enum.IntEnum):
+class _hipMemAllocationType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemAllocationType(_hipMemAllocationType__Base):
     hipMemAllocationTypeInvalid = chip.hipMemAllocationTypeInvalid
     hipMemAllocationTypePinned = chip.hipMemAllocationTypePinned
     hipMemAllocationTypeMax = chip.hipMemAllocationTypeMax
@@ -19053,7 +19165,11 @@ class hipMemAllocationType(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemAllocationHandleType(enum.IntEnum):
+class _hipMemAllocationHandleType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemAllocationHandleType(_hipMemAllocationHandleType__Base):
     hipMemHandleTypeNone = chip.hipMemHandleTypeNone
     hipMemHandleTypePosixFileDescriptor = chip.hipMemHandleTypePosixFileDescriptor
     hipMemHandleTypeWin32 = chip.hipMemHandleTypeWin32
@@ -19434,7 +19550,11 @@ cdef class hipMemPoolPtrExportData:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipJitOption(enum.IntEnum):
+class _hipJitOption__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipJitOption(_hipJitOption__Base):
     hipJitOptionMaxRegisters = chip.hipJitOptionMaxRegisters
     hipJitOptionThreadsPerBlock = chip.hipJitOptionThreadsPerBlock
     hipJitOptionWallTime = chip.hipJitOptionWallTime
@@ -19459,7 +19579,11 @@ class hipJitOption(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipFuncAttribute(enum.IntEnum):
+class _hipFuncAttribute__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipFuncAttribute(_hipFuncAttribute__Base):
     hipFuncAttributeMaxDynamicSharedMemorySize = chip.hipFuncAttributeMaxDynamicSharedMemorySize
     hipFuncAttributePreferredSharedMemoryCarveout = chip.hipFuncAttributePreferredSharedMemoryCarveout
     hipFuncAttributeMax = chip.hipFuncAttributeMax
@@ -19469,7 +19593,11 @@ class hipFuncAttribute(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipFuncCache_t(enum.IntEnum):
+class _hipFuncCache_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipFuncCache_t(_hipFuncCache_t__Base):
     hipFuncCachePreferNone = chip.hipFuncCachePreferNone
     hipFuncCachePreferShared = chip.hipFuncCachePreferShared
     hipFuncCachePreferL1 = chip.hipFuncCachePreferL1
@@ -19480,7 +19608,11 @@ class hipFuncCache_t(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipSharedMemConfig(enum.IntEnum):
+class _hipSharedMemConfig__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipSharedMemConfig(_hipSharedMemConfig__Base):
     hipSharedMemBankSizeDefault = chip.hipSharedMemBankSizeDefault
     hipSharedMemBankSizeFourByte = chip.hipSharedMemBankSizeFourByte
     hipSharedMemBankSizeEightByte = chip.hipSharedMemBankSizeEightByte
@@ -19886,7 +20018,11 @@ cdef class hipLaunchParams_t:
 
 hipLaunchParams = hipLaunchParams_t
 
-class hipExternalMemoryHandleType_enum(enum.IntEnum):
+class _hipExternalMemoryHandleType_enum__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipExternalMemoryHandleType_enum(_hipExternalMemoryHandleType_enum__Base):
     hipExternalMemoryHandleTypeOpaqueFd = chip.hipExternalMemoryHandleTypeOpaqueFd
     hipExternalMemoryHandleTypeOpaqueWin32 = chip.hipExternalMemoryHandleTypeOpaqueWin32
     hipExternalMemoryHandleTypeOpaqueWin32Kmt = chip.hipExternalMemoryHandleTypeOpaqueWin32Kmt
@@ -20604,7 +20740,11 @@ cdef class hipExternalMemoryBufferDesc_st:
 
 hipExternalMemoryBufferDesc = hipExternalMemoryBufferDesc_st
 
-class hipExternalSemaphoreHandleType_enum(enum.IntEnum):
+class _hipExternalSemaphoreHandleType_enum__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipExternalSemaphoreHandleType_enum(_hipExternalSemaphoreHandleType_enum__Base):
     hipExternalSemaphoreHandleTypeOpaqueFd = chip.hipExternalSemaphoreHandleTypeOpaqueFd
     hipExternalSemaphoreHandleTypeOpaqueWin32 = chip.hipExternalSemaphoreHandleTypeOpaqueWin32
     hipExternalSemaphoreHandleTypeOpaqueWin32Kmt = chip.hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
@@ -22427,7 +22567,11 @@ cdef class hipExternalSemaphoreWaitParams_st:
 
 hipExternalSemaphoreWaitParams = hipExternalSemaphoreWaitParams_st
 
-class hipGLDeviceList(enum.IntEnum):
+class _hipGLDeviceList__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipGLDeviceList(_hipGLDeviceList__Base):
     hipGLDeviceListAll = chip.hipGLDeviceListAll
     hipGLDeviceListCurrentFrame = chip.hipGLDeviceListCurrentFrame
     hipGLDeviceListNextFrame = chip.hipGLDeviceListNextFrame
@@ -22437,7 +22581,11 @@ class hipGLDeviceList(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipGraphicsRegisterFlags(enum.IntEnum):
+class _hipGraphicsRegisterFlags__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipGraphicsRegisterFlags(_hipGraphicsRegisterFlags__Base):
     hipGraphicsRegisterFlagsNone = chip.hipGraphicsRegisterFlagsNone
     hipGraphicsRegisterFlagsReadOnly = chip.hipGraphicsRegisterFlagsReadOnly
     hipGraphicsRegisterFlagsWriteDiscard = chip.hipGraphicsRegisterFlagsWriteDiscard
@@ -22931,7 +23079,11 @@ cdef class hipUserObject:
 
 hipUserObject_t = hipUserObject
 
-class hipGraphNodeType(enum.IntEnum):
+class _hipGraphNodeType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipGraphNodeType(_hipGraphNodeType__Base):
     hipGraphNodeTypeKernel = chip.hipGraphNodeTypeKernel
     hipGraphNodeTypeMemcpy = chip.hipGraphNodeTypeMemcpy
     hipGraphNodeTypeMemset = chip.hipGraphNodeTypeMemset
@@ -23645,7 +23797,11 @@ cdef class hipMemsetParams:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipKernelNodeAttrID(enum.IntEnum):
+class _hipKernelNodeAttrID__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipKernelNodeAttrID(_hipKernelNodeAttrID__Base):
     hipKernelNodeAttributeAccessPolicyWindow = chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeCooperative = chip.hipKernelNodeAttributeCooperative
     @staticmethod
@@ -23654,7 +23810,11 @@ class hipKernelNodeAttrID(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipAccessProperty(enum.IntEnum):
+class _hipAccessProperty__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipAccessProperty(_hipAccessProperty__Base):
     hipAccessPropertyNormal = chip.hipAccessPropertyNormal
     hipAccessPropertyStreaming = chip.hipAccessPropertyStreaming
     hipAccessPropertyPersisting = chip.hipAccessPropertyPersisting
@@ -24032,7 +24192,11 @@ cdef class hipKernelNodeAttrValue:
         return ["accessPolicyWindow","cooperative"]
 
 
-class hipGraphExecUpdateResult(enum.IntEnum):
+class _hipGraphExecUpdateResult__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipGraphExecUpdateResult(_hipGraphExecUpdateResult__Base):
     hipGraphExecUpdateSuccess = chip.hipGraphExecUpdateSuccess
     hipGraphExecUpdateError = chip.hipGraphExecUpdateError
     hipGraphExecUpdateErrorTopologyChanged = chip.hipGraphExecUpdateErrorTopologyChanged
@@ -24047,7 +24211,11 @@ class hipGraphExecUpdateResult(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipStreamCaptureMode(enum.IntEnum):
+class _hipStreamCaptureMode__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipStreamCaptureMode(_hipStreamCaptureMode__Base):
     hipStreamCaptureModeGlobal = chip.hipStreamCaptureModeGlobal
     hipStreamCaptureModeThreadLocal = chip.hipStreamCaptureModeThreadLocal
     hipStreamCaptureModeRelaxed = chip.hipStreamCaptureModeRelaxed
@@ -24057,7 +24225,11 @@ class hipStreamCaptureMode(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipStreamCaptureStatus(enum.IntEnum):
+class _hipStreamCaptureStatus__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipStreamCaptureStatus(_hipStreamCaptureStatus__Base):
     hipStreamCaptureStatusNone = chip.hipStreamCaptureStatusNone
     hipStreamCaptureStatusActive = chip.hipStreamCaptureStatusActive
     hipStreamCaptureStatusInvalidated = chip.hipStreamCaptureStatusInvalidated
@@ -24067,7 +24239,11 @@ class hipStreamCaptureStatus(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipStreamUpdateCaptureDependenciesFlags(enum.IntEnum):
+class _hipStreamUpdateCaptureDependenciesFlags__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipStreamUpdateCaptureDependenciesFlags(_hipStreamUpdateCaptureDependenciesFlags__Base):
     hipStreamAddCaptureDependencies = chip.hipStreamAddCaptureDependencies
     hipStreamSetCaptureDependencies = chip.hipStreamSetCaptureDependencies
     @staticmethod
@@ -24076,7 +24252,11 @@ class hipStreamUpdateCaptureDependenciesFlags(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipGraphMemAttributeType(enum.IntEnum):
+class _hipGraphMemAttributeType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipGraphMemAttributeType(_hipGraphMemAttributeType__Base):
     hipGraphMemAttrUsedMemCurrent = chip.hipGraphMemAttrUsedMemCurrent
     hipGraphMemAttrUsedMemHigh = chip.hipGraphMemAttrUsedMemHigh
     hipGraphMemAttrReservedMemCurrent = chip.hipGraphMemAttrReservedMemCurrent
@@ -24087,7 +24267,11 @@ class hipGraphMemAttributeType(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipUserObjectFlags(enum.IntEnum):
+class _hipUserObjectFlags__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipUserObjectFlags(_hipUserObjectFlags__Base):
     hipUserObjectNoDestructorSync = chip.hipUserObjectNoDestructorSync
     @staticmethod
     def ctypes_type():
@@ -24095,7 +24279,11 @@ class hipUserObjectFlags(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipUserObjectRetainFlags(enum.IntEnum):
+class _hipUserObjectRetainFlags__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipUserObjectRetainFlags(_hipUserObjectRetainFlags__Base):
     hipGraphUserObjectMove = chip.hipGraphUserObjectMove
     @staticmethod
     def ctypes_type():
@@ -24103,7 +24291,11 @@ class hipUserObjectRetainFlags(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipGraphInstantiateFlags(enum.IntEnum):
+class _hipGraphInstantiateFlags__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipGraphInstantiateFlags(_hipGraphInstantiateFlags__Base):
     hipGraphInstantiateFlagAutoFreeOnLaunch = chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     @staticmethod
     def ctypes_type():
@@ -24596,7 +24788,11 @@ cdef class ihipMemGenericAllocationHandle:
 
 hipMemGenericAllocationHandle_t = ihipMemGenericAllocationHandle
 
-class hipMemAllocationGranularity_flags(enum.IntEnum):
+class _hipMemAllocationGranularity_flags__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemAllocationGranularity_flags(_hipMemAllocationGranularity_flags__Base):
     hipMemAllocationGranularityMinimum = chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityRecommended = chip.hipMemAllocationGranularityRecommended
     @staticmethod
@@ -24605,7 +24801,11 @@ class hipMemAllocationGranularity_flags(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemHandleType(enum.IntEnum):
+class _hipMemHandleType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemHandleType(_hipMemHandleType__Base):
     hipMemHandleTypeGeneric = chip.hipMemHandleTypeGeneric
     @staticmethod
     def ctypes_type():
@@ -24613,7 +24813,11 @@ class hipMemHandleType(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipMemOperationType(enum.IntEnum):
+class _hipMemOperationType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipMemOperationType(_hipMemOperationType__Base):
     hipMemOperationTypeMap = chip.hipMemOperationTypeMap
     hipMemOperationTypeUnmap = chip.hipMemOperationTypeUnmap
     @staticmethod
@@ -24622,7 +24826,11 @@ class hipMemOperationType(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipArraySparseSubresourceType(enum.IntEnum):
+class _hipArraySparseSubresourceType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipArraySparseSubresourceType(_hipArraySparseSubresourceType__Base):
     hipArraySparseSubresourceTypeSparseLevel = chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeMiptail = chip.hipArraySparseSubresourceTypeMiptail
     @staticmethod
@@ -25857,8 +26065,8 @@ def hipDeviceGetP2PAttribute(object attr, int srcDevice, int dstDevice):
     @returns #hipSuccess, #hipErrorInvalidDevice
     """
     cdef int value
-    if not isinstance(attr,hipDeviceP2PAttr):
-        raise TypeError("argument 'attr' must be of type 'hipDeviceP2PAttr'")
+    if not isinstance(attr,_hipDeviceP2PAttr__Base):
+        raise TypeError("argument 'attr' must be of type '_hipDeviceP2PAttr__Base'")
     _hipDeviceGetP2PAttribute__retval = hipError_t(chip.hipDeviceGetP2PAttribute(&value,attr.value,srcDevice,dstDevice))    # fully specified
     return (_hipDeviceGetP2PAttribute__retval,value)
 
@@ -25993,8 +26201,8 @@ def hipDeviceGetAttribute(object pi, object attr, int deviceId):
     @param [in] deviceId which device to query for information
     @returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
-    if not isinstance(attr,hipDeviceAttribute_t):
-        raise TypeError("argument 'attr' must be of type 'hipDeviceAttribute_t'")
+    if not isinstance(attr,_hipDeviceAttribute_t__Base):
+        raise TypeError("argument 'attr' must be of type '_hipDeviceAttribute_t__Base'")
     _hipDeviceGetAttribute__retval = hipError_t(chip.hipDeviceGetAttribute(
         <int *>hip._util.types.DataHandle.from_pyobj(pi)._ptr,attr.value,deviceId))    # fully specified
     return (_hipDeviceGetAttribute__retval,)
@@ -26081,8 +26289,8 @@ def hipDeviceSetCacheConfig(object cacheConfig):
     Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
     on those architectures.
     """
-    if not isinstance(cacheConfig,hipFuncCache_t):
-        raise TypeError("argument 'cacheConfig' must be of type 'hipFuncCache_t'")
+    if not isinstance(cacheConfig,_hipFuncCache_t__Base):
+        raise TypeError("argument 'cacheConfig' must be of type '_hipFuncCache_t__Base'")
     _hipDeviceSetCacheConfig__retval = hipError_t(chip.hipDeviceSetCacheConfig(cacheConfig.value))    # fully specified
     return (_hipDeviceSetCacheConfig__retval,)
 
@@ -26109,8 +26317,8 @@ def hipDeviceGetLimit(object limit):
     Note: Currently, only hipLimitMallocHeapSize is available
     """
     cdef unsigned long pValue
-    if not isinstance(limit,hipLimit_t):
-        raise TypeError("argument 'limit' must be of type 'hipLimit_t'")
+    if not isinstance(limit,_hipLimit_t__Base):
+        raise TypeError("argument 'limit' must be of type '_hipLimit_t__Base'")
     _hipDeviceGetLimit__retval = hipError_t(chip.hipDeviceGetLimit(&pValue,limit.value))    # fully specified
     return (_hipDeviceGetLimit__retval,pValue)
 
@@ -26122,8 +26330,8 @@ def hipDeviceSetLimit(object limit, unsigned long value):
     @param [in] value
     @returns #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
     """
-    if not isinstance(limit,hipLimit_t):
-        raise TypeError("argument 'limit' must be of type 'hipLimit_t'")
+    if not isinstance(limit,_hipLimit_t__Base):
+        raise TypeError("argument 'limit' must be of type '_hipLimit_t__Base'")
     _hipDeviceSetLimit__retval = hipError_t(chip.hipDeviceSetLimit(limit.value,value))    # fully specified
     return (_hipDeviceSetLimit__retval,)
 
@@ -26160,8 +26368,8 @@ def hipDeviceSetSharedMemConfig(object config):
     Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
     ignored on those architectures.
     """
-    if not isinstance(config,hipSharedMemConfig):
-        raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
+    if not isinstance(config,_hipSharedMemConfig__Base):
+        raise TypeError("argument 'config' must be of type '_hipSharedMemConfig__Base'")
     _hipDeviceSetSharedMemConfig__retval = hipError_t(chip.hipDeviceSetSharedMemConfig(config.value))    # fully specified
     return (_hipDeviceSetSharedMemConfig__retval,)
 
@@ -26349,8 +26557,8 @@ def hipFuncSetAttribute(object func, object attr, int value):
     Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
     ignored on those architectures.
     """
-    if not isinstance(attr,hipFuncAttribute):
-        raise TypeError("argument 'attr' must be of type 'hipFuncAttribute'")
+    if not isinstance(attr,_hipFuncAttribute__Base):
+        raise TypeError("argument 'attr' must be of type '_hipFuncAttribute__Base'")
     _hipFuncSetAttribute__retval = hipError_t(chip.hipFuncSetAttribute(
         <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr,attr.value,value))    # fully specified
     return (_hipFuncSetAttribute__retval,)
@@ -26364,8 +26572,8 @@ def hipFuncSetCacheConfig(object func, object config):
     Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
     on those architectures.
     """
-    if not isinstance(config,hipFuncCache_t):
-        raise TypeError("argument 'config' must be of type 'hipFuncCache_t'")
+    if not isinstance(config,_hipFuncCache_t__Base):
+        raise TypeError("argument 'config' must be of type '_hipFuncCache_t__Base'")
     _hipFuncSetCacheConfig__retval = hipError_t(chip.hipFuncSetCacheConfig(
         <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
     return (_hipFuncSetCacheConfig__retval,)
@@ -26380,8 +26588,8 @@ def hipFuncSetSharedMemConfig(object func, object config):
     Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
     ignored on those architectures.
     """
-    if not isinstance(config,hipSharedMemConfig):
-        raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
+    if not isinstance(config,_hipSharedMemConfig__Base):
+        raise TypeError("argument 'config' must be of type '_hipSharedMemConfig__Base'")
     _hipFuncSetSharedMemConfig__retval = hipError_t(chip.hipFuncSetSharedMemConfig(
         <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr,config.value))    # fully specified
     return (_hipFuncSetSharedMemConfig__retval,)
@@ -26425,8 +26633,8 @@ def hipGetErrorName(object hip_error):
     @return const char pointer to the NULL-terminated error name
     @see hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
     """
-    if not isinstance(hip_error,hipError_t):
-        raise TypeError("argument 'hip_error' must be of type 'hipError_t'")
+    if not isinstance(hip_error,_hipError_t__Base):
+        raise TypeError("argument 'hip_error' must be of type '_hipError_t__Base'")
     cdef const char * _hipGetErrorName__retval = chip.hipGetErrorName(hip_error.value)    # fully specified
     return (_hipGetErrorName__retval,)
 
@@ -26438,8 +26646,8 @@ def hipGetErrorString(object hipError):
     @return const char pointer to the NULL-terminated error string
     @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
     """
-    if not isinstance(hipError,hipError_t):
-        raise TypeError("argument 'hipError' must be of type 'hipError_t'")
+    if not isinstance(hipError,_hipError_t__Base):
+        raise TypeError("argument 'hipError' must be of type '_hipError_t__Base'")
     cdef const char * _hipGetErrorString__retval = chip.hipGetErrorString(hipError.value)    # fully specified
     return (_hipGetErrorString__retval,)
 
@@ -26452,8 +26660,8 @@ def hipDrvGetErrorName(object hipError, object errorString):
     @return #hipSuccess, #hipErrorInvalidValue
     @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
     """
-    if not isinstance(hipError,hipError_t):
-        raise TypeError("argument 'hipError' must be of type 'hipError_t'")
+    if not isinstance(hipError,_hipError_t__Base):
+        raise TypeError("argument 'hipError' must be of type '_hipError_t__Base'")
     _hipDrvGetErrorName__retval = hipError_t(chip.hipDrvGetErrorName(hipError.value,
         <const char **>hip._util.types.DataHandle.from_pyobj(errorString)._ptr))    # fully specified
     return (_hipDrvGetErrorName__retval,)
@@ -26467,8 +26675,8 @@ def hipDrvGetErrorString(object hipError, object errorString):
     @return #hipSuccess, #hipErrorInvalidValue
     @see hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
     """
-    if not isinstance(hipError,hipError_t):
-        raise TypeError("argument 'hipError' must be of type 'hipError_t'")
+    if not isinstance(hipError,_hipError_t__Base):
+        raise TypeError("argument 'hipError' must be of type '_hipError_t__Base'")
     _hipDrvGetErrorString__retval = hipError_t(chip.hipDrvGetErrorString(hipError.value,
         <const char **>hip._util.types.DataHandle.from_pyobj(errorString)._ptr))    # fully specified
     return (_hipDrvGetErrorString__retval,)
@@ -27064,8 +27272,8 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
     it is still open to changes and may have outstanding issues.
     @see hipPointerGetAttributes
     """
-    if not isinstance(attribute,hipPointer_attribute):
-        raise TypeError("argument 'attribute' must be of type 'hipPointer_attribute'")
+    if not isinstance(attribute,_hipPointer_attribute__Base):
+        raise TypeError("argument 'attribute' must be of type '_hipPointer_attribute__Base'")
     _hipPointerGetAttribute__retval = hipError_t(chip.hipPointerGetAttribute(
         <void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,attribute.value,
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
@@ -27323,8 +27531,8 @@ def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device)
     @param [in] device   device to apply the advice for
     @returns #hipSuccess, #hipErrorInvalidValue
     """
-    if not isinstance(advice,hipMemoryAdvise):
-        raise TypeError("argument 'advice' must be of type 'hipMemoryAdvise'")
+    if not isinstance(advice,_hipMemoryAdvise__Base):
+        raise TypeError("argument 'advice' must be of type '_hipMemoryAdvise__Base'")
     _hipMemAdvise__retval = hipError_t(chip.hipMemAdvise(
         <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count,advice.value,device))    # fully specified
     return (_hipMemAdvise__retval,)
@@ -27341,8 +27549,8 @@ def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribu
     @param [in] count      size of the range to query
     @returns #hipSuccess, #hipErrorInvalidValue
     """
-    if not isinstance(attribute,hipMemRangeAttribute):
-        raise TypeError("argument 'attribute' must be of type 'hipMemRangeAttribute'")
+    if not isinstance(attribute,_hipMemRangeAttribute__Base):
+        raise TypeError("argument 'attribute' must be of type '_hipMemRangeAttribute__Base'")
     _hipMemRangeGetAttribute__retval = hipError_t(chip.hipMemRangeGetAttribute(
         <void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,data_size,attribute.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count))    # fully specified
@@ -27500,8 +27708,8 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(attr,hipMemPoolAttr):
-        raise TypeError("argument 'attr' must be of type 'hipMemPoolAttr'")
+    if not isinstance(attr,_hipMemPoolAttr__Base):
+        raise TypeError("argument 'attr' must be of type '_hipMemPoolAttr__Base'")
     _hipMemPoolSetAttribute__retval = hipError_t(chip.hipMemPoolSetAttribute(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,attr.value,
         <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
@@ -27540,8 +27748,8 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(attr,hipMemPoolAttr):
-        raise TypeError("argument 'attr' must be of type 'hipMemPoolAttr'")
+    if not isinstance(attr,_hipMemPoolAttr__Base):
+        raise TypeError("argument 'attr' must be of type '_hipMemPoolAttr__Base'")
     _hipMemPoolGetAttribute__retval = hipError_t(chip.hipMemPoolGetAttribute(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,attr.value,
         <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
@@ -27682,8 +27890,8 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(handle_type,hipMemAllocationHandleType):
-        raise TypeError("argument 'handle_type' must be of type 'hipMemAllocationHandleType'")
+    if not isinstance(handle_type,_hipMemAllocationHandleType__Base):
+        raise TypeError("argument 'handle_type' must be of type '_hipMemAllocationHandleType__Base'")
     _hipMemPoolExportToShareableHandle__retval = hipError_t(chip.hipMemPoolExportToShareableHandle(
         <void *>hip._util.types.DataHandle.from_pyobj(shared_handle)._ptr,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,handle_type.value,flags))    # fully specified
@@ -27707,8 +27915,8 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
     it is still open to changes and may have outstanding issues.
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
-    if not isinstance(handle_type,hipMemAllocationHandleType):
-        raise TypeError("argument 'handle_type' must be of type 'hipMemAllocationHandleType'")
+    if not isinstance(handle_type,_hipMemAllocationHandleType__Base):
+        raise TypeError("argument 'handle_type' must be of type '_hipMemAllocationHandleType__Base'")
     _hipMemPoolImportFromShareableHandle__retval = hipError_t(chip.hipMemPoolImportFromShareableHandle(&mem_pool._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(shared_handle)._ptr,handle_type.value,flags))    # fully specified
     return (_hipMemPoolImportFromShareableHandle__retval,mem_pool)
@@ -27974,8 +28182,8 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
     hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
     hipMemHostAlloc, hipMemHostGetDevicePointer
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy__retval = hipError_t(chip.hipMemcpy(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
@@ -27986,8 +28194,8 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
 def hipMemcpyWithStream(object dst, object src, unsigned long sizeBytes, object kind, object stream):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyWithStream__retval = hipError_t(chip.hipMemcpyWithStream(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
@@ -28187,8 +28395,8 @@ def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsign
     @param[in]   kind  type of memory transfer
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyToSymbol__retval = hipError_t(chip.hipMemcpyToSymbol(
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
@@ -28206,8 +28414,8 @@ def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, u
     @param[in]   stream  stream identifier
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyToSymbolAsync__retval = hipError_t(chip.hipMemcpyToSymbolAsync(
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
@@ -28225,8 +28433,8 @@ def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsi
     @param[in]   kind  type of memory transfer
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromSymbol__retval = hipError_t(chip.hipMemcpyFromSymbol(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
@@ -28244,8 +28452,8 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
     @param[in]   stream  stream identifier
     @return #hipSuccess, #hipErrorInvalidValue
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromSymbolAsync__retval = hipError_t(chip.hipMemcpyFromSymbolAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
@@ -28277,8 +28485,8 @@ def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind,
     hipMemcpyFromArrayAsync, hipMemcpy2DFromArrayAsync, hipMemcpyToSymbolAsync,
     hipMemcpyFromSymbolAsync
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyAsync__retval = hipError_t(chip.hipMemcpyAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
@@ -28651,8 +28859,8 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
     @see hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2D__retval = hipError_t(chip.hipMemcpy2D(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
@@ -28705,8 +28913,8 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
     @see hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DAsync__retval = hipError_t(chip.hipMemcpy2DAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
@@ -28730,8 +28938,8 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
     @see hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DToArray__retval = hipError_t(chip.hipMemcpy2DToArray(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
@@ -28755,8 +28963,8 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
     @see hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DToArrayAsync__retval = hipError_t(chip.hipMemcpy2DToArrayAsync(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
@@ -28778,8 +28986,8 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyToArray__retval = hipError_t(chip.hipMemcpyToArray(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,count,kind.value))    # fully specified
@@ -28800,8 +29008,8 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromArray__retval = hipError_t(chip.hipMemcpyFromArray(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(srcArray)._ptr,wOffset,hOffset,count,kind.value))    # fully specified
@@ -28824,8 +29032,8 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DFromArray__retval = hipError_t(chip.hipMemcpy2DFromArray(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value))    # fully specified
@@ -28849,8 +29057,8 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
     @see hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     hipMemcpyAsync
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DFromArrayAsync__retval = hipError_t(chip.hipMemcpy2DFromArrayAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value,
@@ -29208,8 +29416,8 @@ def hipCtxSetCacheConfig(object cacheConfig):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    if not isinstance(cacheConfig,hipFuncCache_t):
-        raise TypeError("argument 'cacheConfig' must be of type 'hipFuncCache_t'")
+    if not isinstance(cacheConfig,_hipFuncCache_t__Base):
+        raise TypeError("argument 'cacheConfig' must be of type '_hipFuncCache_t__Base'")
     _hipCtxSetCacheConfig__retval = hipError_t(chip.hipCtxSetCacheConfig(cacheConfig.value))    # fully specified
     return (_hipCtxSetCacheConfig__retval,)
 
@@ -29224,8 +29432,8 @@ def hipCtxSetSharedMemConfig(object config):
     @see hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
-    if not isinstance(config,hipSharedMemConfig):
-        raise TypeError("argument 'config' must be of type 'hipSharedMemConfig'")
+    if not isinstance(config,_hipSharedMemConfig__Base):
+        raise TypeError("argument 'config' must be of type '_hipSharedMemConfig__Base'")
     _hipCtxSetSharedMemConfig__retval = hipError_t(chip.hipCtxSetSharedMemConfig(config.value))    # fully specified
     return (_hipCtxSetSharedMemConfig__retval,)
 
@@ -29446,8 +29654,8 @@ def hipFuncGetAttribute(object attrib, object hfunc):
     @returns hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
     """
     cdef int value
-    if not isinstance(attrib,hipFunction_attribute):
-        raise TypeError("argument 'attrib' must be of type 'hipFunction_attribute'")
+    if not isinstance(attrib,_hipFunction_attribute__Base):
+        raise TypeError("argument 'attrib' must be of type '_hipFunction_attribute__Base'")
     _hipFuncGetAttribute__retval = hipError_t(chip.hipFuncGetAttribute(&value,attrib.value,
         ihipModuleSymbol_t.from_pyobj(hfunc)._ptr))    # fully specified
     return (_hipFuncGetAttribute__retval,value)
@@ -30042,8 +30250,8 @@ def hipGetTextureReference(object symbol):
 def hipTexRefSetAddressMode(object texRef, int dim, object am):
     """
     """
-    if not isinstance(am,hipTextureAddressMode):
-        raise TypeError("argument 'am' must be of type 'hipTextureAddressMode'")
+    if not isinstance(am,_hipTextureAddressMode__Base):
+        raise TypeError("argument 'am' must be of type '_hipTextureAddressMode__Base'")
     _hipTexRefSetAddressMode__retval = hipError_t(chip.hipTexRefSetAddressMode(
         textureReference.from_pyobj(texRef)._ptr,dim,am.value))    # fully specified
     return (_hipTexRefSetAddressMode__retval,)
@@ -30063,8 +30271,8 @@ def hipTexRefSetArray(object tex, object array, unsigned int flags):
 def hipTexRefSetFilterMode(object texRef, object fm):
     """
     """
-    if not isinstance(fm,hipTextureFilterMode):
-        raise TypeError("argument 'fm' must be of type 'hipTextureFilterMode'")
+    if not isinstance(fm,_hipTextureFilterMode__Base):
+        raise TypeError("argument 'fm' must be of type '_hipTextureFilterMode__Base'")
     _hipTexRefSetFilterMode__retval = hipError_t(chip.hipTexRefSetFilterMode(
         textureReference.from_pyobj(texRef)._ptr,fm.value))    # fully specified
     return (_hipTexRefSetFilterMode__retval,)
@@ -30083,8 +30291,8 @@ def hipTexRefSetFlags(object texRef, unsigned int Flags):
 def hipTexRefSetFormat(object texRef, object fmt, int NumPackedComponents):
     """
     """
-    if not isinstance(fmt,hipArray_Format):
-        raise TypeError("argument 'fmt' must be of type 'hipArray_Format'")
+    if not isinstance(fmt,_hipArray_Format__Base):
+        raise TypeError("argument 'fmt' must be of type '_hipArray_Format__Base'")
     _hipTexRefSetFormat__retval = hipError_t(chip.hipTexRefSetFormat(
         textureReference.from_pyobj(texRef)._ptr,fmt.value,NumPackedComponents))    # fully specified
     return (_hipTexRefSetFormat__retval,)
@@ -30292,8 +30500,8 @@ def hipTexRefSetBorderColor(object texRef):
 def hipTexRefSetMipmapFilterMode(object texRef, object fm):
     """
     """
-    if not isinstance(fm,hipTextureFilterMode):
-        raise TypeError("argument 'fm' must be of type 'hipTextureFilterMode'")
+    if not isinstance(fm,_hipTextureFilterMode__Base):
+        raise TypeError("argument 'fm' must be of type '_hipTextureFilterMode__Base'")
     _hipTexRefSetMipmapFilterMode__retval = hipError_t(chip.hipTexRefSetMipmapFilterMode(
         textureReference.from_pyobj(texRef)._ptr,fm.value))    # fully specified
     return (_hipTexRefSetMipmapFilterMode__retval,)
@@ -30407,8 +30615,8 @@ def hipStreamBeginCapture(object stream, object mode):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(mode,hipStreamCaptureMode):
-        raise TypeError("argument 'mode' must be of type 'hipStreamCaptureMode'")
+    if not isinstance(mode,_hipStreamCaptureMode__Base):
+        raise TypeError("argument 'mode' must be of type '_hipStreamCaptureMode__Base'")
     _hipStreamBeginCapture__retval = hipError_t(chip.hipStreamBeginCapture(
         ihipStream_t.from_pyobj(stream)._ptr,mode.value))    # fully specified
     return (_hipStreamBeginCapture__retval,)
@@ -30970,8 +31178,8 @@ def hipGraphKernelNodeSetAttribute(object hNode, object attr, object value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(attr,hipKernelNodeAttrID):
-        raise TypeError("argument 'attr' must be of type 'hipKernelNodeAttrID'")
+    if not isinstance(attr,_hipKernelNodeAttrID__Base):
+        raise TypeError("argument 'attr' must be of type '_hipKernelNodeAttrID__Base'")
     _hipGraphKernelNodeSetAttribute__retval = hipError_t(chip.hipGraphKernelNodeSetAttribute(
         hipGraphNode.from_pyobj(hNode)._ptr,attr.value,
         hipKernelNodeAttrValue.from_pyobj(value)._ptr))    # fully specified
@@ -30988,8 +31196,8 @@ def hipGraphKernelNodeGetAttribute(object hNode, object attr, object value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(attr,hipKernelNodeAttrID):
-        raise TypeError("argument 'attr' must be of type 'hipKernelNodeAttrID'")
+    if not isinstance(attr,_hipKernelNodeAttrID__Base):
+        raise TypeError("argument 'attr' must be of type '_hipKernelNodeAttrID__Base'")
     _hipGraphKernelNodeGetAttribute__retval = hipError_t(chip.hipGraphKernelNodeGetAttribute(
         hipGraphNode.from_pyobj(hNode)._ptr,attr.value,
         hipKernelNodeAttrValue.from_pyobj(value)._ptr))    # fully specified
@@ -31030,8 +31238,8 @@ def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object 
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphAddMemcpyNode1D__retval = hipError_t(chip.hipGraphAddMemcpyNode1D(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -31051,8 +31259,8 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned 
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphMemcpyNodeSetParams1D__retval = hipError_t(chip.hipGraphMemcpyNodeSetParams1D(
         hipGraphNode.from_pyobj(node)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -31074,8 +31282,8 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphExecMemcpyNodeSetParams1D__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParams1D(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
@@ -31102,8 +31310,8 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphAddMemcpyNodeFromSymbol__retval = hipError_t(chip.hipGraphAddMemcpyNodeFromSymbol(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -31124,8 +31332,8 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphMemcpyNodeSetParamsFromSymbol__retval = hipError_t(chip.hipGraphMemcpyNodeSetParamsFromSymbol(
         hipGraphNode.from_pyobj(node)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -31148,8 +31356,8 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphExecMemcpyNodeSetParamsFromSymbol__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParamsFromSymbol(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
@@ -31176,8 +31384,8 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, o
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphAddMemcpyNodeToSymbol__retval = hipError_t(chip.hipGraphAddMemcpyNodeToSymbol(&pGraphNode._ptr,
         ihipGraph.from_pyobj(graph)._ptr,&pDependencies._ptr,numDependencies,
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
@@ -31198,8 +31406,8 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphMemcpyNodeSetParamsToSymbol__retval = hipError_t(chip.hipGraphMemcpyNodeSetParamsToSymbol(
         hipGraphNode.from_pyobj(node)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
@@ -31222,8 +31430,8 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipGraphExecMemcpyNodeSetParamsToSymbol__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParamsToSymbol(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
         hipGraphNode.from_pyobj(node)._ptr,
@@ -31580,8 +31788,8 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(attr,hipGraphMemAttributeType):
-        raise TypeError("argument 'attr' must be of type 'hipGraphMemAttributeType'")
+    if not isinstance(attr,_hipGraphMemAttributeType__Base):
+        raise TypeError("argument 'attr' must be of type '_hipGraphMemAttributeType__Base'")
     _hipDeviceGetGraphMemAttribute__retval = hipError_t(chip.hipDeviceGetGraphMemAttribute(device,attr.value,
         <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
     return (_hipDeviceGetGraphMemAttribute__retval,)
@@ -31597,8 +31805,8 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(attr,hipGraphMemAttributeType):
-        raise TypeError("argument 'attr' must be of type 'hipGraphMemAttributeType'")
+    if not isinstance(attr,_hipGraphMemAttributeType__Base):
+        raise TypeError("argument 'attr' must be of type '_hipGraphMemAttributeType__Base'")
     _hipDeviceSetGraphMemAttribute__retval = hipError_t(chip.hipDeviceSetGraphMemAttribute(device,attr.value,
         <void *>hip._util.types.DataHandle.from_pyobj(value)._ptr))    # fully specified
     return (_hipDeviceSetGraphMemAttribute__retval,)
@@ -31756,8 +31964,8 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
     @warning : This API is marked as beta, meaning, while this is feature complete,
     it is still open to changes and may have outstanding issues.
     """
-    if not isinstance(handleType,hipMemAllocationHandleType):
-        raise TypeError("argument 'handleType' must be of type 'hipMemAllocationHandleType'")
+    if not isinstance(handleType,_hipMemAllocationHandleType__Base):
+        raise TypeError("argument 'handleType' must be of type '_hipMemAllocationHandleType__Base'")
     _hipMemExportToShareableHandle__retval = hipError_t(chip.hipMemExportToShareableHandle(
         <void *>hip._util.types.DataHandle.from_pyobj(shareableHandle)._ptr,
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr,handleType.value,flags))    # fully specified
@@ -31792,8 +32000,8 @@ def hipMemGetAllocationGranularity(object prop, object option):
     it is still open to changes and may have outstanding issues.
     """
     cdef unsigned long granularity
-    if not isinstance(option,hipMemAllocationGranularity_flags):
-        raise TypeError("argument 'option' must be of type 'hipMemAllocationGranularity_flags'")
+    if not isinstance(option,_hipMemAllocationGranularity_flags__Base):
+        raise TypeError("argument 'option' must be of type '_hipMemAllocationGranularity_flags__Base'")
     _hipMemGetAllocationGranularity__retval = hipError_t(chip.hipMemGetAllocationGranularity(&granularity,
         hipMemAllocationProp.from_pyobj(prop)._ptr,option.value))    # fully specified
     return (_hipMemGetAllocationGranularity__retval,granularity)
@@ -31825,8 +32033,8 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
     it is still open to changes and may have outstanding issues.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
-    if not isinstance(shHandleType,hipMemAllocationHandleType):
-        raise TypeError("argument 'shHandleType' must be of type 'hipMemAllocationHandleType'")
+    if not isinstance(shHandleType,_hipMemAllocationHandleType__Base):
+        raise TypeError("argument 'shHandleType' must be of type '_hipMemAllocationHandleType__Base'")
     _hipMemImportFromShareableHandle__retval = hipError_t(chip.hipMemImportFromShareableHandle(&handle._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(osHandle)._ptr,shHandleType.value))    # fully specified
     return (_hipMemImportFromShareableHandle__retval,handle)
@@ -31931,8 +32139,8 @@ def hipGLGetDevices(unsigned int hipDeviceCount, object deviceList):
     """
     cdef unsigned int pHipDeviceCount
     cdef int pHipDevices
-    if not isinstance(deviceList,hipGLDeviceList):
-        raise TypeError("argument 'deviceList' must be of type 'hipGLDeviceList'")
+    if not isinstance(deviceList,_hipGLDeviceList__Base):
+        raise TypeError("argument 'deviceList' must be of type '_hipGLDeviceList__Base'")
     _hipGLGetDevices__retval = hipError_t(chip.hipGLGetDevices(&pHipDeviceCount,&pHipDevices,hipDeviceCount,deviceList.value))    # fully specified
     return (_hipGLGetDevices__retval,pHipDeviceCount,pHipDevices)
 
@@ -32010,8 +32218,8 @@ def hipGraphicsUnregisterResource(object resource):
 def hipMemcpy_spt(object dst, object src, unsigned long sizeBytes, object kind):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy_spt__retval = hipError_t(chip.hipMemcpy_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value))    # fully specified
@@ -32022,8 +32230,8 @@ def hipMemcpy_spt(object dst, object src, unsigned long sizeBytes, object kind):
 def hipMemcpyToSymbol_spt(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyToSymbol_spt__retval = hipError_t(chip.hipMemcpyToSymbol_spt(
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value))    # fully specified
@@ -32034,8 +32242,8 @@ def hipMemcpyToSymbol_spt(object symbol, object src, unsigned long sizeBytes, un
 def hipMemcpyFromSymbol_spt(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromSymbol_spt__retval = hipError_t(chip.hipMemcpyFromSymbol_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value))    # fully specified
@@ -32046,8 +32254,8 @@ def hipMemcpyFromSymbol_spt(object dst, object symbol, unsigned long sizeBytes, 
 def hipMemcpy2D_spt(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2D_spt__retval = hipError_t(chip.hipMemcpy2D_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
@@ -32058,8 +32266,8 @@ def hipMemcpy2D_spt(object dst, unsigned long dpitch, object src, unsigned long 
 def hipMemcpy2DFromArray_spt(object dst, unsigned long dpitch, object src, unsigned long wOffset, unsigned long hOffset, unsigned long width, unsigned long height, object kind):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DFromArray_spt__retval = hipError_t(chip.hipMemcpy2DFromArray_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffset,hOffset,width,height,kind.value))    # fully specified
@@ -32138,8 +32346,8 @@ def hipMemset3D_spt(object pitchedDevPtr, int value, object extent):
 def hipMemcpyAsync_spt(object dst, object src, unsigned long sizeBytes, object kind, object stream):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyAsync_spt__retval = hipError_t(chip.hipMemcpyAsync_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,kind.value,
@@ -32161,8 +32369,8 @@ def hipMemcpy3DAsync_spt(object p, object stream):
 def hipMemcpy2DAsync_spt(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DAsync_spt__retval = hipError_t(chip.hipMemcpy2DAsync_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
@@ -32174,8 +32382,8 @@ def hipMemcpy2DAsync_spt(object dst, unsigned long dpitch, object src, unsigned 
 def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromSymbolAsync_spt__retval = hipError_t(chip.hipMemcpyFromSymbolAsync_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,sizeBytes,offset,kind.value,
@@ -32187,8 +32395,8 @@ def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, unsigned long sizeBy
 def hipMemcpyToSymbolAsync_spt(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyToSymbolAsync_spt__retval = hipError_t(chip.hipMemcpyToSymbolAsync_spt(
         <const void *>hip._util.types.DataHandle.from_pyobj(symbol)._ptr,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,sizeBytes,offset,kind.value,
@@ -32200,8 +32408,8 @@ def hipMemcpyToSymbolAsync_spt(object symbol, object src, unsigned long sizeByte
 def hipMemcpyFromArray_spt(object dst, object src, unsigned long wOffsetSrc, unsigned long hOffset, unsigned long count, object kind):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpyFromArray_spt__retval = hipError_t(chip.hipMemcpyFromArray_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
         hipArray.from_pyobj(src)._ptr,wOffsetSrc,hOffset,count,kind.value))    # fully specified
@@ -32212,8 +32420,8 @@ def hipMemcpyFromArray_spt(object dst, object src, unsigned long wOffsetSrc, uns
 def hipMemcpy2DToArray_spt(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DToArray_spt__retval = hipError_t(chip.hipMemcpy2DToArray_spt(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value))    # fully specified
@@ -32224,8 +32432,8 @@ def hipMemcpy2DToArray_spt(object dst, unsigned long wOffset, unsigned long hOff
 def hipMemcpy2DFromArrayAsync_spt(object dst, unsigned long dpitch, object src, unsigned long wOffsetSrc, unsigned long hOffsetSrc, unsigned long width, unsigned long height, object kind, object stream):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DFromArrayAsync_spt__retval = hipError_t(chip.hipMemcpy2DFromArrayAsync_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dpitch,
         hipArray.from_pyobj(src)._ptr,wOffsetSrc,hOffsetSrc,width,height,kind.value,
@@ -32237,8 +32445,8 @@ def hipMemcpy2DFromArrayAsync_spt(object dst, unsigned long dpitch, object src, 
 def hipMemcpy2DToArrayAsync_spt(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
     """
     """
-    if not isinstance(kind,hipMemcpyKind):
-        raise TypeError("argument 'kind' must be of type 'hipMemcpyKind'")
+    if not isinstance(kind,_hipMemcpyKind__Base):
+        raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
     _hipMemcpy2DToArrayAsync_spt__retval = hipError_t(chip.hipMemcpy2DToArrayAsync_spt(
         hipArray.from_pyobj(dst)._ptr,wOffset,hOffset,
         <const void *>hip._util.types.DataHandle.from_pyobj(src)._ptr,spitch,width,height,kind.value,
@@ -32355,8 +32563,8 @@ def hipGraphLaunch_spt(object graphExec, object stream):
 def hipStreamBeginCapture_spt(object stream, object mode):
     """
     """
-    if not isinstance(mode,hipStreamCaptureMode):
-        raise TypeError("argument 'mode' must be of type 'hipStreamCaptureMode'")
+    if not isinstance(mode,_hipStreamCaptureMode__Base):
+        raise TypeError("argument 'mode' must be of type '_hipStreamCaptureMode__Base'")
     _hipStreamBeginCapture_spt__retval = hipError_t(chip.hipStreamBeginCapture_spt(
         ihipStream_t.from_pyobj(stream)._ptr,mode.value))    # fully specified
     return (_hipStreamBeginCapture_spt__retval,)
@@ -32418,7 +32626,11 @@ def hipLaunchHostFunc_spt(object stream, object fn, object userData):
     return (_hipLaunchHostFunc_spt__retval,)
 
 
-class hipDataType(enum.IntEnum):
+class _hipDataType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipDataType(_hipDataType__Base):
     HIP_R_16F = chip.HIP_R_16F
     HIP_R_32F = chip.HIP_R_32F
     HIP_R_64F = chip.HIP_R_64F
@@ -32431,7 +32643,11 @@ class hipDataType(enum.IntEnum):
         return ctypes.c_uint 
 
 
-class hipLibraryPropertyType(enum.IntEnum):
+class _hipLibraryPropertyType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipLibraryPropertyType(_hipLibraryPropertyType__Base):
     HIP_LIBRARY_MAJOR_VERSION = chip.HIP_LIBRARY_MAJOR_VERSION
     HIP_LIBRARY_MINOR_VERSION = chip.HIP_LIBRARY_MINOR_VERSION
     HIP_LIBRARY_PATCH_LEVEL = chip.HIP_LIBRARY_PATCH_LEVEL

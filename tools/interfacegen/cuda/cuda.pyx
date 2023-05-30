@@ -6,7 +6,6 @@ import os
 import enum
 
 import hip.hip
-
 hip = hip.hip # makes hip types and routines accessible without import
                             # allows checks such as `hasattr(cuda.cuda,"hip")`
 
@@ -25,148 +24,109 @@ def _hip_python_get_bool_environ_var(env_var, default):
         allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals)+list(no_vals))])
         raise RuntimeError(f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}")
 
-CU_TRSA_OVERRIDE_FORMAT = hip.hip.HIP_TRSA_OVERRIDE_FORMAT
-CU_TRSF_READ_AS_INTEGER = hip.hip.HIP_TRSF_READ_AS_INTEGER
-CU_TRSF_NORMALIZED_COORDINATES = hip.hip.HIP_TRSF_NORMALIZED_COORDINATES
-CU_TRSF_SRGB = hip.hip.HIP_TRSF_SRGB
-cudaTextureType1D = hip.hip.hipTextureType1D
-cudaTextureType2D = hip.hip.hipTextureType2D
-cudaTextureType3D = hip.hip.hipTextureType3D
-cudaTextureTypeCubemap = hip.hip.hipTextureTypeCubemap
-cudaTextureType1DLayered = hip.hip.hipTextureType1DLayered
-cudaTextureType2DLayered = hip.hip.hipTextureType2DLayered
-cudaTextureTypeCubemapLayered = hip.hip.hipTextureTypeCubemapLayered
-CU_LAUNCH_PARAM_BUFFER_POINTER = hip.hip.HIP_LAUNCH_PARAM_BUFFER_POINTER
-CU_LAUNCH_PARAM_BUFFER_SIZE = hip.hip.HIP_LAUNCH_PARAM_BUFFER_SIZE
-CU_LAUNCH_PARAM_END = hip.hip.HIP_LAUNCH_PARAM_END
-CU_IPC_MEM_LAZY_ENABLE_PEER_ACCESS = hip.hip.hipIpcMemLazyEnablePeerAccess
-cudaIpcMemLazyEnablePeerAccess = hip.hip.hipIpcMemLazyEnablePeerAccess
-CUDA_IPC_HANDLE_SIZE = hip.hip.HIP_IPC_HANDLE_SIZE
-CU_IPC_HANDLE_SIZE = hip.hip.HIP_IPC_HANDLE_SIZE
-CU_STREAM_DEFAULT = hip.hip.hipStreamDefault
-cudaStreamDefault = hip.hip.hipStreamDefault
-CU_STREAM_NON_BLOCKING = hip.hip.hipStreamNonBlocking
-cudaStreamNonBlocking = hip.hip.hipStreamNonBlocking
-CU_EVENT_DEFAULT = hip.hip.hipEventDefault
-cudaEventDefault = hip.hip.hipEventDefault
-CU_EVENT_BLOCKING_SYNC = hip.hip.hipEventBlockingSync
-cudaEventBlockingSync = hip.hip.hipEventBlockingSync
-CU_EVENT_DISABLE_TIMING = hip.hip.hipEventDisableTiming
-cudaEventDisableTiming = hip.hip.hipEventDisableTiming
-CU_EVENT_INTERPROCESS = hip.hip.hipEventInterprocess
-cudaEventInterprocess = hip.hip.hipEventInterprocess
-cudaHostAllocDefault = hip.hip.hipHostMallocDefault
-CU_MEMHOSTALLOC_PORTABLE = hip.hip.hipHostMallocPortable
-cudaHostAllocPortable = hip.hip.hipHostMallocPortable
-CU_MEMHOSTALLOC_DEVICEMAP = hip.hip.hipHostMallocMapped
-cudaHostAllocMapped = hip.hip.hipHostMallocMapped
-CU_MEMHOSTALLOC_WRITECOMBINED = hip.hip.hipHostMallocWriteCombined
-cudaHostAllocWriteCombined = hip.hip.hipHostMallocWriteCombined
-CU_MEM_ATTACH_GLOBAL = hip.hip.hipMemAttachGlobal
-cudaMemAttachGlobal = hip.hip.hipMemAttachGlobal
-CU_MEM_ATTACH_HOST = hip.hip.hipMemAttachHost
-cudaMemAttachHost = hip.hip.hipMemAttachHost
-CU_MEM_ATTACH_SINGLE = hip.hip.hipMemAttachSingle
-cudaMemAttachSingle = hip.hip.hipMemAttachSingle
-cudaHostRegisterDefault = hip.hip.hipHostRegisterDefault
-CU_MEMHOSTREGISTER_PORTABLE = hip.hip.hipHostRegisterPortable
-cudaHostRegisterPortable = hip.hip.hipHostRegisterPortable
-CU_MEMHOSTREGISTER_DEVICEMAP = hip.hip.hipHostRegisterMapped
-cudaHostRegisterMapped = hip.hip.hipHostRegisterMapped
-CU_MEMHOSTREGISTER_IOMEMORY = hip.hip.hipHostRegisterIoMemory
-cudaHostRegisterIoMemory = hip.hip.hipHostRegisterIoMemory
-CU_CTX_SCHED_AUTO = hip.hip.hipDeviceScheduleAuto
-cudaDeviceScheduleAuto = hip.hip.hipDeviceScheduleAuto
-CU_CTX_SCHED_SPIN = hip.hip.hipDeviceScheduleSpin
-cudaDeviceScheduleSpin = hip.hip.hipDeviceScheduleSpin
-CU_CTX_SCHED_YIELD = hip.hip.hipDeviceScheduleYield
-cudaDeviceScheduleYield = hip.hip.hipDeviceScheduleYield
-CU_CTX_BLOCKING_SYNC = hip.hip.hipDeviceScheduleBlockingSync
-CU_CTX_SCHED_BLOCKING_SYNC = hip.hip.hipDeviceScheduleBlockingSync
-cudaDeviceBlockingSync = hip.hip.hipDeviceScheduleBlockingSync
-cudaDeviceScheduleBlockingSync = hip.hip.hipDeviceScheduleBlockingSync
-CU_CTX_SCHED_MASK = hip.hip.hipDeviceScheduleMask
-cudaDeviceScheduleMask = hip.hip.hipDeviceScheduleMask
-CU_CTX_MAP_HOST = hip.hip.hipDeviceMapHost
-cudaDeviceMapHost = hip.hip.hipDeviceMapHost
-CU_CTX_LMEM_RESIZE_TO_MAX = hip.hip.hipDeviceLmemResizeToMax
-cudaDeviceLmemResizeToMax = hip.hip.hipDeviceLmemResizeToMax
-cudaArrayDefault = hip.hip.hipArrayDefault
-CUDA_ARRAY3D_LAYERED = hip.hip.hipArrayLayered
-cudaArrayLayered = hip.hip.hipArrayLayered
-CUDA_ARRAY3D_SURFACE_LDST = hip.hip.hipArraySurfaceLoadStore
-cudaArraySurfaceLoadStore = hip.hip.hipArraySurfaceLoadStore
-CUDA_ARRAY3D_CUBEMAP = hip.hip.hipArrayCubemap
-cudaArrayCubemap = hip.hip.hipArrayCubemap
-CUDA_ARRAY3D_TEXTURE_GATHER = hip.hip.hipArrayTextureGather
-cudaArrayTextureGather = hip.hip.hipArrayTextureGather
-CU_OCCUPANCY_DEFAULT = hip.hip.hipOccupancyDefault
-cudaOccupancyDefault = hip.hip.hipOccupancyDefault
-CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_PRE_LAUNCH_SYNC = hip.hip.hipCooperativeLaunchMultiDeviceNoPreSync
-cudaCooperativeLaunchMultiDeviceNoPreSync = hip.hip.hipCooperativeLaunchMultiDeviceNoPreSync
-CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_POST_LAUNCH_SYNC = hip.hip.hipCooperativeLaunchMultiDeviceNoPostSync
-cudaCooperativeLaunchMultiDeviceNoPostSync = hip.hip.hipCooperativeLaunchMultiDeviceNoPostSync
-CU_DEVICE_CPU = hip.hip.hipCpuDeviceId
-cudaCpuDeviceId = hip.hip.hipCpuDeviceId
-CU_DEVICE_INVALID = hip.hip.hipInvalidDeviceId
-cudaInvalidDeviceId = hip.hip.hipInvalidDeviceId
-CU_STREAM_WAIT_VALUE_GEQ = hip.hip.hipStreamWaitValueGte
-CU_STREAM_WAIT_VALUE_EQ = hip.hip.hipStreamWaitValueEq
-CU_STREAM_WAIT_VALUE_AND = hip.hip.hipStreamWaitValueAnd
-CU_STREAM_WAIT_VALUE_NOR = hip.hip.hipStreamWaitValueNor
+CU_TRSA_OVERRIDE_FORMAT = hip.HIP_TRSA_OVERRIDE_FORMAT
+CU_TRSF_READ_AS_INTEGER = hip.HIP_TRSF_READ_AS_INTEGER
+CU_TRSF_NORMALIZED_COORDINATES = hip.HIP_TRSF_NORMALIZED_COORDINATES
+CU_TRSF_SRGB = hip.HIP_TRSF_SRGB
+cudaTextureType1D = hip.hipTextureType1D
+cudaTextureType2D = hip.hipTextureType2D
+cudaTextureType3D = hip.hipTextureType3D
+cudaTextureTypeCubemap = hip.hipTextureTypeCubemap
+cudaTextureType1DLayered = hip.hipTextureType1DLayered
+cudaTextureType2DLayered = hip.hipTextureType2DLayered
+cudaTextureTypeCubemapLayered = hip.hipTextureTypeCubemapLayered
+CU_LAUNCH_PARAM_BUFFER_POINTER = hip.HIP_LAUNCH_PARAM_BUFFER_POINTER
+CU_LAUNCH_PARAM_BUFFER_SIZE = hip.HIP_LAUNCH_PARAM_BUFFER_SIZE
+CU_LAUNCH_PARAM_END = hip.HIP_LAUNCH_PARAM_END
+CU_IPC_MEM_LAZY_ENABLE_PEER_ACCESS = hip.hipIpcMemLazyEnablePeerAccess
+cudaIpcMemLazyEnablePeerAccess = hip.hipIpcMemLazyEnablePeerAccess
+CUDA_IPC_HANDLE_SIZE = hip.HIP_IPC_HANDLE_SIZE
+CU_IPC_HANDLE_SIZE = hip.HIP_IPC_HANDLE_SIZE
+CU_STREAM_DEFAULT = hip.hipStreamDefault
+cudaStreamDefault = hip.hipStreamDefault
+CU_STREAM_NON_BLOCKING = hip.hipStreamNonBlocking
+cudaStreamNonBlocking = hip.hipStreamNonBlocking
+CU_EVENT_DEFAULT = hip.hipEventDefault
+cudaEventDefault = hip.hipEventDefault
+CU_EVENT_BLOCKING_SYNC = hip.hipEventBlockingSync
+cudaEventBlockingSync = hip.hipEventBlockingSync
+CU_EVENT_DISABLE_TIMING = hip.hipEventDisableTiming
+cudaEventDisableTiming = hip.hipEventDisableTiming
+CU_EVENT_INTERPROCESS = hip.hipEventInterprocess
+cudaEventInterprocess = hip.hipEventInterprocess
+cudaHostAllocDefault = hip.hipHostMallocDefault
+CU_MEMHOSTALLOC_PORTABLE = hip.hipHostMallocPortable
+cudaHostAllocPortable = hip.hipHostMallocPortable
+CU_MEMHOSTALLOC_DEVICEMAP = hip.hipHostMallocMapped
+cudaHostAllocMapped = hip.hipHostMallocMapped
+CU_MEMHOSTALLOC_WRITECOMBINED = hip.hipHostMallocWriteCombined
+cudaHostAllocWriteCombined = hip.hipHostMallocWriteCombined
+CU_MEM_ATTACH_GLOBAL = hip.hipMemAttachGlobal
+cudaMemAttachGlobal = hip.hipMemAttachGlobal
+CU_MEM_ATTACH_HOST = hip.hipMemAttachHost
+cudaMemAttachHost = hip.hipMemAttachHost
+CU_MEM_ATTACH_SINGLE = hip.hipMemAttachSingle
+cudaMemAttachSingle = hip.hipMemAttachSingle
+cudaHostRegisterDefault = hip.hipHostRegisterDefault
+CU_MEMHOSTREGISTER_PORTABLE = hip.hipHostRegisterPortable
+cudaHostRegisterPortable = hip.hipHostRegisterPortable
+CU_MEMHOSTREGISTER_DEVICEMAP = hip.hipHostRegisterMapped
+cudaHostRegisterMapped = hip.hipHostRegisterMapped
+CU_MEMHOSTREGISTER_IOMEMORY = hip.hipHostRegisterIoMemory
+cudaHostRegisterIoMemory = hip.hipHostRegisterIoMemory
+CU_CTX_SCHED_AUTO = hip.hipDeviceScheduleAuto
+cudaDeviceScheduleAuto = hip.hipDeviceScheduleAuto
+CU_CTX_SCHED_SPIN = hip.hipDeviceScheduleSpin
+cudaDeviceScheduleSpin = hip.hipDeviceScheduleSpin
+CU_CTX_SCHED_YIELD = hip.hipDeviceScheduleYield
+cudaDeviceScheduleYield = hip.hipDeviceScheduleYield
+CU_CTX_BLOCKING_SYNC = hip.hipDeviceScheduleBlockingSync
+CU_CTX_SCHED_BLOCKING_SYNC = hip.hipDeviceScheduleBlockingSync
+cudaDeviceBlockingSync = hip.hipDeviceScheduleBlockingSync
+cudaDeviceScheduleBlockingSync = hip.hipDeviceScheduleBlockingSync
+CU_CTX_SCHED_MASK = hip.hipDeviceScheduleMask
+cudaDeviceScheduleMask = hip.hipDeviceScheduleMask
+CU_CTX_MAP_HOST = hip.hipDeviceMapHost
+cudaDeviceMapHost = hip.hipDeviceMapHost
+CU_CTX_LMEM_RESIZE_TO_MAX = hip.hipDeviceLmemResizeToMax
+cudaDeviceLmemResizeToMax = hip.hipDeviceLmemResizeToMax
+cudaArrayDefault = hip.hipArrayDefault
+CUDA_ARRAY3D_LAYERED = hip.hipArrayLayered
+cudaArrayLayered = hip.hipArrayLayered
+CUDA_ARRAY3D_SURFACE_LDST = hip.hipArraySurfaceLoadStore
+cudaArraySurfaceLoadStore = hip.hipArraySurfaceLoadStore
+CUDA_ARRAY3D_CUBEMAP = hip.hipArrayCubemap
+cudaArrayCubemap = hip.hipArrayCubemap
+CUDA_ARRAY3D_TEXTURE_GATHER = hip.hipArrayTextureGather
+cudaArrayTextureGather = hip.hipArrayTextureGather
+CU_OCCUPANCY_DEFAULT = hip.hipOccupancyDefault
+cudaOccupancyDefault = hip.hipOccupancyDefault
+CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_PRE_LAUNCH_SYNC = hip.hipCooperativeLaunchMultiDeviceNoPreSync
+cudaCooperativeLaunchMultiDeviceNoPreSync = hip.hipCooperativeLaunchMultiDeviceNoPreSync
+CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_POST_LAUNCH_SYNC = hip.hipCooperativeLaunchMultiDeviceNoPostSync
+cudaCooperativeLaunchMultiDeviceNoPostSync = hip.hipCooperativeLaunchMultiDeviceNoPostSync
+CU_DEVICE_CPU = hip.hipCpuDeviceId
+cudaCpuDeviceId = hip.hipCpuDeviceId
+CU_DEVICE_INVALID = hip.hipInvalidDeviceId
+cudaInvalidDeviceId = hip.hipInvalidDeviceId
+CU_STREAM_WAIT_VALUE_GEQ = hip.hipStreamWaitValueGte
+CU_STREAM_WAIT_VALUE_EQ = hip.hipStreamWaitValueEq
+CU_STREAM_WAIT_VALUE_AND = hip.hipStreamWaitValueAnd
+CU_STREAM_WAIT_VALUE_NOR = hip.hipStreamWaitValueNor
 HIP_SUCCESS = hip.chip.HIP_SUCCESS
 HIP_ERROR_INVALID_VALUE = hip.chip.HIP_ERROR_INVALID_VALUE
 HIP_ERROR_NOT_INITIALIZED = hip.chip.HIP_ERROR_NOT_INITIALIZED
 HIP_ERROR_LAUNCH_OUT_OF_RESOURCES = hip.chip.HIP_ERROR_LAUNCH_OUT_OF_RESOURCES
 cdef class CUuuid_st(hip.hip.hipUUID_t):
     pass
-CUuuid = hip.hip.hipUUID
-cudaUUID_t = hip.hip.hipUUID
+CUuuid = hip.hipUUID
+cudaUUID_t = hip.hipUUID
 cdef class cudaDeviceProp(hip.hip.hipDeviceProp_t):
     pass
 
 HIP_PYTHON_CUmemorytype_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemorytype_HALLUCINATE","false")
 
 class _CUmemorytype_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -184,22 +144,50 @@ class _CUmemorytype_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemoryType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemorytype
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemorytype(enum.IntEnum,metaclass=_CUmemorytype_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemoryType
+class CUmemorytype(hip._hipMemoryType__Base,metaclass=_CUmemorytype_EnumMeta):
     CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
     cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
     hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
@@ -217,45 +205,6 @@ HIP_PYTHON_CUmemorytype_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP
 
 class _CUmemorytype_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUmemorytype_enum_HALLUCINATE
@@ -272,22 +221,50 @@ class _CUmemorytype_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemoryType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemorytype_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemorytype_enum(enum.IntEnum,metaclass=_CUmemorytype_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemoryType
+class CUmemorytype_enum(hip._hipMemoryType__Base,metaclass=_CUmemorytype_enum_EnumMeta):
     CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
     cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
     hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
@@ -305,45 +282,6 @@ HIP_PYTHON_cudaMemoryType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PY
 
 class _cudaMemoryType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaMemoryType_HALLUCINATE
@@ -360,22 +298,50 @@ class _cudaMemoryType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemoryType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaMemoryType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaMemoryType(enum.IntEnum,metaclass=_cudaMemoryType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemoryType
+class cudaMemoryType(hip._hipMemoryType__Base,metaclass=_cudaMemoryType_EnumMeta):
     CU_MEMORYTYPE_HOST = hip.chip.hipMemoryTypeHost
     cudaMemoryTypeHost = hip.chip.hipMemoryTypeHost
     hipMemoryTypeHost = hip.chip.hipMemoryTypeHost
@@ -395,45 +361,6 @@ HIP_PYTHON_CUresult_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_C
 
 class _CUresult_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUresult_HALLUCINATE
@@ -450,22 +377,50 @@ class _CUresult_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipError_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUresult
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUresult(enum.IntEnum,metaclass=_CUresult_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipError_t
+class CUresult(hip._hipError_t__Base,metaclass=_CUresult_EnumMeta):
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
     hipSuccess = hip.chip.hipSuccess
@@ -681,45 +636,6 @@ HIP_PYTHON_cudaError_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_
 
 class _cudaError_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaError_HALLUCINATE
@@ -736,22 +652,50 @@ class _cudaError_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipError_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaError
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaError(enum.IntEnum,metaclass=_cudaError_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipError_t
+class cudaError(hip._hipError_t__Base,metaclass=_cudaError_EnumMeta):
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
     hipSuccess = hip.chip.hipSuccess
@@ -967,45 +911,6 @@ HIP_PYTHON_cudaError_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PY
 
 class _cudaError_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaError_enum_HALLUCINATE
@@ -1022,22 +927,50 @@ class _cudaError_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipError_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaError_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaError_enum(enum.IntEnum,metaclass=_cudaError_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipError_t
+class cudaError_enum(hip._hipError_t__Base,metaclass=_cudaError_enum_EnumMeta):
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
     hipSuccess = hip.chip.hipSuccess
@@ -1253,45 +1186,6 @@ HIP_PYTHON_cudaError_t_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHO
 
 class _cudaError_t_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaError_t_HALLUCINATE
@@ -1308,22 +1202,50 @@ class _cudaError_t_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipError_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaError_t
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaError_t(enum.IntEnum,metaclass=_cudaError_t_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipError_t
+class cudaError_t(hip._hipError_t__Base,metaclass=_cudaError_t_EnumMeta):
     CUDA_SUCCESS = hip.chip.hipSuccess
     cudaSuccess = hip.chip.hipSuccess
     hipSuccess = hip.chip.hipSuccess
@@ -1539,45 +1461,6 @@ HIP_PYTHON_CUdevice_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HI
 
 class _CUdevice_attribute_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUdevice_attribute_HALLUCINATE
@@ -1594,22 +1477,50 @@ class _CUdevice_attribute_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipDeviceAttribute_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUdevice_attribute
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUdevice_attribute(enum.IntEnum,metaclass=_CUdevice_attribute_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipDeviceAttribute_t
+class CUdevice_attribute(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_attribute_EnumMeta):
     hipDeviceAttributeCudaCompatibleBegin = hip.chip.hipDeviceAttributeCudaCompatibleBegin
     CU_DEVICE_ATTRIBUTE_ECC_ENABLED = hip.chip.hipDeviceAttributeEccEnabled
     cudaDevAttrEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
@@ -1914,45 +1825,6 @@ HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_va
 
 class _CUdevice_attribute_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUdevice_attribute_enum_HALLUCINATE
@@ -1969,22 +1841,50 @@ class _CUdevice_attribute_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipDeviceAttribute_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUdevice_attribute_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUdevice_attribute_enum(enum.IntEnum,metaclass=_CUdevice_attribute_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipDeviceAttribute_t
+class CUdevice_attribute_enum(hip._hipDeviceAttribute_t__Base,metaclass=_CUdevice_attribute_enum_EnumMeta):
     hipDeviceAttributeCudaCompatibleBegin = hip.chip.hipDeviceAttributeCudaCompatibleBegin
     CU_DEVICE_ATTRIBUTE_ECC_ENABLED = hip.chip.hipDeviceAttributeEccEnabled
     cudaDevAttrEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
@@ -2289,45 +2189,6 @@ HIP_PYTHON_cudaDeviceAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PY
 
 class _cudaDeviceAttr_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaDeviceAttr_HALLUCINATE
@@ -2344,22 +2205,50 @@ class _cudaDeviceAttr_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipDeviceAttribute_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaDeviceAttr
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaDeviceAttr(enum.IntEnum,metaclass=_cudaDeviceAttr_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipDeviceAttribute_t
+class cudaDeviceAttr(hip._hipDeviceAttribute_t__Base,metaclass=_cudaDeviceAttr_EnumMeta):
     hipDeviceAttributeCudaCompatibleBegin = hip.chip.hipDeviceAttributeCudaCompatibleBegin
     CU_DEVICE_ATTRIBUTE_ECC_ENABLED = hip.chip.hipDeviceAttributeEccEnabled
     cudaDevAttrEccEnabled = hip.chip.hipDeviceAttributeEccEnabled
@@ -2664,45 +2553,6 @@ HIP_PYTHON_CUcomputemode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYT
 
 class _CUcomputemode_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUcomputemode_HALLUCINATE
@@ -2719,22 +2569,50 @@ class _CUcomputemode_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipComputeMode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUcomputemode
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUcomputemode(enum.IntEnum,metaclass=_CUcomputemode_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipComputeMode
+class CUcomputemode(hip._hipComputeMode__Base,metaclass=_CUcomputemode_EnumMeta):
     CU_COMPUTEMODE_DEFAULT = hip.chip.hipComputeModeDefault
     cudaComputeModeDefault = hip.chip.hipComputeModeDefault
     hipComputeModeDefault = hip.chip.hipComputeModeDefault
@@ -2752,45 +2630,6 @@ HIP_PYTHON_CUcomputemode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HI
 
 class _CUcomputemode_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUcomputemode_enum_HALLUCINATE
@@ -2807,22 +2646,50 @@ class _CUcomputemode_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipComputeMode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUcomputemode_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUcomputemode_enum(enum.IntEnum,metaclass=_CUcomputemode_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipComputeMode
+class CUcomputemode_enum(hip._hipComputeMode__Base,metaclass=_CUcomputemode_enum_EnumMeta):
     CU_COMPUTEMODE_DEFAULT = hip.chip.hipComputeModeDefault
     cudaComputeModeDefault = hip.chip.hipComputeModeDefault
     hipComputeModeDefault = hip.chip.hipComputeModeDefault
@@ -2840,45 +2707,6 @@ HIP_PYTHON_cudaComputeMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_P
 
 class _cudaComputeMode_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaComputeMode_HALLUCINATE
@@ -2895,22 +2723,50 @@ class _cudaComputeMode_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipComputeMode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaComputeMode
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaComputeMode(enum.IntEnum,metaclass=_cudaComputeMode_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipComputeMode
+class cudaComputeMode(hip._hipComputeMode__Base,metaclass=_cudaComputeMode_EnumMeta):
     CU_COMPUTEMODE_DEFAULT = hip.chip.hipComputeModeDefault
     cudaComputeModeDefault = hip.chip.hipComputeModeDefault
     hipComputeModeDefault = hip.chip.hipComputeModeDefault
@@ -2928,45 +2784,6 @@ HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE = _hip_python_get_bool_environ_var(
 
 class _cudaChannelFormatKind_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaChannelFormatKind_HALLUCINATE
@@ -2983,22 +2800,50 @@ class _cudaChannelFormatKind_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipChannelFormatKind):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaChannelFormatKind
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaChannelFormatKind(enum.IntEnum,metaclass=_cudaChannelFormatKind_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipChannelFormatKind
+class cudaChannelFormatKind(hip._hipChannelFormatKind__Base,metaclass=_cudaChannelFormatKind_EnumMeta):
     cudaChannelFormatKindSigned = hip.chip.hipChannelFormatKindSigned
     hipChannelFormatKindSigned = hip.chip.hipChannelFormatKindSigned
     cudaChannelFormatKindUnsigned = hip.chip.hipChannelFormatKindUnsigned
@@ -3013,45 +2858,6 @@ cdef class cudaChannelFormatDesc(hip.hip.hipChannelFormatDesc):
 HIP_PYTHON_CUarray_format_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarray_format_HALLUCINATE","false")
 
 class _CUarray_format_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -3069,22 +2875,50 @@ class _CUarray_format_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipArray_Format):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUarray_format
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUarray_format(enum.IntEnum,metaclass=_CUarray_format_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipArray_Format
+class CUarray_format(hip._hipArray_Format__Base,metaclass=_CUarray_format_EnumMeta):
     CU_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     HIP_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     CU_AD_FORMAT_UNSIGNED_INT16 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT16
@@ -3106,45 +2940,6 @@ HIP_PYTHON_CUarray_format_enum_HALLUCINATE = _hip_python_get_bool_environ_var("H
 
 class _CUarray_format_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUarray_format_enum_HALLUCINATE
@@ -3161,22 +2956,50 @@ class _CUarray_format_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipArray_Format):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUarray_format_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUarray_format_enum(enum.IntEnum,metaclass=_CUarray_format_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipArray_Format
+class CUarray_format_enum(hip._hipArray_Format__Base,metaclass=_CUarray_format_enum_EnumMeta):
     CU_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     HIP_AD_FORMAT_UNSIGNED_INT8 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT8
     CU_AD_FORMAT_UNSIGNED_INT16 = hip.chip.HIP_AD_FORMAT_UNSIGNED_INT16
@@ -3223,59 +3046,20 @@ cdef class CUDA_MEMCPY2D_v1_st(hip.hip.hip_Memcpy2D):
     pass
 cdef class CUDA_MEMCPY2D_v2(hip.hip.hip_Memcpy2D):
     pass
-CUarray = hip.hip.hipArray_t
-cudaArray_t = hip.hip.hipArray_t
-cudaArray_const_t = hip.hip.hipArray_const_t
+CUarray = hip.hipArray_t
+cudaArray_t = hip.hipArray_t
+cudaArray_const_t = hip.hipArray_const_t
 cdef class CUmipmappedArray_st(hip.hip.hipMipmappedArray):
     pass
 cdef class cudaMipmappedArray(hip.hip.hipMipmappedArray):
     pass
-CUmipmappedArray = hip.hip.hipMipmappedArray_t
-cudaMipmappedArray_t = hip.hip.hipMipmappedArray_t
-cudaMipmappedArray_const_t = hip.hip.hipMipmappedArray_const_t
+CUmipmappedArray = hip.hipMipmappedArray_t
+cudaMipmappedArray_t = hip.hipMipmappedArray_t
+cudaMipmappedArray_const_t = hip.hipMipmappedArray_const_t
 
 HIP_PYTHON_cudaResourceType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceType_HALLUCINATE","false")
 
 class _cudaResourceType_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -3293,22 +3077,50 @@ class _cudaResourceType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipResourceType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaResourceType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaResourceType(enum.IntEnum,metaclass=_cudaResourceType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipResourceType
+class cudaResourceType(hip._hipResourceType__Base,metaclass=_cudaResourceType_EnumMeta):
     cudaResourceTypeArray = hip.chip.hipResourceTypeArray
     hipResourceTypeArray = hip.chip.hipResourceTypeArray
     cudaResourceTypeMipmappedArray = hip.chip.hipResourceTypeMipmappedArray
@@ -3321,45 +3133,6 @@ class cudaResourceType(enum.IntEnum,metaclass=_cudaResourceType_EnumMeta):
 HIP_PYTHON_CUresourcetype_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_enum_HALLUCINATE","false")
 
 class _CUresourcetype_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -3377,22 +3150,50 @@ class _CUresourcetype_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.HIPresourcetype_enum):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUresourcetype_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUresourcetype_enum(enum.IntEnum,metaclass=_CUresourcetype_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.HIPresourcetype_enum
+class CUresourcetype_enum(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcetype_enum_EnumMeta):
     CU_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     HIP_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     CU_RESOURCE_TYPE_MIPMAPPED_ARRAY = hip.chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
@@ -3405,45 +3206,6 @@ class CUresourcetype_enum(enum.IntEnum,metaclass=_CUresourcetype_enum_EnumMeta):
 HIP_PYTHON_CUresourcetype_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUresourcetype_HALLUCINATE","false")
 
 class _CUresourcetype_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -3461,22 +3223,50 @@ class _CUresourcetype_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.HIPresourcetype):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUresourcetype
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUresourcetype(enum.IntEnum,metaclass=_CUresourcetype_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.HIPresourcetype
+class CUresourcetype(hip._HIPresourcetype_enum__Base,metaclass=_CUresourcetype_EnumMeta):
     CU_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     HIP_RESOURCE_TYPE_ARRAY = hip.chip.HIP_RESOURCE_TYPE_ARRAY
     CU_RESOURCE_TYPE_MIPMAPPED_ARRAY = hip.chip.HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
@@ -3489,45 +3279,6 @@ class CUresourcetype(enum.IntEnum,metaclass=_CUresourcetype_EnumMeta):
 HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_enum_HALLUCINATE","false")
 
 class _CUaddress_mode_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -3545,22 +3296,50 @@ class _CUaddress_mode_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.HIPaddress_mode_enum):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUaddress_mode_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUaddress_mode_enum(enum.IntEnum,metaclass=_CUaddress_mode_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.HIPaddress_mode_enum
+class CUaddress_mode_enum(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_mode_enum_EnumMeta):
     CU_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     CU_TR_ADDRESS_MODE_CLAMP = hip.chip.HIP_TR_ADDRESS_MODE_CLAMP
@@ -3573,45 +3352,6 @@ class CUaddress_mode_enum(enum.IntEnum,metaclass=_CUaddress_mode_enum_EnumMeta):
 HIP_PYTHON_CUaddress_mode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaddress_mode_HALLUCINATE","false")
 
 class _CUaddress_mode_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -3629,22 +3369,50 @@ class _CUaddress_mode_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.HIPaddress_mode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUaddress_mode
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUaddress_mode(enum.IntEnum,metaclass=_CUaddress_mode_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.HIPaddress_mode
+class CUaddress_mode(hip._HIPaddress_mode_enum__Base,metaclass=_CUaddress_mode_EnumMeta):
     CU_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     HIP_TR_ADDRESS_MODE_WRAP = hip.chip.HIP_TR_ADDRESS_MODE_WRAP
     CU_TR_ADDRESS_MODE_CLAMP = hip.chip.HIP_TR_ADDRESS_MODE_CLAMP
@@ -3657,45 +3425,6 @@ class CUaddress_mode(enum.IntEnum,metaclass=_CUaddress_mode_EnumMeta):
 HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_enum_HALLUCINATE","false")
 
 class _CUfilter_mode_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -3713,22 +3442,50 @@ class _CUfilter_mode_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.HIPfilter_mode_enum):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUfilter_mode_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUfilter_mode_enum(enum.IntEnum,metaclass=_CUfilter_mode_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.HIPfilter_mode_enum
+class CUfilter_mode_enum(hip._HIPfilter_mode_enum__Base,metaclass=_CUfilter_mode_enum_EnumMeta):
     CU_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     CU_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
@@ -3737,45 +3494,6 @@ class CUfilter_mode_enum(enum.IntEnum,metaclass=_CUfilter_mode_enum_EnumMeta):
 HIP_PYTHON_CUfilter_mode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfilter_mode_HALLUCINATE","false")
 
 class _CUfilter_mode_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -3793,73 +3511,62 @@ class _CUfilter_mode_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.HIPfilter_mode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUfilter_mode
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUfilter_mode(enum.IntEnum,metaclass=_CUfilter_mode_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.HIPfilter_mode
+class CUfilter_mode(hip._HIPfilter_mode_enum__Base,metaclass=_CUfilter_mode_EnumMeta):
     CU_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     HIP_TR_FILTER_MODE_POINT = hip.chip.HIP_TR_FILTER_MODE_POINT
     CU_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
     HIP_TR_FILTER_MODE_LINEAR = hip.chip.HIP_TR_FILTER_MODE_LINEAR
 cdef class CUDA_TEXTURE_DESC_st(hip.hip.HIP_TEXTURE_DESC_st):
     pass
-CUDA_TEXTURE_DESC = hip.hip.HIP_TEXTURE_DESC
-CUDA_TEXTURE_DESC_v1 = hip.hip.HIP_TEXTURE_DESC
+CUDA_TEXTURE_DESC = hip.HIP_TEXTURE_DESC
+CUDA_TEXTURE_DESC_v1 = hip.HIP_TEXTURE_DESC
 
 HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaResourceViewFormat_HALLUCINATE","false")
 
 class _cudaResourceViewFormat_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -3877,22 +3584,50 @@ class _cudaResourceViewFormat_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipResourceViewFormat):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaResourceViewFormat
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaResourceViewFormat(enum.IntEnum,metaclass=_cudaResourceViewFormat_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipResourceViewFormat
+class cudaResourceViewFormat(hip._hipResourceViewFormat__Base,metaclass=_cudaResourceViewFormat_EnumMeta):
     cudaResViewFormatNone = hip.chip.hipResViewFormatNone
     hipResViewFormatNone = hip.chip.hipResViewFormatNone
     cudaResViewFormatUnsignedChar1 = hip.chip.hipResViewFormatUnsignedChar1
@@ -3968,45 +3703,6 @@ HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE = _hip_python_get_bool_environ_
 
 class _CUresourceViewFormat_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUresourceViewFormat_enum_HALLUCINATE
@@ -4023,22 +3719,50 @@ class _CUresourceViewFormat_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.HIPresourceViewFormat_enum):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUresourceViewFormat_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUresourceViewFormat_enum(enum.IntEnum,metaclass=_CUresourceViewFormat_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.HIPresourceViewFormat_enum
+class CUresourceViewFormat_enum(hip._HIPresourceViewFormat_enum__Base,metaclass=_CUresourceViewFormat_enum_EnumMeta):
     CU_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     HIP_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     CU_RES_VIEW_FORMAT_UINT_1X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X8
@@ -4114,45 +3838,6 @@ HIP_PYTHON_CUresourceViewFormat_HALLUCINATE = _hip_python_get_bool_environ_var("
 
 class _CUresourceViewFormat_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUresourceViewFormat_HALLUCINATE
@@ -4169,22 +3854,50 @@ class _CUresourceViewFormat_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.HIPresourceViewFormat):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUresourceViewFormat
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUresourceViewFormat(enum.IntEnum,metaclass=_CUresourceViewFormat_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.HIPresourceViewFormat
+class CUresourceViewFormat(hip._HIPresourceViewFormat_enum__Base,metaclass=_CUresourceViewFormat_EnumMeta):
     CU_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     HIP_RES_VIEW_FORMAT_NONE = hip.chip.HIP_RES_VIEW_FORMAT_NONE
     CU_RES_VIEW_FORMAT_UINT_1X8 = hip.chip.HIP_RES_VIEW_FORMAT_UINT_1X8
@@ -4259,57 +3972,18 @@ cdef class cudaResourceDesc(hip.hip.hipResourceDesc):
     pass
 cdef class CUDA_RESOURCE_DESC_st(hip.hip.HIP_RESOURCE_DESC_st):
     pass
-CUDA_RESOURCE_DESC = hip.hip.HIP_RESOURCE_DESC
-CUDA_RESOURCE_DESC_v1 = hip.hip.HIP_RESOURCE_DESC
+CUDA_RESOURCE_DESC = hip.HIP_RESOURCE_DESC
+CUDA_RESOURCE_DESC_v1 = hip.HIP_RESOURCE_DESC
 cdef class cudaResourceViewDesc(hip.hip.hipResourceViewDesc):
     pass
 cdef class CUDA_RESOURCE_VIEW_DESC_st(hip.hip.HIP_RESOURCE_VIEW_DESC_st):
     pass
-CUDA_RESOURCE_VIEW_DESC = hip.hip.HIP_RESOURCE_VIEW_DESC
-CUDA_RESOURCE_VIEW_DESC_v1 = hip.hip.HIP_RESOURCE_VIEW_DESC
+CUDA_RESOURCE_VIEW_DESC = hip.HIP_RESOURCE_VIEW_DESC
+CUDA_RESOURCE_VIEW_DESC_v1 = hip.HIP_RESOURCE_VIEW_DESC
 
 HIP_PYTHON_cudaMemcpyKind_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemcpyKind_HALLUCINATE","false")
 
 class _cudaMemcpyKind_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -4327,22 +4001,50 @@ class _cudaMemcpyKind_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemcpyKind):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaMemcpyKind
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaMemcpyKind(enum.IntEnum,metaclass=_cudaMemcpyKind_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemcpyKind
+class cudaMemcpyKind(hip._hipMemcpyKind__Base,metaclass=_cudaMemcpyKind_EnumMeta):
     cudaMemcpyHostToHost = hip.chip.hipMemcpyHostToHost
     hipMemcpyHostToHost = hip.chip.hipMemcpyHostToHost
     cudaMemcpyHostToDevice = hip.chip.hipMemcpyHostToDevice
@@ -4376,45 +4078,6 @@ HIP_PYTHON_CUfunction_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("
 
 class _CUfunction_attribute_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUfunction_attribute_HALLUCINATE
@@ -4431,22 +4094,50 @@ class _CUfunction_attribute_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipFunction_attribute):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUfunction_attribute
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUfunction_attribute(enum.IntEnum,metaclass=_CUfunction_attribute_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipFunction_attribute
+class CUfunction_attribute(hip._hipFunction_attribute__Base,metaclass=_CUfunction_attribute_EnumMeta):
     CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     CU_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
@@ -4474,45 +4165,6 @@ HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_
 
 class _CUfunction_attribute_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUfunction_attribute_enum_HALLUCINATE
@@ -4529,22 +4181,50 @@ class _CUfunction_attribute_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipFunction_attribute):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUfunction_attribute_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUfunction_attribute_enum(enum.IntEnum,metaclass=_CUfunction_attribute_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipFunction_attribute
+class CUfunction_attribute_enum(hip._hipFunction_attribute__Base,metaclass=_CUfunction_attribute_enum_EnumMeta):
     CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK = hip.chip.HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
     CU_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES = hip.chip.HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
@@ -4572,45 +4252,6 @@ HIP_PYTHON_CUpointer_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("H
 
 class _CUpointer_attribute_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUpointer_attribute_HALLUCINATE
@@ -4627,22 +4268,50 @@ class _CUpointer_attribute_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipPointer_attribute):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUpointer_attribute
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUpointer_attribute(enum.IntEnum,metaclass=_CUpointer_attribute_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipPointer_attribute
+class CUpointer_attribute(hip._hipPointer_attribute__Base,metaclass=_CUpointer_attribute_EnumMeta):
     CU_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     HIP_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     CU_POINTER_ATTRIBUTE_MEMORY_TYPE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
@@ -4682,45 +4351,6 @@ HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_v
 
 class _CUpointer_attribute_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUpointer_attribute_enum_HALLUCINATE
@@ -4737,22 +4367,50 @@ class _CUpointer_attribute_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipPointer_attribute):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUpointer_attribute_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUpointer_attribute_enum(enum.IntEnum,metaclass=_CUpointer_attribute_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipPointer_attribute
+class CUpointer_attribute_enum(hip._hipPointer_attribute__Base,metaclass=_CUpointer_attribute_enum_EnumMeta):
     CU_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     HIP_POINTER_ATTRIBUTE_CONTEXT = hip.chip.HIP_POINTER_ATTRIBUTE_CONTEXT
     CU_POINTER_ATTRIBUTE_MEMORY_TYPE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
@@ -4787,53 +4445,14 @@ class CUpointer_attribute_enum(enum.IntEnum,metaclass=_CUpointer_attribute_enum_
     HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS = hip.chip.HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS
     CU_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
     HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE = hip.chip.HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
-cudaCreateChannelDesc = hip.hip.hipCreateChannelDesc
-CUtexObject = hip.hip.hipTextureObject_t
-CUtexObject_v1 = hip.hip.hipTextureObject_t
-cudaTextureObject_t = hip.hip.hipTextureObject_t
+cudaCreateChannelDesc = hip.hipCreateChannelDesc
+CUtexObject = hip.hipTextureObject_t
+CUtexObject_v1 = hip.hipTextureObject_t
+cudaTextureObject_t = hip.hipTextureObject_t
 
 HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureAddressMode_HALLUCINATE","false")
 
 class _cudaTextureAddressMode_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -4851,22 +4470,50 @@ class _cudaTextureAddressMode_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipTextureAddressMode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaTextureAddressMode
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaTextureAddressMode(enum.IntEnum,metaclass=_cudaTextureAddressMode_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipTextureAddressMode
+class cudaTextureAddressMode(hip._hipTextureAddressMode__Base,metaclass=_cudaTextureAddressMode_EnumMeta):
     cudaAddressModeWrap = hip.chip.hipAddressModeWrap
     hipAddressModeWrap = hip.chip.hipAddressModeWrap
     cudaAddressModeClamp = hip.chip.hipAddressModeClamp
@@ -4879,45 +4526,6 @@ class cudaTextureAddressMode(enum.IntEnum,metaclass=_cudaTextureAddressMode_Enum
 HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureFilterMode_HALLUCINATE","false")
 
 class _cudaTextureFilterMode_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -4935,22 +4543,50 @@ class _cudaTextureFilterMode_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipTextureFilterMode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaTextureFilterMode
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaTextureFilterMode(enum.IntEnum,metaclass=_cudaTextureFilterMode_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipTextureFilterMode
+class cudaTextureFilterMode(hip._hipTextureFilterMode__Base,metaclass=_cudaTextureFilterMode_EnumMeta):
     cudaFilterModePoint = hip.chip.hipFilterModePoint
     hipFilterModePoint = hip.chip.hipFilterModePoint
     cudaFilterModeLinear = hip.chip.hipFilterModeLinear
@@ -4959,45 +4595,6 @@ class cudaTextureFilterMode(enum.IntEnum,metaclass=_cudaTextureFilterMode_EnumMe
 HIP_PYTHON_cudaTextureReadMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaTextureReadMode_HALLUCINATE","false")
 
 class _cudaTextureReadMode_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -5015,22 +4612,50 @@ class _cudaTextureReadMode_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipTextureReadMode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaTextureReadMode
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaTextureReadMode(enum.IntEnum,metaclass=_cudaTextureReadMode_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipTextureReadMode
+class cudaTextureReadMode(hip._hipTextureReadMode__Base,metaclass=_cudaTextureReadMode_EnumMeta):
     cudaReadModeElementType = hip.chip.hipReadModeElementType
     hipReadModeElementType = hip.chip.hipReadModeElementType
     cudaReadModeNormalizedFloat = hip.chip.hipReadModeNormalizedFloat
@@ -5041,54 +4666,15 @@ cdef class textureReference(hip.hip.textureReference):
     pass
 cdef class cudaTextureDesc(hip.hip.hipTextureDesc):
     pass
-CUsurfObject = hip.hip.hipSurfaceObject_t
-CUsurfObject_v1 = hip.hip.hipSurfaceObject_t
-cudaSurfaceObject_t = hip.hip.hipSurfaceObject_t
+CUsurfObject = hip.hipSurfaceObject_t
+CUsurfObject_v1 = hip.hipSurfaceObject_t
+cudaSurfaceObject_t = hip.hipSurfaceObject_t
 cdef class surfaceReference(hip.hip.surfaceReference):
     pass
 
 HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSurfaceBoundaryMode_HALLUCINATE","false")
 
 class _cudaSurfaceBoundaryMode_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -5106,22 +4692,50 @@ class _cudaSurfaceBoundaryMode_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipSurfaceBoundaryMode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaSurfaceBoundaryMode
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaSurfaceBoundaryMode(enum.IntEnum,metaclass=_cudaSurfaceBoundaryMode_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipSurfaceBoundaryMode
+class cudaSurfaceBoundaryMode(hip._hipSurfaceBoundaryMode__Base,metaclass=_cudaSurfaceBoundaryMode_EnumMeta):
     cudaBoundaryModeZero = hip.chip.hipBoundaryModeZero
     hipBoundaryModeZero = hip.chip.hipBoundaryModeZero
     cudaBoundaryModeTrap = hip.chip.hipBoundaryModeTrap
@@ -5130,50 +4744,11 @@ class cudaSurfaceBoundaryMode(enum.IntEnum,metaclass=_cudaSurfaceBoundaryMode_En
     hipBoundaryModeClamp = hip.chip.hipBoundaryModeClamp
 cdef class CUctx_st(hip.hip.ihipCtx_t):
     pass
-CUcontext = hip.hip.hipCtx_t
+CUcontext = hip.hipCtx_t
 
 HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUdevice_P2PAttribute_HALLUCINATE","false")
 
 class _CUdevice_P2PAttribute_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -5191,22 +4766,50 @@ class _CUdevice_P2PAttribute_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipDeviceP2PAttr):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUdevice_P2PAttribute
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUdevice_P2PAttribute(enum.IntEnum,metaclass=_CUdevice_P2PAttribute_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipDeviceP2PAttr
+class CUdevice_P2PAttribute(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice_P2PAttribute_EnumMeta):
     CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK = hip.chip.hipDevP2PAttrPerformanceRank
     cudaDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
     hipDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
@@ -5226,45 +4829,6 @@ HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE = _hip_python_get_bool_environ
 
 class _CUdevice_P2PAttribute_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUdevice_P2PAttribute_enum_HALLUCINATE
@@ -5281,22 +4845,50 @@ class _CUdevice_P2PAttribute_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipDeviceP2PAttr):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUdevice_P2PAttribute_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUdevice_P2PAttribute_enum(enum.IntEnum,metaclass=_CUdevice_P2PAttribute_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipDeviceP2PAttr
+class CUdevice_P2PAttribute_enum(hip._hipDeviceP2PAttr__Base,metaclass=_CUdevice_P2PAttribute_enum_EnumMeta):
     CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK = hip.chip.hipDevP2PAttrPerformanceRank
     cudaDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
     hipDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
@@ -5316,45 +4908,6 @@ HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP
 
 class _cudaDeviceP2PAttr_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaDeviceP2PAttr_HALLUCINATE
@@ -5371,22 +4924,50 @@ class _cudaDeviceP2PAttr_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipDeviceP2PAttr):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaDeviceP2PAttr
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaDeviceP2PAttr(enum.IntEnum,metaclass=_cudaDeviceP2PAttr_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipDeviceP2PAttr
+class cudaDeviceP2PAttr(hip._hipDeviceP2PAttr__Base,metaclass=_cudaDeviceP2PAttr_EnumMeta):
     CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK = hip.chip.hipDevP2PAttrPerformanceRank
     cudaDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
     hipDevP2PAttrPerformanceRank = hip.chip.hipDevP2PAttrPerformanceRank
@@ -5403,82 +4984,43 @@ class cudaDeviceP2PAttr(enum.IntEnum,metaclass=_cudaDeviceP2PAttr_EnumMeta):
     hipDevP2PAttrHipArrayAccessSupported = hip.chip.hipDevP2PAttrHipArrayAccessSupported
 cdef class CUstream_st(hip.hip.ihipStream_t):
     pass
-CUstream = hip.hip.hipStream_t
-cudaStream_t = hip.hip.hipStream_t
+CUstream = hip.hipStream_t
+cudaStream_t = hip.hipStream_t
 cdef class CUipcMemHandle_st(hip.hip.hipIpcMemHandle_st):
     pass
 cdef class cudaIpcMemHandle_st(hip.hip.hipIpcMemHandle_st):
     pass
-CUipcMemHandle = hip.hip.hipIpcMemHandle_t
-CUipcMemHandle_v1 = hip.hip.hipIpcMemHandle_t
-cudaIpcMemHandle_t = hip.hip.hipIpcMemHandle_t
+CUipcMemHandle = hip.hipIpcMemHandle_t
+CUipcMemHandle_v1 = hip.hipIpcMemHandle_t
+cudaIpcMemHandle_t = hip.hipIpcMemHandle_t
 cdef class CUipcEventHandle_st(hip.hip.hipIpcEventHandle_st):
     pass
 cdef class cudaIpcEventHandle_st(hip.hip.hipIpcEventHandle_st):
     pass
-CUipcEventHandle = hip.hip.hipIpcEventHandle_t
-CUipcEventHandle_v1 = hip.hip.hipIpcEventHandle_t
-cudaIpcEventHandle_t = hip.hip.hipIpcEventHandle_t
+CUipcEventHandle = hip.hipIpcEventHandle_t
+CUipcEventHandle_v1 = hip.hipIpcEventHandle_t
+cudaIpcEventHandle_t = hip.hipIpcEventHandle_t
 cdef class CUmod_st(hip.hip.ihipModule_t):
     pass
-CUmodule = hip.hip.hipModule_t
+CUmodule = hip.hipModule_t
 cdef class CUfunc_st(hip.hip.ihipModuleSymbol_t):
     pass
-CUfunction = hip.hip.hipFunction_t
-cudaFunction_t = hip.hip.hipFunction_t
+CUfunction = hip.hipFunction_t
+cudaFunction_t = hip.hipFunction_t
 cdef class CUmemPoolHandle_st(hip.hip.ihipMemPoolHandle_t):
     pass
-CUmemoryPool = hip.hip.hipMemPool_t
-cudaMemPool_t = hip.hip.hipMemPool_t
+CUmemoryPool = hip.hipMemPool_t
+cudaMemPool_t = hip.hipMemPool_t
 cdef class cudaFuncAttributes(hip.hip.hipFuncAttributes):
     pass
 cdef class CUevent_st(hip.hip.ihipEvent_t):
     pass
-CUevent = hip.hip.hipEvent_t
-cudaEvent_t = hip.hip.hipEvent_t
+CUevent = hip.hipEvent_t
+cudaEvent_t = hip.hipEvent_t
 
 HIP_PYTHON_CUlimit_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_HALLUCINATE","false")
 
 class _CUlimit_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -5496,22 +5038,50 @@ class _CUlimit_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipLimit_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUlimit
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUlimit(enum.IntEnum,metaclass=_CUlimit_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipLimit_t
+class CUlimit(hip._hipLimit_t__Base,metaclass=_CUlimit_EnumMeta):
     CU_LIMIT_STACK_SIZE = hip.chip.hipLimitStackSize
     cudaLimitStackSize = hip.chip.hipLimitStackSize
     hipLimitStackSize = hip.chip.hipLimitStackSize
@@ -5526,45 +5096,6 @@ class CUlimit(enum.IntEnum,metaclass=_CUlimit_EnumMeta):
 HIP_PYTHON_CUlimit_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUlimit_enum_HALLUCINATE","false")
 
 class _CUlimit_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -5582,22 +5113,50 @@ class _CUlimit_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipLimit_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUlimit_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUlimit_enum(enum.IntEnum,metaclass=_CUlimit_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipLimit_t
+class CUlimit_enum(hip._hipLimit_t__Base,metaclass=_CUlimit_enum_EnumMeta):
     CU_LIMIT_STACK_SIZE = hip.chip.hipLimitStackSize
     cudaLimitStackSize = hip.chip.hipLimitStackSize
     hipLimitStackSize = hip.chip.hipLimitStackSize
@@ -5612,45 +5171,6 @@ class CUlimit_enum(enum.IntEnum,metaclass=_CUlimit_enum_EnumMeta):
 HIP_PYTHON_cudaLimit_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaLimit_HALLUCINATE","false")
 
 class _cudaLimit_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -5668,22 +5188,50 @@ class _cudaLimit_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipLimit_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaLimit
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaLimit(enum.IntEnum,metaclass=_cudaLimit_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipLimit_t
+class cudaLimit(hip._hipLimit_t__Base,metaclass=_cudaLimit_EnumMeta):
     CU_LIMIT_STACK_SIZE = hip.chip.hipLimitStackSize
     cudaLimitStackSize = hip.chip.hipLimitStackSize
     hipLimitStackSize = hip.chip.hipLimitStackSize
@@ -5698,45 +5246,6 @@ class cudaLimit(enum.IntEnum,metaclass=_cudaLimit_EnumMeta):
 HIP_PYTHON_CUmem_advise_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmem_advise_HALLUCINATE","false")
 
 class _CUmem_advise_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -5754,22 +5263,50 @@ class _CUmem_advise_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemoryAdvise):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmem_advise
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmem_advise(enum.IntEnum,metaclass=_CUmem_advise_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemoryAdvise
+class CUmem_advise(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_EnumMeta):
     CU_MEM_ADVISE_SET_READ_MOSTLY = hip.chip.hipMemAdviseSetReadMostly
     cudaMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
     hipMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
@@ -5795,45 +5332,6 @@ HIP_PYTHON_CUmem_advise_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP
 
 class _CUmem_advise_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUmem_advise_enum_HALLUCINATE
@@ -5850,22 +5348,50 @@ class _CUmem_advise_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemoryAdvise):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmem_advise_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmem_advise_enum(enum.IntEnum,metaclass=_CUmem_advise_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemoryAdvise
+class CUmem_advise_enum(hip._hipMemoryAdvise__Base,metaclass=_CUmem_advise_enum_EnumMeta):
     CU_MEM_ADVISE_SET_READ_MOSTLY = hip.chip.hipMemAdviseSetReadMostly
     cudaMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
     hipMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
@@ -5891,45 +5417,6 @@ HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_
 
 class _cudaMemoryAdvise_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaMemoryAdvise_HALLUCINATE
@@ -5946,22 +5433,50 @@ class _cudaMemoryAdvise_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemoryAdvise):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaMemoryAdvise
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaMemoryAdvise(enum.IntEnum,metaclass=_cudaMemoryAdvise_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemoryAdvise
+class cudaMemoryAdvise(hip._hipMemoryAdvise__Base,metaclass=_cudaMemoryAdvise_EnumMeta):
     CU_MEM_ADVISE_SET_READ_MOSTLY = hip.chip.hipMemAdviseSetReadMostly
     cudaMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
     hipMemAdviseSetReadMostly = hip.chip.hipMemAdviseSetReadMostly
@@ -5987,45 +5502,6 @@ HIP_PYTHON_CUmem_range_attribute_HALLUCINATE = _hip_python_get_bool_environ_var(
 
 class _CUmem_range_attribute_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUmem_range_attribute_HALLUCINATE
@@ -6042,22 +5518,50 @@ class _CUmem_range_attribute_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemRangeAttribute):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmem_range_attribute
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmem_range_attribute(enum.IntEnum,metaclass=_CUmem_range_attribute_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemRangeAttribute
+class CUmem_range_attribute(hip._hipMemRangeAttribute__Base,metaclass=_CUmem_range_attribute_EnumMeta):
     CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY = hip.chip.hipMemRangeAttributeReadMostly
     cudaMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
     hipMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
@@ -6076,45 +5580,6 @@ HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ
 
 class _CUmem_range_attribute_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUmem_range_attribute_enum_HALLUCINATE
@@ -6131,22 +5596,50 @@ class _CUmem_range_attribute_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemRangeAttribute):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmem_range_attribute_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmem_range_attribute_enum(enum.IntEnum,metaclass=_CUmem_range_attribute_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemRangeAttribute
+class CUmem_range_attribute_enum(hip._hipMemRangeAttribute__Base,metaclass=_CUmem_range_attribute_enum_EnumMeta):
     CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY = hip.chip.hipMemRangeAttributeReadMostly
     cudaMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
     hipMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
@@ -6165,45 +5658,6 @@ HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE = _hip_python_get_bool_environ_var(
 
 class _cudaMemRangeAttribute_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaMemRangeAttribute_HALLUCINATE
@@ -6220,22 +5674,50 @@ class _cudaMemRangeAttribute_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemRangeAttribute):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaMemRangeAttribute
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaMemRangeAttribute(enum.IntEnum,metaclass=_cudaMemRangeAttribute_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemRangeAttribute
+class cudaMemRangeAttribute(hip._hipMemRangeAttribute__Base,metaclass=_cudaMemRangeAttribute_EnumMeta):
     CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY = hip.chip.hipMemRangeAttributeReadMostly
     cudaMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
     hipMemRangeAttributeReadMostly = hip.chip.hipMemRangeAttributeReadMostly
@@ -6254,45 +5736,6 @@ HIP_PYTHON_CUmemPool_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("H
 
 class _CUmemPool_attribute_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUmemPool_attribute_HALLUCINATE
@@ -6309,22 +5752,50 @@ class _CUmemPool_attribute_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemPoolAttr):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemPool_attribute
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemPool_attribute(enum.IntEnum,metaclass=_CUmemPool_attribute_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemPoolAttr
+class CUmemPool_attribute(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_attribute_EnumMeta):
     CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES = hip.chip.hipMemPoolReuseFollowEventDependencies
     cudaMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
     hipMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
@@ -6354,45 +5825,6 @@ HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_v
 
 class _CUmemPool_attribute_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUmemPool_attribute_enum_HALLUCINATE
@@ -6409,22 +5841,50 @@ class _CUmemPool_attribute_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemPoolAttr):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemPool_attribute_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemPool_attribute_enum(enum.IntEnum,metaclass=_CUmemPool_attribute_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemPoolAttr
+class CUmemPool_attribute_enum(hip._hipMemPoolAttr__Base,metaclass=_CUmemPool_attribute_enum_EnumMeta):
     CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES = hip.chip.hipMemPoolReuseFollowEventDependencies
     cudaMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
     hipMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
@@ -6454,45 +5914,6 @@ HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_P
 
 class _cudaMemPoolAttr_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaMemPoolAttr_HALLUCINATE
@@ -6509,22 +5930,50 @@ class _cudaMemPoolAttr_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemPoolAttr):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaMemPoolAttr
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaMemPoolAttr(enum.IntEnum,metaclass=_cudaMemPoolAttr_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemPoolAttr
+class cudaMemPoolAttr(hip._hipMemPoolAttr__Base,metaclass=_cudaMemPoolAttr_EnumMeta):
     CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES = hip.chip.hipMemPoolReuseFollowEventDependencies
     cudaMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
     hipMemPoolReuseFollowEventDependencies = hip.chip.hipMemPoolReuseFollowEventDependencies
@@ -6554,45 +6003,6 @@ HIP_PYTHON_CUmemLocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP
 
 class _CUmemLocationType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUmemLocationType_HALLUCINATE
@@ -6609,22 +6019,50 @@ class _CUmemLocationType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemLocationType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemLocationType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemLocationType(enum.IntEnum,metaclass=_CUmemLocationType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemLocationType
+class CUmemLocationType(hip._hipMemLocationType__Base,metaclass=_CUmemLocationType_EnumMeta):
     CU_MEM_LOCATION_TYPE_INVALID = hip.chip.hipMemLocationTypeInvalid
     cudaMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     hipMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
@@ -6635,45 +6073,6 @@ class CUmemLocationType(enum.IntEnum,metaclass=_CUmemLocationType_EnumMeta):
 HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemLocationType_enum_HALLUCINATE","false")
 
 class _CUmemLocationType_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -6691,22 +6090,50 @@ class _CUmemLocationType_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemLocationType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemLocationType_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemLocationType_enum(enum.IntEnum,metaclass=_CUmemLocationType_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemLocationType
+class CUmemLocationType_enum(hip._hipMemLocationType__Base,metaclass=_CUmemLocationType_enum_EnumMeta):
     CU_MEM_LOCATION_TYPE_INVALID = hip.chip.hipMemLocationTypeInvalid
     cudaMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     hipMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
@@ -6717,45 +6144,6 @@ class CUmemLocationType_enum(enum.IntEnum,metaclass=_CUmemLocationType_enum_Enum
 HIP_PYTHON_cudaMemLocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemLocationType_HALLUCINATE","false")
 
 class _cudaMemLocationType_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -6773,22 +6161,50 @@ class _cudaMemLocationType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemLocationType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaMemLocationType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaMemLocationType(enum.IntEnum,metaclass=_cudaMemLocationType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemLocationType
+class cudaMemLocationType(hip._hipMemLocationType__Base,metaclass=_cudaMemLocationType_EnumMeta):
     CU_MEM_LOCATION_TYPE_INVALID = hip.chip.hipMemLocationTypeInvalid
     cudaMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
     hipMemLocationTypeInvalid = hip.chip.hipMemLocationTypeInvalid
@@ -6808,45 +6224,6 @@ HIP_PYTHON_CUmemAccess_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP
 
 class _CUmemAccess_flags_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUmemAccess_flags_HALLUCINATE
@@ -6863,22 +6240,50 @@ class _CUmemAccess_flags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAccessFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemAccess_flags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemAccess_flags(enum.IntEnum,metaclass=_CUmemAccess_flags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAccessFlags
+class CUmemAccess_flags(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess_flags_EnumMeta):
     CU_MEM_ACCESS_FLAGS_PROT_NONE = hip.chip.hipMemAccessFlagsProtNone
     cudaMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
     hipMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
@@ -6892,45 +6297,6 @@ class CUmemAccess_flags(enum.IntEnum,metaclass=_CUmemAccess_flags_EnumMeta):
 HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAccess_flags_enum_HALLUCINATE","false")
 
 class _CUmemAccess_flags_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -6948,22 +6314,50 @@ class _CUmemAccess_flags_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAccessFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemAccess_flags_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemAccess_flags_enum(enum.IntEnum,metaclass=_CUmemAccess_flags_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAccessFlags
+class CUmemAccess_flags_enum(hip._hipMemAccessFlags__Base,metaclass=_CUmemAccess_flags_enum_EnumMeta):
     CU_MEM_ACCESS_FLAGS_PROT_NONE = hip.chip.hipMemAccessFlagsProtNone
     cudaMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
     hipMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
@@ -6977,45 +6371,6 @@ class CUmemAccess_flags_enum(enum.IntEnum,metaclass=_CUmemAccess_flags_enum_Enum
 HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAccessFlags_HALLUCINATE","false")
 
 class _cudaMemAccessFlags_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -7033,22 +6388,50 @@ class _cudaMemAccessFlags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAccessFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaMemAccessFlags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaMemAccessFlags(enum.IntEnum,metaclass=_cudaMemAccessFlags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAccessFlags
+class cudaMemAccessFlags(hip._hipMemAccessFlags__Base,metaclass=_cudaMemAccessFlags_EnumMeta):
     CU_MEM_ACCESS_FLAGS_PROT_NONE = hip.chip.hipMemAccessFlagsProtNone
     cudaMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
     hipMemAccessFlagsProtNone = hip.chip.hipMemAccessFlagsProtNone
@@ -7071,45 +6454,6 @@ HIP_PYTHON_CUmemAllocationType_HALLUCINATE = _hip_python_get_bool_environ_var("H
 
 class _CUmemAllocationType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUmemAllocationType_HALLUCINATE
@@ -7126,22 +6470,50 @@ class _CUmemAllocationType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAllocationType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemAllocationType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemAllocationType(enum.IntEnum,metaclass=_CUmemAllocationType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAllocationType
+class CUmemAllocationType(hip._hipMemAllocationType__Base,metaclass=_CUmemAllocationType_EnumMeta):
     CU_MEM_ALLOCATION_TYPE_INVALID = hip.chip.hipMemAllocationTypeInvalid
     cudaMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
     hipMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
@@ -7155,45 +6527,6 @@ class CUmemAllocationType(enum.IntEnum,metaclass=_CUmemAllocationType_EnumMeta):
 HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationType_enum_HALLUCINATE","false")
 
 class _CUmemAllocationType_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -7211,22 +6544,50 @@ class _CUmemAllocationType_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAllocationType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemAllocationType_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemAllocationType_enum(enum.IntEnum,metaclass=_CUmemAllocationType_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAllocationType
+class CUmemAllocationType_enum(hip._hipMemAllocationType__Base,metaclass=_CUmemAllocationType_enum_EnumMeta):
     CU_MEM_ALLOCATION_TYPE_INVALID = hip.chip.hipMemAllocationTypeInvalid
     cudaMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
     hipMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
@@ -7240,45 +6601,6 @@ class CUmemAllocationType_enum(enum.IntEnum,metaclass=_CUmemAllocationType_enum_
 HIP_PYTHON_cudaMemAllocationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaMemAllocationType_HALLUCINATE","false")
 
 class _cudaMemAllocationType_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -7296,22 +6618,50 @@ class _cudaMemAllocationType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAllocationType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaMemAllocationType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaMemAllocationType(enum.IntEnum,metaclass=_cudaMemAllocationType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAllocationType
+class cudaMemAllocationType(hip._hipMemAllocationType__Base,metaclass=_cudaMemAllocationType_EnumMeta):
     CU_MEM_ALLOCATION_TYPE_INVALID = hip.chip.hipMemAllocationTypeInvalid
     cudaMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
     hipMemAllocationTypeInvalid = hip.chip.hipMemAllocationTypeInvalid
@@ -7325,45 +6675,6 @@ class cudaMemAllocationType(enum.IntEnum,metaclass=_cudaMemAllocationType_EnumMe
 HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationHandleType_HALLUCINATE","false")
 
 class _CUmemAllocationHandleType_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -7381,22 +6692,50 @@ class _CUmemAllocationHandleType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAllocationHandleType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemAllocationHandleType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemAllocationHandleType(enum.IntEnum,metaclass=_CUmemAllocationHandleType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAllocationHandleType
+class CUmemAllocationHandleType(hip._hipMemAllocationHandleType__Base,metaclass=_CUmemAllocationHandleType_EnumMeta):
     CU_MEM_HANDLE_TYPE_NONE = hip.chip.hipMemHandleTypeNone
     cudaMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
     hipMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
@@ -7414,45 +6753,6 @@ HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE = _hip_python_get_bool_env
 
 class _CUmemAllocationHandleType_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUmemAllocationHandleType_enum_HALLUCINATE
@@ -7469,22 +6769,50 @@ class _CUmemAllocationHandleType_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAllocationHandleType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemAllocationHandleType_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemAllocationHandleType_enum(enum.IntEnum,metaclass=_CUmemAllocationHandleType_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAllocationHandleType
+class CUmemAllocationHandleType_enum(hip._hipMemAllocationHandleType__Base,metaclass=_CUmemAllocationHandleType_enum_EnumMeta):
     CU_MEM_HANDLE_TYPE_NONE = hip.chip.hipMemHandleTypeNone
     cudaMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
     hipMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
@@ -7502,45 +6830,6 @@ HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE = _hip_python_get_bool_enviro
 
 class _cudaMemAllocationHandleType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaMemAllocationHandleType_HALLUCINATE
@@ -7557,22 +6846,50 @@ class _cudaMemAllocationHandleType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAllocationHandleType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaMemAllocationHandleType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaMemAllocationHandleType(enum.IntEnum,metaclass=_cudaMemAllocationHandleType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAllocationHandleType
+class cudaMemAllocationHandleType(hip._hipMemAllocationHandleType__Base,metaclass=_cudaMemAllocationHandleType_EnumMeta):
     CU_MEM_HANDLE_TYPE_NONE = hip.chip.hipMemHandleTypeNone
     cudaMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
     hipMemHandleTypeNone = hip.chip.hipMemHandleTypeNone
@@ -7606,45 +6923,6 @@ HIP_PYTHON_CUjit_option_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTH
 
 class _CUjit_option_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUjit_option_HALLUCINATE
@@ -7661,22 +6939,50 @@ class _CUjit_option_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipJitOption):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUjit_option
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUjit_option(enum.IntEnum,metaclass=_CUjit_option_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipJitOption
+class CUjit_option(hip._hipJitOption__Base,metaclass=_CUjit_option_EnumMeta):
     hipJitOptionMaxRegisters = hip.chip.hipJitOptionMaxRegisters
     hipJitOptionThreadsPerBlock = hip.chip.hipJitOptionThreadsPerBlock
     hipJitOptionWallTime = hip.chip.hipJitOptionWallTime
@@ -7700,45 +7006,6 @@ HIP_PYTHON_CUjit_option_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP
 
 class _CUjit_option_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUjit_option_enum_HALLUCINATE
@@ -7755,22 +7022,50 @@ class _CUjit_option_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipJitOption):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUjit_option_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUjit_option_enum(enum.IntEnum,metaclass=_CUjit_option_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipJitOption
+class CUjit_option_enum(hip._hipJitOption__Base,metaclass=_CUjit_option_enum_EnumMeta):
     hipJitOptionMaxRegisters = hip.chip.hipJitOptionMaxRegisters
     hipJitOptionThreadsPerBlock = hip.chip.hipJitOptionThreadsPerBlock
     hipJitOptionWallTime = hip.chip.hipJitOptionWallTime
@@ -7794,45 +7089,6 @@ HIP_PYTHON_cudaFuncAttribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP
 
 class _cudaFuncAttribute_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaFuncAttribute_HALLUCINATE
@@ -7849,22 +7105,50 @@ class _cudaFuncAttribute_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipFuncAttribute):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaFuncAttribute
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaFuncAttribute(enum.IntEnum,metaclass=_cudaFuncAttribute_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipFuncAttribute
+class cudaFuncAttribute(hip._hipFuncAttribute__Base,metaclass=_cudaFuncAttribute_EnumMeta):
     cudaFuncAttributeMaxDynamicSharedMemorySize = hip.chip.hipFuncAttributeMaxDynamicSharedMemorySize
     hipFuncAttributeMaxDynamicSharedMemorySize = hip.chip.hipFuncAttributeMaxDynamicSharedMemorySize
     cudaFuncAttributePreferredSharedMemoryCarveout = hip.chip.hipFuncAttributePreferredSharedMemoryCarveout
@@ -7875,45 +7159,6 @@ class cudaFuncAttribute(enum.IntEnum,metaclass=_cudaFuncAttribute_EnumMeta):
 HIP_PYTHON_CUfunc_cache_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUfunc_cache_HALLUCINATE","false")
 
 class _CUfunc_cache_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -7931,22 +7176,50 @@ class _CUfunc_cache_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipFuncCache_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUfunc_cache
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUfunc_cache(enum.IntEnum,metaclass=_CUfunc_cache_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipFuncCache_t
+class CUfunc_cache(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_EnumMeta):
     CU_FUNC_CACHE_PREFER_NONE = hip.chip.hipFuncCachePreferNone
     cudaFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
     hipFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
@@ -7964,45 +7237,6 @@ HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP
 
 class _CUfunc_cache_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUfunc_cache_enum_HALLUCINATE
@@ -8019,22 +7253,50 @@ class _CUfunc_cache_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipFuncCache_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUfunc_cache_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUfunc_cache_enum(enum.IntEnum,metaclass=_CUfunc_cache_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipFuncCache_t
+class CUfunc_cache_enum(hip._hipFuncCache_t__Base,metaclass=_CUfunc_cache_enum_EnumMeta):
     CU_FUNC_CACHE_PREFER_NONE = hip.chip.hipFuncCachePreferNone
     cudaFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
     hipFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
@@ -8052,45 +7314,6 @@ HIP_PYTHON_cudaFuncCache_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYT
 
 class _cudaFuncCache_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaFuncCache_HALLUCINATE
@@ -8107,22 +7330,50 @@ class _cudaFuncCache_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipFuncCache_t):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaFuncCache
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaFuncCache(enum.IntEnum,metaclass=_cudaFuncCache_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipFuncCache_t
+class cudaFuncCache(hip._hipFuncCache_t__Base,metaclass=_cudaFuncCache_EnumMeta):
     CU_FUNC_CACHE_PREFER_NONE = hip.chip.hipFuncCachePreferNone
     cudaFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
     hipFuncCachePreferNone = hip.chip.hipFuncCachePreferNone
@@ -8140,45 +7391,6 @@ HIP_PYTHON_CUsharedconfig_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PY
 
 class _CUsharedconfig_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUsharedconfig_HALLUCINATE
@@ -8195,22 +7407,50 @@ class _CUsharedconfig_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipSharedMemConfig):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUsharedconfig
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUsharedconfig(enum.IntEnum,metaclass=_CUsharedconfig_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipSharedMemConfig
+class CUsharedconfig(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfig_EnumMeta):
     CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE = hip.chip.hipSharedMemBankSizeDefault
     cudaSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
     hipSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
@@ -8224,45 +7464,6 @@ class CUsharedconfig(enum.IntEnum,metaclass=_CUsharedconfig_EnumMeta):
 HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUsharedconfig_enum_HALLUCINATE","false")
 
 class _CUsharedconfig_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -8280,22 +7481,50 @@ class _CUsharedconfig_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipSharedMemConfig):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUsharedconfig_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUsharedconfig_enum(enum.IntEnum,metaclass=_CUsharedconfig_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipSharedMemConfig
+class CUsharedconfig_enum(hip._hipSharedMemConfig__Base,metaclass=_CUsharedconfig_enum_EnumMeta):
     CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE = hip.chip.hipSharedMemBankSizeDefault
     cudaSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
     hipSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
@@ -8309,45 +7538,6 @@ class CUsharedconfig_enum(enum.IntEnum,metaclass=_CUsharedconfig_enum_EnumMeta):
 HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaSharedMemConfig_HALLUCINATE","false")
 
 class _cudaSharedMemConfig_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -8365,22 +7555,50 @@ class _cudaSharedMemConfig_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipSharedMemConfig):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaSharedMemConfig
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaSharedMemConfig(enum.IntEnum,metaclass=_cudaSharedMemConfig_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipSharedMemConfig
+class cudaSharedMemConfig(hip._hipSharedMemConfig__Base,metaclass=_cudaSharedMemConfig_EnumMeta):
     CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE = hip.chip.hipSharedMemBankSizeDefault
     cudaSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
     hipSharedMemBankSizeDefault = hip.chip.hipSharedMemBankSizeDefault
@@ -8390,50 +7608,11 @@ class cudaSharedMemConfig(enum.IntEnum,metaclass=_cudaSharedMemConfig_EnumMeta):
     CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE = hip.chip.hipSharedMemBankSizeEightByte
     cudaSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
     hipSharedMemBankSizeEightByte = hip.chip.hipSharedMemBankSizeEightByte
-cudaLaunchParams = hip.hip.hipLaunchParams
+cudaLaunchParams = hip.hipLaunchParams
 
 HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalMemoryHandleType_enum_HALLUCINATE","false")
 
 class _CUexternalMemoryHandleType_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -8451,22 +7630,50 @@ class _CUexternalMemoryHandleType_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipExternalMemoryHandleType_enum):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUexternalMemoryHandleType_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUexternalMemoryHandleType_enum(enum.IntEnum,metaclass=_CUexternalMemoryHandleType_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipExternalMemoryHandleType_enum
+class CUexternalMemoryHandleType_enum(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_CUexternalMemoryHandleType_enum_EnumMeta):
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     cudaExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     hipExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
@@ -8493,45 +7700,6 @@ HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE = _hip_python_get_bool_environ
 
 class _CUexternalMemoryHandleType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUexternalMemoryHandleType_HALLUCINATE
@@ -8548,22 +7716,50 @@ class _CUexternalMemoryHandleType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipExternalMemoryHandleType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUexternalMemoryHandleType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUexternalMemoryHandleType(enum.IntEnum,metaclass=_CUexternalMemoryHandleType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipExternalMemoryHandleType
+class CUexternalMemoryHandleType(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_CUexternalMemoryHandleType_EnumMeta):
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     cudaExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     hipExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
@@ -8590,45 +7786,6 @@ HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE = _hip_python_get_bool_envir
 
 class _cudaExternalMemoryHandleType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaExternalMemoryHandleType_HALLUCINATE
@@ -8645,22 +7802,50 @@ class _cudaExternalMemoryHandleType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipExternalMemoryHandleType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaExternalMemoryHandleType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaExternalMemoryHandleType(enum.IntEnum,metaclass=_cudaExternalMemoryHandleType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipExternalMemoryHandleType
+class cudaExternalMemoryHandleType(hip._hipExternalMemoryHandleType_enum__Base,metaclass=_cudaExternalMemoryHandleType_EnumMeta):
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     cudaExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
     hipExternalMemoryHandleTypeOpaqueFd = hip.chip.hipExternalMemoryHandleTypeOpaqueFd
@@ -8684,57 +7869,18 @@ class cudaExternalMemoryHandleType(enum.IntEnum,metaclass=_cudaExternalMemoryHan
     hipExternalMemoryHandleTypeD3D11ResourceKmt = hip.chip.hipExternalMemoryHandleTypeD3D11ResourceKmt
 cdef class CUDA_EXTERNAL_MEMORY_HANDLE_DESC_st(hip.hip.hipExternalMemoryHandleDesc_st):
     pass
-CUDA_EXTERNAL_MEMORY_HANDLE_DESC = hip.hip.hipExternalMemoryHandleDesc
-CUDA_EXTERNAL_MEMORY_HANDLE_DESC_v1 = hip.hip.hipExternalMemoryHandleDesc
-cudaExternalMemoryHandleDesc = hip.hip.hipExternalMemoryHandleDesc
+CUDA_EXTERNAL_MEMORY_HANDLE_DESC = hip.hipExternalMemoryHandleDesc
+CUDA_EXTERNAL_MEMORY_HANDLE_DESC_v1 = hip.hipExternalMemoryHandleDesc
+cudaExternalMemoryHandleDesc = hip.hipExternalMemoryHandleDesc
 cdef class CUDA_EXTERNAL_MEMORY_BUFFER_DESC_st(hip.hip.hipExternalMemoryBufferDesc_st):
     pass
-CUDA_EXTERNAL_MEMORY_BUFFER_DESC = hip.hip.hipExternalMemoryBufferDesc
-CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1 = hip.hip.hipExternalMemoryBufferDesc
-cudaExternalMemoryBufferDesc = hip.hip.hipExternalMemoryBufferDesc
+CUDA_EXTERNAL_MEMORY_BUFFER_DESC = hip.hipExternalMemoryBufferDesc
+CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1 = hip.hipExternalMemoryBufferDesc
+cudaExternalMemoryBufferDesc = hip.hipExternalMemoryBufferDesc
 
 HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUexternalSemaphoreHandleType_enum_HALLUCINATE","false")
 
 class _CUexternalSemaphoreHandleType_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -8752,22 +7898,50 @@ class _CUexternalSemaphoreHandleType_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipExternalSemaphoreHandleType_enum):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUexternalSemaphoreHandleType_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUexternalSemaphoreHandleType_enum(enum.IntEnum,metaclass=_CUexternalSemaphoreHandleType_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipExternalSemaphoreHandleType_enum
+class CUexternalSemaphoreHandleType_enum(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_CUexternalSemaphoreHandleType_enum_EnumMeta):
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     cudaExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     hipExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
@@ -8785,45 +7959,6 @@ HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE = _hip_python_get_bool_envi
 
 class _CUexternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUexternalSemaphoreHandleType_HALLUCINATE
@@ -8840,22 +7975,50 @@ class _CUexternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipExternalSemaphoreHandleType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUexternalSemaphoreHandleType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUexternalSemaphoreHandleType(enum.IntEnum,metaclass=_CUexternalSemaphoreHandleType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipExternalSemaphoreHandleType
+class CUexternalSemaphoreHandleType(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_CUexternalSemaphoreHandleType_EnumMeta):
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     cudaExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     hipExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
@@ -8873,45 +8036,6 @@ HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE = _hip_python_get_bool_en
 
 class _cudaExternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaExternalSemaphoreHandleType_HALLUCINATE
@@ -8928,22 +8052,50 @@ class _cudaExternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipExternalSemaphoreHandleType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaExternalSemaphoreHandleType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaExternalSemaphoreHandleType(enum.IntEnum,metaclass=_cudaExternalSemaphoreHandleType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipExternalSemaphoreHandleType
+class cudaExternalSemaphoreHandleType(hip._hipExternalSemaphoreHandleType_enum__Base,metaclass=_cudaExternalSemaphoreHandleType_EnumMeta):
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     cudaExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
     hipExternalSemaphoreHandleTypeOpaqueFd = hip.chip.hipExternalSemaphoreHandleTypeOpaqueFd
@@ -8958,64 +8110,25 @@ class cudaExternalSemaphoreHandleType(enum.IntEnum,metaclass=_cudaExternalSemaph
     hipExternalSemaphoreHandleTypeD3D12Fence = hip.chip.hipExternalSemaphoreHandleTypeD3D12Fence
 cdef class CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_st(hip.hip.hipExternalSemaphoreHandleDesc_st):
     pass
-CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC = hip.hip.hipExternalSemaphoreHandleDesc
-CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_v1 = hip.hip.hipExternalSemaphoreHandleDesc
-cudaExternalSemaphoreHandleDesc = hip.hip.hipExternalSemaphoreHandleDesc
+CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC = hip.hipExternalSemaphoreHandleDesc
+CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_v1 = hip.hipExternalSemaphoreHandleDesc
+cudaExternalSemaphoreHandleDesc = hip.hipExternalSemaphoreHandleDesc
 cdef class CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_st(hip.hip.hipExternalSemaphoreSignalParams_st):
     pass
-CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS = hip.hip.hipExternalSemaphoreSignalParams
-CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1 = hip.hip.hipExternalSemaphoreSignalParams
-cudaExternalSemaphoreSignalParams = hip.hip.hipExternalSemaphoreSignalParams
-cudaExternalSemaphoreSignalParams_v1 = hip.hip.hipExternalSemaphoreSignalParams
+CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS = hip.hipExternalSemaphoreSignalParams
+CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1 = hip.hipExternalSemaphoreSignalParams
+cudaExternalSemaphoreSignalParams = hip.hipExternalSemaphoreSignalParams
+cudaExternalSemaphoreSignalParams_v1 = hip.hipExternalSemaphoreSignalParams
 cdef class CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_st(hip.hip.hipExternalSemaphoreWaitParams_st):
     pass
-CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS = hip.hip.hipExternalSemaphoreWaitParams
-CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1 = hip.hip.hipExternalSemaphoreWaitParams
-cudaExternalSemaphoreWaitParams = hip.hip.hipExternalSemaphoreWaitParams
-cudaExternalSemaphoreWaitParams_v1 = hip.hip.hipExternalSemaphoreWaitParams
+CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS = hip.hipExternalSemaphoreWaitParams
+CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1 = hip.hipExternalSemaphoreWaitParams
+cudaExternalSemaphoreWaitParams = hip.hipExternalSemaphoreWaitParams
+cudaExternalSemaphoreWaitParams_v1 = hip.hipExternalSemaphoreWaitParams
 
 HIP_PYTHON_CUGLDeviceList_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_HALLUCINATE","false")
 
 class _CUGLDeviceList_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -9033,22 +8146,50 @@ class _CUGLDeviceList_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGLDeviceList):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUGLDeviceList
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUGLDeviceList(enum.IntEnum,metaclass=_CUGLDeviceList_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGLDeviceList
+class CUGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_EnumMeta):
     CU_GL_DEVICE_LIST_ALL = hip.chip.hipGLDeviceListAll
     cudaGLDeviceListAll = hip.chip.hipGLDeviceListAll
     hipGLDeviceListAll = hip.chip.hipGLDeviceListAll
@@ -9062,45 +8203,6 @@ class CUGLDeviceList(enum.IntEnum,metaclass=_CUGLDeviceList_EnumMeta):
 HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUGLDeviceList_enum_HALLUCINATE","false")
 
 class _CUGLDeviceList_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -9118,22 +8220,50 @@ class _CUGLDeviceList_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGLDeviceList):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUGLDeviceList_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUGLDeviceList_enum(enum.IntEnum,metaclass=_CUGLDeviceList_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGLDeviceList
+class CUGLDeviceList_enum(hip._hipGLDeviceList__Base,metaclass=_CUGLDeviceList_enum_EnumMeta):
     CU_GL_DEVICE_LIST_ALL = hip.chip.hipGLDeviceListAll
     cudaGLDeviceListAll = hip.chip.hipGLDeviceListAll
     hipGLDeviceListAll = hip.chip.hipGLDeviceListAll
@@ -9147,45 +8277,6 @@ class CUGLDeviceList_enum(enum.IntEnum,metaclass=_CUGLDeviceList_enum_EnumMeta):
 HIP_PYTHON_cudaGLDeviceList_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGLDeviceList_HALLUCINATE","false")
 
 class _cudaGLDeviceList_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -9203,22 +8294,50 @@ class _cudaGLDeviceList_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGLDeviceList):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaGLDeviceList
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaGLDeviceList(enum.IntEnum,metaclass=_cudaGLDeviceList_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGLDeviceList
+class cudaGLDeviceList(hip._hipGLDeviceList__Base,metaclass=_cudaGLDeviceList_EnumMeta):
     CU_GL_DEVICE_LIST_ALL = hip.chip.hipGLDeviceListAll
     cudaGLDeviceListAll = hip.chip.hipGLDeviceListAll
     hipGLDeviceListAll = hip.chip.hipGLDeviceListAll
@@ -9232,45 +8351,6 @@ class cudaGLDeviceList(enum.IntEnum,metaclass=_cudaGLDeviceList_EnumMeta):
 HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphicsRegisterFlags_HALLUCINATE","false")
 
 class _CUgraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -9288,22 +8368,50 @@ class _CUgraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphicsRegisterFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphicsRegisterFlags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUgraphicsRegisterFlags(enum.IntEnum,metaclass=_CUgraphicsRegisterFlags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphicsRegisterFlags
+class CUgraphicsRegisterFlags(hip._hipGraphicsRegisterFlags__Base,metaclass=_CUgraphicsRegisterFlags_EnumMeta):
     CU_GRAPHICS_REGISTER_FLAGS_NONE = hip.chip.hipGraphicsRegisterFlagsNone
     cudaGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
     hipGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
@@ -9324,45 +8432,6 @@ HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE = _hip_python_get_bool_envir
 
 class _CUgraphicsRegisterFlags_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUgraphicsRegisterFlags_enum_HALLUCINATE
@@ -9379,22 +8448,50 @@ class _CUgraphicsRegisterFlags_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphicsRegisterFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphicsRegisterFlags_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUgraphicsRegisterFlags_enum(enum.IntEnum,metaclass=_CUgraphicsRegisterFlags_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphicsRegisterFlags
+class CUgraphicsRegisterFlags_enum(hip._hipGraphicsRegisterFlags__Base,metaclass=_CUgraphicsRegisterFlags_enum_EnumMeta):
     CU_GRAPHICS_REGISTER_FLAGS_NONE = hip.chip.hipGraphicsRegisterFlagsNone
     cudaGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
     hipGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
@@ -9415,45 +8512,6 @@ HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE = _hip_python_get_bool_environ_
 
 class _cudaGraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaGraphicsRegisterFlags_HALLUCINATE
@@ -9470,22 +8528,50 @@ class _cudaGraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphicsRegisterFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaGraphicsRegisterFlags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaGraphicsRegisterFlags(enum.IntEnum,metaclass=_cudaGraphicsRegisterFlags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphicsRegisterFlags
+class cudaGraphicsRegisterFlags(hip._hipGraphicsRegisterFlags__Base,metaclass=_cudaGraphicsRegisterFlags_EnumMeta):
     CU_GRAPHICS_REGISTER_FLAGS_NONE = hip.chip.hipGraphicsRegisterFlagsNone
     cudaGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
     hipGraphicsRegisterFlagsNone = hip.chip.hipGraphicsRegisterFlagsNone
@@ -9501,69 +8587,30 @@ class cudaGraphicsRegisterFlags(enum.IntEnum,metaclass=_cudaGraphicsRegisterFlag
     CU_GRAPHICS_REGISTER_FLAGS_TEXTURE_GATHER = hip.chip.hipGraphicsRegisterFlagsTextureGather
     cudaGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
     hipGraphicsRegisterFlagsTextureGather = hip.chip.hipGraphicsRegisterFlagsTextureGather
-CUgraphicsResource_st = hip.hip.hipGraphicsResource
-cudaGraphicsResource = hip.hip.hipGraphicsResource
-CUgraphicsResource = hip.hip.hipGraphicsResource_t
-cudaGraphicsResource_t = hip.hip.hipGraphicsResource_t
+CUgraphicsResource_st = hip.hipGraphicsResource
+cudaGraphicsResource = hip.hipGraphicsResource
+CUgraphicsResource = hip.hipGraphicsResource_t
+cudaGraphicsResource_t = hip.hipGraphicsResource_t
 cdef class CUgraph_st(hip.hip.ihipGraph):
     pass
-CUgraph = hip.hip.hipGraph_t
-cudaGraph_t = hip.hip.hipGraph_t
+CUgraph = hip.hipGraph_t
+cudaGraph_t = hip.hipGraph_t
 cdef class CUgraphNode_st(hip.hip.hipGraphNode):
     pass
-CUgraphNode = hip.hip.hipGraphNode_t
-cudaGraphNode_t = hip.hip.hipGraphNode_t
+CUgraphNode = hip.hipGraphNode_t
+cudaGraphNode_t = hip.hipGraphNode_t
 cdef class CUgraphExec_st(hip.hip.hipGraphExec):
     pass
-CUgraphExec = hip.hip.hipGraphExec_t
-cudaGraphExec_t = hip.hip.hipGraphExec_t
+CUgraphExec = hip.hipGraphExec_t
+cudaGraphExec_t = hip.hipGraphExec_t
 cdef class CUuserObject_st(hip.hip.hipUserObject):
     pass
-CUuserObject = hip.hip.hipUserObject_t
-cudaUserObject_t = hip.hip.hipUserObject_t
+CUuserObject = hip.hipUserObject_t
+cudaUserObject_t = hip.hipUserObject_t
 
 HIP_PYTHON_CUgraphNodeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphNodeType_HALLUCINATE","false")
 
 class _CUgraphNodeType_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -9581,22 +8628,50 @@ class _CUgraphNodeType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphNodeType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphNodeType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUgraphNodeType(enum.IntEnum,metaclass=_CUgraphNodeType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphNodeType
+class CUgraphNodeType(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_EnumMeta):
     CU_GRAPH_NODE_TYPE_KERNEL = hip.chip.hipGraphNodeTypeKernel
     cudaGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
     hipGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
@@ -9637,45 +8712,6 @@ HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("
 
 class _CUgraphNodeType_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUgraphNodeType_enum_HALLUCINATE
@@ -9692,22 +8728,50 @@ class _CUgraphNodeType_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphNodeType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphNodeType_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUgraphNodeType_enum(enum.IntEnum,metaclass=_CUgraphNodeType_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphNodeType
+class CUgraphNodeType_enum(hip._hipGraphNodeType__Base,metaclass=_CUgraphNodeType_enum_EnumMeta):
     CU_GRAPH_NODE_TYPE_KERNEL = hip.chip.hipGraphNodeTypeKernel
     cudaGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
     hipGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
@@ -9748,45 +8812,6 @@ HIP_PYTHON_cudaGraphNodeType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP
 
 class _cudaGraphNodeType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaGraphNodeType_HALLUCINATE
@@ -9803,22 +8828,50 @@ class _cudaGraphNodeType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphNodeType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaGraphNodeType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaGraphNodeType(enum.IntEnum,metaclass=_cudaGraphNodeType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphNodeType
+class cudaGraphNodeType(hip._hipGraphNodeType__Base,metaclass=_cudaGraphNodeType_EnumMeta):
     CU_GRAPH_NODE_TYPE_KERNEL = hip.chip.hipGraphNodeTypeKernel
     cudaGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
     hipGraphNodeTypeKernel = hip.chip.hipGraphNodeTypeKernel
@@ -9887,45 +8940,6 @@ HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE = _hip_python_get_bool_environ_var("HI
 
 class _CUkernelNodeAttrID_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUkernelNodeAttrID_HALLUCINATE
@@ -9942,22 +8956,50 @@ class _CUkernelNodeAttrID_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipKernelNodeAttrID):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUkernelNodeAttrID
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUkernelNodeAttrID(enum.IntEnum,metaclass=_CUkernelNodeAttrID_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipKernelNodeAttrID
+class CUkernelNodeAttrID(hip._hipKernelNodeAttrID__Base,metaclass=_CUkernelNodeAttrID_EnumMeta):
     CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     cudaKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
@@ -9968,45 +9010,6 @@ class CUkernelNodeAttrID(enum.IntEnum,metaclass=_CUkernelNodeAttrID_EnumMeta):
 HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUkernelNodeAttrID_enum_HALLUCINATE","false")
 
 class _CUkernelNodeAttrID_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -10024,22 +9027,50 @@ class _CUkernelNodeAttrID_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipKernelNodeAttrID):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUkernelNodeAttrID_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUkernelNodeAttrID_enum(enum.IntEnum,metaclass=_CUkernelNodeAttrID_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipKernelNodeAttrID
+class CUkernelNodeAttrID_enum(hip._hipKernelNodeAttrID__Base,metaclass=_CUkernelNodeAttrID_enum_EnumMeta):
     CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     cudaKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
@@ -10050,45 +9081,6 @@ class CUkernelNodeAttrID_enum(enum.IntEnum,metaclass=_CUkernelNodeAttrID_enum_En
 HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaKernelNodeAttrID_HALLUCINATE","false")
 
 class _cudaKernelNodeAttrID_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -10106,22 +9098,50 @@ class _cudaKernelNodeAttrID_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipKernelNodeAttrID):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaKernelNodeAttrID
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaKernelNodeAttrID(enum.IntEnum,metaclass=_cudaKernelNodeAttrID_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipKernelNodeAttrID
+class cudaKernelNodeAttrID(hip._hipKernelNodeAttrID__Base,metaclass=_cudaKernelNodeAttrID_EnumMeta):
     CU_KERNEL_NODE_ATTRIBUTE_ACCESS_POLICY_WINDOW = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     cudaKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
     hipKernelNodeAttributeAccessPolicyWindow = hip.chip.hipKernelNodeAttributeAccessPolicyWindow
@@ -10132,45 +9152,6 @@ class cudaKernelNodeAttrID(enum.IntEnum,metaclass=_cudaKernelNodeAttrID_EnumMeta
 HIP_PYTHON_CUaccessProperty_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_HALLUCINATE","false")
 
 class _CUaccessProperty_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -10188,22 +9169,50 @@ class _CUaccessProperty_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipAccessProperty):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUaccessProperty
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUaccessProperty(enum.IntEnum,metaclass=_CUaccessProperty_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipAccessProperty
+class CUaccessProperty(hip._hipAccessProperty__Base,metaclass=_CUaccessProperty_EnumMeta):
     CU_ACCESS_PROPERTY_NORMAL = hip.chip.hipAccessPropertyNormal
     cudaAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
     hipAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
@@ -10217,45 +9226,6 @@ class CUaccessProperty(enum.IntEnum,metaclass=_CUaccessProperty_EnumMeta):
 HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUaccessProperty_enum_HALLUCINATE","false")
 
 class _CUaccessProperty_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -10273,22 +9243,50 @@ class _CUaccessProperty_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipAccessProperty):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUaccessProperty_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUaccessProperty_enum(enum.IntEnum,metaclass=_CUaccessProperty_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipAccessProperty
+class CUaccessProperty_enum(hip._hipAccessProperty__Base,metaclass=_CUaccessProperty_enum_EnumMeta):
     CU_ACCESS_PROPERTY_NORMAL = hip.chip.hipAccessPropertyNormal
     cudaAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
     hipAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
@@ -10302,45 +9300,6 @@ class CUaccessProperty_enum(enum.IntEnum,metaclass=_CUaccessProperty_enum_EnumMe
 HIP_PYTHON_cudaAccessProperty_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaAccessProperty_HALLUCINATE","false")
 
 class _cudaAccessProperty_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -10358,22 +9317,50 @@ class _cudaAccessProperty_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipAccessProperty):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaAccessProperty
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaAccessProperty(enum.IntEnum,metaclass=_cudaAccessProperty_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipAccessProperty
+class cudaAccessProperty(hip._hipAccessProperty__Base,metaclass=_cudaAccessProperty_EnumMeta):
     CU_ACCESS_PROPERTY_NORMAL = hip.chip.hipAccessPropertyNormal
     cudaAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
     hipAccessPropertyNormal = hip.chip.hipAccessPropertyNormal
@@ -10402,45 +9389,6 @@ HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE = _hip_python_get_bool_environ_va
 
 class _CUgraphExecUpdateResult_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUgraphExecUpdateResult_HALLUCINATE
@@ -10457,22 +9405,50 @@ class _CUgraphExecUpdateResult_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphExecUpdateResult):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphExecUpdateResult
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUgraphExecUpdateResult(enum.IntEnum,metaclass=_CUgraphExecUpdateResult_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphExecUpdateResult
+class CUgraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_CUgraphExecUpdateResult_EnumMeta):
     CU_GRAPH_EXEC_UPDATE_SUCCESS = hip.chip.hipGraphExecUpdateSuccess
     cudaGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
     hipGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
@@ -10502,45 +9478,6 @@ HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE = _hip_python_get_bool_envir
 
 class _CUgraphExecUpdateResult_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUgraphExecUpdateResult_enum_HALLUCINATE
@@ -10557,22 +9494,50 @@ class _CUgraphExecUpdateResult_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphExecUpdateResult):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphExecUpdateResult_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUgraphExecUpdateResult_enum(enum.IntEnum,metaclass=_CUgraphExecUpdateResult_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphExecUpdateResult
+class CUgraphExecUpdateResult_enum(hip._hipGraphExecUpdateResult__Base,metaclass=_CUgraphExecUpdateResult_enum_EnumMeta):
     CU_GRAPH_EXEC_UPDATE_SUCCESS = hip.chip.hipGraphExecUpdateSuccess
     cudaGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
     hipGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
@@ -10602,45 +9567,6 @@ HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE = _hip_python_get_bool_environ_
 
 class _cudaGraphExecUpdateResult_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaGraphExecUpdateResult_HALLUCINATE
@@ -10657,22 +9583,50 @@ class _cudaGraphExecUpdateResult_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphExecUpdateResult):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaGraphExecUpdateResult
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaGraphExecUpdateResult(enum.IntEnum,metaclass=_cudaGraphExecUpdateResult_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphExecUpdateResult
+class cudaGraphExecUpdateResult(hip._hipGraphExecUpdateResult__Base,metaclass=_cudaGraphExecUpdateResult_EnumMeta):
     CU_GRAPH_EXEC_UPDATE_SUCCESS = hip.chip.hipGraphExecUpdateSuccess
     cudaGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
     hipGraphExecUpdateSuccess = hip.chip.hipGraphExecUpdateSuccess
@@ -10702,45 +9656,6 @@ HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE = _hip_python_get_bool_environ_var("H
 
 class _CUstreamCaptureMode_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUstreamCaptureMode_HALLUCINATE
@@ -10757,22 +9672,50 @@ class _CUstreamCaptureMode_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipStreamCaptureMode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUstreamCaptureMode
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUstreamCaptureMode(enum.IntEnum,metaclass=_CUstreamCaptureMode_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipStreamCaptureMode
+class CUstreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_CUstreamCaptureMode_EnumMeta):
     CU_STREAM_CAPTURE_MODE_GLOBAL = hip.chip.hipStreamCaptureModeGlobal
     cudaStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
     hipStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
@@ -10786,45 +9729,6 @@ class CUstreamCaptureMode(enum.IntEnum,metaclass=_CUstreamCaptureMode_EnumMeta):
 HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureMode_enum_HALLUCINATE","false")
 
 class _CUstreamCaptureMode_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -10842,22 +9746,50 @@ class _CUstreamCaptureMode_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipStreamCaptureMode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUstreamCaptureMode_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUstreamCaptureMode_enum(enum.IntEnum,metaclass=_CUstreamCaptureMode_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipStreamCaptureMode
+class CUstreamCaptureMode_enum(hip._hipStreamCaptureMode__Base,metaclass=_CUstreamCaptureMode_enum_EnumMeta):
     CU_STREAM_CAPTURE_MODE_GLOBAL = hip.chip.hipStreamCaptureModeGlobal
     cudaStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
     hipStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
@@ -10871,45 +9803,6 @@ class CUstreamCaptureMode_enum(enum.IntEnum,metaclass=_CUstreamCaptureMode_enum_
 HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureMode_HALLUCINATE","false")
 
 class _cudaStreamCaptureMode_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -10927,22 +9820,50 @@ class _cudaStreamCaptureMode_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipStreamCaptureMode):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaStreamCaptureMode
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaStreamCaptureMode(enum.IntEnum,metaclass=_cudaStreamCaptureMode_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipStreamCaptureMode
+class cudaStreamCaptureMode(hip._hipStreamCaptureMode__Base,metaclass=_cudaStreamCaptureMode_EnumMeta):
     CU_STREAM_CAPTURE_MODE_GLOBAL = hip.chip.hipStreamCaptureModeGlobal
     cudaStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
     hipStreamCaptureModeGlobal = hip.chip.hipStreamCaptureModeGlobal
@@ -10956,45 +9877,6 @@ class cudaStreamCaptureMode(enum.IntEnum,metaclass=_cudaStreamCaptureMode_EnumMe
 HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_HALLUCINATE","false")
 
 class _CUstreamCaptureStatus_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -11012,22 +9894,50 @@ class _CUstreamCaptureStatus_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipStreamCaptureStatus):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUstreamCaptureStatus
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUstreamCaptureStatus(enum.IntEnum,metaclass=_CUstreamCaptureStatus_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipStreamCaptureStatus
+class CUstreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_CUstreamCaptureStatus_EnumMeta):
     CU_STREAM_CAPTURE_STATUS_NONE = hip.chip.hipStreamCaptureStatusNone
     cudaStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
     hipStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
@@ -11041,45 +9951,6 @@ class CUstreamCaptureStatus(enum.IntEnum,metaclass=_CUstreamCaptureStatus_EnumMe
 HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamCaptureStatus_enum_HALLUCINATE","false")
 
 class _CUstreamCaptureStatus_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -11097,22 +9968,50 @@ class _CUstreamCaptureStatus_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipStreamCaptureStatus):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUstreamCaptureStatus_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUstreamCaptureStatus_enum(enum.IntEnum,metaclass=_CUstreamCaptureStatus_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipStreamCaptureStatus
+class CUstreamCaptureStatus_enum(hip._hipStreamCaptureStatus__Base,metaclass=_CUstreamCaptureStatus_enum_EnumMeta):
     CU_STREAM_CAPTURE_STATUS_NONE = hip.chip.hipStreamCaptureStatusNone
     cudaStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
     hipStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
@@ -11126,45 +10025,6 @@ class CUstreamCaptureStatus_enum(enum.IntEnum,metaclass=_CUstreamCaptureStatus_e
 HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamCaptureStatus_HALLUCINATE","false")
 
 class _cudaStreamCaptureStatus_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -11182,22 +10042,50 @@ class _cudaStreamCaptureStatus_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipStreamCaptureStatus):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaStreamCaptureStatus
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaStreamCaptureStatus(enum.IntEnum,metaclass=_cudaStreamCaptureStatus_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipStreamCaptureStatus
+class cudaStreamCaptureStatus(hip._hipStreamCaptureStatus__Base,metaclass=_cudaStreamCaptureStatus_EnumMeta):
     CU_STREAM_CAPTURE_STATUS_NONE = hip.chip.hipStreamCaptureStatusNone
     cudaStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
     hipStreamCaptureStatusNone = hip.chip.hipStreamCaptureStatusNone
@@ -11211,45 +10099,6 @@ class cudaStreamCaptureStatus(enum.IntEnum,metaclass=_cudaStreamCaptureStatus_En
 HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_HALLUCINATE","false")
 
 class _CUstreamUpdateCaptureDependencies_flags_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -11267,22 +10116,50 @@ class _CUstreamUpdateCaptureDependencies_flags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipStreamUpdateCaptureDependenciesFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUstreamUpdateCaptureDependencies_flags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUstreamUpdateCaptureDependencies_flags(enum.IntEnum,metaclass=_CUstreamUpdateCaptureDependencies_flags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipStreamUpdateCaptureDependenciesFlags
+class CUstreamUpdateCaptureDependencies_flags(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_CUstreamUpdateCaptureDependencies_flags_EnumMeta):
     CU_STREAM_ADD_CAPTURE_DEPENDENCIES = hip.chip.hipStreamAddCaptureDependencies
     cudaStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     hipStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
@@ -11293,45 +10170,6 @@ class CUstreamUpdateCaptureDependencies_flags(enum.IntEnum,metaclass=_CUstreamUp
 HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUstreamUpdateCaptureDependencies_flags_enum_HALLUCINATE","false")
 
 class _CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -11349,22 +10187,50 @@ class _CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipStreamUpdateCaptureDependenciesFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUstreamUpdateCaptureDependencies_flags_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUstreamUpdateCaptureDependencies_flags_enum(enum.IntEnum,metaclass=_CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipStreamUpdateCaptureDependenciesFlags
+class CUstreamUpdateCaptureDependencies_flags_enum(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta):
     CU_STREAM_ADD_CAPTURE_DEPENDENCIES = hip.chip.hipStreamAddCaptureDependencies
     cudaStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     hipStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
@@ -11375,45 +10241,6 @@ class CUstreamUpdateCaptureDependencies_flags_enum(enum.IntEnum,metaclass=_CUstr
 HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaStreamUpdateCaptureDependenciesFlags_HALLUCINATE","false")
 
 class _cudaStreamUpdateCaptureDependenciesFlags_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -11431,22 +10258,50 @@ class _cudaStreamUpdateCaptureDependenciesFlags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipStreamUpdateCaptureDependenciesFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaStreamUpdateCaptureDependenciesFlags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaStreamUpdateCaptureDependenciesFlags(enum.IntEnum,metaclass=_cudaStreamUpdateCaptureDependenciesFlags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipStreamUpdateCaptureDependenciesFlags
+class cudaStreamUpdateCaptureDependenciesFlags(hip._hipStreamUpdateCaptureDependenciesFlags__Base,metaclass=_cudaStreamUpdateCaptureDependenciesFlags_EnumMeta):
     CU_STREAM_ADD_CAPTURE_DEPENDENCIES = hip.chip.hipStreamAddCaptureDependencies
     cudaStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
     hipStreamAddCaptureDependencies = hip.chip.hipStreamAddCaptureDependencies
@@ -11457,45 +10312,6 @@ class cudaStreamUpdateCaptureDependenciesFlags(enum.IntEnum,metaclass=_cudaStrea
 HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphMem_attribute_HALLUCINATE","false")
 
 class _CUgraphMem_attribute_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -11513,22 +10329,50 @@ class _CUgraphMem_attribute_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphMemAttributeType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphMem_attribute
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUgraphMem_attribute(enum.IntEnum,metaclass=_CUgraphMem_attribute_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphMemAttributeType
+class CUgraphMem_attribute(hip._hipGraphMemAttributeType__Base,metaclass=_CUgraphMem_attribute_EnumMeta):
     CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT = hip.chip.hipGraphMemAttrUsedMemCurrent
     cudaGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
     hipGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
@@ -11546,45 +10390,6 @@ HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE = _hip_python_get_bool_environ_
 
 class _CUgraphMem_attribute_enum_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUgraphMem_attribute_enum_HALLUCINATE
@@ -11601,22 +10406,50 @@ class _CUgraphMem_attribute_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphMemAttributeType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphMem_attribute_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUgraphMem_attribute_enum(enum.IntEnum,metaclass=_CUgraphMem_attribute_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphMemAttributeType
+class CUgraphMem_attribute_enum(hip._hipGraphMemAttributeType__Base,metaclass=_CUgraphMem_attribute_enum_EnumMeta):
     CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT = hip.chip.hipGraphMemAttrUsedMemCurrent
     cudaGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
     hipGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
@@ -11634,45 +10467,6 @@ HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE = _hip_python_get_bool_environ_
 
 class _cudaGraphMemAttributeType_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_cudaGraphMemAttributeType_HALLUCINATE
@@ -11689,22 +10483,50 @@ class _cudaGraphMemAttributeType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphMemAttributeType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaGraphMemAttributeType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaGraphMemAttributeType(enum.IntEnum,metaclass=_cudaGraphMemAttributeType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphMemAttributeType
+class cudaGraphMemAttributeType(hip._hipGraphMemAttributeType__Base,metaclass=_cudaGraphMemAttributeType_EnumMeta):
     CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT = hip.chip.hipGraphMemAttrUsedMemCurrent
     cudaGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
     hipGraphMemAttrUsedMemCurrent = hip.chip.hipGraphMemAttrUsedMemCurrent
@@ -11722,45 +10544,6 @@ HIP_PYTHON_CUuserObject_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HI
 
 class _CUuserObject_flags_EnumMeta(enum.EnumMeta):
 
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
-
     def __getattribute__(cls,name):
         global _get_hip_name
         global HIP_PYTHON_CUuserObject_flags_HALLUCINATE
@@ -11777,22 +10560,50 @@ class _CUuserObject_flags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipUserObjectFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUuserObject_flags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUuserObject_flags(enum.IntEnum,metaclass=_CUuserObject_flags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipUserObjectFlags
+class CUuserObject_flags(hip._hipUserObjectFlags__Base,metaclass=_CUuserObject_flags_EnumMeta):
     CU_USER_OBJECT_NO_DESTRUCTOR_SYNC = hip.chip.hipUserObjectNoDestructorSync
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
@@ -11800,45 +10611,6 @@ class CUuserObject_flags(enum.IntEnum,metaclass=_CUuserObject_flags_EnumMeta):
 HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObject_flags_enum_HALLUCINATE","false")
 
 class _CUuserObject_flags_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -11856,22 +10628,50 @@ class _CUuserObject_flags_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipUserObjectFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUuserObject_flags_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUuserObject_flags_enum(enum.IntEnum,metaclass=_CUuserObject_flags_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipUserObjectFlags
+class CUuserObject_flags_enum(hip._hipUserObjectFlags__Base,metaclass=_CUuserObject_flags_enum_EnumMeta):
     CU_USER_OBJECT_NO_DESTRUCTOR_SYNC = hip.chip.hipUserObjectNoDestructorSync
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
@@ -11879,45 +10679,6 @@ class CUuserObject_flags_enum(enum.IntEnum,metaclass=_CUuserObject_flags_enum_En
 HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectFlags_HALLUCINATE","false")
 
 class _cudaUserObjectFlags_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -11935,22 +10696,50 @@ class _cudaUserObjectFlags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipUserObjectFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaUserObjectFlags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaUserObjectFlags(enum.IntEnum,metaclass=_cudaUserObjectFlags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipUserObjectFlags
+class cudaUserObjectFlags(hip._hipUserObjectFlags__Base,metaclass=_cudaUserObjectFlags_EnumMeta):
     CU_USER_OBJECT_NO_DESTRUCTOR_SYNC = hip.chip.hipUserObjectNoDestructorSync
     cudaUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
     hipUserObjectNoDestructorSync = hip.chip.hipUserObjectNoDestructorSync
@@ -11958,45 +10747,6 @@ class cudaUserObjectFlags(enum.IntEnum,metaclass=_cudaUserObjectFlags_EnumMeta):
 HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_HALLUCINATE","false")
 
 class _CUuserObjectRetain_flags_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12014,22 +10764,50 @@ class _CUuserObjectRetain_flags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipUserObjectRetainFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUuserObjectRetain_flags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUuserObjectRetain_flags(enum.IntEnum,metaclass=_CUuserObjectRetain_flags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipUserObjectRetainFlags
+class CUuserObjectRetain_flags(hip._hipUserObjectRetainFlags__Base,metaclass=_CUuserObjectRetain_flags_EnumMeta):
     CU_GRAPH_USER_OBJECT_MOVE = hip.chip.hipGraphUserObjectMove
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
@@ -12037,45 +10815,6 @@ class CUuserObjectRetain_flags(enum.IntEnum,metaclass=_CUuserObjectRetain_flags_
 HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUuserObjectRetain_flags_enum_HALLUCINATE","false")
 
 class _CUuserObjectRetain_flags_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12093,22 +10832,50 @@ class _CUuserObjectRetain_flags_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipUserObjectRetainFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUuserObjectRetain_flags_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUuserObjectRetain_flags_enum(enum.IntEnum,metaclass=_CUuserObjectRetain_flags_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipUserObjectRetainFlags
+class CUuserObjectRetain_flags_enum(hip._hipUserObjectRetainFlags__Base,metaclass=_CUuserObjectRetain_flags_enum_EnumMeta):
     CU_GRAPH_USER_OBJECT_MOVE = hip.chip.hipGraphUserObjectMove
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
@@ -12116,45 +10883,6 @@ class CUuserObjectRetain_flags_enum(enum.IntEnum,metaclass=_CUuserObjectRetain_f
 HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaUserObjectRetainFlags_HALLUCINATE","false")
 
 class _cudaUserObjectRetainFlags_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12172,22 +10900,50 @@ class _cudaUserObjectRetainFlags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipUserObjectRetainFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaUserObjectRetainFlags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaUserObjectRetainFlags(enum.IntEnum,metaclass=_cudaUserObjectRetainFlags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipUserObjectRetainFlags
+class cudaUserObjectRetainFlags(hip._hipUserObjectRetainFlags__Base,metaclass=_cudaUserObjectRetainFlags_EnumMeta):
     CU_GRAPH_USER_OBJECT_MOVE = hip.chip.hipGraphUserObjectMove
     cudaGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
     hipGraphUserObjectMove = hip.chip.hipGraphUserObjectMove
@@ -12195,45 +10951,6 @@ class cudaUserObjectRetainFlags(enum.IntEnum,metaclass=_cudaUserObjectRetainFlag
 HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_HALLUCINATE","false")
 
 class _CUgraphInstantiate_flags_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12251,22 +10968,50 @@ class _CUgraphInstantiate_flags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphInstantiateFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphInstantiate_flags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUgraphInstantiate_flags(enum.IntEnum,metaclass=_CUgraphInstantiate_flags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphInstantiateFlags
+class CUgraphInstantiate_flags(hip._hipGraphInstantiateFlags__Base,metaclass=_CUgraphInstantiate_flags_EnumMeta):
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
@@ -12274,45 +11019,6 @@ class CUgraphInstantiate_flags(enum.IntEnum,metaclass=_CUgraphInstantiate_flags_
 HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUgraphInstantiate_flags_enum_HALLUCINATE","false")
 
 class _CUgraphInstantiate_flags_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12330,22 +11036,50 @@ class _CUgraphInstantiate_flags_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphInstantiateFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUgraphInstantiate_flags_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUgraphInstantiate_flags_enum(enum.IntEnum,metaclass=_CUgraphInstantiate_flags_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphInstantiateFlags
+class CUgraphInstantiate_flags_enum(hip._hipGraphInstantiateFlags__Base,metaclass=_CUgraphInstantiate_flags_enum_EnumMeta):
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
@@ -12353,45 +11087,6 @@ class CUgraphInstantiate_flags_enum(enum.IntEnum,metaclass=_CUgraphInstantiate_f
 HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_cudaGraphInstantiateFlags_HALLUCINATE","false")
 
 class _cudaGraphInstantiateFlags_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12409,22 +11104,50 @@ class _cudaGraphInstantiateFlags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipGraphInstantiateFlags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return cudaGraphInstantiateFlags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class cudaGraphInstantiateFlags(enum.IntEnum,metaclass=_cudaGraphInstantiateFlags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipGraphInstantiateFlags
+class cudaGraphInstantiateFlags(hip._hipGraphInstantiateFlags__Base,metaclass=_cudaGraphInstantiateFlags_EnumMeta):
     CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     cudaGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
     hipGraphInstantiateFlagAutoFreeOnLaunch = hip.chip.hipGraphInstantiateFlagAutoFreeOnLaunch
@@ -12434,51 +11157,12 @@ cdef class CUmemAllocationProp_st(hip.hip.hipMemAllocationProp):
     pass
 cdef class CUmemAllocationProp_v1(hip.hip.hipMemAllocationProp):
     pass
-CUmemGenericAllocationHandle = hip.hip.hipMemGenericAllocationHandle_t
-CUmemGenericAllocationHandle_v1 = hip.hip.hipMemGenericAllocationHandle_t
+CUmemGenericAllocationHandle = hip.hipMemGenericAllocationHandle_t
+CUmemGenericAllocationHandle_v1 = hip.hipMemGenericAllocationHandle_t
 
 HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_HALLUCINATE","false")
 
 class _CUmemAllocationGranularity_flags_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12496,22 +11180,50 @@ class _CUmemAllocationGranularity_flags_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAllocationGranularity_flags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemAllocationGranularity_flags
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemAllocationGranularity_flags(enum.IntEnum,metaclass=_CUmemAllocationGranularity_flags_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAllocationGranularity_flags
+class CUmemAllocationGranularity_flags(hip._hipMemAllocationGranularity_flags__Base,metaclass=_CUmemAllocationGranularity_flags_EnumMeta):
     CU_MEM_ALLOC_GRANULARITY_MINIMUM = hip.chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityMinimum = hip.chip.hipMemAllocationGranularityMinimum
     CU_MEM_ALLOC_GRANULARITY_RECOMMENDED = hip.chip.hipMemAllocationGranularityRecommended
@@ -12520,45 +11232,6 @@ class CUmemAllocationGranularity_flags(enum.IntEnum,metaclass=_CUmemAllocationGr
 HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemAllocationGranularity_flags_enum_HALLUCINATE","false")
 
 class _CUmemAllocationGranularity_flags_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12576,22 +11249,50 @@ class _CUmemAllocationGranularity_flags_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemAllocationGranularity_flags):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemAllocationGranularity_flags_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemAllocationGranularity_flags_enum(enum.IntEnum,metaclass=_CUmemAllocationGranularity_flags_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemAllocationGranularity_flags
+class CUmemAllocationGranularity_flags_enum(hip._hipMemAllocationGranularity_flags__Base,metaclass=_CUmemAllocationGranularity_flags_enum_EnumMeta):
     CU_MEM_ALLOC_GRANULARITY_MINIMUM = hip.chip.hipMemAllocationGranularityMinimum
     hipMemAllocationGranularityMinimum = hip.chip.hipMemAllocationGranularityMinimum
     CU_MEM_ALLOC_GRANULARITY_RECOMMENDED = hip.chip.hipMemAllocationGranularityRecommended
@@ -12600,45 +11301,6 @@ class CUmemAllocationGranularity_flags_enum(enum.IntEnum,metaclass=_CUmemAllocat
 HIP_PYTHON_CUmemHandleType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_HALLUCINATE","false")
 
 class _CUmemHandleType_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12656,67 +11318,56 @@ class _CUmemHandleType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemHandleType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemHandleType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemHandleType(enum.IntEnum,metaclass=_CUmemHandleType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemHandleType
+class CUmemHandleType(hip._hipMemHandleType__Base,metaclass=_CUmemHandleType_EnumMeta):
     CU_MEM_HANDLE_TYPE_GENERIC = hip.chip.hipMemHandleTypeGeneric
     hipMemHandleTypeGeneric = hip.chip.hipMemHandleTypeGeneric
 
 HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemHandleType_enum_HALLUCINATE","false")
 
 class _CUmemHandleType_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12734,67 +11385,56 @@ class _CUmemHandleType_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemHandleType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemHandleType_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemHandleType_enum(enum.IntEnum,metaclass=_CUmemHandleType_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemHandleType
+class CUmemHandleType_enum(hip._hipMemHandleType__Base,metaclass=_CUmemHandleType_enum_EnumMeta):
     CU_MEM_HANDLE_TYPE_GENERIC = hip.chip.hipMemHandleTypeGeneric
     hipMemHandleTypeGeneric = hip.chip.hipMemHandleTypeGeneric
 
 HIP_PYTHON_CUmemOperationType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_HALLUCINATE","false")
 
 class _CUmemOperationType_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12812,22 +11452,50 @@ class _CUmemOperationType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemOperationType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemOperationType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemOperationType(enum.IntEnum,metaclass=_CUmemOperationType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemOperationType
+class CUmemOperationType(hip._hipMemOperationType__Base,metaclass=_CUmemOperationType_EnumMeta):
     CU_MEM_OPERATION_TYPE_MAP = hip.chip.hipMemOperationTypeMap
     hipMemOperationTypeMap = hip.chip.hipMemOperationTypeMap
     CU_MEM_OPERATION_TYPE_UNMAP = hip.chip.hipMemOperationTypeUnmap
@@ -12836,45 +11504,6 @@ class CUmemOperationType(enum.IntEnum,metaclass=_CUmemOperationType_EnumMeta):
 HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUmemOperationType_enum_HALLUCINATE","false")
 
 class _CUmemOperationType_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12892,22 +11521,50 @@ class _CUmemOperationType_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipMemOperationType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUmemOperationType_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUmemOperationType_enum(enum.IntEnum,metaclass=_CUmemOperationType_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipMemOperationType
+class CUmemOperationType_enum(hip._hipMemOperationType__Base,metaclass=_CUmemOperationType_enum_EnumMeta):
     CU_MEM_OPERATION_TYPE_MAP = hip.chip.hipMemOperationTypeMap
     hipMemOperationTypeMap = hip.chip.hipMemOperationTypeMap
     CU_MEM_OPERATION_TYPE_UNMAP = hip.chip.hipMemOperationTypeUnmap
@@ -12916,45 +11573,6 @@ class CUmemOperationType_enum(enum.IntEnum,metaclass=_CUmemOperationType_enum_En
 HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_HALLUCINATE","false")
 
 class _CUarraySparseSubresourceType_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -12972,22 +11590,50 @@ class _CUarraySparseSubresourceType_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipArraySparseSubresourceType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUarraySparseSubresourceType
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUarraySparseSubresourceType(enum.IntEnum,metaclass=_CUarraySparseSubresourceType_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipArraySparseSubresourceType
+class CUarraySparseSubresourceType(hip._hipArraySparseSubresourceType__Base,metaclass=_CUarraySparseSubresourceType_EnumMeta):
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_SPARSE_LEVEL = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeSparseLevel = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_MIPTAIL = hip.chip.hipArraySparseSubresourceTypeMiptail
@@ -12996,45 +11642,6 @@ class CUarraySparseSubresourceType(enum.IntEnum,metaclass=_CUarraySparseSubresou
 HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE = _hip_python_get_bool_environ_var("HIP_PYTHON_CUarraySparseSubresourceType_enum_HALLUCINATE","false")
 
 class _CUarraySparseSubresourceType_enum_EnumMeta(enum.EnumMeta):
-
-    class FakeEnumType():
-        """Mimicks the orginal enum type this 
-        is derived from.
-        """
-
-        def __init__(self):
-            pass
-
-        @property
-        def name(self):
-            return self._name_
-
-        @property
-        def value(self):
-            return self._value_
-
-        def __eq__(self,other):
-            if isinstance(other,self._orig_enum_type_):
-                return self.value == other.value
-            return False
-
-        @property
-        def __class__(self):
-            """Overwrite __class__ to satisfy __isinstance__ check.
-            """
-            return self._orig_enum_type_
-
-        def __repr__(self):        
-            """Mimicks enum.Enum.__repr__"""
-            return "<%s.%s: %r>" % (
-                    self.__class__.__name__, self._name_, self._value_)
-
-        def __str__(self):
-            """Mimicks enum.Enum.__str__"""
-            return "%s.%s" % (self.__class__.__name__, self._name_)
-
-        def __hash__(self):
-            return hash(str(self))
 
     def __getattribute__(cls,name):
         global _get_hip_name
@@ -13052,22 +11659,50 @@ class _CUarraySparseSubresourceType_enum_EnumMeta(enum.EnumMeta):
                 new_val = min(used_vals)
                 while new_val in used_vals: # find a free enum value
                     new_val += 1
-                enum_types = list(cls._member_map_.values())
-                enum_class = enum_types[0].__class__
-                fake_enum = type(
-                    name,
-                    (cls.FakeEnumType,),
-                    {"_name_":name,"_value_": new_val,"_orig_enum_type_": enum_class}
-                )()
-                return fake_enum
+
+                class HallucinatedEnumConstant():
+                    """Mimicks the orginal enum type this is derived from.
+                    """
+                    def __init__(self):
+                        pass
+
+                    @property
+                    def name(self):
+                        return self._name_
+
+                    @property
+                    def value(self):
+                        return self._value_
+
+                    def __eq__(self,other):
+                        if isinstance(other,hip.hipArraySparseSubresourceType):
+                            return self.value == other.value
+                        return False
+
+                    def __repr__(self):        
+                        """Mimicks enum.Enum.__repr__"""
+                        return "<%s.%s: %r>" % (
+                                self.__class__._name_, self._name_, self._value_)
+
+                    def __str__(self):
+                        """Mimicks enum.Enum.__str__"""
+                        return "%s.%s" % (self.__class__._name_, self._name_)
+
+                    def __hash__(self):
+                        return hash(str(self))
+
+                    @property
+                    def __class__(self):
+                        """Make this type appear as a constant of the actual 
+                        CUDA enum type in isinstance checks.
+                        """
+                        return CUarraySparseSubresourceType_enum
+                setattr(HallucinatedEnumConstant,"_name_",name)
+                setattr(HallucinatedEnumConstant,"_value_",new_val)
+                return HallucinatedEnumConstant()
 
 
-class CUarraySparseSubresourceType_enum(enum.IntEnum,metaclass=_CUarraySparseSubresourceType_enum_EnumMeta):
-    @property
-    def __class__(self):
-        """Overwrite __class__ to satisfy __isinstance__ check.
-        """
-        return hip.hip.hipArraySparseSubresourceType
+class CUarraySparseSubresourceType_enum(hip._hipArraySparseSubresourceType__Base,metaclass=_CUarraySparseSubresourceType_enum_EnumMeta):
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_SPARSE_LEVEL = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     hipArraySparseSubresourceTypeSparseLevel = hip.chip.hipArraySparseSubresourceTypeSparseLevel
     CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_MIPTAIL = hip.chip.hipArraySparseSubresourceTypeMiptail
@@ -13078,552 +11713,552 @@ cdef class CUarrayMapInfo_st(hip.hip.hipArrayMapInfo):
     pass
 cdef class CUarrayMapInfo_v1(hip.hip.hipArrayMapInfo):
     pass
-cuInit = hip.hip.hipInit
-cuDriverGetVersion = hip.hip.hipDriverGetVersion
-cudaDriverGetVersion = hip.hip.hipDriverGetVersion
-cudaRuntimeGetVersion = hip.hip.hipRuntimeGetVersion
-cuDeviceGet = hip.hip.hipDeviceGet
-cuDeviceComputeCapability = hip.hip.hipDeviceComputeCapability
-cuDeviceGetName = hip.hip.hipDeviceGetName
-cuDeviceGetUuid = hip.hip.hipDeviceGetUuid
-cuDeviceGetUuid_v2 = hip.hip.hipDeviceGetUuid
-cudaDeviceGetP2PAttribute = hip.hip.hipDeviceGetP2PAttribute
-cuDeviceGetP2PAttribute = hip.hip.hipDeviceGetP2PAttribute
-cudaDeviceGetPCIBusId = hip.hip.hipDeviceGetPCIBusId
-cuDeviceGetPCIBusId = hip.hip.hipDeviceGetPCIBusId
-cudaDeviceGetByPCIBusId = hip.hip.hipDeviceGetByPCIBusId
-cuDeviceGetByPCIBusId = hip.hip.hipDeviceGetByPCIBusId
-cuDeviceTotalMem = hip.hip.hipDeviceTotalMem
-cuDeviceTotalMem_v2 = hip.hip.hipDeviceTotalMem
-cudaDeviceSynchronize = hip.hip.hipDeviceSynchronize
-cudaThreadSynchronize = hip.hip.hipDeviceSynchronize
-cudaDeviceReset = hip.hip.hipDeviceReset
-cudaThreadExit = hip.hip.hipDeviceReset
-cudaSetDevice = hip.hip.hipSetDevice
-cudaGetDevice = hip.hip.hipGetDevice
-cuDeviceGetCount = hip.hip.hipGetDeviceCount
-cudaGetDeviceCount = hip.hip.hipGetDeviceCount
-cuDeviceGetAttribute = hip.hip.hipDeviceGetAttribute
-cudaDeviceGetAttribute = hip.hip.hipDeviceGetAttribute
-cuDeviceGetDefaultMemPool = hip.hip.hipDeviceGetDefaultMemPool
-cudaDeviceGetDefaultMemPool = hip.hip.hipDeviceGetDefaultMemPool
-cuDeviceSetMemPool = hip.hip.hipDeviceSetMemPool
-cudaDeviceSetMemPool = hip.hip.hipDeviceSetMemPool
-cuDeviceGetMemPool = hip.hip.hipDeviceGetMemPool
-cudaDeviceGetMemPool = hip.hip.hipDeviceGetMemPool
-cudaGetDeviceProperties = hip.hip.hipGetDeviceProperties
-cudaDeviceSetCacheConfig = hip.hip.hipDeviceSetCacheConfig
-cudaThreadSetCacheConfig = hip.hip.hipDeviceSetCacheConfig
-cudaDeviceGetCacheConfig = hip.hip.hipDeviceGetCacheConfig
-cudaThreadGetCacheConfig = hip.hip.hipDeviceGetCacheConfig
-cudaDeviceGetLimit = hip.hip.hipDeviceGetLimit
-cuCtxGetLimit = hip.hip.hipDeviceGetLimit
-cudaDeviceSetLimit = hip.hip.hipDeviceSetLimit
-cuCtxSetLimit = hip.hip.hipDeviceSetLimit
-cudaDeviceGetSharedMemConfig = hip.hip.hipDeviceGetSharedMemConfig
-cudaGetDeviceFlags = hip.hip.hipGetDeviceFlags
-cudaDeviceSetSharedMemConfig = hip.hip.hipDeviceSetSharedMemConfig
-cudaSetDeviceFlags = hip.hip.hipSetDeviceFlags
-cudaChooseDevice = hip.hip.hipChooseDevice
-cudaIpcGetMemHandle = hip.hip.hipIpcGetMemHandle
-cuIpcGetMemHandle = hip.hip.hipIpcGetMemHandle
-cudaIpcOpenMemHandle = hip.hip.hipIpcOpenMemHandle
-cuIpcOpenMemHandle = hip.hip.hipIpcOpenMemHandle
-cudaIpcCloseMemHandle = hip.hip.hipIpcCloseMemHandle
-cuIpcCloseMemHandle = hip.hip.hipIpcCloseMemHandle
-cudaIpcGetEventHandle = hip.hip.hipIpcGetEventHandle
-cuIpcGetEventHandle = hip.hip.hipIpcGetEventHandle
-cudaIpcOpenEventHandle = hip.hip.hipIpcOpenEventHandle
-cuIpcOpenEventHandle = hip.hip.hipIpcOpenEventHandle
-cudaFuncSetAttribute = hip.hip.hipFuncSetAttribute
-cudaFuncSetCacheConfig = hip.hip.hipFuncSetCacheConfig
-cudaFuncSetSharedMemConfig = hip.hip.hipFuncSetSharedMemConfig
-cudaGetLastError = hip.hip.hipGetLastError
-cudaPeekAtLastError = hip.hip.hipPeekAtLastError
-cudaGetErrorName = hip.hip.hipGetErrorName
-cudaGetErrorString = hip.hip.hipGetErrorString
-cuGetErrorName = hip.hip.hipDrvGetErrorName
-cuGetErrorString = hip.hip.hipDrvGetErrorString
-cudaStreamCreate = hip.hip.hipStreamCreate
-cuStreamCreate = hip.hip.hipStreamCreateWithFlags
-cudaStreamCreateWithFlags = hip.hip.hipStreamCreateWithFlags
-cuStreamCreateWithPriority = hip.hip.hipStreamCreateWithPriority
-cudaStreamCreateWithPriority = hip.hip.hipStreamCreateWithPriority
-cudaDeviceGetStreamPriorityRange = hip.hip.hipDeviceGetStreamPriorityRange
-cuCtxGetStreamPriorityRange = hip.hip.hipDeviceGetStreamPriorityRange
-cuStreamDestroy = hip.hip.hipStreamDestroy
-cuStreamDestroy_v2 = hip.hip.hipStreamDestroy
-cudaStreamDestroy = hip.hip.hipStreamDestroy
-cuStreamQuery = hip.hip.hipStreamQuery
-cudaStreamQuery = hip.hip.hipStreamQuery
-cuStreamSynchronize = hip.hip.hipStreamSynchronize
-cudaStreamSynchronize = hip.hip.hipStreamSynchronize
-cuStreamWaitEvent = hip.hip.hipStreamWaitEvent
-cudaStreamWaitEvent = hip.hip.hipStreamWaitEvent
-cuStreamGetFlags = hip.hip.hipStreamGetFlags
-cudaStreamGetFlags = hip.hip.hipStreamGetFlags
-cuStreamGetPriority = hip.hip.hipStreamGetPriority
-cudaStreamGetPriority = hip.hip.hipStreamGetPriority
+cuInit = hip.hipInit
+cuDriverGetVersion = hip.hipDriverGetVersion
+cudaDriverGetVersion = hip.hipDriverGetVersion
+cudaRuntimeGetVersion = hip.hipRuntimeGetVersion
+cuDeviceGet = hip.hipDeviceGet
+cuDeviceComputeCapability = hip.hipDeviceComputeCapability
+cuDeviceGetName = hip.hipDeviceGetName
+cuDeviceGetUuid = hip.hipDeviceGetUuid
+cuDeviceGetUuid_v2 = hip.hipDeviceGetUuid
+cudaDeviceGetP2PAttribute = hip.hipDeviceGetP2PAttribute
+cuDeviceGetP2PAttribute = hip.hipDeviceGetP2PAttribute
+cudaDeviceGetPCIBusId = hip.hipDeviceGetPCIBusId
+cuDeviceGetPCIBusId = hip.hipDeviceGetPCIBusId
+cudaDeviceGetByPCIBusId = hip.hipDeviceGetByPCIBusId
+cuDeviceGetByPCIBusId = hip.hipDeviceGetByPCIBusId
+cuDeviceTotalMem = hip.hipDeviceTotalMem
+cuDeviceTotalMem_v2 = hip.hipDeviceTotalMem
+cudaDeviceSynchronize = hip.hipDeviceSynchronize
+cudaThreadSynchronize = hip.hipDeviceSynchronize
+cudaDeviceReset = hip.hipDeviceReset
+cudaThreadExit = hip.hipDeviceReset
+cudaSetDevice = hip.hipSetDevice
+cudaGetDevice = hip.hipGetDevice
+cuDeviceGetCount = hip.hipGetDeviceCount
+cudaGetDeviceCount = hip.hipGetDeviceCount
+cuDeviceGetAttribute = hip.hipDeviceGetAttribute
+cudaDeviceGetAttribute = hip.hipDeviceGetAttribute
+cuDeviceGetDefaultMemPool = hip.hipDeviceGetDefaultMemPool
+cudaDeviceGetDefaultMemPool = hip.hipDeviceGetDefaultMemPool
+cuDeviceSetMemPool = hip.hipDeviceSetMemPool
+cudaDeviceSetMemPool = hip.hipDeviceSetMemPool
+cuDeviceGetMemPool = hip.hipDeviceGetMemPool
+cudaDeviceGetMemPool = hip.hipDeviceGetMemPool
+cudaGetDeviceProperties = hip.hipGetDeviceProperties
+cudaDeviceSetCacheConfig = hip.hipDeviceSetCacheConfig
+cudaThreadSetCacheConfig = hip.hipDeviceSetCacheConfig
+cudaDeviceGetCacheConfig = hip.hipDeviceGetCacheConfig
+cudaThreadGetCacheConfig = hip.hipDeviceGetCacheConfig
+cudaDeviceGetLimit = hip.hipDeviceGetLimit
+cuCtxGetLimit = hip.hipDeviceGetLimit
+cudaDeviceSetLimit = hip.hipDeviceSetLimit
+cuCtxSetLimit = hip.hipDeviceSetLimit
+cudaDeviceGetSharedMemConfig = hip.hipDeviceGetSharedMemConfig
+cudaGetDeviceFlags = hip.hipGetDeviceFlags
+cudaDeviceSetSharedMemConfig = hip.hipDeviceSetSharedMemConfig
+cudaSetDeviceFlags = hip.hipSetDeviceFlags
+cudaChooseDevice = hip.hipChooseDevice
+cudaIpcGetMemHandle = hip.hipIpcGetMemHandle
+cuIpcGetMemHandle = hip.hipIpcGetMemHandle
+cudaIpcOpenMemHandle = hip.hipIpcOpenMemHandle
+cuIpcOpenMemHandle = hip.hipIpcOpenMemHandle
+cudaIpcCloseMemHandle = hip.hipIpcCloseMemHandle
+cuIpcCloseMemHandle = hip.hipIpcCloseMemHandle
+cudaIpcGetEventHandle = hip.hipIpcGetEventHandle
+cuIpcGetEventHandle = hip.hipIpcGetEventHandle
+cudaIpcOpenEventHandle = hip.hipIpcOpenEventHandle
+cuIpcOpenEventHandle = hip.hipIpcOpenEventHandle
+cudaFuncSetAttribute = hip.hipFuncSetAttribute
+cudaFuncSetCacheConfig = hip.hipFuncSetCacheConfig
+cudaFuncSetSharedMemConfig = hip.hipFuncSetSharedMemConfig
+cudaGetLastError = hip.hipGetLastError
+cudaPeekAtLastError = hip.hipPeekAtLastError
+cudaGetErrorName = hip.hipGetErrorName
+cudaGetErrorString = hip.hipGetErrorString
+cuGetErrorName = hip.hipDrvGetErrorName
+cuGetErrorString = hip.hipDrvGetErrorString
+cudaStreamCreate = hip.hipStreamCreate
+cuStreamCreate = hip.hipStreamCreateWithFlags
+cudaStreamCreateWithFlags = hip.hipStreamCreateWithFlags
+cuStreamCreateWithPriority = hip.hipStreamCreateWithPriority
+cudaStreamCreateWithPriority = hip.hipStreamCreateWithPriority
+cudaDeviceGetStreamPriorityRange = hip.hipDeviceGetStreamPriorityRange
+cuCtxGetStreamPriorityRange = hip.hipDeviceGetStreamPriorityRange
+cuStreamDestroy = hip.hipStreamDestroy
+cuStreamDestroy_v2 = hip.hipStreamDestroy
+cudaStreamDestroy = hip.hipStreamDestroy
+cuStreamQuery = hip.hipStreamQuery
+cudaStreamQuery = hip.hipStreamQuery
+cuStreamSynchronize = hip.hipStreamSynchronize
+cudaStreamSynchronize = hip.hipStreamSynchronize
+cuStreamWaitEvent = hip.hipStreamWaitEvent
+cudaStreamWaitEvent = hip.hipStreamWaitEvent
+cuStreamGetFlags = hip.hipStreamGetFlags
+cudaStreamGetFlags = hip.hipStreamGetFlags
+cuStreamGetPriority = hip.hipStreamGetPriority
+cudaStreamGetPriority = hip.hipStreamGetPriority
 cdef class CUstreamCallback(hip.hip.hipStreamCallback_t):
     pass
 cdef class cudaStreamCallback_t(hip.hip.hipStreamCallback_t):
     pass
-cuStreamAddCallback = hip.hip.hipStreamAddCallback
-cudaStreamAddCallback = hip.hip.hipStreamAddCallback
-cuStreamWaitValue32 = hip.hip.hipStreamWaitValue32
-cuStreamWaitValue32_v2 = hip.hip.hipStreamWaitValue32
-cuStreamWaitValue64 = hip.hip.hipStreamWaitValue64
-cuStreamWaitValue64_v2 = hip.hip.hipStreamWaitValue64
-cuStreamWriteValue32 = hip.hip.hipStreamWriteValue32
-cuStreamWriteValue32_v2 = hip.hip.hipStreamWriteValue32
-cuStreamWriteValue64 = hip.hip.hipStreamWriteValue64
-cuStreamWriteValue64_v2 = hip.hip.hipStreamWriteValue64
-cuEventCreate = hip.hip.hipEventCreateWithFlags
-cudaEventCreateWithFlags = hip.hip.hipEventCreateWithFlags
-cudaEventCreate = hip.hip.hipEventCreate
-cuEventRecord = hip.hip.hipEventRecord
-cudaEventRecord = hip.hip.hipEventRecord
-cuEventDestroy = hip.hip.hipEventDestroy
-cuEventDestroy_v2 = hip.hip.hipEventDestroy
-cudaEventDestroy = hip.hip.hipEventDestroy
-cuEventSynchronize = hip.hip.hipEventSynchronize
-cudaEventSynchronize = hip.hip.hipEventSynchronize
-cuEventElapsedTime = hip.hip.hipEventElapsedTime
-cudaEventElapsedTime = hip.hip.hipEventElapsedTime
-cuEventQuery = hip.hip.hipEventQuery
-cudaEventQuery = hip.hip.hipEventQuery
-cudaPointerGetAttributes = hip.hip.hipPointerGetAttributes
-cuPointerGetAttribute = hip.hip.hipPointerGetAttribute
-cuPointerGetAttributes = hip.hip.hipDrvPointerGetAttributes
-cuImportExternalSemaphore = hip.hip.hipImportExternalSemaphore
-cudaImportExternalSemaphore = hip.hip.hipImportExternalSemaphore
-cuSignalExternalSemaphoresAsync = hip.hip.hipSignalExternalSemaphoresAsync
-cudaSignalExternalSemaphoresAsync = hip.hip.hipSignalExternalSemaphoresAsync
-cuWaitExternalSemaphoresAsync = hip.hip.hipWaitExternalSemaphoresAsync
-cudaWaitExternalSemaphoresAsync = hip.hip.hipWaitExternalSemaphoresAsync
-cuDestroyExternalSemaphore = hip.hip.hipDestroyExternalSemaphore
-cudaDestroyExternalSemaphore = hip.hip.hipDestroyExternalSemaphore
-cuImportExternalMemory = hip.hip.hipImportExternalMemory
-cudaImportExternalMemory = hip.hip.hipImportExternalMemory
-cuExternalMemoryGetMappedBuffer = hip.hip.hipExternalMemoryGetMappedBuffer
-cudaExternalMemoryGetMappedBuffer = hip.hip.hipExternalMemoryGetMappedBuffer
-cuDestroyExternalMemory = hip.hip.hipDestroyExternalMemory
-cudaDestroyExternalMemory = hip.hip.hipDestroyExternalMemory
-cuMemAlloc = hip.hip.hipMalloc
-cuMemAlloc_v2 = hip.hip.hipMalloc
-cudaMalloc = hip.hip.hipMalloc
-cuMemAllocHost = hip.hip.hipMemAllocHost
-cuMemAllocHost_v2 = hip.hip.hipMemAllocHost
-cudaMallocHost = hip.hip.hipHostMalloc
-cuMemAllocManaged = hip.hip.hipMallocManaged
-cudaMallocManaged = hip.hip.hipMallocManaged
-cudaMemPrefetchAsync = hip.hip.hipMemPrefetchAsync
-cuMemPrefetchAsync = hip.hip.hipMemPrefetchAsync
-cudaMemAdvise = hip.hip.hipMemAdvise
-cuMemAdvise = hip.hip.hipMemAdvise
-cudaMemRangeGetAttribute = hip.hip.hipMemRangeGetAttribute
-cuMemRangeGetAttribute = hip.hip.hipMemRangeGetAttribute
-cudaMemRangeGetAttributes = hip.hip.hipMemRangeGetAttributes
-cuMemRangeGetAttributes = hip.hip.hipMemRangeGetAttributes
-cuStreamAttachMemAsync = hip.hip.hipStreamAttachMemAsync
-cudaStreamAttachMemAsync = hip.hip.hipStreamAttachMemAsync
-cudaMallocAsync = hip.hip.hipMallocAsync
-cuMemAllocAsync = hip.hip.hipMallocAsync
-cudaFreeAsync = hip.hip.hipFreeAsync
-cuMemFreeAsync = hip.hip.hipFreeAsync
-cudaMemPoolTrimTo = hip.hip.hipMemPoolTrimTo
-cuMemPoolTrimTo = hip.hip.hipMemPoolTrimTo
-cudaMemPoolSetAttribute = hip.hip.hipMemPoolSetAttribute
-cuMemPoolSetAttribute = hip.hip.hipMemPoolSetAttribute
-cudaMemPoolGetAttribute = hip.hip.hipMemPoolGetAttribute
-cuMemPoolGetAttribute = hip.hip.hipMemPoolGetAttribute
-cudaMemPoolSetAccess = hip.hip.hipMemPoolSetAccess
-cuMemPoolSetAccess = hip.hip.hipMemPoolSetAccess
-cudaMemPoolGetAccess = hip.hip.hipMemPoolGetAccess
-cuMemPoolGetAccess = hip.hip.hipMemPoolGetAccess
-cudaMemPoolCreate = hip.hip.hipMemPoolCreate
-cuMemPoolCreate = hip.hip.hipMemPoolCreate
-cudaMemPoolDestroy = hip.hip.hipMemPoolDestroy
-cuMemPoolDestroy = hip.hip.hipMemPoolDestroy
-cudaMallocFromPoolAsync = hip.hip.hipMallocFromPoolAsync
-cuMemAllocFromPoolAsync = hip.hip.hipMallocFromPoolAsync
-cudaMemPoolExportToShareableHandle = hip.hip.hipMemPoolExportToShareableHandle
-cuMemPoolExportToShareableHandle = hip.hip.hipMemPoolExportToShareableHandle
-cudaMemPoolImportFromShareableHandle = hip.hip.hipMemPoolImportFromShareableHandle
-cuMemPoolImportFromShareableHandle = hip.hip.hipMemPoolImportFromShareableHandle
-cudaMemPoolExportPointer = hip.hip.hipMemPoolExportPointer
-cuMemPoolExportPointer = hip.hip.hipMemPoolExportPointer
-cudaMemPoolImportPointer = hip.hip.hipMemPoolImportPointer
-cuMemPoolImportPointer = hip.hip.hipMemPoolImportPointer
-cuMemHostAlloc = hip.hip.hipHostAlloc
-cudaHostAlloc = hip.hip.hipHostAlloc
-cuMemHostGetDevicePointer = hip.hip.hipHostGetDevicePointer
-cuMemHostGetDevicePointer_v2 = hip.hip.hipHostGetDevicePointer
-cudaHostGetDevicePointer = hip.hip.hipHostGetDevicePointer
-cuMemHostGetFlags = hip.hip.hipHostGetFlags
-cudaHostGetFlags = hip.hip.hipHostGetFlags
-cuMemHostRegister = hip.hip.hipHostRegister
-cuMemHostRegister_v2 = hip.hip.hipHostRegister
-cudaHostRegister = hip.hip.hipHostRegister
-cuMemHostUnregister = hip.hip.hipHostUnregister
-cudaHostUnregister = hip.hip.hipHostUnregister
-cudaMallocPitch = hip.hip.hipMallocPitch
-cuMemAllocPitch = hip.hip.hipMemAllocPitch
-cuMemAllocPitch_v2 = hip.hip.hipMemAllocPitch
-cuMemFree = hip.hip.hipFree
-cuMemFree_v2 = hip.hip.hipFree
-cudaFree = hip.hip.hipFree
-cuMemFreeHost = hip.hip.hipHostFree
-cudaFreeHost = hip.hip.hipHostFree
-cudaMemcpy = hip.hip.hipMemcpy
-cuMemcpyHtoD = hip.hip.hipMemcpyHtoD
-cuMemcpyHtoD_v2 = hip.hip.hipMemcpyHtoD
-cuMemcpyDtoH = hip.hip.hipMemcpyDtoH
-cuMemcpyDtoH_v2 = hip.hip.hipMemcpyDtoH
-cuMemcpyDtoD = hip.hip.hipMemcpyDtoD
-cuMemcpyDtoD_v2 = hip.hip.hipMemcpyDtoD
-cuMemcpyHtoDAsync = hip.hip.hipMemcpyHtoDAsync
-cuMemcpyHtoDAsync_v2 = hip.hip.hipMemcpyHtoDAsync
-cuMemcpyDtoHAsync = hip.hip.hipMemcpyDtoHAsync
-cuMemcpyDtoHAsync_v2 = hip.hip.hipMemcpyDtoHAsync
-cuMemcpyDtoDAsync = hip.hip.hipMemcpyDtoDAsync
-cuMemcpyDtoDAsync_v2 = hip.hip.hipMemcpyDtoDAsync
-cuModuleGetGlobal = hip.hip.hipModuleGetGlobal
-cuModuleGetGlobal_v2 = hip.hip.hipModuleGetGlobal
-cudaGetSymbolAddress = hip.hip.hipGetSymbolAddress
-cudaGetSymbolSize = hip.hip.hipGetSymbolSize
-cudaMemcpyToSymbol = hip.hip.hipMemcpyToSymbol
-cudaMemcpyToSymbolAsync = hip.hip.hipMemcpyToSymbolAsync
-cudaMemcpyFromSymbol = hip.hip.hipMemcpyFromSymbol
-cudaMemcpyFromSymbolAsync = hip.hip.hipMemcpyFromSymbolAsync
-cudaMemcpyAsync = hip.hip.hipMemcpyAsync
-cudaMemset = hip.hip.hipMemset
-cuMemsetD8 = hip.hip.hipMemsetD8
-cuMemsetD8_v2 = hip.hip.hipMemsetD8
-cuMemsetD8Async = hip.hip.hipMemsetD8Async
-cuMemsetD16 = hip.hip.hipMemsetD16
-cuMemsetD16_v2 = hip.hip.hipMemsetD16
-cuMemsetD16Async = hip.hip.hipMemsetD16Async
-cuMemsetD32 = hip.hip.hipMemsetD32
-cuMemsetD32_v2 = hip.hip.hipMemsetD32
-cudaMemsetAsync = hip.hip.hipMemsetAsync
-cuMemsetD32Async = hip.hip.hipMemsetD32Async
-cudaMemset2D = hip.hip.hipMemset2D
-cudaMemset2DAsync = hip.hip.hipMemset2DAsync
-cudaMemset3D = hip.hip.hipMemset3D
-cudaMemset3DAsync = hip.hip.hipMemset3DAsync
-cuMemGetInfo = hip.hip.hipMemGetInfo
-cuMemGetInfo_v2 = hip.hip.hipMemGetInfo
-cudaMemGetInfo = hip.hip.hipMemGetInfo
-cudaMallocArray = hip.hip.hipMallocArray
-cuArrayCreate = hip.hip.hipArrayCreate
-cuArrayCreate_v2 = hip.hip.hipArrayCreate
-cuArrayDestroy = hip.hip.hipArrayDestroy
-cuArray3DCreate = hip.hip.hipArray3DCreate
-cuArray3DCreate_v2 = hip.hip.hipArray3DCreate
-cudaMalloc3D = hip.hip.hipMalloc3D
-cudaFreeArray = hip.hip.hipFreeArray
-cudaFreeMipmappedArray = hip.hip.hipFreeMipmappedArray
-cudaMalloc3DArray = hip.hip.hipMalloc3DArray
-cudaMallocMipmappedArray = hip.hip.hipMallocMipmappedArray
-cudaGetMipmappedArrayLevel = hip.hip.hipGetMipmappedArrayLevel
-cudaMemcpy2D = hip.hip.hipMemcpy2D
-cuMemcpy2D = hip.hip.hipMemcpyParam2D
-cuMemcpy2D_v2 = hip.hip.hipMemcpyParam2D
-cuMemcpy2DAsync = hip.hip.hipMemcpyParam2DAsync
-cuMemcpy2DAsync_v2 = hip.hip.hipMemcpyParam2DAsync
-cudaMemcpy2DAsync = hip.hip.hipMemcpy2DAsync
-cudaMemcpy2DToArray = hip.hip.hipMemcpy2DToArray
-cudaMemcpy2DToArrayAsync = hip.hip.hipMemcpy2DToArrayAsync
-cudaMemcpyToArray = hip.hip.hipMemcpyToArray
-cudaMemcpyFromArray = hip.hip.hipMemcpyFromArray
-cudaMemcpy2DFromArray = hip.hip.hipMemcpy2DFromArray
-cudaMemcpy2DFromArrayAsync = hip.hip.hipMemcpy2DFromArrayAsync
-cuMemcpyAtoH = hip.hip.hipMemcpyAtoH
-cuMemcpyAtoH_v2 = hip.hip.hipMemcpyAtoH
-cuMemcpyHtoA = hip.hip.hipMemcpyHtoA
-cuMemcpyHtoA_v2 = hip.hip.hipMemcpyHtoA
-cudaMemcpy3D = hip.hip.hipMemcpy3D
-cudaMemcpy3DAsync = hip.hip.hipMemcpy3DAsync
-cuMemcpy3D = hip.hip.hipDrvMemcpy3D
-cuMemcpy3D_v2 = hip.hip.hipDrvMemcpy3D
-cuMemcpy3DAsync = hip.hip.hipDrvMemcpy3DAsync
-cuMemcpy3DAsync_v2 = hip.hip.hipDrvMemcpy3DAsync
-cuDeviceCanAccessPeer = hip.hip.hipDeviceCanAccessPeer
-cudaDeviceCanAccessPeer = hip.hip.hipDeviceCanAccessPeer
-cudaDeviceEnablePeerAccess = hip.hip.hipDeviceEnablePeerAccess
-cudaDeviceDisablePeerAccess = hip.hip.hipDeviceDisablePeerAccess
-cuMemGetAddressRange = hip.hip.hipMemGetAddressRange
-cuMemGetAddressRange_v2 = hip.hip.hipMemGetAddressRange
-cudaMemcpyPeer = hip.hip.hipMemcpyPeer
-cudaMemcpyPeerAsync = hip.hip.hipMemcpyPeerAsync
-cuCtxCreate = hip.hip.hipCtxCreate
-cuCtxCreate_v2 = hip.hip.hipCtxCreate
-cuCtxDestroy = hip.hip.hipCtxDestroy
-cuCtxDestroy_v2 = hip.hip.hipCtxDestroy
-cuCtxPopCurrent = hip.hip.hipCtxPopCurrent
-cuCtxPopCurrent_v2 = hip.hip.hipCtxPopCurrent
-cuCtxPushCurrent = hip.hip.hipCtxPushCurrent
-cuCtxPushCurrent_v2 = hip.hip.hipCtxPushCurrent
-cuCtxSetCurrent = hip.hip.hipCtxSetCurrent
-cuCtxGetCurrent = hip.hip.hipCtxGetCurrent
-cuCtxGetDevice = hip.hip.hipCtxGetDevice
-cuCtxGetApiVersion = hip.hip.hipCtxGetApiVersion
-cuCtxGetCacheConfig = hip.hip.hipCtxGetCacheConfig
-cuCtxSetCacheConfig = hip.hip.hipCtxSetCacheConfig
-cuCtxSetSharedMemConfig = hip.hip.hipCtxSetSharedMemConfig
-cuCtxGetSharedMemConfig = hip.hip.hipCtxGetSharedMemConfig
-cuCtxSynchronize = hip.hip.hipCtxSynchronize
-cuCtxGetFlags = hip.hip.hipCtxGetFlags
-cuCtxEnablePeerAccess = hip.hip.hipCtxEnablePeerAccess
-cuCtxDisablePeerAccess = hip.hip.hipCtxDisablePeerAccess
-cuDevicePrimaryCtxGetState = hip.hip.hipDevicePrimaryCtxGetState
-cuDevicePrimaryCtxRelease = hip.hip.hipDevicePrimaryCtxRelease
-cuDevicePrimaryCtxRelease_v2 = hip.hip.hipDevicePrimaryCtxRelease
-cuDevicePrimaryCtxRetain = hip.hip.hipDevicePrimaryCtxRetain
-cuDevicePrimaryCtxReset = hip.hip.hipDevicePrimaryCtxReset
-cuDevicePrimaryCtxReset_v2 = hip.hip.hipDevicePrimaryCtxReset
-cuDevicePrimaryCtxSetFlags = hip.hip.hipDevicePrimaryCtxSetFlags
-cuDevicePrimaryCtxSetFlags_v2 = hip.hip.hipDevicePrimaryCtxSetFlags
-cuModuleLoad = hip.hip.hipModuleLoad
-cuModuleUnload = hip.hip.hipModuleUnload
-cuModuleGetFunction = hip.hip.hipModuleGetFunction
-cudaFuncGetAttributes = hip.hip.hipFuncGetAttributes
-cuFuncGetAttribute = hip.hip.hipFuncGetAttribute
-cuModuleGetTexRef = hip.hip.hipModuleGetTexRef
-cuModuleLoadData = hip.hip.hipModuleLoadData
-cuModuleLoadDataEx = hip.hip.hipModuleLoadDataEx
-cuLaunchKernel = hip.hip.hipModuleLaunchKernel
-cudaLaunchCooperativeKernel = hip.hip.hipLaunchCooperativeKernel
-cudaLaunchCooperativeKernelMultiDevice = hip.hip.hipLaunchCooperativeKernelMultiDevice
-cuOccupancyMaxPotentialBlockSize = hip.hip.hipModuleOccupancyMaxPotentialBlockSize
-cuOccupancyMaxPotentialBlockSizeWithFlags = hip.hip.hipModuleOccupancyMaxPotentialBlockSizeWithFlags
-cuOccupancyMaxActiveBlocksPerMultiprocessor = hip.hip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessor
-cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags = hip.hip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
-cudaOccupancyMaxActiveBlocksPerMultiprocessor = hip.hip.hipOccupancyMaxActiveBlocksPerMultiprocessor
-cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags = hip.hip.hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
-cudaOccupancyMaxPotentialBlockSize = hip.hip.hipOccupancyMaxPotentialBlockSize
-cuProfilerStart = hip.hip.hipProfilerStart
-cudaProfilerStart = hip.hip.hipProfilerStart
-cuProfilerStop = hip.hip.hipProfilerStop
-cudaProfilerStop = hip.hip.hipProfilerStop
-cudaConfigureCall = hip.hip.hipConfigureCall
-cudaSetupArgument = hip.hip.hipSetupArgument
-cudaLaunch = hip.hip.hipLaunchByPtr
-cudaLaunchKernel = hip.hip.hipLaunchKernel
-cuLaunchHostFunc = hip.hip.hipLaunchHostFunc
-cudaLaunchHostFunc = hip.hip.hipLaunchHostFunc
-cuMemcpy2DUnaligned = hip.hip.hipDrvMemcpy2DUnaligned
-cuMemcpy2DUnaligned_v2 = hip.hip.hipDrvMemcpy2DUnaligned
-cudaBindTextureToMipmappedArray = hip.hip.hipBindTextureToMipmappedArray
-cudaCreateTextureObject = hip.hip.hipCreateTextureObject
-cudaDestroyTextureObject = hip.hip.hipDestroyTextureObject
-cudaGetChannelDesc = hip.hip.hipGetChannelDesc
-cudaGetTextureObjectResourceDesc = hip.hip.hipGetTextureObjectResourceDesc
-cudaGetTextureObjectResourceViewDesc = hip.hip.hipGetTextureObjectResourceViewDesc
-cudaGetTextureObjectTextureDesc = hip.hip.hipGetTextureObjectTextureDesc
-cuTexObjectCreate = hip.hip.hipTexObjectCreate
-cuTexObjectDestroy = hip.hip.hipTexObjectDestroy
-cuTexObjectGetResourceDesc = hip.hip.hipTexObjectGetResourceDesc
-cuTexObjectGetResourceViewDesc = hip.hip.hipTexObjectGetResourceViewDesc
-cuTexObjectGetTextureDesc = hip.hip.hipTexObjectGetTextureDesc
-cudaGetTextureReference = hip.hip.hipGetTextureReference
-cuTexRefSetAddressMode = hip.hip.hipTexRefSetAddressMode
-cuTexRefSetArray = hip.hip.hipTexRefSetArray
-cuTexRefSetFilterMode = hip.hip.hipTexRefSetFilterMode
-cuTexRefSetFlags = hip.hip.hipTexRefSetFlags
-cuTexRefSetFormat = hip.hip.hipTexRefSetFormat
-cudaBindTexture = hip.hip.hipBindTexture
-cudaBindTexture2D = hip.hip.hipBindTexture2D
-cudaBindTextureToArray = hip.hip.hipBindTextureToArray
-cudaGetTextureAlignmentOffset = hip.hip.hipGetTextureAlignmentOffset
-cudaUnbindTexture = hip.hip.hipUnbindTexture
-cuTexRefGetAddress = hip.hip.hipTexRefGetAddress
-cuTexRefGetAddress_v2 = hip.hip.hipTexRefGetAddress
-cuTexRefGetAddressMode = hip.hip.hipTexRefGetAddressMode
-cuTexRefGetFilterMode = hip.hip.hipTexRefGetFilterMode
-cuTexRefGetFlags = hip.hip.hipTexRefGetFlags
-cuTexRefGetFormat = hip.hip.hipTexRefGetFormat
-cuTexRefGetMaxAnisotropy = hip.hip.hipTexRefGetMaxAnisotropy
-cuTexRefGetMipmapFilterMode = hip.hip.hipTexRefGetMipmapFilterMode
-cuTexRefGetMipmapLevelBias = hip.hip.hipTexRefGetMipmapLevelBias
-cuTexRefGetMipmapLevelClamp = hip.hip.hipTexRefGetMipmapLevelClamp
-cuTexRefGetMipmappedArray = hip.hip.hipTexRefGetMipMappedArray
-cuTexRefSetAddress = hip.hip.hipTexRefSetAddress
-cuTexRefSetAddress_v2 = hip.hip.hipTexRefSetAddress
-cuTexRefSetAddress2D = hip.hip.hipTexRefSetAddress2D
-cuTexRefSetAddress2D_v2 = hip.hip.hipTexRefSetAddress2D
-cuTexRefSetAddress2D_v3 = hip.hip.hipTexRefSetAddress2D
-cuTexRefSetMaxAnisotropy = hip.hip.hipTexRefSetMaxAnisotropy
-cuTexRefSetBorderColor = hip.hip.hipTexRefSetBorderColor
-cuTexRefSetMipmapFilterMode = hip.hip.hipTexRefSetMipmapFilterMode
-cuTexRefSetMipmapLevelBias = hip.hip.hipTexRefSetMipmapLevelBias
-cuTexRefSetMipmapLevelClamp = hip.hip.hipTexRefSetMipmapLevelClamp
-cuTexRefSetMipmappedArray = hip.hip.hipTexRefSetMipmappedArray
-cuMipmappedArrayCreate = hip.hip.hipMipmappedArrayCreate
-cuMipmappedArrayDestroy = hip.hip.hipMipmappedArrayDestroy
-cuMipmappedArrayGetLevel = hip.hip.hipMipmappedArrayGetLevel
-cuStreamBeginCapture = hip.hip.hipStreamBeginCapture
-cuStreamBeginCapture_v2 = hip.hip.hipStreamBeginCapture
-cudaStreamBeginCapture = hip.hip.hipStreamBeginCapture
-cuStreamEndCapture = hip.hip.hipStreamEndCapture
-cudaStreamEndCapture = hip.hip.hipStreamEndCapture
-cuStreamGetCaptureInfo = hip.hip.hipStreamGetCaptureInfo
-cudaStreamGetCaptureInfo = hip.hip.hipStreamGetCaptureInfo
-cuStreamGetCaptureInfo_v2 = hip.hip.hipStreamGetCaptureInfo_v2
-cuStreamIsCapturing = hip.hip.hipStreamIsCapturing
-cudaStreamIsCapturing = hip.hip.hipStreamIsCapturing
-cuStreamUpdateCaptureDependencies = hip.hip.hipStreamUpdateCaptureDependencies
-cuThreadExchangeStreamCaptureMode = hip.hip.hipThreadExchangeStreamCaptureMode
-cudaThreadExchangeStreamCaptureMode = hip.hip.hipThreadExchangeStreamCaptureMode
-cuGraphCreate = hip.hip.hipGraphCreate
-cudaGraphCreate = hip.hip.hipGraphCreate
-cuGraphDestroy = hip.hip.hipGraphDestroy
-cudaGraphDestroy = hip.hip.hipGraphDestroy
-cuGraphAddDependencies = hip.hip.hipGraphAddDependencies
-cudaGraphAddDependencies = hip.hip.hipGraphAddDependencies
-cuGraphRemoveDependencies = hip.hip.hipGraphRemoveDependencies
-cudaGraphRemoveDependencies = hip.hip.hipGraphRemoveDependencies
-cuGraphGetEdges = hip.hip.hipGraphGetEdges
-cudaGraphGetEdges = hip.hip.hipGraphGetEdges
-cuGraphGetNodes = hip.hip.hipGraphGetNodes
-cudaGraphGetNodes = hip.hip.hipGraphGetNodes
-cuGraphGetRootNodes = hip.hip.hipGraphGetRootNodes
-cudaGraphGetRootNodes = hip.hip.hipGraphGetRootNodes
-cuGraphNodeGetDependencies = hip.hip.hipGraphNodeGetDependencies
-cudaGraphNodeGetDependencies = hip.hip.hipGraphNodeGetDependencies
-cuGraphNodeGetDependentNodes = hip.hip.hipGraphNodeGetDependentNodes
-cudaGraphNodeGetDependentNodes = hip.hip.hipGraphNodeGetDependentNodes
-cuGraphNodeGetType = hip.hip.hipGraphNodeGetType
-cudaGraphNodeGetType = hip.hip.hipGraphNodeGetType
-cuGraphDestroyNode = hip.hip.hipGraphDestroyNode
-cudaGraphDestroyNode = hip.hip.hipGraphDestroyNode
-cuGraphClone = hip.hip.hipGraphClone
-cudaGraphClone = hip.hip.hipGraphClone
-cuGraphNodeFindInClone = hip.hip.hipGraphNodeFindInClone
-cudaGraphNodeFindInClone = hip.hip.hipGraphNodeFindInClone
-cuGraphInstantiate = hip.hip.hipGraphInstantiate
-cuGraphInstantiate_v2 = hip.hip.hipGraphInstantiate
-cudaGraphInstantiate = hip.hip.hipGraphInstantiate
-cuGraphInstantiateWithFlags = hip.hip.hipGraphInstantiateWithFlags
-cudaGraphInstantiateWithFlags = hip.hip.hipGraphInstantiateWithFlags
-cuGraphLaunch = hip.hip.hipGraphLaunch
-cudaGraphLaunch = hip.hip.hipGraphLaunch
-cuGraphUpload = hip.hip.hipGraphUpload
-cudaGraphUpload = hip.hip.hipGraphUpload
-cuGraphExecDestroy = hip.hip.hipGraphExecDestroy
-cudaGraphExecDestroy = hip.hip.hipGraphExecDestroy
-cuGraphExecUpdate = hip.hip.hipGraphExecUpdate
-cudaGraphExecUpdate = hip.hip.hipGraphExecUpdate
-cuGraphAddKernelNode = hip.hip.hipGraphAddKernelNode
-cudaGraphAddKernelNode = hip.hip.hipGraphAddKernelNode
-cuGraphKernelNodeGetParams = hip.hip.hipGraphKernelNodeGetParams
-cudaGraphKernelNodeGetParams = hip.hip.hipGraphKernelNodeGetParams
-cuGraphKernelNodeSetParams = hip.hip.hipGraphKernelNodeSetParams
-cudaGraphKernelNodeSetParams = hip.hip.hipGraphKernelNodeSetParams
-cuGraphExecKernelNodeSetParams = hip.hip.hipGraphExecKernelNodeSetParams
-cudaGraphExecKernelNodeSetParams = hip.hip.hipGraphExecKernelNodeSetParams
-cudaGraphAddMemcpyNode = hip.hip.hipGraphAddMemcpyNode
-cuGraphMemcpyNodeGetParams = hip.hip.hipGraphMemcpyNodeGetParams
-cudaGraphMemcpyNodeGetParams = hip.hip.hipGraphMemcpyNodeGetParams
-cuGraphMemcpyNodeSetParams = hip.hip.hipGraphMemcpyNodeSetParams
-cudaGraphMemcpyNodeSetParams = hip.hip.hipGraphMemcpyNodeSetParams
-cuGraphKernelNodeSetAttribute = hip.hip.hipGraphKernelNodeSetAttribute
-cudaGraphKernelNodeSetAttribute = hip.hip.hipGraphKernelNodeSetAttribute
-cuGraphKernelNodeGetAttribute = hip.hip.hipGraphKernelNodeGetAttribute
-cudaGraphKernelNodeGetAttribute = hip.hip.hipGraphKernelNodeGetAttribute
-cudaGraphExecMemcpyNodeSetParams = hip.hip.hipGraphExecMemcpyNodeSetParams
-cudaGraphAddMemcpyNode1D = hip.hip.hipGraphAddMemcpyNode1D
-cudaGraphMemcpyNodeSetParams1D = hip.hip.hipGraphMemcpyNodeSetParams1D
-cudaGraphExecMemcpyNodeSetParams1D = hip.hip.hipGraphExecMemcpyNodeSetParams1D
-cudaGraphAddMemcpyNodeFromSymbol = hip.hip.hipGraphAddMemcpyNodeFromSymbol
-cudaGraphMemcpyNodeSetParamsFromSymbol = hip.hip.hipGraphMemcpyNodeSetParamsFromSymbol
-cudaGraphExecMemcpyNodeSetParamsFromSymbol = hip.hip.hipGraphExecMemcpyNodeSetParamsFromSymbol
-cudaGraphAddMemcpyNodeToSymbol = hip.hip.hipGraphAddMemcpyNodeToSymbol
-cudaGraphMemcpyNodeSetParamsToSymbol = hip.hip.hipGraphMemcpyNodeSetParamsToSymbol
-cudaGraphExecMemcpyNodeSetParamsToSymbol = hip.hip.hipGraphExecMemcpyNodeSetParamsToSymbol
-cudaGraphAddMemsetNode = hip.hip.hipGraphAddMemsetNode
-cuGraphMemsetNodeGetParams = hip.hip.hipGraphMemsetNodeGetParams
-cudaGraphMemsetNodeGetParams = hip.hip.hipGraphMemsetNodeGetParams
-cuGraphMemsetNodeSetParams = hip.hip.hipGraphMemsetNodeSetParams
-cudaGraphMemsetNodeSetParams = hip.hip.hipGraphMemsetNodeSetParams
-cudaGraphExecMemsetNodeSetParams = hip.hip.hipGraphExecMemsetNodeSetParams
-cuGraphAddHostNode = hip.hip.hipGraphAddHostNode
-cudaGraphAddHostNode = hip.hip.hipGraphAddHostNode
-cuGraphHostNodeGetParams = hip.hip.hipGraphHostNodeGetParams
-cudaGraphHostNodeGetParams = hip.hip.hipGraphHostNodeGetParams
-cuGraphHostNodeSetParams = hip.hip.hipGraphHostNodeSetParams
-cudaGraphHostNodeSetParams = hip.hip.hipGraphHostNodeSetParams
-cuGraphExecHostNodeSetParams = hip.hip.hipGraphExecHostNodeSetParams
-cudaGraphExecHostNodeSetParams = hip.hip.hipGraphExecHostNodeSetParams
-cuGraphAddChildGraphNode = hip.hip.hipGraphAddChildGraphNode
-cudaGraphAddChildGraphNode = hip.hip.hipGraphAddChildGraphNode
-cuGraphChildGraphNodeGetGraph = hip.hip.hipGraphChildGraphNodeGetGraph
-cudaGraphChildGraphNodeGetGraph = hip.hip.hipGraphChildGraphNodeGetGraph
-cuGraphExecChildGraphNodeSetParams = hip.hip.hipGraphExecChildGraphNodeSetParams
-cudaGraphExecChildGraphNodeSetParams = hip.hip.hipGraphExecChildGraphNodeSetParams
-cuGraphAddEmptyNode = hip.hip.hipGraphAddEmptyNode
-cudaGraphAddEmptyNode = hip.hip.hipGraphAddEmptyNode
-cuGraphAddEventRecordNode = hip.hip.hipGraphAddEventRecordNode
-cudaGraphAddEventRecordNode = hip.hip.hipGraphAddEventRecordNode
-cuGraphEventRecordNodeGetEvent = hip.hip.hipGraphEventRecordNodeGetEvent
-cudaGraphEventRecordNodeGetEvent = hip.hip.hipGraphEventRecordNodeGetEvent
-cuGraphEventRecordNodeSetEvent = hip.hip.hipGraphEventRecordNodeSetEvent
-cudaGraphEventRecordNodeSetEvent = hip.hip.hipGraphEventRecordNodeSetEvent
-cuGraphExecEventRecordNodeSetEvent = hip.hip.hipGraphExecEventRecordNodeSetEvent
-cudaGraphExecEventRecordNodeSetEvent = hip.hip.hipGraphExecEventRecordNodeSetEvent
-cuGraphAddEventWaitNode = hip.hip.hipGraphAddEventWaitNode
-cudaGraphAddEventWaitNode = hip.hip.hipGraphAddEventWaitNode
-cuGraphEventWaitNodeGetEvent = hip.hip.hipGraphEventWaitNodeGetEvent
-cudaGraphEventWaitNodeGetEvent = hip.hip.hipGraphEventWaitNodeGetEvent
-cuGraphEventWaitNodeSetEvent = hip.hip.hipGraphEventWaitNodeSetEvent
-cudaGraphEventWaitNodeSetEvent = hip.hip.hipGraphEventWaitNodeSetEvent
-cuGraphExecEventWaitNodeSetEvent = hip.hip.hipGraphExecEventWaitNodeSetEvent
-cudaGraphExecEventWaitNodeSetEvent = hip.hip.hipGraphExecEventWaitNodeSetEvent
-cuDeviceGetGraphMemAttribute = hip.hip.hipDeviceGetGraphMemAttribute
-cudaDeviceGetGraphMemAttribute = hip.hip.hipDeviceGetGraphMemAttribute
-cuDeviceSetGraphMemAttribute = hip.hip.hipDeviceSetGraphMemAttribute
-cudaDeviceSetGraphMemAttribute = hip.hip.hipDeviceSetGraphMemAttribute
-cuDeviceGraphMemTrim = hip.hip.hipDeviceGraphMemTrim
-cudaDeviceGraphMemTrim = hip.hip.hipDeviceGraphMemTrim
-cuUserObjectCreate = hip.hip.hipUserObjectCreate
-cudaUserObjectCreate = hip.hip.hipUserObjectCreate
-cuUserObjectRelease = hip.hip.hipUserObjectRelease
-cudaUserObjectRelease = hip.hip.hipUserObjectRelease
-cuUserObjectRetain = hip.hip.hipUserObjectRetain
-cudaUserObjectRetain = hip.hip.hipUserObjectRetain
-cuGraphRetainUserObject = hip.hip.hipGraphRetainUserObject
-cudaGraphRetainUserObject = hip.hip.hipGraphRetainUserObject
-cuGraphReleaseUserObject = hip.hip.hipGraphReleaseUserObject
-cudaGraphReleaseUserObject = hip.hip.hipGraphReleaseUserObject
-cuMemAddressFree = hip.hip.hipMemAddressFree
-cuMemAddressReserve = hip.hip.hipMemAddressReserve
-cuMemCreate = hip.hip.hipMemCreate
-cuMemExportToShareableHandle = hip.hip.hipMemExportToShareableHandle
-cuMemGetAccess = hip.hip.hipMemGetAccess
-cuMemGetAllocationGranularity = hip.hip.hipMemGetAllocationGranularity
-cuMemGetAllocationPropertiesFromHandle = hip.hip.hipMemGetAllocationPropertiesFromHandle
-cuMemImportFromShareableHandle = hip.hip.hipMemImportFromShareableHandle
-cuMemMap = hip.hip.hipMemMap
-cuMemMapArrayAsync = hip.hip.hipMemMapArrayAsync
-cuMemRelease = hip.hip.hipMemRelease
-cuMemRetainAllocationHandle = hip.hip.hipMemRetainAllocationHandle
-cuMemSetAccess = hip.hip.hipMemSetAccess
-cuMemUnmap = hip.hip.hipMemUnmap
-cuGLGetDevices = hip.hip.hipGLGetDevices
-cudaGLGetDevices = hip.hip.hipGLGetDevices
-cuGraphicsGLRegisterBuffer = hip.hip.hipGraphicsGLRegisterBuffer
-cudaGraphicsGLRegisterBuffer = hip.hip.hipGraphicsGLRegisterBuffer
-cuGraphicsGLRegisterImage = hip.hip.hipGraphicsGLRegisterImage
-cudaGraphicsGLRegisterImage = hip.hip.hipGraphicsGLRegisterImage
-cuGraphicsMapResources = hip.hip.hipGraphicsMapResources
-cudaGraphicsMapResources = hip.hip.hipGraphicsMapResources
-cuGraphicsSubResourceGetMappedArray = hip.hip.hipGraphicsSubResourceGetMappedArray
-cudaGraphicsSubResourceGetMappedArray = hip.hip.hipGraphicsSubResourceGetMappedArray
-cuGraphicsResourceGetMappedPointer = hip.hip.hipGraphicsResourceGetMappedPointer
-cuGraphicsResourceGetMappedPointer_v2 = hip.hip.hipGraphicsResourceGetMappedPointer
-cudaGraphicsResourceGetMappedPointer = hip.hip.hipGraphicsResourceGetMappedPointer
-cuGraphicsUnmapResources = hip.hip.hipGraphicsUnmapResources
-cudaGraphicsUnmapResources = hip.hip.hipGraphicsUnmapResources
-cuGraphicsUnregisterResource = hip.hip.hipGraphicsUnregisterResource
-cudaGraphicsUnregisterResource = hip.hip.hipGraphicsUnregisterResource
+cuStreamAddCallback = hip.hipStreamAddCallback
+cudaStreamAddCallback = hip.hipStreamAddCallback
+cuStreamWaitValue32 = hip.hipStreamWaitValue32
+cuStreamWaitValue32_v2 = hip.hipStreamWaitValue32
+cuStreamWaitValue64 = hip.hipStreamWaitValue64
+cuStreamWaitValue64_v2 = hip.hipStreamWaitValue64
+cuStreamWriteValue32 = hip.hipStreamWriteValue32
+cuStreamWriteValue32_v2 = hip.hipStreamWriteValue32
+cuStreamWriteValue64 = hip.hipStreamWriteValue64
+cuStreamWriteValue64_v2 = hip.hipStreamWriteValue64
+cuEventCreate = hip.hipEventCreateWithFlags
+cudaEventCreateWithFlags = hip.hipEventCreateWithFlags
+cudaEventCreate = hip.hipEventCreate
+cuEventRecord = hip.hipEventRecord
+cudaEventRecord = hip.hipEventRecord
+cuEventDestroy = hip.hipEventDestroy
+cuEventDestroy_v2 = hip.hipEventDestroy
+cudaEventDestroy = hip.hipEventDestroy
+cuEventSynchronize = hip.hipEventSynchronize
+cudaEventSynchronize = hip.hipEventSynchronize
+cuEventElapsedTime = hip.hipEventElapsedTime
+cudaEventElapsedTime = hip.hipEventElapsedTime
+cuEventQuery = hip.hipEventQuery
+cudaEventQuery = hip.hipEventQuery
+cudaPointerGetAttributes = hip.hipPointerGetAttributes
+cuPointerGetAttribute = hip.hipPointerGetAttribute
+cuPointerGetAttributes = hip.hipDrvPointerGetAttributes
+cuImportExternalSemaphore = hip.hipImportExternalSemaphore
+cudaImportExternalSemaphore = hip.hipImportExternalSemaphore
+cuSignalExternalSemaphoresAsync = hip.hipSignalExternalSemaphoresAsync
+cudaSignalExternalSemaphoresAsync = hip.hipSignalExternalSemaphoresAsync
+cuWaitExternalSemaphoresAsync = hip.hipWaitExternalSemaphoresAsync
+cudaWaitExternalSemaphoresAsync = hip.hipWaitExternalSemaphoresAsync
+cuDestroyExternalSemaphore = hip.hipDestroyExternalSemaphore
+cudaDestroyExternalSemaphore = hip.hipDestroyExternalSemaphore
+cuImportExternalMemory = hip.hipImportExternalMemory
+cudaImportExternalMemory = hip.hipImportExternalMemory
+cuExternalMemoryGetMappedBuffer = hip.hipExternalMemoryGetMappedBuffer
+cudaExternalMemoryGetMappedBuffer = hip.hipExternalMemoryGetMappedBuffer
+cuDestroyExternalMemory = hip.hipDestroyExternalMemory
+cudaDestroyExternalMemory = hip.hipDestroyExternalMemory
+cuMemAlloc = hip.hipMalloc
+cuMemAlloc_v2 = hip.hipMalloc
+cudaMalloc = hip.hipMalloc
+cuMemAllocHost = hip.hipMemAllocHost
+cuMemAllocHost_v2 = hip.hipMemAllocHost
+cudaMallocHost = hip.hipHostMalloc
+cuMemAllocManaged = hip.hipMallocManaged
+cudaMallocManaged = hip.hipMallocManaged
+cudaMemPrefetchAsync = hip.hipMemPrefetchAsync
+cuMemPrefetchAsync = hip.hipMemPrefetchAsync
+cudaMemAdvise = hip.hipMemAdvise
+cuMemAdvise = hip.hipMemAdvise
+cudaMemRangeGetAttribute = hip.hipMemRangeGetAttribute
+cuMemRangeGetAttribute = hip.hipMemRangeGetAttribute
+cudaMemRangeGetAttributes = hip.hipMemRangeGetAttributes
+cuMemRangeGetAttributes = hip.hipMemRangeGetAttributes
+cuStreamAttachMemAsync = hip.hipStreamAttachMemAsync
+cudaStreamAttachMemAsync = hip.hipStreamAttachMemAsync
+cudaMallocAsync = hip.hipMallocAsync
+cuMemAllocAsync = hip.hipMallocAsync
+cudaFreeAsync = hip.hipFreeAsync
+cuMemFreeAsync = hip.hipFreeAsync
+cudaMemPoolTrimTo = hip.hipMemPoolTrimTo
+cuMemPoolTrimTo = hip.hipMemPoolTrimTo
+cudaMemPoolSetAttribute = hip.hipMemPoolSetAttribute
+cuMemPoolSetAttribute = hip.hipMemPoolSetAttribute
+cudaMemPoolGetAttribute = hip.hipMemPoolGetAttribute
+cuMemPoolGetAttribute = hip.hipMemPoolGetAttribute
+cudaMemPoolSetAccess = hip.hipMemPoolSetAccess
+cuMemPoolSetAccess = hip.hipMemPoolSetAccess
+cudaMemPoolGetAccess = hip.hipMemPoolGetAccess
+cuMemPoolGetAccess = hip.hipMemPoolGetAccess
+cudaMemPoolCreate = hip.hipMemPoolCreate
+cuMemPoolCreate = hip.hipMemPoolCreate
+cudaMemPoolDestroy = hip.hipMemPoolDestroy
+cuMemPoolDestroy = hip.hipMemPoolDestroy
+cudaMallocFromPoolAsync = hip.hipMallocFromPoolAsync
+cuMemAllocFromPoolAsync = hip.hipMallocFromPoolAsync
+cudaMemPoolExportToShareableHandle = hip.hipMemPoolExportToShareableHandle
+cuMemPoolExportToShareableHandle = hip.hipMemPoolExportToShareableHandle
+cudaMemPoolImportFromShareableHandle = hip.hipMemPoolImportFromShareableHandle
+cuMemPoolImportFromShareableHandle = hip.hipMemPoolImportFromShareableHandle
+cudaMemPoolExportPointer = hip.hipMemPoolExportPointer
+cuMemPoolExportPointer = hip.hipMemPoolExportPointer
+cudaMemPoolImportPointer = hip.hipMemPoolImportPointer
+cuMemPoolImportPointer = hip.hipMemPoolImportPointer
+cuMemHostAlloc = hip.hipHostAlloc
+cudaHostAlloc = hip.hipHostAlloc
+cuMemHostGetDevicePointer = hip.hipHostGetDevicePointer
+cuMemHostGetDevicePointer_v2 = hip.hipHostGetDevicePointer
+cudaHostGetDevicePointer = hip.hipHostGetDevicePointer
+cuMemHostGetFlags = hip.hipHostGetFlags
+cudaHostGetFlags = hip.hipHostGetFlags
+cuMemHostRegister = hip.hipHostRegister
+cuMemHostRegister_v2 = hip.hipHostRegister
+cudaHostRegister = hip.hipHostRegister
+cuMemHostUnregister = hip.hipHostUnregister
+cudaHostUnregister = hip.hipHostUnregister
+cudaMallocPitch = hip.hipMallocPitch
+cuMemAllocPitch = hip.hipMemAllocPitch
+cuMemAllocPitch_v2 = hip.hipMemAllocPitch
+cuMemFree = hip.hipFree
+cuMemFree_v2 = hip.hipFree
+cudaFree = hip.hipFree
+cuMemFreeHost = hip.hipHostFree
+cudaFreeHost = hip.hipHostFree
+cudaMemcpy = hip.hipMemcpy
+cuMemcpyHtoD = hip.hipMemcpyHtoD
+cuMemcpyHtoD_v2 = hip.hipMemcpyHtoD
+cuMemcpyDtoH = hip.hipMemcpyDtoH
+cuMemcpyDtoH_v2 = hip.hipMemcpyDtoH
+cuMemcpyDtoD = hip.hipMemcpyDtoD
+cuMemcpyDtoD_v2 = hip.hipMemcpyDtoD
+cuMemcpyHtoDAsync = hip.hipMemcpyHtoDAsync
+cuMemcpyHtoDAsync_v2 = hip.hipMemcpyHtoDAsync
+cuMemcpyDtoHAsync = hip.hipMemcpyDtoHAsync
+cuMemcpyDtoHAsync_v2 = hip.hipMemcpyDtoHAsync
+cuMemcpyDtoDAsync = hip.hipMemcpyDtoDAsync
+cuMemcpyDtoDAsync_v2 = hip.hipMemcpyDtoDAsync
+cuModuleGetGlobal = hip.hipModuleGetGlobal
+cuModuleGetGlobal_v2 = hip.hipModuleGetGlobal
+cudaGetSymbolAddress = hip.hipGetSymbolAddress
+cudaGetSymbolSize = hip.hipGetSymbolSize
+cudaMemcpyToSymbol = hip.hipMemcpyToSymbol
+cudaMemcpyToSymbolAsync = hip.hipMemcpyToSymbolAsync
+cudaMemcpyFromSymbol = hip.hipMemcpyFromSymbol
+cudaMemcpyFromSymbolAsync = hip.hipMemcpyFromSymbolAsync
+cudaMemcpyAsync = hip.hipMemcpyAsync
+cudaMemset = hip.hipMemset
+cuMemsetD8 = hip.hipMemsetD8
+cuMemsetD8_v2 = hip.hipMemsetD8
+cuMemsetD8Async = hip.hipMemsetD8Async
+cuMemsetD16 = hip.hipMemsetD16
+cuMemsetD16_v2 = hip.hipMemsetD16
+cuMemsetD16Async = hip.hipMemsetD16Async
+cuMemsetD32 = hip.hipMemsetD32
+cuMemsetD32_v2 = hip.hipMemsetD32
+cudaMemsetAsync = hip.hipMemsetAsync
+cuMemsetD32Async = hip.hipMemsetD32Async
+cudaMemset2D = hip.hipMemset2D
+cudaMemset2DAsync = hip.hipMemset2DAsync
+cudaMemset3D = hip.hipMemset3D
+cudaMemset3DAsync = hip.hipMemset3DAsync
+cuMemGetInfo = hip.hipMemGetInfo
+cuMemGetInfo_v2 = hip.hipMemGetInfo
+cudaMemGetInfo = hip.hipMemGetInfo
+cudaMallocArray = hip.hipMallocArray
+cuArrayCreate = hip.hipArrayCreate
+cuArrayCreate_v2 = hip.hipArrayCreate
+cuArrayDestroy = hip.hipArrayDestroy
+cuArray3DCreate = hip.hipArray3DCreate
+cuArray3DCreate_v2 = hip.hipArray3DCreate
+cudaMalloc3D = hip.hipMalloc3D
+cudaFreeArray = hip.hipFreeArray
+cudaFreeMipmappedArray = hip.hipFreeMipmappedArray
+cudaMalloc3DArray = hip.hipMalloc3DArray
+cudaMallocMipmappedArray = hip.hipMallocMipmappedArray
+cudaGetMipmappedArrayLevel = hip.hipGetMipmappedArrayLevel
+cudaMemcpy2D = hip.hipMemcpy2D
+cuMemcpy2D = hip.hipMemcpyParam2D
+cuMemcpy2D_v2 = hip.hipMemcpyParam2D
+cuMemcpy2DAsync = hip.hipMemcpyParam2DAsync
+cuMemcpy2DAsync_v2 = hip.hipMemcpyParam2DAsync
+cudaMemcpy2DAsync = hip.hipMemcpy2DAsync
+cudaMemcpy2DToArray = hip.hipMemcpy2DToArray
+cudaMemcpy2DToArrayAsync = hip.hipMemcpy2DToArrayAsync
+cudaMemcpyToArray = hip.hipMemcpyToArray
+cudaMemcpyFromArray = hip.hipMemcpyFromArray
+cudaMemcpy2DFromArray = hip.hipMemcpy2DFromArray
+cudaMemcpy2DFromArrayAsync = hip.hipMemcpy2DFromArrayAsync
+cuMemcpyAtoH = hip.hipMemcpyAtoH
+cuMemcpyAtoH_v2 = hip.hipMemcpyAtoH
+cuMemcpyHtoA = hip.hipMemcpyHtoA
+cuMemcpyHtoA_v2 = hip.hipMemcpyHtoA
+cudaMemcpy3D = hip.hipMemcpy3D
+cudaMemcpy3DAsync = hip.hipMemcpy3DAsync
+cuMemcpy3D = hip.hipDrvMemcpy3D
+cuMemcpy3D_v2 = hip.hipDrvMemcpy3D
+cuMemcpy3DAsync = hip.hipDrvMemcpy3DAsync
+cuMemcpy3DAsync_v2 = hip.hipDrvMemcpy3DAsync
+cuDeviceCanAccessPeer = hip.hipDeviceCanAccessPeer
+cudaDeviceCanAccessPeer = hip.hipDeviceCanAccessPeer
+cudaDeviceEnablePeerAccess = hip.hipDeviceEnablePeerAccess
+cudaDeviceDisablePeerAccess = hip.hipDeviceDisablePeerAccess
+cuMemGetAddressRange = hip.hipMemGetAddressRange
+cuMemGetAddressRange_v2 = hip.hipMemGetAddressRange
+cudaMemcpyPeer = hip.hipMemcpyPeer
+cudaMemcpyPeerAsync = hip.hipMemcpyPeerAsync
+cuCtxCreate = hip.hipCtxCreate
+cuCtxCreate_v2 = hip.hipCtxCreate
+cuCtxDestroy = hip.hipCtxDestroy
+cuCtxDestroy_v2 = hip.hipCtxDestroy
+cuCtxPopCurrent = hip.hipCtxPopCurrent
+cuCtxPopCurrent_v2 = hip.hipCtxPopCurrent
+cuCtxPushCurrent = hip.hipCtxPushCurrent
+cuCtxPushCurrent_v2 = hip.hipCtxPushCurrent
+cuCtxSetCurrent = hip.hipCtxSetCurrent
+cuCtxGetCurrent = hip.hipCtxGetCurrent
+cuCtxGetDevice = hip.hipCtxGetDevice
+cuCtxGetApiVersion = hip.hipCtxGetApiVersion
+cuCtxGetCacheConfig = hip.hipCtxGetCacheConfig
+cuCtxSetCacheConfig = hip.hipCtxSetCacheConfig
+cuCtxSetSharedMemConfig = hip.hipCtxSetSharedMemConfig
+cuCtxGetSharedMemConfig = hip.hipCtxGetSharedMemConfig
+cuCtxSynchronize = hip.hipCtxSynchronize
+cuCtxGetFlags = hip.hipCtxGetFlags
+cuCtxEnablePeerAccess = hip.hipCtxEnablePeerAccess
+cuCtxDisablePeerAccess = hip.hipCtxDisablePeerAccess
+cuDevicePrimaryCtxGetState = hip.hipDevicePrimaryCtxGetState
+cuDevicePrimaryCtxRelease = hip.hipDevicePrimaryCtxRelease
+cuDevicePrimaryCtxRelease_v2 = hip.hipDevicePrimaryCtxRelease
+cuDevicePrimaryCtxRetain = hip.hipDevicePrimaryCtxRetain
+cuDevicePrimaryCtxReset = hip.hipDevicePrimaryCtxReset
+cuDevicePrimaryCtxReset_v2 = hip.hipDevicePrimaryCtxReset
+cuDevicePrimaryCtxSetFlags = hip.hipDevicePrimaryCtxSetFlags
+cuDevicePrimaryCtxSetFlags_v2 = hip.hipDevicePrimaryCtxSetFlags
+cuModuleLoad = hip.hipModuleLoad
+cuModuleUnload = hip.hipModuleUnload
+cuModuleGetFunction = hip.hipModuleGetFunction
+cudaFuncGetAttributes = hip.hipFuncGetAttributes
+cuFuncGetAttribute = hip.hipFuncGetAttribute
+cuModuleGetTexRef = hip.hipModuleGetTexRef
+cuModuleLoadData = hip.hipModuleLoadData
+cuModuleLoadDataEx = hip.hipModuleLoadDataEx
+cuLaunchKernel = hip.hipModuleLaunchKernel
+cudaLaunchCooperativeKernel = hip.hipLaunchCooperativeKernel
+cudaLaunchCooperativeKernelMultiDevice = hip.hipLaunchCooperativeKernelMultiDevice
+cuOccupancyMaxPotentialBlockSize = hip.hipModuleOccupancyMaxPotentialBlockSize
+cuOccupancyMaxPotentialBlockSizeWithFlags = hip.hipModuleOccupancyMaxPotentialBlockSizeWithFlags
+cuOccupancyMaxActiveBlocksPerMultiprocessor = hip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessor
+cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags = hip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
+cudaOccupancyMaxActiveBlocksPerMultiprocessor = hip.hipOccupancyMaxActiveBlocksPerMultiprocessor
+cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags = hip.hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
+cudaOccupancyMaxPotentialBlockSize = hip.hipOccupancyMaxPotentialBlockSize
+cuProfilerStart = hip.hipProfilerStart
+cudaProfilerStart = hip.hipProfilerStart
+cuProfilerStop = hip.hipProfilerStop
+cudaProfilerStop = hip.hipProfilerStop
+cudaConfigureCall = hip.hipConfigureCall
+cudaSetupArgument = hip.hipSetupArgument
+cudaLaunch = hip.hipLaunchByPtr
+cudaLaunchKernel = hip.hipLaunchKernel
+cuLaunchHostFunc = hip.hipLaunchHostFunc
+cudaLaunchHostFunc = hip.hipLaunchHostFunc
+cuMemcpy2DUnaligned = hip.hipDrvMemcpy2DUnaligned
+cuMemcpy2DUnaligned_v2 = hip.hipDrvMemcpy2DUnaligned
+cudaBindTextureToMipmappedArray = hip.hipBindTextureToMipmappedArray
+cudaCreateTextureObject = hip.hipCreateTextureObject
+cudaDestroyTextureObject = hip.hipDestroyTextureObject
+cudaGetChannelDesc = hip.hipGetChannelDesc
+cudaGetTextureObjectResourceDesc = hip.hipGetTextureObjectResourceDesc
+cudaGetTextureObjectResourceViewDesc = hip.hipGetTextureObjectResourceViewDesc
+cudaGetTextureObjectTextureDesc = hip.hipGetTextureObjectTextureDesc
+cuTexObjectCreate = hip.hipTexObjectCreate
+cuTexObjectDestroy = hip.hipTexObjectDestroy
+cuTexObjectGetResourceDesc = hip.hipTexObjectGetResourceDesc
+cuTexObjectGetResourceViewDesc = hip.hipTexObjectGetResourceViewDesc
+cuTexObjectGetTextureDesc = hip.hipTexObjectGetTextureDesc
+cudaGetTextureReference = hip.hipGetTextureReference
+cuTexRefSetAddressMode = hip.hipTexRefSetAddressMode
+cuTexRefSetArray = hip.hipTexRefSetArray
+cuTexRefSetFilterMode = hip.hipTexRefSetFilterMode
+cuTexRefSetFlags = hip.hipTexRefSetFlags
+cuTexRefSetFormat = hip.hipTexRefSetFormat
+cudaBindTexture = hip.hipBindTexture
+cudaBindTexture2D = hip.hipBindTexture2D
+cudaBindTextureToArray = hip.hipBindTextureToArray
+cudaGetTextureAlignmentOffset = hip.hipGetTextureAlignmentOffset
+cudaUnbindTexture = hip.hipUnbindTexture
+cuTexRefGetAddress = hip.hipTexRefGetAddress
+cuTexRefGetAddress_v2 = hip.hipTexRefGetAddress
+cuTexRefGetAddressMode = hip.hipTexRefGetAddressMode
+cuTexRefGetFilterMode = hip.hipTexRefGetFilterMode
+cuTexRefGetFlags = hip.hipTexRefGetFlags
+cuTexRefGetFormat = hip.hipTexRefGetFormat
+cuTexRefGetMaxAnisotropy = hip.hipTexRefGetMaxAnisotropy
+cuTexRefGetMipmapFilterMode = hip.hipTexRefGetMipmapFilterMode
+cuTexRefGetMipmapLevelBias = hip.hipTexRefGetMipmapLevelBias
+cuTexRefGetMipmapLevelClamp = hip.hipTexRefGetMipmapLevelClamp
+cuTexRefGetMipmappedArray = hip.hipTexRefGetMipMappedArray
+cuTexRefSetAddress = hip.hipTexRefSetAddress
+cuTexRefSetAddress_v2 = hip.hipTexRefSetAddress
+cuTexRefSetAddress2D = hip.hipTexRefSetAddress2D
+cuTexRefSetAddress2D_v2 = hip.hipTexRefSetAddress2D
+cuTexRefSetAddress2D_v3 = hip.hipTexRefSetAddress2D
+cuTexRefSetMaxAnisotropy = hip.hipTexRefSetMaxAnisotropy
+cuTexRefSetBorderColor = hip.hipTexRefSetBorderColor
+cuTexRefSetMipmapFilterMode = hip.hipTexRefSetMipmapFilterMode
+cuTexRefSetMipmapLevelBias = hip.hipTexRefSetMipmapLevelBias
+cuTexRefSetMipmapLevelClamp = hip.hipTexRefSetMipmapLevelClamp
+cuTexRefSetMipmappedArray = hip.hipTexRefSetMipmappedArray
+cuMipmappedArrayCreate = hip.hipMipmappedArrayCreate
+cuMipmappedArrayDestroy = hip.hipMipmappedArrayDestroy
+cuMipmappedArrayGetLevel = hip.hipMipmappedArrayGetLevel
+cuStreamBeginCapture = hip.hipStreamBeginCapture
+cuStreamBeginCapture_v2 = hip.hipStreamBeginCapture
+cudaStreamBeginCapture = hip.hipStreamBeginCapture
+cuStreamEndCapture = hip.hipStreamEndCapture
+cudaStreamEndCapture = hip.hipStreamEndCapture
+cuStreamGetCaptureInfo = hip.hipStreamGetCaptureInfo
+cudaStreamGetCaptureInfo = hip.hipStreamGetCaptureInfo
+cuStreamGetCaptureInfo_v2 = hip.hipStreamGetCaptureInfo_v2
+cuStreamIsCapturing = hip.hipStreamIsCapturing
+cudaStreamIsCapturing = hip.hipStreamIsCapturing
+cuStreamUpdateCaptureDependencies = hip.hipStreamUpdateCaptureDependencies
+cuThreadExchangeStreamCaptureMode = hip.hipThreadExchangeStreamCaptureMode
+cudaThreadExchangeStreamCaptureMode = hip.hipThreadExchangeStreamCaptureMode
+cuGraphCreate = hip.hipGraphCreate
+cudaGraphCreate = hip.hipGraphCreate
+cuGraphDestroy = hip.hipGraphDestroy
+cudaGraphDestroy = hip.hipGraphDestroy
+cuGraphAddDependencies = hip.hipGraphAddDependencies
+cudaGraphAddDependencies = hip.hipGraphAddDependencies
+cuGraphRemoveDependencies = hip.hipGraphRemoveDependencies
+cudaGraphRemoveDependencies = hip.hipGraphRemoveDependencies
+cuGraphGetEdges = hip.hipGraphGetEdges
+cudaGraphGetEdges = hip.hipGraphGetEdges
+cuGraphGetNodes = hip.hipGraphGetNodes
+cudaGraphGetNodes = hip.hipGraphGetNodes
+cuGraphGetRootNodes = hip.hipGraphGetRootNodes
+cudaGraphGetRootNodes = hip.hipGraphGetRootNodes
+cuGraphNodeGetDependencies = hip.hipGraphNodeGetDependencies
+cudaGraphNodeGetDependencies = hip.hipGraphNodeGetDependencies
+cuGraphNodeGetDependentNodes = hip.hipGraphNodeGetDependentNodes
+cudaGraphNodeGetDependentNodes = hip.hipGraphNodeGetDependentNodes
+cuGraphNodeGetType = hip.hipGraphNodeGetType
+cudaGraphNodeGetType = hip.hipGraphNodeGetType
+cuGraphDestroyNode = hip.hipGraphDestroyNode
+cudaGraphDestroyNode = hip.hipGraphDestroyNode
+cuGraphClone = hip.hipGraphClone
+cudaGraphClone = hip.hipGraphClone
+cuGraphNodeFindInClone = hip.hipGraphNodeFindInClone
+cudaGraphNodeFindInClone = hip.hipGraphNodeFindInClone
+cuGraphInstantiate = hip.hipGraphInstantiate
+cuGraphInstantiate_v2 = hip.hipGraphInstantiate
+cudaGraphInstantiate = hip.hipGraphInstantiate
+cuGraphInstantiateWithFlags = hip.hipGraphInstantiateWithFlags
+cudaGraphInstantiateWithFlags = hip.hipGraphInstantiateWithFlags
+cuGraphLaunch = hip.hipGraphLaunch
+cudaGraphLaunch = hip.hipGraphLaunch
+cuGraphUpload = hip.hipGraphUpload
+cudaGraphUpload = hip.hipGraphUpload
+cuGraphExecDestroy = hip.hipGraphExecDestroy
+cudaGraphExecDestroy = hip.hipGraphExecDestroy
+cuGraphExecUpdate = hip.hipGraphExecUpdate
+cudaGraphExecUpdate = hip.hipGraphExecUpdate
+cuGraphAddKernelNode = hip.hipGraphAddKernelNode
+cudaGraphAddKernelNode = hip.hipGraphAddKernelNode
+cuGraphKernelNodeGetParams = hip.hipGraphKernelNodeGetParams
+cudaGraphKernelNodeGetParams = hip.hipGraphKernelNodeGetParams
+cuGraphKernelNodeSetParams = hip.hipGraphKernelNodeSetParams
+cudaGraphKernelNodeSetParams = hip.hipGraphKernelNodeSetParams
+cuGraphExecKernelNodeSetParams = hip.hipGraphExecKernelNodeSetParams
+cudaGraphExecKernelNodeSetParams = hip.hipGraphExecKernelNodeSetParams
+cudaGraphAddMemcpyNode = hip.hipGraphAddMemcpyNode
+cuGraphMemcpyNodeGetParams = hip.hipGraphMemcpyNodeGetParams
+cudaGraphMemcpyNodeGetParams = hip.hipGraphMemcpyNodeGetParams
+cuGraphMemcpyNodeSetParams = hip.hipGraphMemcpyNodeSetParams
+cudaGraphMemcpyNodeSetParams = hip.hipGraphMemcpyNodeSetParams
+cuGraphKernelNodeSetAttribute = hip.hipGraphKernelNodeSetAttribute
+cudaGraphKernelNodeSetAttribute = hip.hipGraphKernelNodeSetAttribute
+cuGraphKernelNodeGetAttribute = hip.hipGraphKernelNodeGetAttribute
+cudaGraphKernelNodeGetAttribute = hip.hipGraphKernelNodeGetAttribute
+cudaGraphExecMemcpyNodeSetParams = hip.hipGraphExecMemcpyNodeSetParams
+cudaGraphAddMemcpyNode1D = hip.hipGraphAddMemcpyNode1D
+cudaGraphMemcpyNodeSetParams1D = hip.hipGraphMemcpyNodeSetParams1D
+cudaGraphExecMemcpyNodeSetParams1D = hip.hipGraphExecMemcpyNodeSetParams1D
+cudaGraphAddMemcpyNodeFromSymbol = hip.hipGraphAddMemcpyNodeFromSymbol
+cudaGraphMemcpyNodeSetParamsFromSymbol = hip.hipGraphMemcpyNodeSetParamsFromSymbol
+cudaGraphExecMemcpyNodeSetParamsFromSymbol = hip.hipGraphExecMemcpyNodeSetParamsFromSymbol
+cudaGraphAddMemcpyNodeToSymbol = hip.hipGraphAddMemcpyNodeToSymbol
+cudaGraphMemcpyNodeSetParamsToSymbol = hip.hipGraphMemcpyNodeSetParamsToSymbol
+cudaGraphExecMemcpyNodeSetParamsToSymbol = hip.hipGraphExecMemcpyNodeSetParamsToSymbol
+cudaGraphAddMemsetNode = hip.hipGraphAddMemsetNode
+cuGraphMemsetNodeGetParams = hip.hipGraphMemsetNodeGetParams
+cudaGraphMemsetNodeGetParams = hip.hipGraphMemsetNodeGetParams
+cuGraphMemsetNodeSetParams = hip.hipGraphMemsetNodeSetParams
+cudaGraphMemsetNodeSetParams = hip.hipGraphMemsetNodeSetParams
+cudaGraphExecMemsetNodeSetParams = hip.hipGraphExecMemsetNodeSetParams
+cuGraphAddHostNode = hip.hipGraphAddHostNode
+cudaGraphAddHostNode = hip.hipGraphAddHostNode
+cuGraphHostNodeGetParams = hip.hipGraphHostNodeGetParams
+cudaGraphHostNodeGetParams = hip.hipGraphHostNodeGetParams
+cuGraphHostNodeSetParams = hip.hipGraphHostNodeSetParams
+cudaGraphHostNodeSetParams = hip.hipGraphHostNodeSetParams
+cuGraphExecHostNodeSetParams = hip.hipGraphExecHostNodeSetParams
+cudaGraphExecHostNodeSetParams = hip.hipGraphExecHostNodeSetParams
+cuGraphAddChildGraphNode = hip.hipGraphAddChildGraphNode
+cudaGraphAddChildGraphNode = hip.hipGraphAddChildGraphNode
+cuGraphChildGraphNodeGetGraph = hip.hipGraphChildGraphNodeGetGraph
+cudaGraphChildGraphNodeGetGraph = hip.hipGraphChildGraphNodeGetGraph
+cuGraphExecChildGraphNodeSetParams = hip.hipGraphExecChildGraphNodeSetParams
+cudaGraphExecChildGraphNodeSetParams = hip.hipGraphExecChildGraphNodeSetParams
+cuGraphAddEmptyNode = hip.hipGraphAddEmptyNode
+cudaGraphAddEmptyNode = hip.hipGraphAddEmptyNode
+cuGraphAddEventRecordNode = hip.hipGraphAddEventRecordNode
+cudaGraphAddEventRecordNode = hip.hipGraphAddEventRecordNode
+cuGraphEventRecordNodeGetEvent = hip.hipGraphEventRecordNodeGetEvent
+cudaGraphEventRecordNodeGetEvent = hip.hipGraphEventRecordNodeGetEvent
+cuGraphEventRecordNodeSetEvent = hip.hipGraphEventRecordNodeSetEvent
+cudaGraphEventRecordNodeSetEvent = hip.hipGraphEventRecordNodeSetEvent
+cuGraphExecEventRecordNodeSetEvent = hip.hipGraphExecEventRecordNodeSetEvent
+cudaGraphExecEventRecordNodeSetEvent = hip.hipGraphExecEventRecordNodeSetEvent
+cuGraphAddEventWaitNode = hip.hipGraphAddEventWaitNode
+cudaGraphAddEventWaitNode = hip.hipGraphAddEventWaitNode
+cuGraphEventWaitNodeGetEvent = hip.hipGraphEventWaitNodeGetEvent
+cudaGraphEventWaitNodeGetEvent = hip.hipGraphEventWaitNodeGetEvent
+cuGraphEventWaitNodeSetEvent = hip.hipGraphEventWaitNodeSetEvent
+cudaGraphEventWaitNodeSetEvent = hip.hipGraphEventWaitNodeSetEvent
+cuGraphExecEventWaitNodeSetEvent = hip.hipGraphExecEventWaitNodeSetEvent
+cudaGraphExecEventWaitNodeSetEvent = hip.hipGraphExecEventWaitNodeSetEvent
+cuDeviceGetGraphMemAttribute = hip.hipDeviceGetGraphMemAttribute
+cudaDeviceGetGraphMemAttribute = hip.hipDeviceGetGraphMemAttribute
+cuDeviceSetGraphMemAttribute = hip.hipDeviceSetGraphMemAttribute
+cudaDeviceSetGraphMemAttribute = hip.hipDeviceSetGraphMemAttribute
+cuDeviceGraphMemTrim = hip.hipDeviceGraphMemTrim
+cudaDeviceGraphMemTrim = hip.hipDeviceGraphMemTrim
+cuUserObjectCreate = hip.hipUserObjectCreate
+cudaUserObjectCreate = hip.hipUserObjectCreate
+cuUserObjectRelease = hip.hipUserObjectRelease
+cudaUserObjectRelease = hip.hipUserObjectRelease
+cuUserObjectRetain = hip.hipUserObjectRetain
+cudaUserObjectRetain = hip.hipUserObjectRetain
+cuGraphRetainUserObject = hip.hipGraphRetainUserObject
+cudaGraphRetainUserObject = hip.hipGraphRetainUserObject
+cuGraphReleaseUserObject = hip.hipGraphReleaseUserObject
+cudaGraphReleaseUserObject = hip.hipGraphReleaseUserObject
+cuMemAddressFree = hip.hipMemAddressFree
+cuMemAddressReserve = hip.hipMemAddressReserve
+cuMemCreate = hip.hipMemCreate
+cuMemExportToShareableHandle = hip.hipMemExportToShareableHandle
+cuMemGetAccess = hip.hipMemGetAccess
+cuMemGetAllocationGranularity = hip.hipMemGetAllocationGranularity
+cuMemGetAllocationPropertiesFromHandle = hip.hipMemGetAllocationPropertiesFromHandle
+cuMemImportFromShareableHandle = hip.hipMemImportFromShareableHandle
+cuMemMap = hip.hipMemMap
+cuMemMapArrayAsync = hip.hipMemMapArrayAsync
+cuMemRelease = hip.hipMemRelease
+cuMemRetainAllocationHandle = hip.hipMemRetainAllocationHandle
+cuMemSetAccess = hip.hipMemSetAccess
+cuMemUnmap = hip.hipMemUnmap
+cuGLGetDevices = hip.hipGLGetDevices
+cudaGLGetDevices = hip.hipGLGetDevices
+cuGraphicsGLRegisterBuffer = hip.hipGraphicsGLRegisterBuffer
+cudaGraphicsGLRegisterBuffer = hip.hipGraphicsGLRegisterBuffer
+cuGraphicsGLRegisterImage = hip.hipGraphicsGLRegisterImage
+cudaGraphicsGLRegisterImage = hip.hipGraphicsGLRegisterImage
+cuGraphicsMapResources = hip.hipGraphicsMapResources
+cudaGraphicsMapResources = hip.hipGraphicsMapResources
+cuGraphicsSubResourceGetMappedArray = hip.hipGraphicsSubResourceGetMappedArray
+cudaGraphicsSubResourceGetMappedArray = hip.hipGraphicsSubResourceGetMappedArray
+cuGraphicsResourceGetMappedPointer = hip.hipGraphicsResourceGetMappedPointer
+cuGraphicsResourceGetMappedPointer_v2 = hip.hipGraphicsResourceGetMappedPointer
+cudaGraphicsResourceGetMappedPointer = hip.hipGraphicsResourceGetMappedPointer
+cuGraphicsUnmapResources = hip.hipGraphicsUnmapResources
+cudaGraphicsUnmapResources = hip.hipGraphicsUnmapResources
+cuGraphicsUnregisterResource = hip.hipGraphicsUnregisterResource
+cudaGraphicsUnregisterResource = hip.hipGraphicsUnregisterResource

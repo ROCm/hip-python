@@ -20,8 +20,9 @@ This script:
 """
 
 from cuda.cudart import cudaError_t
+from cuda.cudart import hip
 
-error_kinds = { # some of those do not exist in HIP
+error_kinds = ( # some of those do not exist in HIP
     cudaError_t.cudaErrorInitializationError,
     cudaError_t.cudaErrorInsufficientDriver,
     cudaError_t.cudaErrorInvalidDeviceFunction,
@@ -39,8 +40,9 @@ error_kinds = { # some of those do not exist in HIP
     cudaError_t.cudaErrorTimeout, # no HIP equivalent
     cudaError_t.cudaErrorUnknown,
     cudaError_t.cudaErrorApiFailureBase, # no HIP equivalent
-}
+)
 
 for err in error_kinds:
     assert isinstance(err,cudaError_t)
     assert (err != cudaError_t.cudaSuccess)
+print("ok")
