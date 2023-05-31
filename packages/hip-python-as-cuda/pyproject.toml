@@ -1,9 +1,7 @@
 [build-system]
 requires = [  # PEP 508 specifications
   "setuptools>=10.0.1", 
-  "setuptools_scm[toml]>=6.2",
   "wheel", 
   "cython", 
-  "libclang >= 14.0.1, != 15.0.3, != 15.0.6, <= 15.0.6.1"
 ] 
 build-backend = "setuptools.build_meta"
