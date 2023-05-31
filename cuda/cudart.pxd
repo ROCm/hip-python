@@ -5,8 +5,6 @@ __author__ = "AMD_AUTHOR"
 cimport hip.chip
 cimport hip.hip
 
-DEF HIP_PYTHON = True
-
 cimport cuda.ccudart
 from hip.hip cimport hipUUID_t # here
 cdef class CUuuid_st(hip.hip.hipUUID_t):

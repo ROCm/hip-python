@@ -12,11 +12,15 @@ cdef void* x_d
 cdef int x
 
 def cuda_check(ccudart.cudaError_t err):
-    if err != ccudart.cudaSuccess:
+    IF HIP_PYTHON:
+        success_status = ccudart.cudaSuccess
+    ELSE:
+        success_status = ccudart.cudaError.cudaSuccess
+    if err != success_status:
         raise RuntimeError(f"reason: {err}")
 
-#if HIP_PYTHON" in ccudart:
-#    print("using HIP Python wrapper for CUDA Python")
+IF HIP_PYTHON:
+    print("using HIP Python wrapper for CUDA Python")
 
 cuda_check(ccudart.cudaStreamCreate(&stream))
 cuda_check(ccudart.cudaMalloc(&x_d, num_bytes))
