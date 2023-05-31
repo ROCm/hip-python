@@ -185,8 +185,6 @@ def generate_cuda_interop_package_files(
             # AMD_COPYRIGHT
             
             cimport {cpkg_name}
-
-            DEF HIP_PYTHON = True
             """
         ),
     ]
@@ -199,8 +197,6 @@ def generate_cuda_interop_package_files(
 
             cimport {cpkg_name}
             cimport {pkg_cimport_name}
-            
-            DEF HIP_PYTHON = True
             """
         ),
         f"cimport {output_dir}.c{cuda_pkg_name}",  # for checking compiler errors

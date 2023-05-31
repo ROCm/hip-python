@@ -2,8 +2,6 @@
 
 cimport hip.chiprtc
 
-DEF HIP_PYTHON = True
-
 from hip.chiprtc cimport hiprtcResult as nvrtcResult
 from hip.chiprtc cimport HIPRTC_SUCCESS
 from hip.chiprtc cimport HIPRTC_SUCCESS as NVRTC_SUCCESS

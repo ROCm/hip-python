@@ -32,5 +32,6 @@ setup(
   ext_modules = cythonize(
     [create_extension("ccuda_stream", ["ccuda_stream.pyx"]),],
     compiler_directives=dict(language_level=3),
+    compile_time_env=dict(HIP_PYTHON=True),
   )
 )
