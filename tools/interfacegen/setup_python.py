@@ -18,6 +18,7 @@ import argparse
 
 import _controls
 import _cuda_interop_layer_gen
+import _gitversion
 
 from _codegen.cython import (
     CythonPackageGenerator,
@@ -36,6 +37,7 @@ from _codegen.tree import (
 
 from _parse_hipify_perl import parse_hipify_perl
 
+
 def parse_options():
     global ROCM_INC
     global RUNTIME_LINKING
@@ -52,31 +54,75 @@ def parse_options():
         elif value in no_vals:
             return False
         else:
-            allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals) + list(no_vals))])
+            allowed_vals = ", ".join(
+                [f"'{a}'" for a in (list(yes_vals) + list(no_vals))]
+            )
             raise RuntimeError(
                 f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}"
             )
 
-    parser = argparse.ArgumentParser(description="Generator for HIP Python packages")
-    parser.add_argument("--rocm-path",type=str,required=False,dest="rocm_path",
-                        help="The ROCm installation directory. Can be set via environment variables 'ROCM_PATH', 'ROCM_HOME' too.")
-    parser.add_argument("--platform",type=str,required=False,dest="platform",
-                        help="The HIP platform, 'amd' or 'nvidia'. Can be set via environment variable HIP_PLATFORM too.")
-    parser.add_argument("--clang-resource-dir",required=False,dest="clang_resource_dir",
-                        help="The clang resource directory. Can also be set via environment variable 'HIP_PYTHON_CLANG_RES_DIR'.")
-    parser.add_argument("--libs",type=str,required=False,dest="libs",
-                        help="The ROCm libaries to generate interfaces for, as comma-separated list, e.g. 'hip,hiprtc'. Pass '*' to generate all, pass '' to generate none.")
-    parser.add_argument("--no-rt-linking",required=False,action="store_false",dest="runtime_linking",
-                        help="If HIP libraries should not be linked at runtime by the HIP Python modules.")
-    parser.add_argument("-v","--verbose",required=False,action="store_true",dest="verbose",
-                        default=False,
-                        help="Verbose output.")
+    parser = argparse.ArgumentParser(
+        description=textwrap.dedent(
+            """\
+        Generator for HIP Python packages 'hip-python' and 'hip-python-as-cuda'.
+    
+        NOTE:
+            You can also use the environment variables 'ROCM_PATH' (or 'ROCM_HOME'),
+            'HIP_PLATFORM', 'HIP_PYTHON_CLANG_RES_DIR', 'HIP_PYTHON_LIBS',
+            'HIP_PYTHON_RUNTIME_LINKING' instead of the command line interface.
+        """
+        ),
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+    parser.add_argument(
+        "--rocm-path",
+        type=str,
+        required=False,
+        dest="rocm_path",
+        help="The ROCm installation directory. Can be set via environment variables 'ROCM_PATH', 'ROCM_HOME' too.",
+    )
+    parser.add_argument(
+        "--platform",
+        type=str,
+        required=False,
+        dest="platform",
+        help="The HIP platform, 'amd' or 'nvidia'. Can be set via environment variable HIP_PLATFORM too.",
+    )
+    parser.add_argument(
+        "--clang-resource-dir",
+        required=False,
+        dest="clang_resource_dir",
+        help="The clang resource directory. Can also be set via environment variable 'HIP_PYTHON_CLANG_RES_DIR'.",
+    )
+    parser.add_argument(
+        "--libs",
+        type=str,
+        required=False,
+        dest="libs",
+        help="The ROCm libaries to generate interfaces for, as comma-separated list, e.g. 'hip,hiprtc'. Pass '*' to generate all, pass '' to generate none.",
+    )
+    parser.add_argument(
+        "--no-rt-linking",
+        required=False,
+        action="store_false",
+        dest="runtime_linking",
+        help="If HIP libraries should not be linked at runtime by the HIP Python modules.",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        required=False,
+        action="store_true",
+        dest="verbose",
+        default=False,
+        help="Verbose output.",
+    )
     parser.set_defaults(
-        rocm_path=os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME",None)),
-        platform=os.environ.get("HIP_PLATFORM","amd"),
+        rocm_path=os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME", None)),
+        platform=os.environ.get("HIP_PLATFORM", "amd"),
         clang_resource_dir=os.environ.get("HIP_PYTHON_CLANG_RES_DIR", None),
-        libs="*",
-        runtime_linking=get_bool_environ_var("HIP_PYTHON_RUNTIME_LINKING","true"),
+        libs=os.environ.get("HIP_PYTHON_LIBS", "*"),
+        runtime_linking=get_bool_environ_var("HIP_PYTHON_RUNTIME_LINKING", "true"),
         verbose=False,
     )
     args = parser.parse_args()
@@ -137,6 +183,7 @@ def parse_options():
             )
         )
     GENERATOR_ARGS += ["-resource-dir", args.clang_resource_dir]
+
 
 # hip
 def generate_hip_package_files():
@@ -205,11 +252,14 @@ def generate_hip_package_files():
                 HIP_VERSION_PATCH = int(last_token)
             elif node.name == "HIP_VERSION_GITHASH":
                 HIP_VERSION_GITHASH = last_token.strip('"')
-    _cuda_interop_layer_gen.generate_cuda_interop_package_files("cuda", generator, HIP_2_CUDA)
+    _cuda_interop_layer_gen.generate_cuda_interop_package_files(
+        "cuda", generator, HIP_2_CUDA
+    )
     _cuda_interop_layer_gen.generate_cuda_interop_package_files(
         "cudart", generator, HIP_2_CUDA, warn=False
     )  # already warned before, regenerate to have correctly named pxd/pyx files too. Could be done via symlinks & __init__.py mod too.
     return generator
+
 
 # hiprtc
 def generate_hiprtc_package_files():
@@ -239,8 +289,11 @@ def generate_hiprtc_package_files():
         ptr_complicated_type_handler=hiprtc_ptr_complicated_type_handler,
         cflags=GENERATOR_ARGS,
     )
-    _cuda_interop_layer_gen.generate_cuda_interop_package_files("nvrtc", generator, HIP_2_CUDA)
+    _cuda_interop_layer_gen.generate_cuda_interop_package_files(
+        "nvrtc", generator, HIP_2_CUDA
+    )
     return generator
+
 
 # hipblas
 def generate_hipblas_package_files():
@@ -396,6 +449,7 @@ def generate_hipsparse_package_files():
     )
     return generator
 
+
 if __name__ == "__main__":
     ROCM_INC = None
     RUNTIME_LINKING = None
@@ -421,15 +475,11 @@ if __name__ == "__main__":
     )
 
     if len(LIBS.strip()):
-        lib_names = (
-            AVAILABLE_GENERATORS.keys()
-            if LIBS == "*"
-            else LIBS.split(",")
-        )
+        lib_names = AVAILABLE_GENERATORS.keys() if LIBS == "*" else LIBS.split(",")
     else:
         lib_names = []
 
-    output_dir = os.path.join("packages","hip-python","hip")
+    hip_output_dir = os.path.join("packages", "hip-python", "hip")
     for entry in lib_names:
         libname = entry.strip()
         if libname not in AVAILABLE_GENERATORS:
@@ -437,28 +487,42 @@ if __name__ == "__main__":
             msg = f"no codegenerator found for library '{libname}'; please choose from: {available_libs}, or '*', which implies that all code generators will be used."
             raise KeyError(msg)
         generator = AVAILABLE_GENERATORS[libname]()
-        generator.write_package_files(output_dir=output_dir)
+        generator.write_package_files(output_dir=hip_output_dir)
 
-    HIP_VERSION_NAME = (
-        f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}-{HIP_VERSION_GITHASH}"
-    )
+    HIP_VERSION_NAME = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}-{HIP_VERSION_GITHASH}"
     HIP_VERSION = (
         HIP_VERSION_MAJOR * 10000000 + HIP_VERSION_MINOR * 100000 + HIP_VERSION_PATCH
     )
 
-    with open(os.path.join(output_dir,"__init__.py"), "w") as f:
-        init_content = textwrap.dedent(
-            f"""\
-            from ._version import *
-            HIP_VERSION = {HIP_VERSION}
-            HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
-            HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
+    VERSION = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}.{_gitversion.version()}"
+    cuda_output_dir = os.path.join("packages", "hip-python-as-cuda", "cuda")
+    for output_dir in (hip_output_dir, cuda_output_dir):
+        # hip/_version.py
+        with open(os.path.join(output_dir, "_version.py"), "w") as f:
+            f.write(
+                textwrap.dedent(
+                    f"""\
+                VERSION = __version__ = "{VERSION}"
+                HIP_PYTHON_CODEGEN_BRANCH = "{_gitversion.git_current_branch()}"
+                HIP_PYTHON_CODEGEN_REV = "{_gitversion.git_rev()}"\
+                """
+                ).strip()
+            )
+        # hip/__init__.py
+        with open(os.path.join(output_dir, "__init__.py"), "w") as f:
+            init_content = textwrap.dedent(
+                f"""\
+                from ._version import *
+                HIP_VERSION = {HIP_VERSION}
+                HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
+                HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
 
-            from . import _util
-            """
-        )
-
-        for pkg_name in AVAILABLE_GENERATORS.keys():
-            init_content += f"from . import {pkg_name}\n"
-
-        f.write(init_content)
+                from . import _util"""
+            )
+            if output_dir == hip_output_dir:
+                for pkg_name in AVAILABLE_GENERATORS.keys():
+                    init_content += f"from . import {pkg_name}\n"
+            else:
+                for pkg_name in ("cuda","cudart","nvrtc"):
+                    init_content += f"from . import {pkg_name}\n"
+            f.write(init_content)

@@ -1,5 +1,6 @@
 import os
 import textwrap
+import warnings
 
 from _codegen.cython import (
     CythonPackageGenerator,
@@ -24,13 +25,14 @@ except ImportError:
     HAVE_LEVENSHTEIN = False
 
 def generate_cuda_interop_package_files(
-    cuda_pkg_name: str, generator: CythonPackageGenerator, 
+    cuda_pkg_name: str, 
+    generator: CythonPackageGenerator,
     hip2cuda: dict,
     warn: bool = True
 ):
     global HAVE_LEVENSHTEIN
     pkg_dir = "cuda"
-    output_dir = os.path.join("packages","hip-python-as-nv",pkg_dir)
+    output_dir = os.path.join("packages","hip-python-as-cuda",pkg_dir)
     indent = " " * 4
     pkg_name = generator.pkg_name
     cpkg_name = f"hip.c{pkg_name}"
@@ -97,12 +99,11 @@ def generate_cuda_interop_package_files(
     # impl part is always empty
     def warn_(hip_name):
         global HAVE_LEVENSHTEIN
-        global HIP_2_CUDA
         msg = f"hipify-perl: no CUDA symbol found for HIP symbol {hip_name}"
         if HAVE_LEVENSHTEIN:
             cutoff = 0.9
             candidates = []
-            for other_hip_name in HIP_2_CUDA:
+            for other_hip_name in hip2cuda:
                 if (
                     Levenshtein.ratio(
                         hip_name,
@@ -118,7 +119,6 @@ def generate_cuda_interop_package_files(
         warnings.warn(msg)
 
     def handle_enum_(node, hip_name, cuda_name):
-        global HIP_2_CUDA
         nonlocal indent
         nonlocal c_interface_decl_part
         nonlocal python_interface_impl_part
@@ -134,8 +134,8 @@ def generate_cuda_interop_package_files(
             python_constants.append(
                 f"{hip_constant_name} = {cpkg_name}.{hip_constant_name}"
             )
-            if hip_constant_name in HIP_2_CUDA:
-                for cuda_constant_name in HIP_2_CUDA[hip_constant_name]:
+            if hip_constant_name in hip2cuda:
+                for cuda_constant_name in hip2cuda[hip_constant_name]:
                     c_constants.append(
                         f"from {cpkg_name} cimport {hip_constant_name} as {cuda_constant_name}"
                     )
@@ -234,8 +234,8 @@ def generate_cuda_interop_package_files(
             c_interface_decl_part += c_constants
         else:  # if it is a typedef or there are multiple CUDA names
             hip_underlying_type_name = enum.name
-            if hip_underlying_type_name in HIP_2_CUDA:
-                cuda_underlying_type_name = HIP_2_CUDA[hip_underlying_type_name][
+            if hip_underlying_type_name in hip2cuda:
+                cuda_underlying_type_name = hip2cuda[hip_underlying_type_name][
                     0
                 ]  # take first
                 cython_enum = f"ctypedef {cuda_underlying_type_name} {cuda_name}"
