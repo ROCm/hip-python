@@ -101,9 +101,11 @@ class HipModule:
             (f"{self.PKG_NAME}.{self.name}", [f"./{self.PKG_NAME}/{self.name}.pyx"]),
         ]
 
+
 # differs between hip-python and hip-python-as-nv package
+PKG_NAME = "cuda"
 def gather_ext_modules():
-    HipModule.PKG_NAME = "cuda"
+    HipModule.PKG_NAME = PKG_NAME
     global CYTHON_EXT_MODULES
     global HIP_MODULES
     HIP_MODULES += [
@@ -119,6 +121,9 @@ def gather_ext_modules():
     ]
     for mod in HIP_MODULES:
         CYTHON_EXT_MODULES += mod.ext_modules
+
+main_ns = {}
+exec(open(os.path.join(PKG_NAME,"_version.py"),"r").read(), main_ns)
 
 if __name__ == "__main__":
     ROCM_INC = None
@@ -144,4 +149,5 @@ if __name__ == "__main__":
 
     setup(
         ext_modules=ext_modules,
+        version = main_ns["__version__"],
     )
