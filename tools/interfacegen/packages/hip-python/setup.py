@@ -102,8 +102,9 @@ class HipModule:
         ]
 
 # differs between hip-python and hip-python-as-cuda package
+PKG_NAME = "hip"
 def gather_ext_modules():
-    HipModule.PKG_NAME = "hip"
+    HipModule.PKG_NAME = PKG_NAME
     global CYTHON_EXT_MODULES
     global HIP_MODULES
     CYTHON_EXT_MODULES.append(("hip._util.types", ["./hip/_util/types.pyx"]))
@@ -125,6 +126,9 @@ def gather_ext_modules():
     ]
     for mod in HIP_MODULES:
         CYTHON_EXT_MODULES += mod.ext_modules
+
+main_ns = {}
+exec(open(os.path.join(PKG_NAME,"_version.py"),"r").read(), main_ns)
 
 if __name__ == "__main__":
     ROCM_INC = None
@@ -149,4 +153,5 @@ if __name__ == "__main__":
 
     setup(
         ext_modules=ext_modules,
+        version = main_ns["__version__"],
     )

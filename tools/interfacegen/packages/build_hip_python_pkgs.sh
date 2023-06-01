@@ -11,8 +11,8 @@ export PYTHONPATH="${PYTHONPATH}:$(pwd)/hip-python/:$(pwd)/hip-python-as-cuda"
 # put local path into PYTHONPATH,
 # as `build` will copy only the setup script and package files into a temporary dir
 
-python3 -m build hip-python
-python3 -m build hip-python-as-cuda
+python3 -m build hip-python $@
+python3 -m build hip-python-as-cuda $@
 
 export ROCM_PATH="${SAVED_ROCM_PATH}"
 export HIP_PLATFORM="${SAVED_HIP_PLATFORM}"
