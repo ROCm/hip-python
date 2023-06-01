@@ -63,12 +63,14 @@ def git_is_clean():
     except subprocess.CalledProcessError:
         return False
 
-def version():
+def version(append_hash=False,append_date=False):
     """Version number of the code generator.
 
     Takes revision count of origin branch 'main' as version number.
     Appends `.dev{num}` if the head of the current branch/local version of 'main'
     deviates `{num}` revisions from origin 'main'.
+    Further appends the revision hash in this case.
+    Finally appends a date if the local repository is not clean.
     """
     is_clean = git_is_clean()
     tag = git_describe()
@@ -86,10 +88,15 @@ def version():
         
     yyyymmdd = datetime.date.today().strftime("%Y%m%d")
     if distance == 0 and is_clean:
-        return f"{main_rev_count}"
+        result =  f"{main_rev_count}"
     elif distance and is_clean:
-        return f"{main_rev_count}.dev{distance}+g{rev_hash}"
+        result =  f"{main_rev_count}.dev{distance}+g{rev_hash}"
     elif distance == 0 and not is_clean:
-        return f"{main_rev_count}+d{yyyymmdd}"
+        result =  f"{main_rev_count}+d{yyyymmdd}"
     else: # if distance > 0 and not is_clean:
-        return f"{main_rev_count}.dev{distance}+g{rev_hash}+d{yyyymmdd}"
+        result =  f"{main_rev_count}.dev{distance}+g{rev_hash}+d{yyyymmdd}"
+    if not append_hash:
+        result = result.replace(f"+g{rev_hash}","")
+    if not append_date:
+        result = result.replace(f"+d{yyyymmdd}","")
+    return result

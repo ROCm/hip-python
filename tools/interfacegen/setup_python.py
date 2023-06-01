@@ -495,23 +495,36 @@ if __name__ == "__main__":
     )
 
     VERSION = f"{HIP_VERSION_MAJOR}.{HIP_VERSION_MINOR}.{HIP_VERSION_PATCH}.{_gitversion.version()}"
+    FULL_VERSION = (
+        f"{HIP_VERSION_NAME}.{_gitversion.version(append_hash=True,append_date=True)}"
+    )
     cuda_output_dir = os.path.join("packages", "hip-python-as-cuda", "cuda")
     for output_dir in (hip_output_dir, cuda_output_dir):
-        # hip/_version.py
+        # hip|cuda/_version.py
         with open(os.path.join(output_dir, "_version.py"), "w") as f:
             f.write(
                 textwrap.dedent(
                     f"""\
+                # AMD_COPYRIGHT
+
+                __author__ = "AMD_AUTHOR"
+
                 VERSION = __version__ = "{VERSION}"
+                FULL_VERSION = __full_version__ = "{FULL_VERSION}"
                 HIP_PYTHON_CODEGEN_BRANCH = "{_gitversion.git_current_branch()}"
+                HIP_PYTHON_CODEGEN_VERSION = "{_gitversion.version(append_hash=True,append_date=True)}"
                 HIP_PYTHON_CODEGEN_REV = "{_gitversion.git_rev()}"\
                 """
                 ).strip()
             )
-        # hip/__init__.py
+        # hip|cuda/__init__.py
         with open(os.path.join(output_dir, "__init__.py"), "w") as f:
             init_content = textwrap.dedent(
                 f"""\
+                # AMD_COPYRIGHT
+
+                __author__ = "AMD_AUTHOR"
+
                 from ._version import *
                 HIP_VERSION = {HIP_VERSION}
                 HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
@@ -523,6 +536,26 @@ if __name__ == "__main__":
                 for pkg_name in AVAILABLE_GENERATORS.keys():
                     init_content += f"from . import {pkg_name}\n"
             else:
-                for pkg_name in ("cuda","cudart","nvrtc"):
+                for pkg_name in ("cuda", "cudart", "nvrtc"):
                     init_content += f"from . import {pkg_name}\n"
             f.write(init_content)
+    # hip-python-as-cuda/requirements.txt
+    requirements_file = os.path.join(
+        "packages", "hip-python-as-cuda", "requirements.txt"
+    )
+    with open(requirements_file, "w") as outfile:
+        outfile.write(
+            textwrap.dedent(
+                f"""\
+                # AMD_COPYRIGHT
+                
+                # This file has been generated, do not modify.
+                
+                # Python dependencies required for development
+                setuptools>=42
+                cython
+                wheel
+                build
+                hip-python=={VERSION}"""
+            )
+        )

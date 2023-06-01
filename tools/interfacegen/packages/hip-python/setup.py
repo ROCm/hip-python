@@ -80,10 +80,10 @@ def create_extension(name, sources):
         library_dirs=[ROCM_LIB],
         libraries=[mod.lib for mod in HIP_MODULES],
         language="c",
-        extra_compile_args=EXTRA_COMPILE_ARGS,
+        extra_compile_args=EXTRA_COMPILE_ARGS + ["-D","__half=uint16_t"],
     )
 
-class HipModule:
+class Module:
     PKG_NAME = "hip"
 
     def __init__(self, module, lib=None, helpers=[]):
@@ -102,9 +102,7 @@ class HipModule:
         ]
 
 # differs between hip-python and hip-python-as-cuda package
-PKG_NAME = "hip"
 def gather_ext_modules():
-    HipModule.PKG_NAME = PKG_NAME
     global CYTHON_EXT_MODULES
     global HIP_MODULES
     CYTHON_EXT_MODULES.append(("hip._util.types", ["./hip/_util/types.pyx"]))
@@ -112,23 +110,23 @@ def gather_ext_modules():
         ("hip._util.posixloader", ["./hip/_util/posixloader.pyx"])
     )
     HIP_MODULES += [
-        HipModule(
+        Module(
         "hip",
         lib="amdhip64",
         helpers=[("hip._hip_helpers", ["./hip/_hip_helpers.pyx"])],
         ),
-        HipModule("hiprtc"),
-        HipModule("hipblas"),
-        HipModule("rccl"),
-        HipModule("hiprand"),
-        HipModule("hipfft"),
-        HipModule("hipsparse"),
+        Module("hiprtc"),
+        Module("hipblas"),
+        Module("rccl"),
+        Module("hiprand"),
+        Module("hipfft"),
+        Module("hipsparse"),
     ]
     for mod in HIP_MODULES:
         CYTHON_EXT_MODULES += mod.ext_modules
 
-main_ns = {}
-exec(open(os.path.join(PKG_NAME,"_version.py"),"r").read(), main_ns)
+ns = {}
+exec(open(os.path.join(Module.PKG_NAME,"_version.py"),"r").read(), ns)
 
 if __name__ == "__main__":
     ROCM_INC = None
@@ -153,5 +151,5 @@ if __name__ == "__main__":
 
     setup(
         ext_modules=ext_modules,
-        version = main_ns["__version__"],
+        version = ns["__version__"],
     )
