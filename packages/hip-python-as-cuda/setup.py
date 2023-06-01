@@ -14,6 +14,7 @@ import enum
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 
+
 class HipPlatform(enum.IntEnum):
     AMD = 0
     NVIDIA = 1
@@ -35,6 +36,7 @@ class HipPlatform(enum.IntEnum):
     def cflags(self):
         return ["-D", f"__HIP_PLATFORM_{self.name}__"]
 
+
 def parse_options():
     global ROCM_INC
     global ROCM_LIB
@@ -50,14 +52,16 @@ def parse_options():
         elif value in no_vals:
             return False
         else:
-            allowed_vals = ", ".join([f"'{a}'" for a in (list(yes_vals) + list(no_vals))])
+            allowed_vals = ", ".join(
+                [f"'{a}'" for a in (list(yes_vals) + list(no_vals))]
+            )
             raise RuntimeError(
                 f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}"
             )
 
-    rocm_path=os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME",None))
-    platform=os.environ.get("HIP_PLATFORM","amd")
-    verbose=os.environ.get("HIP_PYTHON_VERBOSE","amd")
+    rocm_path = os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME", None))
+    platform = os.environ.get("HIP_PLATFORM", "amd")
+    verbose = os.environ.get("HIP_PYTHON_VERBOSE", "amd")
 
     if not rocm_path:
         raise RuntimeError("ROCm path is not set")
@@ -68,6 +72,7 @@ def parse_options():
         raise RuntimeError("Currently only platform 'amd' is supported")
 
     EXTRA_COMPILE_ARGS = HipPlatform.from_string(platform).cflags + [f"-I{ROCM_INC}"]
+
 
 def create_extension(name, sources):
     global ROCM_INC
@@ -80,11 +85,13 @@ def create_extension(name, sources):
         library_dirs=[ROCM_LIB],
         libraries=[mod.lib for mod in HIP_MODULES],
         language="c",
-        extra_compile_args=EXTRA_COMPILE_ARGS,
+        extra_compile_args=EXTRA_COMPILE_ARGS + ["-D", "__half=uint16_t"],
     )
 
-class HipModule:
-    PKG_NAME = "hip"
+
+# differs between hip-python and hip-python-as-nv package
+class Module:
+    PKG_NAME = "cuda"
 
     def __init__(self, module, lib=None, helpers=[]):
         self.name = module
@@ -97,33 +104,30 @@ class HipModule:
     @property
     def ext_modules(self):
         return self._helpers + [
-            (f"{self.PKG_NAME}.c{self.name}", [f"./{self.PKG_NAME}/c{self.name}.pyx"]),
             (f"{self.PKG_NAME}.{self.name}", [f"./{self.PKG_NAME}/{self.name}.pyx"]),
         ]
 
 
-# differs between hip-python and hip-python-as-nv package
-PKG_NAME = "cuda"
 def gather_ext_modules():
-    HipModule.PKG_NAME = PKG_NAME
     global CYTHON_EXT_MODULES
     global HIP_MODULES
     HIP_MODULES += [
-        HipModule(
+        Module(
             "cuda",
             lib="amdhip64",
         ),
-        HipModule(
+        Module(
             "cudart",
             lib="amdhip64",
         ),
-        HipModule("nvrtc"),
+        Module("nvrtc"),
     ]
     for mod in HIP_MODULES:
         CYTHON_EXT_MODULES += mod.ext_modules
 
-main_ns = {}
-exec(open(os.path.join(PKG_NAME,"_version.py"),"r").read(), main_ns)
+
+ns = {}
+exec(open(os.path.join(Module.PKG_NAME, "_version.py"), "r").read(), ns)
 
 if __name__ == "__main__":
     ROCM_INC = None
@@ -132,10 +136,10 @@ if __name__ == "__main__":
     VERBOSE = False
     HIP_MODULES = []
     CYTHON_EXT_MODULES = []
-    
+
     parse_options()
-    gather_ext_modules() 
-    
+    gather_ext_modules()
+
     ext_modules = []
     for name, sources in CYTHON_EXT_MODULES:
         extension = create_extension(name, sources)
@@ -147,7 +151,15 @@ if __name__ == "__main__":
             ),
         )
 
+    matching_hip_python = f"hip-python=={ns['__version__']}"
     setup(
         ext_modules=ext_modules,
-        version = main_ns["__version__"],
+        version=ns["__version__"],
+        setup_requires=[
+            "cython",
+            matching_hip_python,
+        ],
+        install_requires=[
+            matching_hip_python,
+        ],
     )
