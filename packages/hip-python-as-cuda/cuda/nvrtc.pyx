@@ -65,7 +65,7 @@ class _nvrtcResult_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -155,7 +155,7 @@ class _CUjitInputType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -238,7 +238,7 @@ class _CUjitInputType_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)

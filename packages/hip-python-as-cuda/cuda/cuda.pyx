@@ -164,7 +164,7 @@ class _CUmemorytype_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -241,7 +241,7 @@ class _CUmemorytype_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -318,7 +318,7 @@ class _cudaMemoryType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -397,7 +397,7 @@ class _CUresult_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -672,7 +672,7 @@ class _cudaError_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -947,7 +947,7 @@ class _cudaError_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -1222,7 +1222,7 @@ class _cudaError_t_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -1497,7 +1497,7 @@ class _CUdevice_attribute_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -1861,7 +1861,7 @@ class _CUdevice_attribute_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -2225,7 +2225,7 @@ class _cudaDeviceAttr_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -2589,7 +2589,7 @@ class _CUcomputemode_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -2666,7 +2666,7 @@ class _CUcomputemode_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -2743,7 +2743,7 @@ class _cudaComputeMode_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -2820,7 +2820,7 @@ class _cudaChannelFormatKind_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -2895,7 +2895,7 @@ class _CUarray_format_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -2976,7 +2976,7 @@ class _CUarray_format_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -3097,7 +3097,7 @@ class _cudaResourceType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -3170,7 +3170,7 @@ class _CUresourcetype_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -3243,7 +3243,7 @@ class _CUresourcetype_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -3316,7 +3316,7 @@ class _CUaddress_mode_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -3389,7 +3389,7 @@ class _CUaddress_mode_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -3462,7 +3462,7 @@ class _CUfilter_mode_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -3531,7 +3531,7 @@ class _CUfilter_mode_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -3604,7 +3604,7 @@ class _cudaResourceViewFormat_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -3739,7 +3739,7 @@ class _CUresourceViewFormat_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -3874,7 +3874,7 @@ class _CUresourceViewFormat_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4021,7 +4021,7 @@ class _cudaMemcpyKind_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4114,7 +4114,7 @@ class _CUfunction_attribute_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4201,7 +4201,7 @@ class _CUfunction_attribute_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4288,7 +4288,7 @@ class _CUpointer_attribute_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4387,7 +4387,7 @@ class _CUpointer_attribute_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4490,7 +4490,7 @@ class _cudaTextureAddressMode_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4563,7 +4563,7 @@ class _cudaTextureFilterMode_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4632,7 +4632,7 @@ class _cudaTextureReadMode_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4712,7 +4712,7 @@ class _cudaSurfaceBoundaryMode_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4786,7 +4786,7 @@ class _CUdevice_P2PAttribute_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4865,7 +4865,7 @@ class _CUdevice_P2PAttribute_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -4944,7 +4944,7 @@ class _cudaDeviceP2PAttr_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5058,7 +5058,7 @@ class _CUlimit_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5133,7 +5133,7 @@ class _CUlimit_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5208,7 +5208,7 @@ class _cudaLimit_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5283,7 +5283,7 @@ class _CUmem_advise_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5368,7 +5368,7 @@ class _CUmem_advise_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5453,7 +5453,7 @@ class _cudaMemoryAdvise_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5538,7 +5538,7 @@ class _CUmem_range_attribute_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5616,7 +5616,7 @@ class _CUmem_range_attribute_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5694,7 +5694,7 @@ class _cudaMemRangeAttribute_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5772,7 +5772,7 @@ class _CUmemPool_attribute_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5861,7 +5861,7 @@ class _CUmemPool_attribute_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -5950,7 +5950,7 @@ class _cudaMemPoolAttr_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6039,7 +6039,7 @@ class _CUmemLocationType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6110,7 +6110,7 @@ class _CUmemLocationType_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6181,7 +6181,7 @@ class _cudaMemLocationType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6260,7 +6260,7 @@ class _CUmemAccess_flags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6334,7 +6334,7 @@ class _CUmemAccess_flags_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6408,7 +6408,7 @@ class _cudaMemAccessFlags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6490,7 +6490,7 @@ class _CUmemAllocationType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6564,7 +6564,7 @@ class _CUmemAllocationType_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6638,7 +6638,7 @@ class _cudaMemAllocationType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6712,7 +6712,7 @@ class _CUmemAllocationHandleType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6789,7 +6789,7 @@ class _CUmemAllocationHandleType_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6866,7 +6866,7 @@ class _cudaMemAllocationHandleType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -6959,7 +6959,7 @@ class _CUjit_option_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7042,7 +7042,7 @@ class _CUjit_option_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7125,7 +7125,7 @@ class _cudaFuncAttribute_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7196,7 +7196,7 @@ class _CUfunc_cache_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7273,7 +7273,7 @@ class _CUfunc_cache_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7350,7 +7350,7 @@ class _cudaFuncCache_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7427,7 +7427,7 @@ class _CUsharedconfig_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7501,7 +7501,7 @@ class _CUsharedconfig_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7575,7 +7575,7 @@ class _cudaSharedMemConfig_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7650,7 +7650,7 @@ class _CUexternalMemoryHandleType_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7736,7 +7736,7 @@ class _CUexternalMemoryHandleType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7822,7 +7822,7 @@ class _cudaExternalMemoryHandleType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7918,7 +7918,7 @@ class _CUexternalSemaphoreHandleType_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -7995,7 +7995,7 @@ class _CUexternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8072,7 +8072,7 @@ class _cudaExternalSemaphoreHandleType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8166,7 +8166,7 @@ class _CUGLDeviceList_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8240,7 +8240,7 @@ class _CUGLDeviceList_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8314,7 +8314,7 @@ class _cudaGLDeviceList_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8388,7 +8388,7 @@ class _CUgraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8468,7 +8468,7 @@ class _CUgraphicsRegisterFlags_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8548,7 +8548,7 @@ class _cudaGraphicsRegisterFlags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8648,7 +8648,7 @@ class _CUgraphNodeType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8748,7 +8748,7 @@ class _CUgraphNodeType_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8848,7 +8848,7 @@ class _cudaGraphNodeType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -8976,7 +8976,7 @@ class _CUkernelNodeAttrID_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9047,7 +9047,7 @@ class _CUkernelNodeAttrID_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9118,7 +9118,7 @@ class _cudaKernelNodeAttrID_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9189,7 +9189,7 @@ class _CUaccessProperty_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9263,7 +9263,7 @@ class _CUaccessProperty_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9337,7 +9337,7 @@ class _cudaAccessProperty_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9425,7 +9425,7 @@ class _CUgraphExecUpdateResult_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9514,7 +9514,7 @@ class _CUgraphExecUpdateResult_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9603,7 +9603,7 @@ class _cudaGraphExecUpdateResult_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9692,7 +9692,7 @@ class _CUstreamCaptureMode_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9766,7 +9766,7 @@ class _CUstreamCaptureMode_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9840,7 +9840,7 @@ class _cudaStreamCaptureMode_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9914,7 +9914,7 @@ class _CUstreamCaptureStatus_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -9988,7 +9988,7 @@ class _CUstreamCaptureStatus_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10062,7 +10062,7 @@ class _cudaStreamCaptureStatus_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10136,7 +10136,7 @@ class _CUstreamUpdateCaptureDependencies_flags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10207,7 +10207,7 @@ class _CUstreamUpdateCaptureDependencies_flags_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10278,7 +10278,7 @@ class _cudaStreamUpdateCaptureDependenciesFlags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10349,7 +10349,7 @@ class _CUgraphMem_attribute_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10426,7 +10426,7 @@ class _CUgraphMem_attribute_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10503,7 +10503,7 @@ class _cudaGraphMemAttributeType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10580,7 +10580,7 @@ class _CUuserObject_flags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10648,7 +10648,7 @@ class _CUuserObject_flags_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10716,7 +10716,7 @@ class _cudaUserObjectFlags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10784,7 +10784,7 @@ class _CUuserObjectRetain_flags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10852,7 +10852,7 @@ class _CUuserObjectRetain_flags_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10920,7 +10920,7 @@ class _cudaUserObjectRetainFlags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -10988,7 +10988,7 @@ class _CUgraphInstantiate_flags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -11056,7 +11056,7 @@ class _CUgraphInstantiate_flags_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -11124,7 +11124,7 @@ class _cudaGraphInstantiateFlags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -11200,7 +11200,7 @@ class _CUmemAllocationGranularity_flags_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -11269,7 +11269,7 @@ class _CUmemAllocationGranularity_flags_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -11338,7 +11338,7 @@ class _CUmemHandleType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -11405,7 +11405,7 @@ class _CUmemHandleType_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -11472,7 +11472,7 @@ class _CUmemOperationType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -11541,7 +11541,7 @@ class _CUmemOperationType_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -11610,7 +11610,7 @@ class _CUarraySparseSubresourceType_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)
@@ -11679,7 +11679,7 @@ class _CUarraySparseSubresourceType_enum_EnumMeta(enum.EnumMeta):
                             return self.value == other.value
                         return False
 
-                    def __repr__(self):        
+                    def __repr__(self):
                         """Mimicks enum.Enum.__repr__"""
                         return "<%s.%s: %r>" % (
                                 self.__class__._name_, self._name_, self._value_)

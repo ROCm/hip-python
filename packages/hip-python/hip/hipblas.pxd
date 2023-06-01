@@ -5,8 +5,6 @@ cimport cpython.long
 cimport cpython.buffer
 cimport hip._util.types
 ctypedef bint _Bool # bool is not a reserved keyword in C, _Bool is
-#ctypedef int16_t __int16_t
-#ctypedef uint16_t __uint16_t
 from .hip cimport ihipStream_t
 
 from . cimport chipblas

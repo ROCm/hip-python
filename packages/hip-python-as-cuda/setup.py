@@ -9,16 +9,37 @@ files in the `cuda` subfolder.
 __author__ = "AMD_AUTHOR"
 
 import os
-import argparse
 import enum
 
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 
+class HipPlatform(enum.IntEnum):
+    AMD = 0
+    NVIDIA = 1
+
+    @staticmethod
+    def from_string(key: str):
+        valid_inputs = ("amd", "hcc", "nvidia", "nvcc")
+        key = key.lower()
+        if key in valid_inputs[0:2]:
+            return HipPlatform.AMD
+        elif key in valid_inputs[2:4]:
+            return HipPlatform.NVIDIA
+        else:
+            raise ValueError(
+                f"Input must be one of: {','.join(valid_inputs)} (any case)"
+            )
+
+    @property
+    def cflags(self):
+        return ["-D", f"__HIP_PLATFORM_{self.name}__"]
+
 def parse_options():
     global ROCM_INC
     global ROCM_LIB
     global EXTRA_COMPILE_ARGS
+    global VERBOSE
 
     def get_bool_environ_var(env_var, default):
         yes_vals = ("true", "1", "t", "y", "yes")
@@ -34,54 +55,24 @@ def parse_options():
                 f"value of '{env_var}' must be one of (case-insensitive): {allowed_vals}"
             )
 
-    parser = argparse.ArgumentParser(description="Generator for HIP Python packages")
-    parser.add_argument("--rocm-path",type=str,required=False,dest="rocm_path",
-                        help="The ROCm installation directory. Can be set via environment variables 'ROCM_PATH', 'ROCM_HOME' too.")
-    parser.add_argument("--platform",type=str,required=False,dest="platform",
-                        help="The HIP platform, 'amd' or 'nvidia'. Can be set via environment variable 'HIP_PLATFORM' too.")
-    parser.add_argument("-v","--verbose",required=False,action="store_true",dest="verbose",
-                        default=False, help="Verbose output.")
-    parser.set_defaults(
-        rocm_path=os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME",None)),
-        platform=os.environ.get("HIP_PLATFORM","amd"),
-        verbose=False,
-    )
-    args = parser.parse_args()
+    rocm_path=os.environ.get("ROCM_PATH", os.environ.get("ROCM_HOME",None))
+    platform=os.environ.get("HIP_PLATFORM","amd")
+    verbose=os.environ.get("HIP_PYTHON_VERBOSE","amd")
 
-    if not args.rocm_path:
+    if not rocm_path:
         raise RuntimeError("ROCm path is not set")
-    ROCM_INC = os.path.join(args.rocm_path, "include")
-    ROCM_LIB = os.path.join(args.rocm_path, "lib")
+    ROCM_INC = os.path.join(rocm_path, "include")
+    ROCM_LIB = os.path.join(rocm_path, "lib")
 
-    if args.platform not in ("amd", "hcc"):
+    if platform not in ("amd", "hcc"):
         raise RuntimeError("Currently only platform 'amd' is supported")
 
-    class HipPlatform(enum.IntEnum):
-        AMD = 0
-        NVIDIA = 1
-
-        @staticmethod
-        def from_string(key: str):
-            valid_inputs = ("amd", "hcc", "nvidia", "nvcc")
-            key = key.lower()
-            if key in valid_inputs[0:2]:
-                return HipPlatform.AMD
-            elif key in valid_inputs[2:4]:
-                return HipPlatform.NVIDIA
-            else:
-                raise ValueError(
-                    f"Input must be one of: {','.join(valid_inputs)} (any case)"
-                )
-
-        @property
-        def cflags(self):
-            return ["-D", f"__HIP_PLATFORM_{self.name}__"]
-
-    EXTRA_COMPILE_ARGS = HipPlatform.from_string(args.platform).cflags + [f"-I{ROCM_INC}"]
+    EXTRA_COMPILE_ARGS = HipPlatform.from_string(platform).cflags + [f"-I{ROCM_INC}"]
 
 def create_extension(name, sources):
     global ROCM_INC
     global ROCM_LIB
+    global HIP_MODULES
     return Extension(
         name,
         sources=sources,
@@ -106,7 +97,7 @@ class HipModule:
     @property
     def ext_modules(self):
         return self._helpers + [
-            (f"{self.PKG_NAME}.c{self.name}}", [f"./{self.PKG_NAME}/c{self.name}.pyx"]),
+            (f"{self.PKG_NAME}.c{self.name}", [f"./{self.PKG_NAME}/c{self.name}.pyx"]),
             (f"{self.PKG_NAME}.{self.name}", [f"./{self.PKG_NAME}/{self.name}.pyx"]),
         ]
 
@@ -115,10 +106,6 @@ def gather_ext_modules():
     HipModule.PKG_NAME = "cuda"
     global CYTHON_EXT_MODULES
     global HIP_MODULES
-    #CYTHON_EXT_MODULES.append(("hip._util.types", ["./hip/_util/types.pyx"]))
-    #CYTHON_EXT_MODULES.append(
-    #    ("hip._util.posixloader", ["./hip/_util/posixloader.pyx"])
-    #)
     HIP_MODULES += [
         HipModule(
             "cuda",
@@ -130,11 +117,19 @@ def gather_ext_modules():
         ),
         HipModule("nvrtc"),
     ]
-    CYTHON_EXT_MODULES += [mod.ext_modules for mod in HIP_MODULES]
+    for mod in HIP_MODULES:
+        CYTHON_EXT_MODULES += mod.ext_modules
 
 if __name__ == "__main__":
+    ROCM_INC = None
+    ROCM_LIB = None
+    EXTRA_COMPILE_ARGS = None
+    VERBOSE = False
     HIP_MODULES = []
     CYTHON_EXT_MODULES = []
+    
+    parse_options()
+    gather_ext_modules() 
     
     ext_modules = []
     for name, sources in CYTHON_EXT_MODULES:
