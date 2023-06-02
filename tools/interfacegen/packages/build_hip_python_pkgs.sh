@@ -5,9 +5,6 @@ SAVED_HIP_PLATFORM=${HIP_PLATFORM}
 export ROCM_PATH=${ROCM_PATH:-"/opt/rocm"} # adjust accordingly
 export HIP_PLATFORM=${HIP_PLATFORM:-"amd"}
 
-# put local path into PYTHONPATH,
-# as `build` will copy only the setup script and package files into a temporary dir
-
 rm -rf venv
 python3 -m venv venv
 
