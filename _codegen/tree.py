@@ -823,13 +823,13 @@ class Enum(Type, *__EnumMixins):
         return True
 
 
-class Nested:
+class Anonymous:
     """A marker for nested struct/union/enum types."""
 
     pass
 
 
-class NestedStruct(Struct, Nested):
+class AnonymousStruct(Struct, Anonymous):
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
@@ -839,7 +839,7 @@ class NestedStruct(Struct, Nested):
 
     @property
     def struct_index(self):
-        return self._index(NestedStruct)
+        return self._index(AnonymousStruct)
 
     @property
     def name(self):
@@ -852,7 +852,7 @@ class NestedStruct(Struct, Nested):
             return self._name
 
 
-class NestedUnion(Union, Nested):
+class AnonymousUnion(Union, Anonymous):
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
@@ -862,7 +862,7 @@ class NestedUnion(Union, Nested):
 
     @property
     def union_index(self):
-        return self._index(NestedUnion)
+        return self._index(AnonymousUnion)
 
     @property
     def name(self):
@@ -875,7 +875,7 @@ class NestedUnion(Union, Nested):
             return self._name
 
 
-class NestedEnum(Enum, Nested):
+class AnonymousEnum(Enum, Anonymous):
     def __init__(
         self,
         cursor: clang.cindex.Cursor,
@@ -885,7 +885,7 @@ class NestedEnum(Enum, Nested):
 
     @property
     def enum_index(self):
-        return self._index(NestedEnum)
+        return self._index(AnonymousEnum)
 
     @property
     def name(self):
@@ -964,7 +964,7 @@ class TypedefedFunctionPointer(FunctionPointer, *__TypedefedFunctionPointerMixin
 
 
 class AnonymousFunctionPointer(
-    FunctionPointer, Nested, *__AnonymousFunctionPointerMixins
+    FunctionPointer, Anonymous, *__AnonymousFunctionPointerMixins
 ):
     @staticmethod
     def match(clang_type: clang.cindex.Type):
@@ -1077,10 +1077,10 @@ def from_libclang_translation_unit(
         clang.cindex.CursorKind.UNION_DECL: Union,
         clang.cindex.CursorKind.ENUM_DECL: Enum,
     }
-    nested_structure_types = {
-        clang.cindex.CursorKind.STRUCT_DECL: NestedStruct,
-        clang.cindex.CursorKind.UNION_DECL: NestedUnion,
-        clang.cindex.CursorKind.ENUM_DECL: NestedEnum,
+    anon_structure_types = {
+        clang.cindex.CursorKind.STRUCT_DECL: AnonymousStruct,
+        clang.cindex.CursorKind.UNION_DECL: AnonymousUnion,
+        clang.cindex.CursorKind.ENUM_DECL: AnonymousEnum,
     }
 
     def handle_top_level_cursor_(cursor: clang.cindex.Cursor, root: Root):
@@ -1210,15 +1210,15 @@ def from_libclang_translation_unit(
         Other cursors are ignored.
         """
         nonlocal structure_types
-        nonlocal nested_structure_types
+        nonlocal anon_structure_types
 
         is_anonymous = cursor.spelling == ""
 
         if cursor.kind in structure_types:
             cls = structure_types[cursor.kind]
-            cls_nested = nested_structure_types[cursor.kind]
+            cls_anon = anon_structure_types[cursor.kind]
             if is_anonymous:
-                node = cls_nested(cursor, parent)
+                node = cls_anon(cursor, parent)
             else:
                 node = cls(cursor, parent)
             descend_into_child_cursors_(node)

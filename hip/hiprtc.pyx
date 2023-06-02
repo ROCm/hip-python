@@ -2,8 +2,11 @@
 import cython
 import ctypes
 import enum
-import hip.hipify
-class hiprtcResult(hip.hipify.IntEnum):
+class _hiprtcResult__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hiprtcResult(_hiprtcResult__Base):
     HIPRTC_SUCCESS = chiprtc.HIPRTC_SUCCESS
     HIPRTC_ERROR_OUT_OF_MEMORY = chiprtc.HIPRTC_ERROR_OUT_OF_MEMORY
     HIPRTC_ERROR_PROGRAM_CREATION_FAILURE = chiprtc.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
@@ -23,7 +26,11 @@ class hiprtcResult(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hiprtcJIT_option(hip.hipify.IntEnum):
+class _hiprtcJIT_option__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hiprtcJIT_option(_hiprtcJIT_option__Base):
     HIPRTC_JIT_MAX_REGISTERS = chiprtc.HIPRTC_JIT_MAX_REGISTERS
     HIPRTC_JIT_THREADS_PER_BLOCK = chiprtc.HIPRTC_JIT_THREADS_PER_BLOCK
     HIPRTC_JIT_WALL_TIME = chiprtc.HIPRTC_JIT_WALL_TIME
@@ -56,7 +63,11 @@ class hiprtcJIT_option(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hiprtcJITInputType(hip.hipify.IntEnum):
+class _hiprtcJITInputType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hiprtcJITInputType(_hiprtcJITInputType__Base):
     HIPRTC_JIT_INPUT_CUBIN = chiprtc.HIPRTC_JIT_INPUT_CUBIN
     HIPRTC_JIT_INPUT_PTX = chiprtc.HIPRTC_JIT_INPUT_PTX
     HIPRTC_JIT_INPUT_FATBINARY = chiprtc.HIPRTC_JIT_INPUT_FATBINARY
@@ -179,8 +190,8 @@ def hiprtcGetErrorString(object result):
     if the hiprtc result is defined, it will return "Invalid HIPRTC error code"
     @see hiprtcResult
     """
-    if not isinstance(result,hiprtcResult):
-        raise TypeError("argument 'result' must be of type 'hiprtcResult'")
+    if not isinstance(result,_hiprtcResult__Base):
+        raise TypeError("argument 'result' must be of type '_hiprtcResult__Base'")
     cdef const char * _hiprtcGetErrorString__retval = chiprtc.hiprtcGetErrorString(result.value)    # fully specified
     return (_hiprtcGetErrorString__retval,)
 
@@ -489,8 +500,8 @@ def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * fil
     @return HIPRTC_ERROR_INVALID_INPUT
     @see hiprtcResult
     """
-    if not isinstance(input_type,hiprtcJITInputType):
-        raise TypeError("argument 'input_type' must be of type 'hiprtcJITInputType'")
+    if not isinstance(input_type,_hiprtcJITInputType__Base):
+        raise TypeError("argument 'input_type' must be of type '_hiprtcJITInputType__Base'")
     _hiprtcLinkAddFile__retval = hiprtcResult(chiprtc.hiprtcLinkAddFile(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr,input_type.value,file_path,num_options,
         <chiprtc.hiprtcJIT_option *>hip._util.types.DataHandle.from_pyobj(options_ptr)._ptr,
@@ -509,8 +520,8 @@ def hiprtcLinkAddData(object hip_link_state, object input_type, object image, un
     @return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
     @see hiprtcResult
     """
-    if not isinstance(input_type,hiprtcJITInputType):
-        raise TypeError("argument 'input_type' must be of type 'hiprtcJITInputType'")
+    if not isinstance(input_type,_hiprtcJITInputType__Base):
+        raise TypeError("argument 'input_type' must be of type '_hiprtcJITInputType__Base'")
     _hiprtcLinkAddData__retval = hiprtcResult(chiprtc.hiprtcLinkAddData(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr,input_type.value,
         <void *>hip._util.types.DataHandle.from_pyobj(image)._ptr,image_size,name,num_options,
