@@ -2,7 +2,6 @@
 import cython
 import ctypes
 import enum
-import hip.hipify
 HIPRAND_VERSION = chiprand.HIPRAND_VERSION
 
 HIPRAND_DEFAULT_MAX_BLOCK_SIZE = chiprand.HIPRAND_DEFAULT_MAX_BLOCK_SIZE
@@ -539,7 +538,11 @@ cdef class rocrand_generator_base_type:
 
 rocrand_generator = rocrand_generator_base_type
 
-class rocrand_status(hip.hipify.IntEnum):
+class _rocrand_status__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class rocrand_status(_rocrand_status__Base):
     ROCRAND_STATUS_SUCCESS = chiprand.ROCRAND_STATUS_SUCCESS
     ROCRAND_STATUS_VERSION_MISMATCH = chiprand.ROCRAND_STATUS_VERSION_MISMATCH
     ROCRAND_STATUS_NOT_CREATED = chiprand.ROCRAND_STATUS_NOT_CREATED
@@ -556,7 +559,11 @@ class rocrand_status(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class rocrand_rng_type(hip.hipify.IntEnum):
+class _rocrand_rng_type__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class rocrand_rng_type(_rocrand_rng_type__Base):
     ROCRAND_RNG_PSEUDO_DEFAULT = chiprand.ROCRAND_RNG_PSEUDO_DEFAULT
     ROCRAND_RNG_PSEUDO_XORWOW = chiprand.ROCRAND_RNG_PSEUDO_XORWOW
     ROCRAND_RNG_PSEUDO_MRG32K3A = chiprand.ROCRAND_RNG_PSEUDO_MRG32K3A
@@ -583,7 +590,11 @@ hiprandGenerator_t = rocrand_generator_base_type
 
 hiprandDiscreteDistribution_t = rocrand_discrete_distribution_st
 
-class hiprandStatus(hip.hipify.IntEnum):
+class _hiprandStatus__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hiprandStatus(_hiprandStatus__Base):
     HIPRAND_STATUS_SUCCESS = chiprand.HIPRAND_STATUS_SUCCESS
     HIPRAND_STATUS_VERSION_MISMATCH = chiprand.HIPRAND_STATUS_VERSION_MISMATCH
     HIPRAND_STATUS_NOT_INITIALIZED = chiprand.HIPRAND_STATUS_NOT_INITIALIZED
@@ -606,7 +617,11 @@ class hiprandStatus(hip.hipify.IntEnum):
 
 hiprandStatus_t = hiprandStatus
 
-class hiprandRngType(hip.hipify.IntEnum):
+class _hiprandRngType__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hiprandRngType(_hiprandRngType__Base):
     HIPRAND_RNG_TEST = chiprand.HIPRAND_RNG_TEST
     HIPRAND_RNG_PSEUDO_DEFAULT = chiprand.HIPRAND_RNG_PSEUDO_DEFAULT
     HIPRAND_RNG_PSEUDO_XORWOW = chiprand.HIPRAND_RNG_PSEUDO_XORWOW
@@ -657,8 +672,8 @@ def hiprandCreateGenerator(object rng_type):
     - HIPRAND_STATUS_SUCCESS if generator was created successfully \n
     """
     generator = rocrand_generator_base_type.from_ptr(NULL)
-    if not isinstance(rng_type,hiprandRngType):
-        raise TypeError("argument 'rng_type' must be of type 'hiprandRngType'")
+    if not isinstance(rng_type,_hiprandRngType__Base):
+        raise TypeError("argument 'rng_type' must be of type '_hiprandRngType__Base'")
     _hiprandCreateGenerator__retval = hiprandStatus(chiprand.hiprandCreateGenerator(&generator._ptr,rng_type.value))    # fully specified
     return (_hiprandCreateGenerator__retval,generator)
 
@@ -692,8 +707,8 @@ def hiprandCreateGeneratorHost(object rng_type):
     - HIPRAND_STATUS_SUCCESS if generator was created successfully \n
     """
     generator = rocrand_generator_base_type.from_ptr(NULL)
-    if not isinstance(rng_type,hiprandRngType):
-        raise TypeError("argument 'rng_type' must be of type 'hiprandRngType'")
+    if not isinstance(rng_type,_hiprandRngType__Base):
+        raise TypeError("argument 'rng_type' must be of type '_hiprandRngType__Base'")
     _hiprandCreateGeneratorHost__retval = hiprandStatus(chiprand.hiprandCreateGeneratorHost(&generator._ptr,rng_type.value))    # fully specified
     return (_hiprandCreateGeneratorHost__retval,generator)
 

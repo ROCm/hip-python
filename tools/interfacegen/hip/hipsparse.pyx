@@ -2,7 +2,6 @@
 import cython
 import ctypes
 import enum
-import hip.hipify
 cdef class bsrsv2Info:
     # members declared in pxd file
 
@@ -1059,7 +1058,11 @@ cdef class csru2csrInfo:
 
 csru2csrInfo_t = csru2csrInfo
 
-class hipsparseStatus_t(hip.hipify.IntEnum):
+class _hipsparseStatus_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseStatus_t(_hipsparseStatus_t__Base):
     HIPSPARSE_STATUS_SUCCESS = chipsparse.HIPSPARSE_STATUS_SUCCESS
     HIPSPARSE_STATUS_NOT_INITIALIZED = chipsparse.HIPSPARSE_STATUS_NOT_INITIALIZED
     HIPSPARSE_STATUS_ALLOC_FAILED = chipsparse.HIPSPARSE_STATUS_ALLOC_FAILED
@@ -1078,7 +1081,11 @@ class hipsparseStatus_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparsePointerMode_t(hip.hipify.IntEnum):
+class _hipsparsePointerMode_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparsePointerMode_t(_hipsparsePointerMode_t__Base):
     HIPSPARSE_POINTER_MODE_HOST = chipsparse.HIPSPARSE_POINTER_MODE_HOST
     HIPSPARSE_POINTER_MODE_DEVICE = chipsparse.HIPSPARSE_POINTER_MODE_DEVICE
     @staticmethod
@@ -1087,7 +1094,11 @@ class hipsparsePointerMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseAction_t(hip.hipify.IntEnum):
+class _hipsparseAction_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseAction_t(_hipsparseAction_t__Base):
     HIPSPARSE_ACTION_SYMBOLIC = chipsparse.HIPSPARSE_ACTION_SYMBOLIC
     HIPSPARSE_ACTION_NUMERIC = chipsparse.HIPSPARSE_ACTION_NUMERIC
     @staticmethod
@@ -1096,7 +1107,11 @@ class hipsparseAction_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseMatrixType_t(hip.hipify.IntEnum):
+class _hipsparseMatrixType_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseMatrixType_t(_hipsparseMatrixType_t__Base):
     HIPSPARSE_MATRIX_TYPE_GENERAL = chipsparse.HIPSPARSE_MATRIX_TYPE_GENERAL
     HIPSPARSE_MATRIX_TYPE_SYMMETRIC = chipsparse.HIPSPARSE_MATRIX_TYPE_SYMMETRIC
     HIPSPARSE_MATRIX_TYPE_HERMITIAN = chipsparse.HIPSPARSE_MATRIX_TYPE_HERMITIAN
@@ -1107,7 +1122,11 @@ class hipsparseMatrixType_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseFillMode_t(hip.hipify.IntEnum):
+class _hipsparseFillMode_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseFillMode_t(_hipsparseFillMode_t__Base):
     HIPSPARSE_FILL_MODE_LOWER = chipsparse.HIPSPARSE_FILL_MODE_LOWER
     HIPSPARSE_FILL_MODE_UPPER = chipsparse.HIPSPARSE_FILL_MODE_UPPER
     @staticmethod
@@ -1116,7 +1135,11 @@ class hipsparseFillMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseDiagType_t(hip.hipify.IntEnum):
+class _hipsparseDiagType_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseDiagType_t(_hipsparseDiagType_t__Base):
     HIPSPARSE_DIAG_TYPE_NON_UNIT = chipsparse.HIPSPARSE_DIAG_TYPE_NON_UNIT
     HIPSPARSE_DIAG_TYPE_UNIT = chipsparse.HIPSPARSE_DIAG_TYPE_UNIT
     @staticmethod
@@ -1125,7 +1148,11 @@ class hipsparseDiagType_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseIndexBase_t(hip.hipify.IntEnum):
+class _hipsparseIndexBase_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseIndexBase_t(_hipsparseIndexBase_t__Base):
     HIPSPARSE_INDEX_BASE_ZERO = chipsparse.HIPSPARSE_INDEX_BASE_ZERO
     HIPSPARSE_INDEX_BASE_ONE = chipsparse.HIPSPARSE_INDEX_BASE_ONE
     @staticmethod
@@ -1134,7 +1161,11 @@ class hipsparseIndexBase_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseOperation_t(hip.hipify.IntEnum):
+class _hipsparseOperation_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseOperation_t(_hipsparseOperation_t__Base):
     HIPSPARSE_OPERATION_NON_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_NON_TRANSPOSE
     HIPSPARSE_OPERATION_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_TRANSPOSE
     HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE = chipsparse.HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE
@@ -1144,7 +1175,11 @@ class hipsparseOperation_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseHybPartition_t(hip.hipify.IntEnum):
+class _hipsparseHybPartition_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseHybPartition_t(_hipsparseHybPartition_t__Base):
     HIPSPARSE_HYB_PARTITION_AUTO = chipsparse.HIPSPARSE_HYB_PARTITION_AUTO
     HIPSPARSE_HYB_PARTITION_USER = chipsparse.HIPSPARSE_HYB_PARTITION_USER
     HIPSPARSE_HYB_PARTITION_MAX = chipsparse.HIPSPARSE_HYB_PARTITION_MAX
@@ -1154,7 +1189,11 @@ class hipsparseHybPartition_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSolvePolicy_t(hip.hipify.IntEnum):
+class _hipsparseSolvePolicy_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseSolvePolicy_t(_hipsparseSolvePolicy_t__Base):
     HIPSPARSE_SOLVE_POLICY_NO_LEVEL = chipsparse.HIPSPARSE_SOLVE_POLICY_NO_LEVEL
     HIPSPARSE_SOLVE_POLICY_USE_LEVEL = chipsparse.HIPSPARSE_SOLVE_POLICY_USE_LEVEL
     @staticmethod
@@ -1163,7 +1202,11 @@ class hipsparseSolvePolicy_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSideMode_t(hip.hipify.IntEnum):
+class _hipsparseSideMode_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseSideMode_t(_hipsparseSideMode_t__Base):
     HIPSPARSE_SIDE_LEFT = chipsparse.HIPSPARSE_SIDE_LEFT
     HIPSPARSE_SIDE_RIGHT = chipsparse.HIPSPARSE_SIDE_RIGHT
     @staticmethod
@@ -1172,7 +1215,11 @@ class hipsparseSideMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseDirection_t(hip.hipify.IntEnum):
+class _hipsparseDirection_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseDirection_t(_hipsparseDirection_t__Base):
     HIPSPARSE_DIRECTION_ROW = chipsparse.HIPSPARSE_DIRECTION_ROW
     HIPSPARSE_DIRECTION_COLUMN = chipsparse.HIPSPARSE_DIRECTION_COLUMN
     @staticmethod
@@ -1275,8 +1322,8 @@ def hipsparseSetPointerMode(object handle, object mode):
     by reference on the host. Valid pointer modes are \ref HIPSPARSE_POINTER_MODE_HOST
     or \p HIPSPARSE_POINTER_MODE_DEVICE.
     """
-    if not isinstance(mode,hipsparsePointerMode_t):
-        raise TypeError("argument 'mode' must be of type 'hipsparsePointerMode_t'")
+    if not isinstance(mode,_hipsparsePointerMode_t__Base):
+        raise TypeError("argument 'mode' must be of type '_hipsparsePointerMode_t__Base'")
     _hipsparseSetPointerMode__retval = hipsparseStatus_t(chipsparse.hipsparseSetPointerMode(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mode.value))    # fully specified
     return (_hipsparseSetPointerMode__retval,)
@@ -1348,8 +1395,8 @@ def hipsparseSetMatType(object descrA, object type):
     \ref HIPSPARSE_MATRIX_TYPE_SYMMETRIC, \ref HIPSPARSE_MATRIX_TYPE_HERMITIAN or
     \ref HIPSPARSE_MATRIX_TYPE_TRIANGULAR.
     """
-    if not isinstance(type,hipsparseMatrixType_t):
-        raise TypeError("argument 'type' must be of type 'hipsparseMatrixType_t'")
+    if not isinstance(type,_hipsparseMatrixType_t__Base):
+        raise TypeError("argument 'type' must be of type '_hipsparseMatrixType_t__Base'")
     _hipsparseSetMatType__retval = hipsparseStatus_t(chipsparse.hipsparseSetMatType(
         <void *>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,type.value))    # fully specified
     return (_hipsparseSetMatType__retval,)
@@ -1376,8 +1423,8 @@ def hipsparseSetMatFillMode(object descrA, object fillMode):
     Valid fill modes are \ref HIPSPARSE_FILL_MODE_LOWER or
     \ref HIPSPARSE_FILL_MODE_UPPER.
     """
-    if not isinstance(fillMode,hipsparseFillMode_t):
-        raise TypeError("argument 'fillMode' must be of type 'hipsparseFillMode_t'")
+    if not isinstance(fillMode,_hipsparseFillMode_t__Base):
+        raise TypeError("argument 'fillMode' must be of type '_hipsparseFillMode_t__Base'")
     _hipsparseSetMatFillMode__retval = hipsparseStatus_t(chipsparse.hipsparseSetMatFillMode(
         <void *>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,fillMode.value))    # fully specified
     return (_hipsparseSetMatFillMode__retval,)
@@ -1404,8 +1451,8 @@ def hipsparseSetMatDiagType(object descrA, object diagType):
     descriptor. Valid diagonal types are \ref HIPSPARSE_DIAG_TYPE_UNIT or
     \ref HIPSPARSE_DIAG_TYPE_NON_UNIT.
     """
-    if not isinstance(diagType,hipsparseDiagType_t):
-        raise TypeError("argument 'diagType' must be of type 'hipsparseDiagType_t'")
+    if not isinstance(diagType,_hipsparseDiagType_t__Base):
+        raise TypeError("argument 'diagType' must be of type '_hipsparseDiagType_t__Base'")
     _hipsparseSetMatDiagType__retval = hipsparseStatus_t(chipsparse.hipsparseSetMatDiagType(
         <void *>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,diagType.value))    # fully specified
     return (_hipsparseSetMatDiagType__retval,)
@@ -1432,8 +1479,8 @@ def hipsparseSetMatIndexBase(object descrA, object base):
     \p hipsparseSetMatIndexBase sets the index base of a matrix descriptor. Valid
     options are \ref HIPSPARSE_INDEX_BASE_ZERO or \ref HIPSPARSE_INDEX_BASE_ONE.
     """
-    if not isinstance(base,hipsparseIndexBase_t):
-        raise TypeError("argument 'base' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(base,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'base' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSetMatIndexBase__retval = hipsparseStatus_t(chipsparse.hipsparseSetMatIndexBase(
         <void *>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,base.value))    # fully specified
     return (_hipsparseSetMatIndexBase__retval,)
@@ -1809,8 +1856,8 @@ def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xI
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSaxpyi__retval = hipsparseStatus_t(chipsparse.hipsparseSaxpyi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -1824,8 +1871,8 @@ def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 def hipsparseDaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDaxpyi__retval = hipsparseStatus_t(chipsparse.hipsparseDaxpyi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -1839,8 +1886,8 @@ def hipsparseDaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 def hipsparseCaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCaxpyi__retval = hipsparseStatus_t(chipsparse.hipsparseCaxpyi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(alpha)._ptr,
@@ -1854,8 +1901,8 @@ def hipsparseCaxpyi(object handle, int nnz, object alpha, object xVal, object xI
 def hipsparseZaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZaxpyi__retval = hipsparseStatus_t(chipsparse.hipsparseZaxpyi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(alpha)._ptr,
@@ -1886,8 +1933,8 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSdoti__retval = hipsparseStatus_t(chipsparse.hipsparseSdoti(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
@@ -1901,8 +1948,8 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
 def hipsparseDdoti(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDdoti__retval = hipsparseStatus_t(chipsparse.hipsparseDdoti(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
@@ -1916,8 +1963,8 @@ def hipsparseDdoti(object handle, int nnz, object xVal, object xInd, object y, o
 def hipsparseCdoti(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCdoti__retval = hipsparseStatus_t(chipsparse.hipsparseCdoti(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(xVal)._ptr,
@@ -1931,8 +1978,8 @@ def hipsparseCdoti(object handle, int nnz, object xVal, object xInd, object y, o
 def hipsparseZdoti(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZdoti__retval = hipsparseStatus_t(chipsparse.hipsparseZdoti(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(xVal)._ptr,
@@ -1964,8 +2011,8 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCdotci__retval = hipsparseStatus_t(chipsparse.hipsparseCdotci(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(xVal)._ptr,
@@ -1979,8 +2026,8 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
 def hipsparseZdotci(object handle, int nnz, object xVal, object xInd, object y, object result, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZdotci__retval = hipsparseStatus_t(chipsparse.hipsparseZdotci(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(xVal)._ptr,
@@ -2008,8 +2055,8 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSgthr__retval = hipsparseStatus_t(chipsparse.hipsparseSgthr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
@@ -2022,8 +2069,8 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
 def hipsparseDgthr(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDgthr__retval = hipsparseStatus_t(chipsparse.hipsparseDgthr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
@@ -2036,8 +2083,8 @@ def hipsparseDgthr(object handle, int nnz, object y, object xVal, object xInd, o
 def hipsparseCgthr(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCgthr__retval = hipsparseStatus_t(chipsparse.hipsparseCgthr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(y)._ptr,
@@ -2050,8 +2097,8 @@ def hipsparseCgthr(object handle, int nnz, object y, object xVal, object xInd, o
 def hipsparseZgthr(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZgthr__retval = hipsparseStatus_t(chipsparse.hipsparseZgthr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(y)._ptr,
@@ -2081,8 +2128,8 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSgthrz__retval = hipsparseStatus_t(chipsparse.hipsparseSgthrz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <float *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
@@ -2095,8 +2142,8 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 def hipsparseDgthrz(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDgthrz__retval = hipsparseStatus_t(chipsparse.hipsparseDgthrz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <double *>hip._util.types.DataHandle.from_pyobj(y)._ptr,
@@ -2109,8 +2156,8 @@ def hipsparseDgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 def hipsparseCgthrz(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCgthrz__retval = hipsparseStatus_t(chipsparse.hipsparseCgthrz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(y)._ptr,
@@ -2123,8 +2170,8 @@ def hipsparseCgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 def hipsparseZgthrz(object handle, int nnz, object y, object xVal, object xInd, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZgthrz__retval = hipsparseStatus_t(chipsparse.hipsparseZgthrz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(y)._ptr,
@@ -2157,8 +2204,8 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSroti__retval = hipsparseStatus_t(chipsparse.hipsparseSroti(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <float *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
@@ -2173,8 +2220,8 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
 def hipsparseDroti(object handle, int nnz, object xVal, object xInd, object y, object c, object s, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDroti__retval = hipsparseStatus_t(chipsparse.hipsparseDroti(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <double *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
@@ -2204,8 +2251,8 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSsctr__retval = hipsparseStatus_t(chipsparse.hipsparseSsctr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
@@ -2218,8 +2265,8 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
 def hipsparseDsctr(object handle, int nnz, object xVal, object xInd, object y, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDsctr__retval = hipsparseStatus_t(chipsparse.hipsparseDsctr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(xVal)._ptr,
@@ -2232,8 +2279,8 @@ def hipsparseDsctr(object handle, int nnz, object xVal, object xInd, object y, o
 def hipsparseCsctr(object handle, int nnz, object xVal, object xInd, object y, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCsctr__retval = hipsparseStatus_t(chipsparse.hipsparseCsctr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         float2.from_pyobj(xVal)._ptr,
@@ -2246,8 +2293,8 @@ def hipsparseCsctr(object handle, int nnz, object xVal, object xInd, object y, o
 def hipsparseZsctr(object handle, int nnz, object xVal, object xInd, object y, object idxBase):
     """
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZsctr__retval = hipsparseStatus_t(chipsparse.hipsparseZsctr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,nnz,
         double2.from_pyobj(xVal)._ptr,
@@ -2295,8 +2342,8 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
     Currently, only \p trans == \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseScsrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -2314,8 +2361,8 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
 def hipsparseDcsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -2333,8 +2380,8 @@ def hipsparseDcsrmv(object handle, object transA, int m, int n, int nnz, object 
 def hipsparseCcsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
         float2.from_pyobj(alpha)._ptr,
@@ -2352,8 +2399,8 @@ def hipsparseCcsrmv(object handle, object transA, int m, int n, int nnz, object 
 def hipsparseZcsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
         double2.from_pyobj(alpha)._ptr,
@@ -2401,8 +2448,8 @@ def hipsparseScsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
     temporary storage buffer must be allocated by the user.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsv2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2418,8 +2465,8 @@ def hipsparseScsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
 def hipsparseDcsrsv2_bufferSize(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsv2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2435,8 +2482,8 @@ def hipsparseDcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
 def hipsparseCcsrsv2_bufferSize(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsv2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2452,8 +2499,8 @@ def hipsparseCcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
 def hipsparseZcsrsv2_bufferSize(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsv2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2477,8 +2524,8 @@ def hipsparseScsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
     temporary storage buffer must be allocated by the user.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2494,8 +2541,8 @@ def hipsparseScsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
 def hipsparseDcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2511,8 +2558,8 @@ def hipsparseDcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
 def hipsparseCcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2528,8 +2575,8 @@ def hipsparseCcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
 def hipsparseZcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2553,10 +2600,10 @@ def hipsparseScsrsv2_analysis(object handle, object transA, int m, int nnz, obje
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsv2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2572,10 +2619,10 @@ def hipsparseScsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 def hipsparseDcsrsv2_analysis(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsv2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2591,10 +2638,10 @@ def hipsparseDcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 def hipsparseCcsrsv2_analysis(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsv2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2610,10 +2657,10 @@ def hipsparseCcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 def hipsparseZcsrsv2_analysis(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsv2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -2665,10 +2712,10 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
     \p trans == \ref HIPSPARSE_OPERATION_TRANSPOSE is supported.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsv2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -2687,10 +2734,10 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
 def hipsparseDcsrsv2_solve(object handle, object transA, int m, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object f, object x, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsv2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -2709,10 +2756,10 @@ def hipsparseDcsrsv2_solve(object handle, object transA, int m, int nnz, object 
 def hipsparseCcsrsv2_solve(object handle, object transA, int m, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object f, object x, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsv2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         float2.from_pyobj(alpha)._ptr,
@@ -2731,10 +2778,10 @@ def hipsparseCcsrsv2_solve(object handle, object transA, int m, int nnz, object 
 def hipsparseZcsrsv2_solve(object handle, object transA, int m, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object f, object x, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsv2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,nnz,
         double2.from_pyobj(alpha)._ptr,
@@ -2778,8 +2825,8 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
     Currently, only \p trans == \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseShybmv__retval = hipsparseStatus_t(chipsparse.hipsparseShybmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -2795,8 +2842,8 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
 def hipsparseDhybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDhybmv__retval = hipsparseStatus_t(chipsparse.hipsparseDhybmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -2812,8 +2859,8 @@ def hipsparseDhybmv(object handle, object transA, object alpha, object descrA, o
 def hipsparseChybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseChybmv__retval = hipsparseStatus_t(chipsparse.hipsparseChybmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,
         float2.from_pyobj(alpha)._ptr,
@@ -2829,8 +2876,8 @@ def hipsparseChybmv(object handle, object transA, object alpha, object descrA, o
 def hipsparseZhybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZhybmv__retval = hipsparseStatus_t(chipsparse.hipsparseZhybmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,
         double2.from_pyobj(alpha)._ptr,
@@ -2872,10 +2919,10 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
     Currently, only \p trans == \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -2893,10 +2940,10 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 def hipsparseDbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -2914,10 +2961,10 @@ def hipsparseDbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 def hipsparseCbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
         float2.from_pyobj(alpha)._ptr,
@@ -2935,10 +2982,10 @@ def hipsparseCbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 def hipsparseZbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrmv__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nb,nnzb,
         double2.from_pyobj(alpha)._ptr,
@@ -2986,10 +3033,10 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
     Currently, \p block_dim == 1 is not supported.
     @{*/
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(trans,hipsparseOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(trans,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrxmv__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrxmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3009,10 +3056,10 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 def hipsparseDbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
     """
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(trans,hipsparseOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(trans,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrxmv__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrxmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3032,10 +3079,10 @@ def hipsparseDbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 def hipsparseCbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
     """
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(trans,hipsparseOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(trans,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrxmv__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrxmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
         float2.from_pyobj(alpha)._ptr,
@@ -3055,10 +3102,10 @@ def hipsparseCbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 def hipsparseZbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
     """
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(trans,hipsparseOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(trans,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrxmv__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrxmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,trans.value,sizeOfMask,mb,nb,nnzb,
         double2.from_pyobj(alpha)._ptr,
@@ -3105,10 +3152,10 @@ def hipsparseSbsrsv2_bufferSize(object handle, object dirA, object transA, int m
     temporary storage buffer must be allocated by the user.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsv2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3124,10 +3171,10 @@ def hipsparseSbsrsv2_bufferSize(object handle, object dirA, object transA, int m
 def hipsparseDbsrsv2_bufferSize(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsv2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3143,10 +3190,10 @@ def hipsparseDbsrsv2_bufferSize(object handle, object dirA, object transA, int m
 def hipsparseCbsrsv2_bufferSize(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsv2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3162,10 +3209,10 @@ def hipsparseCbsrsv2_bufferSize(object handle, object dirA, object transA, int m
 def hipsparseZbsrsv2_bufferSize(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrsv2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsv2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3187,10 +3234,10 @@ def hipsparseSbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
     temporary storage buffer must be allocated by the user.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3206,10 +3253,10 @@ def hipsparseSbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
 def hipsparseDbsrsv2_bufferSizeExt(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSize):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3225,10 +3272,10 @@ def hipsparseDbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
 def hipsparseCbsrsv2_bufferSizeExt(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSize):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3244,10 +3291,10 @@ def hipsparseCbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
 def hipsparseZbsrsv2_bufferSizeExt(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSize):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsv2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3272,12 +3319,12 @@ def hipsparseSbsrsv2_analysis(object handle, object dirA, object transA, int mb,
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsv2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3293,12 +3340,12 @@ def hipsparseSbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 def hipsparseDbsrsv2_analysis(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsv2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3314,12 +3361,12 @@ def hipsparseDbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 def hipsparseCbsrsv2_analysis(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsv2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3335,12 +3382,12 @@ def hipsparseCbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 def hipsparseZbsrsv2_analysis(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrsv2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsv2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -3391,12 +3438,12 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
     \p trans == \ref HIPSPARSE_OPERATION_TRANSPOSE is supported.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsv2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3415,12 +3462,12 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 def hipsparseDbsrsv2_solve(object handle, object dirA, object transA, int mb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object f, object x, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsv2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3439,12 +3486,12 @@ def hipsparseDbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 def hipsparseCbsrsv2_solve(object handle, object dirA, object transA, int mb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object f, object x, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsv2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         float2.from_pyobj(alpha)._ptr,
@@ -3463,12 +3510,12 @@ def hipsparseCbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 def hipsparseZbsrsv2_solve(object handle, object dirA, object transA, int mb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object f, object x, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrsv2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsv2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,mb,nnzb,
         double2.from_pyobj(alpha)._ptr,
@@ -3493,8 +3540,8 @@ def hipsparseSgemvi_bufferSize(object handle, object transA, int m, int n, int n
     user.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSgemvi_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSgemvi_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
         <int *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
@@ -3505,8 +3552,8 @@ def hipsparseSgemvi_bufferSize(object handle, object transA, int m, int n, int n
 def hipsparseDgemvi_bufferSize(object handle, object transA, int m, int n, int nnz, object pBufferSize):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDgemvi_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDgemvi_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
         <int *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
@@ -3517,8 +3564,8 @@ def hipsparseDgemvi_bufferSize(object handle, object transA, int m, int n, int n
 def hipsparseCgemvi_bufferSize(object handle, object transA, int m, int n, int nnz, object pBufferSize):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCgemvi_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCgemvi_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
         <int *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
@@ -3529,8 +3576,8 @@ def hipsparseCgemvi_bufferSize(object handle, object transA, int m, int n, int n
 def hipsparseZgemvi_bufferSize(object handle, object transA, int m, int n, int nnz, object pBufferSize):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZgemvi_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZgemvi_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,nnz,
         <int *>hip._util.types.DataHandle.from_pyobj(pBufferSize)._ptr))    # fully specified
@@ -3567,10 +3614,10 @@ def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, ob
     Currently, only \p trans == \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSgemvi__retval = hipsparseStatus_t(chipsparse.hipsparseSgemvi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3587,10 +3634,10 @@ def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, ob
 def hipsparseDgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDgemvi__retval = hipsparseStatus_t(chipsparse.hipsparseDgemvi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3607,10 +3654,10 @@ def hipsparseDgemvi(object handle, object transA, int m, int n, object alpha, ob
 def hipsparseCgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCgemvi__retval = hipsparseStatus_t(chipsparse.hipsparseCgemvi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
         float2.from_pyobj(alpha)._ptr,
@@ -3627,10 +3674,10 @@ def hipsparseCgemvi(object handle, object transA, int m, int n, object alpha, ob
 def hipsparseZgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZgemvi__retval = hipsparseStatus_t(chipsparse.hipsparseZgemvi(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
         double2.from_pyobj(alpha)._ptr,
@@ -3680,12 +3727,12 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
     Currently, only \p trans_A == \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3703,12 +3750,12 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
 def hipsparseDbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3726,12 +3773,12 @@ def hipsparseDbsrmm(object handle, object dirA, object transA, object transB, in
 def hipsparseCbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
         float2.from_pyobj(alpha)._ptr,
@@ -3749,12 +3796,12 @@ def hipsparseCbsrmm(object handle, object dirA, object transA, object transB, in
 def hipsparseZbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transB.value,mb,n,kb,nnzb,
         double2.from_pyobj(alpha)._ptr,
@@ -3808,8 +3855,8 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseScsrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3827,8 +3874,8 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 def hipsparseDcsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3846,8 +3893,8 @@ def hipsparseDcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 def hipsparseCcsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
         float2.from_pyobj(alpha)._ptr,
@@ -3865,8 +3912,8 @@ def hipsparseCcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 def hipsparseZcsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrmm__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,k,nnz,
         double2.from_pyobj(alpha)._ptr,
@@ -3930,10 +3977,10 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrmm2__retval = hipsparseStatus_t(chipsparse.hipsparseScsrmm2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3951,10 +3998,10 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
 def hipsparseDcsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrmm2__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrmm2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -3972,10 +4019,10 @@ def hipsparseDcsrmm2(object handle, object transA, object transB, int m, int n, 
 def hipsparseCcsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrmm2__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrmm2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
         float2.from_pyobj(alpha)._ptr,
@@ -3993,10 +4040,10 @@ def hipsparseCcsrmm2(object handle, object transA, object transB, int m, int n, 
 def hipsparseZcsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrmm2__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrmm2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,nnz,
         double2.from_pyobj(alpha)._ptr,
@@ -4041,12 +4088,12 @@ def hipsparseSbsrsm2_bufferSize(object handle, object dirA, object transA, objec
     temporary storage buffer must be allocated by the user.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseSbsrsm2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsm2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -4062,12 +4109,12 @@ def hipsparseSbsrsm2_bufferSize(object handle, object dirA, object transA, objec
 def hipsparseDbsrsm2_bufferSize(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDbsrsm2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsm2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -4083,12 +4130,12 @@ def hipsparseDbsrsm2_bufferSize(object handle, object dirA, object transA, objec
 def hipsparseCbsrsm2_bufferSize(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCbsrsm2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsm2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -4104,12 +4151,12 @@ def hipsparseCbsrsm2_bufferSize(object handle, object dirA, object transA, objec
 def hipsparseZbsrsm2_bufferSize(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZbsrsm2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsm2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -4134,14 +4181,14 @@ def hipsparseSbsrsm2_analysis(object handle, object dirA, object transA, object 
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsm2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -4157,14 +4204,14 @@ def hipsparseSbsrsm2_analysis(object handle, object dirA, object transA, object 
 def hipsparseDbsrsm2_analysis(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsm2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -4180,14 +4227,14 @@ def hipsparseDbsrsm2_analysis(object handle, object dirA, object transA, object 
 def hipsparseCbsrsm2_analysis(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsm2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -4203,14 +4250,14 @@ def hipsparseCbsrsm2_analysis(object handle, object dirA, object transA, object 
 def hipsparseZbsrsm2_analysis(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsm2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -4272,14 +4319,14 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
     \p trans_X != \ref HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE is supported.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrsm2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4298,14 +4345,14 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
 def hipsparseDbsrsm2_solve(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object B, int ldb, object X, int ldx, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrsm2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4324,14 +4371,14 @@ def hipsparseDbsrsm2_solve(object handle, object dirA, object transA, object tra
 def hipsparseCbsrsm2_solve(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object B, int ldb, object X, int ldx, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrsm2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         float2.from_pyobj(alpha)._ptr,
@@ -4350,14 +4397,14 @@ def hipsparseCbsrsm2_solve(object handle, object dirA, object transA, object tra
 def hipsparseZbsrsm2_solve(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object B, int ldb, object X, int ldx, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transX,hipsparseOperation_t):
-        raise TypeError("argument 'transX' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transX' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrsm2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,transA.value,transX.value,mb,nrhs,nnzb,
         double2.from_pyobj(alpha)._ptr,
@@ -4403,12 +4450,12 @@ def hipsparseScsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
     temporary storage buffer must be allocated by the user.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrsm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsm2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4426,12 +4473,12 @@ def hipsparseScsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
 def hipsparseDcsrsm2_bufferSizeExt(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBufferSize):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrsm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsm2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4449,12 +4496,12 @@ def hipsparseDcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
 def hipsparseCcsrsm2_bufferSizeExt(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBufferSize):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrsm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsm2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         float2.from_pyobj(alpha)._ptr,
@@ -4472,12 +4519,12 @@ def hipsparseCcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
 def hipsparseZcsrsm2_bufferSizeExt(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBufferSize):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrsm2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsm2_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         double2.from_pyobj(alpha)._ptr,
@@ -4504,12 +4551,12 @@ def hipsparseScsrsm2_analysis(object handle, int algo, object transA, object tra
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsm2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4527,12 +4574,12 @@ def hipsparseScsrsm2_analysis(object handle, int algo, object transA, object tra
 def hipsparseDcsrsm2_analysis(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsm2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4550,12 +4597,12 @@ def hipsparseDcsrsm2_analysis(object handle, int algo, object transA, object tra
 def hipsparseCcsrsm2_analysis(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsm2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         float2.from_pyobj(alpha)._ptr,
@@ -4573,12 +4620,12 @@ def hipsparseCcsrsm2_analysis(object handle, int algo, object transA, object tra
 def hipsparseZcsrsm2_analysis(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrsm2_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsm2_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         double2.from_pyobj(alpha)._ptr,
@@ -4651,12 +4698,12 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
     \p trans_B != \ref HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE is supported.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseScsrsm2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4674,12 +4721,12 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
 def hipsparseDcsrsm2_solve(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrsm2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4697,12 +4744,12 @@ def hipsparseDcsrsm2_solve(object handle, int algo, object transA, object transB
 def hipsparseCcsrsm2_solve(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrsm2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         float2.from_pyobj(alpha)._ptr,
@@ -4720,12 +4767,12 @@ def hipsparseCcsrsm2_solve(object handle, int algo, object transA, object transB
 def hipsparseZcsrsm2_solve(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrsm2_solve__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrsm2_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,algo,transA.value,transB.value,m,nrhs,nnz,
         double2.from_pyobj(alpha)._ptr,
@@ -5246,10 +5293,10 @@ def hipsparseXcsrgemmNnz(object handle, object transA, object transB, int m, int
     \note
     Currently, only \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseXcsrgemmNnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrgemmNnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
@@ -5309,10 +5356,10 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
     row, additional temporary storage buffer is allocated by the algorithm.
     @{*/
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseScsrgemm__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
@@ -5334,10 +5381,10 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
 def hipsparseDcsrgemm(object handle, object transA, object transB, int m, int n, int k, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseDcsrgemm__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrgemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
@@ -5359,10 +5406,10 @@ def hipsparseDcsrgemm(object handle, object transA, object transB, int m, int n,
 def hipsparseCcsrgemm(object handle, object transA, object transB, int m, int n, int k, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseCcsrgemm__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrgemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
@@ -5384,10 +5431,10 @@ def hipsparseCcsrgemm(object handle, object transA, object transB, int m, int n,
 def hipsparseZcsrgemm(object handle, object transA, object transB, int m, int n, int k, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
     """
-    if not isinstance(transA,hipsparseOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(transB,hipsparseOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipsparseOperation_t'")
+    if not isinstance(transA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(transB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipsparseOperation_t__Base'")
     _hipsparseZcsrgemm__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrgemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,nnzA,
@@ -5784,8 +5831,8 @@ def hipsparseSbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
     The temporary storage buffer must be allocated by the user.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSbsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrilu02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -5801,8 +5848,8 @@ def hipsparseSbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 def hipsparseDbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDbsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrilu02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -5818,8 +5865,8 @@ def hipsparseDbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 def hipsparseCbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCbsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrilu02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -5835,8 +5882,8 @@ def hipsparseCbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 def hipsparseZbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZbsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrilu02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -5862,10 +5909,10 @@ def hipsparseSbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrilu02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -5881,10 +5928,10 @@ def hipsparseSbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
 def hipsparseDbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrilu02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -5900,10 +5947,10 @@ def hipsparseDbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
 def hipsparseCbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrilu02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -5919,10 +5966,10 @@ def hipsparseCbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, ob
 def hipsparseZbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrilu02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -5955,10 +6002,10 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrilu02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -5974,10 +6021,10 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 def hipsparseDbsrilu02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA_valM, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseDbsrilu02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -5993,10 +6040,10 @@ def hipsparseDbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 def hipsparseCbsrilu02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA_valM, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseCbsrilu02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6012,10 +6059,10 @@ def hipsparseCbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 def hipsparseZbsrilu02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA_valM, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseZbsrilu02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6256,8 +6303,8 @@ def hipsparseScsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6273,8 +6320,8 @@ def hipsparseScsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 def hipsparseDcsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrilu02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6290,8 +6337,8 @@ def hipsparseDcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 def hipsparseCcsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrilu02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6307,8 +6354,8 @@ def hipsparseCcsrilu02_analysis(object handle, int m, int nnz, object descrA, ob
 def hipsparseZcsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrilu02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrilu02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6344,8 +6391,8 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6361,8 +6408,8 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
 def hipsparseDcsrilu02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseDcsrilu02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6378,8 +6425,8 @@ def hipsparseDcsrilu02(object handle, int m, int nnz, object descrA, object csrS
 def hipsparseCcsrilu02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseCcsrilu02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6395,8 +6442,8 @@ def hipsparseCcsrilu02(object handle, int m, int nnz, object descrA, object csrS
 def hipsparseZcsrilu02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsrilu02__retval = hipsparseStatus_t(chipsparse.hipsparseZcsrilu02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6445,8 +6492,8 @@ def hipsparseSbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
     temporary storage buffer must be allocated by the user.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSbsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSbsric02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6462,8 +6509,8 @@ def hipsparseSbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 def hipsparseDbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDbsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDbsric02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6479,8 +6526,8 @@ def hipsparseDbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 def hipsparseCbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCbsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCbsric02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6496,8 +6543,8 @@ def hipsparseCbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 def hipsparseZbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZbsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZbsric02_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6523,10 +6570,10 @@ def hipsparseSbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSbsric02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6542,10 +6589,10 @@ def hipsparseSbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
 def hipsparseDbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDbsric02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6561,10 +6608,10 @@ def hipsparseDbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
 def hipsparseCbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCbsric02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6580,10 +6627,10 @@ def hipsparseCbsric02_analysis(object handle, object dirA, int mb, int nnzb, obj
 def hipsparseZbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZbsric02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6616,10 +6663,10 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseSbsric02__retval = hipsparseStatus_t(chipsparse.hipsparseSbsric02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6635,10 +6682,10 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
 def hipsparseDbsric02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDbsric02__retval = hipsparseStatus_t(chipsparse.hipsparseDbsric02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6654,10 +6701,10 @@ def hipsparseDbsric02(object handle, object dirA, int mb, int nnzb, object descr
 def hipsparseCbsric02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCbsric02__retval = hipsparseStatus_t(chipsparse.hipsparseCbsric02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6673,10 +6720,10 @@ def hipsparseCbsric02(object handle, object dirA, int mb, int nnzb, object descr
 def hipsparseZbsric02(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")                    
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")                    
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZbsric02__retval = hipsparseStatus_t(chipsparse.hipsparseZbsric02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6856,8 +6903,8 @@ def hipsparseScsric02_analysis(object handle, int m, int nnz, object descrA, obj
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseScsric02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6873,8 +6920,8 @@ def hipsparseScsric02_analysis(object handle, int m, int nnz, object descrA, obj
 def hipsparseDcsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDcsric02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6890,8 +6937,8 @@ def hipsparseDcsric02_analysis(object handle, int m, int nnz, object descrA, obj
 def hipsparseCcsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseCcsric02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6907,8 +6954,8 @@ def hipsparseCcsric02_analysis(object handle, int m, int nnz, object descrA, obj
 def hipsparseZcsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsric02_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseZcsric02_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6944,8 +6991,8 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseScsric02__retval = hipsparseStatus_t(chipsparse.hipsparseScsric02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6961,8 +7008,8 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
 def hipsparseDcsric02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseDcsric02__retval = hipsparseStatus_t(chipsparse.hipsparseDcsric02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6978,8 +7025,8 @@ def hipsparseDcsric02(object handle, int m, int nnz, object descrA, object csrSo
 def hipsparseCcsric02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseCcsric02__retval = hipsparseStatus_t(chipsparse.hipsparseCcsric02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -6995,8 +7042,8 @@ def hipsparseCcsric02(object handle, int m, int nnz, object descrA, object csrSo
 def hipsparseZcsric02(object handle, int m, int nnz, object descrA, object csrSortedValA_valM, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
     """
-    if not isinstance(policy,hipsparseSolvePolicy_t):
-        raise TypeError("argument 'policy' must be of type 'hipsparseSolvePolicy_t'")
+    if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
+        raise TypeError("argument 'policy' must be of type '_hipsparseSolvePolicy_t__Base'")
     _hipsparseZcsric02__retval = hipsparseStatus_t(chipsparse.hipsparseZcsric02(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,nnz,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -7659,8 +7706,8 @@ def hipsparseSnnz(object handle, object dirA, int m, int n, object descrA, objec
     The routine does support asynchronous execution if the pointer mode is set to device.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSnnz__retval = hipsparseStatus_t(chipsparse.hipsparseSnnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -7674,8 +7721,8 @@ def hipsparseSnnz(object handle, object dirA, int m, int n, object descrA, objec
 def hipsparseDnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDnnz__retval = hipsparseStatus_t(chipsparse.hipsparseDnnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -7689,8 +7736,8 @@ def hipsparseDnnz(object handle, object dirA, int m, int n, object descrA, objec
 def hipsparseCnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCnnz__retval = hipsparseStatus_t(chipsparse.hipsparseCnnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -7704,8 +7751,8 @@ def hipsparseCnnz(object handle, object dirA, int m, int n, object descrA, objec
 def hipsparseZnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZnnz__retval = hipsparseStatus_t(chipsparse.hipsparseZnnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -8359,8 +8406,8 @@ def hipsparseXcsr2bsrNnz(object handle, object dirA, int m, int n, object descrA
     \details
     The routine does support asynchronous execution if the pointer mode is set to device.
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseXcsr2bsrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsr2bsrNnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -8448,8 +8495,8 @@ def hipsparseXcsr2coo(object handle, object csrRowPtr, int nnz, int m, object co
     This function is non blocking and executed asynchronously with respect to the host.
     It may return before the actual computation has finished.
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseXcsr2coo__retval = hipsparseStatus_t(chipsparse.hipsparseXcsr2coo(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <const int *>hip._util.types.DataHandle.from_pyobj(csrRowPtr)._ptr,nnz,m,
@@ -8473,10 +8520,10 @@ def hipsparseScsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(copyValues,hipsparseAction_t):
-        raise TypeError("argument 'copyValues' must be of type 'hipsparseAction_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(copyValues,_hipsparseAction_t__Base):
+        raise TypeError("argument 'copyValues' must be of type '_hipsparseAction_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseScsr2csc__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2csc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
         <const float *>hip._util.types.DataHandle.from_pyobj(csrSortedVal)._ptr,
@@ -8492,10 +8539,10 @@ def hipsparseScsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
 def hipsparseDcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal, object csrSortedRowPtr, object csrSortedColInd, object cscSortedVal, object cscSortedRowInd, object cscSortedColPtr, object copyValues, object idxBase):
     """
     """
-    if not isinstance(copyValues,hipsparseAction_t):
-        raise TypeError("argument 'copyValues' must be of type 'hipsparseAction_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(copyValues,_hipsparseAction_t__Base):
+        raise TypeError("argument 'copyValues' must be of type '_hipsparseAction_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDcsr2csc__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2csc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
         <const double *>hip._util.types.DataHandle.from_pyobj(csrSortedVal)._ptr,
@@ -8511,10 +8558,10 @@ def hipsparseDcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
 def hipsparseCcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal, object csrSortedRowPtr, object csrSortedColInd, object cscSortedVal, object cscSortedRowInd, object cscSortedColPtr, object copyValues, object idxBase):
     """
     """
-    if not isinstance(copyValues,hipsparseAction_t):
-        raise TypeError("argument 'copyValues' must be of type 'hipsparseAction_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(copyValues,_hipsparseAction_t__Base):
+        raise TypeError("argument 'copyValues' must be of type '_hipsparseAction_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCcsr2csc__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2csc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
         float2.from_pyobj(csrSortedVal)._ptr,
@@ -8530,10 +8577,10 @@ def hipsparseCcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
 def hipsparseZcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal, object csrSortedRowPtr, object csrSortedColInd, object cscSortedVal, object cscSortedRowInd, object cscSortedColPtr, object copyValues, object idxBase):
     """
     """
-    if not isinstance(copyValues,hipsparseAction_t):
-        raise TypeError("argument 'copyValues' must be of type 'hipsparseAction_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(copyValues,_hipsparseAction_t__Base):
+        raise TypeError("argument 'copyValues' must be of type '_hipsparseAction_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZcsr2csc__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2csc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
         double2.from_pyobj(csrSortedVal)._ptr,
@@ -8545,7 +8592,11 @@ def hipsparseZcsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
     return (_hipsparseZcsr2csc__retval,)
 
 
-class hipsparseCsr2CscAlg_t(hip.hipify.IntEnum):
+class _hipsparseCsr2CscAlg_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseCsr2CscAlg_t(_hipsparseCsr2CscAlg_t__Base):
     HIPSPARSE_CSR2CSC_ALG1 = chipsparse.HIPSPARSE_CSR2CSC_ALG1
     HIPSPARSE_CSR2CSC_ALG2 = chipsparse.HIPSPARSE_CSR2CSC_ALG2
     @staticmethod
@@ -8571,14 +8622,14 @@ def hipsparseCsr2cscEx2_bufferSize(object handle, int m, int n, int nnz, object 
     This function is non blocking and executed asynchronously with respect to the host.
     It may return before the actual computation has finished.
     """
-    if not isinstance(valType,hipDataType):
-        raise TypeError("argument 'valType' must be of type 'hipDataType'")                    
-    if not isinstance(copyValues,hipsparseAction_t):
-        raise TypeError("argument 'copyValues' must be of type 'hipsparseAction_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")                    
-    if not isinstance(alg,hipsparseCsr2CscAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseCsr2CscAlg_t'")
+    if not isinstance(valType,_hipDataType__Base):
+        raise TypeError("argument 'valType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(copyValues,_hipsparseAction_t__Base):
+        raise TypeError("argument 'copyValues' must be of type '_hipsparseAction_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")                    
+    if not isinstance(alg,_hipsparseCsr2CscAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseCsr2CscAlg_t__Base'")
     _hipsparseCsr2cscEx2_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCsr2cscEx2_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
         <const void *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
@@ -8606,14 +8657,14 @@ def hipsparseCsr2cscEx2(object handle, int m, int n, int nnz, object csrVal, obj
     This function is non blocking and executed asynchronously with respect to the host.
     It may return before the actual computation has finished.
     """
-    if not isinstance(valType,hipDataType):
-        raise TypeError("argument 'valType' must be of type 'hipDataType'")                    
-    if not isinstance(copyValues,hipsparseAction_t):
-        raise TypeError("argument 'copyValues' must be of type 'hipsparseAction_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")                    
-    if not isinstance(alg,hipsparseCsr2CscAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseCsr2CscAlg_t'")
+    if not isinstance(valType,_hipDataType__Base):
+        raise TypeError("argument 'valType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(copyValues,_hipsparseAction_t__Base):
+        raise TypeError("argument 'copyValues' must be of type '_hipsparseAction_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")                    
+    if not isinstance(alg,_hipsparseCsr2CscAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseCsr2CscAlg_t__Base'")
     _hipsparseCsr2cscEx2__retval = hipsparseStatus_t(chipsparse.hipsparseCsr2cscEx2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
         <const void *>hip._util.types.DataHandle.from_pyobj(csrVal)._ptr,
@@ -8641,8 +8692,8 @@ def hipsparseScsr2hyb(object handle, int m, int n, object descrA, object csrSort
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(partitionType,hipsparseHybPartition_t):
-        raise TypeError("argument 'partitionType' must be of type 'hipsparseHybPartition_t'")
+    if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
+        raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
     _hipsparseScsr2hyb__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2hyb(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -8657,8 +8708,8 @@ def hipsparseScsr2hyb(object handle, int m, int n, object descrA, object csrSort
 def hipsparseDcsr2hyb(object handle, int m, int n, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object hybA, int userEllWidth, object partitionType):
     """
     """
-    if not isinstance(partitionType,hipsparseHybPartition_t):
-        raise TypeError("argument 'partitionType' must be of type 'hipsparseHybPartition_t'")
+    if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
+        raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
     _hipsparseDcsr2hyb__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2hyb(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -8673,8 +8724,8 @@ def hipsparseDcsr2hyb(object handle, int m, int n, object descrA, object csrSort
 def hipsparseCcsr2hyb(object handle, int m, int n, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object hybA, int userEllWidth, object partitionType):
     """
     """
-    if not isinstance(partitionType,hipsparseHybPartition_t):
-        raise TypeError("argument 'partitionType' must be of type 'hipsparseHybPartition_t'")
+    if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
+        raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
     _hipsparseCcsr2hyb__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2hyb(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -8689,8 +8740,8 @@ def hipsparseCcsr2hyb(object handle, int m, int n, object descrA, object csrSort
 def hipsparseZcsr2hyb(object handle, int m, int n, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object hybA, int userEllWidth, object partitionType):
     """
     """
-    if not isinstance(partitionType,hipsparseHybPartition_t):
-        raise TypeError("argument 'partitionType' must be of type 'hipsparseHybPartition_t'")
+    if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
+        raise TypeError("argument 'partitionType' must be of type '_hipsparseHybPartition_t__Base'")
     _hipsparseZcsr2hyb__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2hyb(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -8777,10 +8828,10 @@ def hipsparseSgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(copy_values,hipsparseAction_t):
-        raise TypeError("argument 'copy_values' must be of type 'hipsparseAction_t'")                    
-    if not isinstance(idx_base,hipsparseIndexBase_t):
-        raise TypeError("argument 'idx_base' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(copy_values,_hipsparseAction_t__Base):
+        raise TypeError("argument 'copy_values' must be of type '_hipsparseAction_t__Base'")                    
+    if not isinstance(idx_base,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idx_base' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseSgebsr2gebsc__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2gebsc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
         <const float *>hip._util.types.DataHandle.from_pyobj(bsr_val)._ptr,
@@ -8797,10 +8848,10 @@ def hipsparseSgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 def hipsparseDgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object bsc_val, object bsc_row_ind, object bsc_col_ptr, object copy_values, object idx_base, object temp_buffer):
     """
     """
-    if not isinstance(copy_values,hipsparseAction_t):
-        raise TypeError("argument 'copy_values' must be of type 'hipsparseAction_t'")                    
-    if not isinstance(idx_base,hipsparseIndexBase_t):
-        raise TypeError("argument 'idx_base' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(copy_values,_hipsparseAction_t__Base):
+        raise TypeError("argument 'copy_values' must be of type '_hipsparseAction_t__Base'")                    
+    if not isinstance(idx_base,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idx_base' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseDgebsr2gebsc__retval = hipsparseStatus_t(chipsparse.hipsparseDgebsr2gebsc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
         <const double *>hip._util.types.DataHandle.from_pyobj(bsr_val)._ptr,
@@ -8817,10 +8868,10 @@ def hipsparseDgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 def hipsparseCgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object bsc_val, object bsc_row_ind, object bsc_col_ptr, object copy_values, object idx_base, object temp_buffer):
     """
     """
-    if not isinstance(copy_values,hipsparseAction_t):
-        raise TypeError("argument 'copy_values' must be of type 'hipsparseAction_t'")                    
-    if not isinstance(idx_base,hipsparseIndexBase_t):
-        raise TypeError("argument 'idx_base' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(copy_values,_hipsparseAction_t__Base):
+        raise TypeError("argument 'copy_values' must be of type '_hipsparseAction_t__Base'")                    
+    if not isinstance(idx_base,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idx_base' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseCgebsr2gebsc__retval = hipsparseStatus_t(chipsparse.hipsparseCgebsr2gebsc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
         float2.from_pyobj(bsr_val)._ptr,
@@ -8837,10 +8888,10 @@ def hipsparseCgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 def hipsparseZgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object bsc_val, object bsc_row_ind, object bsc_col_ptr, object copy_values, object idx_base, object temp_buffer):
     """
     """
-    if not isinstance(copy_values,hipsparseAction_t):
-        raise TypeError("argument 'copy_values' must be of type 'hipsparseAction_t'")                    
-    if not isinstance(idx_base,hipsparseIndexBase_t):
-        raise TypeError("argument 'idx_base' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(copy_values,_hipsparseAction_t__Base):
+        raise TypeError("argument 'copy_values' must be of type '_hipsparseAction_t__Base'")                    
+    if not isinstance(idx_base,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idx_base' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseZgebsr2gebsc__retval = hipsparseStatus_t(chipsparse.hipsparseZgebsr2gebsc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mb,nb,nnzb,
         double2.from_pyobj(bsr_val)._ptr,
@@ -8867,8 +8918,8 @@ def hipsparseScsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
     The routine does support asynchronous execution if the pointer mode is set to device.
     @{*/
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseScsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2gebsr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
@@ -8883,8 +8934,8 @@ def hipsparseScsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 def hipsparseDcsr2gebsr_bufferSize(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     """
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDcsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2gebsr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
@@ -8899,8 +8950,8 @@ def hipsparseDcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 def hipsparseCcsr2gebsr_bufferSize(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     """
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCcsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2gebsr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
@@ -8915,8 +8966,8 @@ def hipsparseCcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 def hipsparseZcsr2gebsr_bufferSize(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     """
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZcsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2gebsr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
@@ -8934,8 +8985,8 @@ def hipsparseXcsr2gebsrNnz(object handle, object dir, int m, int n, object csr_d
     This function computes the number of nonzero block columns per row and the total number of nonzero blocks in a sparse
     GEneral BSR matrix given a sparse CSR matrix as input.
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseXcsr2gebsrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseXcsr2gebsrNnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
@@ -8960,8 +9011,8 @@ def hipsparseScsr2gebsr(object handle, object dir, int m, int n, object csr_desc
     \p csr2gebsr_nnz() which also fills in \p bsr_row_ptr.
     @{*/
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseScsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2gebsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
@@ -8980,8 +9031,8 @@ def hipsparseScsr2gebsr(object handle, object dir, int m, int n, object csr_desc
 def hipsparseDcsr2gebsr(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer):
     """
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDcsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2gebsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
@@ -9000,8 +9051,8 @@ def hipsparseDcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
 def hipsparseCcsr2gebsr(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer):
     """
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCcsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2gebsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
@@ -9020,8 +9071,8 @@ def hipsparseCcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
 def hipsparseZcsr2gebsr(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer):
     """
     """
-    if not isinstance(dir,hipsparseDirection_t):
-        raise TypeError("argument 'dir' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dir,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZcsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2gebsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dir.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(csr_descr)._ptr,
@@ -9050,8 +9101,8 @@ def hipsparseScsr2bsr(object handle, object dirA, int m, int n, object descrA, o
     \p block_dim>16
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseScsr2bsr__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2bsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9069,8 +9120,8 @@ def hipsparseScsr2bsr(object handle, object dirA, int m, int n, object descrA, o
 def hipsparseDcsr2bsr(object handle, object dirA, int m, int n, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDcsr2bsr__retval = hipsparseStatus_t(chipsparse.hipsparseDcsr2bsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9088,8 +9139,8 @@ def hipsparseDcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
 def hipsparseCcsr2bsr(object handle, object dirA, int m, int n, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCcsr2bsr__retval = hipsparseStatus_t(chipsparse.hipsparseCcsr2bsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9107,8 +9158,8 @@ def hipsparseCcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
 def hipsparseZcsr2bsr(object handle, object dirA, int m, int n, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZcsr2bsr__retval = hipsparseStatus_t(chipsparse.hipsparseZcsr2bsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,m,n,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9137,8 +9188,8 @@ def hipsparseSbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSbsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSbsr2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9156,8 +9207,8 @@ def hipsparseSbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 def hipsparseDbsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDbsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDbsr2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9175,8 +9226,8 @@ def hipsparseDbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 def hipsparseCbsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCbsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseCbsr2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9194,8 +9245,8 @@ def hipsparseCbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 def hipsparseZbsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZbsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseZbsr2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9224,8 +9275,8 @@ def hipsparseSgebsr2csr(object handle, object dirA, int mb, int nb, object descr
     It may return before the actual computation has finished.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSgebsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9243,8 +9294,8 @@ def hipsparseSgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 def hipsparseDgebsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDim, int colBlockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDgebsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseDgebsr2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9262,8 +9313,8 @@ def hipsparseDgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 def hipsparseCgebsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDim, int colBlockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCgebsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseCgebsr2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9281,8 +9332,8 @@ def hipsparseCgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 def hipsparseZgebsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDim, int colBlockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZgebsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseZgebsr2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -9813,8 +9864,8 @@ def hipsparseXcoo2csr(object handle, object cooRowInd, int nnz, int m, object cs
     This function is non blocking and executed asynchronously with respect to the host.
     It may return before the actual computation has finished.
     """
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")
     _hipsparseXcoo2csr__retval = hipsparseStatus_t(chipsparse.hipsparseXcoo2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <const int *>hip._util.types.DataHandle.from_pyobj(cooRowInd)._ptr,nnz,m,
@@ -10014,8 +10065,8 @@ def hipsparseSgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
     The temporary storage buffer must be allocated by the user.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSgebsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2gebsr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -10030,8 +10081,8 @@ def hipsparseSgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 def hipsparseDgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDgebsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDgebsr2gebsr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -10046,8 +10097,8 @@ def hipsparseDgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 def hipsparseCgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCgebsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseCgebsr2gebsr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -10062,8 +10113,8 @@ def hipsparseCgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 def hipsparseZgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZgebsr2gebsr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseZgebsr2gebsr_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -10083,8 +10134,8 @@ def hipsparseXgebsr2gebsrNnz(object handle, object dirA, int mb, int nb, int nnz
     \details
     The routine does support asynchronous execution.
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseXgebsr2gebsrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseXgebsr2gebsrNnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -10112,8 +10163,8 @@ def hipsparseSgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
     hipsparseXgebsr2gebsr() to complete the conversion.
     @{*/
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseSgebsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2gebsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -10132,8 +10183,8 @@ def hipsparseSgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 def hipsparseDgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC, int rowBlockDimC, int colBlockDimC, object buffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseDgebsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseDgebsr2gebsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -10152,8 +10203,8 @@ def hipsparseDgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 def hipsparseCgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC, int rowBlockDimC, int colBlockDimC, object buffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseCgebsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseCgebsr2gebsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -10172,8 +10223,8 @@ def hipsparseCgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 def hipsparseZgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC, int rowBlockDimC, int colBlockDimC, object buffer):
     """
     """
-    if not isinstance(dirA,hipsparseDirection_t):
-        raise TypeError("argument 'dirA' must be of type 'hipsparseDirection_t'")
+    if not isinstance(dirA,_hipsparseDirection_t__Base):
+        raise TypeError("argument 'dirA' must be of type '_hipsparseDirection_t__Base'")
     _hipsparseZgebsr2gebsr__retval = hipsparseStatus_t(chipsparse.hipsparseZgebsr2gebsr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,dirA.value,mb,nb,nnzb,
         <void *const>hip._util.types.DataHandle.from_pyobj(descrA)._ptr,
@@ -10740,7 +10791,11 @@ cdef class hipsparseSpSMDescr:
 
 hipsparseSpSMDescr_t = hipsparseSpSMDescr
 
-class hipsparseFormat_t(hip.hipify.IntEnum):
+class _hipsparseFormat_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseFormat_t(_hipsparseFormat_t__Base):
     HIPSPARSE_FORMAT_CSR = chipsparse.HIPSPARSE_FORMAT_CSR
     HIPSPARSE_FORMAT_CSC = chipsparse.HIPSPARSE_FORMAT_CSC
     HIPSPARSE_FORMAT_COO = chipsparse.HIPSPARSE_FORMAT_COO
@@ -10752,7 +10807,11 @@ class hipsparseFormat_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseOrder_t(hip.hipify.IntEnum):
+class _hipsparseOrder_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseOrder_t(_hipsparseOrder_t__Base):
     HIPSPARSE_ORDER_ROW = chipsparse.HIPSPARSE_ORDER_ROW
     HIPSPARSE_ORDER_COLUMN = chipsparse.HIPSPARSE_ORDER_COLUMN
     HIPSPARSE_ORDER_COL = chipsparse.HIPSPARSE_ORDER_COL
@@ -10762,7 +10821,11 @@ class hipsparseOrder_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseIndexType_t(hip.hipify.IntEnum):
+class _hipsparseIndexType_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseIndexType_t(_hipsparseIndexType_t__Base):
     HIPSPARSE_INDEX_16U = chipsparse.HIPSPARSE_INDEX_16U
     HIPSPARSE_INDEX_32I = chipsparse.HIPSPARSE_INDEX_32I
     HIPSPARSE_INDEX_64I = chipsparse.HIPSPARSE_INDEX_64I
@@ -10772,7 +10835,11 @@ class hipsparseIndexType_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpMVAlg_t(hip.hipify.IntEnum):
+class _hipsparseSpMVAlg_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseSpMVAlg_t(_hipsparseSpMVAlg_t__Base):
     HIPSPARSE_MV_ALG_DEFAULT = chipsparse.HIPSPARSE_MV_ALG_DEFAULT
     HIPSPARSE_COOMV_ALG = chipsparse.HIPSPARSE_COOMV_ALG
     HIPSPARSE_CSRMV_ALG1 = chipsparse.HIPSPARSE_CSRMV_ALG1
@@ -10788,7 +10855,11 @@ class hipsparseSpMVAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpMMAlg_t(hip.hipify.IntEnum):
+class _hipsparseSpMMAlg_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseSpMMAlg_t(_hipsparseSpMMAlg_t__Base):
     HIPSPARSE_MM_ALG_DEFAULT = chipsparse.HIPSPARSE_MM_ALG_DEFAULT
     HIPSPARSE_COOMM_ALG1 = chipsparse.HIPSPARSE_COOMM_ALG1
     HIPSPARSE_COOMM_ALG2 = chipsparse.HIPSPARSE_COOMM_ALG2
@@ -10809,7 +10880,11 @@ class hipsparseSpMMAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSparseToDenseAlg_t(hip.hipify.IntEnum):
+class _hipsparseSparseToDenseAlg_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseSparseToDenseAlg_t(_hipsparseSparseToDenseAlg_t__Base):
     HIPSPARSE_SPARSETODENSE_ALG_DEFAULT = chipsparse.HIPSPARSE_SPARSETODENSE_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -10817,7 +10892,11 @@ class hipsparseSparseToDenseAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseDenseToSparseAlg_t(hip.hipify.IntEnum):
+class _hipsparseDenseToSparseAlg_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseDenseToSparseAlg_t(_hipsparseDenseToSparseAlg_t__Base):
     HIPSPARSE_DENSETOSPARSE_ALG_DEFAULT = chipsparse.HIPSPARSE_DENSETOSPARSE_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -10825,7 +10904,11 @@ class hipsparseDenseToSparseAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSDDMMAlg_t(hip.hipify.IntEnum):
+class _hipsparseSDDMMAlg_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseSDDMMAlg_t(_hipsparseSDDMMAlg_t__Base):
     HIPSPARSE_SDDMM_ALG_DEFAULT = chipsparse.HIPSPARSE_SDDMM_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -10833,7 +10916,11 @@ class hipsparseSDDMMAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpSVAlg_t(hip.hipify.IntEnum):
+class _hipsparseSpSVAlg_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseSpSVAlg_t(_hipsparseSpSVAlg_t__Base):
     HIPSPARSE_SPSV_ALG_DEFAULT = chipsparse.HIPSPARSE_SPSV_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -10841,7 +10928,11 @@ class hipsparseSpSVAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpSMAlg_t(hip.hipify.IntEnum):
+class _hipsparseSpSMAlg_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseSpSMAlg_t(_hipsparseSpSMAlg_t__Base):
     HIPSPARSE_SPSM_ALG_DEFAULT = chipsparse.HIPSPARSE_SPSM_ALG_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -10849,7 +10940,11 @@ class hipsparseSpSMAlg_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpMatAttribute_t(hip.hipify.IntEnum):
+class _hipsparseSpMatAttribute_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseSpMatAttribute_t(_hipsparseSpMatAttribute_t__Base):
     HIPSPARSE_SPMAT_FILL_MODE = chipsparse.HIPSPARSE_SPMAT_FILL_MODE
     HIPSPARSE_SPMAT_DIAG_TYPE = chipsparse.HIPSPARSE_SPMAT_DIAG_TYPE
     @staticmethod
@@ -10858,7 +10953,11 @@ class hipsparseSpMatAttribute_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipsparseSpGEMMAlg_t(hip.hipify.IntEnum):
+class _hipsparseSpGEMMAlg_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipsparseSpGEMMAlg_t(_hipsparseSpGEMMAlg_t__Base):
     HIPSPARSE_SPGEMM_DEFAULT = chipsparse.HIPSPARSE_SPGEMM_DEFAULT
     HIPSPARSE_SPGEMM_CSR_ALG_NONDETERMINISTIC = chipsparse.HIPSPARSE_SPGEMM_CSR_ALG_NONDETERMINISTIC
     HIPSPARSE_SPGEMM_CSR_ALG_DETERMINISTIC = chipsparse.HIPSPARSE_SPGEMM_CSR_ALG_DETERMINISTIC
@@ -10872,12 +10971,12 @@ class hipsparseSpGEMMAlg_t(hip.hipify.IntEnum):
 def hipsparseCreateSpVec(object spVecDescr, long size, long nnz, object indices, object values, object idxType, object idxBase, object valueType):
     """
     """
-    if not isinstance(idxType,hipsparseIndexType_t):
-        raise TypeError("argument 'idxType' must be of type 'hipsparseIndexType_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")                    
-    if not isinstance(valueType,hipDataType):
-        raise TypeError("argument 'valueType' must be of type 'hipDataType'")
+    if not isinstance(idxType,_hipsparseIndexType_t__Base):
+        raise TypeError("argument 'idxType' must be of type '_hipsparseIndexType_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")                    
+    if not isinstance(valueType,_hipDataType__Base):
+        raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateSpVec__retval = hipsparseStatus_t(chipsparse.hipsparseCreateSpVec(
         <void **>hip._util.types.DataHandle.from_pyobj(spVecDescr)._ptr,size,nnz,
         <void *>hip._util.types.DataHandle.from_pyobj(indices)._ptr,
@@ -10944,12 +11043,12 @@ def hipsparseSpVecSetValues(object spVecDescr, object values):
 def hipsparseCreateCoo(object spMatDescr, long rows, long cols, long nnz, object cooRowInd, object cooColInd, object cooValues, object cooIdxType, object idxBase, object valueType):
     """
     """
-    if not isinstance(cooIdxType,hipsparseIndexType_t):
-        raise TypeError("argument 'cooIdxType' must be of type 'hipsparseIndexType_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")                    
-    if not isinstance(valueType,hipDataType):
-        raise TypeError("argument 'valueType' must be of type 'hipDataType'")
+    if not isinstance(cooIdxType,_hipsparseIndexType_t__Base):
+        raise TypeError("argument 'cooIdxType' must be of type '_hipsparseIndexType_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")                    
+    if not isinstance(valueType,_hipDataType__Base):
+        raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateCoo__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCoo(
         <void **>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
         <void *>hip._util.types.DataHandle.from_pyobj(cooRowInd)._ptr,
@@ -10962,12 +11061,12 @@ def hipsparseCreateCoo(object spMatDescr, long rows, long cols, long nnz, object
 def hipsparseCreateCooAoS(object spMatDescr, long rows, long cols, long nnz, object cooInd, object cooValues, object cooIdxType, object idxBase, object valueType):
     """
     """
-    if not isinstance(cooIdxType,hipsparseIndexType_t):
-        raise TypeError("argument 'cooIdxType' must be of type 'hipsparseIndexType_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")                    
-    if not isinstance(valueType,hipDataType):
-        raise TypeError("argument 'valueType' must be of type 'hipDataType'")
+    if not isinstance(cooIdxType,_hipsparseIndexType_t__Base):
+        raise TypeError("argument 'cooIdxType' must be of type '_hipsparseIndexType_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")                    
+    if not isinstance(valueType,_hipDataType__Base):
+        raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateCooAoS__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCooAoS(
         <void **>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
         <void *>hip._util.types.DataHandle.from_pyobj(cooInd)._ptr,
@@ -10979,14 +11078,14 @@ def hipsparseCreateCooAoS(object spMatDescr, long rows, long cols, long nnz, obj
 def hipsparseCreateCsr(object spMatDescr, long rows, long cols, long nnz, object csrRowOffsets, object csrColInd, object csrValues, object csrRowOffsetsType, object csrColIndType, object idxBase, object valueType):
     """
     """
-    if not isinstance(csrRowOffsetsType,hipsparseIndexType_t):
-        raise TypeError("argument 'csrRowOffsetsType' must be of type 'hipsparseIndexType_t'")                    
-    if not isinstance(csrColIndType,hipsparseIndexType_t):
-        raise TypeError("argument 'csrColIndType' must be of type 'hipsparseIndexType_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")                    
-    if not isinstance(valueType,hipDataType):
-        raise TypeError("argument 'valueType' must be of type 'hipDataType'")
+    if not isinstance(csrRowOffsetsType,_hipsparseIndexType_t__Base):
+        raise TypeError("argument 'csrRowOffsetsType' must be of type '_hipsparseIndexType_t__Base'")                    
+    if not isinstance(csrColIndType,_hipsparseIndexType_t__Base):
+        raise TypeError("argument 'csrColIndType' must be of type '_hipsparseIndexType_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")                    
+    if not isinstance(valueType,_hipDataType__Base):
+        raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateCsr__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCsr(
         <void **>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
         <void *>hip._util.types.DataHandle.from_pyobj(csrRowOffsets)._ptr,
@@ -10999,14 +11098,14 @@ def hipsparseCreateCsr(object spMatDescr, long rows, long cols, long nnz, object
 def hipsparseCreateCsc(object spMatDescr, long rows, long cols, long nnz, object cscColOffsets, object cscRowInd, object cscValues, object cscColOffsetsType, object cscRowIndType, object idxBase, object valueType):
     """
     """
-    if not isinstance(cscColOffsetsType,hipsparseIndexType_t):
-        raise TypeError("argument 'cscColOffsetsType' must be of type 'hipsparseIndexType_t'")                    
-    if not isinstance(cscRowIndType,hipsparseIndexType_t):
-        raise TypeError("argument 'cscRowIndType' must be of type 'hipsparseIndexType_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")                    
-    if not isinstance(valueType,hipDataType):
-        raise TypeError("argument 'valueType' must be of type 'hipDataType'")
+    if not isinstance(cscColOffsetsType,_hipsparseIndexType_t__Base):
+        raise TypeError("argument 'cscColOffsetsType' must be of type '_hipsparseIndexType_t__Base'")                    
+    if not isinstance(cscRowIndType,_hipsparseIndexType_t__Base):
+        raise TypeError("argument 'cscRowIndType' must be of type '_hipsparseIndexType_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")                    
+    if not isinstance(valueType,_hipDataType__Base):
+        raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateCsc__retval = hipsparseStatus_t(chipsparse.hipsparseCreateCsc(
         <void **>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,rows,cols,nnz,
         <void *>hip._util.types.DataHandle.from_pyobj(cscColOffsets)._ptr,
@@ -11019,12 +11118,12 @@ def hipsparseCreateCsc(object spMatDescr, long rows, long cols, long nnz, object
 def hipsparseCreateBlockedEll(object spMatDescr, long rows, long cols, long ellBlockSize, long ellCols, object ellColInd, object ellValue, object ellIdxType, object idxBase, object valueType):
     """
     """
-    if not isinstance(ellIdxType,hipsparseIndexType_t):
-        raise TypeError("argument 'ellIdxType' must be of type 'hipsparseIndexType_t'")                    
-    if not isinstance(idxBase,hipsparseIndexBase_t):
-        raise TypeError("argument 'idxBase' must be of type 'hipsparseIndexBase_t'")                    
-    if not isinstance(valueType,hipDataType):
-        raise TypeError("argument 'valueType' must be of type 'hipDataType'")
+    if not isinstance(ellIdxType,_hipsparseIndexType_t__Base):
+        raise TypeError("argument 'ellIdxType' must be of type '_hipsparseIndexType_t__Base'")                    
+    if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
+        raise TypeError("argument 'idxBase' must be of type '_hipsparseIndexBase_t__Base'")                    
+    if not isinstance(valueType,_hipDataType__Base):
+        raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateBlockedEll__retval = hipsparseStatus_t(chipsparse.hipsparseCreateBlockedEll(
         <void **>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,rows,cols,ellBlockSize,ellCols,
         <void *>hip._util.types.DataHandle.from_pyobj(ellColInd)._ptr,
@@ -11242,8 +11341,8 @@ def hipsparseCsrSetStridedBatch(object spMatDescr, int batchCount, long offsetsB
 def hipsparseSpMatGetAttribute(object spMatDescr, object attribute, object data, unsigned long dataSize):
     """
     """
-    if not isinstance(attribute,hipsparseSpMatAttribute_t):
-        raise TypeError("argument 'attribute' must be of type 'hipsparseSpMatAttribute_t'")
+    if not isinstance(attribute,_hipsparseSpMatAttribute_t__Base):
+        raise TypeError("argument 'attribute' must be of type '_hipsparseSpMatAttribute_t__Base'")
     _hipsparseSpMatGetAttribute__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatGetAttribute(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,attribute.value,
         <void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,dataSize))    # fully specified
@@ -11254,8 +11353,8 @@ def hipsparseSpMatGetAttribute(object spMatDescr, object attribute, object data,
 def hipsparseSpMatSetAttribute(object spMatDescr, object attribute, object data, unsigned long dataSize):
     """
     """
-    if not isinstance(attribute,hipsparseSpMatAttribute_t):
-        raise TypeError("argument 'attribute' must be of type 'hipsparseSpMatAttribute_t'")
+    if not isinstance(attribute,_hipsparseSpMatAttribute_t__Base):
+        raise TypeError("argument 'attribute' must be of type '_hipsparseSpMatAttribute_t__Base'")
     _hipsparseSpMatSetAttribute__retval = hipsparseStatus_t(chipsparse.hipsparseSpMatSetAttribute(
         <void *>hip._util.types.DataHandle.from_pyobj(spMatDescr)._ptr,attribute.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(data)._ptr,dataSize))    # fully specified
@@ -11266,8 +11365,8 @@ def hipsparseSpMatSetAttribute(object spMatDescr, object attribute, object data,
 def hipsparseCreateDnVec(object dnVecDescr, long size, object values, object valueType):
     """
     """
-    if not isinstance(valueType,hipDataType):
-        raise TypeError("argument 'valueType' must be of type 'hipDataType'")
+    if not isinstance(valueType,_hipDataType__Base):
+        raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")
     _hipsparseCreateDnVec__retval = hipsparseStatus_t(chipsparse.hipsparseCreateDnVec(
         <void **>hip._util.types.DataHandle.from_pyobj(dnVecDescr)._ptr,size,
         <void *>hip._util.types.DataHandle.from_pyobj(values)._ptr,valueType.value))    # fully specified
@@ -11319,10 +11418,10 @@ def hipsparseDnVecSetValues(object dnVecDescr, object values):
 def hipsparseCreateDnMat(object dnMatDescr, long rows, long cols, long ld, object values, object valueType, object order):
     """
     """
-    if not isinstance(valueType,hipDataType):
-        raise TypeError("argument 'valueType' must be of type 'hipDataType'")                    
-    if not isinstance(order,hipsparseOrder_t):
-        raise TypeError("argument 'order' must be of type 'hipsparseOrder_t'")
+    if not isinstance(valueType,_hipDataType__Base):
+        raise TypeError("argument 'valueType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(order,_hipsparseOrder_t__Base):
+        raise TypeError("argument 'order' must be of type '_hipsparseOrder_t__Base'")
     _hipsparseCreateDnMat__retval = hipsparseStatus_t(chipsparse.hipsparseCreateDnMat(
         <void **>hip._util.types.DataHandle.from_pyobj(dnMatDescr)._ptr,rows,cols,ld,
         <void *>hip._util.types.DataHandle.from_pyobj(values)._ptr,valueType.value,order.value))    # fully specified
@@ -11445,8 +11544,8 @@ def hipsparseRot(object handle, object c_coeff, object s_coeff, object vecX, obj
 def hipsparseSparseToDense_bufferSize(object handle, object matA, object matB, object alg, object bufferSize):
     """
     """
-    if not isinstance(alg,hipsparseSparseToDenseAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSparseToDenseAlg_t'")
+    if not isinstance(alg,_hipsparseSparseToDenseAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSparseToDenseAlg_t__Base'")
     _hipsparseSparseToDense_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSparseToDense_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
@@ -11459,8 +11558,8 @@ def hipsparseSparseToDense_bufferSize(object handle, object matA, object matB, o
 def hipsparseSparseToDense(object handle, object matA, object matB, object alg, object externalBuffer):
     """
     """
-    if not isinstance(alg,hipsparseSparseToDenseAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSparseToDenseAlg_t'")
+    if not isinstance(alg,_hipsparseSparseToDenseAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSparseToDenseAlg_t__Base'")
     _hipsparseSparseToDense__retval = hipsparseStatus_t(chipsparse.hipsparseSparseToDense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
@@ -11473,8 +11572,8 @@ def hipsparseSparseToDense(object handle, object matA, object matB, object alg, 
 def hipsparseDenseToSparse_bufferSize(object handle, object matA, object matB, object alg, object bufferSize):
     """
     """
-    if not isinstance(alg,hipsparseDenseToSparseAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseDenseToSparseAlg_t'")
+    if not isinstance(alg,_hipsparseDenseToSparseAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseDenseToSparseAlg_t__Base'")
     _hipsparseDenseToSparse_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseDenseToSparse_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
@@ -11487,8 +11586,8 @@ def hipsparseDenseToSparse_bufferSize(object handle, object matA, object matB, o
 def hipsparseDenseToSparse_analysis(object handle, object matA, object matB, object alg, object externalBuffer):
     """
     """
-    if not isinstance(alg,hipsparseDenseToSparseAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseDenseToSparseAlg_t'")
+    if not isinstance(alg,_hipsparseDenseToSparseAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseDenseToSparseAlg_t__Base'")
     _hipsparseDenseToSparse_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseDenseToSparse_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
@@ -11501,8 +11600,8 @@ def hipsparseDenseToSparse_analysis(object handle, object matA, object matB, obj
 def hipsparseDenseToSparse_convert(object handle, object matA, object matB, object alg, object externalBuffer):
     """
     """
-    if not isinstance(alg,hipsparseDenseToSparseAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseDenseToSparseAlg_t'")
+    if not isinstance(alg,_hipsparseDenseToSparseAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseDenseToSparseAlg_t__Base'")
     _hipsparseDenseToSparse_convert__retval = hipsparseStatus_t(chipsparse.hipsparseDenseToSparse_convert(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
         <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
@@ -11515,10 +11614,10 @@ def hipsparseDenseToSparse_convert(object handle, object matA, object matB, obje
 def hipsparseSpVV_bufferSize(object handle, object opX, object vecX, object vecY, object result, object computeType, object bufferSize):
     """
     """
-    if not isinstance(opX,hipsparseOperation_t):
-        raise TypeError("argument 'opX' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")
+    if not isinstance(opX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opX' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")
     _hipsparseSpVV_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpVV_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opX.value,
         <void *>hip._util.types.DataHandle.from_pyobj(vecX)._ptr,
@@ -11532,10 +11631,10 @@ def hipsparseSpVV_bufferSize(object handle, object opX, object vecX, object vecY
 def hipsparseSpVV(object handle, object opX, object vecX, object vecY, object result, object computeType, object externalBuffer):
     """
     """
-    if not isinstance(opX,hipsparseOperation_t):
-        raise TypeError("argument 'opX' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")
+    if not isinstance(opX,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opX' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")
     _hipsparseSpVV__retval = hipsparseStatus_t(chipsparse.hipsparseSpVV(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opX.value,
         <void *>hip._util.types.DataHandle.from_pyobj(vecX)._ptr,
@@ -11549,12 +11648,12 @@ def hipsparseSpVV(object handle, object opX, object vecX, object vecY, object re
 def hipsparseSpMV_bufferSize(object handle, object opA, object alpha, object matA, object vecX, object beta, object vecY, object computeType, object alg, object bufferSize):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpMVAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpMVAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpMVAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpMVAlg_t__Base'")
     _hipsparseSpMV_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpMV_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11570,12 +11669,12 @@ def hipsparseSpMV_bufferSize(object handle, object opA, object alpha, object mat
 def hipsparseSpMV_preprocess(object handle, object opA, object alpha, object matA, object vecX, object beta, object vecY, object computeType, object alg, object externalBuffer):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpMVAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpMVAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpMVAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpMVAlg_t__Base'")
     _hipsparseSpMV_preprocess__retval = hipsparseStatus_t(chipsparse.hipsparseSpMV_preprocess(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11591,12 +11690,12 @@ def hipsparseSpMV_preprocess(object handle, object opA, object alpha, object mat
 def hipsparseSpMV(object handle, object opA, object alpha, object matA, object vecX, object beta, object vecY, object computeType, object alg, object externalBuffer):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpMVAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpMVAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpMVAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpMVAlg_t__Base'")
     _hipsparseSpMV__retval = hipsparseStatus_t(chipsparse.hipsparseSpMV(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11612,14 +11711,14 @@ def hipsparseSpMV(object handle, object opA, object alpha, object matA, object v
 def hipsparseSpMM_bufferSize(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object bufferSize):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpMMAlg_t__Base'")
     _hipsparseSpMM_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpMM_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11635,14 +11734,14 @@ def hipsparseSpMM_bufferSize(object handle, object opA, object opB, object alpha
 def hipsparseSpMM_preprocess(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object externalBuffer):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpMMAlg_t__Base'")
     _hipsparseSpMM_preprocess__retval = hipsparseStatus_t(chipsparse.hipsparseSpMM_preprocess(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11658,14 +11757,14 @@ def hipsparseSpMM_preprocess(object handle, object opA, object opB, object alpha
 def hipsparseSpMM(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object externalBuffer):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpMMAlg_t__Base'")
     _hipsparseSpMM__retval = hipsparseStatus_t(chipsparse.hipsparseSpMM(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11699,14 +11798,14 @@ def hipsparseSpGEMM_destroyDescr(object descr):
 def hipsparseSpGEMM_workEstimation(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr, object bufferSize1, object externalBuffer1):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpGEMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpGEMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMM_workEstimation__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMM_workEstimation(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11724,14 +11823,14 @@ def hipsparseSpGEMM_workEstimation(object handle, object opA, object opB, object
 def hipsparseSpGEMM_compute(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr, object bufferSize2, object externalBuffer2):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpGEMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpGEMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMM_compute__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMM_compute(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11749,14 +11848,14 @@ def hipsparseSpGEMM_compute(object handle, object opA, object opB, object alpha,
 def hipsparseSpGEMM_copy(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpGEMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpGEMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMM_copy__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMM_copy(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11772,12 +11871,12 @@ def hipsparseSpGEMM_copy(object handle, object opA, object opB, object alpha, ob
 def hipsparseSpGEMMreuse_workEstimation(object handle, object opA, object opB, object matA, object matB, object matC, object alg, object spgemmDescr, object bufferSize1, object externalBuffer1):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(alg,hipsparseSpGEMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpGEMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMMreuse_workEstimation__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMMreuse_workEstimation(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
@@ -11793,12 +11892,12 @@ def hipsparseSpGEMMreuse_workEstimation(object handle, object opA, object opB, o
 def hipsparseSpGEMMreuse_nnz(object handle, object opA, object opB, object matA, object matB, object matC, object alg, object spgemmDescr, object bufferSize2, object externalBuffer2, object bufferSize3, object externalBuffer3, object bufferSize4, object externalBuffer4):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(alg,hipsparseSpGEMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpGEMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMMreuse_nnz__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMMreuse_nnz(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
@@ -11818,14 +11917,14 @@ def hipsparseSpGEMMreuse_nnz(object handle, object opA, object opB, object matA,
 def hipsparseSpGEMMreuse_compute(object handle, object opA, object opB, object alpha, object matA, object matB, object beta, object matC, object computeType, object alg, object spgemmDescr):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpGEMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpGEMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMMreuse_compute__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMMreuse_compute(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11841,12 +11940,12 @@ def hipsparseSpGEMMreuse_compute(object handle, object opA, object opB, object a
 def hipsparseSpGEMMreuse_copy(object handle, object opA, object opB, object matA, object matB, object matC, object alg, object spgemmDescr, object bufferSize5, object externalBuffer5):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(alg,hipsparseSpGEMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpGEMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(alg,_hipsparseSpGEMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpGEMMAlg_t__Base'")
     _hipsparseSpGEMMreuse_copy__retval = hipsparseStatus_t(chipsparse.hipsparseSpGEMMreuse_copy(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <void *>hip._util.types.DataHandle.from_pyobj(matA)._ptr,
@@ -11862,14 +11961,14 @@ def hipsparseSpGEMMreuse_copy(object handle, object opA, object opB, object matA
 def hipsparseSDDMM(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object tempBuffer):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSDDMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSDDMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSDDMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSDDMMAlg_t__Base'")
     _hipsparseSDDMM__retval = hipsparseStatus_t(chipsparse.hipsparseSDDMM(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11885,14 +11984,14 @@ def hipsparseSDDMM(object handle, object opA, object opB, object alpha, object A
 def hipsparseSDDMM_bufferSize(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object bufferSize):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSDDMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSDDMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSDDMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSDDMMAlg_t__Base'")
     _hipsparseSDDMM_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSDDMM_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11908,14 +12007,14 @@ def hipsparseSDDMM_bufferSize(object handle, object opA, object opB, object alph
 def hipsparseSDDMM_preprocess(object handle, object opA, object opB, object alpha, object A, object B, object beta, object C, object computeType, object alg, object tempBuffer):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSDDMMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSDDMMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSDDMMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSDDMMAlg_t__Base'")
     _hipsparseSDDMM_preprocess__retval = hipsparseStatus_t(chipsparse.hipsparseSDDMM_preprocess(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11949,12 +12048,12 @@ def hipsparseSpSV_destroyDescr(object descr):
 def hipsparseSpSV_bufferSize(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object bufferSize):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpSVAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpSVAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpSVAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpSVAlg_t__Base'")
     _hipsparseSpSV_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpSV_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11970,12 +12069,12 @@ def hipsparseSpSV_bufferSize(object handle, object opA, object alpha, object mat
 def hipsparseSpSV_analysis(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object externalBuffer):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpSVAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpSVAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpSVAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpSVAlg_t__Base'")
     _hipsparseSpSV_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSpSV_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11991,12 +12090,12 @@ def hipsparseSpSV_analysis(object handle, object opA, object alpha, object matA,
 def hipsparseSpSV_solve(object handle, object opA, object alpha, object matA, object x, object y, object computeType, object alg, object spsvDescr, object externalBuffer):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpSVAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpSVAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpSVAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpSVAlg_t__Base'")
     _hipsparseSpSV_solve__retval = hipsparseStatus_t(chipsparse.hipsparseSpSV_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12030,14 +12129,14 @@ def hipsparseSpSM_destroyDescr(object descr):
 def hipsparseSpSM_bufferSize(object handle, object opA, object opB, object alpha, object matA, object matB, object matC, object computeType, object alg, object spsmDescr, object bufferSize):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpSMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpSMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpSMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpSMAlg_t__Base'")
     _hipsparseSpSM_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpSM_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12053,14 +12152,14 @@ def hipsparseSpSM_bufferSize(object handle, object opA, object opB, object alpha
 def hipsparseSpSM_analysis(object handle, object opA, object opB, object alpha, object matA, object matB, object matC, object computeType, object alg, object spsmDescr, object externalBuffer):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpSMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpSMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpSMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpSMAlg_t__Base'")
     _hipsparseSpSM_analysis__retval = hipsparseStatus_t(chipsparse.hipsparseSpSM_analysis(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12076,14 +12175,14 @@ def hipsparseSpSM_analysis(object handle, object opA, object opB, object alpha, 
 def hipsparseSpSM_solve(object handle, object opA, object opB, object alpha, object matA, object matB, object matC, object computeType, object alg, object spsmDescr, object externalBuffer):
     """
     """
-    if not isinstance(opA,hipsparseOperation_t):
-        raise TypeError("argument 'opA' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(opB,hipsparseOperation_t):
-        raise TypeError("argument 'opB' must be of type 'hipsparseOperation_t'")                    
-    if not isinstance(computeType,hipDataType):
-        raise TypeError("argument 'computeType' must be of type 'hipDataType'")                    
-    if not isinstance(alg,hipsparseSpSMAlg_t):
-        raise TypeError("argument 'alg' must be of type 'hipsparseSpSMAlg_t'")
+    if not isinstance(opA,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opA' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(opB,_hipsparseOperation_t__Base):
+        raise TypeError("argument 'opB' must be of type '_hipsparseOperation_t__Base'")                    
+    if not isinstance(computeType,_hipDataType__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipDataType__Base'")                    
+    if not isinstance(alg,_hipsparseSpSMAlg_t__Base):
+        raise TypeError("argument 'alg' must be of type '_hipsparseSpSMAlg_t__Base'")
     _hipsparseSpSM_solve__retval = hipsparseStatus_t(chipsparse.hipsparseSpSM_solve(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,opA.value,opB.value,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,

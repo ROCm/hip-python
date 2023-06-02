@@ -2,7 +2,6 @@
 import cython
 import ctypes
 import enum
-import hip.hipify
 hipblasVersionMajor = chipblas.hipblasVersionMajor
 
 hipblaseVersionMinor = chipblas.hipblaseVersionMinor
@@ -491,7 +490,11 @@ cdef class hipblasDoubleComplex:
         raise ValueError("'item' type must be 'int'")
 
 
-class hipblasStatus_t(hip.hipify.IntEnum):
+class _hipblasStatus_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipblasStatus_t(_hipblasStatus_t__Base):
     HIPBLAS_STATUS_SUCCESS = chipblas.HIPBLAS_STATUS_SUCCESS
     HIPBLAS_STATUS_NOT_INITIALIZED = chipblas.HIPBLAS_STATUS_NOT_INITIALIZED
     HIPBLAS_STATUS_ALLOC_FAILED = chipblas.HIPBLAS_STATUS_ALLOC_FAILED
@@ -510,7 +513,11 @@ class hipblasStatus_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasOperation_t(hip.hipify.IntEnum):
+class _hipblasOperation_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipblasOperation_t(_hipblasOperation_t__Base):
     HIPBLAS_OP_N = chipblas.HIPBLAS_OP_N
     HIPBLAS_OP_T = chipblas.HIPBLAS_OP_T
     HIPBLAS_OP_C = chipblas.HIPBLAS_OP_C
@@ -520,7 +527,11 @@ class hipblasOperation_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasPointerMode_t(hip.hipify.IntEnum):
+class _hipblasPointerMode_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipblasPointerMode_t(_hipblasPointerMode_t__Base):
     HIPBLAS_POINTER_MODE_HOST = chipblas.HIPBLAS_POINTER_MODE_HOST
     HIPBLAS_POINTER_MODE_DEVICE = chipblas.HIPBLAS_POINTER_MODE_DEVICE
     @staticmethod
@@ -529,7 +540,11 @@ class hipblasPointerMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasFillMode_t(hip.hipify.IntEnum):
+class _hipblasFillMode_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipblasFillMode_t(_hipblasFillMode_t__Base):
     HIPBLAS_FILL_MODE_UPPER = chipblas.HIPBLAS_FILL_MODE_UPPER
     HIPBLAS_FILL_MODE_LOWER = chipblas.HIPBLAS_FILL_MODE_LOWER
     HIPBLAS_FILL_MODE_FULL = chipblas.HIPBLAS_FILL_MODE_FULL
@@ -539,7 +554,11 @@ class hipblasFillMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasDiagType_t(hip.hipify.IntEnum):
+class _hipblasDiagType_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipblasDiagType_t(_hipblasDiagType_t__Base):
     HIPBLAS_DIAG_NON_UNIT = chipblas.HIPBLAS_DIAG_NON_UNIT
     HIPBLAS_DIAG_UNIT = chipblas.HIPBLAS_DIAG_UNIT
     @staticmethod
@@ -548,7 +567,11 @@ class hipblasDiagType_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasSideMode_t(hip.hipify.IntEnum):
+class _hipblasSideMode_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipblasSideMode_t(_hipblasSideMode_t__Base):
     HIPBLAS_SIDE_LEFT = chipblas.HIPBLAS_SIDE_LEFT
     HIPBLAS_SIDE_RIGHT = chipblas.HIPBLAS_SIDE_RIGHT
     HIPBLAS_SIDE_BOTH = chipblas.HIPBLAS_SIDE_BOTH
@@ -558,7 +581,11 @@ class hipblasSideMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasDatatype_t(hip.hipify.IntEnum):
+class _hipblasDatatype_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipblasDatatype_t(_hipblasDatatype_t__Base):
     HIPBLAS_R_16F = chipblas.HIPBLAS_R_16F
     HIPBLAS_R_32F = chipblas.HIPBLAS_R_32F
     HIPBLAS_R_64F = chipblas.HIPBLAS_R_64F
@@ -581,7 +608,11 @@ class hipblasDatatype_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasGemmAlgo_t(hip.hipify.IntEnum):
+class _hipblasGemmAlgo_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipblasGemmAlgo_t(_hipblasGemmAlgo_t__Base):
     HIPBLAS_GEMM_DEFAULT = chipblas.HIPBLAS_GEMM_DEFAULT
     @staticmethod
     def ctypes_type():
@@ -589,7 +620,11 @@ class hipblasGemmAlgo_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasAtomicsMode_t(hip.hipify.IntEnum):
+class _hipblasAtomicsMode_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipblasAtomicsMode_t(_hipblasAtomicsMode_t__Base):
     HIPBLAS_ATOMICS_NOT_ALLOWED = chipblas.HIPBLAS_ATOMICS_NOT_ALLOWED
     HIPBLAS_ATOMICS_ALLOWED = chipblas.HIPBLAS_ATOMICS_ALLOWED
     @staticmethod
@@ -598,7 +633,11 @@ class hipblasAtomicsMode_t(hip.hipify.IntEnum):
         return ctypes.c_uint 
 
 
-class hipblasInt8Datatype_t(hip.hipify.IntEnum):
+class _hipblasInt8Datatype_t__Base(enum.IntEnum):
+    """Empty enum base class that allows subclassing.
+    """
+    pass
+class hipblasInt8Datatype_t(_hipblasInt8Datatype_t__Base):
     HIPBLAS_INT8_DATATYPE_DEFAULT = chipblas.HIPBLAS_INT8_DATATYPE_DEFAULT
     HIPBLAS_INT8_DATATYPE_INT8 = chipblas.HIPBLAS_INT8_DATATYPE_INT8
     HIPBLAS_INT8_DATATYPE_PACK_INT8x4 = chipblas.HIPBLAS_INT8_DATATYPE_PACK_INT8x4
@@ -651,8 +690,8 @@ def hipblasGetStream(object handle, object streamId):
 def hipblasSetPointerMode(object handle, object mode):
     """! \brief Set hipblas pointer mode */
     """
-    if not isinstance(mode,hipblasPointerMode_t):
-        raise TypeError("argument 'mode' must be of type 'hipblasPointerMode_t'")
+    if not isinstance(mode,_hipblasPointerMode_t__Base):
+        raise TypeError("argument 'mode' must be of type '_hipblasPointerMode_t__Base'")
     _hipblasSetPointerMode__retval = hipblasStatus_t(chipblas.hipblasSetPointerMode(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,mode.value))    # fully specified
     return (_hipblasSetPointerMode__retval,)
@@ -672,8 +711,8 @@ def hipblasGetPointerMode(object handle, object mode):
 def hipblasSetInt8Datatype(object handle, object int8Type):
     """! \brief Set hipblas int8 Datatype */
     """
-    if not isinstance(int8Type,hipblasInt8Datatype_t):
-        raise TypeError("argument 'int8Type' must be of type 'hipblasInt8Datatype_t'")
+    if not isinstance(int8Type,_hipblasInt8Datatype_t__Base):
+        raise TypeError("argument 'int8Type' must be of type '_hipblasInt8Datatype_t__Base'")
     _hipblasSetInt8Datatype__retval = hipblasStatus_t(chipblas.hipblasSetInt8Datatype(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,int8Type.value))    # fully specified
     return (_hipblasSetInt8Datatype__retval,)
@@ -937,8 +976,8 @@ def hipblasGetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
 def hipblasSetAtomicsMode(object handle, object atomics_mode):
     """! \brief Set hipblasSetAtomicsMode*/
     """
-    if not isinstance(atomics_mode,hipblasAtomicsMode_t):
-        raise TypeError("argument 'atomics_mode' must be of type 'hipblasAtomicsMode_t'")
+    if not isinstance(atomics_mode,_hipblasAtomicsMode_t__Base):
+        raise TypeError("argument 'atomics_mode' must be of type '_hipblasAtomicsMode_t__Base'")
     _hipblasSetAtomicsMode__retval = hipblasStatus_t(chipblas.hipblasSetAtomicsMode(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,atomics_mode.value))    # fully specified
     return (_hipblasSetAtomicsMode__retval,)
@@ -4290,8 +4329,8 @@ def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
         incy      [int]
                   specifies the increment for the elements of y.
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgbmv__retval = hipblasStatus_t(chipblas.hipblasSgbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4306,8 +4345,8 @@ def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
 def hipblasDgbmv(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgbmv__retval = hipblasStatus_t(chipblas.hipblasDgbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4322,8 +4361,8 @@ def hipblasDgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
 def hipblasCgbmv(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgbmv__retval = hipblasStatus_t(chipblas.hipblasCgbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -4338,8 +4377,8 @@ def hipblasCgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
 def hipblasZgbmv(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgbmv__retval = hipblasStatus_t(chipblas.hipblasZgbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -4426,8 +4465,8 @@ def hipblasSgbmvBatched(object handle, object trans, int m, int n, int kl, int k
         batchCount [int]
                     specifies the number of instances in the batch.
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgbmvBatched__retval = hipblasStatus_t(chipblas.hipblasSgbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4442,8 +4481,8 @@ def hipblasSgbmvBatched(object handle, object trans, int m, int n, int kl, int k
 def hipblasDgbmvBatched(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgbmvBatched__retval = hipblasStatus_t(chipblas.hipblasDgbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4458,8 +4497,8 @@ def hipblasDgbmvBatched(object handle, object trans, int m, int n, int kl, int k
 def hipblasCgbmvBatched(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgbmvBatched__retval = hipblasStatus_t(chipblas.hipblasCgbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -4474,8 +4513,8 @@ def hipblasCgbmvBatched(object handle, object trans, int m, int n, int kl, int k
 def hipblasZgbmvBatched(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgbmvBatched__retval = hipblasStatus_t(chipblas.hipblasZgbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -4571,8 +4610,8 @@ def hipblasSgbmvStridedBatched(object handle, object trans, int m, int n, int kl
         batchCount [int]
                     specifies the number of instances in the batch.
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4587,8 +4626,8 @@ def hipblasSgbmvStridedBatched(object handle, object trans, int m, int n, int kl
 def hipblasDgbmvStridedBatched(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4603,8 +4642,8 @@ def hipblasDgbmvStridedBatched(object handle, object trans, int m, int n, int kl
 def hipblasCgbmvStridedBatched(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -4619,8 +4658,8 @@ def hipblasCgbmvStridedBatched(object handle, object trans, int m, int n, int kl
 def hipblasZgbmvStridedBatched(object handle, object trans, int m, int n, int kl, int ku, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,kl,ku,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -4681,8 +4720,8 @@ def hipblasSgemv(object handle, object trans, int m, int n, object alpha, object
         incy      [int]
                   specifies the increment for the elements of y.
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemv__retval = hipblasStatus_t(chipblas.hipblasSgemv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4697,8 +4736,8 @@ def hipblasSgemv(object handle, object trans, int m, int n, object alpha, object
 def hipblasDgemv(object handle, object trans, int m, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemv__retval = hipblasStatus_t(chipblas.hipblasDgemv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4713,8 +4752,8 @@ def hipblasDgemv(object handle, object trans, int m, int n, object alpha, object
 def hipblasCgemv(object handle, object trans, int m, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemv__retval = hipblasStatus_t(chipblas.hipblasCgemv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -4729,8 +4768,8 @@ def hipblasCgemv(object handle, object trans, int m, int n, object alpha, object
 def hipblasZgemv(object handle, object trans, int m, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemv__retval = hipblasStatus_t(chipblas.hipblasZgemv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -4795,8 +4834,8 @@ def hipblasSgemvBatched(object handle, object trans, int m, int n, object alpha,
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemvBatched__retval = hipblasStatus_t(chipblas.hipblasSgemvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4811,8 +4850,8 @@ def hipblasSgemvBatched(object handle, object trans, int m, int n, object alpha,
 def hipblasDgemvBatched(object handle, object trans, int m, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemvBatched__retval = hipblasStatus_t(chipblas.hipblasDgemvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4827,8 +4866,8 @@ def hipblasDgemvBatched(object handle, object trans, int m, int n, object alpha,
 def hipblasCgemvBatched(object handle, object trans, int m, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemvBatched__retval = hipblasStatus_t(chipblas.hipblasCgemvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -4843,8 +4882,8 @@ def hipblasCgemvBatched(object handle, object trans, int m, int n, object alpha,
 def hipblasZgemvBatched(object handle, object trans, int m, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemvBatched__retval = hipblasStatus_t(chipblas.hipblasZgemvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -4924,8 +4963,8 @@ def hipblasSgemvStridedBatched(object handle, object transA, int m, int n, objec
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgemvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4940,8 +4979,8 @@ def hipblasSgemvStridedBatched(object handle, object transA, int m, int n, objec
 def hipblasDgemvStridedBatched(object handle, object transA, int m, int n, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgemvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -4956,8 +4995,8 @@ def hipblasDgemvStridedBatched(object handle, object transA, int m, int n, objec
 def hipblasCgemvStridedBatched(object handle, object transA, int m, int n, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgemvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -4972,8 +5011,8 @@ def hipblasCgemvStridedBatched(object handle, object transA, int m, int n, objec
 def hipblasZgemvStridedBatched(object handle, object transA, int m, int n, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgemvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -5441,8 +5480,8 @@ def hipblasChbmv(object handle, object uplo, int n, int k, object alpha, object 
         incy      [int]
                   specifies the increment for the elements of y.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChbmv__retval = hipblasStatus_t(chipblas.hipblasChbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -5457,8 +5496,8 @@ def hipblasChbmv(object handle, object uplo, int n, int k, object alpha, object 
 def hipblasZhbmv(object handle, object uplo, int n, int k, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhbmv__retval = hipblasStatus_t(chipblas.hipblasZhbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -5549,8 +5588,8 @@ def hipblasChbmvBatched(object handle, object uplo, int n, int k, object alpha, 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChbmvBatched__retval = hipblasStatus_t(chipblas.hipblasChbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -5565,8 +5604,8 @@ def hipblasChbmvBatched(object handle, object uplo, int n, int k, object alpha, 
 def hipblasZhbmvBatched(object handle, object uplo, int n, int k, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhbmvBatched__retval = hipblasStatus_t(chipblas.hipblasZhbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -5666,8 +5705,8 @@ def hipblasChbmvStridedBatched(object handle, object uplo, int n, int k, object 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasChbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -5682,8 +5721,8 @@ def hipblasChbmvStridedBatched(object handle, object uplo, int n, int k, object 
 def hipblasZhbmvStridedBatched(object handle, object uplo, int n, int k, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -5750,8 +5789,8 @@ def hipblasChemv(object handle, object uplo, int n, object alpha, object AP, int
         incy      [int]
                   specifies the increment for the elements of y.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemv__retval = hipblasStatus_t(chipblas.hipblasChemv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -5766,8 +5805,8 @@ def hipblasChemv(object handle, object uplo, int n, object alpha, object AP, int
 def hipblasZhemv(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemv__retval = hipblasStatus_t(chipblas.hipblasZhemv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -5837,8 +5876,8 @@ def hipblasChemvBatched(object handle, object uplo, int n, object alpha, object 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemvBatched__retval = hipblasStatus_t(chipblas.hipblasChemvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -5853,8 +5892,8 @@ def hipblasChemvBatched(object handle, object uplo, int n, object alpha, object 
 def hipblasZhemvBatched(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemvBatched__retval = hipblasStatus_t(chipblas.hipblasZhemvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -5934,8 +5973,8 @@ def hipblasChemvStridedBatched(object handle, object uplo, int n, object alpha, 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasChemvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -5950,8 +5989,8 @@ def hipblasChemvStridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasZhemvStridedBatched(object handle, object uplo, int n, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhemvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -6012,8 +6051,8 @@ def hipblasCher(object handle, object uplo, int n, object alpha, object x, int i
         lda       [int]
                   specifies the leading dimension of A. Must be at least max(1, n).
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCher__retval = hipblasStatus_t(chipblas.hipblasCher(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -6026,8 +6065,8 @@ def hipblasCher(object handle, object uplo, int n, object alpha, object x, int i
 def hipblasZher(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZher__retval = hipblasStatus_t(chipblas.hipblasZher(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -6089,8 +6128,8 @@ def hipblasCherBatched(object handle, object uplo, int n, object alpha, object x
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCherBatched__retval = hipblasStatus_t(chipblas.hipblasCherBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -6103,8 +6142,8 @@ def hipblasCherBatched(object handle, object uplo, int n, object alpha, object x
 def hipblasZherBatched(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZherBatched__retval = hipblasStatus_t(chipblas.hipblasZherBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -6172,8 +6211,8 @@ def hipblasCherStridedBatched(object handle, object uplo, int n, object alpha, o
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCherStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCherStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -6186,8 +6225,8 @@ def hipblasCherStridedBatched(object handle, object uplo, int n, object alpha, o
 def hipblasZherStridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object AP, int lda, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZherStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZherStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -6251,8 +6290,8 @@ def hipblasCher2(object handle, object uplo, int n, object alpha, object x, int 
         lda       [int]
                   specifies the leading dimension of A. Must be at least max(lda, 1).
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCher2__retval = hipblasStatus_t(chipblas.hipblasCher2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -6266,8 +6305,8 @@ def hipblasCher2(object handle, object uplo, int n, object alpha, object x, int 
 def hipblasZher2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZher2__retval = hipblasStatus_t(chipblas.hipblasZher2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -6335,8 +6374,8 @@ def hipblasCher2Batched(object handle, object uplo, int n, object alpha, object 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCher2Batched__retval = hipblasStatus_t(chipblas.hipblasCher2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -6350,8 +6389,8 @@ def hipblasCher2Batched(object handle, object uplo, int n, object alpha, object 
 def hipblasZher2Batched(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZher2Batched__retval = hipblasStatus_t(chipblas.hipblasZher2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -6428,8 +6467,8 @@ def hipblasCher2StridedBatched(object handle, object uplo, int n, object alpha, 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCher2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasCher2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -6443,8 +6482,8 @@ def hipblasCher2StridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasZher2StridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object y, int incy, long stridey, object AP, int lda, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZher2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasZher2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -6522,8 +6561,8 @@ def hipblasChpmv(object handle, object uplo, int n, object alpha, object AP, obj
         incy      [int]
                   specifies the increment for the elements of y.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpmv__retval = hipblasStatus_t(chipblas.hipblasChpmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -6538,8 +6577,8 @@ def hipblasChpmv(object handle, object uplo, int n, object alpha, object AP, obj
 def hipblasZhpmv(object handle, object uplo, int n, object alpha, object AP, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpmv__retval = hipblasStatus_t(chipblas.hipblasZhpmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -6622,8 +6661,8 @@ def hipblasChpmvBatched(object handle, object uplo, int n, object alpha, object 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpmvBatched__retval = hipblasStatus_t(chipblas.hipblasChpmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -6638,8 +6677,8 @@ def hipblasChpmvBatched(object handle, object uplo, int n, object alpha, object 
 def hipblasZhpmvBatched(object handle, object uplo, int n, object alpha, object AP, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpmvBatched__retval = hipblasStatus_t(chipblas.hipblasZhpmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -6731,8 +6770,8 @@ def hipblasChpmvStridedBatched(object handle, object uplo, int n, object alpha, 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasChpmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -6747,8 +6786,8 @@ def hipblasChpmvStridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasZhpmvStridedBatched(object handle, object uplo, int n, object alpha, object AP, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhpmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -6822,8 +6861,8 @@ def hipblasChpr(object handle, object uplo, int n, object alpha, object x, int i
                 Note that the imaginary part of the diagonal elements are not accessed and are assumed
                 to be 0.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpr__retval = hipblasStatus_t(chipblas.hipblasChpr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -6836,8 +6875,8 @@ def hipblasChpr(object handle, object uplo, int n, object alpha, object x, int i
 def hipblasZhpr(object handle, object uplo, int n, object alpha, object x, int incx, object AP):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpr__retval = hipblasStatus_t(chipblas.hipblasZhpr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -6912,8 +6951,8 @@ def hipblasChprBatched(object handle, object uplo, int n, object alpha, object x
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChprBatched__retval = hipblasStatus_t(chipblas.hipblasChprBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -6926,8 +6965,8 @@ def hipblasChprBatched(object handle, object uplo, int n, object alpha, object x
 def hipblasZhprBatched(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhprBatched__retval = hipblasStatus_t(chipblas.hipblasZhprBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7008,8 +7047,8 @@ def hipblasChprStridedBatched(object handle, object uplo, int n, object alpha, o
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasChprStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7022,8 +7061,8 @@ def hipblasChprStridedBatched(object handle, object uplo, int n, object alpha, o
 def hipblasZhprStridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object AP, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhprStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7100,8 +7139,8 @@ def hipblasChpr2(object handle, object uplo, int n, object alpha, object x, int 
                 Note that the imaginary part of the diagonal elements are not accessed and are assumed
                 to be 0.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpr2__retval = hipblasStatus_t(chipblas.hipblasChpr2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -7115,8 +7154,8 @@ def hipblasChpr2(object handle, object uplo, int n, object alpha, object x, int 
 def hipblasZhpr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpr2__retval = hipblasStatus_t(chipblas.hipblasZhpr2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -7197,8 +7236,8 @@ def hipblasChpr2Batched(object handle, object uplo, int n, object alpha, object 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpr2Batched__retval = hipblasStatus_t(chipblas.hipblasChpr2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -7212,8 +7251,8 @@ def hipblasChpr2Batched(object handle, object uplo, int n, object alpha, object 
 def hipblasZhpr2Batched(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpr2Batched__retval = hipblasStatus_t(chipblas.hipblasZhpr2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -7303,8 +7342,8 @@ def hipblasChpr2StridedBatched(object handle, object uplo, int n, object alpha, 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChpr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasChpr2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -7318,8 +7357,8 @@ def hipblasChpr2StridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasZhpr2StridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object y, int incy, long stridey, object AP, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhpr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhpr2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -7379,8 +7418,8 @@ def hipblasSsbmv(object handle, object uplo, int n, int k, object alpha, object 
         incy      [int]
                   specifies the increment for the elements of y
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsbmv__retval = hipblasStatus_t(chipblas.hipblasSsbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7395,8 +7434,8 @@ def hipblasSsbmv(object handle, object uplo, int n, int k, object alpha, object 
 def hipblasDsbmv(object handle, object uplo, int n, int k, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsbmv__retval = hipblasStatus_t(chipblas.hipblasDsbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7463,8 +7502,8 @@ def hipblasSsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsbmvBatched__retval = hipblasStatus_t(chipblas.hipblasSsbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7479,8 +7518,8 @@ def hipblasSsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
 def hipblasDsbmvBatched(object handle, object uplo, int n, int k, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsbmvBatched__retval = hipblasStatus_t(chipblas.hipblasDsbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7562,8 +7601,8 @@ def hipblasSsbmvStridedBatched(object handle, object uplo, int n, int k, object 
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7578,8 +7617,8 @@ def hipblasSsbmvStridedBatched(object handle, object uplo, int n, int k, object 
 def hipblasDsbmvStridedBatched(object handle, object uplo, int n, int k, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7634,8 +7673,8 @@ def hipblasSspmv(object handle, object uplo, int n, object alpha, object AP, obj
         incy      [int]
                   specifies the increment for the elements of y
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspmv__retval = hipblasStatus_t(chipblas.hipblasSspmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7650,8 +7689,8 @@ def hipblasSspmv(object handle, object uplo, int n, object alpha, object AP, obj
 def hipblasDspmv(object handle, object uplo, int n, object alpha, object AP, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspmv__retval = hipblasStatus_t(chipblas.hipblasDspmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7712,8 +7751,8 @@ def hipblasSspmvBatched(object handle, object uplo, int n, object alpha, object 
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspmvBatched__retval = hipblasStatus_t(chipblas.hipblasSspmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7728,8 +7767,8 @@ def hipblasSspmvBatched(object handle, object uplo, int n, object alpha, object 
 def hipblasDspmvBatched(object handle, object uplo, int n, object alpha, object AP, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspmvBatched__retval = hipblasStatus_t(chipblas.hipblasDspmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7805,8 +7844,8 @@ def hipblasSspmvStridedBatched(object handle, object uplo, int n, object alpha, 
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSspmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7821,8 +7860,8 @@ def hipblasSspmvStridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasDspmvStridedBatched(object handle, object uplo, int n, object alpha, object AP, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDspmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7896,8 +7935,8 @@ def hipblasSspr(object handle, object uplo, int n, object alpha, object x, int i
                             3 6 8 9
                             4 7 9 0
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspr__retval = hipblasStatus_t(chipblas.hipblasSspr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7910,8 +7949,8 @@ def hipblasSspr(object handle, object uplo, int n, object alpha, object x, int i
 def hipblasDspr(object handle, object uplo, int n, object alpha, object x, int incx, object AP):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspr__retval = hipblasStatus_t(chipblas.hipblasDspr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -7924,8 +7963,8 @@ def hipblasDspr(object handle, object uplo, int n, object alpha, object x, int i
 def hipblasCspr(object handle, object uplo, int n, object alpha, object x, int incx, object AP):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCspr__retval = hipblasStatus_t(chipblas.hipblasCspr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -7938,8 +7977,8 @@ def hipblasCspr(object handle, object uplo, int n, object alpha, object x, int i
 def hipblasZspr(object handle, object uplo, int n, object alpha, object x, int incx, object AP):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZspr__retval = hipblasStatus_t(chipblas.hipblasZspr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -8014,8 +8053,8 @@ def hipblasSsprBatched(object handle, object uplo, int n, object alpha, object x
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsprBatched__retval = hipblasStatus_t(chipblas.hipblasSsprBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8028,8 +8067,8 @@ def hipblasSsprBatched(object handle, object uplo, int n, object alpha, object x
 def hipblasDsprBatched(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsprBatched__retval = hipblasStatus_t(chipblas.hipblasDsprBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8042,8 +8081,8 @@ def hipblasDsprBatched(object handle, object uplo, int n, object alpha, object x
 def hipblasCsprBatched(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsprBatched__retval = hipblasStatus_t(chipblas.hipblasCsprBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -8056,8 +8095,8 @@ def hipblasCsprBatched(object handle, object uplo, int n, object alpha, object x
 def hipblasZsprBatched(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsprBatched__retval = hipblasStatus_t(chipblas.hipblasZsprBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -8138,8 +8177,8 @@ def hipblasSsprStridedBatched(object handle, object uplo, int n, object alpha, o
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsprStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8152,8 +8191,8 @@ def hipblasSsprStridedBatched(object handle, object uplo, int n, object alpha, o
 def hipblasDsprStridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object AP, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsprStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8166,8 +8205,8 @@ def hipblasDsprStridedBatched(object handle, object uplo, int n, object alpha, o
 def hipblasCsprStridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object AP, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsprStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -8180,8 +8219,8 @@ def hipblasCsprStridedBatched(object handle, object uplo, int n, object alpha, o
 def hipblasZsprStridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object AP, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsprStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsprStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -8258,8 +8297,8 @@ def hipblasSspr2(object handle, object uplo, int n, object alpha, object x, int 
                             3 6 8 9
                             4 7 9 0
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspr2__retval = hipblasStatus_t(chipblas.hipblasSspr2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8273,8 +8312,8 @@ def hipblasSspr2(object handle, object uplo, int n, object alpha, object x, int 
 def hipblasDspr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspr2__retval = hipblasStatus_t(chipblas.hipblasDspr2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8355,8 +8394,8 @@ def hipblasSspr2Batched(object handle, object uplo, int n, object alpha, object 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspr2Batched__retval = hipblasStatus_t(chipblas.hipblasSspr2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8370,8 +8409,8 @@ def hipblasSspr2Batched(object handle, object uplo, int n, object alpha, object 
 def hipblasDspr2Batched(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspr2Batched__retval = hipblasStatus_t(chipblas.hipblasDspr2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8461,8 +8500,8 @@ def hipblasSspr2StridedBatched(object handle, object uplo, int n, object alpha, 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSspr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasSspr2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8476,8 +8515,8 @@ def hipblasSspr2StridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasDspr2StridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object y, int incy, long stridey, object AP, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDspr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasDspr2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8534,8 +8573,8 @@ def hipblasSsymv(object handle, object uplo, int n, object alpha, object AP, int
         incy      [int]
                   specifies the increment for the elements of y
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymv__retval = hipblasStatus_t(chipblas.hipblasSsymv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8550,8 +8589,8 @@ def hipblasSsymv(object handle, object uplo, int n, object alpha, object AP, int
 def hipblasDsymv(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymv__retval = hipblasStatus_t(chipblas.hipblasDsymv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8566,8 +8605,8 @@ def hipblasDsymv(object handle, object uplo, int n, object alpha, object AP, int
 def hipblasCsymv(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymv__retval = hipblasStatus_t(chipblas.hipblasCsymv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -8582,8 +8621,8 @@ def hipblasCsymv(object handle, object uplo, int n, object alpha, object AP, int
 def hipblasZsymv(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymv__retval = hipblasStatus_t(chipblas.hipblasZsymv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -8648,8 +8687,8 @@ def hipblasSsymvBatched(object handle, object uplo, int n, object alpha, object 
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymvBatched__retval = hipblasStatus_t(chipblas.hipblasSsymvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8664,8 +8703,8 @@ def hipblasSsymvBatched(object handle, object uplo, int n, object alpha, object 
 def hipblasDsymvBatched(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymvBatched__retval = hipblasStatus_t(chipblas.hipblasDsymvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8680,8 +8719,8 @@ def hipblasDsymvBatched(object handle, object uplo, int n, object alpha, object 
 def hipblasCsymvBatched(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymvBatched__retval = hipblasStatus_t(chipblas.hipblasCsymvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -8696,8 +8735,8 @@ def hipblasCsymvBatched(object handle, object uplo, int n, object alpha, object 
 def hipblasZsymvBatched(object handle, object uplo, int n, object alpha, object AP, int lda, object x, int incx, object beta, object y, int incy, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymvBatched__retval = hipblasStatus_t(chipblas.hipblasZsymvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -8777,8 +8816,8 @@ def hipblasSsymvStridedBatched(object handle, object uplo, int n, object alpha, 
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsymvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8793,8 +8832,8 @@ def hipblasSsymvStridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasDsymvStridedBatched(object handle, object uplo, int n, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsymvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8809,8 +8848,8 @@ def hipblasDsymvStridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasCsymvStridedBatched(object handle, object uplo, int n, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsymvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -8825,8 +8864,8 @@ def hipblasCsymvStridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasZsymvStridedBatched(object handle, object uplo, int n, object alpha, object AP, int lda, long strideA, object x, int incx, long stridex, object beta, object y, int incy, long stridey, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsymvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -8879,8 +8918,8 @@ def hipblasSsyr(object handle, object uplo, int n, object alpha, object x, int i
         lda       [int]
                   specifies the leading dimension of A.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyr__retval = hipblasStatus_t(chipblas.hipblasSsyr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8893,8 +8932,8 @@ def hipblasSsyr(object handle, object uplo, int n, object alpha, object x, int i
 def hipblasDsyr(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyr__retval = hipblasStatus_t(chipblas.hipblasDsyr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8907,8 +8946,8 @@ def hipblasDsyr(object handle, object uplo, int n, object alpha, object x, int i
 def hipblasCsyr(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyr__retval = hipblasStatus_t(chipblas.hipblasCsyr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -8921,8 +8960,8 @@ def hipblasCsyr(object handle, object uplo, int n, object alpha, object x, int i
 def hipblasZsyr(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyr__retval = hipblasStatus_t(chipblas.hipblasZsyr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -8975,8 +9014,8 @@ def hipblasSsyrBatched(object handle, object uplo, int n, object alpha, object x
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyrBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -8989,8 +9028,8 @@ def hipblasSsyrBatched(object handle, object uplo, int n, object alpha, object x
 def hipblasDsyrBatched(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyrBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -9003,8 +9042,8 @@ def hipblasDsyrBatched(object handle, object uplo, int n, object alpha, object x
 def hipblasCsyrBatched(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyrBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -9017,8 +9056,8 @@ def hipblasCsyrBatched(object handle, object uplo, int n, object alpha, object x
 def hipblasZsyrBatched(object handle, object uplo, int n, object alpha, object x, int incx, object AP, int lda, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyrBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -9077,8 +9116,8 @@ def hipblasSsyrStridedBatched(object handle, object uplo, int n, object alpha, o
         batchCount [int]
                   number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyrStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -9091,8 +9130,8 @@ def hipblasSsyrStridedBatched(object handle, object uplo, int n, object alpha, o
 def hipblasDsyrStridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object AP, int lda, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyrStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -9105,8 +9144,8 @@ def hipblasDsyrStridedBatched(object handle, object uplo, int n, object alpha, o
 def hipblasCsyrStridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object AP, int lda, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyrStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -9119,8 +9158,8 @@ def hipblasCsyrStridedBatched(object handle, object uplo, int n, object alpha, o
 def hipblasZsyrStridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object AP, int lda, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyrStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -9176,8 +9215,8 @@ def hipblasSsyr2(object handle, object uplo, int n, object alpha, object x, int 
         lda       [int]
                   specifies the leading dimension of A.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyr2__retval = hipblasStatus_t(chipblas.hipblasSsyr2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -9191,8 +9230,8 @@ def hipblasSsyr2(object handle, object uplo, int n, object alpha, object x, int 
 def hipblasDsyr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyr2__retval = hipblasStatus_t(chipblas.hipblasDsyr2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -9206,8 +9245,8 @@ def hipblasDsyr2(object handle, object uplo, int n, object alpha, object x, int 
 def hipblasCsyr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyr2__retval = hipblasStatus_t(chipblas.hipblasCsyr2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -9221,8 +9260,8 @@ def hipblasCsyr2(object handle, object uplo, int n, object alpha, object x, int 
 def hipblasZsyr2(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyr2__retval = hipblasStatus_t(chipblas.hipblasZsyr2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -9281,8 +9320,8 @@ def hipblasSsyr2Batched(object handle, object uplo, int n, object alpha, object 
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyr2Batched__retval = hipblasStatus_t(chipblas.hipblasSsyr2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -9296,8 +9335,8 @@ def hipblasSsyr2Batched(object handle, object uplo, int n, object alpha, object 
 def hipblasDsyr2Batched(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyr2Batched__retval = hipblasStatus_t(chipblas.hipblasDsyr2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -9311,8 +9350,8 @@ def hipblasDsyr2Batched(object handle, object uplo, int n, object alpha, object 
 def hipblasCsyr2Batched(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyr2Batched__retval = hipblasStatus_t(chipblas.hipblasCsyr2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -9326,8 +9365,8 @@ def hipblasCsyr2Batched(object handle, object uplo, int n, object alpha, object 
 def hipblasZsyr2Batched(object handle, object uplo, int n, object alpha, object x, int incx, object y, int incy, object AP, int lda, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyr2Batched__retval = hipblasStatus_t(chipblas.hipblasZsyr2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -9395,8 +9434,8 @@ def hipblasSsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
         batchCount [int]
                   number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsyr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsyr2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -9410,8 +9449,8 @@ def hipblasSsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasDsyr2StridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object y, int incy, long stridey, object AP, int lda, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsyr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsyr2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -9425,8 +9464,8 @@ def hipblasDsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasCsyr2StridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object y, int incy, long stridey, object AP, int lda, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsyr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsyr2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -9440,8 +9479,8 @@ def hipblasCsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
 def hipblasZsyr2StridedBatched(object handle, object uplo, int n, object alpha, object x, int incx, long stridex, object y, int incy, long stridey, object AP, int lda, long strideA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsyr2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsyr2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -9529,12 +9568,12 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
         incx      [int]
                   specifies the increment for the elements of x.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbmv__retval = hipblasStatus_t(chipblas.hipblasStbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -9546,12 +9585,12 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasDtbmv(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbmv__retval = hipblasStatus_t(chipblas.hipblasDtbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -9563,12 +9602,12 @@ def hipblasDtbmv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasCtbmv(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbmv__retval = hipblasStatus_t(chipblas.hipblasCtbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
@@ -9580,12 +9619,12 @@ def hipblasCtbmv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasZtbmv(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbmv__retval = hipblasStatus_t(chipblas.hipblasZtbmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
@@ -9675,12 +9714,12 @@ def hipblasStbmvBatched(object handle, object uplo, object transA, object diag, 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbmvBatched__retval = hipblasStatus_t(chipblas.hipblasStbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -9692,12 +9731,12 @@ def hipblasStbmvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasDtbmvBatched(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbmvBatched__retval = hipblasStatus_t(chipblas.hipblasDtbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -9709,12 +9748,12 @@ def hipblasDtbmvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasCtbmvBatched(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbmvBatched__retval = hipblasStatus_t(chipblas.hipblasCtbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -9726,12 +9765,12 @@ def hipblasCtbmvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasZtbmvBatched(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbmvBatched__retval = hipblasStatus_t(chipblas.hipblasZtbmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -9827,12 +9866,12 @@ def hipblasStbmvStridedBatched(object handle, object uplo, object transA, object
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -9844,12 +9883,12 @@ def hipblasStbmvStridedBatched(object handle, object uplo, object transA, object
 def hipblasDtbmvStridedBatched(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -9861,12 +9900,12 @@ def hipblasDtbmvStridedBatched(object handle, object uplo, object transA, object
 def hipblasCtbmvStridedBatched(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -9878,12 +9917,12 @@ def hipblasCtbmvStridedBatched(object handle, object uplo, object transA, object
 def hipblasZtbmvStridedBatched(object handle, object uplo, object transA, object diag, int m, int k, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtbmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -9953,12 +9992,12 @@ def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, 
         incx      [int]
                   specifies the increment for the elements of x.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbsv__retval = hipblasStatus_t(chipblas.hipblasStbsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -9970,12 +10009,12 @@ def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, 
 def hipblasDtbsv(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbsv__retval = hipblasStatus_t(chipblas.hipblasDtbsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -9987,12 +10026,12 @@ def hipblasDtbsv(object handle, object uplo, object transA, object diag, int n, 
 def hipblasCtbsv(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbsv__retval = hipblasStatus_t(chipblas.hipblasCtbsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
@@ -10004,12 +10043,12 @@ def hipblasCtbsv(object handle, object uplo, object transA, object diag, int n, 
 def hipblasZtbsv(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbsv__retval = hipblasStatus_t(chipblas.hipblasZtbsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
@@ -10085,12 +10124,12 @@ def hipblasStbsvBatched(object handle, object uplo, object transA, object diag, 
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbsvBatched__retval = hipblasStatus_t(chipblas.hipblasStbsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -10102,12 +10141,12 @@ def hipblasStbsvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasDtbsvBatched(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbsvBatched__retval = hipblasStatus_t(chipblas.hipblasDtbsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -10119,12 +10158,12 @@ def hipblasDtbsvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasCtbsvBatched(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbsvBatched__retval = hipblasStatus_t(chipblas.hipblasCtbsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -10136,12 +10175,12 @@ def hipblasCtbsvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasZtbsvBatched(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbsvBatched__retval = hipblasStatus_t(chipblas.hipblasZtbsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -10222,12 +10261,12 @@ def hipblasStbsvStridedBatched(object handle, object uplo, object transA, object
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStbsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStbsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -10239,12 +10278,12 @@ def hipblasStbsvStridedBatched(object handle, object uplo, object transA, object
 def hipblasDtbsvStridedBatched(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtbsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtbsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -10256,12 +10295,12 @@ def hipblasDtbsvStridedBatched(object handle, object uplo, object transA, object
 def hipblasCtbsvStridedBatched(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtbsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtbsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -10273,12 +10312,12 @@ def hipblasCtbsvStridedBatched(object handle, object uplo, object transA, object
 def hipblasZtbsvStridedBatched(object handle, object uplo, object transA, object diag, int n, int k, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtbsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtbsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,n,k,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -10345,12 +10384,12 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
         incx    [int]
                 specifies the increment for the elements of x. incx must not be zero.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpmv__retval = hipblasStatus_t(chipblas.hipblasStpmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10362,12 +10401,12 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasDtpmv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpmv__retval = hipblasStatus_t(chipblas.hipblasDtpmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10379,12 +10418,12 @@ def hipblasDtpmv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasCtpmv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpmv__retval = hipblasStatus_t(chipblas.hipblasCtpmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,
@@ -10396,12 +10435,12 @@ def hipblasCtpmv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasZtpmv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpmv__retval = hipblasStatus_t(chipblas.hipblasZtpmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,
@@ -10462,12 +10501,12 @@ def hipblasStpmvBatched(object handle, object uplo, object transA, object diag, 
         batchCount [int]
                   The number of batched matrices/vectors.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpmvBatched__retval = hipblasStatus_t(chipblas.hipblasStpmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10479,12 +10518,12 @@ def hipblasStpmvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasDtpmvBatched(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpmvBatched__retval = hipblasStatus_t(chipblas.hipblasDtpmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10496,12 +10535,12 @@ def hipblasDtpmvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasCtpmvBatched(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpmvBatched__retval = hipblasStatus_t(chipblas.hipblasCtpmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10513,12 +10552,12 @@ def hipblasCtpmvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasZtpmvBatched(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpmvBatched__retval = hipblasStatus_t(chipblas.hipblasZtpmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10588,12 +10627,12 @@ def hipblasStpmvStridedBatched(object handle, object uplo, object transA, object
         batchCount [int]
                   The number of batched matrices/vectors.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStpmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,
@@ -10605,12 +10644,12 @@ def hipblasStpmvStridedBatched(object handle, object uplo, object transA, object
 def hipblasDtpmvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtpmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,
@@ -10622,12 +10661,12 @@ def hipblasDtpmvStridedBatched(object handle, object uplo, object transA, object
 def hipblasCtpmvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtpmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,strideA,
@@ -10639,12 +10678,12 @@ def hipblasCtpmvStridedBatched(object handle, object uplo, object transA, object
 def hipblasZtpmvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtpmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,strideA,
@@ -10705,12 +10744,12 @@ def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, 
         incx      [int]
                   specifies the increment for the elements of x.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpsv__retval = hipblasStatus_t(chipblas.hipblasStpsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10722,12 +10761,12 @@ def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasDtpsv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpsv__retval = hipblasStatus_t(chipblas.hipblasDtpsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10739,12 +10778,12 @@ def hipblasDtpsv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasCtpsv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpsv__retval = hipblasStatus_t(chipblas.hipblasCtpsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,
@@ -10756,12 +10795,12 @@ def hipblasCtpsv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasZtpsv(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpsv__retval = hipblasStatus_t(chipblas.hipblasZtpsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,
@@ -10826,12 +10865,12 @@ def hipblasStpsvBatched(object handle, object uplo, object transA, object diag, 
         batchCount [int]
                     specifies the number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpsvBatched__retval = hipblasStatus_t(chipblas.hipblasStpsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10843,12 +10882,12 @@ def hipblasStpsvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasDtpsvBatched(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpsvBatched__retval = hipblasStatus_t(chipblas.hipblasDtpsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10860,12 +10899,12 @@ def hipblasDtpsvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasCtpsvBatched(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpsvBatched__retval = hipblasStatus_t(chipblas.hipblasCtpsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10877,12 +10916,12 @@ def hipblasCtpsvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasZtpsvBatched(object handle, object uplo, object transA, object diag, int m, object AP, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpsvBatched__retval = hipblasStatus_t(chipblas.hipblasZtpsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,
@@ -10954,12 +10993,12 @@ def hipblasStpsvStridedBatched(object handle, object uplo, object transA, object
         batchCount [int]
                     specifies the number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStpsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStpsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,
@@ -10971,12 +11010,12 @@ def hipblasStpsvStridedBatched(object handle, object uplo, object transA, object
 def hipblasDtpsvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtpsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtpsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,strideA,
@@ -10988,12 +11027,12 @@ def hipblasDtpsvStridedBatched(object handle, object uplo, object transA, object
 def hipblasCtpsvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtpsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtpsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,strideA,
@@ -11005,12 +11044,12 @@ def hipblasCtpsvStridedBatched(object handle, object uplo, object transA, object
 def hipblasZtpsvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtpsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtpsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,strideA,
@@ -11072,12 +11111,12 @@ def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, 
         incx      [int]
                   specifies the increment for the elements of x.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmv__retval = hipblasStatus_t(chipblas.hipblasStrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11089,12 +11128,12 @@ def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasDtrmv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmv__retval = hipblasStatus_t(chipblas.hipblasDtrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11106,12 +11145,12 @@ def hipblasDtrmv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasCtrmv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmv__retval = hipblasStatus_t(chipblas.hipblasCtrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
@@ -11123,12 +11162,12 @@ def hipblasCtrmv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasZtrmv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmv__retval = hipblasStatus_t(chipblas.hipblasZtrmv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
@@ -11194,12 +11233,12 @@ def hipblasStrmvBatched(object handle, object uplo, object transA, object diag, 
         batchCount [int]
                   The number of batched matrices/vectors.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmvBatched__retval = hipblasStatus_t(chipblas.hipblasStrmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11211,12 +11250,12 @@ def hipblasStrmvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasDtrmvBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmvBatched__retval = hipblasStatus_t(chipblas.hipblasDtrmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11228,12 +11267,12 @@ def hipblasDtrmvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasCtrmvBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmvBatched__retval = hipblasStatus_t(chipblas.hipblasCtrmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11245,12 +11284,12 @@ def hipblasCtrmvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasZtrmvBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmvBatched__retval = hipblasStatus_t(chipblas.hipblasZtrmvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11325,12 +11364,12 @@ def hipblasStrmvStridedBatched(object handle, object uplo, object transA, object
         batchCount [int]
                   The number of batched matrices/vectors.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -11342,12 +11381,12 @@ def hipblasStrmvStridedBatched(object handle, object uplo, object transA, object
 def hipblasDtrmvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -11359,12 +11398,12 @@ def hipblasDtrmvStridedBatched(object handle, object uplo, object transA, object
 def hipblasCtrmvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtrmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -11376,12 +11415,12 @@ def hipblasCtrmvStridedBatched(object handle, object uplo, object transA, object
 def hipblasZtrmvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtrmvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -11443,12 +11482,12 @@ def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, 
         incx      [int]
                   specifies the increment for the elements of x.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsv__retval = hipblasStatus_t(chipblas.hipblasStrsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11460,12 +11499,12 @@ def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasDtrsv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsv__retval = hipblasStatus_t(chipblas.hipblasDtrsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11477,12 +11516,12 @@ def hipblasDtrsv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasCtrsv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsv__retval = hipblasStatus_t(chipblas.hipblasCtrsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
@@ -11494,12 +11533,12 @@ def hipblasCtrsv(object handle, object uplo, object transA, object diag, int m, 
 def hipblasZtrsv(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsv__retval = hipblasStatus_t(chipblas.hipblasZtrsv(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
@@ -11566,12 +11605,12 @@ def hipblasStrsvBatched(object handle, object uplo, object transA, object diag, 
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsvBatched__retval = hipblasStatus_t(chipblas.hipblasStrsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11583,12 +11622,12 @@ def hipblasStrsvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasDtrsvBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsvBatched__retval = hipblasStatus_t(chipblas.hipblasDtrsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11600,12 +11639,12 @@ def hipblasDtrsvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasCtrsvBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsvBatched__retval = hipblasStatus_t(chipblas.hipblasCtrsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11617,12 +11656,12 @@ def hipblasCtrsvBatched(object handle, object uplo, object transA, object diag, 
 def hipblasZtrsvBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, object x, int incx, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsvBatched__retval = hipblasStatus_t(chipblas.hipblasZtrsvBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -11696,12 +11735,12 @@ def hipblasStrsvStridedBatched(object handle, object uplo, object transA, object
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -11713,12 +11752,12 @@ def hipblasStrsvStridedBatched(object handle, object uplo, object transA, object
 def hipblasDtrsvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -11730,12 +11769,12 @@ def hipblasDtrsvStridedBatched(object handle, object uplo, object transA, object
 def hipblasCtrsvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtrsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -11747,12 +11786,12 @@ def hipblasCtrsvStridedBatched(object handle, object uplo, object transA, object
 def hipblasZtrsvStridedBatched(object handle, object uplo, object transA, object diag, int m, object AP, int lda, long strideA, object x, int incx, long stridex, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsvStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtrsvStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,diag.value,m,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -11821,10 +11860,10 @@ def hipblasHgemm(object handle, object transA, object transB, int m, int n, int 
         ldc       [int]
                   specifies the leading dimension of C.
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasHgemm__retval = hipblasStatus_t(chipblas.hipblasHgemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11839,10 +11878,10 @@ def hipblasHgemm(object handle, object transA, object transB, int m, int n, int 
 def hipblasSgemm(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemm__retval = hipblasStatus_t(chipblas.hipblasSgemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11857,10 +11896,10 @@ def hipblasSgemm(object handle, object transA, object transB, int m, int n, int 
 def hipblasDgemm(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemm__retval = hipblasStatus_t(chipblas.hipblasDgemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11875,10 +11914,10 @@ def hipblasDgemm(object handle, object transA, object transB, int m, int n, int 
 def hipblasCgemm(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemm__retval = hipblasStatus_t(chipblas.hipblasCgemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -11893,10 +11932,10 @@ def hipblasCgemm(object handle, object transA, object transB, int m, int n, int 
 def hipblasZgemm(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemm__retval = hipblasStatus_t(chipblas.hipblasZgemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -11968,10 +12007,10 @@ def hipblasHgemmBatched(object handle, object transA, object transB, int m, int 
                   [int]
                   number of gemm operations in the batch
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasHgemmBatched__retval = hipblasStatus_t(chipblas.hipblasHgemmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -11986,10 +12025,10 @@ def hipblasHgemmBatched(object handle, object transA, object transB, int m, int 
 def hipblasSgemmBatched(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemmBatched__retval = hipblasStatus_t(chipblas.hipblasSgemmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12004,10 +12043,10 @@ def hipblasSgemmBatched(object handle, object transA, object transB, int m, int 
 def hipblasDgemmBatched(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemmBatched__retval = hipblasStatus_t(chipblas.hipblasDgemmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12022,10 +12061,10 @@ def hipblasDgemmBatched(object handle, object transA, object transB, int m, int 
 def hipblasCgemmBatched(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemmBatched__retval = hipblasStatus_t(chipblas.hipblasCgemmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -12040,10 +12079,10 @@ def hipblasCgemmBatched(object handle, object transA, object transB, int m, int 
 def hipblasZgemmBatched(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemmBatched__retval = hipblasStatus_t(chipblas.hipblasZgemmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -12129,10 +12168,10 @@ def hipblasHgemmStridedBatched(object handle, object transA, object transB, int 
                   [int]
                   number of gemm operatons in the batch
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasHgemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasHgemmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const unsigned short *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12147,10 +12186,10 @@ def hipblasHgemmStridedBatched(object handle, object transA, object transB, int 
 def hipblasSgemmStridedBatched(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, long long strideA, object BP, int ldb, long long strideB, object beta, object CP, int ldc, long long strideC, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgemmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12165,10 +12204,10 @@ def hipblasSgemmStridedBatched(object handle, object transA, object transB, int 
 def hipblasDgemmStridedBatched(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, long long strideA, object BP, int ldb, long long strideB, object beta, object CP, int ldc, long long strideC, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgemmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12183,10 +12222,10 @@ def hipblasDgemmStridedBatched(object handle, object transA, object transB, int 
 def hipblasCgemmStridedBatched(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, long long strideA, object BP, int ldb, long long strideB, object beta, object CP, int ldc, long long strideC, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgemmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -12201,10 +12240,10 @@ def hipblasCgemmStridedBatched(object handle, object transA, object transB, int 
 def hipblasZgemmStridedBatched(object handle, object transA, object transB, int m, int n, int k, object alpha, object AP, int lda, long long strideA, object BP, int ldb, long long strideB, object beta, object CP, int ldc, long long strideC, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgemmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -12287,10 +12326,10 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherk__retval = hipblasStatus_t(chipblas.hipblasCherk(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12304,10 +12343,10 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
 def hipblasZherk(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherk__retval = hipblasStatus_t(chipblas.hipblasZherk(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12391,10 +12430,10 @@ def hipblasCherkBatched(object handle, object uplo, object transA, int n, int k,
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherkBatched__retval = hipblasStatus_t(chipblas.hipblasCherkBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12408,10 +12447,10 @@ def hipblasCherkBatched(object handle, object uplo, object transA, int n, int k,
 def hipblasZherkBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherkBatched__retval = hipblasStatus_t(chipblas.hipblasZherkBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12504,10 +12543,10 @@ def hipblasCherkStridedBatched(object handle, object uplo, object transA, int n,
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCherkStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12521,10 +12560,10 @@ def hipblasCherkStridedBatched(object handle, object uplo, object transA, int n,
 def hipblasZherkStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZherkStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -12617,10 +12656,10 @@ def hipblasCherkx(object handle, object uplo, object transA, int n, int k, objec
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherkx__retval = hipblasStatus_t(chipblas.hipblasCherkx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -12635,10 +12674,10 @@ def hipblasCherkx(object handle, object uplo, object transA, int n, int k, objec
 def hipblasZherkx(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherkx__retval = hipblasStatus_t(chipblas.hipblasZherkx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -12735,10 +12774,10 @@ def hipblasCherkxBatched(object handle, object uplo, object transA, int n, int k
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherkxBatched__retval = hipblasStatus_t(chipblas.hipblasCherkxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -12753,10 +12792,10 @@ def hipblasCherkxBatched(object handle, object uplo, object transA, int n, int k
 def hipblasZherkxBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherkxBatched__retval = hipblasStatus_t(chipblas.hipblasZherkxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -12865,10 +12904,10 @@ def hipblasCherkxStridedBatched(object handle, object uplo, object transA, int n
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCherkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCherkxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -12883,10 +12922,10 @@ def hipblasCherkxStridedBatched(object handle, object uplo, object transA, int n
 def hipblasZherkxStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZherkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZherkxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -12978,10 +13017,10 @@ def hipblasCher2k(object handle, object uplo, object transA, int n, int k, objec
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCher2k__retval = hipblasStatus_t(chipblas.hipblasCher2k(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -12996,10 +13035,10 @@ def hipblasCher2k(object handle, object uplo, object transA, int n, int k, objec
 def hipblasZher2k(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZher2k__retval = hipblasStatus_t(chipblas.hipblasZher2k(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -13092,10 +13131,10 @@ def hipblasCher2kBatched(object handle, object uplo, object transA, int n, int k
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCher2kBatched__retval = hipblasStatus_t(chipblas.hipblasCher2kBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -13110,10 +13149,10 @@ def hipblasCher2kBatched(object handle, object uplo, object transA, int n, int k
 def hipblasZher2kBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZher2kBatched__retval = hipblasStatus_t(chipblas.hipblasZher2kBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -13221,10 +13260,10 @@ def hipblasCher2kStridedBatched(object handle, object uplo, object transA, int n
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCher2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCher2kStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -13239,10 +13278,10 @@ def hipblasCher2kStridedBatched(object handle, object uplo, object transA, int n
 def hipblasZher2kStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZher2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZher2kStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -13331,10 +13370,10 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, m )
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymm__retval = hipblasStatus_t(chipblas.hipblasSsymm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -13349,10 +13388,10 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
 def hipblasDsymm(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymm__retval = hipblasStatus_t(chipblas.hipblasDsymm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -13367,10 +13406,10 @@ def hipblasDsymm(object handle, object side, object uplo, int m, int n, object a
 def hipblasCsymm(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymm__retval = hipblasStatus_t(chipblas.hipblasCsymm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -13385,10 +13424,10 @@ def hipblasCsymm(object handle, object side, object uplo, int m, int n, object a
 def hipblasZsymm(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymm__retval = hipblasStatus_t(chipblas.hipblasZsymm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -13481,10 +13520,10 @@ def hipblasSsymmBatched(object handle, object side, object uplo, int m, int n, o
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymmBatched__retval = hipblasStatus_t(chipblas.hipblasSsymmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -13499,10 +13538,10 @@ def hipblasSsymmBatched(object handle, object side, object uplo, int m, int n, o
 def hipblasDsymmBatched(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymmBatched__retval = hipblasStatus_t(chipblas.hipblasDsymmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -13517,10 +13556,10 @@ def hipblasDsymmBatched(object handle, object side, object uplo, int m, int n, o
 def hipblasCsymmBatched(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymmBatched__retval = hipblasStatus_t(chipblas.hipblasCsymmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -13535,10 +13574,10 @@ def hipblasCsymmBatched(object handle, object side, object uplo, int m, int n, o
 def hipblasZsymmBatched(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymmBatched__retval = hipblasStatus_t(chipblas.hipblasZsymmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -13640,10 +13679,10 @@ def hipblasSsymmStridedBatched(object handle, object side, object uplo, int m, i
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasSsymmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsymmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -13658,10 +13697,10 @@ def hipblasSsymmStridedBatched(object handle, object side, object uplo, int m, i
 def hipblasDsymmStridedBatched(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasDsymmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsymmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -13676,10 +13715,10 @@ def hipblasDsymmStridedBatched(object handle, object side, object uplo, int m, i
 def hipblasCsymmStridedBatched(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasCsymmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsymmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -13694,10 +13733,10 @@ def hipblasCsymmStridedBatched(object handle, object side, object uplo, int m, i
 def hipblasZsymmStridedBatched(object handle, object side, object uplo, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZsymmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsymmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -13783,10 +13822,10 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrk__retval = hipblasStatus_t(chipblas.hipblasSsyrk(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -13800,10 +13839,10 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
 def hipblasDsyrk(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrk__retval = hipblasStatus_t(chipblas.hipblasDsyrk(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -13817,10 +13856,10 @@ def hipblasDsyrk(object handle, object uplo, object transA, int n, int k, object
 def hipblasCsyrk(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrk__retval = hipblasStatus_t(chipblas.hipblasCsyrk(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -13834,10 +13873,10 @@ def hipblasCsyrk(object handle, object uplo, object transA, int n, int k, object
 def hipblasZsyrk(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrk__retval = hipblasStatus_t(chipblas.hipblasZsyrk(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -13924,10 +13963,10 @@ def hipblasSsyrkBatched(object handle, object uplo, object transA, int n, int k,
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrkBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrkBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -13941,10 +13980,10 @@ def hipblasSsyrkBatched(object handle, object uplo, object transA, int n, int k,
 def hipblasDsyrkBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrkBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrkBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -13958,10 +13997,10 @@ def hipblasDsyrkBatched(object handle, object uplo, object transA, int n, int k,
 def hipblasCsyrkBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrkBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrkBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -13975,10 +14014,10 @@ def hipblasCsyrkBatched(object handle, object uplo, object transA, int n, int k,
 def hipblasZsyrkBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrkBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrkBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -14074,10 +14113,10 @@ def hipblasSsyrkStridedBatched(object handle, object uplo, object transA, int n,
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrkStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14091,10 +14130,10 @@ def hipblasSsyrkStridedBatched(object handle, object uplo, object transA, int n,
 def hipblasDsyrkStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrkStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14108,10 +14147,10 @@ def hipblasDsyrkStridedBatched(object handle, object uplo, object transA, int n,
 def hipblasCsyrkStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrkStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -14125,10 +14164,10 @@ def hipblasCsyrkStridedBatched(object handle, object uplo, object transA, int n,
 def hipblasZsyrkStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrkStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrkStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -14218,10 +14257,10 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyr2k__retval = hipblasStatus_t(chipblas.hipblasSsyr2k(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14236,10 +14275,10 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
 def hipblasDsyr2k(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyr2k__retval = hipblasStatus_t(chipblas.hipblasDsyr2k(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14254,10 +14293,10 @@ def hipblasDsyr2k(object handle, object uplo, object transA, int n, int k, objec
 def hipblasCsyr2k(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyr2k__retval = hipblasStatus_t(chipblas.hipblasCsyr2k(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -14272,10 +14311,10 @@ def hipblasCsyr2k(object handle, object uplo, object transA, int n, int k, objec
 def hipblasZsyr2k(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyr2k__retval = hipblasStatus_t(chipblas.hipblasZsyr2k(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -14366,10 +14405,10 @@ def hipblasSsyr2kBatched(object handle, object uplo, object transA, int n, int k
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyr2kBatched__retval = hipblasStatus_t(chipblas.hipblasSsyr2kBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14384,10 +14423,10 @@ def hipblasSsyr2kBatched(object handle, object uplo, object transA, int n, int k
 def hipblasDsyr2kBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyr2kBatched__retval = hipblasStatus_t(chipblas.hipblasDsyr2kBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14402,10 +14441,10 @@ def hipblasDsyr2kBatched(object handle, object uplo, object transA, int n, int k
 def hipblasCsyr2kBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyr2kBatched__retval = hipblasStatus_t(chipblas.hipblasCsyr2kBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -14420,10 +14459,10 @@ def hipblasCsyr2kBatched(object handle, object uplo, object transA, int n, int k
 def hipblasZsyr2kBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyr2kBatched__retval = hipblasStatus_t(chipblas.hipblasZsyr2kBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -14530,10 +14569,10 @@ def hipblasSsyr2kStridedBatched(object handle, object uplo, object transA, int n
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyr2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsyr2kStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14548,10 +14587,10 @@ def hipblasSsyr2kStridedBatched(object handle, object uplo, object transA, int n
 def hipblasDsyr2kStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyr2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsyr2kStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14566,10 +14605,10 @@ def hipblasDsyr2kStridedBatched(object handle, object uplo, object transA, int n
 def hipblasCsyr2kStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyr2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsyr2kStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -14584,10 +14623,10 @@ def hipblasCsyr2kStridedBatched(object handle, object uplo, object transA, int n
 def hipblasZsyr2kStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyr2kStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsyr2kStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -14681,10 +14720,10 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrkx__retval = hipblasStatus_t(chipblas.hipblasSsyrkx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14699,10 +14738,10 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
 def hipblasDsyrkx(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrkx__retval = hipblasStatus_t(chipblas.hipblasDsyrkx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14717,10 +14756,10 @@ def hipblasDsyrkx(object handle, object uplo, object transA, int n, int k, objec
 def hipblasCsyrkx(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrkx__retval = hipblasStatus_t(chipblas.hipblasCsyrkx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -14735,10 +14774,10 @@ def hipblasCsyrkx(object handle, object uplo, object transA, int n, int k, objec
 def hipblasZsyrkx(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrkx__retval = hipblasStatus_t(chipblas.hipblasZsyrkx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -14834,10 +14873,10 @@ def hipblasSsyrkxBatched(object handle, object uplo, object transA, int n, int k
         batchCount [int]
                 number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrkxBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrkxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14852,10 +14891,10 @@ def hipblasSsyrkxBatched(object handle, object uplo, object transA, int n, int k
 def hipblasDsyrkxBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrkxBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrkxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -14870,10 +14909,10 @@ def hipblasDsyrkxBatched(object handle, object uplo, object transA, int n, int k
 def hipblasCsyrkxBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrkxBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrkxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -14888,10 +14927,10 @@ def hipblasCsyrkxBatched(object handle, object uplo, object transA, int n, int k
 def hipblasZsyrkxBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrkxBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrkxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -14999,10 +15038,10 @@ def hipblasSsyrkxStridedBatched(object handle, object uplo, object transA, int n
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasSsyrkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSsyrkxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -15017,10 +15056,10 @@ def hipblasSsyrkxStridedBatched(object handle, object uplo, object transA, int n
 def hipblasDsyrkxStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasDsyrkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDsyrkxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -15035,10 +15074,10 @@ def hipblasDsyrkxStridedBatched(object handle, object uplo, object transA, int n
 def hipblasCsyrkxStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasCsyrkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCsyrkxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -15053,10 +15092,10 @@ def hipblasCsyrkxStridedBatched(object handle, object uplo, object transA, int n
 def hipblasZsyrkxStridedBatched(object handle, object uplo, object transA, int n, int k, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
     _hipblasZsyrkxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZsyrkxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,transA.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -15124,10 +15163,10 @@ def hipblasSgeam(object handle, object transA, object transB, int m, int n, obje
         ldc       [int]
                   specifies the leading dimension of C.
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgeam__retval = hipblasStatus_t(chipblas.hipblasSgeam(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -15142,10 +15181,10 @@ def hipblasSgeam(object handle, object transA, object transB, int m, int n, obje
 def hipblasDgeam(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, object beta, object BP, int ldb, object CP, int ldc):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgeam__retval = hipblasStatus_t(chipblas.hipblasDgeam(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -15160,10 +15199,10 @@ def hipblasDgeam(object handle, object transA, object transB, int m, int n, obje
 def hipblasCgeam(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, object beta, object BP, int ldb, object CP, int ldc):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgeam__retval = hipblasStatus_t(chipblas.hipblasCgeam(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -15178,10 +15217,10 @@ def hipblasCgeam(object handle, object transA, object transB, int m, int n, obje
 def hipblasZgeam(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, object beta, object BP, int ldb, object CP, int ldc):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgeam__retval = hipblasStatus_t(chipblas.hipblasZgeam(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -15257,10 +15296,10 @@ def hipblasSgeamBatched(object handle, object transA, object transB, int m, int 
         batchCount [int]
                     number of instances i in the batch.
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgeamBatched__retval = hipblasStatus_t(chipblas.hipblasSgeamBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -15275,10 +15314,10 @@ def hipblasSgeamBatched(object handle, object transA, object transB, int m, int 
 def hipblasDgeamBatched(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, object beta, object BP, int ldb, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgeamBatched__retval = hipblasStatus_t(chipblas.hipblasDgeamBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -15293,10 +15332,10 @@ def hipblasDgeamBatched(object handle, object transA, object transB, int m, int 
 def hipblasCgeamBatched(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, object beta, object BP, int ldb, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgeamBatched__retval = hipblasStatus_t(chipblas.hipblasCgeamBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -15311,10 +15350,10 @@ def hipblasCgeamBatched(object handle, object transA, object transB, int m, int 
 def hipblasZgeamBatched(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, object beta, object BP, int ldb, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgeamBatched__retval = hipblasStatus_t(chipblas.hipblasZgeamBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -15415,10 +15454,10 @@ def hipblasSgeamStridedBatched(object handle, object transA, object transB, int 
         batchCount [int]
                     number of instances i in the batch.
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgeamStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgeamStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -15433,10 +15472,10 @@ def hipblasSgeamStridedBatched(object handle, object transA, object transB, int 
 def hipblasDgeamStridedBatched(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, long strideA, object beta, object BP, int ldb, long strideB, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgeamStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgeamStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -15451,10 +15490,10 @@ def hipblasDgeamStridedBatched(object handle, object transA, object transB, int 
 def hipblasCgeamStridedBatched(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, long strideA, object beta, object BP, int ldb, long strideB, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgeamStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgeamStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -15469,10 +15508,10 @@ def hipblasCgeamStridedBatched(object handle, object transA, object transB, int 
 def hipblasZgeamStridedBatched(object handle, object transA, object transB, int m, int n, object alpha, object AP, int lda, long strideA, object beta, object BP, int ldb, long strideB, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgeamStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgeamStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -15562,10 +15601,10 @@ def hipblasChemm(object handle, object side, object uplo, int n, int k, object a
         ldc    [int]
                ldc specifies the first dimension of C. ldc >= max( 1, m )
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemm__retval = hipblasStatus_t(chipblas.hipblasChemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -15580,10 +15619,10 @@ def hipblasChemm(object handle, object side, object uplo, int n, int k, object a
 def hipblasZhemm(object handle, object side, object uplo, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemm__retval = hipblasStatus_t(chipblas.hipblasZhemm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -15677,10 +15716,10 @@ def hipblasChemmBatched(object handle, object side, object uplo, int n, int k, o
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemmBatched__retval = hipblasStatus_t(chipblas.hipblasChemmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -15695,10 +15734,10 @@ def hipblasChemmBatched(object handle, object side, object uplo, int n, int k, o
 def hipblasZhemmBatched(object handle, object side, object uplo, int n, int k, object alpha, object AP, int lda, object BP, int ldb, object beta, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemmBatched__retval = hipblasStatus_t(chipblas.hipblasZhemmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -15804,10 +15843,10 @@ def hipblasChemmStridedBatched(object handle, object side, object uplo, int n, i
         batchCount [int]
                     number of instances in the batch
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasChemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasChemmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -15822,10 +15861,10 @@ def hipblasChemmStridedBatched(object handle, object side, object uplo, int n, i
 def hipblasZhemmStridedBatched(object handle, object side, object uplo, int n, int k, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, object beta, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
     _hipblasZhemmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZhemmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,n,k,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -15934,14 +15973,14 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
         ldb    [int]
                ldb specifies the first dimension of B. ldb >= max( 1, m ).
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmm__retval = hipblasStatus_t(chipblas.hipblasStrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -15954,14 +15993,14 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
 def hipblasDtrmm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmm__retval = hipblasStatus_t(chipblas.hipblasDtrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -15974,14 +16013,14 @@ def hipblasDtrmm(object handle, object side, object uplo, object transA, object 
 def hipblasCtrmm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmm__retval = hipblasStatus_t(chipblas.hipblasCtrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -15994,14 +16033,14 @@ def hipblasCtrmm(object handle, object side, object uplo, object transA, object 
 def hipblasZtrmm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmm__retval = hipblasStatus_t(chipblas.hipblasZtrmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -16111,14 +16150,14 @@ def hipblasStrmmBatched(object handle, object side, object uplo, object transA, 
         batchCount [int]
                     number of instances i in the batch.
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmmBatched__retval = hipblasStatus_t(chipblas.hipblasStrmmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -16131,14 +16170,14 @@ def hipblasStrmmBatched(object handle, object side, object uplo, object transA, 
 def hipblasDtrmmBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmmBatched__retval = hipblasStatus_t(chipblas.hipblasDtrmmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -16151,14 +16190,14 @@ def hipblasDtrmmBatched(object handle, object side, object uplo, object transA, 
 def hipblasCtrmmBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmmBatched__retval = hipblasStatus_t(chipblas.hipblasCtrmmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -16171,14 +16210,14 @@ def hipblasCtrmmBatched(object handle, object side, object uplo, object transA, 
 def hipblasZtrmmBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmmBatched__retval = hipblasStatus_t(chipblas.hipblasZtrmmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -16295,14 +16334,14 @@ def hipblasStrmmStridedBatched(object handle, object side, object uplo, object t
         batchCount [int]
                     number of instances i in the batch.
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrmmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -16315,14 +16354,14 @@ def hipblasStrmmStridedBatched(object handle, object side, object uplo, object t
 def hipblasDtrmmStridedBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrmmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -16335,14 +16374,14 @@ def hipblasDtrmmStridedBatched(object handle, object side, object uplo, object t
 def hipblasCtrmmStridedBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtrmmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -16355,14 +16394,14 @@ def hipblasCtrmmStridedBatched(object handle, object side, object uplo, object t
 def hipblasZtrmmStridedBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtrmmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -16462,14 +16501,14 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
         ldb    [int]
                ldb specifies the first dimension of B. ldb >= max( 1, m ).
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsm__retval = hipblasStatus_t(chipblas.hipblasStrsm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -16482,14 +16521,14 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
 def hipblasDtrsm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsm__retval = hipblasStatus_t(chipblas.hipblasDtrsm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -16502,14 +16541,14 @@ def hipblasDtrsm(object handle, object side, object uplo, object transA, object 
 def hipblasCtrsm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsm__retval = hipblasStatus_t(chipblas.hipblasCtrsm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -16522,14 +16561,14 @@ def hipblasCtrsm(object handle, object side, object uplo, object transA, object 
 def hipblasZtrsm(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsm__retval = hipblasStatus_t(chipblas.hipblasZtrsm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -16617,14 +16656,14 @@ def hipblasStrsmBatched(object handle, object side, object uplo, object transA, 
         batchCount [int]
                     number of trsm operatons in the batch.
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsmBatched__retval = hipblasStatus_t(chipblas.hipblasStrsmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -16637,14 +16676,14 @@ def hipblasStrsmBatched(object handle, object side, object uplo, object transA, 
 def hipblasDtrsmBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsmBatched__retval = hipblasStatus_t(chipblas.hipblasDtrsmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -16657,14 +16696,14 @@ def hipblasDtrsmBatched(object handle, object side, object uplo, object transA, 
 def hipblasCtrsmBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsmBatched__retval = hipblasStatus_t(chipblas.hipblasCtrsmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -16677,14 +16716,14 @@ def hipblasCtrsmBatched(object handle, object side, object uplo, object transA, 
 def hipblasZtrsmBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, object BP, int ldb, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsmBatched__retval = hipblasStatus_t(chipblas.hipblasZtrsmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -16779,14 +16818,14 @@ def hipblasStrsmStridedBatched(object handle, object side, object uplo, object t
         batchCount [int]
                     number of trsm operatons in the batch.
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrsmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrsmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -16799,14 +16838,14 @@ def hipblasStrsmStridedBatched(object handle, object side, object uplo, object t
 def hipblasDtrsmStridedBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrsmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrsmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -16819,14 +16858,14 @@ def hipblasDtrsmStridedBatched(object handle, object side, object uplo, object t
 def hipblasCtrsmStridedBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrsmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtrsmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasComplex.from_pyobj(alpha)._ptr,
@@ -16839,14 +16878,14 @@ def hipblasCtrsmStridedBatched(object handle, object side, object uplo, object t
 def hipblasZtrsmStridedBatched(object handle, object side, object uplo, object transA, object diag, int m, int n, object alpha, object AP, int lda, long strideA, object BP, int ldb, long strideB, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrsmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtrsmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         hipblasDoubleComplex.from_pyobj(alpha)._ptr,
@@ -16894,10 +16933,10 @@ def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int
         ldinvA    [int]
                   specifies the leading dimension of invA.
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrtri__retval = hipblasStatus_t(chipblas.hipblasStrtri(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -16909,10 +16948,10 @@ def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int
 def hipblasDtrtri(object handle, object uplo, object diag, int n, object AP, int lda, object invA, int ldinvA):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrtri__retval = hipblasStatus_t(chipblas.hipblasDtrtri(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -16924,10 +16963,10 @@ def hipblasDtrtri(object handle, object uplo, object diag, int n, object AP, int
 def hipblasCtrtri(object handle, object uplo, object diag, int n, object AP, int lda, object invA, int ldinvA):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrtri__retval = hipblasStatus_t(chipblas.hipblasCtrtri(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
@@ -16939,10 +16978,10 @@ def hipblasCtrtri(object handle, object uplo, object diag, int n, object AP, int
 def hipblasZtrtri(object handle, object uplo, object diag, int n, object AP, int lda, object invA, int ldinvA):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrtri__retval = hipblasStatus_t(chipblas.hipblasZtrtri(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
@@ -16996,10 +17035,10 @@ def hipblasStrtriBatched(object handle, object uplo, object diag, int n, object 
         batchCount [int]
                   numbers of matrices in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrtriBatched__retval = hipblasStatus_t(chipblas.hipblasStrtriBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -17011,10 +17050,10 @@ def hipblasStrtriBatched(object handle, object uplo, object diag, int n, object 
 def hipblasDtrtriBatched(object handle, object uplo, object diag, int n, object AP, int lda, object invA, int ldinvA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrtriBatched__retval = hipblasStatus_t(chipblas.hipblasDtrtriBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -17026,10 +17065,10 @@ def hipblasDtrtriBatched(object handle, object uplo, object diag, int n, object 
 def hipblasCtrtriBatched(object handle, object uplo, object diag, int n, object AP, int lda, object invA, int ldinvA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrtriBatched__retval = hipblasStatus_t(chipblas.hipblasCtrtriBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -17041,10 +17080,10 @@ def hipblasCtrtriBatched(object handle, object uplo, object diag, int n, object 
 def hipblasZtrtriBatched(object handle, object uplo, object diag, int n, object AP, int lda, object invA, int ldinvA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrtriBatched__retval = hipblasStatus_t(chipblas.hipblasZtrtriBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -17104,10 +17143,10 @@ def hipblasStrtriStridedBatched(object handle, object uplo, object diag, int n, 
         batchCount  [int]
                      numbers of matrices in the batch
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasStrtriStridedBatched__retval = hipblasStatus_t(chipblas.hipblasStrtriStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -17119,10 +17158,10 @@ def hipblasStrtriStridedBatched(object handle, object uplo, object diag, int n, 
 def hipblasDtrtriStridedBatched(object handle, object uplo, object diag, int n, object AP, int lda, long strideA, object invA, int ldinvA, long stride_invA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasDtrtriStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDtrtriStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -17134,10 +17173,10 @@ def hipblasDtrtriStridedBatched(object handle, object uplo, object diag, int n, 
 def hipblasCtrtriStridedBatched(object handle, object uplo, object diag, int n, object AP, int lda, long strideA, object invA, int ldinvA, long stride_invA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasCtrtriStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCtrtriStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -17149,10 +17188,10 @@ def hipblasCtrtriStridedBatched(object handle, object uplo, object diag, int n, 
 def hipblasZtrtriStridedBatched(object handle, object uplo, object diag, int n, object AP, int lda, long strideA, object invA, int ldinvA, long stride_invA, int batchCount):
     """
     """
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")
     _hipblasZtrtriStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZtrtriStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,uplo.value,diag.value,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -17206,8 +17245,8 @@ def hipblasSdgmm(object handle, object side, int m, int n, object AP, int lda, o
         ldc       [int]
                   specifies the leading dimension of C.
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasSdgmm__retval = hipblasStatus_t(chipblas.hipblasSdgmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -17220,8 +17259,8 @@ def hipblasSdgmm(object handle, object side, int m, int n, object AP, int lda, o
 def hipblasDdgmm(object handle, object side, int m, int n, object AP, int lda, object x, int incx, object CP, int ldc):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasDdgmm__retval = hipblasStatus_t(chipblas.hipblasDdgmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -17234,8 +17273,8 @@ def hipblasDdgmm(object handle, object side, int m, int n, object AP, int lda, o
 def hipblasCdgmm(object handle, object side, int m, int n, object AP, int lda, object x, int incx, object CP, int ldc):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasCdgmm__retval = hipblasStatus_t(chipblas.hipblasCdgmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,
@@ -17248,8 +17287,8 @@ def hipblasCdgmm(object handle, object side, int m, int n, object AP, int lda, o
 def hipblasZdgmm(object handle, object side, int m, int n, object AP, int lda, object x, int incx, object CP, int ldc):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasZdgmm__retval = hipblasStatus_t(chipblas.hipblasZdgmm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,
@@ -17311,8 +17350,8 @@ def hipblasSdgmmBatched(object handle, object side, int m, int n, object AP, int
         batchCount [int]
                     number of instances in the batch.
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasSdgmmBatched__retval = hipblasStatus_t(chipblas.hipblasSdgmmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         <const float *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -17325,8 +17364,8 @@ def hipblasSdgmmBatched(object handle, object side, int m, int n, object AP, int
 def hipblasDdgmmBatched(object handle, object side, int m, int n, object AP, int lda, object x, int incx, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasDdgmmBatched__retval = hipblasStatus_t(chipblas.hipblasDdgmmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         <const double *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -17339,8 +17378,8 @@ def hipblasDdgmmBatched(object handle, object side, int m, int n, object AP, int
 def hipblasCdgmmBatched(object handle, object side, int m, int n, object AP, int lda, object x, int incx, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasCdgmmBatched__retval = hipblasStatus_t(chipblas.hipblasCdgmmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -17353,8 +17392,8 @@ def hipblasCdgmmBatched(object handle, object side, int m, int n, object AP, int
 def hipblasZdgmmBatched(object handle, object side, int m, int n, object AP, int lda, object x, int incx, object CP, int ldc, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasZdgmmBatched__retval = hipblasStatus_t(chipblas.hipblasZdgmmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -17425,8 +17464,8 @@ def hipblasSdgmmStridedBatched(object handle, object side, int m, int n, object 
         batchCount [int]
                     number of instances i in the batch.
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasSdgmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSdgmmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         <const float *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -17439,8 +17478,8 @@ def hipblasSdgmmStridedBatched(object handle, object side, int m, int n, object 
 def hipblasDdgmmStridedBatched(object handle, object side, int m, int n, object AP, int lda, long strideA, object x, int incx, long stridex, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasDdgmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDdgmmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         <const double *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,strideA,
@@ -17453,8 +17492,8 @@ def hipblasDdgmmStridedBatched(object handle, object side, int m, int n, object 
 def hipblasCdgmmStridedBatched(object handle, object side, int m, int n, object AP, int lda, long strideA, object x, int incx, long stridex, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasCdgmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCdgmmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         hipblasComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -17467,8 +17506,8 @@ def hipblasCdgmmStridedBatched(object handle, object side, int m, int n, object 
 def hipblasZdgmmStridedBatched(object handle, object side, int m, int n, object AP, int lda, long strideA, object x, int incx, long stridex, object CP, int ldc, long strideC, int batchCount):
     """
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
     _hipblasZdgmmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZdgmmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,m,n,
         hipblasDoubleComplex.from_pyobj(AP)._ptr,lda,strideA,
@@ -17846,8 +17885,8 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
                   If info = 0, successful exit.
                   If info = j < 0, the j-th argument is invalid.
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgetrs__retval = hipblasStatus_t(chipblas.hipblasSgetrs(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
@@ -17861,8 +17900,8 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
 def hipblasDgetrs(object handle, object trans, const int n, const int nrhs, object A, const int lda, object ipiv, object B, const int ldb, object info):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgetrs__retval = hipblasStatus_t(chipblas.hipblasDgetrs(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
@@ -17876,8 +17915,8 @@ def hipblasDgetrs(object handle, object trans, const int n, const int nrhs, obje
 def hipblasCgetrs(object handle, object trans, const int n, const int nrhs, object A, const int lda, object ipiv, object B, const int ldb, object info):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgetrs__retval = hipblasStatus_t(chipblas.hipblasCgetrs(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,
@@ -17891,8 +17930,8 @@ def hipblasCgetrs(object handle, object trans, const int n, const int nrhs, obje
 def hipblasZgetrs(object handle, object trans, const int n, const int nrhs, object A, const int lda, object ipiv, object B, const int ldb, object info):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgetrs__retval = hipblasStatus_t(chipblas.hipblasZgetrs(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
@@ -17961,8 +18000,8 @@ def hipblasSgetrsBatched(object handle, object trans, const int n, const int nrh
         batchCount int. batchCount >= 0.\n
                     Number of instances (systems) in the batch.
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
@@ -17976,8 +18015,8 @@ def hipblasSgetrsBatched(object handle, object trans, const int n, const int nrh
 def hipblasDgetrsBatched(object handle, object trans, const int n, const int nrhs, object A, const int lda, object ipiv, object B, const int ldb, object info, const int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasDgetrsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
@@ -17991,8 +18030,8 @@ def hipblasDgetrsBatched(object handle, object trans, const int n, const int nrh
 def hipblasCgetrsBatched(object handle, object trans, const int n, const int nrhs, object A, const int lda, object ipiv, object B, const int ldb, object info, const int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasCgetrsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
@@ -18006,8 +18045,8 @@ def hipblasCgetrsBatched(object handle, object trans, const int n, const int nrh
 def hipblasZgetrsBatched(object handle, object trans, const int n, const int nrhs, object A, const int lda, object ipiv, object B, const int ldb, object info, const int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgetrsBatched__retval = hipblasStatus_t(chipblas.hipblasZgetrsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
@@ -18089,8 +18128,8 @@ def hipblasSgetrsStridedBatched(object handle, object trans, const int n, const 
         batchCount int. batchCount >= 0.\n
                     Number of instances (systems) in the batch.
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
@@ -18104,8 +18143,8 @@ def hipblasSgetrsStridedBatched(object handle, object trans, const int n, const 
 def hipblasDgetrsStridedBatched(object handle, object trans, const int n, const int nrhs, object A, const int lda, const long strideA, object ipiv, const long strideP, object B, const int ldb, const long strideB, object info, const int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgetrsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
@@ -18119,8 +18158,8 @@ def hipblasDgetrsStridedBatched(object handle, object trans, const int n, const 
 def hipblasCgetrsStridedBatched(object handle, object trans, const int n, const int nrhs, object A, const int lda, const long strideA, object ipiv, const long strideP, object B, const int ldb, const long strideB, object info, const int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgetrsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,strideA,
@@ -18134,8 +18173,8 @@ def hipblasCgetrsStridedBatched(object handle, object trans, const int n, const 
 def hipblasZgetrsStridedBatched(object handle, object trans, const int n, const int nrhs, object A, const int lda, const long strideA, object ipiv, const long strideP, object B, const int ldb, const long strideB, object info, const int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgetrsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgetrsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,strideA,
@@ -18311,8 +18350,8 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
                     If info = i > 0, the solution could not be computed because input matrix A is
                     rank deficient; the i-th diagonal element of its triangular factor is zero.
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgels__retval = hipblasStatus_t(chipblas.hipblasSgels(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
@@ -18326,8 +18365,8 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
 def hipblasDgels(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, object B, const int ldb, object info, object deviceInfo):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgels__retval = hipblasStatus_t(chipblas.hipblasDgels(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
@@ -18341,8 +18380,8 @@ def hipblasDgels(object handle, object trans, const int m, const int n, const in
 def hipblasCgels(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, object B, const int ldb, object info, object deviceInfo):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgels__retval = hipblasStatus_t(chipblas.hipblasCgels(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,
@@ -18356,8 +18395,8 @@ def hipblasCgels(object handle, object trans, const int m, const int n, const in
 def hipblasZgels(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, object B, const int ldb, object info, object deviceInfo):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgels__retval = hipblasStatus_t(chipblas.hipblasZgels(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,
@@ -18442,8 +18481,8 @@ def hipblasSgelsBatched(object handle, object trans, const int m, const int n, c
         batchCount  int. batchCount >= 0.\n
                     Number of matrices in the batch.
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgelsBatched__retval = hipblasStatus_t(chipblas.hipblasSgelsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <float *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
@@ -18457,8 +18496,8 @@ def hipblasSgelsBatched(object handle, object trans, const int m, const int n, c
 def hipblasDgelsBatched(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, object B, const int ldb, object info, object deviceInfo, const int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgelsBatched__retval = hipblasStatus_t(chipblas.hipblasDgelsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <double *const*>hip._util.types.ListOfDataHandle.from_pyobj(A)._ptr,lda,
@@ -18472,8 +18511,8 @@ def hipblasDgelsBatched(object handle, object trans, const int m, const int n, c
 def hipblasCgelsBatched(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, object B, const int ldb, object info, object deviceInfo, const int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgelsBatched__retval = hipblasStatus_t(chipblas.hipblasCgelsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <chipblas.hipblasComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
@@ -18487,8 +18526,8 @@ def hipblasCgelsBatched(object handle, object trans, const int m, const int n, c
 def hipblasZgelsBatched(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, object B, const int ldb, object info, object deviceInfo, const int batchCount):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgelsBatched__retval = hipblasStatus_t(chipblas.hipblasZgelsBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <chipblas.hipblasDoubleComplex *const*>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,
@@ -18581,8 +18620,8 @@ def hipblasSgelsStridedBatched(object handle, object trans, const int m, const i
         batchCount  int. batchCount >= 0.\n
                     Number of matrices in the batch.
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasSgelsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgelsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <float *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
@@ -18596,8 +18635,8 @@ def hipblasSgelsStridedBatched(object handle, object trans, const int m, const i
 def hipblasDgelsStridedBatched(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, const long strideA, object B, const int ldb, const long strideB, object info, object deviceInfo, const int batch_count):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasDgelsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasDgelsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         <double *>hip._util.types.DataHandle.from_pyobj(A)._ptr,lda,strideA,
@@ -18611,8 +18650,8 @@ def hipblasDgelsStridedBatched(object handle, object trans, const int m, const i
 def hipblasCgelsStridedBatched(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, const long strideA, object B, const int ldb, const long strideB, object info, object deviceInfo, const int batch_count):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasCgelsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasCgelsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasComplex.from_pyobj(A)._ptr,lda,strideA,
@@ -18626,8 +18665,8 @@ def hipblasCgelsStridedBatched(object handle, object trans, const int m, const i
 def hipblasZgelsStridedBatched(object handle, object trans, const int m, const int n, const int nrhs, object A, const int lda, const long strideA, object B, const int ldb, const long strideB, object info, object deviceInfo, const int batch_count):
     """
     """
-    if not isinstance(trans,hipblasOperation_t):
-        raise TypeError("argument 'trans' must be of type 'hipblasOperation_t'")
+    if not isinstance(trans,_hipblasOperation_t__Base):
+        raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
     _hipblasZgelsStridedBatched__retval = hipblasStatus_t(chipblas.hipblasZgelsStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,trans.value,m,n,nrhs,
         hipblasDoubleComplex.from_pyobj(A)._ptr,lda,strideA,
@@ -19050,20 +19089,20 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
         algo      [hipblasGemmAlgo_t]
                   enumerant specifying the algorithm type.
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(aType,hipblasDatatype_t):
-        raise TypeError("argument 'aType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(bType,hipblasDatatype_t):
-        raise TypeError("argument 'bType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(cType,hipblasDatatype_t):
-        raise TypeError("argument 'cType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(computeType,hipblasDatatype_t):
-        raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(algo,hipblasGemmAlgo_t):
-        raise TypeError("argument 'algo' must be of type 'hipblasGemmAlgo_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(aType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'aType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(bType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'bType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(cType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'cType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(computeType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(algo,_hipblasGemmAlgo_t__Base):
+        raise TypeError("argument 'algo' must be of type '_hipblasGemmAlgo_t__Base'")
     _hipblasGemmEx__retval = hipblasStatus_t(chipblas.hipblasGemmEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -19160,20 +19199,20 @@ def hipblasGemmBatchedEx(object handle, object transA, object transB, int m, int
         algo      [hipblasGemmAlgo_t]
                   enumerant specifying the algorithm type.
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(aType,hipblasDatatype_t):
-        raise TypeError("argument 'aType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(bType,hipblasDatatype_t):
-        raise TypeError("argument 'bType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(cType,hipblasDatatype_t):
-        raise TypeError("argument 'cType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(computeType,hipblasDatatype_t):
-        raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(algo,hipblasGemmAlgo_t):
-        raise TypeError("argument 'algo' must be of type 'hipblasGemmAlgo_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(aType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'aType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(bType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'bType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(cType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'cType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(computeType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(algo,_hipblasGemmAlgo_t__Base):
+        raise TypeError("argument 'algo' must be of type '_hipblasGemmAlgo_t__Base'")
     _hipblasGemmBatchedEx__retval = hipblasStatus_t(chipblas.hipblasGemmBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -19285,20 +19324,20 @@ def hipblasGemmStridedBatchedEx(object handle, object transA, object transB, int
         algo      [hipblasGemmAlgo_t]
                   enumerant specifying the algorithm type.
     """
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(transB,hipblasOperation_t):
-        raise TypeError("argument 'transB' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(aType,hipblasDatatype_t):
-        raise TypeError("argument 'aType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(bType,hipblasDatatype_t):
-        raise TypeError("argument 'bType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(cType,hipblasDatatype_t):
-        raise TypeError("argument 'cType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(computeType,hipblasDatatype_t):
-        raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(algo,hipblasGemmAlgo_t):
-        raise TypeError("argument 'algo' must be of type 'hipblasGemmAlgo_t'")
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(transB,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transB' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(aType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'aType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(bType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'bType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(cType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'cType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(computeType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(algo,_hipblasGemmAlgo_t__Base):
+        raise TypeError("argument 'algo' must be of type '_hipblasGemmAlgo_t__Base'")
     _hipblasGemmStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasGemmStridedBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,transA.value,transB.value,m,n,k,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -19431,16 +19470,16 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
         computeType [hipblasDatatype_t]
                 specifies the datatype of computation
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")                    
-    if not isinstance(computeType,hipblasDatatype_t):
-        raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")                    
+    if not isinstance(computeType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasTrsmEx__retval = hipblasStatus_t(chipblas.hipblasTrsmEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -19577,16 +19616,16 @@ def hipblasTrsmBatchedEx(object handle, object side, object uplo, object transA,
         computeType [hipblasDatatype_t]
                 specifies the datatype of computation
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")                    
-    if not isinstance(computeType,hipblasDatatype_t):
-        raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")                    
+    if not isinstance(computeType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasTrsmBatchedEx__retval = hipblasStatus_t(chipblas.hipblasTrsmBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -19736,16 +19775,16 @@ def hipblasTrsmStridedBatchedEx(object handle, object side, object uplo, object 
         computeType [hipblasDatatype_t]
                 specifies the datatype of computation
     """
-    if not isinstance(side,hipblasSideMode_t):
-        raise TypeError("argument 'side' must be of type 'hipblasSideMode_t'")                    
-    if not isinstance(uplo,hipblasFillMode_t):
-        raise TypeError("argument 'uplo' must be of type 'hipblasFillMode_t'")                    
-    if not isinstance(transA,hipblasOperation_t):
-        raise TypeError("argument 'transA' must be of type 'hipblasOperation_t'")                    
-    if not isinstance(diag,hipblasDiagType_t):
-        raise TypeError("argument 'diag' must be of type 'hipblasDiagType_t'")                    
-    if not isinstance(computeType,hipblasDatatype_t):
-        raise TypeError("argument 'computeType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(side,_hipblasSideMode_t__Base):
+        raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
+    if not isinstance(uplo,_hipblasFillMode_t__Base):
+        raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
+    if not isinstance(transA,_hipblasOperation_t__Base):
+        raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
+    if not isinstance(diag,_hipblasDiagType_t__Base):
+        raise TypeError("argument 'diag' must be of type '_hipblasDiagType_t__Base'")                    
+    if not isinstance(computeType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'computeType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasTrsmStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasTrsmStridedBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,side.value,uplo.value,transA.value,diag.value,m,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,
@@ -19797,14 +19836,14 @@ def hipblasAxpyEx(object handle, int n, object alpha, object alphaType, object x
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
-    if not isinstance(alphaType,hipblasDatatype_t):
-        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(alphaType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasAxpyEx__retval = hipblasStatus_t(chipblas.hipblasAxpyEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
@@ -19859,14 +19898,14 @@ def hipblasAxpyBatchedEx(object handle, int n, object alpha, object alphaType, o
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
-    if not isinstance(alphaType,hipblasDatatype_t):
-        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(alphaType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasAxpyBatchedEx__retval = hipblasStatus_t(chipblas.hipblasAxpyBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
@@ -19933,14 +19972,14 @@ def hipblasAxpyStridedBatchedEx(object handle, int n, object alpha, object alpha
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
-    if not isinstance(alphaType,hipblasDatatype_t):
-        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(alphaType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasAxpyStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasAxpyStridedBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
@@ -19998,14 +20037,14 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(resultType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'resultType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotEx__retval = hipblasStatus_t(chipblas.hipblasDotEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
@@ -20018,14 +20057,14 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
 def hipblasDotcEx(object handle, int n, object x, object xType, int incx, object y, object yType, int incy, object result, object resultType, object executionType):
     """
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(resultType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'resultType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotcEx__retval = hipblasStatus_t(chipblas.hipblasDotcEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
@@ -20089,14 +20128,14 @@ def hipblasDotBatchedEx(object handle, int n, object x, object xType, int incx, 
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(resultType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'resultType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotBatchedEx__retval = hipblasStatus_t(chipblas.hipblasDotBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
@@ -20109,14 +20148,14 @@ def hipblasDotBatchedEx(object handle, int n, object x, object xType, int incx, 
 def hipblasDotcBatchedEx(object handle, int n, object x, object xType, int incx, object y, object yType, int incy, int batchCount, object result, object resultType, object executionType):
     """
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(resultType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'resultType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotcBatchedEx__retval = hipblasStatus_t(chipblas.hipblasDotcBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
@@ -20186,14 +20225,14 @@ def hipblasDotStridedBatchedEx(object handle, int n, object x, object xType, int
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(resultType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'resultType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasDotStridedBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,stridex,
@@ -20206,14 +20245,14 @@ def hipblasDotStridedBatchedEx(object handle, int n, object x, object xType, int
 def hipblasDotcStridedBatchedEx(object handle, int n, object x, object xType, int incx, long stridex, object y, object yType, int incy, long stridey, int batchCount, object result, object resultType, object executionType):
     """
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(resultType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'resultType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasDotcStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasDotcStridedBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,stridex,
@@ -20260,12 +20299,12 @@ def hipblasNrm2Ex(object handle, int n, object x, object xType, int incx, object
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(resultType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'resultType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasNrm2Ex__retval = hipblasStatus_t(chipblas.hipblasNrm2Ex(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
@@ -20313,12 +20352,12 @@ def hipblasNrm2BatchedEx(object handle, int n, object x, object xType, int incx,
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(resultType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'resultType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasNrm2BatchedEx__retval = hipblasStatus_t(chipblas.hipblasNrm2BatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,batchCount,
@@ -20372,12 +20411,12 @@ def hipblasNrm2StridedBatchedEx(object handle, int n, object x, object xType, in
         executionType [hipblasDatatype_t]
                       specifies the datatype of computation.
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(resultType,hipblasDatatype_t):
-        raise TypeError("argument 'resultType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(resultType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'resultType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasNrm2StridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasNrm2StridedBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,stridex,batchCount,
@@ -20436,14 +20475,14 @@ def hipblasRotEx(object handle, int n, object x, object xType, int incx, object 
         executionType [hipblasDatatype_t]
                        specifies the datatype of computation.
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(csType,hipblasDatatype_t):
-        raise TypeError("argument 'csType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(csType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'csType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasRotEx__retval = hipblasStatus_t(chipblas.hipblasRotEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
@@ -20507,14 +20546,14 @@ def hipblasRotBatchedEx(object handle, int n, object x, object xType, int incx, 
         executionType [hipblasDatatype_t]
                        specifies the datatype of computation.
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(csType,hipblasDatatype_t):
-        raise TypeError("argument 'csType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(csType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'csType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasRotBatchedEx__retval = hipblasStatus_t(chipblas.hipblasRotBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,
@@ -20584,14 +20623,14 @@ def hipblasRotStridedBatchedEx(object handle, int n, object x, object xType, int
         executionType [hipblasDatatype_t]
                        specifies the datatype of computation.
     """
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(yType,hipblasDatatype_t):
-        raise TypeError("argument 'yType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(csType,hipblasDatatype_t):
-        raise TypeError("argument 'csType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(yType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'yType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(csType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'csType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasRotStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasRotStridedBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,xType.value,incx,stridex,
@@ -20635,12 +20674,12 @@ def hipblasScalEx(object handle, int n, object alpha, object alphaType, object x
         executionType [hipblasDatatype_t]
                        specifies the datatype of computation.
     """
-    if not isinstance(alphaType,hipblasDatatype_t):
-        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(alphaType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasScalEx__retval = hipblasStatus_t(chipblas.hipblasScalEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
@@ -20685,12 +20724,12 @@ def hipblasScalBatchedEx(object handle, int n, object alpha, object alphaType, o
         executionType [hipblasDatatype_t]
                        specifies the datatype of computation.
     """
-    if not isinstance(alphaType,hipblasDatatype_t):
-        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(alphaType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasScalBatchedEx__retval = hipblasStatus_t(chipblas.hipblasScalBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
@@ -20742,12 +20781,12 @@ def hipblasScalStridedBatchedEx(object handle, int n, object alpha, object alpha
         executionType [hipblasDatatype_t]
                        specifies the datatype of computation.
     """
-    if not isinstance(alphaType,hipblasDatatype_t):
-        raise TypeError("argument 'alphaType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(xType,hipblasDatatype_t):
-        raise TypeError("argument 'xType' must be of type 'hipblasDatatype_t'")                    
-    if not isinstance(executionType,hipblasDatatype_t):
-        raise TypeError("argument 'executionType' must be of type 'hipblasDatatype_t'")
+    if not isinstance(alphaType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(xType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
+    if not isinstance(executionType,_hipblasDatatype_t__Base):
+        raise TypeError("argument 'executionType' must be of type '_hipblasDatatype_t__Base'")
     _hipblasScalStridedBatchedEx__retval = hipblasStatus_t(chipblas.hipblasScalStridedBatchedEx(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
         <const void *>hip._util.types.DataHandle.from_pyobj(alpha)._ptr,alphaType.value,
@@ -20768,7 +20807,7 @@ def hipblasStatusToString(object status):
         status  [hipblasStatus_t]
                 hipBLAS status to convert to string
     """
-    if not isinstance(status,hipblasStatus_t):
-        raise TypeError("argument 'status' must be of type 'hipblasStatus_t'")
+    if not isinstance(status,_hipblasStatus_t__Base):
+        raise TypeError("argument 'status' must be of type '_hipblasStatus_t__Base'")
     cdef const char * _hipblasStatusToString__retval = chipblas.hipblasStatusToString(status.value)    # fully specified
     return (_hipblasStatusToString__retval,)

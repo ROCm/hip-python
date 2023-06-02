@@ -146,3 +146,4 @@ for attrib in (
             print(f"{attrib.name}: {result.value}")
     except:
         print(f"{attrib.name}: hipErrorInvalidValue")
+print("ok")
