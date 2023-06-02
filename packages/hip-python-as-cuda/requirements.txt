@@ -1,0 +1,6 @@
+# Python dependencies required for development
+setuptools>=42
+cython
+wheel
+build
+hip-python==5.4.22804.41.dev98
