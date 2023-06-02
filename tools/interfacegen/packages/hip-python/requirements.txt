@@ -1,0 +1,7 @@
+# AMD_COPYRIGHT
+
+# Python dependencies required for development
+setuptools>=42
+cython
+wheel
+build

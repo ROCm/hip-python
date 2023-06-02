@@ -1,0 +1,7 @@
+[build-system]
+requires = [  # PEP 508 specifications
+  "setuptools>=10.0.1", 
+  "wheel", 
+  "cython", 
+] 
+build-backend = "setuptools.build_meta"
