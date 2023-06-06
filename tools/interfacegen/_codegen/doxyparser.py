@@ -2,7 +2,8 @@
 
 __author__ = "AMD_AUTHOR"
 
-from typing import Any
+import textwrap
+
 import pyparsing as pyp
 
 import warnings
@@ -41,7 +42,7 @@ class styles:
                 offset = s.find(tk,offset) + len(tk)
             return s[loc:offset]
         
-        def __getattribute__(self, name: str) -> Any:
+        def __getattribute__(self, name: str):
             return self.identity
 
 
@@ -651,9 +652,45 @@ class DoxygenGrammar:
                 pyparser.setParseAction(getattr(output_style, kind))
             except AttributeError:
                 pyparser.setParseAction(styles.KeepAll.identity)
+    
+    def remove_doxygen_cpp_comments(self,text: str, dedent=True):
+        """Strip away doxygen C++ comment delimiters.
+        """
+        result = ""
+        last_end = 0
 
-    def remove_doxygen_cpp_comments(self,text: str):
-        pass
+        for _,start,end in pyp.cppStyleComment.scanString(text):
+            result += text[last_end:start]
+            comment = text[start:end]
+            if comment.lstrip().startswith("//"):
+                comment = comment.replace("///","",1)
+                comment = comment.replace("//!","",1)
+                result += comment
+            elif comment.lstrip()[0:3] in ("/**","/*!"):
+                lines = comment.splitlines(keepends=True)
+                for i,ln in enumerate(lines):
+                    has_linebreak = ln.endswith("\n")
+                    result_line = ln.rstrip()
+                    if i == 0:
+                        idx = result_line.find("/*")
+                        result_line = result_line.replace(result_line[idx:idx+3]," "*3,1)
+                    elif i == len(lines)-1:
+                        idx = result_line.rfind("*/")
+                        if idx > 0:
+                            result_line = result_line[:idx]
+                    if result_line.lstrip().startswith("*"):
+                        result_line = result_line.replace("*"," ",1)
+                    result += result_line
+                    if has_linebreak:
+                         result += "\n"
+            else: # other commnet
+                result += comment
+            last_end = end
+        result += text[last_end:]
+        if dedent:
+            return textwrap.dedent(result)
+        else:
+            return result
 
     def _create_text_blocks(self,text: str):
         """Splits the text into verbatim and non-verbatim blocks.
