@@ -1,8 +1,7 @@
-from doxyparser import DoxygenGrammar
+import addtoplevelpath
+from doxyparser import DoxygenGrammar, styles
 
 grammar = DoxygenGrammar()
-
-print(grammar.all.parseString(r"\a TEST"))
 
 param_list = r"""
 
@@ -14,12 +13,31 @@ param_list = r"""
 \param[out] param3 My multiline 
                 description ending
                 at the end of the text. \c Monotype text.
+
+\verbatim
+\param[in,out] param4 this will not be changed.
+
+\endverbatim
+
+\f[
+
+  \textit{\param[in,out] param5 this will not be changed.}
+
+\f]
+
+@f{eqnarray}
+
+  \textit{\param[in,out] param6 this will not be changed.}
+
+@f}
+
+\f$\textit{\param[in,out] param7 this will not be changed.}\f$
 """
 
 for mtch in grammar.all.scanString(param_list):
     print(mtch)
 
-class MyParamFormatter(grammar.PythonDocstrings):
+class MyParamFormatter(styles.PythonDocstrings):
 
     @staticmethod
     def param(tokens):
@@ -34,7 +52,6 @@ class MyParamFormatter(grammar.PythonDocstrings):
         dir = dir_map[tokens[1]]
         return f":param {name}: {descr} Direction: {dir}"
     
-grammar.output_style = MyParamFormatter
+grammar.style = MyParamFormatter
 
-print(grammar.transform(param_list))
-
+print(grammar.transform_string(param_list))
