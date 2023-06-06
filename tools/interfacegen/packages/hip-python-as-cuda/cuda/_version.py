@@ -2,8 +2,8 @@
 
 __author__ = "AMD_AUTHOR"
 
-VERSION = __version__ = "5.4.22804.41.dev98"
-FULL_VERSION = __full_version__ = "5.4.22804-474e8620.41.dev98+g46d62a2+d20230601"
-HIP_PYTHON_CODEGEN_BRANCH = "feature/package-dirs"
-HIP_PYTHON_CODEGEN_VERSION = "41.dev98+g46d62a2+d20230601"
-HIP_PYTHON_CODEGEN_REV = "46d62a2"
+VERSION = __version__ = "5.4.22804.41.dev103"
+FULL_VERSION = __full_version__ = "5.4.22804-474e8620.41.dev103+gaee1fd1+d20230606"
+HIP_PYTHON_CODEGEN_BRANCH = "feature/doxyparser"
+HIP_PYTHON_CODEGEN_VERSION = "41.dev103+gaee1fd1+d20230606"
+HIP_PYTHON_CODEGEN_REV = "aee1fd1"

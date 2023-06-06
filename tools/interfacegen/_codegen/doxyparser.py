@@ -8,6 +8,48 @@ import pyparsing as pyp
 
 import warnings
 
+def remove_doxygen_cpp_comments(text: str, dedent=True):
+    """Strip away doxygen C++ comment delimiters.
+
+    Args:
+        dedent (bool): If the result should be dedented, i.e. the outermost level of indentation removed. Defaults to True.
+    """
+    result = ""
+    last_end = 0
+
+    for _,start,end in pyp.cppStyleComment.scanString(text):
+        result += text[last_end:start]
+        comment = text[start:end]
+        if comment.lstrip().startswith("//"):
+            comment = comment.replace("///","",1)
+            comment = comment.replace("//!","",1)
+            result += comment
+        elif comment.lstrip()[0:3] in ("/**","/*!"):
+            lines = comment.splitlines(keepends=True)
+            for i,ln in enumerate(lines):
+                has_linebreak = ln.endswith("\n")
+                result_line = ln.rstrip()
+                if i == 0:
+                    idx = result_line.find("/*")
+                    result_line = result_line.replace(result_line[idx:idx+3]," "*3,1)
+                elif i == len(lines)-1:
+                    idx = result_line.rfind("*/")
+                    if idx > 0:
+                        result_line = result_line[:idx]
+                if result_line.lstrip().startswith("*"):
+                    result_line = result_line.replace("*"," ",1)
+                result += result_line
+                if has_linebreak:
+                        result += "\n"
+        else: # other commnet
+            result += comment
+        last_end = end
+    result += text[last_end:]
+    if dedent:
+        return textwrap.dedent(result)
+    else:
+        return result
+
 class styles:
 
     """Collection of basic styles that users can base their custom
@@ -291,10 +333,10 @@ class DoxygenGrammar:
         "xmlonly",
     ]
 
-    def __init__(self):
+    def __init__(self,style = styles.KeepAll):
         self._construct_grammer()
         self._output_style = None
-        self.style = styles.KeepAll
+        self.style = style
 
     def _pyp_cmd(self, cmd, words=True):
         if isinstance(cmd, list):
@@ -652,45 +694,6 @@ class DoxygenGrammar:
                 pyparser.setParseAction(getattr(output_style, kind))
             except AttributeError:
                 pyparser.setParseAction(styles.KeepAll.identity)
-    
-    def remove_doxygen_cpp_comments(self,text: str, dedent=True):
-        """Strip away doxygen C++ comment delimiters.
-        """
-        result = ""
-        last_end = 0
-
-        for _,start,end in pyp.cppStyleComment.scanString(text):
-            result += text[last_end:start]
-            comment = text[start:end]
-            if comment.lstrip().startswith("//"):
-                comment = comment.replace("///","",1)
-                comment = comment.replace("//!","",1)
-                result += comment
-            elif comment.lstrip()[0:3] in ("/**","/*!"):
-                lines = comment.splitlines(keepends=True)
-                for i,ln in enumerate(lines):
-                    has_linebreak = ln.endswith("\n")
-                    result_line = ln.rstrip()
-                    if i == 0:
-                        idx = result_line.find("/*")
-                        result_line = result_line.replace(result_line[idx:idx+3]," "*3,1)
-                    elif i == len(lines)-1:
-                        idx = result_line.rfind("*/")
-                        if idx > 0:
-                            result_line = result_line[:idx]
-                    if result_line.lstrip().startswith("*"):
-                        result_line = result_line.replace("*"," ",1)
-                    result += result_line
-                    if has_linebreak:
-                         result += "\n"
-            else: # other commnet
-                result += comment
-            last_end = end
-        result += text[last_end:]
-        if dedent:
-            return textwrap.dedent(result)
-        else:
-            return result
 
     def _create_text_blocks(self,text: str):
         """Splits the text into verbatim and non-verbatim blocks.

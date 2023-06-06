@@ -1035,24 +1035,11 @@ class Function(Node, Typed, *__FunctionMixin):
     def raw_comment(self):
         """Returns full (doxygen) comment for this node."""
         return self.cursor.raw_comment
-        # todo parse the comment and adjust parameter types.
 
     @property
     def brief_comment(self):
         """Returns brief (doxygen) comment for this node."""
         return self.cursor.brief_comment
-
-    def _raw_comment_stripped(self):
-        """Returns raw comment without the C comment chars."""
-        comment: str = self.raw_comment
-        p_comment = re.compile(r"^(\s*\*|\s*\/)+\s*")
-        result = []
-        if comment != None:
-            for line1 in comment.splitlines(keepends=True):
-                line = p_comment.sub("", line1, count=2)
-                result.append(line)
-        return "".join(result)
-
 
 def from_libclang_translation_unit(
     translation_unit: clang.cindex.TranslationUnit, warn=control.Warnings.WARN

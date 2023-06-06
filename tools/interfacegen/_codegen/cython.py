@@ -6,6 +6,7 @@ import sys
 import os
 import keyword
 import textwrap
+from typing import Any
 
 import clang.cindex
 
@@ -13,6 +14,8 @@ import Cython.Tempita
 
 from . import cparser
 from . import control
+
+from . import doxyparser
 
 indent = " " * 4
 
@@ -367,9 +370,10 @@ def {{attr}}(self):
 
 # Mixins
 class CythonMixin:
+
     def __init__(self):  # Will not be called, attribs specified for type hinting
         self.renamer = DEFAULT_RENAMER
-        self.sep = "_"
+        self.sep = "_"        
 
     @property
     def cython_name(self):
@@ -483,19 +487,19 @@ class Typed:
     def is_out_ptr(self):
         """If this parameter has been specified as out parameter."""
         assert self.is_ptr
-        return self.ptr_intent(self) == control.PointerParamIntent.OUT
+        return self.ptr_intent(self) == control.ParmIntent.OUT
 
     @property
     def is_inout_ptr(self):
         """If this is an inout parameter."""
         assert self.is_ptr
-        return self.ptr_intent(self) == control.PointerParamIntent.INOUT
+        return self.ptr_intent(self) == control.ParmIntent.INOUT
 
     @property
     def is_in_ptr(self):
         """If this is an inout parameter."""
         assert self.is_ptr
-        return self.ptr_intent(self) == control.PointerParamIntent.IN
+        return self.ptr_intent(self) == control.ParmIntent.IN
 
 
     @property
@@ -886,7 +890,7 @@ class ParmMixin(CythonMixin, Typed):
         global DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
         CythonMixin.__init__(self)
         self.ptr_rank = control.DEFAULT_PTR_RANK
-        self.ptr_intent = control.DEFAULT_PTR_PARAM_INTENT
+        self.ptr_intent = control.DEFAULT_PTR_PARM_INTENT
         self.ptr_complicated_type_handler = DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
 
     @property
@@ -899,6 +903,16 @@ class ParmMixin(CythonMixin, Typed):
         return f"{typename} {name}"
 
 class FunctionMixin(CythonMixin, Typed):
+    
+    def _raw_comment_stripped(self):
+        from . import tree
+
+        assert isinstance(self, tree.Function)
+        if self.raw_comment != None:
+            return doxyparser.remove_doxygen_cpp_comments(self.raw_comment)
+        else:
+            return ""
+
     def _raw_comment_as_python_comment(self):
         from . import tree
 
@@ -926,16 +940,6 @@ class FunctionMixin(CythonMixin, Typed):
         if not self.has_python_body_epilog:
             setattr(self, "_python_body_epilog", [])
         self._python_body_epilog.append(code)
-
-    # TODO Identify and extract doxygen params and other sections to create higher quality docstring
-    # doxygen param is terminated by blank line or new section/paragraph
-    # Can be used to build parser for args
-    # More details https://doxygen.nl/manual/commands.html#cmdparam
-    def _raw_comment_as_docstring(self):
-        from . import tree
-
-        assert isinstance(self, tree.Function)
-        return f'"""{"".join(self._raw_comment_stripped()).rstrip()}\n"""'
 
     @property
     def _has_funptr_parm(self):
@@ -986,6 +990,103 @@ cdef void* {funptr_name} = NULL
     __init_symbol(&{funptr_name},"{self.name}")
     return (<{typename} (*)({parm_types}){modifiers}> {funptr_name})({parm_names})
 """
+
+    def _raw_comment_as_docstring(self,out_arg_names):
+        """Converts doxygen comment to a Python docstring using the doxyparser API.
+        """
+        from . import tree
+
+        assert isinstance(self, tree.Function)
+
+        indent = " "*4
+        #brief = None
+        #return_ = None
+        #result = None
+        #returns = None
+        doxygen_parms = []
+        class Formatter(doxyparser.styles.PythonDocstrings):
+
+            @staticmethod
+            def no_args(tokens):
+                cmd = tokens[0][1:]
+                if cmd in ("verbatim","endverbatim"):
+                    return '"""'
+                return []
+
+            @staticmethod
+            def paragraphs_no_args(tokens):
+                cmd = tokens[0][1:]
+                text_lines = tokens[1].lstrip().splitlines(keepends=False)
+                if cmd in ("short","brief"):
+                    return " ".join(text_lines)
+                elif cmd in (
+                    #"arg",
+                    "attention",
+                    "author",
+                    "authors",
+                    #"brief",
+                    "bug",
+                    "copyright",
+                    "date",
+                    "deprecated",
+                    "details",
+                    "invariant",
+                    #"li",
+                    "note",
+                    "post",
+                    "pre",
+                    "remark",
+                    "remarks",
+                    "result",
+                    "return",
+                    "returns",
+                    "sa",
+                    "see",
+                    #"short",
+                    "since",
+                    "test",
+                    "todo",
+                    "version",
+                    "warning",
+                ):
+                    text = textwrap.indent("\n".join([ln.lstrip() for ln in text_lines]),indent)
+                    return cmd[0].upper() + cmd[1:] +":\n" + text + "\n"
+                else:
+                    return []
+            
+            @staticmethod
+            def param(tokens):
+                # ['\\param', '[in]', 'param1', 'Description text is here.']
+                dir_map = {
+                    "[in]": control.ParmIntent.IN,
+                    "[in,out]": control.ParmIntent.INOUT,
+                    "[out]": control.ParmIntent.OUT,
+                }
+                name = tokens[2]
+                descr = tokens[3]
+                dir = dir_map[tokens[1]]
+                doxygen_parms.append((name,dir,descr))
+                return []
+
+        grammar = doxyparser.DoxygenGrammar(Formatter)
+        docstring_body = grammar.transform_string(self._raw_comment_stripped())
+        args = []
+        #retvals = [] # TODO
+        for (name, _, descr) in doxygen_parms:
+            descr_lines = [ln.lstrip() for ln in descr.splitlines(keepends=True)]
+            if name in out_arg_names:
+                pass
+                #retvals.append(
+                #    f"f{name}: {descr_lines[0]}{textwrap.indent(''.join(descr_lines),indent)}"
+                #)
+            else:
+                args.append(
+                    f"{name}: {''.join(descr_lines[0:1])}{textwrap.indent(''.join(descr_lines[1:]),indent)}".rstrip()
+                )
+        if len(args):
+            docstring_body += "\nArgs:\n"
+            docstring_body += textwrap.indent("\n".join(args),indent)
+        return f'"""\n{docstring_body}\n"""'
 
     def _analyze_parms(self, cprefix: str):
         from . import tree
@@ -1194,7 +1295,7 @@ cdef void* {funptr_name} = NULL
         result = "@cython.embedsignature(True)\n"
         result += (
             f"def {self.cython_name}({', '.join(sig_args)}):\n"
-            + textwrap.indent(self._raw_comment_as_docstring(), indent).rstrip()
+            + textwrap.indent(self._raw_comment_as_docstring(out_arg_names), indent).rstrip()
             + "\n"
         )
         if self.has_python_body_prolog:
@@ -1228,7 +1329,7 @@ class CythonBackend:
         filename: str,
         node_filter: callable = control.DEFAULT_NODE_FILTER,
         macro_type: callable = DEFAULT_MACRO_TYPE,
-        ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
+        ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
@@ -1254,7 +1355,7 @@ class CythonBackend:
         filename: str,
         node_filter: callable = control.DEFAULT_NODE_FILTER,
         macro_type: callable = DEFAULT_MACRO_TYPE,
-        ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
+        ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
@@ -1476,7 +1577,7 @@ class CythonPackageGenerator:
         dll: str = None,
         node_filter: callable = control.DEFAULT_NODE_FILTER,
         macro_type: callable = DEFAULT_MACRO_TYPE,
-        ptr_parm_intent: callable = control.DEFAULT_PTR_PARAM_INTENT,
+        ptr_parm_intent: callable = control.DEFAULT_PTR_PARM_INTENT,
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
