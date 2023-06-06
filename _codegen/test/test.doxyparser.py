@@ -3,6 +3,8 @@ from doxyparser import DoxygenGrammar, styles
 
 grammar = DoxygenGrammar()
 
+print(grammar.all.parseString(r"\a TEST"))
+
 param_list = r"""
 
 \param[in] param1 My description ending at the next param section. \a Italic text.
@@ -30,8 +32,6 @@ param_list = r"""
   \textit{\param[in,out] param6 this will not be changed.}
 
 @f}
-
-\f$\textit{\param[in,out] param7 this will not be changed.}\f$
 """
 
 for mtch in grammar.all.scanString(param_list):
@@ -55,3 +55,44 @@ class MyParamFormatter(styles.PythonDocstrings):
 grammar.style = MyParamFormatter
 
 print(grammar.transform_string(param_list))
+
+#
+
+import pyparsing as pyp
+
+
+comments = """\
+
+/// My /// docu line 1
+/// My /// docu line 2
+/// My /// docu line 3
+
+//! My //! docu line 1
+//! My //! docu line 2
+//! My //! docu line 3
+
+/** My /** * docu line 1
+ *  My /** * docu line 2
+ */
+
+/*! My /*! * docu line 1
+ *  My /*! * docu line 2
+ */
+
+  /*! My /*! docu line 1
+      My /*! docu line 2
+   */
+  
+  /** My /** docu line 1
+      My /** docu line 2
+   */
+
+/* Normal C comment */
+
+// Normal C comment
+"""
+
+#for tokens,start,end in pyp.cppStyleComment.scanString(comments):
+#    print(tokens)
+
+print(grammar.remove_doxygen_cpp_comments(comments))
