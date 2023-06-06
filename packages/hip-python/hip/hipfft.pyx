@@ -176,7 +176,7 @@ def hipfftPlan1d(int nx, object type, int batch):
     Create a new one-dimensional FFT plan.
 
     Details:
-        Allocate and initialize a new one-dimensional FFT plan.
+       Allocate and initialize a new one-dimensional FFT plan.
 
 
 
@@ -185,10 +185,9 @@ def hipfftPlan1d(int nx, object type, int batch):
 
 
     Args:
-        plan: Pointer to the FFT plan handle.
-        nx: FFT length.
-        type: FFT type.
-        batch: Number of batched transforms to compute.
+       nx: FFT length.
+       type: FFT type.
+       batch: Number of batched transforms to compute.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
     if not isinstance(type,_hipfftType_t__Base):
@@ -203,10 +202,10 @@ def hipfftPlan2d(int nx, int ny, object type):
     Create a new two-dimensional FFT plan.
 
     Details:
-        Allocate and initialize a new two-dimensional FFT plan.
-        Two-dimensional data should be stored in C ordering (row-major
-        format), so that indexes in y-direction (j index) vary the
-        fastest.
+       Allocate and initialize a new two-dimensional FFT plan.
+       Two-dimensional data should be stored in C ordering (row-major
+       format), so that indexes in y-direction (j index) vary the
+       fastest.
 
 
 
@@ -215,10 +214,9 @@ def hipfftPlan2d(int nx, int ny, object type):
 
 
     Args:
-        plan: Pointer to the FFT plan handle.
-        nx: Number of elements in the x-direction (slow index).
-        ny: Number of elements in the y-direction (fast index).
-        type: FFT type.
+       nx: Number of elements in the x-direction (slow index).
+       ny: Number of elements in the y-direction (fast index).
+       type: FFT type.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
     if not isinstance(type,_hipfftType_t__Base):
@@ -233,10 +231,10 @@ def hipfftPlan3d(int nx, int ny, int nz, object type):
     Create a new three-dimensional FFT plan.
 
     Details:
-        Allocate and initialize a new three-dimensional FFT plan.
-        Three-dimensional data should be stored in C ordering (row-major
-        format), so that indexes in z-direction (k index) vary the
-        fastest.
+       Allocate and initialize a new three-dimensional FFT plan.
+       Three-dimensional data should be stored in C ordering (row-major
+       format), so that indexes in z-direction (k index) vary the
+       fastest.
 
 
 
@@ -246,11 +244,10 @@ def hipfftPlan3d(int nx, int ny, int nz, object type):
 
 
     Args:
-        plan: Pointer to the FFT plan handle.
-        nx: Number of elements in the x-direction (slowest index).
-        ny: Number of elements in the y-direction.
-        nz: Number of elements in the z-direction (fastest index).
-        type: FFT type.
+       nx: Number of elements in the x-direction (slowest index).
+       ny: Number of elements in the y-direction.
+       nz: Number of elements in the z-direction (fastest index).
+       type: FFT type.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
     if not isinstance(type,_hipfftType_t__Base):
@@ -265,52 +262,51 @@ def hipfftPlanMany(int rank, object n, object inembed, int istride, int idist, o
      Create a new batched rank-dimensional FFT plan with advanced data layout.
 
     Details:
-        Allocate and initialize a new batched rank-dimensional
-        FFT plan. The number of elements to transform in each direction of
-        the input data is specified in n.
+       Allocate and initialize a new batched rank-dimensional
+       FFT plan. The number of elements to transform in each direction of
+       the input data is specified in n.
 
-        The batch parameter tells hipFFT how many transforms to perform.
-        The distance between the first elements of two consecutive batches
-        of the input and output data are specified with the idist and odist
-        parameters.
+       The batch parameter tells hipFFT how many transforms to perform.
+       The distance between the first elements of two consecutive batches
+       of the input and output data are specified with the idist and odist
+       parameters.
 
-        The inembed and onembed parameters define the input and output data
-        layouts. The number of elements in the data is assumed to be larger
-        than the number of elements in the transform. Strided data layouts
-        are also supported. Strides along the fastest direction in the input
-        and output data are specified via the istride and ostride parameters.
+       The inembed and onembed parameters define the input and output data
+       layouts. The number of elements in the data is assumed to be larger
+       than the number of elements in the transform. Strided data layouts
+       are also supported. Strides along the fastest direction in the input
+       and output data are specified via the istride and ostride parameters.
 
-        If both inembed and onembed parameters are set to NULL, all the
-        advanced data layout parameters are ignored and reverted to default
-        values, i.e., the batched transform is performed with non-strided data
-        access and the number of data/transform elements are assumed to be
-        equivalent.
+       If both inembed and onembed parameters are set to NULL, all the
+       advanced data layout parameters are ignored and reverted to default
+       values, i.e., the batched transform is performed with non-strided data
+       access and the number of data/transform elements are assumed to be
+       equivalent.
 
 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+
+
+
+
+
 
     Args:
-        plan: Pointer to the FFT plan handle.
-        rank: Dimension of transform (1, 2, or 3).
-        n: Number of elements to transform in the x/y/z directions.
-        inembed: Number of elements in the input data in the x/y/z directions.
-        istride: Distance between two successive elements in the input data.
-        idist: Distance between input batches.
-        onembed: Number of elements in the output data in the x/y/z directions.
-        ostride: Distance between two successive elements in the output data.
-        odist: Distance between output batches.
-        type: FFT type.
-        batch: Number of batched transforms to perform.
+       rank: Dimension of transform (1, 2, or 3).
+       n: Number of elements to transform in the x/y/z directions.
+       inembed: Number of elements in the input data in the x/y/z directions.
+       istride: Distance between two successive elements in the input data.
+       idist: Distance between input batches.
+       onembed: Number of elements in the output data in the x/y/z directions.
+       ostride: Distance between two successive elements in the output data.
+       odist: Distance between output batches.
+       type: FFT type.
+       batch: Number of batched transforms to perform.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
     if not isinstance(type,_hipfftType_t__Base):
@@ -339,13 +335,13 @@ def hipfftExtPlanScaleFactor(object plan, double scalefactor):
     Set scaling factor.
 
     Details:
-        hipFFT multiplies each element of the result by the given factor at the end of the transform.
+       hipFFT multiplies each element of the result by the given factor at the end of the transform.
 
-        The supplied factor must be a finite number.  That is, it must neither be infinity nor NaN.
+       The supplied factor must be a finite number.  That is, it must neither be infinity nor NaN.
 
-        This function must be called after the plan is allocated using
-        ::hipfftCreate, but before the plan is initialized by any of the
-        "MakePlan" functions.
+       This function must be called after the plan is allocated using
+       ::hipfftCreate, but before the plan is initialized by any of the
+       "MakePlan" functions.
 
 
 
@@ -361,8 +357,8 @@ def hipfftMakePlan1d(object plan, int nx, object type, int batch):
     Initialize a new one-dimensional FFT plan.
 
     Details:
-        Assumes that the plan has been created already, and
-        modifies the plan associated with the plan handle.
+       Assumes that the plan has been created already, and
+       modifies the plan associated with the plan handle.
 
 
 
@@ -371,10 +367,10 @@ def hipfftMakePlan1d(object plan, int nx, object type, int batch):
 
 
     Args:
-        plan: Handle of the FFT plan.
-        nx: FFT length.
-        type: FFT type.
-        batch: Number of batched transforms to compute.
+       plan: Handle of the FFT plan.
+       nx: FFT length.
+       type: FFT type.
+       batch: Number of batched transforms to compute.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -390,11 +386,11 @@ def hipfftMakePlan2d(object plan, int nx, int ny, object type):
     Initialize a new two-dimensional FFT plan.
 
     Details:
-        Assumes that the plan has been created already, and
-        modifies the plan associated with the plan handle.
-        Two-dimensional data should be stored in C ordering (row-major
-        format), so that indexes in y-direction (j index) vary the
-        fastest.
+       Assumes that the plan has been created already, and
+       modifies the plan associated with the plan handle.
+       Two-dimensional data should be stored in C ordering (row-major
+       format), so that indexes in y-direction (j index) vary the
+       fastest.
 
 
 
@@ -404,11 +400,10 @@ def hipfftMakePlan2d(object plan, int nx, int ny, object type):
 
 
     Args:
-        plan: Handle of the FFT plan.
-        nx: Number of elements in the x-direction (slow index).
-        ny: Number of elements in the y-direction (fast index).
-        type: FFT type.
-        workSize: Pointer to work area size (returned value).
+       plan: Handle of the FFT plan.
+       nx: Number of elements in the x-direction (slow index).
+       ny: Number of elements in the y-direction (fast index).
+       type: FFT type.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -424,11 +419,11 @@ def hipfftMakePlan3d(object plan, int nx, int ny, int nz, object type):
     Initialize a new two-dimensional FFT plan.
 
     Details:
-        Assumes that the plan has been created already, and
-        modifies the plan associated with the plan handle.
-        Three-dimensional data should be stored in C ordering (row-major
-        format), so that indexes in z-direction (k index) vary the
-        fastest.
+       Assumes that the plan has been created already, and
+       modifies the plan associated with the plan handle.
+       Three-dimensional data should be stored in C ordering (row-major
+       format), so that indexes in z-direction (k index) vary the
+       fastest.
 
 
 
@@ -439,12 +434,11 @@ def hipfftMakePlan3d(object plan, int nx, int ny, int nz, object type):
 
 
     Args:
-        plan: Handle of the FFT plan.
-        nx: Number of elements in the x-direction (slowest index).
-        ny: Number of elements in the y-direction.
-        nz: Number of elements in the z-direction (fastest index).
-        type: FFT type.
-        workSize: Pointer to work area size (returned value).
+       plan: Handle of the FFT plan.
+       nx: Number of elements in the x-direction (slowest index).
+       ny: Number of elements in the y-direction.
+       nz: Number of elements in the z-direction (fastest index).
+       type: FFT type.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -460,27 +454,27 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
     Initialize a new batched rank-dimensional FFT plan with advanced data layout.
 
     Details:
-        Assumes that the plan has been created already, and
-        modifies the plan associated with the plan handle. The number
-        of elements to transform in each direction of the input data
-        in the FFT plan is specified in n.
+       Assumes that the plan has been created already, and
+       modifies the plan associated with the plan handle. The number
+       of elements to transform in each direction of the input data
+       in the FFT plan is specified in n.
 
-        The batch parameter tells hipFFT how many transforms to perform.
-        The distance between the first elements of two consecutive batches
-        of the input and output data are specified with the idist and odist
-        parameters.
+       The batch parameter tells hipFFT how many transforms to perform.
+       The distance between the first elements of two consecutive batches
+       of the input and output data are specified with the idist and odist
+       parameters.
 
-        The inembed and onembed parameters define the input and output data
-        layouts. The number of elements in the data is assumed to be larger
-        than the number of elements in the transform. Strided data layouts
-        are also supported. Strides along the fastest direction in the input
-        and output data are specified via the istride and ostride parameters.
+       The inembed and onembed parameters define the input and output data
+       layouts. The number of elements in the data is assumed to be larger
+       than the number of elements in the transform. Strided data layouts
+       are also supported. Strides along the fastest direction in the input
+       and output data are specified via the istride and ostride parameters.
 
-        If both inembed and onembed parameters are set to NULL, all the
-        advanced data layout parameters are ignored and reverted to default
-        values, i.e., the batched transform is performed with non-strided data
-        access and the number of data/transform elements are assumed to be
-        equivalent.
+       If both inembed and onembed parameters are set to NULL, all the
+       advanced data layout parameters are ignored and reverted to default
+       values, i.e., the batched transform is performed with non-strided data
+       access and the number of data/transform elements are assumed to be
+       equivalent.
 
 
 
@@ -497,18 +491,17 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
 
 
     Args:
-        plan: Pointer to the FFT plan handle.
-        rank: Dimension of transform (1, 2, or 3).
-        n: Number of elements to transform in the x/y/z directions.
-        inembed: Number of elements in the input data in the x/y/z directions.
-        istride: Distance between two successive elements in the input data.
-        idist: Distance between input batches.
-        onembed: Number of elements in the output data in the x/y/z directions.
-        ostride: Distance between two successive elements in the output data.
-        odist: Distance between output batches.
-        type: FFT type.
-        batch: Number of batched transforms to perform.
-        workSize: Pointer to work area size (returned value).
+       plan: Pointer to the FFT plan handle.
+       rank: Dimension of transform (1, 2, or 3).
+       n: Number of elements to transform in the x/y/z directions.
+       inembed: Number of elements in the input data in the x/y/z directions.
+       istride: Distance between two successive elements in the input data.
+       idist: Distance between input batches.
+       onembed: Number of elements in the output data in the x/y/z directions.
+       ostride: Distance between two successive elements in the output data.
+       odist: Distance between output batches.
+       type: FFT type.
+       batch: Number of batched transforms to perform.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -547,9 +540,8 @@ def hipfftEstimate1d(int nx, object type, int batch):
 
 
     Args:
-        nx: Number of elements in the x-direction.
-        type: FFT type.
-        workSize: Pointer to work area size (returned value).
+       nx: Number of elements in the x-direction.
+       type: FFT type.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -569,10 +561,9 @@ def hipfftEstimate2d(int nx, int ny, object type):
 
 
     Args:
-        nx: Number of elements in the x-direction.
-        ny: Number of elements in the y-direction.
-        type: FFT type.
-        workSize: Pointer to work area size (returned value).
+       nx: Number of elements in the x-direction.
+       ny: Number of elements in the y-direction.
+       type: FFT type.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -593,11 +584,10 @@ def hipfftEstimate3d(int nx, int ny, int nz, object type):
 
 
     Args:
-        nx: Number of elements in the x-direction.
-        ny: Number of elements in the y-direction.
-        nz: Number of elements in the z-direction.
-        type: FFT type.
-        workSize: Pointer to work area size (returned value).
+       nx: Number of elements in the x-direction.
+       ny: Number of elements in the y-direction.
+       nz: Number of elements in the z-direction.
+       type: FFT type.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -620,17 +610,16 @@ def hipfftEstimateMany(int rank, object n, object inembed, int istride, int idis
 
 
     Args:
-        rank: Dimension of FFT transform (1, 2, or 3).
-        n: Number of elements in the x/y/z directions.
-        inembed:
-        istride:
-        idist: Distance between input batches.
-        onembed:
-        ostride:
-        odist: Distance between output batches.
-        type: FFT type.
-        batch: Number of batched transforms to perform.
-        workSize: Pointer to work area size (returned value).
+       rank: Dimension of FFT transform (1, 2, or 3).
+       n: Number of elements in the x/y/z directions.
+       inembed:
+       istride:
+       idist: Distance between input batches.
+       onembed:
+       ostride:
+       odist: Distance between output batches.
+       type: FFT type.
+       batch: Number of batched transforms to perform.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -653,10 +642,9 @@ def hipfftGetSize1d(object plan, int nx, object type, int batch):
 
 
     Args:
-        plan: Pointer to the FFT plan.
-        nx: Number of elements in the x-direction.
-        type: FFT type.
-        workSize: Pointer to work area size (returned value).
+       plan: Pointer to the FFT plan.
+       nx: Number of elements in the x-direction.
+       type: FFT type.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -678,11 +666,10 @@ def hipfftGetSize2d(object plan, int nx, int ny, object type):
 
 
     Args:
-        plan: Pointer to the FFT plan.
-        nx: Number of elements in the x-direction.
-        ny: Number of elements in the y-direction.
-        type: FFT type.
-        workSize: Pointer to work area size (returned value).
+       plan: Pointer to the FFT plan.
+       nx: Number of elements in the x-direction.
+       ny: Number of elements in the y-direction.
+       type: FFT type.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -705,12 +692,11 @@ def hipfftGetSize3d(object plan, int nx, int ny, int nz, object type):
 
 
     Args:
-        plan: Pointer to the FFT plan.
-        nx: Number of elements in the x-direction.
-        ny: Number of elements in the y-direction.
-        nz: Number of elements in the z-direction.
-        type: FFT type.
-        workSize: Pointer to work area size (returned value).
+       plan: Pointer to the FFT plan.
+       nx: Number of elements in the x-direction.
+       ny: Number of elements in the y-direction.
+       nz: Number of elements in the z-direction.
+       type: FFT type.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -735,18 +721,17 @@ def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istri
 
 
     Args:
-        plan: Pointer to the FFT plan.
-        rank: Dimension of FFT transform (1, 2, or 3).
-        n: Number of elements in the x/y/z directions.
-        inembed:
-        istride:
-        idist: Distance between input batches.
-        onembed:
-        ostride:
-        odist: Distance between output batches.
-        type: FFT type.
-        batch: Number of batched transforms to perform.
-        workSize: Pointer to work area size (returned value).
+       plan: Pointer to the FFT plan.
+       rank: Dimension of FFT transform (1, 2, or 3).
+       n: Number of elements in the x/y/z directions.
+       inembed:
+       istride:
+       idist: Distance between input batches.
+       onembed:
+       ostride:
+       odist: Distance between output batches.
+       type: FFT type.
+       batch: Number of batched transforms to perform.
     """
     if not isinstance(type,_hipfftType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftType_t__Base'")                    
@@ -783,7 +768,7 @@ def hipfftGetSize(object plan):
 
 
     Args:
-        plan: Pointer to the FFT plan.
+       plan: Pointer to the FFT plan.
     """
     cdef unsigned long workSize
     _hipfftGetSize__retval = hipfftResult_t(chipfft.hipfftGetSize(
@@ -800,8 +785,8 @@ def hipfftSetAutoAllocation(object plan, int autoAllocate):
 
 
     Args:
-        plan: Pointer to the FFT plan.
-        autoAllocate: 0 to disable auto-allocation, non-zero to enable.
+       plan: Pointer to the FFT plan.
+       autoAllocate: 0 to disable auto-allocation, non-zero to enable.
     """
     _hipfftSetAutoAllocation__retval = hipfftResult_t(chipfft.hipfftSetAutoAllocation(
         hipfftHandle_t.from_pyobj(plan)._ptr,autoAllocate))    # fully specified
@@ -817,8 +802,8 @@ def hipfftSetWorkArea(object plan, object workArea):
 
 
     Args:
-        plan: Pointer to the FFT plan.
-        workArea: Pointer to the work area (on device).
+       plan: Pointer to the FFT plan.
+       workArea: Pointer to the work area (on device).
     """
     _hipfftSetWorkArea__retval = hipfftResult_t(chipfft.hipfftSetWorkArea(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -832,8 +817,8 @@ def hipfftExecC2C(object plan, object idata, object odata, int direction):
     Execute a (float) complex-to-complex FFT.
 
     Details:
-        If the input and output buffers are equal, an in-place
-        transform is performed.
+       If the input and output buffers are equal, an in-place
+       transform is performed.
 
 
     @param plan The FFT plan.
@@ -855,8 +840,8 @@ def hipfftExecR2C(object plan, object idata, object odata):
     Execute a (float) real-to-complex FFT.
 
     Details:
-        If the input and output buffers are equal, an in-place
-        transform is performed.
+       If the input and output buffers are equal, an in-place
+       transform is performed.
 
 
     @param plan The FFT plan.
@@ -877,8 +862,8 @@ def hipfftExecC2R(object plan, object idata, object odata):
     Execute a (float) complex-to-real FFT.
 
     Details:
-        If the input and output buffers are equal, an in-place
-        transform is performed.
+       If the input and output buffers are equal, an in-place
+       transform is performed.
 
 
     @param plan The FFT plan.
@@ -899,8 +884,8 @@ def hipfftExecZ2Z(object plan, object idata, object odata, int direction):
     Execute a (double) complex-to-complex FFT.
 
     Details:
-        If the input and output buffers are equal, an in-place
-        transform is performed.
+       If the input and output buffers are equal, an in-place
+       transform is performed.
 
 
     @param plan The FFT plan.
@@ -922,8 +907,8 @@ def hipfftExecD2Z(object plan, object idata, object odata):
     Execute a (double) real-to-complex FFT.
 
     Details:
-        If the input and output buffers are equal, an in-place
-        transform is performed.
+       If the input and output buffers are equal, an in-place
+       transform is performed.
 
 
     @param plan The FFT plan.
@@ -944,8 +929,8 @@ def hipfftExecZ2D(object plan, object idata, object odata):
     Execute a (double) complex-to-real FFT.
 
     Details:
-        If the input and output buffers are equal, an in-place
-        transform is performed.
+       If the input and output buffers are equal, an in-place
+       transform is performed.
 
 
     @param plan The FFT plan.
@@ -966,8 +951,8 @@ def hipfftSetStream(object plan, object stream):
      Set HIP stream to execute plan on.
 
     Details:
-        Associates a HIP stream with a hipFFT plan.  All kernels
-        launched by this plan are associated with the provided stream.
+       Associates a HIP stream with a hipFFT plan.  All kernels
+       launched by this plan are associated with the provided stream.
 
 
     @param plan The FFT plan.
@@ -999,7 +984,7 @@ def hipfftGetVersion(object version):
 
 
     Args:
-        version: cuFFT/rocFFT version (returned value).
+       version: cuFFT/rocFFT version (returned value).
     """
     _hipfftGetVersion__retval = hipfftResult_t(chipfft.hipfftGetVersion(
         <int *>hip._util.types.DataHandle.from_pyobj(version)._ptr))    # fully specified
@@ -1015,8 +1000,8 @@ def hipfftGetProperty(object type, object value):
 
 
     Args:
-        type: Property type.
-        value: Returned value.
+       type: Property type.
+       value: Returned value.
     """
     if not isinstance(type,_hipfftLibraryPropertyType_t__Base):
         raise TypeError("argument 'type' must be of type '_hipfftLibraryPropertyType_t__Base'")

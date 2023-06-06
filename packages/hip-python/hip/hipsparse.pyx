@@ -1235,10 +1235,10 @@ def hipsparseCreate(object handle):
     Create a hipsparse handle
 
     Details:
-        ``hipsparseCreate`` creates the hipSPARSE library context. It must be
-        initialized before any other hipSPARSE API function is invoked and must be passed to
-        all subsequent library function calls. The handle should be destroyed at the end
-        using hipsparseDestroy().
+       ``hipsparseCreate`` creates the hipSPARSE library context. It must be
+       initialized before any other hipSPARSE API function is invoked and must be passed to
+       all subsequent library function calls. The handle should be destroyed at the end
+       using hipsparseDestroy().
 
 
     """
@@ -1254,8 +1254,8 @@ def hipsparseDestroy(object handle):
     Destroy a hipsparse handle
 
     Details:
-        ``hipsparseDestroy`` destroys the hipSPARSE library context and releases all
-        resources used by the hipSPARSE library.
+       ``hipsparseDestroy`` destroys the hipSPARSE library context and releases all
+       resources used by the hipSPARSE library.
 
 
     """
@@ -1271,10 +1271,10 @@ def hipsparseGetVersion(object handle, object version):
     Get hipSPARSE version
 
     Details:
-        ``hipsparseGetVersion`` gets the hipSPARSE library version number.
-        - patch = version % 100
-        - minor = version / 100 % 1000
-        - major = version / 100000
+       ``hipsparseGetVersion`` gets the hipSPARSE library version number.
+       - patch = version % 100
+       - minor = version / 100 % 1000
+       - major = version / 100000
 
 
     """
@@ -1291,7 +1291,7 @@ def hipsparseGetGitRevision(object handle, char * rev):
     Get hipSPARSE git revision
 
     Details:
-        ``hipsparseGetGitRevision`` gets the hipSPARSE library git commit revision (SHA-1).
+       ``hipsparseGetGitRevision`` gets the hipSPARSE library git commit revision (SHA-1).
 
 
     """
@@ -1307,8 +1307,8 @@ def hipsparseSetStream(object handle, object streamId):
     Specify user defined HIP stream
 
     Details:
-        ``hipsparseSetStream`` specifies the stream to be used by the hipSPARSE library
-        context and all subsequent function calls.
+       ``hipsparseSetStream`` specifies the stream to be used by the hipSPARSE library
+       context and all subsequent function calls.
 
 
     """
@@ -1325,8 +1325,8 @@ def hipsparseGetStream(object handle):
     Get current stream from library context
 
     Details:
-        ``hipsparseGetStream`` gets the hipSPARSE library context stream which is currently
-        used for all subsequent function calls.
+       ``hipsparseGetStream`` gets the hipSPARSE library context stream which is currently
+       used for all subsequent function calls.
 
 
     """
@@ -1343,9 +1343,9 @@ def hipsparseSetPointerMode(object handle, object mode):
     Specify pointer mode
 
     Details:
-        ``hipsparseSetPointerMode`` specifies the pointer mode to be used by the hipSPARSE
-        library context and all subsequent function calls. By default, all values are passed
-        by reference on the host. Valid pointer modes are
+       ``hipsparseSetPointerMode`` specifies the pointer mode to be used by the hipSPARSE
+       library context and all subsequent function calls. By default, all values are passed
+       by reference on the host. Valid pointer modes are
      \ref HIPSPARSE_POINTER_MODE_HOST
     or ``HIPSPARSE_POINTER_MODE_DEVICE.``
 
@@ -1364,8 +1364,8 @@ def hipsparseGetPointerMode(object handle, object mode):
     Get current pointer mode from library context
 
     Details:
-        ``hipsparseGetPointerMode`` gets the hipSPARSE library context pointer mode which
-        is currently used for all subsequent function calls.
+       ``hipsparseGetPointerMode`` gets the hipSPARSE library context pointer mode which
+       is currently used for all subsequent function calls.
 
 
     """
@@ -1381,7 +1381,7 @@ def hipsparseCreateMatDescr(object descrA):
     \ingroup aux_module
     Create a matrix descriptor
     Details:
-        ``hipsparseCreateMatDescr`` creates a matrix descriptor. It initializes
+       ``hipsparseCreateMatDescr`` creates a matrix descriptor. It initializes
 
     \ref hipsparseMatrixType_t to \ref HIPSPARSE_MATRIX_TYPE_GENERAL and
     \ref hipsparseIndexBase_t to \ref HIPSPARSE_INDEX_BASE_ZERO. It should be destroyed
@@ -1400,8 +1400,8 @@ def hipsparseDestroyMatDescr(object descrA):
     Destroy a matrix descriptor
 
     Details:
-        ``hipsparseDestroyMatDescr`` destroys a matrix descriptor and releases all
-        resources used by the descriptor.
+       ``hipsparseDestroyMatDescr`` destroys a matrix descriptor and releases all
+       resources used by the descriptor.
 
 
     """
@@ -1416,8 +1416,8 @@ def hipsparseCopyMatDescr(object dest, object src):
     \ingroup aux_module
     Copy a matrix descriptor
     Details:
-        ``hipsparseCopyMatDescr`` copies a matrix descriptor. Both, source and destination
-        matrix descriptors must be initialized prior to calling ``hipsparseCopyMatDescr.``
+       ``hipsparseCopyMatDescr`` copies a matrix descriptor. Both, source and destination
+       matrix descriptors must be initialized prior to calling ``hipsparseCopyMatDescr.``
 
 
     """
@@ -1434,8 +1434,8 @@ def hipsparseSetMatType(object descrA, object type):
     Specify the matrix type of a matrix descriptor
 
     Details:
-        ``hipsparseSetMatType`` sets the matrix type of a matrix descriptor. Valid
-        matrix types are
+       ``hipsparseSetMatType`` sets the matrix type of a matrix descriptor. Valid
+       matrix types are
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL,
     \ref HIPSPARSE_MATRIX_TYPE_SYMMETRIC, \ref HIPSPARSE_MATRIX_TYPE_HERMITIAN or
     \ref HIPSPARSE_MATRIX_TYPE_TRIANGULAR.
@@ -1455,7 +1455,7 @@ def hipsparseGetMatType(object descrA):
     Get the matrix type of a matrix descriptor
 
     Details:
-        ``hipsparseGetMatType`` returns the matrix type of a matrix descriptor.
+       ``hipsparseGetMatType`` returns the matrix type of a matrix descriptor.
 
 
     """
@@ -1471,8 +1471,8 @@ def hipsparseSetMatFillMode(object descrA, object fillMode):
     Specify the matrix fill mode of a matrix descriptor
 
     Details:
-        ``hipsparseSetMatFillMode`` sets the matrix fill mode of a matrix descriptor.
-        Valid fill modes are
+       ``hipsparseSetMatFillMode`` sets the matrix fill mode of a matrix descriptor.
+       Valid fill modes are
      \ref HIPSPARSE_FILL_MODE_LOWER or
     \ref HIPSPARSE_FILL_MODE_UPPER.
 
@@ -1491,7 +1491,7 @@ def hipsparseGetMatFillMode(object descrA):
     Get the matrix fill mode of a matrix descriptor
 
     Details:
-        ``hipsparseGetMatFillMode`` returns the matrix fill mode of a matrix descriptor.
+       ``hipsparseGetMatFillMode`` returns the matrix fill mode of a matrix descriptor.
 
 
     """
@@ -1507,8 +1507,8 @@ def hipsparseSetMatDiagType(object descrA, object diagType):
     Specify the matrix diagonal type of a matrix descriptor
 
     Details:
-        ``hipsparseSetMatDiagType`` sets the matrix diagonal type of a matrix
-        descriptor. Valid diagonal types are
+       ``hipsparseSetMatDiagType`` sets the matrix diagonal type of a matrix
+       descriptor. Valid diagonal types are
      \ref HIPSPARSE_DIAG_TYPE_UNIT or
     \ref HIPSPARSE_DIAG_TYPE_NON_UNIT.
 
@@ -1527,8 +1527,8 @@ def hipsparseGetMatDiagType(object descrA):
     Get the matrix diagonal type of a matrix descriptor
 
     Details:
-        ``hipsparseGetMatDiagType`` returns the matrix diagonal type of a matrix
-        descriptor.
+       ``hipsparseGetMatDiagType`` returns the matrix diagonal type of a matrix
+       descriptor.
 
 
     """
@@ -1544,8 +1544,8 @@ def hipsparseSetMatIndexBase(object descrA, object base):
     Specify the index base of a matrix descriptor
 
     Details:
-        ``hipsparseSetMatIndexBase`` sets the index base of a matrix descriptor. Valid
-        options are
+       ``hipsparseSetMatIndexBase`` sets the index base of a matrix descriptor. Valid
+       options are
      \ref HIPSPARSE_INDEX_BASE_ZERO or \ref HIPSPARSE_INDEX_BASE_ONE.
 
     """
@@ -1563,7 +1563,7 @@ def hipsparseGetMatIndexBase(object descrA):
     Get the index base of a matrix descriptor
 
     Details:
-        ``hipsparseGetMatIndexBase`` returns the index base of a matrix descriptor.
+       ``hipsparseGetMatIndexBase`` returns the index base of a matrix descriptor.
 
 
     """
@@ -1579,8 +1579,8 @@ def hipsparseCreateHybMat(object hybA):
     Create a ``HYB`` matrix structure
 
     Details:
-        ``hipsparseCreateHybMat`` creates a structure that holds the matrix in ``HYB``
-        storage format. It should be destroyed at the end using hipsparseDestroyHybMat().
+       ``hipsparseCreateHybMat`` creates a structure that holds the matrix in ``HYB``
+       storage format. It should be destroyed at the end using hipsparseDestroyHybMat().
 
 
     """
@@ -1596,7 +1596,7 @@ def hipsparseDestroyHybMat(object hybA):
     Destroy a ``HYB`` matrix structure
 
     Details:
-        ``hipsparseDestroyHybMat`` destroys a ``HYB`` structure.
+       ``hipsparseDestroyHybMat`` destroys a ``HYB`` structure.
 
 
     """
@@ -1612,9 +1612,9 @@ def hipsparseCreateBsrsv2Info():
     Create a bsrsv2 info structure
 
     Details:
-        ``hipsparseCreateBsrsv2Info`` creates a structure that holds the bsrsv2 info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyBsrsv2Info().
+       ``hipsparseCreateBsrsv2Info`` creates a structure that holds the bsrsv2 info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyBsrsv2Info().
 
 
     """
@@ -1630,7 +1630,7 @@ def hipsparseDestroyBsrsv2Info(object info):
     Destroy a bsrsv2 info structure
 
     Details:
-        ``hipsparseDestroyBsrsv2Info`` destroys a bsrsv2 info structure.
+       ``hipsparseDestroyBsrsv2Info`` destroys a bsrsv2 info structure.
 
 
     """
@@ -1646,9 +1646,9 @@ def hipsparseCreateBsrsm2Info():
     Create a bsrsm2 info structure
 
     Details:
-        ``hipsparseCreateBsrsm2Info`` creates a structure that holds the bsrsm2 info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyBsrsm2Info().
+       ``hipsparseCreateBsrsm2Info`` creates a structure that holds the bsrsm2 info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyBsrsm2Info().
 
 
     """
@@ -1664,7 +1664,7 @@ def hipsparseDestroyBsrsm2Info(object info):
     Destroy a bsrsm2 info structure
 
     Details:
-        ``hipsparseDestroyBsrsm2Info`` destroys a bsrsm2 info structure.
+       ``hipsparseDestroyBsrsm2Info`` destroys a bsrsm2 info structure.
 
 
     """
@@ -1680,9 +1680,9 @@ def hipsparseCreateBsrilu02Info():
     Create a bsrilu02 info structure
 
     Details:
-        ``hipsparseCreateBsrilu02Info`` creates a structure that holds the bsrilu02 info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyBsrilu02Info().
+       ``hipsparseCreateBsrilu02Info`` creates a structure that holds the bsrilu02 info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyBsrilu02Info().
 
 
     """
@@ -1698,7 +1698,7 @@ def hipsparseDestroyBsrilu02Info(object info):
     Destroy a bsrilu02 info structure
 
     Details:
-        ``hipsparseDestroyBsrilu02Info`` destroys a bsrilu02 info structure.
+       ``hipsparseDestroyBsrilu02Info`` destroys a bsrilu02 info structure.
 
 
     """
@@ -1714,9 +1714,9 @@ def hipsparseCreateBsric02Info():
     Create a bsric02 info structure
 
     Details:
-        ``hipsparseCreateBsric02Info`` creates a structure that holds the bsric02 info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyBsric02Info().
+       ``hipsparseCreateBsric02Info`` creates a structure that holds the bsric02 info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyBsric02Info().
 
 
     """
@@ -1732,7 +1732,7 @@ def hipsparseDestroyBsric02Info(object info):
     Destroy a bsric02 info structure
 
     Details:
-        ``hipsparseDestroyBsric02Info`` destroys a bsric02 info structure.
+       ``hipsparseDestroyBsric02Info`` destroys a bsric02 info structure.
 
 
     """
@@ -1748,9 +1748,9 @@ def hipsparseCreateCsrsv2Info():
     Create a csrsv2 info structure
 
     Details:
-        ``hipsparseCreateCsrsv2Info`` creates a structure that holds the csrsv2 info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyCsrsv2Info().
+       ``hipsparseCreateCsrsv2Info`` creates a structure that holds the csrsv2 info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyCsrsv2Info().
 
 
     """
@@ -1766,7 +1766,7 @@ def hipsparseDestroyCsrsv2Info(object info):
     Destroy a csrsv2 info structure
 
     Details:
-        ``hipsparseDestroyCsrsv2Info`` destroys a csrsv2 info structure.
+       ``hipsparseDestroyCsrsv2Info`` destroys a csrsv2 info structure.
 
 
     """
@@ -1782,9 +1782,9 @@ def hipsparseCreateCsrsm2Info():
     Create a csrsm2 info structure
 
     Details:
-        ``hipsparseCreateCsrsm2Info`` creates a structure that holds the csrsm2 info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyCsrsm2Info().
+       ``hipsparseCreateCsrsm2Info`` creates a structure that holds the csrsm2 info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyCsrsm2Info().
 
 
     """
@@ -1800,7 +1800,7 @@ def hipsparseDestroyCsrsm2Info(object info):
     Destroy a csrsm2 info structure
 
     Details:
-        ``hipsparseDestroyCsrsm2Info`` destroys a csrsm2 info structure.
+       ``hipsparseDestroyCsrsm2Info`` destroys a csrsm2 info structure.
 
 
     """
@@ -1816,9 +1816,9 @@ def hipsparseCreateCsrilu02Info():
     Create a csrilu02 info structure
 
     Details:
-        ``hipsparseCreateCsrilu02Info`` creates a structure that holds the csrilu02 info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyCsrilu02Info().
+       ``hipsparseCreateCsrilu02Info`` creates a structure that holds the csrilu02 info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyCsrilu02Info().
 
 
     """
@@ -1834,7 +1834,7 @@ def hipsparseDestroyCsrilu02Info(object info):
     Destroy a csrilu02 info structure
 
     Details:
-        ``hipsparseDestroyCsrilu02Info`` destroys a csrilu02 info structure.
+       ``hipsparseDestroyCsrilu02Info`` destroys a csrilu02 info structure.
 
 
     """
@@ -1850,9 +1850,9 @@ def hipsparseCreateCsric02Info():
     Create a csric02 info structure
 
     Details:
-        ``hipsparseCreateCsric02Info`` creates a structure that holds the csric02 info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyCsric02Info().
+       ``hipsparseCreateCsric02Info`` creates a structure that holds the csric02 info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyCsric02Info().
 
 
     """
@@ -1868,7 +1868,7 @@ def hipsparseDestroyCsric02Info(object info):
     Destroy a csric02 info structure
 
     Details:
-        ``hipsparseDestroyCsric02Info`` destroys a csric02 info structure.
+       ``hipsparseDestroyCsric02Info`` destroys a csric02 info structure.
 
 
     """
@@ -1884,9 +1884,9 @@ def hipsparseCreateCsru2csrInfo():
     Create a csru2csr info structure
 
     Details:
-        ``hipsparseCreateCsru2csrInfo`` creates a structure that holds the csru2csr info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyCsru2csrInfo().
+       ``hipsparseCreateCsru2csrInfo`` creates a structure that holds the csru2csr info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyCsru2csrInfo().
 
 
     """
@@ -1902,7 +1902,7 @@ def hipsparseDestroyCsru2csrInfo(object info):
     Destroy a csru2csr info structure
 
     Details:
-        ``hipsparseDestroyCsru2csrInfo`` destroys a csru2csr info structure.
+       ``hipsparseDestroyCsru2csrInfo`` destroys a csru2csr info structure.
 
 
     """
@@ -1918,9 +1918,9 @@ def hipsparseCreateColorInfo(object info):
     Create a color info structure
 
     Details:
-        ``hipsparseCreateColorInfo`` creates a structure that holds the color info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyColorInfo().
+       ``hipsparseCreateColorInfo`` creates a structure that holds the color info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyColorInfo().
 
 
     """
@@ -1936,7 +1936,7 @@ def hipsparseDestroyColorInfo(object info):
     Destroy a color info structure
 
     Details:
-        ``hipsparseDestroyColorInfo`` destroys a color info structure.
+       ``hipsparseDestroyColorInfo`` destroys a color info structure.
 
 
     """
@@ -1952,9 +1952,9 @@ def hipsparseCreateCsrgemm2Info():
     Create a csrgemm2 info structure
 
     Details:
-        ``hipsparseCreateCsrgemm2Info`` creates a structure that holds the csrgemm2 info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyCsrgemm2Info().
+       ``hipsparseCreateCsrgemm2Info`` creates a structure that holds the csrgemm2 info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyCsrgemm2Info().
 
 
     """
@@ -1970,7 +1970,7 @@ def hipsparseDestroyCsrgemm2Info(object info):
     Destroy a csrgemm2 info structure
 
     Details:
-        ``hipsparseDestroyCsrgemm2Info`` destroys a csrgemm2 info structure.
+       ``hipsparseDestroyCsrgemm2Info`` destroys a csrgemm2 info structure.
 
 
     """
@@ -1986,9 +1986,9 @@ def hipsparseCreatePruneInfo():
     Create a prune info structure
 
     Details:
-        ``hipsparseCreatePruneInfo`` creates a structure that holds the prune info data
-        that is gathered during the analysis routines available. It should be destroyed
-        at the end using hipsparseDestroyPruneInfo().
+       ``hipsparseCreatePruneInfo`` creates a structure that holds the prune info data
+       that is gathered during the analysis routines available. It should be destroyed
+       at the end using hipsparseDestroyPruneInfo().
 
 
     """
@@ -2004,7 +2004,7 @@ def hipsparseDestroyPruneInfo(object info):
     Destroy a prune info structure
 
     Details:
-        ``hipsparseDestroyPruneInfo`` destroys a prune info structure.
+       ``hipsparseDestroyPruneInfo`` destroys a prune info structure.
 
 
     """
@@ -2020,7 +2020,7 @@ def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xI
       Scale a sparse vector and add it to a dense vector.
 
       Details:
-        ``hipsparseXaxpyi`` multiplies the sparse vector \f$
+       ``hipsparseXaxpyi`` multiplies the sparse vector \f$
     x\f$ with scalar \f$\alpha\f$ and
       adds the result to the dense vector \f$y\f$, such that
 
@@ -2033,13 +2033,13 @@ def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xI
           {
               y[x_ind[i]] = y[x_ind[i]] + alpha * x_val[i];
           }
-  
+
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
@@ -2108,7 +2108,7 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
       Compute the dot product of a sparse vector with a dense vector.
 
       Details:
-        ``hipsparseXdoti`` computes the dot product of the sparse vector \f$
+       ``hipsparseXdoti`` computes the dot product of the sparse vector \f$
     x\f$ with the
       dense vector \f$y\f$, such that
       \f[
@@ -2120,13 +2120,13 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
           {
               result += x_val[i] * y[x_ind[i]];
           }
-  
+
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
@@ -2195,8 +2195,8 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
       Compute the dot product of a complex conjugate sparse vector with a dense   vector.
 
       Details:
-        ``hipsparseXdotci`` computes the dot product of the complex conjugate sparse vector
-        \f$
+       ``hipsparseXdotci`` computes the dot product of the complex conjugate sparse vector
+       \f$
     x\f$ with the dense vector \f$y\f$, such that
       \f[
         \text{result} := \bar{x}^H y
@@ -2207,13 +2207,13 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
           {
               result += conj(x_val[i]) * y[x_ind[i]];
           }
-  
+
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
@@ -2250,8 +2250,8 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
       Gather elements from a dense vector and store them into a sparse vector.
 
       Details:
-        ``hipsparseXgthr`` gathers the elements that are listed in ``x_ind`` from the dense
-        vector \f$
+       ``hipsparseXgthr`` gathers the elements that are listed in ``x_ind`` from the dense
+       vector \f$
     y\f$ and stores them in the sparse vector \f$x\f$.
 
       \code{.c}
@@ -2259,13 +2259,13 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
           {
               x_val[i] = y[x_ind[i]];
           }
-  
+
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
@@ -2330,8 +2330,8 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
       Gather and zero out elements from a dense vector and store them into a sparse   vector.
 
       Details:
-        ``hipsparseXgthrz`` gathers the elements that are listed in ``x_ind`` from the dense
-        vector \f$
+       ``hipsparseXgthrz`` gathers the elements that are listed in ``x_ind`` from the dense
+       vector \f$
     y\f$ and stores them in the sparse vector \f$x\f$. The gathered elements
       in \f$y\f$ are replaced by zero.
 
@@ -2341,13 +2341,13 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
               x_val[i]    = y[x_ind[i]];
               y[x_ind[i]] = 0;
           }
-  
+
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
@@ -2412,7 +2412,7 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
       Apply Givens rotation to a dense and a sparse vector.
 
       Details:
-        ``hipsparseXroti`` applies the Givens rotation matrix \f$
+       ``hipsparseXroti`` applies the Givens rotation matrix \f$
     G\f$ to the sparse vector
       \f$x\f$ and the dense vector \f$y\f$, where
       \f[
@@ -2428,13 +2428,13 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
               x_val[i]    = c * x_tmp + s * y_tmp;
               y[x_ind[i]] = c * y_tmp - s * x_tmp;
           }
-  
+
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
@@ -2473,8 +2473,8 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
       Scatter elements from a dense vector across a sparse vector.
 
       Details:
-        ``hipsparseXsctr`` scatters the elements that are listed in ``x_ind`` from the sparse
-        vector \f$
+       ``hipsparseXsctr`` scatters the elements that are listed in ``x_ind`` from the sparse
+       vector \f$
     x\f$ into the dense vector \f$y\f$. Indices of \f$y\f$ that are not listed
       in ``x_ind`` remain unchanged.
 
@@ -2483,13 +2483,13 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
           {
               y[x_ind[i]] = x_val[i];
           }
-  
+
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
@@ -2554,7 +2554,7 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
       Sparse matrix vector multiplication using CSR storage format
 
       Details:
-        ``hipsparseXcsrmv`` multiplies the scalar \f$
+       ``hipsparseXcsrmv`` multiplies the scalar \f$
     \alpha\f$ with a sparse \f$m \times n\f$
       matrix, defined in CSR storage format, and the dense vector \f$x\f$ and adds the
       result to the dense vector \f$y\f$ that is multiplied by the scalar \f$\beta\f$,
@@ -2583,15 +2583,15 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
                   y[i] = y[i] + alpha * csr_val[j] * x[csr_col_ind[j]];
               }
           }
-  
-
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
 
 
       Note:
-        Currently, only ``trans`` ==
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+
+
+      Note:
+       Currently, only ``trans`` ==
      \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
     /
       @{*/
@@ -2674,24 +2674,24 @@ def hipsparseZcsrmv(object handle, object transA, int m, int n, int nnz, object 
 @cython.embedsignature(True)
 def hipsparseXcsrsv2_zeroPivot(object handle, object info, object position):
     """
-       \ingroup level2_module
-      Sparse triangular solve using CSR storage format
+      \ingroup level2_module
+     Sparse triangular solve using CSR storage format
 
-      Details:
-        ``hipsparseXcsrsv2_zeroPivot`` returns
-     \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
-      structural or numerical zero has been found during hipsparseScsrsv2_solve(),
-      hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() or hipsparseZcsrsv2_solve()
-      computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$ is stored in ``position,``
-      using same index base as the CSR matrix.
+     Details:
+      ``hipsparseXcsrsv2_zeroPivot`` returns
+    \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
+     structural or numerical zero has been found during hipsparseScsrsv2_solve(),
+     hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() or hipsparseZcsrsv2_solve()
+     computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$ is stored in ``position,``
+     using same index base as the CSR matrix.
 
-      ``position`` can be in host or device memory. If no zero pivot has been found,
-      ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
+     ``position`` can be in host or device memory. If no zero pivot has been found,
+     ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
 
-      Note:
-        ``hipsparseXcsrsv2_zeroPivot`` is a blocking function. It might influence
-        performance negatively.
-        /
+     Note:
+      ``hipsparseXcsrsv2_zeroPivot`` is a blocking function. It might influence
+      performance negatively.
+      /
 
     """
     _hipsparseXcsrsv2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsv2_zeroPivot(
@@ -2704,17 +2704,17 @@ def hipsparseXcsrsv2_zeroPivot(object handle, object info, object position):
 @cython.embedsignature(True)
 def hipsparseScsrsv2_bufferSize(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     """
-       \ingroup level2_module
-      Sparse triangular solve using CSR storage format
+     \ingroup level2_module
+    Sparse triangular solve using CSR storage format
 
-      Details:
-        ``hipsparseXcsrsv2_bufferSize`` returns the size of the temporary storage buffer that
-        is required by hipsparseScsrsv2_analysis(), hipsparseDcsrsv2_analysis(),
-        hipsparseCcsrsv2_analysis(), hipsparseZcsrsv2_analysis(), hipsparseScsrsv2_solve(),
-        hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve(). The
-        temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXcsrsv2_bufferSize`` returns the size of the temporary storage buffer that
+     is required by hipsparseScsrsv2_analysis(), hipsparseDcsrsv2_analysis(),
+     hipsparseCcsrsv2_analysis(), hipsparseZcsrsv2_analysis(), hipsparseScsrsv2_solve(),
+     hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve(). The
+     temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
@@ -2787,17 +2787,17 @@ def hipsparseZcsrsv2_bufferSize(object handle, object transA, int m, int nnz, ob
 @cython.embedsignature(True)
 def hipsparseScsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     """
-       \ingroup level2_module
-      Sparse triangular solve using CSR storage format
+     \ingroup level2_module
+    Sparse triangular solve using CSR storage format
 
-      Details:
-        ``hipsparseXcsrsv2_bufferSizeExt`` returns the size of the temporary storage buffer that
-        is required by hipsparseScsrsv2_analysis(), hipsparseDcsrsv2_analysis(),
-        hipsparseCcsrsv2_analysis(), hipsparseZcsrsv2_analysis(), hipsparseScsrsv2_solve(),
-        hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve(). The
-        temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXcsrsv2_bufferSizeExt`` returns the size of the temporary storage buffer that
+     is required by hipsparseScsrsv2_analysis(), hipsparseDcsrsv2_analysis(),
+     hipsparseCcsrsv2_analysis(), hipsparseZcsrsv2_analysis(), hipsparseScsrsv2_solve(),
+     hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve(). The
+     temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
@@ -2870,19 +2870,19 @@ def hipsparseZcsrsv2_bufferSizeExt(object handle, object transA, int m, int nnz,
 @cython.embedsignature(True)
 def hipsparseScsrsv2_analysis(object handle, object transA, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
-       \ingroup level2_module
-      Sparse triangular solve using CSR storage format
+     \ingroup level2_module
+    Sparse triangular solve using CSR storage format
 
-      Details:
-        ``hipsparseXcsrsv2_analysis`` performs the analysis step for hipsparseScsrsv2_solve(),
-        hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve().
+    Details:
+     ``hipsparseXcsrsv2_analysis`` performs the analysis step for hipsparseScsrsv2_solve(),
+     hipsparseDcsrsv2_solve(), hipsparseCcsrsv2_solve() and hipsparseZcsrsv2_solve().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
@@ -2967,8 +2967,8 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
       Sparse triangular solve using CSR storage format
 
       Details:
-        ``hipsparseXcsrsv2_solve`` solves a sparse triangular linear system of a sparse
-        \f$
+       ``hipsparseXcsrsv2_solve`` solves a sparse triangular linear system of a sparse
+       \f$
     m \times m\f$ matrix, defined in CSR storage format, a dense solution vector
       \f$y\f$ and the right-hand side \f$x\f$ that is multiplied by \f$\alpha\f$, such that
       \f[
@@ -2995,17 +2995,17 @@ def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object 
       reported, even if \f$A_{j,j} = 0\f$ for some \f$j\f$.
 
       Note:
-        The sparse CSR matrix has to be sorted. This can be achieved by calling
-        hipsparseXcsrsort().
+       The sparse CSR matrix has to be sorted. This can be achieved by calling
+       hipsparseXcsrsort().
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
       Note:
-        Currently, only ``trans`` ==
+       Currently, only ``trans`` ==
      \ref HIPSPARSE_OPERATION_NON_TRANSPOSE and
       ``trans`` == \ref HIPSPARSE_OPERATION_TRANSPOSE is supported.
     /
@@ -3105,7 +3105,7 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
       Sparse matrix vector multiplication using HYB storage format
 
       Details:
-        ``hipsparseXhybmv`` multiplies the scalar \f$
+       ``hipsparseXhybmv`` multiplies the scalar \f$
     \alpha\f$ with a sparse \f$m \times n\f$
       matrix, defined in HYB storage format, and the dense vector \f$x\f$ and adds the
       result to the dense vector \f$y\f$ that is multiplied by the scalar \f$\beta\f$,
@@ -3125,12 +3125,12 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
       \f]
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
       Note:
-        Currently, only ``trans`` ==
+       Currently, only ``trans`` ==
      \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
     /
       @{*/
@@ -3209,7 +3209,7 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
       Sparse matrix vector multiplication using BSR storage format
 
       Details:
-        ``hipsparseXbsrmv`` multiplies the scalar \f$
+       ``hipsparseXbsrmv`` multiplies the scalar \f$
     \alpha\f$ with a sparse
       \f$(mb \cdot \text{block_dim}) \times (nb \cdot \text{block_dim})\f$
       matrix, defined in BSR storage format, and the dense vector \f$x\f$ and adds the
@@ -3230,12 +3230,12 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
       \f]
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
       Note:
-        Currently, only ``trans`` ==
+       Currently, only ``trans`` ==
      \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
     /
       @{*/
@@ -3330,7 +3330,7 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
       Sparse matrix vector multiplication with mask operation using BSR storage format
 
       Details:
-        ``hipsparseXbsrxmv`` multiplies the scalar \f$
+       ``hipsparseXbsrxmv`` multiplies the scalar \f$
     \alpha\f$ with a sparse
       \f$(mb \cdot \text{block_dim}) \times (nb \cdot \text{block_dim})\f$
       modified matrix, defined in BSR storage format, and the dense vector \f$x\f$ and adds the
@@ -3355,12 +3355,12 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
       is defined with two arrays, ``bsr_row_ptr`` and ``bsr_end_ptr`` (both of size ``mb),`` rather the usual ``bsr_row_ptr`` of size ``mb`` + 1.
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
       Note:
-        Currently, only ``trans`` ==
+       Currently, only ``trans`` ==
      \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
       Currently, ``block_dim`` == 1 is not supported.
     /
@@ -3460,23 +3460,23 @@ def hipsparseZbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 @cython.embedsignature(True)
 def hipsparseXbsrsv2_zeroPivot(object handle, object info, object position):
     """
-       \ingroup level2_module
-      Sparse triangular solve using BSR storage format
+      \ingroup level2_module
+     Sparse triangular solve using BSR storage format
 
-      Details:
-        ``hipsparseXbsrsv2_zeroPivot`` returns
-     \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
-      structural or numerical zero has been found during hipsparseXbsrsv2_analysis() or
-      hipsparseXbsrsv2_solve() computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$
-      is stored in ``position,`` using same index base as the BSR matrix.
+     Details:
+      ``hipsparseXbsrsv2_zeroPivot`` returns
+    \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
+     structural or numerical zero has been found during hipsparseXbsrsv2_analysis() or
+     hipsparseXbsrsv2_solve() computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$
+     is stored in ``position,`` using same index base as the BSR matrix.
 
-      ``position`` can be in host or device memory. If no zero pivot has been found,
-      ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
+     ``position`` can be in host or device memory. If no zero pivot has been found,
+     ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
 
-      Note:
-        ``hipsparseXbsrsv2_zeroPivot`` is a blocking function. It might influence
-        performance negatively.
-        /
+     Note:
+      ``hipsparseXbsrsv2_zeroPivot`` is a blocking function. It might influence
+      performance negatively.
+      /
 
     """
     _hipsparseXbsrsv2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXbsrsv2_zeroPivot(
@@ -3489,15 +3489,15 @@ def hipsparseXbsrsv2_zeroPivot(object handle, object info, object position):
 @cython.embedsignature(True)
 def hipsparseSbsrsv2_bufferSize(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
-       \ingroup level2_module
-      Sparse triangular solve using BSR storage format
+     \ingroup level2_module
+    Sparse triangular solve using BSR storage format
 
-      Details:
-        ``hipsparseXbsrsv2_bufferSize`` returns the size of the temporary storage buffer that
-        is required by hipsparseXbsrsv2_analysis() and hipsparseXbsrsv2_solve(). The
-        temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXbsrsv2_bufferSize`` returns the size of the temporary storage buffer that
+     is required by hipsparseXbsrsv2_analysis() and hipsparseXbsrsv2_solve(). The
+     temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -3578,15 +3578,15 @@ def hipsparseZbsrsv2_bufferSize(object handle, object dirA, object transA, int m
 @cython.embedsignature(True)
 def hipsparseSbsrsv2_bufferSizeExt(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSize):
     """
-       \ingroup level2_module
-      Sparse triangular solve using BSR storage format
+     \ingroup level2_module
+    Sparse triangular solve using BSR storage format
 
-      Details:
-        ``hipsparseXbsrsv2_bufferSizeExt`` returns the size of the temporary storage buffer that
-        is required by hipsparseXbsrsv2_analysis() and hipsparseXbsrsv2_solve(). The
-        temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXbsrsv2_bufferSizeExt`` returns the size of the temporary storage buffer that
+     is required by hipsparseXbsrsv2_analysis() and hipsparseXbsrsv2_solve(). The
+     temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -3667,22 +3667,22 @@ def hipsparseZbsrsv2_bufferSizeExt(object handle, object dirA, object transA, in
 @cython.embedsignature(True)
 def hipsparseSbsrsv2_analysis(object handle, object dirA, object transA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
-       \ingroup level2_module
-      Sparse triangular solve using BSR storage format
+     \ingroup level2_module
+    Sparse triangular solve using BSR storage format
 
-      Details:
-        ``hipsparseXbsrsv2_analysis`` performs the analysis step for hipsparseXbsrsv2_solve().
-
-
-      Note:
-        If the matrix sparsity pattern changes, the gathered information will become invalid.
+    Details:
+     ``hipsparseXbsrsv2_analysis`` performs the analysis step for hipsparseXbsrsv2_solve().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     If the matrix sparsity pattern changes, the gathered information will become invalid.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -3775,8 +3775,8 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
       Sparse triangular solve using BSR storage format
 
       Details:
-        ``hipsparseXbsrsv2_solve`` solves a sparse triangular linear system of a sparse
-        \f$
+       ``hipsparseXbsrsv2_solve`` solves a sparse triangular linear system of a sparse
+       \f$
     m \times m\f$ matrix, defined in BSR storage format, a dense solution vector
       \f$y\f$ and the right-hand side \f$x\f$ that is multiplied by \f$\alpha\f$, such that
       \f[
@@ -3803,16 +3803,16 @@ def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, in
       reported, even if \f$A_{j,j} = 0\f$ for some \f$j\f$.
 
       Note:
-        The sparse BSR matrix has to be sorted.
+       The sparse BSR matrix has to be sorted.
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
       Note:
-        Currently, only ``trans`` ==
+       Currently, only ``trans`` ==
      \ref HIPSPARSE_OPERATION_NON_TRANSPOSE and
       ``trans`` == \ref HIPSPARSE_OPERATION_TRANSPOSE is supported.
     /
@@ -3916,15 +3916,15 @@ def hipsparseZbsrsv2_solve(object handle, object dirA, object transA, int mb, in
 @cython.embedsignature(True)
 def hipsparseSgemvi_bufferSize(object handle, object transA, int m, int n, int nnz, object pBufferSize):
     """
-     \ingroup level2_module
-     Dense matrix sparse vector multiplication
+    \ingroup level2_module
+    Dense matrix sparse vector multiplication
 
-     Details:
-        ``hipsparseXgemvi_bufferSize`` returns the size of the temporary storage buffer
-        required by hipsparseXgemvi(). The temporary storage buffer must be allocated by the
-        user.
+    Details:
+      ``hipsparseXgemvi_bufferSize`` returns the size of the temporary storage buffer
+      required by hipsparseXgemvi(). The temporary storage buffer must be allocated by the
+      user.
 
-        @{*/
+      @{*/
 
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
@@ -3981,7 +3981,7 @@ def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, ob
      Dense matrix sparse vector multiplication
 
      Details:
-        ``hipsparseXgemvi`` multiplies the scalar \f$
+       ``hipsparseXgemvi`` multiplies the scalar \f$
     \alpha\f$ with a dense \f$m \times n\f$
      matrix \f$A\f$ and the sparse vector \f$x\f$ and adds the result to the dense vector
      \f$y\f$ that is multiplied by the scalar \f$\beta\f$, such that
@@ -4003,12 +4003,12 @@ def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, ob
      by hipsparseXgemvi_bufferSize().
 
      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
      Note:
-        Currently, only ``trans`` ==
+       Currently, only ``trans`` ==
      \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
 
     @{*/
@@ -4099,7 +4099,7 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
      Sparse matrix dense matrix multiplication using BSR storage format
 
      Details:
-        ``hipsparseXbsrmm`` multiplies the scalar \f$
+       ``hipsparseXbsrmm`` multiplies the scalar \f$
     \alpha\f$ with a sparse \f$mb \times kb\f$
      matrix \f$A\f$, defined in BSR storage format, and the dense \f$k \times n\f$
      matrix \f$B\f$ (where \f$k = block\_dim \times kb\f$) and adds the result to the dense
@@ -4127,12 +4127,12 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
      \f]
 
      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
      Note:
-        Currently, only ``trans_A`` ==
+       Currently, only ``trans_A`` ==
      \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
 
     @{*/
@@ -4235,7 +4235,7 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
       Sparse matrix dense matrix multiplication using CSR storage format
 
       Details:
-        ``hipsparseXcsrmm`` multiplies the scalar \f$
+       ``hipsparseXcsrmm`` multiplies the scalar \f$
     \alpha\f$ with a sparse \f$m \times k\f$
       matrix \f$A\f$, defined in CSR storage format, and the dense \f$k \times n\f$
       matrix \f$B\f$ and adds the result to the dense \f$m \times n\f$ matrix \f$C\f$ that
@@ -4267,13 +4267,13 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
                   }
               }
           }
-  
+
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
@@ -4358,7 +4358,7 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
       Sparse matrix dense matrix multiplication using CSR storage format
 
       Details:
-        ``hipsparseXcsrmm2`` multiplies the scalar \f$
+       ``hipsparseXcsrmm2`` multiplies the scalar \f$
     \alpha\f$ with a sparse \f$m \times k\f$
       matrix \f$A\f$, defined in CSR storage format, and the dense \f$k \times n\f$
       matrix \f$B\f$ and adds the result to the dense \f$m \times n\f$ matrix \f$C\f$ that
@@ -4400,13 +4400,13 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
                   }
               }
           }
-  
+
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
@@ -4495,23 +4495,23 @@ def hipsparseZcsrmm2(object handle, object transA, object transB, int m, int n, 
 @cython.embedsignature(True)
 def hipsparseXbsrsm2_zeroPivot(object handle, object info, object position):
     """
-       \ingroup level3_module
-      Sparse triangular system solve using BSR storage format
+      \ingroup level3_module
+     Sparse triangular system solve using BSR storage format
 
-      Details:
-        ``hipsparseXbsrsm2_zeroPivot`` returns
-     \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
-      structural or numerical zero has been found during hipsparseXbsrsm2_analysis() or
-      hipsparseXbsrsm2_solve() computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$
-      is stored in ``position,`` using same index base as the BSR matrix.
+     Details:
+      ``hipsparseXbsrsm2_zeroPivot`` returns
+    \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
+     structural or numerical zero has been found during hipsparseXbsrsm2_analysis() or
+     hipsparseXbsrsm2_solve() computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$
+     is stored in ``position,`` using same index base as the BSR matrix.
 
-      ``position`` can be in host or device memory. If no zero pivot has been found,
-      ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
+     ``position`` can be in host or device memory. If no zero pivot has been found,
+     ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
 
-      Note:
-        ``hipsparseXbsrsm2_zeroPivot`` is a blocking function. It might influence
-        performance negatively.
-        /
+     Note:
+      ``hipsparseXbsrsm2_zeroPivot`` is a blocking function. It might influence
+      performance negatively.
+      /
 
     """
     _hipsparseXbsrsm2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXbsrsm2_zeroPivot(
@@ -4524,15 +4524,15 @@ def hipsparseXbsrsm2_zeroPivot(object handle, object info, object position):
 @cython.embedsignature(True)
 def hipsparseSbsrsm2_bufferSize(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
-       \ingroup level3_module
-      Sparse triangular system solve using BSR storage format
+     \ingroup level3_module
+    Sparse triangular system solve using BSR storage format
 
-      Details:
-        ``hipsparseXbsrsm2_buffer_size`` returns the size of the temporary storage buffer that
-        is required by hipsparseXbsrsm2_analysis() and hipsparseXbsrsm2_solve(). The
-        temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXbsrsm2_buffer_size`` returns the size of the temporary storage buffer that
+     is required by hipsparseXbsrsm2_analysis() and hipsparseXbsrsm2_solve(). The
+     temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -4621,22 +4621,22 @@ def hipsparseZbsrsm2_bufferSize(object handle, object dirA, object transA, objec
 @cython.embedsignature(True)
 def hipsparseSbsrsm2_analysis(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
-       \ingroup level3_module
-      Sparse triangular system solve using BSR storage format
+     \ingroup level3_module
+    Sparse triangular system solve using BSR storage format
 
-      Details:
-        ``hipsparseXbsrsm2_analysis`` performs the analysis step for hipsparseXbsrsm2_solve().
-
-
-      Note:
-        If the matrix sparsity pattern changes, the gathered information will become invalid.
+    Details:
+     ``hipsparseXbsrsm2_analysis`` performs the analysis step for hipsparseXbsrsm2_solve().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     If the matrix sparsity pattern changes, the gathered information will become invalid.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -4737,8 +4737,8 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
       Sparse triangular system solve using BSR storage format
 
       Details:
-        ``hipsparseXbsrsm2_solve`` solves a sparse triangular linear system of a sparse
-        \f$
+       ``hipsparseXbsrsm2_solve`` solves a sparse triangular linear system of a sparse
+       \f$
     m \times m\f$ matrix, defined in BSR storage format, a dense solution matrix
       \f$X\f$ and the right-hand side matrix \f$B\f$ that is multiplied by \f$\alpha\f$, such that
       \f[
@@ -4774,20 +4774,20 @@ def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object tra
       reported, even if \f$A_{j,j} = 0\f$ for some \f$j\f$.
 
       Note:
-        The sparse BSR matrix has to be sorted.
+       The sparse BSR matrix has to be sorted.
 
 
       Note:
-        Operation type of B and X must match, if \f$
+       Operation type of B and X must match, if \f$
     op(B)=B, op(X)=X\f$.
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
       Note:
-        Currently, only ``trans_A`` !=
+       Currently, only ``trans_A`` !=
      \ref HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE and
       ``trans_X`` != \ref HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE is supported.
     /
@@ -4899,23 +4899,23 @@ def hipsparseZbsrsm2_solve(object handle, object dirA, object transA, object tra
 @cython.embedsignature(True)
 def hipsparseXcsrsm2_zeroPivot(object handle, object info, object position):
     """
-       \ingroup level3_module
-      Sparse triangular system solve using CSR storage format
+      \ingroup level3_module
+     Sparse triangular system solve using CSR storage format
 
-      Details:
-        ``hipsparseXcsrsm2_zeroPivot`` returns
-     \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
-      structural or numerical zero has been found during hipsparseXcsrsm2_analysis() or
-      hipsparseXcsrsm2_solve() computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$
-      is stored in ``position,`` using same index base as the CSR matrix.
+     Details:
+      ``hipsparseXcsrsm2_zeroPivot`` returns
+    \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
+     structural or numerical zero has been found during hipsparseXcsrsm2_analysis() or
+     hipsparseXcsrsm2_solve() computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$
+     is stored in ``position,`` using same index base as the CSR matrix.
 
-      ``position`` can be in host or device memory. If no zero pivot has been found,
-      ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
+     ``position`` can be in host or device memory. If no zero pivot has been found,
+     ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
 
-      Note:
-        ``hipsparseXcsrsm2_zeroPivot`` is a blocking function. It might influence
-        performance negatively.
-        /
+     Note:
+      ``hipsparseXcsrsm2_zeroPivot`` is a blocking function. It might influence
+      performance negatively.
+      /
 
     """
     _hipsparseXcsrsm2_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsm2_zeroPivot(
@@ -4928,15 +4928,15 @@ def hipsparseXcsrsm2_zeroPivot(object handle, object info, object position):
 @cython.embedsignature(True)
 def hipsparseScsrsm2_bufferSizeExt(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBufferSize):
     """
-       \ingroup level3_module
-      Sparse triangular system solve using CSR storage format
+     \ingroup level3_module
+    Sparse triangular system solve using CSR storage format
 
-      Details:
-        ``hipsparseXcsrsm2_bufferSizeExt`` returns the size of the temporary storage buffer
-        that is required by hipsparseXcsrsm2_analysis() and hipsparseXcsrsm2_solve(). The
-        temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXcsrsm2_bufferSizeExt`` returns the size of the temporary storage buffer
+     that is required by hipsparseXcsrsm2_analysis() and hipsparseXcsrsm2_solve(). The
+     temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
@@ -5033,22 +5033,22 @@ def hipsparseZcsrsm2_bufferSizeExt(object handle, int algo, object transA, objec
 @cython.embedsignature(True)
 def hipsparseScsrsm2_analysis(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     """
-       \ingroup level3_module
-      Sparse triangular system solve using CSR storage format
+     \ingroup level3_module
+    Sparse triangular system solve using CSR storage format
 
-      Details:
-        ``hipsparseXcsrsm2_analysis`` performs the analysis step for hipsparseXcsrsm2_solve().
-
-
-      Note:
-        If the matrix sparsity pattern changes, the gathered information will become invalid.
+    Details:
+     ``hipsparseXcsrsm2_analysis`` performs the analysis step for hipsparseXcsrsm2_solve().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     If the matrix sparsity pattern changes, the gathered information will become invalid.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
@@ -5149,8 +5149,8 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
       Sparse triangular system solve using CSR storage format
 
       Details:
-        ``hipsparseXcsrsm2_solve`` solves a sparse triangular linear system of a sparse
-        \f$
+       ``hipsparseXcsrsm2_solve`` solves a sparse triangular linear system of a sparse
+       \f$
     m \times m\f$ matrix, defined in CSR storage format, a dense solution matrix
       \f$X\f$ and the right-hand side matrix \f$B\f$ that is multiplied by \f$\alpha\f$, such that
       \f[
@@ -5196,17 +5196,17 @@ def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB
       reported, even if \f$A_{j,j} = 0\f$ for some \f$j\f$.
 
       Note:
-        The sparse CSR matrix has to be sorted. This can be achieved by calling
-        hipsparseXcsrsort().
+       The sparse CSR matrix has to be sorted. This can be achieved by calling
+       hipsparseXcsrsort().
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
       Note:
-        Currently, only ``trans_A`` !=
+       Currently, only ``trans_A`` !=
      \ref HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE and
       ``trans_B`` != \ref HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE is supported.
     /
@@ -5310,7 +5310,7 @@ def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
       Dense matrix sparse matrix multiplication using CSR storage format
 
       Details:
-        ``hipsparseXgemmi`` multiplies the scalar \f$
+       ``hipsparseXgemmi`` multiplies the scalar \f$
     \alpha\f$ with a dense \f$m \times k\f$
       matrix \f$A\f$ and the sparse \f$k \times n\f$ matrix \f$B\f$, defined in CSR
       storage format and adds the result to the dense \f$m \times n\f$ matrix \f$C\f$ that
@@ -5340,10 +5340,10 @@ def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
       \f]
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     _hipsparseSgemmi__retval = hipsparseStatus_t(chipsparse.hipsparseSgemmi(
@@ -5416,18 +5416,18 @@ def hipsparseXcsrgeamNnz(object handle, int m, int n, object descrA, int nnzA, o
       Sparse matrix sparse matrix addition using CSR storage format
 
       Details:
-        ``hipsparseXcsrgeamNnz`` computes the total CSR non-zero elements and the CSR row
-        offsets, that point to the start of every row of the sparse CSR matrix, of the
-        resulting matrix C. It is assumed that ``csr_row_ptr_C`` has been allocated with
-        size ``m`` + 1.
+       ``hipsparseXcsrgeamNnz`` computes the total CSR non-zero elements and the CSR row
+       offsets, that point to the start of every row of the sparse CSR matrix, of the
+       resulting matrix C. It is assumed that ``csr_row_ptr_C`` has been allocated with
+       size ``m`` + 1.
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
       Note:
-        Currently, only
+       Currently, only
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
     /
     """
@@ -5452,7 +5452,7 @@ def hipsparseScsrgeam(object handle, int m, int n, object alpha, object descrA, 
       Sparse matrix sparse matrix addition using CSR storage format
 
       Details:
-        ``hipsparseXcsrgeam`` multiplies the scalar \f$
+       ``hipsparseXcsrgeam`` multiplies the scalar \f$
     \alpha\f$ with the sparse
       \f$m \times n\f$ matrix \f$A\f$, defined in CSR storage format, multiplies the
       scalar \f$\beta\f$ with the sparse \f$m \times n\f$ matrix \f$B\f$, defined in CSR
@@ -5468,16 +5468,16 @@ def hipsparseScsrgeam(object handle, int m, int n, object alpha, object descrA, 
       the sparse CSR matrix C. Both can be obtained by hipsparseXcsrgeamNnz().
 
       Note:
-        Both scalars \f$
+       Both scalars \f$
     \alpha\f$ and \f$beta\f$ have to be valid.
       Note:
-        Currently, only
+       Currently, only
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
       Note:
-        This function is non blocking and executed asynchronously with respect to the
-        host. It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the
+       host. It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     _hipsparseScsrgeam__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgeam(
@@ -5578,13 +5578,13 @@ def hipsparseScsrgeam2_bufferSizeExt(object handle, int m, int n, object alpha, 
       Sparse matrix sparse matrix multiplication using CSR storage format
 
       Details:
-        ``hipsparseXcsrgeam2_bufferSizeExt`` returns the size of the temporary storage buffer
-        that is required by hipsparseXcsrgeam2Nnz() and hipsparseXcsrgeam2(). The temporary
-        storage buffer must be allocated by the user.
+       ``hipsparseXcsrgeam2_bufferSizeExt`` returns the size of the temporary storage buffer
+       that is required by hipsparseXcsrgeam2Nnz() and hipsparseXcsrgeam2(). The temporary
+       storage buffer must be allocated by the user.
 
 
       Note:
-        Currently, only
+       Currently, only
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
     /
       @{*/
@@ -5691,18 +5691,18 @@ def hipsparseXcsrgeam2Nnz(object handle, int m, int n, object descrA, int nnzA, 
       Sparse matrix sparse matrix addition using CSR storage format
 
       Details:
-        ``hipsparseXcsrgeam2Nnz`` computes the total CSR non-zero elements and the CSR row
-        offsets, that point to the start of every row of the sparse CSR matrix, of the
-        resulting matrix C. It is assumed that ``csr_row_ptr_C`` has been allocated with
-        size ``m`` + 1.
+       ``hipsparseXcsrgeam2Nnz`` computes the total CSR non-zero elements and the CSR row
+       offsets, that point to the start of every row of the sparse CSR matrix, of the
+       resulting matrix C. It is assumed that ``csr_row_ptr_C`` has been allocated with
+       size ``m`` + 1.
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
       Note:
-        Currently, only
+       Currently, only
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
     /
     """
@@ -5728,7 +5728,7 @@ def hipsparseScsrgeam2(object handle, int m, int n, object alpha, object descrA,
       Sparse matrix sparse matrix addition using CSR storage format
 
       Details:
-        ``hipsparseXcsrgeam2`` multiplies the scalar \f$
+       ``hipsparseXcsrgeam2`` multiplies the scalar \f$
     \alpha\f$ with the sparse
       \f$m \times n\f$ matrix \f$A\f$, defined in CSR storage format, multiplies the
       scalar \f$\beta\f$ with the sparse \f$m \times n\f$ matrix \f$B\f$, defined in CSR
@@ -5744,16 +5744,16 @@ def hipsparseScsrgeam2(object handle, int m, int n, object alpha, object descrA,
       the sparse CSR matrix C. Both can be obtained by hipsparseXcsrgeam2Nnz().
 
       Note:
-        Both scalars \f$
+       Both scalars \f$
     \alpha\f$ and \f$beta\f$ have to be valid.
       Note:
-        Currently, only
+       Currently, only
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
       Note:
-        This function is non blocking and executed asynchronously with respect to the
-        host. It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the
+       host. It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     _hipsparseScsrgeam2__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgeam2(
@@ -5858,29 +5858,29 @@ def hipsparseXcsrgemmNnz(object handle, object transA, object transB, int m, int
       Sparse matrix sparse matrix multiplication using CSR storage format
 
       Details:
-        ``hipsparseXcsrgemmNnz`` computes the total CSR non-zero elements and the CSR row
-        offsets, that point to the start of every row of the sparse CSR matrix, of the
-        resulting multiplied matrix C. It is assumed that ``csr_row_ptr_C`` has been allocated
-        with size ``m`` + 1.
+       ``hipsparseXcsrgemmNnz`` computes the total CSR non-zero elements and the CSR row
+       offsets, that point to the start of every row of the sparse CSR matrix, of the
+       resulting multiplied matrix C. It is assumed that ``csr_row_ptr_C`` has been allocated
+       with size ``m`` + 1.
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
       Note:
-        Please note, that for matrix products with more than 8192 intermediate products per
-        row, additional temporary storage buffer is allocated by the algorithm.
+       Please note, that for matrix products with more than 8192 intermediate products per
+       row, additional temporary storage buffer is allocated by the algorithm.
 
 
       Note:
-        Currently, only ``trans_A`` == ``trans_B`` ==
+       Currently, only ``trans_A`` == ``trans_B`` ==
      \ref HIPSPARSE_OPERATION_NONE is
       supported.
 
       Note:
-        Currently, only
+       Currently, only
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
     /
     """
@@ -5909,7 +5909,7 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
       Sparse matrix sparse matrix multiplication using CSR storage format
 
       Details:
-        ``hipsparseXcsrgemm`` multiplies the sparse \f$
+       ``hipsparseXcsrgemm`` multiplies the sparse \f$
     m \times k\f$ matrix \f$A\f$, defined in
       CSR storage format with the sparse \f$k \times n\f$ matrix \f$B\f$, defined in CSR
       storage format, and stores the result in the sparse \f$m \times n\f$ matrix \f$C\f$,
@@ -5944,23 +5944,23 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
       the sparse CSR matrix C. Both can be obtained by hipsparseXcsrgemmNnz().
 
       Note:
-        Currently, only ``trans_A`` ==
+       Currently, only ``trans_A`` ==
      \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
       Note:
-        Currently, only ``trans_B`` ==
+       Currently, only ``trans_B`` ==
      \ref HIPSPARSE_OPERATION_NON_TRANSPOSE is supported.
       Note:
-        Currently, only
+       Currently, only
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
       Note:
-        This function is non blocking and executed asynchronously with respect to the
-        host. It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the
+       host. It may return before the actual computation has finished.
 
       Note:
-        Please note, that for matrix products with more than 4096 non-zero entries per
-        row, additional temporary storage buffer is allocated by the algorithm.
-        /
-        @{*/
+       Please note, that for matrix products with more than 4096 non-zero entries per
+       row, additional temporary storage buffer is allocated by the algorithm.
+       /
+       @{*/
 
     """
     if not isinstance(transA,_hipsparseOperation_t__Base):
@@ -6069,23 +6069,23 @@ def hipsparseScsrgemm2_bufferSizeExt(object handle, int m, int n, int k, object 
       Sparse matrix sparse matrix multiplication using CSR storage format
 
       Details:
-        ``hipsparseXcsrgemm2_bufferSizeExt`` returns the size of the temporary storage buffer
-        that is required by hipsparseXcsrgemm2Nnz() and hipsparseXcsrgemm2(). The temporary
-        storage buffer must be allocated by the user.
+       ``hipsparseXcsrgemm2_bufferSizeExt`` returns the size of the temporary storage buffer
+       that is required by hipsparseXcsrgemm2Nnz() and hipsparseXcsrgemm2(). The temporary
+       storage buffer must be allocated by the user.
 
 
       Note:
-        Please note, that for matrix products with more than 4096 non-zero entries per row,
-        additional temporary storage buffer is allocated by the algorithm.
+       Please note, that for matrix products with more than 4096 non-zero entries per row,
+       additional temporary storage buffer is allocated by the algorithm.
 
 
       Note:
-        Please note, that for matrix products with more than 8192 intermediate products per
-        row, additional temporary storage buffer is allocated by the algorithm.
+       Please note, that for matrix products with more than 8192 intermediate products per
+       row, additional temporary storage buffer is allocated by the algorithm.
 
 
       Note:
-        Currently, only
+       Currently, only
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
     /
       @{*/
@@ -6184,25 +6184,25 @@ def hipsparseXcsrgemm2Nnz(object handle, int m, int n, int k, object descrA, int
       Sparse matrix sparse matrix multiplication using CSR storage format
 
       Details:
-        ``hipsparseXcsrgemm2Nnz`` computes the total CSR non-zero elements and the CSR row
-        offsets, that point to the start of every row of the sparse CSR matrix, of the
-        resulting multiplied matrix C. It is assumed that ``csr_row_ptr_C`` has been allocated
-        with size ``m`` + 1.
-        The required buffer size can be obtained by hipsparseXcsrgemm2_bufferSizeExt().
+       ``hipsparseXcsrgemm2Nnz`` computes the total CSR non-zero elements and the CSR row
+       offsets, that point to the start of every row of the sparse CSR matrix, of the
+       resulting multiplied matrix C. It is assumed that ``csr_row_ptr_C`` has been allocated
+       with size ``m`` + 1.
+       The required buffer size can be obtained by hipsparseXcsrgemm2_bufferSizeExt().
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
 
       Note:
-        Please note, that for matrix products with more than 8192 intermediate products per
-        row, additional temporary storage buffer is allocated by the algorithm.
+       Please note, that for matrix products with more than 8192 intermediate products per
+       row, additional temporary storage buffer is allocated by the algorithm.
 
 
       Note:
-        Currently, only
+       Currently, only
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
     /
     """
@@ -6232,7 +6232,7 @@ def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object 
       Sparse matrix sparse matrix multiplication using CSR storage format
 
       Details:
-        ``hipsparseXcsrgemm2`` multiplies the scalar \f$
+       ``hipsparseXcsrgemm2`` multiplies the scalar \f$
     \alpha\f$ with the sparse
       \f$m \times k\f$ matrix \f$A\f$, defined in CSR storage format, and the sparse
       \f$k \times n\f$ matrix \f$B\f$, defined in CSR storage format, and adds the result
@@ -6252,26 +6252,26 @@ def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object 
       hipsparseXcsrgemm2_bufferSizeExt().
 
       Note:
-        If \f$
+       If \f$
     \alpha == 0\f$, then \f$C = \beta \cdot D\f$ will be computed.
       Note:
-        If \f$
+       If \f$
     \beta == 0\f$, then \f$C = \alpha \cdot A \cdot B\f$ will be computed.
       Note:
-        \f$
+       \f$
     \alpha == beta == 0\f$ is invalid.
       Note:
-        Currently, only
+       Currently, only
      \ref HIPSPARSE_MATRIX_TYPE_GENERAL is supported.
       Note:
-        This function is non blocking and executed asynchronously with respect to the
-        host. It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the
+       host. It may return before the actual computation has finished.
 
       Note:
-        Please note, that for matrix products with more than 4096 non-zero entries per
-        row, additional temporary storage buffer is allocated by the algorithm.
-        /
-        @{*/
+       Please note, that for matrix products with more than 4096 non-zero entries per
+       row, additional temporary storage buffer is allocated by the algorithm.
+       /
+       @{*/
 
     """
     _hipsparseScsrgemm2__retval = hipsparseStatus_t(chipsparse.hipsparseScsrgemm2(
@@ -6396,7 +6396,7 @@ def hipsparseXbsrilu02_zeroPivot(object handle, object info, object position):
     Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage format
 
     Details:
-        ``hipsparseXbsrilu02_zeroPivot`` returns
+       ``hipsparseXbsrilu02_zeroPivot`` returns
      \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
     structural or numerical zero has been found during hipsparseXbsrilu02_analysis() or
     hipsparseXbsrilu02() computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$ is
@@ -6406,14 +6406,14 @@ def hipsparseXbsrilu02_zeroPivot(object handle, object info, object position):
     ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
 
     Note:
-        If a zero pivot is found, ``position`` \f$
+       If a zero pivot is found, ``position`` \f$
     =j\f$ means that either the diagonal block
     \f$A_{j,j}\f$ is missing (structural zero) or the diagonal block \f$A_{j,j}\f$ is not
     invertible (numerical zero).
 
     Note:
-        ``hipsparseXbsrilu02_zeroPivot`` is a blocking function. It might influence
-        performance negatively.
+       ``hipsparseXbsrilu02_zeroPivot`` is a blocking function. It might influence
+       performance negatively.
 
 
     """
@@ -6431,21 +6431,21 @@ def hipsparseSbsrilu02_numericBoost(object handle, object info, int enable_boost
        Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage    format
 
        Details:
-        ``hipsparseXbsrilu02_numericBoost`` enables the user to replace a numerical value in
-        an incomplete LU factorization. ``tol`` is used to determine whether a numerical value
-        is replaced by ``boost_val,`` such that \f$
+       ``hipsparseXbsrilu02_numericBoost`` enables the user to replace a numerical value in
+       an incomplete LU factorization. ``tol`` is used to determine whether a numerical value
+       is replaced by ``boost_val,`` such that \f$
     A_{j,j} = \text{boost_val}\f$ if
        \f$\text{tol} \ge \left|A_{j,j}\right|\f$.
 
        Note:
-        The boost value is enabled by setting ``enable_boost`` to 1 or disabled by
-        setting ``enable_boost`` to 0.
+       The boost value is enabled by setting ``enable_boost`` to 1 or disabled by
+       setting ``enable_boost`` to 0.
 
 
        Note:
-        ``tol`` and ``boost_val`` can be in host or device memory.
-        /
-        @{*/
+       ``tol`` and ``boost_val`` can be in host or device memory.
+       /
+       @{*/
 
     """
     _hipsparseSbsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseSbsrilu02_numericBoost(
@@ -6498,15 +6498,15 @@ def hipsparseZbsrilu02_numericBoost(object handle, object info, int enable_boost
 @cython.embedsignature(True)
 def hipsparseSbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
-       \ingroup precond_module
-       Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage    format
+    \ingroup precond_module
+    Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage    format
 
-       Details:
-        ``hipsparseXbsrilu02_bufferSize`` returns the size of the temporary storage buffer
-        that is required by hipsparseXbsrilu02_analysis() and hipsparseXbsrilu02_solve().
-        The temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+    ``hipsparseXbsrilu02_bufferSize`` returns the size of the temporary storage buffer
+    that is required by hipsparseXbsrilu02_analysis() and hipsparseXbsrilu02_solve().
+    The temporary storage buffer must be allocated by the user.
+    /
+    @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -6579,22 +6579,22 @@ def hipsparseZbsrilu02_bufferSize(object handle, object dirA, int mb, int nnzb, 
 @cython.embedsignature(True)
 def hipsparseSbsrilu02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object policy, object pBuffer):
     """
-     \ingroup precond_module
-     Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage  format
+    \ingroup precond_module
+    Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage  format
 
-     Details:
-        ``hipsparseXbsrilu02_analysis`` performs the analysis step for hipsparseXbsrilu02().
-
-
-     Note:
-        If the matrix sparsity pattern changes, the gathered information will become invalid.
+    Details:
+      ``hipsparseXbsrilu02_analysis`` performs the analysis step for hipsparseXbsrilu02().
 
 
-     Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+    Note:
+      If the matrix sparsity pattern changes, the gathered information will become invalid.
 
-        @{*/
+
+    Note:
+      This function is non blocking and executed asynchronously with respect to the host.
+      It may return before the actual computation has finished.
+
+      @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -6679,8 +6679,8 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
      Incomplete LU factorization with 0 fill-ins and no pivoting using BSR storage  format
 
      Details:
-        ``hipsparseXbsrilu02`` computes the incomplete LU factorization with 0 fill-ins and no
-        pivoting of a sparse \f$
+       ``hipsparseXbsrilu02`` computes the incomplete LU factorization with 0 fill-ins and no
+       pivoting of a sparse \f$
     mb \times mb\f$ BSR matrix \f$A\f$, such that
      \f[
        A \approx LU
@@ -6693,10 +6693,10 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
      status can be obtained by calling hipsparseXbsrilu02_zeroPivot().
 
      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
-        @{*/
+       @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -6777,23 +6777,23 @@ def hipsparseZbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 @cython.embedsignature(True)
 def hipsparseXcsrilu02_zeroPivot(object handle, object info, object position):
     """
-       \ingroup precond_module
-      Incomplete LU factorization with 0 fill-ins and no pivoting using CSR   storage format
+      \ingroup precond_module
+     Incomplete LU factorization with 0 fill-ins and no pivoting using CSR   storage format
 
-      Details:
-        ``hipsparseXcsrilu02_zeroPivot`` returns
-     \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
-      structural or numerical zero has been found during hipsparseXcsrilu02() computation.
-      The first zero pivot \f$j\f$ at \f$A_{j,j}\f$ is stored in ``position,`` using same
-      index base as the CSR matrix.
+     Details:
+      ``hipsparseXcsrilu02_zeroPivot`` returns
+    \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
+     structural or numerical zero has been found during hipsparseXcsrilu02() computation.
+     The first zero pivot \f$j\f$ at \f$A_{j,j}\f$ is stored in ``position,`` using same
+     index base as the CSR matrix.
 
-      ``position`` can be in host or device memory. If no zero pivot has been found,
-      ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
+     ``position`` can be in host or device memory. If no zero pivot has been found,
+     ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
 
-      Note:
-        ``hipsparseXcsrilu02_zeroPivot`` is a blocking function. It might influence
-        performance negatively.
-        /
+     Note:
+      ``hipsparseXcsrilu02_zeroPivot`` is a blocking function. It might influence
+      performance negatively.
+      /
 
     """
     _hipsparseXcsrilu02_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrilu02_zeroPivot(
@@ -6810,21 +6810,21 @@ def hipsparseScsrilu02_numericBoost(object handle, object info, int enable_boost
      Incomplete LU factorization with 0 fill-ins and no pivoting using CSR storage  format
 
      Details:
-        ``hipsparseXcsrilu02_numericBoost`` enables the user to replace a numerical value in
-        an incomplete LU factorization. ``tol`` is used to determine whether a numerical value
-        is replaced by ``boost_val,`` such that \f$
+       ``hipsparseXcsrilu02_numericBoost`` enables the user to replace a numerical value in
+       an incomplete LU factorization. ``tol`` is used to determine whether a numerical value
+       is replaced by ``boost_val,`` such that \f$
     A_{j,j} = \text{boost_val}\f$ if
      \f$\text{tol} \ge \left|A_{j,j}\right|\f$.
 
      Note:
-        The boost value is enabled by setting ``enable_boost`` to 1 or disabled by
-        setting ``enable_boost`` to 0.
+       The boost value is enabled by setting ``enable_boost`` to 1 or disabled by
+       setting ``enable_boost`` to 0.
 
 
      Note:
-        ``tol`` and ``boost_val`` can be in host or device memory.
+       ``tol`` and ``boost_val`` can be in host or device memory.
 
-        @{*/
+       @{*/
 
     """
     _hipsparseScsrilu02_numericBoost__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_numericBoost(
@@ -6877,15 +6877,15 @@ def hipsparseZcsrilu02_numericBoost(object handle, object info, int enable_boost
 @cython.embedsignature(True)
 def hipsparseScsrilu02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     """
-       \ingroup precond_module
-      Incomplete LU factorization with 0 fill-ins and no pivoting using CSR   storage format
+     \ingroup precond_module
+    Incomplete LU factorization with 0 fill-ins and no pivoting using CSR   storage format
 
-      Details:
-        ``hipsparseXcsrilu02_bufferSize`` returns the size of the temporary storage buffer
-        that is required by hipsparseXcsrilu02_analysis() and hipsparseXcsrilu02_solve(). the
-        temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXcsrilu02_bufferSize`` returns the size of the temporary storage buffer
+     that is required by hipsparseXcsrilu02_analysis() and hipsparseXcsrilu02_solve(). the
+     temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     _hipsparseScsrilu02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_bufferSize(
@@ -6950,15 +6950,15 @@ def hipsparseZcsrilu02_bufferSize(object handle, int m, int nnz, object descrA, 
 @cython.embedsignature(True)
 def hipsparseScsrilu02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     """
-       \ingroup precond_module
-      Incomplete LU factorization with 0 fill-ins and no pivoting using CSR   storage format
+     \ingroup precond_module
+    Incomplete LU factorization with 0 fill-ins and no pivoting using CSR   storage format
 
-      Details:
-        ``hipsparseXcsrilu02_bufferSizeExt`` returns the size of the temporary storage buffer
-        that is required by hipsparseXcsrilu02_analysis() and hipsparseXcsrilu02_solve(). the
-        temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXcsrilu02_bufferSizeExt`` returns the size of the temporary storage buffer
+     that is required by hipsparseXcsrilu02_analysis() and hipsparseXcsrilu02_solve(). the
+     temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     _hipsparseScsrilu02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsrilu02_bufferSizeExt(
@@ -7023,22 +7023,22 @@ def hipsparseZcsrilu02_bufferSizeExt(object handle, int m, int nnz, object descr
 @cython.embedsignature(True)
 def hipsparseScsrilu02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
-       \ingroup precond_module
-      Incomplete LU factorization with 0 fill-ins and no pivoting using CSR   storage format
+     \ingroup precond_module
+    Incomplete LU factorization with 0 fill-ins and no pivoting using CSR   storage format
 
-      Details:
-        ``hipsparseXcsrilu02_analysis`` performs the analysis step for hipsparseXcsrilu02().
-
-
-      Note:
-        If the matrix sparsity pattern changes, the gathered information will become invalid.
+    Details:
+     ``hipsparseXcsrilu02_analysis`` performs the analysis step for hipsparseXcsrilu02().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     If the matrix sparsity pattern changes, the gathered information will become invalid.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
@@ -7115,8 +7115,8 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
       Incomplete LU factorization with 0 fill-ins and no pivoting using CSR   storage format
 
       Details:
-        ``hipsparseXcsrilu02`` computes the incomplete LU factorization with 0 fill-ins and no
-        pivoting of a sparse \f$
+       ``hipsparseXcsrilu02`` computes the incomplete LU factorization with 0 fill-ins and no
+       pivoting of a sparse \f$
     m \times m\f$ CSR matrix \f$A\f$, such that
       \f[
         A \approx LU
@@ -7129,15 +7129,15 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
       zero). The zero pivot status can be obtained by calling hipsparseXcsrilu02_zeroPivot().
 
       Note:
-        The sparse CSR matrix has to be sorted. This can be achieved by calling
-        hipsparseXcsrsort().
+       The sparse CSR matrix has to be sorted. This can be achieved by calling
+       hipsparseXcsrsort().
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
@@ -7214,7 +7214,7 @@ def hipsparseXbsric02_zeroPivot(object handle, object info, object position):
     Incomplete Cholesky factorization with 0 fill-ins and no pivoting using BSR storage format
 
     Details:
-        ``hipsparseXbsric02_zeroPivot`` returns
+       ``hipsparseXbsric02_zeroPivot`` returns
      \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
     structural or numerical zero has been found during hipsparseXbsric02_analysis() or
     hipsparseXbsric02() computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$ is
@@ -7224,14 +7224,14 @@ def hipsparseXbsric02_zeroPivot(object handle, object info, object position):
     ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
 
     Note:
-        If a zero pivot is found, ``position=j`` means that either the diagonal block ``A(j,j)``
-        is missing (structural zero) or the diagonal block ``A(j,j)`` is not positive definite
-        (numerical zero).
+       If a zero pivot is found, ``position=j`` means that either the diagonal block ``A(j,j)``
+       is missing (structural zero) or the diagonal block ``A(j,j)`` is not positive definite
+       (numerical zero).
 
 
     Note:
-        ``hipsparseXbsric02_zeroPivot`` is a blocking function. It might influence
-        performance negatively.
+       ``hipsparseXbsric02_zeroPivot`` is a blocking function. It might influence
+       performance negatively.
 
 
     """
@@ -7245,15 +7245,15 @@ def hipsparseXbsric02_zeroPivot(object handle, object info, object position):
 @cython.embedsignature(True)
 def hipsparseSbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object pBufferSizeInBytes):
     """
-     \ingroup precond_module
-     Incomplete Cholesky factorization with 0 fill-ins and no pivoting using BSR  storage format
+    \ingroup precond_module
+    Incomplete Cholesky factorization with 0 fill-ins and no pivoting using BSR  storage format
 
-     Details:
-        ``hipsparseXbsric02_bufferSize`` returns the size of the temporary storage buffer
-        that is required by hipsparseXbsric02_analysis() and hipsparseXbsric02(). The
-        temporary storage buffer must be allocated by the user.
+    Details:
+      ``hipsparseXbsric02_bufferSize`` returns the size of the temporary storage buffer
+      that is required by hipsparseXbsric02_analysis() and hipsparseXbsric02(). The
+      temporary storage buffer must be allocated by the user.
 
-        @{*/
+      @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -7326,22 +7326,22 @@ def hipsparseZbsric02_bufferSize(object handle, object dirA, int mb, int nnzb, o
 @cython.embedsignature(True)
 def hipsparseSbsric02_analysis(object handle, object dirA, int mb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object info, object policy, object pBuffer):
     """
-     \ingroup precond_module
-     Incomplete Cholesky factorization with 0 fill-ins and no pivoting using BSR  storage format
+    \ingroup precond_module
+    Incomplete Cholesky factorization with 0 fill-ins and no pivoting using BSR  storage format
 
-     Details:
-        ``hipsparseXbsric02_analysis`` performs the analysis step for hipsparseXbsric02().
-
-
-     Note:
-        If the matrix sparsity pattern changes, the gathered information will become invalid.
+    Details:
+      ``hipsparseXbsric02_analysis`` performs the analysis step for hipsparseXbsric02().
 
 
-     Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+    Note:
+      If the matrix sparsity pattern changes, the gathered information will become invalid.
 
-        @{*/
+
+    Note:
+      This function is non blocking and executed asynchronously with respect to the host.
+      It may return before the actual computation has finished.
+
+      @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -7426,8 +7426,8 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
      Incomplete Cholesky factorization with 0 fill-ins and no pivoting using BSR  storage format
 
      Details:
-        ``hipsparseXbsric02`` computes the incomplete Cholesky factorization with 0 fill-ins
-        and no pivoting of a sparse \f$
+       ``hipsparseXbsric02`` computes the incomplete Cholesky factorization with 0 fill-ins
+       and no pivoting of a sparse \f$
     mb \times mb\f$ BSR matrix \f$A\f$, such that
      \f[
        A \approx LL^T
@@ -7440,10 +7440,10 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
      obtained by calling hipsparseXbsric02_zeroPivot().
 
      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
 
-        @{*/
+       @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -7524,23 +7524,23 @@ def hipsparseZbsric02(object handle, object dirA, int mb, int nnzb, object descr
 @cython.embedsignature(True)
 def hipsparseXcsric02_zeroPivot(object handle, object info, object position):
     """
-       \ingroup precond_module
-      Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR   storage format
+      \ingroup precond_module
+     Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR   storage format
 
-      Details:
-        ``hipsparseXcsric02_zeroPivot`` returns
-     \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
-      structural or numerical zero has been found during hipsparseXcsric02_analysis() or
-      hipsparseXcsric02() computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$
-      is stored in ``position,`` using same index base as the CSR matrix.
+     Details:
+      ``hipsparseXcsric02_zeroPivot`` returns
+    \ref HIPSPARSE_STATUS_ZERO_PIVOT, if either a
+     structural or numerical zero has been found during hipsparseXcsric02_analysis() or
+     hipsparseXcsric02() computation. The first zero pivot \f$j\f$ at \f$A_{j,j}\f$
+     is stored in ``position,`` using same index base as the CSR matrix.
 
-      ``position`` can be in host or device memory. If no zero pivot has been found,
-      ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
+     ``position`` can be in host or device memory. If no zero pivot has been found,
+     ``position`` is set to -1 and \ref HIPSPARSE_STATUS_SUCCESS is returned instead.
 
-      Note:
-        ``hipsparseXcsric02_zeroPivot`` is a blocking function. It might influence
-        performance negatively.
-        /
+     Note:
+      ``hipsparseXcsric02_zeroPivot`` is a blocking function. It might influence
+      performance negatively.
+      /
 
     """
     _hipsparseXcsric02_zeroPivot__retval = hipsparseStatus_t(chipsparse.hipsparseXcsric02_zeroPivot(
@@ -7553,14 +7553,14 @@ def hipsparseXcsric02_zeroPivot(object handle, object info, object position):
 @cython.embedsignature(True)
 def hipsparseScsric02_bufferSize(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSizeInBytes):
     """
-       \ingroup precond_module
-      Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR   storage format
+     \ingroup precond_module
+    Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR   storage format
 
-      Details:
-        ``hipsparseXcsric02_bufferSize`` returns the size of the temporary storage buffer
-        that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
-        /
-        @{*/
+    Details:
+     ``hipsparseXcsric02_bufferSize`` returns the size of the temporary storage buffer
+     that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
+     /
+     @{*/
 
     """
     _hipsparseScsric02_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseScsric02_bufferSize(
@@ -7625,14 +7625,14 @@ def hipsparseZcsric02_bufferSize(object handle, int m, int nnz, object descrA, o
 @cython.embedsignature(True)
 def hipsparseScsric02_bufferSizeExt(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object pBufferSize):
     """
-       \ingroup precond_module
-      Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR   storage format
+     \ingroup precond_module
+    Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR   storage format
 
-      Details:
-        ``hipsparseXcsric02_bufferSizeExt`` returns the size of the temporary storage buffer
-        that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
-        /
-        @{*/
+    Details:
+     ``hipsparseXcsric02_bufferSizeExt`` returns the size of the temporary storage buffer
+     that is required by hipsparseXcsric02_analysis() and hipsparseXcsric02().
+     /
+     @{*/
 
     """
     _hipsparseScsric02_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsric02_bufferSizeExt(
@@ -7697,22 +7697,22 @@ def hipsparseZcsric02_bufferSizeExt(object handle, int m, int nnz, object descrA
 @cython.embedsignature(True)
 def hipsparseScsric02_analysis(object handle, int m, int nnz, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object policy, object pBuffer):
     """
-       \ingroup precond_module
-      Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR   storage format
+     \ingroup precond_module
+    Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR   storage format
 
-      Details:
-        ``hipsparseXcsric02_analysis`` performs the analysis step for hipsparseXcsric02().
-
-
-      Note:
-        If the matrix sparsity pattern changes, the gathered information will become invalid.
+    Details:
+     ``hipsparseXcsric02_analysis`` performs the analysis step for hipsparseXcsric02().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     If the matrix sparsity pattern changes, the gathered information will become invalid.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
@@ -7789,8 +7789,8 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
       Incomplete Cholesky factorization with 0 fill-ins and no pivoting using CSR   storage format
 
       Details:
-        ``hipsparseXcsric02`` computes the incomplete Cholesky factorization with 0 fill-ins
-        and no pivoting of a sparse \f$
+       ``hipsparseXcsric02`` computes the incomplete Cholesky factorization with 0 fill-ins
+       and no pivoting of a sparse \f$
     m \times m\f$ CSR matrix \f$A\f$, such that
       \f[
         A \approx LL^T
@@ -7803,15 +7803,15 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
       zero). The zero pivot status can be obtained by calling hipsparseXcsric02_zeroPivot().
 
       Note:
-        The sparse CSR matrix has to be sorted. This can be achieved by calling
-        hipsparseXcsrsort().
+       The sparse CSR matrix has to be sorted. This can be achieved by calling
+       hipsparseXcsrsort().
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(policy,_hipsparseSolvePolicy_t__Base):
@@ -7884,15 +7884,15 @@ def hipsparseZcsric02(object handle, int m, int nnz, object descrA, object csrSo
 @cython.embedsignature(True)
 def hipsparseSgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBufferSizeInBytes):
     """
-       \ingroup precond_module
-      Tridiagonal solver with pivoting
+     \ingroup precond_module
+    Tridiagonal solver with pivoting
 
-      Details:
-        ``hipsparseXgtsv2_bufferSize`` returns the size of the temporary storage buffer
-        that is required by hipsparseXgtsv2(). The temporary storage buffer must be
-        allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXgtsv2_bufferSize`` returns the size of the temporary storage buffer
+     that is required by hipsparseXgtsv2(). The temporary storage buffer must be
+     allocated by the user.
+     /
+     @{*/
 
     """
     _hipsparseSgtsv2_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2_bufferSizeExt(
@@ -7953,18 +7953,18 @@ def hipsparseZgtsv2_bufferSizeExt(object handle, int m, int n, object dl, object
 @cython.embedsignature(True)
 def hipsparseSgtsv2(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
     """
-       \ingroup precond_module
-      Tridiagonal solver with pivoting
+     \ingroup precond_module
+    Tridiagonal solver with pivoting
 
-      Details:
-        ``hipsparseXgtsv2`` solves a tridiagonal system for multiple right hand sides using pivoting.
+    Details:
+     ``hipsparseXgtsv2`` solves a tridiagonal system for multiple right hand sides using pivoting.
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     _hipsparseSgtsv2__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2(
@@ -8025,15 +8025,15 @@ def hipsparseZgtsv2(object handle, int m, int n, object dl, object d, object du,
 @cython.embedsignature(True)
 def hipsparseSgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBufferSizeInBytes):
     """
-       \ingroup precond_module
-      Tridiagonal solver (no pivoting)
+     \ingroup precond_module
+    Tridiagonal solver (no pivoting)
 
-      Details:
-        ``hipsparseXgtsv2_nopivot_bufferSizeExt`` returns the size of the temporary storage
-        buffer that is required by hipsparseXgtsv2_nopivot(). The temporary storage buffer
-        must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXgtsv2_nopivot_bufferSizeExt`` returns the size of the temporary storage
+     buffer that is required by hipsparseXgtsv2_nopivot(). The temporary storage buffer
+     must be allocated by the user.
+     /
+     @{*/
 
     """
     _hipsparseSgtsv2_nopivot_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2_nopivot_bufferSizeExt(
@@ -8094,18 +8094,18 @@ def hipsparseZgtsv2_nopivot_bufferSizeExt(object handle, int m, int n, object dl
 @cython.embedsignature(True)
 def hipsparseSgtsv2_nopivot(object handle, int m, int n, object dl, object d, object du, object B, int ldb, object pBuffer):
     """
-       \ingroup precond_module
-      Tridiagonal solver (no pivoting)
+     \ingroup precond_module
+    Tridiagonal solver (no pivoting)
 
-      Details:
-        ``hipsparseXgtsv2_nopivot`` solves a tridiagonal linear system for multiple right-hand sides
+    Details:
+     ``hipsparseXgtsv2_nopivot`` solves a tridiagonal linear system for multiple right-hand sides
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     _hipsparseSgtsv2_nopivot__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2_nopivot(
@@ -8166,15 +8166,15 @@ def hipsparseZgtsv2_nopivot(object handle, int m, int n, object dl, object d, ob
 @cython.embedsignature(True)
 def hipsparseSgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBufferSizeInBytes):
     """
-       \ingroup precond_module
-      Strided Batch tridiagonal solver (no pivoting)
+     \ingroup precond_module
+    Strided Batch tridiagonal solver (no pivoting)
 
-      Details:
-        ``hipsparseXgtsv2StridedBatch_bufferSizeExt`` returns the size of the temporary storage
-        buffer that is required by hipsparseXgtsv2StridedBatch(). The temporary storage buffer
-        must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXgtsv2StridedBatch_bufferSizeExt`` returns the size of the temporary storage
+     buffer that is required by hipsparseXgtsv2StridedBatch(). The temporary storage buffer
+     must be allocated by the user.
+     /
+     @{*/
 
     """
     _hipsparseSgtsv2StridedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2StridedBatch_bufferSizeExt(
@@ -8235,18 +8235,18 @@ def hipsparseZgtsv2StridedBatch_bufferSizeExt(object handle, int m, object dl, o
 @cython.embedsignature(True)
 def hipsparseSgtsv2StridedBatch(object handle, int m, object dl, object d, object du, object x, int batchCount, int batchStride, object pBuffer):
     """
-       \ingroup precond_module
-      Strided Batch tridiagonal solver (no pivoting)
+     \ingroup precond_module
+    Strided Batch tridiagonal solver (no pivoting)
 
-      Details:
-        ``hipsparseXgtsv2StridedBatch`` solves a batched tridiagonal linear system
+    Details:
+     ``hipsparseXgtsv2StridedBatch`` solves a batched tridiagonal linear system
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     _hipsparseSgtsv2StridedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsv2StridedBatch(
@@ -8307,15 +8307,15 @@ def hipsparseZgtsv2StridedBatch(object handle, int m, object dl, object d, objec
 @cython.embedsignature(True)
 def hipsparseSgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBufferSizeInBytes):
     """
-       \ingroup precond_module
-      Interleaved Batch tridiagonal solver
+     \ingroup precond_module
+    Interleaved Batch tridiagonal solver
 
-      Details:
-        ``hipsparseXgtsvInterleavedBatch_bufferSizeExt`` returns the size of the temporary storage
-        buffer that is required by hipsparseXgtsvInterleavedBatch(). The temporary storage buffer
-        must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXgtsvInterleavedBatch_bufferSizeExt`` returns the size of the temporary storage
+     buffer that is required by hipsparseXgtsvInterleavedBatch(). The temporary storage buffer
+     must be allocated by the user.
+     /
+     @{*/
 
     """
     _hipsparseSgtsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsvInterleavedBatch_bufferSizeExt(
@@ -8376,18 +8376,18 @@ def hipsparseZgtsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 @cython.embedsignature(True)
 def hipsparseSgtsvInterleavedBatch(object handle, int algo, int m, object dl, object d, object du, object x, int batchCount, object pBuffer):
     """
-       \ingroup precond_module
-      Interleaved Batch tridiagonal solver
+     \ingroup precond_module
+    Interleaved Batch tridiagonal solver
 
-      Details:
-        ``hipsparseXgtsvInterleavedBatch`` solves a batched tridiagonal linear system
+    Details:
+     ``hipsparseXgtsvInterleavedBatch`` solves a batched tridiagonal linear system
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     _hipsparseSgtsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSgtsvInterleavedBatch(
@@ -8448,15 +8448,15 @@ def hipsparseZgtsvInterleavedBatch(object handle, int algo, int m, object dl, ob
 @cython.embedsignature(True)
 def hipsparseSgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBufferSizeInBytes):
     """
-       \ingroup precond_module
-      Interleaved Batch pentadiagonal solver
+     \ingroup precond_module
+    Interleaved Batch pentadiagonal solver
 
-      Details:
-        ``hipsparseXgpsvInterleavedBatch_bufferSizeExt`` returns the size of the temporary storage
-        buffer that is required by hipsparseXgpsvInterleavedBatch(). The temporary storage buffer
-        must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXgpsvInterleavedBatch_bufferSizeExt`` returns the size of the temporary storage
+     buffer that is required by hipsparseXgpsvInterleavedBatch(). The temporary storage buffer
+     must be allocated by the user.
+     /
+     @{*/
 
     """
     _hipsparseSgpsvInterleavedBatch_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSgpsvInterleavedBatch_bufferSizeExt(
@@ -8525,18 +8525,18 @@ def hipsparseZgpsvInterleavedBatch_bufferSizeExt(object handle, int algo, int m,
 @cython.embedsignature(True)
 def hipsparseSgpsvInterleavedBatch(object handle, int algo, int m, object ds, object dl, object d, object du, object dw, object x, int batchCount, object pBuffer):
     """
-       \ingroup precond_module
-      Interleaved Batch pentadiagonal solver
+     \ingroup precond_module
+    Interleaved Batch pentadiagonal solver
 
-      Details:
-        ``hipsparseXgpsvInterleavedBatch`` solves a batched pentadiagonal linear system
+    Details:
+     ``hipsparseXgpsvInterleavedBatch`` solves a batched pentadiagonal linear system
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     _hipsparseSgpsvInterleavedBatch__retval = hipsparseStatus_t(chipsparse.hipsparseSgpsvInterleavedBatch(
@@ -8605,13 +8605,13 @@ def hipsparseZgpsvInterleavedBatch(object handle, int algo, int m, object ds, ob
 @cython.embedsignature(True)
 def hipsparseSnnz(object handle, object dirA, int m, int n, object descrA, object A, int lda, object nnzPerRowColumn, object nnzTotalDevHostPtr):
     """
-       \ingroup conv_module
-      This function computes the number of nonzero elements per row or column and the total   number of nonzero elements in a dense matrix.
+     \ingroup conv_module
+    This function computes the number of nonzero elements per row or column and the total   number of nonzero elements in a dense matrix.
 
-      Details:
-        The routine does support asynchronous execution if the pointer mode is set to device.
-        /
-        @{*/
+    Details:
+     The routine does support asynchronous execution if the pointer mode is set to device.
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -8676,8 +8676,8 @@ def hipsparseZnnz(object handle, object dirA, int m, int n, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseSdense2csr(object handle, int m, int n, object descr, object A, int ld, object nnz_per_rows, object csr_val, object csr_row_ptr, object csr_col_ind):
     """
-       \ingroup conv_module
-      This function converts the matrix A in dense format into a sparse matrix in CSR format.   All the parameters are assumed to have been pre-allocated by the user and the arrays   are filled in based on nnz_per_row, which can be pre-computed with hipsparseXnnz().   It is executed asynchronously with respect to the host and may return control to the   application on the host before the entire result is ready. /   @{*/
+     \ingroup conv_module
+    This function converts the matrix A in dense format into a sparse matrix in CSR format.   All the parameters are assumed to have been pre-allocated by the user and the arrays   are filled in based on nnz_per_row, which can be pre-computed with hipsparseXnnz().   It is executed asynchronously with respect to the host and may return control to the   application on the host before the entire result is ready. /   @{*/
     """
     _hipsparseSdense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSdense2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8741,15 +8741,15 @@ def hipsparseZdense2csr(object handle, int m, int n, object descr, object A, int
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csr_bufferSize(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object bufferSize):
     """
-       \ingroup conv_module
-      This function computes the the size of the user allocated temporary storage buffer used when converting and pruning   a dense matrix to a CSR matrix.
+     \ingroup conv_module
+    This function computes the the size of the user allocated temporary storage buffer used when converting and pruning   a dense matrix to a CSR matrix.
 
-      Details:
-        ``hipsparseXpruneDense2csr_bufferSizeExt`` returns the size of the temporary storage buffer
-        that is required by hipsparseXpruneDense2csrNnz() and hipsparseXpruneDense2csr(). The
-        temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXpruneDense2csr_bufferSizeExt`` returns the size of the temporary storage buffer
+     that is required by hipsparseXpruneDense2csrNnz() and hipsparseXpruneDense2csr(). The
+     temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     _hipsparseSpruneDense2csr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csr_bufferSize(
@@ -8818,13 +8818,13 @@ def hipsparseDpruneDense2csr_bufferSizeExt(object handle, int m, int n, object A
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csrNnz(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrRowPtr, object nnzTotalDevHostPtr, object buffer):
     """
-       \ingroup conv_module
-      This function computes the number of nonzero elements per row and the total number of   nonzero elements in a dense matrix once elements less than the threshold are pruned   from the matrix.
+     \ingroup conv_module
+    This function computes the number of nonzero elements per row and the total number of   nonzero elements in a dense matrix once elements less than the threshold are pruned   from the matrix.
 
-      Details:
-        The routine does support asynchronous execution if the pointer mode is set to device.
-        /
-        @{*/
+    Details:
+     The routine does support asynchronous execution if the pointer mode is set to device.
+     /
+     @{*/
 
     """
     _hipsparseSpruneDense2csrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrNnz(
@@ -8857,22 +8857,22 @@ def hipsparseDpruneDense2csrNnz(object handle, int m, int n, object A, int lda, 
 @cython.embedsignature(True)
 def hipsparseSpruneDense2csr(object handle, int m, int n, object A, int lda, object threshold, object descr, object csrVal, object csrRowPtr, object csrColInd, object buffer):
     """
-       \ingroup conv_module
-      This function converts the matrix A in dense format into a sparse matrix in CSR format   while pruning values that are less than the threshold. All the parameters are assumed   to have been pre-allocated by the user.
+     \ingroup conv_module
+    This function converts the matrix A in dense format into a sparse matrix in CSR format   while pruning values that are less than the threshold. All the parameters are assumed   to have been pre-allocated by the user.
 
-      Details:
-        The user first allocates ``csrRowPtr`` to have ``m+1`` elements and then calls
-        hipsparseXpruneDense2csrNnz() which fills in the ``csrRowPtr`` array and stores the
-        number of elements that are larger than the pruning threshold in ``nnzTotalDevHostPtr.``
-        The user then allocates ``csrColInd`` and ``csrVal`` to have size ``nnzTotalDevHostPtr``
-        and completes the conversion by calling hipsparseXpruneDense2csr(). A temporary storage
-        buffer is used by both hipsparseXpruneDense2csrNnz() and hipsparseXpruneDense2csr() and
-        must be allocated by the user and whose size is determined by
-        hipsparseXpruneDense2csr_bufferSizeExt(). The routine hipsparseXpruneDense2csr() is
-        executed asynchronously with respect to the host and may return control to the
-        application on the host before the entire result is ready.
-        /
-        @{*/
+    Details:
+     The user first allocates ``csrRowPtr`` to have ``m+1`` elements and then calls
+     hipsparseXpruneDense2csrNnz() which fills in the ``csrRowPtr`` array and stores the
+     number of elements that are larger than the pruning threshold in ``nnzTotalDevHostPtr.``
+     The user then allocates ``csrColInd`` and ``csrVal`` to have size ``nnzTotalDevHostPtr``
+     and completes the conversion by calling hipsparseXpruneDense2csr(). A temporary storage
+     buffer is used by both hipsparseXpruneDense2csrNnz() and hipsparseXpruneDense2csr() and
+     must be allocated by the user and whose size is determined by
+     hipsparseXpruneDense2csr_bufferSizeExt(). The routine hipsparseXpruneDense2csr() is
+     executed asynchronously with respect to the host and may return control to the
+     application on the host before the entire result is ready.
+     /
+     @{*/
 
     """
     _hipsparseSpruneDense2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csr(
@@ -8911,18 +8911,18 @@ def hipsparseSpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
       This function computes the size of the user allocated temporary storage buffer used   when converting and pruning by percentage a dense matrix to a CSR matrix.
 
       Details:
-        When converting and pruning a dense matrix A to a CSR matrix by percentage the
-        following steps are performed. First the user calls
-        ``hipsparseXpruneDense2csrByPercentage_bufferSize`` which determines the size of the
-        temporary storage buffer. Once determined, this buffer must be allocated by the user.
-        Next the user allocates the csr_row_ptr array to have ``m+1`` elements and calls
-        ``hipsparseXpruneDense2csrNnzByPercentage.`` Finally the user finishes the conversion
-        by allocating the csr_col_ind and csr_val arrays (whos size is determined by the value
-        at nnz_total_dev_host_ptr) and calling ``hipsparseXpruneDense2csrByPercentage.``
+       When converting and pruning a dense matrix A to a CSR matrix by percentage the
+       following steps are performed. First the user calls
+       ``hipsparseXpruneDense2csrByPercentage_bufferSize`` which determines the size of the
+       temporary storage buffer. Once determined, this buffer must be allocated by the user.
+       Next the user allocates the csr_row_ptr array to have ``m+1`` elements and calls
+       ``hipsparseXpruneDense2csrNnzByPercentage.`` Finally the user finishes the conversion
+       by allocating the csr_col_ind and csr_val arrays (whos size is determined by the value
+       at nnz_total_dev_host_ptr) and calling ``hipsparseXpruneDense2csrByPercentage.``
 
-        The pruning by percentage works by first sorting the absolute values of the dense
-        matrix ``A.`` We then determine a position in this sorted array by
-        \f[
+       The pruning by percentage works by first sorting the absolute values of the dense
+       matrix ``A.`` We then determine a position in this sorted array by
+       \f[
 
         pos = ceil(m*n*(percentage/100)) - 1
         pos = min(pos, m*n-1)
@@ -8972,18 +8972,18 @@ def hipsparseSpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
       This function computes the size of the user allocated temporary storage buffer used   when converting and pruning by percentage a dense matrix to a CSR matrix.
 
       Details:
-        When converting and pruning a dense matrix A to a CSR matrix by percentage the
-        following steps are performed. First the user calls
-        ``hipsparseXpruneDense2csrByPercentage_bufferSizeExt`` which determines the size of the
-        temporary storage buffer. Once determined, this buffer must be allocated by the user.
-        Next the user allocates the csr_row_ptr array to have ``m+1`` elements and calls
-        ``hipsparseXpruneDense2csrNnzByPercentage.`` Finally the user finishes the conversion
-        by allocating the csr_col_ind and csr_val arrays (whos size is determined by the value
-        at nnz_total_dev_host_ptr) and calling ``hipsparseXpruneDense2csrByPercentage.``
+       When converting and pruning a dense matrix A to a CSR matrix by percentage the
+       following steps are performed. First the user calls
+       ``hipsparseXpruneDense2csrByPercentage_bufferSizeExt`` which determines the size of the
+       temporary storage buffer. Once determined, this buffer must be allocated by the user.
+       Next the user allocates the csr_row_ptr array to have ``m+1`` elements and calls
+       ``hipsparseXpruneDense2csrNnzByPercentage.`` Finally the user finishes the conversion
+       by allocating the csr_col_ind and csr_val arrays (whos size is determined by the value
+       at nnz_total_dev_host_ptr) and calling ``hipsparseXpruneDense2csrByPercentage.``
 
-        The pruning by percentage works by first sorting the absolute values of the dense
-        matrix ``A.`` We then determine a position in this sorted array by
-        \f[
+       The pruning by percentage works by first sorting the absolute values of the dense
+       matrix ``A.`` We then determine a position in this sorted array by
+       \f[
 
         pos = ceil(m*n*(percentage/100)) - 1
         pos = min(pos, m*n-1)
@@ -9033,18 +9033,18 @@ def hipsparseSpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
       This function computes the number of nonzero elements per row and the total number of   nonzero elements in a dense matrix when converting and pruning by percentage a dense   matrix to a CSR matrix.
 
       Details:
-        When converting and pruning a dense matrix A to a CSR matrix by percentage the
-        following steps are performed. First the user calls
-        ``hipsparseXpruneDense2csrByPercentage_bufferSize`` which determines the size of the
-        temporary storage buffer. Once determined, this buffer must be allocated by the user.
-        Next the user allocates the csr_row_ptr array to have ``m+1`` elements and calls
-        ``hipsparseXpruneDense2csrNnzByPercentage.`` Finally the user finishes the conversion
-        by allocating the csr_col_ind and csr_val arrays (whos size is determined by the value
-        at nnz_total_dev_host_ptr) and calling ``hipsparseXpruneDense2csrByPercentage.``
+       When converting and pruning a dense matrix A to a CSR matrix by percentage the
+       following steps are performed. First the user calls
+       ``hipsparseXpruneDense2csrByPercentage_bufferSize`` which determines the size of the
+       temporary storage buffer. Once determined, this buffer must be allocated by the user.
+       Next the user allocates the csr_row_ptr array to have ``m+1`` elements and calls
+       ``hipsparseXpruneDense2csrNnzByPercentage.`` Finally the user finishes the conversion
+       by allocating the csr_col_ind and csr_val arrays (whos size is determined by the value
+       at nnz_total_dev_host_ptr) and calling ``hipsparseXpruneDense2csrByPercentage.``
 
-        The pruning by percentage works by first sorting the absolute values of the dense
-        matrix ``A.`` We then determine a position in this sorted array by
-        \f[
+       The pruning by percentage works by first sorting the absolute values of the dense
+       matrix ``A.`` We then determine a position in this sorted array by
+       \f[
 
         pos = ceil(m*n*(percentage/100)) - 1
         pos = min(pos, m*n-1)
@@ -9091,18 +9091,18 @@ def hipsparseSpruneDense2csrByPercentage(object handle, int m, int n, object A, 
       This function computes the number of nonzero elements per row and the total number of   nonzero elements in a dense matrix when converting and pruning by percentage a dense   matrix to a CSR matrix.
 
       Details:
-        When converting and pruning a dense matrix A to a CSR matrix by percentage the
-        following steps are performed. First the user calls
-        ``hipsparseXpruneDense2csrByPercentage_bufferSize`` which determines the size of the
-        temporary storage buffer. Once determined, this buffer must be allocated by the user.
-        Next the user allocates the csr_row_ptr array to have ``m+1`` elements and calls
-        ``hipsparseXpruneDense2csrNnzByPercentage.`` Finally the user finishes the conversion
-        by allocating the csr_col_ind and csr_val arrays (whos size is determined by the value
-        at nnz_total_dev_host_ptr) and calling ``hipsparseXpruneDense2csrByPercentage.``
+       When converting and pruning a dense matrix A to a CSR matrix by percentage the
+       following steps are performed. First the user calls
+       ``hipsparseXpruneDense2csrByPercentage_bufferSize`` which determines the size of the
+       temporary storage buffer. Once determined, this buffer must be allocated by the user.
+       Next the user allocates the csr_row_ptr array to have ``m+1`` elements and calls
+       ``hipsparseXpruneDense2csrNnzByPercentage.`` Finally the user finishes the conversion
+       by allocating the csr_col_ind and csr_val arrays (whos size is determined by the value
+       at nnz_total_dev_host_ptr) and calling ``hipsparseXpruneDense2csrByPercentage.``
 
-        The pruning by percentage works by first sorting the absolute values of the dense
-        matrix ``A.`` We then determine a position in this sorted array by
-        \f[
+       The pruning by percentage works by first sorting the absolute values of the dense
+       matrix ``A.`` We then determine a position in this sorted array by
+       \f[
 
         pos = ceil(m*n*(percentage/100)) - 1
         pos = min(pos, m*n-1)
@@ -9147,8 +9147,8 @@ def hipsparseDpruneDense2csrByPercentage(object handle, int m, int n, object A, 
 @cython.embedsignature(True)
 def hipsparseSdense2csc(object handle, int m, int n, object descr, object A, int ld, object nnz_per_columns, object csc_val, object csc_row_ind, object csc_col_ptr):
     """
-       \ingroup conv_module
-      This function converts the matrix A in dense format into a sparse matrix in CSC format.   All the parameters are assumed to have been pre-allocated by the user and the arrays are filled in based on nnz_per_columns, which can be pre-computed with hipsparseXnnz().   It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready. /   @{*/
+     \ingroup conv_module
+    This function converts the matrix A in dense format into a sparse matrix in CSC format.   All the parameters are assumed to have been pre-allocated by the user and the arrays are filled in based on nnz_per_columns, which can be pre-computed with hipsparseXnnz().   It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready. /   @{*/
     """
     _hipsparseSdense2csc__retval = hipsparseStatus_t(chipsparse.hipsparseSdense2csc(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -9212,8 +9212,8 @@ def hipsparseZdense2csc(object handle, int m, int n, object descr, object A, int
 @cython.embedsignature(True)
 def hipsparseScsr2dense(object handle, int m, int n, object descr, object csr_val, object csr_row_ptr, object csr_col_ind, object A, int ld):
     """
-       \ingroup conv_module
-      This function converts the sparse matrix in CSR format into a dense matrix.   It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready. /   @{*/
+     \ingroup conv_module
+    This function converts the sparse matrix in CSR format into a dense matrix.   It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready. /   @{*/
     """
     _hipsparseScsr2dense__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2dense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -9273,8 +9273,8 @@ def hipsparseZcsr2dense(object handle, int m, int n, object descr, object csr_va
 @cython.embedsignature(True)
 def hipsparseScsc2dense(object handle, int m, int n, object descr, object csc_val, object csc_row_ind, object csc_col_ptr, object A, int ld):
     """
-       \ingroup conv_module
-      This function converts the sparse matrix in CSC format into a dense matrix.   It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready. /   @{*/
+     \ingroup conv_module
+    This function converts the sparse matrix in CSC format into a dense matrix.   It is executed asynchronously with respect to the host and may return control to the application on the host before the entire result is ready. /   @{*/
     """
     _hipsparseScsc2dense__retval = hipsparseStatus_t(chipsparse.hipsparseScsc2dense(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -9334,12 +9334,12 @@ def hipsparseZcsc2dense(object handle, int m, int n, object descr, object csc_va
 @cython.embedsignature(True)
 def hipsparseXcsr2bsrNnz(object handle, object dirA, int m, int n, object descrA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrRowPtrC, object bsrNnzb):
     """
-       \ingroup conv_module
-      This function computes the number of nonzero block columns per row and the total number of nonzero blocks in a sparse   BSR matrix given a sparse CSR matrix as input.
+     \ingroup conv_module
+    This function computes the number of nonzero block columns per row and the total number of nonzero blocks in a sparse   BSR matrix given a sparse CSR matrix as input.
 
-      Details:
-        The routine does support asynchronous execution if the pointer mode is set to device.
-        /
+    Details:
+     The routine does support asynchronous execution if the pointer mode is set to device.
+     /
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -9425,23 +9425,23 @@ def hipsparseZnnz_compress(object handle, int m, object descrA, object csrValA, 
 @cython.embedsignature(True)
 def hipsparseXcsr2coo(object handle, object csrRowPtr, int nnz, int m, object cooRowInd, object idxBase):
     """
-       \ingroup conv_module
-      Convert a sparse CSR matrix into a sparse COO matrix
+     \ingroup conv_module
+    Convert a sparse CSR matrix into a sparse COO matrix
 
-      Details:
-        ``hipsparseXcsr2coo`` converts the CSR array containing the row offsets, that point
-        to the start of every row, into a COO array of row indices.
-
-
-      Note:
-        It can also be used to convert a CSC array containing the column offsets into a COO
-        array of column indices.
+    Details:
+     ``hipsparseXcsr2coo`` converts the CSR array containing the row offsets, that point
+     to the start of every row, into a COO array of row indices.
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
+    Note:
+     It can also be used to convert a CSC array containing the column offsets into a COO
+     array of column indices.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
 
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
@@ -9460,21 +9460,21 @@ def hipsparseScsr2csc(object handle, int m, int n, int nnz, object csrSortedVal,
       Convert a sparse CSR matrix into a sparse CSC matrix
 
       Details:
-        ``hipsparseXcsr2csc`` converts a CSR matrix into a CSC matrix. ``hipsparseXcsr2csc``
-        can also be used to convert a CSC matrix into a CSR matrix. ``copy_values`` decides
-        whether ``csc_val`` is being filled during conversion (
+       ``hipsparseXcsr2csc`` converts a CSR matrix into a CSC matrix. ``hipsparseXcsr2csc``
+       can also be used to convert a CSC matrix into a CSR matrix. ``copy_values`` decides
+       whether ``csc_val`` is being filled during conversion (
     \ref HIPSPARSE_ACTION_NUMERIC)
       or not (\ref HIPSPARSE_ACTION_SYMBOLIC).
 
       Note:
-        The resulting matrix can also be seen as the transpose of the input matrix.
+       The resulting matrix can also be seen as the transpose of the input matrix.
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(copyValues,_hipsparseAction_t__Base):
@@ -9572,21 +9572,21 @@ def hipsparseCsr2cscEx2_bufferSize(object handle, int m, int n, int nnz, object 
       This function computes the size of the user allocated temporary storage buffer used   when converting a sparse CSR matrix into a sparse CSC matrix.
 
       Details:
-        ``hipsparseXcsr2cscEx2_bufferSize`` calculates the required user allocated temporary buffer needed
-        by ``hipsparseXcsr2cscEx2`` to convert a CSR matrix into a CSC matrix. ``hipsparseXcsr2cscEx2``
-        can also be used to convert a CSC matrix into a CSR matrix. ``copy_values`` decides
-        whether ``csc_val`` is being filled during conversion (
+       ``hipsparseXcsr2cscEx2_bufferSize`` calculates the required user allocated temporary buffer needed
+       by ``hipsparseXcsr2cscEx2`` to convert a CSR matrix into a CSC matrix. ``hipsparseXcsr2cscEx2``
+       can also be used to convert a CSC matrix into a CSR matrix. ``copy_values`` decides
+       whether ``csc_val`` is being filled during conversion (
     \ref HIPSPARSE_ACTION_NUMERIC)
       or not (\ref HIPSPARSE_ACTION_SYMBOLIC).
 
       Note:
-        The resulting matrix can also be seen as the transpose of the input matrix.
+       The resulting matrix can also be seen as the transpose of the input matrix.
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
 
     """
     if not isinstance(valType,_hipDataType__Base):
@@ -9616,20 +9616,20 @@ def hipsparseCsr2cscEx2(object handle, int m, int n, int nnz, object csrVal, obj
       Convert a sparse CSR matrix into a sparse CSC matrix
 
       Details:
-        ``hipsparseXcsr2cscEx2`` converts a CSR matrix into a CSC matrix. ``hipsparseXcsr2cscEx2``
-        can also be used to convert a CSC matrix into a CSR matrix. ``copy_values`` decides
-        whether ``csc_val`` is being filled during conversion (
+       ``hipsparseXcsr2cscEx2`` converts a CSR matrix into a CSC matrix. ``hipsparseXcsr2cscEx2``
+       can also be used to convert a CSC matrix into a CSR matrix. ``copy_values`` decides
+       whether ``csc_val`` is being filled during conversion (
     \ref HIPSPARSE_ACTION_NUMERIC)
       or not (\ref HIPSPARSE_ACTION_SYMBOLIC).
 
       Note:
-        The resulting matrix can also be seen as the transpose of the input matrix.
+       The resulting matrix can also be seen as the transpose of the input matrix.
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
 
     """
     if not isinstance(valType,_hipDataType__Base):
@@ -9655,24 +9655,24 @@ def hipsparseCsr2cscEx2(object handle, int m, int n, int nnz, object csrVal, obj
 @cython.embedsignature(True)
 def hipsparseScsr2hyb(object handle, int m, int n, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object hybA, int userEllWidth, object partitionType):
     """
-       \ingroup conv_module
-      Convert a sparse CSR matrix into a sparse HYB matrix
+     \ingroup conv_module
+    Convert a sparse CSR matrix into a sparse HYB matrix
 
-      Details:
-        ``hipsparseXcsr2hyb`` converts a CSR matrix into a HYB matrix. It is assumed
-        that ``hyb`` has been initialized with hipsparseCreateHybMat().
-
-
-      Note:
-        This function requires a significant amount of storage for the HYB matrix,
-        depending on the matrix structure.
+    Details:
+     ``hipsparseXcsr2hyb`` converts a CSR matrix into a HYB matrix. It is assumed
+     that ``hyb`` has been initialized with hipsparseCreateHybMat().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     This function requires a significant amount of storage for the HYB matrix,
+     depending on the matrix structure.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     if not isinstance(partitionType,_hipsparseHybPartition_t__Base):
@@ -9741,15 +9741,15 @@ def hipsparseZcsr2hyb(object handle, int m, int n, object descrA, object csrSort
 @cython.embedsignature(True)
 def hipsparseSgebsr2gebsc_bufferSize(object handle, int mb, int nb, int nnzb, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     """
-       \ingroup conv_module
-      Convert a sparse GEneral BSR matrix into a sparse GEneral BSC matrix
+     \ingroup conv_module
+    Convert a sparse GEneral BSR matrix into a sparse GEneral BSC matrix
 
-      Details:
-        ``hipsparseXgebsr2gebsc_bufferSize`` returns the size of the temporary storage buffer
-        required by hipsparseXgebsr2gebsc().
-        The temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXgebsr2gebsc_bufferSize`` returns the size of the temporary storage buffer
+     required by hipsparseXgebsr2gebsc().
+     The temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     _hipsparseSgebsr2gebsc_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSgebsr2gebsc_bufferSize(
@@ -9810,9 +9810,9 @@ def hipsparseSgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
       Convert a sparse GEneral BSR matrix into a sparse GEneral BSC matrix
 
       Details:
-        ``hipsparseXgebsr2gebsc`` converts a GEneral BSR matrix into a GEneral BSC matrix. ``hipsparseXgebsr2gebsc``
-        can also be used to convert a GEneral BSC matrix into a GEneral BSR matrix. ``copy_values`` decides
-        whether ``bsc_val`` is being filled during conversion (
+       ``hipsparseXgebsr2gebsc`` converts a GEneral BSR matrix into a GEneral BSC matrix. ``hipsparseXgebsr2gebsc``
+       can also be used to convert a GEneral BSC matrix into a GEneral BSR matrix. ``copy_values`` decides
+       whether ``bsc_val`` is being filled during conversion (
     \ref HIPSPARSE_ACTION_NUMERIC)
       or not (\ref HIPSPARSE_ACTION_SYMBOLIC).
 
@@ -9820,14 +9820,14 @@ def hipsparseSgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
       by the user. Storage buffer size can be determined by hipsparseXgebsr2gebsc_bufferSize().
 
       Note:
-        The resulting matrix can also be seen as the transpose of the input matrix.
+       The resulting matrix can also be seen as the transpose of the input matrix.
 
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
+       @{*/
 
     """
     if not isinstance(copy_values,_hipsparseAction_t__Base):
@@ -9912,21 +9912,21 @@ def hipsparseZgebsr2gebsc(object handle, int mb, int nb, int nnzb, object bsr_va
 @cython.embedsignature(True)
 def hipsparseScsr2gebsr_bufferSize(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, int row_block_dim, int col_block_dim, object p_buffer_size):
     """
-       \ingroup conv_module
-  
-       Details:
-        ``hipsparseXcsr2gebsr_bufferSize`` returns the size of the temporary buffer that
-        is required by ``hipsparseXcsr2gebcsrNnz`` and ``hipsparseXcsr2gebcsr.``
-        The temporary storage buffer must be allocated by the user.
+     \ingroup conv_module
 
-        This function computes the number of nonzero block columns per row and the total number of nonzero blocks in a sparse
-        GEneral BSR matrix given a sparse CSR matrix as input.
+     Details:
+     ``hipsparseXcsr2gebsr_bufferSize`` returns the size of the temporary buffer that
+     is required by ``hipsparseXcsr2gebcsrNnz`` and ``hipsparseXcsr2gebcsr.``
+     The temporary storage buffer must be allocated by the user.
+
+     This function computes the number of nonzero block columns per row and the total number of nonzero blocks in a sparse
+     GEneral BSR matrix given a sparse CSR matrix as input.
 
 
-      Details:
-        The routine does support asynchronous execution if the pointer mode is set to device.
-        /
-        @{*/
+    Details:
+     The routine does support asynchronous execution if the pointer mode is set to device.
+     /
+     @{*/
 
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
@@ -9995,8 +9995,8 @@ def hipsparseZcsr2gebsr_bufferSize(object handle, object dir, int m, int n, obje
 @cython.embedsignature(True)
 def hipsparseXcsr2gebsrNnz(object handle, object dir, int m, int n, object csr_descr, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_row_ptr, int row_block_dim, int col_block_dim, object bsr_nnz_devhost, object p_buffer):
     """
-       \ingroup conv_module
-      This function computes the number of nonzero block columns per row and the total number of nonzero blocks in a sparse   GEneral BSR matrix given a sparse CSR matrix as input.  /
+     \ingroup conv_module
+    This function computes the number of nonzero block columns per row and the total number of nonzero blocks in a sparse   GEneral BSR matrix given a sparse CSR matrix as input.  /
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
         raise TypeError("argument 'dir' must be of type '_hipsparseDirection_t__Base'")
@@ -10015,17 +10015,17 @@ def hipsparseXcsr2gebsrNnz(object handle, object dir, int m, int n, object csr_d
 @cython.embedsignature(True)
 def hipsparseScsr2gebsr(object handle, object dir, int m, int n, object csr_descr, object csr_val, object csr_row_ptr, object csr_col_ind, object bsr_descr, object bsr_val, object bsr_row_ptr, object bsr_col_ind, int row_block_dim, int col_block_dim, object p_buffer):
     """
-       \ingroup conv_module
-      Convert a sparse CSR matrix into a sparse GEneral BSR matrix
+     \ingroup conv_module
+    Convert a sparse CSR matrix into a sparse GEneral BSR matrix
 
-      Details:
-        ``hipsparseXcsr2gebsr`` converts a CSR matrix into a GEneral BSR matrix. It is assumed,
-        that ``bsr_val,`` ``bsr_col_ind`` and ``bsr_row_ptr`` are allocated. Allocation size
-        for ``bsr_row_ptr`` is computed as ``mb+1`` where ``mb`` is the number of block rows in
-        the GEneral BSR matrix. Allocation size for ``bsr_val`` and ``bsr_col_ind`` is computed using
-        ``csr2gebsr_nnz()`` which also fills in ``bsr_row_ptr.``
-        /
-        @{*/
+    Details:
+     ``hipsparseXcsr2gebsr`` converts a CSR matrix into a GEneral BSR matrix. It is assumed,
+     that ``bsr_val,`` ``bsr_col_ind`` and ``bsr_row_ptr`` are allocated. Allocation size
+     for ``bsr_row_ptr`` is computed as ``mb+1`` where ``mb`` is the number of block rows in
+     the GEneral BSR matrix. Allocation size for ``bsr_val`` and ``bsr_col_ind`` is computed using
+     ``csr2gebsr_nnz()`` which also fills in ``bsr_row_ptr.``
+     /
+     @{*/
 
     """
     if not isinstance(dir,_hipsparseDirection_t__Base):
@@ -10110,20 +10110,20 @@ def hipsparseZcsr2gebsr(object handle, object dir, int m, int n, object csr_desc
 @cython.embedsignature(True)
 def hipsparseScsr2bsr(object handle, object dirA, int m, int n, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, int blockDim, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC):
     """
-       \ingroup conv_module
-      Convert a sparse CSR matrix into a sparse BSR matrix
+     \ingroup conv_module
+    Convert a sparse CSR matrix into a sparse BSR matrix
 
-      Details:
-        ``hipsparseXcsr2bsr`` converts a CSR matrix into a BSR matrix. It is assumed,
-        that ``bsr_val,`` ``bsr_col_ind`` and ``bsr_row_ptr`` are allocated. Allocation size
-        for ``bsr_row_ptr`` is computed as ``mb+1`` where ``mb`` is the number of block rows in
-        the BSR matrix. Allocation size for ``bsr_val`` and ``bsr_col_ind`` is computed using
-        ``csr2bsr_nnz()`` which also fills in ``bsr_row_ptr.``
+    Details:
+     ``hipsparseXcsr2bsr`` converts a CSR matrix into a BSR matrix. It is assumed,
+     that ``bsr_val,`` ``bsr_col_ind`` and ``bsr_row_ptr`` are allocated. Allocation size
+     for ``bsr_row_ptr`` is computed as ``mb+1`` where ``mb`` is the number of block rows in
+     the BSR matrix. Allocation size for ``bsr_val`` and ``bsr_col_ind`` is computed using
+     ``csr2bsr_nnz()`` which also fills in ``bsr_row_ptr.``
 
-        ``hipsparseXcsr2bsr`` requires extra temporary storage that is allocated internally if
-        ``block_dim>16``
-        /
-        @{*/
+     ``hipsparseXcsr2bsr`` requires extra temporary storage that is allocated internally if
+     ``block_dim>16``
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -10204,22 +10204,22 @@ def hipsparseZcsr2bsr(object handle, object dirA, int m, int n, object descrA, o
 @cython.embedsignature(True)
 def hipsparseSbsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
-       \ingroup conv_module
-      Convert a sparse BSR matrix into a sparse CSR matrix
+     \ingroup conv_module
+    Convert a sparse BSR matrix into a sparse CSR matrix
 
-      Details:
-        ``hipsparseXbsr2csr`` converts a BSR matrix into a CSR matrix. It is assumed,
-        that ``csr_val,`` ``csr_col_ind`` and ``csr_row_ptr`` are allocated. Allocation size
-        for ``csr_row_ptr`` is computed by the number of block rows multiplied by the block
-        dimension plus one. Allocation for ``csr_val`` and ``csr_col_ind`` is computed by the
-        the number of blocks in the BSR matrix multiplied by the block dimension squared.
+    Details:
+     ``hipsparseXbsr2csr`` converts a BSR matrix into a CSR matrix. It is assumed,
+     that ``csr_val,`` ``csr_col_ind`` and ``csr_row_ptr`` are allocated. Allocation size
+     for ``csr_row_ptr`` is computed by the number of block rows multiplied by the block
+     dimension plus one. Allocation for ``csr_val`` and ``csr_col_ind`` is computed by the
+     the number of blocks in the BSR matrix multiplied by the block dimension squared.
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -10300,22 +10300,22 @@ def hipsparseZbsr2csr(object handle, object dirA, int mb, int nb, object descrA,
 @cython.embedsignature(True)
 def hipsparseSgebsr2csr(object handle, object dirA, int mb, int nb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDim, int colBlockDim, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     """
-       \ingroup conv_module
-      Convert a sparse general BSR matrix into a sparse CSR matrix
+     \ingroup conv_module
+    Convert a sparse general BSR matrix into a sparse CSR matrix
 
-      Details:
-        ``hipsparseXgebsr2csr`` converts a BSR matrix into a CSR matrix. It is assumed,
-        that ``csr_val,`` ``csr_col_ind`` and ``csr_row_ptr`` are allocated. Allocation size
-        for ``csr_row_ptr`` is computed by the number of block rows multiplied by the block
-        dimension plus one. Allocation for ``csr_val`` and ``csr_col_ind`` is computed by the
-        the number of blocks in the BSR matrix multiplied by the product of the block dimensions.
+    Details:
+     ``hipsparseXgebsr2csr`` converts a BSR matrix into a CSR matrix. It is assumed,
+     that ``csr_val,`` ``csr_col_ind`` and ``csr_row_ptr`` are allocated. Allocation size
+     for ``csr_row_ptr`` is computed by the number of block rows multiplied by the block
+     dimension plus one. Allocation for ``csr_val`` and ``csr_col_ind`` is computed by the
+     the number of blocks in the BSR matrix multiplied by the product of the block dimensions.
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -10396,18 +10396,18 @@ def hipsparseZgebsr2csr(object handle, object dirA, int mb, int nb, object descr
 @cython.embedsignature(True)
 def hipsparseScsr2csr_compress(object handle, int m, int n, object descrA, object csrValA, object csrColIndA, object csrRowPtrA, int nnzA, object nnzPerRow, object csrValC, object csrColIndC, object csrRowPtrC, float tol):
     """
-     \ingroup conv_module
-     Convert a sparse CSR matrix into a compressed sparse CSR matrix
+    \ingroup conv_module
+    Convert a sparse CSR matrix into a compressed sparse CSR matrix
 
-     Details:
-        ``hipsparseXcsr2csr_compress`` converts a CSR matrix into a compressed CSR matrix by
-        removing entries in the input CSR matrix that are below a non-negative threshold ``tol``
+    Details:
+      ``hipsparseXcsr2csr_compress`` converts a CSR matrix into a compressed CSR matrix by
+      removing entries in the input CSR matrix that are below a non-negative threshold ``tol``
 
 
-     Note:
-        In the case of complex matrices only the magnitude of the real part of ``tol`` is used.
+    Note:
+      In the case of complex matrices only the magnitude of the real part of ``tol`` is used.
 
-        @{*/
+      @{*/
 
     """
     _hipsparseScsr2csr_compress__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2csr_compress(
@@ -10482,15 +10482,15 @@ def hipsparseZcsr2csr_compress(object handle, int m, int n, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseSpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object bufferSize):
     """
-     \ingroup conv_module
-     Convert and prune sparse CSR matrix into a sparse CSR matrix
+    \ingroup conv_module
+    Convert and prune sparse CSR matrix into a sparse CSR matrix
 
-     Details:
-        ``hipsparseXpruneCsr2csr_bufferSize`` returns the size of the temporary buffer that
-        is required by ``hipsparseXpruneCsr2csrNnz`` and hipsparseXpruneCsr2csr. The
-        temporary storage buffer must be allocated by the user.
+    Details:
+      ``hipsparseXpruneCsr2csr_bufferSize`` returns the size of the temporary buffer that
+      is required by ``hipsparseXpruneCsr2csrNnz`` and hipsparseXpruneCsr2csr. The
+      temporary storage buffer must be allocated by the user.
 
-        @{*/
+      @{*/
 
     """
     _hipsparseSpruneCsr2csr_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csr_bufferSize(
@@ -10531,15 +10531,15 @@ def hipsparseDpruneCsr2csr_bufferSize(object handle, int m, int n, int nnzA, obj
 @cython.embedsignature(True)
 def hipsparseSpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object bufferSize):
     """
-     \ingroup conv_module
-     Convert and prune sparse CSR matrix into a sparse CSR matrix
+    \ingroup conv_module
+    Convert and prune sparse CSR matrix into a sparse CSR matrix
 
-     Details:
-        ``hipsparseXpruneCsr2csr_bufferSizeExt`` returns the size of the temporary buffer that
-        is required by ``hipsparseXpruneCsr2csrNnz`` and hipsparseXpruneCsr2csr. The
-        temporary storage buffer must be allocated by the user.
+    Details:
+      ``hipsparseXpruneCsr2csr_bufferSizeExt`` returns the size of the temporary buffer that
+      is required by ``hipsparseXpruneCsr2csrNnz`` and hipsparseXpruneCsr2csr. The
+      temporary storage buffer must be allocated by the user.
 
-        @{*/
+      @{*/
 
     """
     _hipsparseSpruneCsr2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csr_bufferSizeExt(
@@ -10580,19 +10580,19 @@ def hipsparseDpruneCsr2csr_bufferSizeExt(object handle, int m, int n, int nnzA, 
 @cython.embedsignature(True)
 def hipsparseSpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrRowPtrC, object nnzTotalDevHostPtr, object buffer):
     """
-       \ingroup conv_module
-       Convert and prune sparse CSR matrix into a sparse CSR matrix
+    \ingroup conv_module
+    Convert and prune sparse CSR matrix into a sparse CSR matrix
 
-       Details:
-        ``hipsparseXpruneCsr2csrNnz`` computes the number of nonzero elements per row and the total
-        number of nonzero elements in a sparse CSR matrix once elements less than the threshold are
-        pruned from the matrix.
+    Details:
+    ``hipsparseXpruneCsr2csrNnz`` computes the number of nonzero elements per row and the total
+    number of nonzero elements in a sparse CSR matrix once elements less than the threshold are
+    pruned from the matrix.
 
 
-       Note:
-        The routine does support asynchronous execution if the pointer mode is set to device.
-        /
-        @{*/
+    Note:
+    The routine does support asynchronous execution if the pointer mode is set to device.
+    /
+    @{*/
 
     """
     _hipsparseSpruneCsr2csrNnz__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrNnz(
@@ -10631,21 +10631,21 @@ def hipsparseDpruneCsr2csrNnz(object handle, int m, int n, int nnzA, object desc
 @cython.embedsignature(True)
 def hipsparseSpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, object threshold, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object buffer):
     """
-     \ingroup conv_module
-     Convert and prune sparse CSR matrix into a sparse CSR matrix
+    \ingroup conv_module
+    Convert and prune sparse CSR matrix into a sparse CSR matrix
 
-     Details:
-        This function converts the sparse CSR matrix A into a sparse CSR matrix C by pruning values in A
-        that are less than the threshold. All the parameters are assumed to have been pre-allocated by the user.
-        The user first calls hipsparseXpruneCsr2csr_bufferSize() to determine the size of the buffer used
-        by hipsparseXpruneCsr2csrNnz() and hipsparseXpruneCsr2csr() which the user then allocates. The user then
-        allocates ``csr_row_ptr_C`` to have ``m+1`` elements and then calls hipsparseXpruneCsr2csrNnz() which fills
-        in the ``csr_row_ptr_C`` array stores then number of elements that are larger than the pruning threshold
-        in ``nnz_total_dev_host_ptr.`` The user then calls hipsparseXpruneCsr2csr() to complete the conversion. It
-        is executed asynchronously with respect to the host and may return control to the application on the host
-        before the entire result is ready.
+    Details:
+      This function converts the sparse CSR matrix A into a sparse CSR matrix C by pruning values in A
+      that are less than the threshold. All the parameters are assumed to have been pre-allocated by the user.
+      The user first calls hipsparseXpruneCsr2csr_bufferSize() to determine the size of the buffer used
+      by hipsparseXpruneCsr2csrNnz() and hipsparseXpruneCsr2csr() which the user then allocates. The user then
+      allocates ``csr_row_ptr_C`` to have ``m+1`` elements and then calls hipsparseXpruneCsr2csrNnz() which fills
+      in the ``csr_row_ptr_C`` array stores then number of elements that are larger than the pruning threshold
+      in ``nnz_total_dev_host_ptr.`` The user then calls hipsparseXpruneCsr2csr() to complete the conversion. It
+      is executed asynchronously with respect to the host and may return control to the application on the host
+      before the entire result is ready.
 
-        @{*/
+      @{*/
 
     """
     _hipsparseSpruneCsr2csr__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csr(
@@ -10686,15 +10686,15 @@ def hipsparseDpruneCsr2csr(object handle, int m, int n, int nnzA, object descrA,
 @cython.embedsignature(True)
 def hipsparseSpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, float percentage, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object bufferSize):
     """
-     \ingroup conv_module
-     Convert and prune by percentage a sparse CSR matrix into a sparse CSR matrix
+    \ingroup conv_module
+    Convert and prune by percentage a sparse CSR matrix into a sparse CSR matrix
 
-     Details:
-        ``hipsparseXpruneCsr2csrByPercentage_bufferSize`` returns the size of the temporary buffer that
-        is required by ``hipsparseXpruneCsr2csrNnzByPercentage.``
-        The temporary storage buffer must be allocated by the user.
+    Details:
+      ``hipsparseXpruneCsr2csrByPercentage_bufferSize`` returns the size of the temporary buffer that
+      is required by ``hipsparseXpruneCsr2csrNnzByPercentage.``
+      The temporary storage buffer must be allocated by the user.
 
-        @{*/
+      @{*/
 
     """
     _hipsparseSpruneCsr2csrByPercentage_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrByPercentage_bufferSize(
@@ -10735,15 +10735,15 @@ def hipsparseDpruneCsr2csrByPercentage_bufferSize(object handle, int m, int n, i
 @cython.embedsignature(True)
 def hipsparseSpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, float percentage, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object bufferSize):
     """
-     \ingroup conv_module
-     Convert and prune by percentage a sparse CSR matrix into a sparse CSR matrix
+    \ingroup conv_module
+    Convert and prune by percentage a sparse CSR matrix into a sparse CSR matrix
 
-     Details:
-        ``hipsparseXpruneCsr2csrByPercentage_bufferSizeExt`` returns the size of the temporary buffer that
-        is required by ``hipsparseXpruneCsr2csrNnzByPercentage.``
-        The temporary storage buffer must be allocated by the user.
+    Details:
+      ``hipsparseXpruneCsr2csrByPercentage_bufferSizeExt`` returns the size of the temporary buffer that
+      is required by ``hipsparseXpruneCsr2csrNnzByPercentage.``
+      The temporary storage buffer must be allocated by the user.
 
-        @{*/
+      @{*/
 
     """
     _hipsparseSpruneCsr2csrByPercentage_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrByPercentage_bufferSizeExt(
@@ -10784,19 +10784,19 @@ def hipsparseDpruneCsr2csrByPercentage_bufferSizeExt(object handle, int m, int n
 @cython.embedsignature(True)
 def hipsparseSpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, float percentage, object descrC, object csrRowPtrC, object nnzTotalDevHostPtr, object info, object buffer):
     """
-     \ingroup conv_module
-     Convert and prune by percentage a sparse CSR matrix into a sparse CSR matrix
+    \ingroup conv_module
+    Convert and prune by percentage a sparse CSR matrix into a sparse CSR matrix
 
-     Details:
-        ``hipsparseXpruneCsr2csrNnzByPercentage`` computes the number of nonzero elements per row and the total
-        number of nonzero elements in a sparse CSR matrix once elements less than the threshold are
-        pruned from the matrix.
+    Details:
+      ``hipsparseXpruneCsr2csrNnzByPercentage`` computes the number of nonzero elements per row and the total
+      number of nonzero elements in a sparse CSR matrix once elements less than the threshold are
+      pruned from the matrix.
 
 
-     Note:
-        The routine does support asynchronous execution if the pointer mode is set to device.
+    Note:
+      The routine does support asynchronous execution if the pointer mode is set to device.
 
-        @{*/
+      @{*/
 
     """
     _hipsparseSpruneCsr2csrNnzByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrNnzByPercentage(
@@ -10835,21 +10835,21 @@ def hipsparseDpruneCsr2csrNnzByPercentage(object handle, int m, int n, int nnzA,
 @cython.embedsignature(True)
 def hipsparseSpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, object descrA, object csrValA, object csrRowPtrA, object csrColIndA, float percentage, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object buffer):
     """
-     \ingroup conv_module
-     Convert and prune by percentage a sparse CSR matrix into a sparse CSR matrix
+    \ingroup conv_module
+    Convert and prune by percentage a sparse CSR matrix into a sparse CSR matrix
 
-     Details:
-        This function converts the sparse CSR matrix A into a sparse CSR matrix C by pruning values in A
-        that are less than the threshold. All the parameters are assumed to have been pre-allocated by the user.
-        The user first calls hipsparseXpruneCsr2csr_bufferSize() to determine the size of the buffer used
-        by hipsparseXpruneCsr2csrNnz() and hipsparseXpruneCsr2csr() which the user then allocates. The user then
-        allocates ``csr_row_ptr_C`` to have ``m+1`` elements and then calls hipsparseXpruneCsr2csrNnz() which fills
-        in the ``csr_row_ptr_C`` array stores then number of elements that are larger than the pruning threshold
-        in ``nnz_total_dev_host_ptr.`` The user then calls hipsparseXpruneCsr2csr() to complete the conversion. It
-        is executed asynchronously with respect to the host and may return control to the application on the host
-        before the entire result is ready.
+    Details:
+      This function converts the sparse CSR matrix A into a sparse CSR matrix C by pruning values in A
+      that are less than the threshold. All the parameters are assumed to have been pre-allocated by the user.
+      The user first calls hipsparseXpruneCsr2csr_bufferSize() to determine the size of the buffer used
+      by hipsparseXpruneCsr2csrNnz() and hipsparseXpruneCsr2csr() which the user then allocates. The user then
+      allocates ``csr_row_ptr_C`` to have ``m+1`` elements and then calls hipsparseXpruneCsr2csrNnz() which fills
+      in the ``csr_row_ptr_C`` array stores then number of elements that are larger than the pruning threshold
+      in ``nnz_total_dev_host_ptr.`` The user then calls hipsparseXpruneCsr2csr() to complete the conversion. It
+      is executed asynchronously with respect to the host and may return control to the application on the host
+      before the entire result is ready.
 
-        @{*/
+      @{*/
 
     """
     _hipsparseSpruneCsr2csrByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneCsr2csrByPercentage(
@@ -10890,18 +10890,18 @@ def hipsparseDpruneCsr2csrByPercentage(object handle, int m, int n, int nnzA, ob
 @cython.embedsignature(True)
 def hipsparseShyb2csr(object handle, object descrA, object hybA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA):
     """
-       \ingroup conv_module
-      Convert a sparse HYB matrix into a sparse CSR matrix
+     \ingroup conv_module
+    Convert a sparse HYB matrix into a sparse CSR matrix
 
-      Details:
-        ``hipsparseXhyb2csr`` converts a HYB matrix into a CSR matrix.
+    Details:
+     ``hipsparseXhyb2csr`` converts a HYB matrix into a CSR matrix.
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
-        @{*/
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
+     @{*/
 
     """
     _hipsparseShyb2csr__retval = hipsparseStatus_t(chipsparse.hipsparseShyb2csr(
@@ -10962,25 +10962,25 @@ def hipsparseZhyb2csr(object handle, object descrA, object hybA, object csrSorte
 @cython.embedsignature(True)
 def hipsparseXcoo2csr(object handle, object cooRowInd, int nnz, int m, object csrRowPtr, object idxBase):
     """
-       \ingroup conv_module
-       Convert a sparse COO matrix into a sparse CSR matrix
+    \ingroup conv_module
+    Convert a sparse COO matrix into a sparse CSR matrix
 
-       Details:
-        ``hipsparseXcoo2csr`` converts the COO array containing the row indices into a
-        CSR array of row offsets, that point to the start of every row.
-        It is assumed that the COO row index array is sorted.
-
-
-       Note:
-        It can also be used, to convert a COO array containing the column indices into
-        a CSC array of column offsets, that point to the start of every column. Then, it is
-        assumed that the COO column index array is sorted, instead.
+    Details:
+    ``hipsparseXcoo2csr`` converts the COO array containing the row indices into a
+    CSR array of row offsets, that point to the start of every row.
+    It is assumed that the COO row index array is sorted.
 
 
-       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
+    Note:
+    It can also be used, to convert a COO array containing the column indices into
+    a CSC array of column offsets, that point to the start of every column. Then, it is
+    assumed that the COO column index array is sorted, instead.
+
+
+    Note:
+    This function is non blocking and executed asynchronously with respect to the host.
+    It may return before the actual computation has finished.
+    /
 
     """
     if not isinstance(idxBase,_hipsparseIndexBase_t__Base):
@@ -10999,8 +10999,8 @@ def hipsparseCreateIdentityPermutation(object handle, int n, object p):
       Create the identity map
 
       Details:
-        ``hipsparseCreateIdentityPermutation`` stores the identity map in ``p,`` such that
-        \f$
+       ``hipsparseCreateIdentityPermutation`` stores the identity map in ``p,`` such that
+       \f$
     p = 0:1:(n-1)\f$.
 
       \code{.c}
@@ -11008,12 +11008,12 @@ def hipsparseCreateIdentityPermutation(object handle, int n, object p):
           {
               p[i] = i;
           }
-  
+
 
       Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
+       This function is non blocking and executed asynchronously with respect to the host.
+       It may return before the actual computation has finished.
+       /
 
     """
     _hipsparseCreateIdentityPermutation__retval = hipsparseStatus_t(chipsparse.hipsparseCreateIdentityPermutation(
@@ -11025,14 +11025,14 @@ def hipsparseCreateIdentityPermutation(object handle, int n, object p):
 @cython.embedsignature(True)
 def hipsparseXcsrsort_bufferSizeExt(object handle, int m, int n, int nnz, object csrRowPtr, object csrColInd, object pBufferSizeInBytes):
     """
-       \ingroup conv_module
-      Sort a sparse CSR matrix
+     \ingroup conv_module
+    Sort a sparse CSR matrix
 
-      Details:
-        ``hipsparseXcsrsort_bufferSizeExt`` returns the size of the temporary storage buffer
-        required by hipsparseXcsrsort(). The temporary storage buffer must be allocated by
-        the user.
-        /
+    Details:
+     ``hipsparseXcsrsort_bufferSizeExt`` returns the size of the temporary storage buffer
+     required by hipsparseXcsrsort(). The temporary storage buffer must be allocated by
+     the user.
+     /
 
     """
     _hipsparseXcsrsort_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsort_bufferSizeExt(
@@ -11046,26 +11046,26 @@ def hipsparseXcsrsort_bufferSizeExt(object handle, int m, int n, int nnz, object
 @cython.embedsignature(True)
 def hipsparseXcsrsort(object handle, int m, int n, int nnz, object descrA, object csrRowPtr, object csrColInd, object P, object pBuffer):
     """
-       \ingroup conv_module
-      Sort a sparse CSR matrix
+     \ingroup conv_module
+    Sort a sparse CSR matrix
 
-      Details:
-        ``hipsparseXcsrsort`` sorts a matrix in CSR format. The sorted permutation vector
-        ``perm`` can be used to obtain sorted ``csr_val`` array. In this case, ``perm`` must be
-        initialized as the identity permutation, see hipsparseCreateIdentityPermutation().
+    Details:
+     ``hipsparseXcsrsort`` sorts a matrix in CSR format. The sorted permutation vector
+     ``perm`` can be used to obtain sorted ``csr_val`` array. In this case, ``perm`` must be
+     initialized as the identity permutation, see hipsparseCreateIdentityPermutation().
 
-        ``hipsparseXcsrsort`` requires extra temporary storage buffer that has to be allocated by
-        the user. Storage buffer size can be determined by hipsparseXcsrsort_bufferSizeExt().
-
-
-      Note:
-        ``perm`` can be ``NULL`` if a sorted permutation vector is not required.
+     ``hipsparseXcsrsort`` requires extra temporary storage buffer that has to be allocated by
+     the user. Storage buffer size can be determined by hipsparseXcsrsort_bufferSizeExt().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
+    Note:
+     ``perm`` can be ``NULL`` if a sorted permutation vector is not required.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
 
     """
     _hipsparseXcsrsort__retval = hipsparseStatus_t(chipsparse.hipsparseXcsrsort(
@@ -11081,14 +11081,14 @@ def hipsparseXcsrsort(object handle, int m, int n, int nnz, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseXcscsort_bufferSizeExt(object handle, int m, int n, int nnz, object cscColPtr, object cscRowInd, object pBufferSizeInBytes):
     """
-       \ingroup conv_module
-      Sort a sparse CSC matrix
+     \ingroup conv_module
+    Sort a sparse CSC matrix
 
-      Details:
-        ``hipsparseXcscsort_bufferSizeExt`` returns the size of the temporary storage buffer
-        required by hipsparseXcscsort(). The temporary storage buffer must be allocated by
-        the user.
-        /
+    Details:
+     ``hipsparseXcscsort_bufferSizeExt`` returns the size of the temporary storage buffer
+     required by hipsparseXcscsort(). The temporary storage buffer must be allocated by
+     the user.
+     /
 
     """
     _hipsparseXcscsort_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseXcscsort_bufferSizeExt(
@@ -11102,26 +11102,26 @@ def hipsparseXcscsort_bufferSizeExt(object handle, int m, int n, int nnz, object
 @cython.embedsignature(True)
 def hipsparseXcscsort(object handle, int m, int n, int nnz, object descrA, object cscColPtr, object cscRowInd, object P, object pBuffer):
     """
-       \ingroup conv_module
-      Sort a sparse CSC matrix
+     \ingroup conv_module
+    Sort a sparse CSC matrix
 
-      Details:
-        ``hipsparseXcscsort`` sorts a matrix in CSC format. The sorted permutation vector
-        ``perm`` can be used to obtain sorted ``csc_val`` array. In this case, ``perm`` must be
-        initialized as the identity permutation, see hipsparseCreateIdentityPermutation().
+    Details:
+     ``hipsparseXcscsort`` sorts a matrix in CSC format. The sorted permutation vector
+     ``perm`` can be used to obtain sorted ``csc_val`` array. In this case, ``perm`` must be
+     initialized as the identity permutation, see hipsparseCreateIdentityPermutation().
 
-        ``hipsparseXcscsort`` requires extra temporary storage buffer that has to be allocated by
-        the user. Storage buffer size can be determined by hipsparseXcscsort_bufferSizeExt().
-
-
-      Note:
-        ``perm`` can be ``NULL`` if a sorted permutation vector is not required.
+     ``hipsparseXcscsort`` requires extra temporary storage buffer that has to be allocated by
+     the user. Storage buffer size can be determined by hipsparseXcscsort_bufferSizeExt().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
+    Note:
+     ``perm`` can be ``NULL`` if a sorted permutation vector is not required.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
 
     """
     _hipsparseXcscsort__retval = hipsparseStatus_t(chipsparse.hipsparseXcscsort(
@@ -11137,14 +11137,14 @@ def hipsparseXcscsort(object handle, int m, int n, int nnz, object descrA, objec
 @cython.embedsignature(True)
 def hipsparseXcoosort_bufferSizeExt(object handle, int m, int n, int nnz, object cooRows, object cooCols, object pBufferSizeInBytes):
     """
-       \ingroup conv_module
-      Sort a sparse COO matrix
+     \ingroup conv_module
+    Sort a sparse COO matrix
 
-      Details:
-        ``hipsparseXcoosort_bufferSizeExt`` returns the size of the temporary storage buffer
-        required by hipsparseXcoosort(). The temporary storage buffer must be allocated by
-        the user.
-        /
+    Details:
+     ``hipsparseXcoosort_bufferSizeExt`` returns the size of the temporary storage buffer
+     required by hipsparseXcoosort(). The temporary storage buffer must be allocated by
+     the user.
+     /
 
     """
     _hipsparseXcoosort_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseXcoosort_bufferSizeExt(
@@ -11158,28 +11158,28 @@ def hipsparseXcoosort_bufferSizeExt(object handle, int m, int n, int nnz, object
 @cython.embedsignature(True)
 def hipsparseXcoosortByRow(object handle, int m, int n, int nnz, object cooRows, object cooCols, object P, object pBuffer):
     """
-       \ingroup conv_module
-      Sort a sparse COO matrix by row
+     \ingroup conv_module
+    Sort a sparse COO matrix by row
 
-      Details:
-        ``hipsparseXcoosortByRow`` sorts a matrix in COO format by row. The sorted
-        permutation vector ``perm`` can be used to obtain sorted ``coo_val`` array. In this
-        case, ``perm`` must be initialized as the identity permutation, see
-        hipsparseCreateIdentityPermutation().
+    Details:
+     ``hipsparseXcoosortByRow`` sorts a matrix in COO format by row. The sorted
+     permutation vector ``perm`` can be used to obtain sorted ``coo_val`` array. In this
+     case, ``perm`` must be initialized as the identity permutation, see
+     hipsparseCreateIdentityPermutation().
 
-        ``hipsparseXcoosortByRow`` requires extra temporary storage buffer that has to be
-        allocated by the user. Storage buffer size can be determined by
-        hipsparseXcoosort_bufferSizeExt().
-
-
-      Note:
-        ``perm`` can be ``NULL`` if a sorted permutation vector is not required.
+     ``hipsparseXcoosortByRow`` requires extra temporary storage buffer that has to be
+     allocated by the user. Storage buffer size can be determined by
+     hipsparseXcoosort_bufferSizeExt().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
+    Note:
+     ``perm`` can be ``NULL`` if a sorted permutation vector is not required.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
 
     """
     _hipsparseXcoosortByRow__retval = hipsparseStatus_t(chipsparse.hipsparseXcoosortByRow(
@@ -11194,28 +11194,28 @@ def hipsparseXcoosortByRow(object handle, int m, int n, int nnz, object cooRows,
 @cython.embedsignature(True)
 def hipsparseXcoosortByColumn(object handle, int m, int n, int nnz, object cooRows, object cooCols, object P, object pBuffer):
     """
-       \ingroup conv_module
-      Sort a sparse COO matrix by column
+     \ingroup conv_module
+    Sort a sparse COO matrix by column
 
-      Details:
-        ``hipsparseXcoosortByColumn`` sorts a matrix in COO format by column. The sorted
-        permutation vector ``perm`` can be used to obtain sorted ``coo_val`` array. In this
-        case, ``perm`` must be initialized as the identity permutation, see
-        hipsparseCreateIdentityPermutation().
+    Details:
+     ``hipsparseXcoosortByColumn`` sorts a matrix in COO format by column. The sorted
+     permutation vector ``perm`` can be used to obtain sorted ``coo_val`` array. In this
+     case, ``perm`` must be initialized as the identity permutation, see
+     hipsparseCreateIdentityPermutation().
 
-        ``hipsparseXcoosortByColumn`` requires extra temporary storage buffer that has to be
-        allocated by the user. Storage buffer size can be determined by
-        hipsparseXcoosort_bufferSizeExt().
-
-
-      Note:
-        ``perm`` can be ``NULL`` if a sorted permutation vector is not required.
+     ``hipsparseXcoosortByColumn`` requires extra temporary storage buffer that has to be
+     allocated by the user. Storage buffer size can be determined by
+     hipsparseXcoosort_bufferSizeExt().
 
 
-      Note:
-        This function is non blocking and executed asynchronously with respect to the host.
-        It may return before the actual computation has finished.
-        /
+    Note:
+     ``perm`` can be ``NULL`` if a sorted permutation vector is not required.
+
+
+    Note:
+     This function is non blocking and executed asynchronously with respect to the host.
+     It may return before the actual computation has finished.
+     /
 
     """
     _hipsparseXcoosortByColumn__retval = hipsparseStatus_t(chipsparse.hipsparseXcoosortByColumn(
@@ -11230,15 +11230,15 @@ def hipsparseXcoosortByColumn(object handle, int m, int n, int nnz, object cooRo
 @cython.embedsignature(True)
 def hipsparseSgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, int rowBlockDimC, int colBlockDimC, object bufferSize):
     """
-       \ingroup conv_module
-      This function computes the the size of the user allocated temporary storage buffer used when converting a sparse   general BSR matrix to another sparse general BSR matrix.
+     \ingroup conv_module
+    This function computes the the size of the user allocated temporary storage buffer used when converting a sparse   general BSR matrix to another sparse general BSR matrix.
 
-      Details:
-        ``hipsparseXgebsr2gebsr_bufferSize`` returns the size of the temporary storage buffer
-        that is required by hipsparseXgebsr2gebsrNnz() and hipsparseXgebsr2gebsr().
-        The temporary storage buffer must be allocated by the user.
-        /
-        @{*/
+    Details:
+     ``hipsparseXgebsr2gebsr_bufferSize`` returns the size of the temporary storage buffer
+     that is required by hipsparseXgebsr2gebsrNnz() and hipsparseXgebsr2gebsr().
+     The temporary storage buffer must be allocated by the user.
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -11307,12 +11307,12 @@ def hipsparseZgebsr2gebsr_bufferSize(object handle, object dirA, int mb, int nb,
 @cython.embedsignature(True)
 def hipsparseXgebsr2gebsrNnz(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrRowPtrC, int rowBlockDimC, int colBlockDimC, object nnzTotalDevHostPtr, object buffer):
     """
-       \ingroup conv_module
-      This function is used when converting a general BSR sparse matrix ``A`` to another general BSR sparse matrix ``C.``   Specifically, this function determines the number of non-zero blocks that will exist in ``C`` (stored using either a host   or device pointer), and computes the row pointer array for ``C.``
+     \ingroup conv_module
+    This function is used when converting a general BSR sparse matrix ``A`` to another general BSR sparse matrix ``C.``   Specifically, this function determines the number of non-zero blocks that will exist in ``C`` (stored using either a host   or device pointer), and computes the row pointer array for ``C.``
 
-      Details:
-        The routine does support asynchronous execution.
-        /
+    Details:
+     The routine does support asynchronous execution.
+     /
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -11332,19 +11332,19 @@ def hipsparseXgebsr2gebsrNnz(object handle, object dirA, int mb, int nb, int nnz
 @cython.embedsignature(True)
 def hipsparseSgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int rowBlockDimA, int colBlockDimA, object descrC, object bsrValC, object bsrRowPtrC, object bsrColIndC, int rowBlockDimC, int colBlockDimC, object buffer):
     """
-       \ingroup conv_module
-      This function converts the general BSR sparse matrix ``A`` to another general BSR sparse matrix ``C.``
+     \ingroup conv_module
+    This function converts the general BSR sparse matrix ``A`` to another general BSR sparse matrix ``C.``
 
-      Details:
-        The conversion uses three steps. First, the user calls hipsparseXgebsr2gebsr_bufferSize() to determine the size of
-        the required temporary storage buffer. The user then allocates this buffer. Secondly, the user then allocates ``mb_C+1``
-        integers for the row pointer array for ``C`` where ``mb_C=(m+row_block_dim_C-1)/row_block_dim_C.`` The user then calls
-        hipsparseXgebsr2gebsrNnz() to fill in the row pointer array for ``C`` ( ``bsr_row_ptr_C`` ) and determine the number of
-        non-zero blocks that will exist in ``C.`` Finally, the user allocates space for the colimn indices array of ``C`` to have
-        ``nnzb_C`` elements and space for the values array of ``C`` to have ``nnzb_C*roc_block_dim_C*col_block_dim_C`` and then calls
-        hipsparseXgebsr2gebsr() to complete the conversion.
-        /
-        @{*/
+    Details:
+     The conversion uses three steps. First, the user calls hipsparseXgebsr2gebsr_bufferSize() to determine the size of
+     the required temporary storage buffer. The user then allocates this buffer. Secondly, the user then allocates ``mb_C+1``
+     integers for the row pointer array for ``C`` where ``mb_C=(m+row_block_dim_C-1)/row_block_dim_C.`` The user then calls
+     hipsparseXgebsr2gebsrNnz() to fill in the row pointer array for ``C`` ( ``bsr_row_ptr_C`` ) and determine the number of
+     non-zero blocks that will exist in ``C.`` Finally, the user allocates space for the colimn indices array of ``C`` to have
+     ``nnzb_C`` elements and space for the values array of ``C`` to have ``nnzb_C*roc_block_dim_C*col_block_dim_C`` and then calls
+     hipsparseXgebsr2gebsr() to complete the conversion.
+     /
+     @{*/
 
     """
     if not isinstance(dirA,_hipsparseDirection_t__Base):
@@ -11429,8 +11429,8 @@ def hipsparseZgebsr2gebsr(object handle, object dirA, int mb, int nb, int nnzb, 
 @cython.embedsignature(True)
 def hipsparseScsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, object csrVal, object csrRowPtr, object csrColInd, object info, object pBufferSizeInBytes):
     """
-       \ingroup conv_module
-      This function calculates the amount of temporary storage required for   hipsparseXcsru2csr() and hipsparseXcsr2csru(). /   @{*/
+     \ingroup conv_module
+    This function calculates the amount of temporary storage required for   hipsparseXcsru2csr() and hipsparseXcsr2csru(). /   @{*/
     """
     _hipsparseScsru2csr_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseScsru2csr_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -11490,8 +11490,8 @@ def hipsparseZcsru2csr_bufferSizeExt(object handle, int m, int n, int nnz, objec
 @cython.embedsignature(True)
 def hipsparseScsru2csr(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
     """
-       \ingroup conv_module
-      This function converts unsorted CSR format to sorted CSR format. The required   temporary storage has to be allocated by the user. /   @{*/
+     \ingroup conv_module
+    This function converts unsorted CSR format to sorted CSR format. The required   temporary storage has to be allocated by the user. /   @{*/
     """
     _hipsparseScsru2csr__retval = hipsparseStatus_t(chipsparse.hipsparseScsru2csr(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -11555,8 +11555,8 @@ def hipsparseZcsru2csr(object handle, int m, int n, int nnz, object descrA, obje
 @cython.embedsignature(True)
 def hipsparseScsr2csru(object handle, int m, int n, int nnz, object descrA, object csrVal, object csrRowPtr, object csrColInd, object info, object pBuffer):
     """
-       \ingroup conv_module
-      This function converts sorted CSR format to unsorted CSR format. The required   temporary storage has to be allocated by the user. /   @{*/
+     \ingroup conv_module
+    This function converts sorted CSR format to unsorted CSR format. The required   temporary storage has to be allocated by the user. /   @{*/
     """
     _hipsparseScsr2csru__retval = hipsparseStatus_t(chipsparse.hipsparseScsr2csru(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,nnz,
@@ -11624,7 +11624,7 @@ def hipsparseScsrcolor(object handle, int m, int nnz, object descrA, object csrV
       Coloring of the adjacency graph of the matrix \f$A\f$ stored in the CSR format.
 
       Details:
-        ``hipsparseXcsrcolor`` performs the coloring of the undirected graph represented by the (symmetric) sparsity pattern of the matrix \f$
+       ``hipsparseXcsrcolor`` performs the coloring of the undirected graph represented by the (symmetric) sparsity pattern of the matrix \f$
     A\f$ stored in CSR format. Graph coloring is a way of coloring the nodes of a graph such that no two adjacent nodes are of the same color. The ``fraction_to_color`` is a parameter to only color a given percentage of the graph nodes, the remaining uncolored nodes receive distinct new colors. The optional ``reordering`` array is a permutation array such that unknowns of the same color are grouped. The matrix \f$A\f$ must be stored as a general matrix with a symmetric sparsity pattern, and if the matrix \f$A\f$ is non-symmetric then the user is responsible to provide the symmetric part \f$\frac{A+A^T}{2}\f$.
     /
       @{*/

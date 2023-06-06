@@ -189,20 +189,20 @@ def hiprtcGetErrorString(object result):
 
 
     Return:
-        const char pointer to the NULL-terminated error string
+       const char pointer to the NULL-terminated error string
 
 
     Warning:
-        In HIP, this function returns the name of the error,
-        if the hiprtc result is defined, it will return "Invalid HIPRTC error code"
+       In HIP, this function returns the name of the error,
+       if the hiprtc result is defined, it will return "Invalid HIPRTC error code"
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        result: code to convert to string.
+       result: code to convert to string.
     """
     if not isinstance(result,_hiprtcResult__Base):
         raise TypeError("argument 'result' must be of type '_hiprtcResult__Base'")
@@ -220,9 +220,6 @@ def hiprtcVersion():
 
 
 
-    Args:
-        major: HIP Runtime Compilation major version.
-        minor: HIP Runtime Compilation minor version.
     """
     cdef int major
     cdef int minor
@@ -335,18 +332,18 @@ def hiprtcAddNameExpression(object prog, const char * name_expression):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
-        If const char pointer is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
+       If const char pointer is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        prog: runtime compilation program instance.
-        name_expression: const char pointer to the name expression.
+       prog: runtime compilation program instance.
+       name_expression: const char pointer to the name expression.
     """
     _hiprtcAddNameExpression__retval = hiprtcResult(chiprtc.hiprtcAddNameExpression(
         _hiprtcProgram.from_pyobj(prog)._ptr,name_expression))    # fully specified
@@ -363,20 +360,20 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
-        If the compiler failed to build the runtime compilation program,
-        it will return HIPRTC_ERROR_COMPILATION.
+       If the compiler failed to build the runtime compilation program,
+       it will return HIPRTC_ERROR_COMPILATION.
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        prog: runtime compilation program instance.
-        numOptions: number of compiler options.
-        options: compiler options as const array of strins.
+       prog: runtime compilation program instance.
+       numOptions: number of compiler options.
+       options: compiler options as const array of strins.
     """
     _hiprtcCompileProgram__retval = hiprtcResult(chiprtc.hiprtcCompileProgram(
         _hiprtcProgram.from_pyobj(prog)._ptr,numOptions,
@@ -390,31 +387,31 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
 
     Creates an instance of hiprtcProgram with the given input parameters, and sets the output hiprtcProgram prog with it.
 
-    @param [in, out] prog  runtime compilation program instance.
+
 
 
 
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
-        Any invalide input parameter, it will return HIPRTC_ERROR_INVALID_INPUT
-        or HIPRTC_ERROR_INVALID_PROGRAM.
+       Any invalide input parameter, it will return HIPRTC_ERROR_INVALID_INPUT
+       or HIPRTC_ERROR_INVALID_PROGRAM.
 
-        If failed to create the program, it will return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE.
+       If failed to create the program, it will return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE.
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        src: const char pointer to the program source.
-        name: const char pointer to the program name.
-        numHeaders: number of headers.
-        headers: array of strings pointing to headers.
-        includeNames: array of strings pointing to names included in program source.
+       src: const char pointer to the program source.
+       name: const char pointer to the program name.
+       numHeaders: number of headers.
+       headers: array of strings pointing to headers.
+       includeNames: array of strings pointing to names included in program source.
     """
     prog = _hiprtcProgram.from_ptr(NULL)
     _hiprtcCreateProgram__retval = hiprtcResult(chiprtc.hiprtcCreateProgram(&prog._ptr,src,name,numHeaders,
@@ -431,17 +428,17 @@ def hiprtcDestroyProgram(object prog):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
-        If prog is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
+       If prog is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        prog: runtime compilation program instance.
+       prog: runtime compilation program instance.
     """
     _hiprtcDestroyProgram__retval = hiprtcResult(chiprtc.hiprtcDestroyProgram(
         <chiprtc.hiprtcProgram*>hip._util.types.DataHandle.from_pyobj(prog)._ptr))    # fully specified
@@ -456,24 +453,24 @@ def hiprtcGetLoweredName(object prog, const char * name_expression):
 
 
 
-    @param [in, out] lowered_name  const char array to the lowered (mangled) name.
+
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
-        If any invalide nullptr input parameters, it will return HIPRTC_ERROR_INVALID_INPUT
+       If any invalide nullptr input parameters, it will return HIPRTC_ERROR_INVALID_INPUT
 
-        If name_expression is not found, it will return HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID
+       If name_expression is not found, it will return HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID
 
-        If failed to get lowered_name from the program, it will return HIPRTC_ERROR_COMPILATION.
+       If failed to get lowered_name from the program, it will return HIPRTC_ERROR_COMPILATION.
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        prog: runtime compilation program instance.
-        name_expression: const char pointer to the name expression.
+       prog: runtime compilation program instance.
+       name_expression: const char pointer to the name expression.
     """
     cdef const char * lowered_name
     _hiprtcGetLoweredName__retval = hiprtcResult(chiprtc.hiprtcGetLoweredName(
@@ -490,16 +487,16 @@ def hiprtcGetProgramLog(object prog, object log):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        prog: runtime compilation program instance.
-        log: memory pointer to the generated log.
+       prog: runtime compilation program instance.
+       log: memory pointer to the generated log.
     """
     _hiprtcGetProgramLog__retval = hiprtcResult(chiprtc.hiprtcGetProgramLog(
         _hiprtcProgram.from_pyobj(prog)._ptr,
@@ -516,16 +513,15 @@ def hiprtcGetProgramLogSize(object prog):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        prog: runtime compilation program instance.
-        logSizeRet: size of generated log.
+       prog: runtime compilation program instance.
     """
     cdef unsigned long logSizeRet
     _hiprtcGetProgramLogSize__retval = hiprtcResult(chiprtc.hiprtcGetProgramLogSize(
@@ -542,16 +538,16 @@ def hiprtcGetCode(object prog, object code):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        prog: runtime compilation program instance.
-        code: char pointer to binary.
+       prog: runtime compilation program instance.
+       code: char pointer to binary.
     """
     _hiprtcGetCode__retval = hiprtcResult(chiprtc.hiprtcGetCode(
         _hiprtcProgram.from_pyobj(prog)._ptr,
@@ -568,16 +564,16 @@ def hiprtcGetCodeSize(object prog):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        prog: runtime compilation program instance.
-        code: the size of binary.
+       prog: runtime compilation program instance.
+       code: the size of binary.
     """
     cdef unsigned long codeSizeRet
     _hiprtcGetCodeSize__retval = hiprtcResult(chiprtc.hiprtcGetCodeSize(
@@ -594,16 +590,16 @@ def hiprtcGetBitcode(object prog, object bitcode):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        prog: runtime compilation program instance.
-        code: char pointer to bitcode.
+       prog: runtime compilation program instance.
+       code: char pointer to bitcode.
     """
     _hiprtcGetBitcode__retval = hiprtcResult(chiprtc.hiprtcGetBitcode(
         _hiprtcProgram.from_pyobj(prog)._ptr,
@@ -621,16 +617,16 @@ def hiprtcGetBitcodeSize(object prog):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        prog: runtime compilation program instance.
-        code: the size of bitcode.
+       prog: runtime compilation program instance.
+       code: the size of bitcode.
     """
     cdef unsigned long bitcode_size
     _hiprtcGetBitcodeSize__retval = hiprtcResult(chiprtc.hiprtcGetBitcodeSize(
@@ -646,16 +642,16 @@ def hiprtcLinkCreate(unsigned int num_options, object option_ptr, object option_
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        hip_jit_options:
-        hiprtc: link state instance
+       hip_jit_options:
+       hiprtc: link state instance
     """
     hip_link_state_ptr = ihiprtcLinkState.from_ptr(NULL)
     _hiprtcLinkCreate__retval = hiprtcResult(chiprtc.hiprtcLinkCreate(num_options,
@@ -673,22 +669,22 @@ def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * fil
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
-        If input values are invalid, it will
+       If input values are invalid, it will
 
     Return:
-        HIPRTC_ERROR_INVALID_INPUT
+       HIPRTC_ERROR_INVALID_INPUT
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        hiprtc: link state, jit input type, file path,
-            option reated parameters.
-        None: .
+       hiprtc: link state, jit input type, file path,
+          option reated parameters.
+       None: .
     """
     if not isinstance(input_type,_hiprtcJITInputType__Base):
         raise TypeError("argument 'input_type' must be of type '_hiprtcJITInputType__Base'")
@@ -708,22 +704,22 @@ def hiprtcLinkAddData(object hip_link_state, object input_type, object image, un
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
-        If adding the file fails, it will
+       If adding the file fails, it will
 
     Return:
-        HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
+       HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        hiprtc: link state, jit input type, image_ptr ,
-            option reated parameters.
-        None: .
+       hiprtc: link state, jit input type, image_ptr ,
+          option reated parameters.
+       None: .
     """
     if not isinstance(input_type,_hiprtcJITInputType__Base):
         raise TypeError("argument 'input_type' must be of type '_hiprtcJITInputType__Base'")
@@ -744,21 +740,21 @@ def hiprtcLinkComplete(object hip_link_state):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
-        If adding the data fails, it will
+       If adding the data fails, it will
 
     Return:
-        HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
+       HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        hiprtc: link state instance
-        linked_binary: linked_binary_size
+       hiprtc: link state instance
+       linked_binary: linked_binary_size
     """
     bin_out = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long size_out
@@ -777,21 +773,21 @@ def hiprtcLinkDestroy(object hip_link_state):
 
 
     Return:
-        HIPRTC_SUCCESS
+       HIPRTC_SUCCESS
 
-        If linking fails, it will
+       If linking fails, it will
 
     Return:
-        HIPRTC_ERROR_LINKING
+       HIPRTC_ERROR_LINKING
 
 
     See:
-        hiprtcResult
+       hiprtcResult
 
 
     Args:
-        hiprtc: link state instance
-        code: the size of binary.
+       hiprtc: link state instance
+       code: the size of binary.
     """
     _hiprtcLinkDestroy__retval = hiprtcResult(chiprtc.hiprtcLinkDestroy(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr))    # fully specified

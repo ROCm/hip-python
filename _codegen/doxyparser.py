@@ -577,7 +577,7 @@ class DoxygenGrammar:
         )
 
         # \param '['dir']' <parameter-name> { parameter description }
-        param_dir = pyp.Regex(r"\[(in|out|(in,out))\]")
+        param_dir = pyp.Regex(r"\[\s*(in|out|(\s*in,\s*out))\s*\]")
         param_names = pyp.delimitedList(IDENT)
         param = (
             self._pyp_cmd("param")
