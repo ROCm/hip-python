@@ -11,7 +11,7 @@ from _codegen.tree import (
     Record,
 )
 
-from _codegen.control import PointerParamIntent
+from _codegen.control import ParmIntent
 
 # HIP
 
@@ -163,12 +163,12 @@ class hip:
             )
         ):
             if (parm.parent.name, parm.name) == ("hipDeviceGetAttribute", "pi"):
-                return PointerParamIntent.INOUT
-            return PointerParamIntent.OUT
+                return ParmIntent.INOUT
+            return ParmIntent.OUT
         if parm.is_pointer_to_void(degree=2):
             if parm.name in ["devPtr", "ptr", "dev_ptr", "data", "dptr"]:
-                return PointerParamIntent.OUT
-        return PointerParamIntent.IN
+                return ParmIntent.OUT
+        return ParmIntent.IN
 
     @staticmethod
     def ptr_rank(node: Node):
@@ -220,10 +220,10 @@ class hiprtc:
             ("hiprtcGetBitcode", "bitcode"),
         )
         if (parm.parent.name, parm.name) in out_parms:
-            return PointerParamIntent.OUT
+            return ParmIntent.OUT
         if (parm.parent.name, parm.name) in inout_parms:
-            return PointerParamIntent.INOUT
-        return PointerParamIntent.IN
+            return ParmIntent.INOUT
+        return ParmIntent.IN
 
     @staticmethod
     def ptr_rank(node: Node):
@@ -269,8 +269,8 @@ class hipblas:
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         if node.is_pointer_to_void(degree=2) and node.name == "handle":
-            return PointerParamIntent.OUT
-        return PointerParamIntent.IN
+            return ParmIntent.OUT
+        return ParmIntent.IN
 
     @staticmethod
     def ptr_rank(node: Node):
@@ -366,19 +366,19 @@ class rccl:
                 ("ncclCommInitAll", "comm"),
                 ("pncclCommInitAll", "comm"),
             ):
-                return PointerParamIntent.INOUT
-            return PointerParamIntent.OUT
+                return ParmIntent.INOUT
+            return ParmIntent.OUT
         if node.is_pointer_to_record(degree=1):
             if (node.parent.name, node.name) == "ncclGetUniqueId":
-                return PointerParamIntent.OUT
+                return ParmIntent.OUT
         if node.is_pointer_to_basic_type(degree=1):
             if (node.parent.name, node.name) in (
                 ("ncclCommInitAll", "devlist"),
                 ("pncclCommInitAll", "devlist"),
             ):
-                return PointerParamIntent.IN
-            return PointerParamIntent.OUT
-        return PointerParamIntent.IN
+                return ParmIntent.IN
+            return ParmIntent.OUT
+        return ParmIntent.IN
 
     @staticmethod
     def ptr_rank(node: Node):
@@ -434,12 +434,12 @@ class hiprand:
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         if node.is_pointer_to_record(degree=2):
-            return PointerParamIntent.OUT
+            return ParmIntent.OUT
         if node.is_pointer_to_basic_type(degree=1):
             if node.name == "output_data":
-                return PointerParamIntent.INOUT
-            return PointerParamIntent.OUT
-        return PointerParamIntent.IN
+                return ParmIntent.INOUT
+            return ParmIntent.OUT
+        return ParmIntent.IN
 
     @staticmethod
     def ptr_rank(node: Node):
@@ -484,10 +484,10 @@ class hipfft:
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         if node.is_pointer_to_record(degree=2):
-            return PointerParamIntent.OUT
+            return ParmIntent.OUT
         if node.name == "workSize":
-            return PointerParamIntent.OUT
-        return PointerParamIntent.IN
+            return ParmIntent.OUT
+        return ParmIntent.IN
 
     @staticmethod
     def ptr_rank(node: Node):
@@ -528,8 +528,8 @@ class hipsparse:
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         if node.is_pointer_to_record(degree=2):
-            return PointerParamIntent.OUT
-        return PointerParamIntent.IN
+            return ParmIntent.OUT
+        return ParmIntent.IN
 
     @staticmethod
     def ptr_rank(node: Node):

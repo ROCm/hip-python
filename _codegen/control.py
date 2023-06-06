@@ -22,14 +22,14 @@ def DEFAULT_RENAMER(name: str):
 def DEFAULT_NODE_FILTER(node: "tree.Node"):
     return True
 
-class PointerParamIntent(enum.IntEnum):
+class ParmIntent(enum.IntEnum):
     IN = 0
     INOUT = 1
     OUT = 2
 
-def DEFAULT_PTR_PARAM_INTENT(node: "tree.Parm"):
+def DEFAULT_PTR_PARM_INTENT(node: "tree.Parm"):
     if node.is_double_pointer_to_non_const_type:
-        return PointerParamIntent.INOUT
+        return ParmIntent.INOUT
 
 RANK_ANY = -1
 
