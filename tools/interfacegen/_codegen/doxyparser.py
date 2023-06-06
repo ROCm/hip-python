@@ -2,11 +2,54 @@
 
 __author__ = "AMD_AUTHOR"
 
+from typing import Any
 import pyparsing as pyp
 
-class DoxygenGrammar:
-    
+import warnings
+
+class styles:
+
+    """Collection of basic styles that users can base their custom
+    style on.
+
+    To set at parse action for the DoxygenGrammar parsers,
+    a user must specify a ``@staticmethod`` with the same name 
+    in a class definition and pass this one
+    to an ``DoxygenGrammar`` instance via ``<mygrammar>.output_style = <mystyle>``.
+    """
+
+    class SuppressAll(object):
+        """Suppresses all found expressions.
+        Note:
+            The implementation is complete as it does
+            not specify a parse action for any DoxygenGrammar parser.
+        """
+
+        pass
+
+    class KeepAll(object):
+        """Keeps all found expressions as they are.
+        """
+
+        @staticmethod
+        def identity(s: str,loc: int,tokens: list):
+            
+            tks = list(tokens)
+            offset = loc
+            while len(tks):
+                tk = tks.pop(0)
+                offset = s.find(tk,offset) + len(tk)
+            return s[loc:offset]
+        
+        def __getattribute__(self, name: str) -> Any:
+            return self.identity
+
+
     class PythonDocstrings:
+        """Base class for Python docstring output that
+        defines parse actions for some DoxygenGrammar parsers such as
+        ``escaped`` and ``with_word``
+        """
 
         @staticmethod
         def escaped(tokens):
@@ -28,6 +71,8 @@ class DoxygenGrammar:
                 return f"**{arg}**"
             else:  # if cmd in ("p","c"): # monotype
                 return f"``{arg}``"
+
+class DoxygenGrammar:
 
     kinds = {
         "escaped": [
@@ -246,15 +291,21 @@ class DoxygenGrammar:
     ]
 
     def __init__(self):
-        self._output_style = self.PythonDocstrings
         self._construct_grammer()
+        self._output_style = None
+        self.style = styles.KeepAll
 
-    def _pyp_cmd(self, cmd):
+    def _pyp_cmd(self, cmd, words=True):
         if isinstance(cmd, list):
             cmds = cmd
         else:
             cmds = [cmd]
-        return pyp.Regex(r"[\\@]\b(" + "|".join(cmds) + r")\b")
+        if words:
+            expr = r"[\\@](" + "|".join(cmds) + r")\b"
+        else:
+            expr = r"[\\@](" + "|".join(cmds) + r")"
+        #print(expr)
+        return pyp.Regex(expr)
 
     def _pyp_section_indicator(self):
         """An pyparsing expression for a section indicatior.
@@ -280,24 +331,23 @@ class DoxygenGrammar:
             Use better filename expression than Word of printables, as this
             does not allow whitespace.
         """
-        EOL = pyp.LineEnd().suppress()
-        LPAR, RPAR = pyp.Literal("{").suppress(), pyp.Literal("{").suppress()
-        LBPAR, RBPAR = pyp.Literal("[").suppress(), pyp.Literal("]").suppress()
-        DQUOT = pyp.Literal('"').suppress()
+        LPAR, RPAR = pyp.Literal("{"), pyp.Literal("{")
+        LBPAR, RBPAR = pyp.Literal("["), pyp.Literal("]")
+        DQUOT = pyp.Literal('"')
         IDENT = pyp.pyparsing_common.identifier
         INTEGER = pyp.pyparsing_common.integer
-        BLANK_LINE = (pyp.LineStart() + pyp.LineEnd()).suppress()
+        BLANK_LINE = (pyp.LineStart() + pyp.LineEnd())
         UNTIL_LINE_END = (
             pyp.SkipTo(pyp.LineEnd(), failOn=BLANK_LINE)
         )
-        OPT_UNTIL_LINE_END = pyp.Optional(UNTIL_LINE_END)
+        OPT_UNTIL_LINE_END = pyp.Optional(UNTIL_LINE_END,default=None)
         SECTION_INDICATOR = self._pyp_section_indicator()
         SECTION_TERMINATOR = SECTION_INDICATOR | BLANK_LINE | pyp.StringEnd()
         UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE = pyp.SkipTo(
             SECTION_TERMINATOR
         )
         WORD_OF_PRINTABLES = pyp.Word(pyp.printables, pyp.printables)
-        OPT_WORD_OF_PRINTABLES = pyp.Optional(WORD_OF_PRINTABLES)
+        OPT_WORD_OF_PRINTABLES = pyp.Optional(WORD_OF_PRINTABLES,default=None)
 
         # ex: \&
         escaped = self._pyp_cmd(self.kinds["escaped"])
@@ -378,6 +428,8 @@ class DoxygenGrammar:
             + WORD_OF_PRINTABLES
         )
 
+        ## 
+
         # ex: \cite <label>
         cite = self._pyp_cmd("cite") + WORD_OF_PRINTABLES
 
@@ -401,19 +453,19 @@ class DoxygenGrammar:
         emoji = self._pyp_cmd("emoji") + pyp.QuotedString('"')
 
         # \f]
-        fbrclose = self._pyp_cmd("f\]")
+        fbrclose = self._pyp_cmd(r"f\]",words=False)
 
         # \f[
-        fbropen = self._pyp_cmd("f\[")
+        fbropen = self._pyp_cmd(r"f\[",words=False)
 
         # \f}
-        fcurlyclose = self._pyp_cmd("f\}")
+        fcurlyclose = self._pyp_cmd(r"f\}",words=False)
 
         # \f{environment}{
-        fcurlyopen = self._pyp_cmd("f\{") + IDENT + RPAR + LPAR
+        fcurlyopen = self._pyp_cmd(r"f\{",words=False) + IDENT + RPAR + LPAR
 
         # \f$
-        fdollar = self._pyp_cmd("f\$")
+        fdollar = self._pyp_cmd(r"f\$",words=False)
 
         # \file [<name>]
         file = self._pyp_cmd("file") + OPT_WORD_OF_PRINTABLES
@@ -424,10 +476,10 @@ class DoxygenGrammar:
         )
 
         # \f)
-        frndclose = self._pyp_cmd("f\)")
+        frndclose = self._pyp_cmd(r"f\)",words=False)
 
         # \f(
-        frndopen = self._pyp_cmd("f\(")
+        frndopen = self._pyp_cmd(r"f\(",words=False)
 
         # \headerfile <header-file> [<header-name>]
         headerfile = (
@@ -554,20 +606,31 @@ class DoxygenGrammar:
         all = formatters | transformers
         self.__dict__.update(locals())
 
-    def get_parser_for_command(self, cmd: str):
-        """Return pyparsing parser for the given command.
+    def get_parser_name_for_command(self, cmd: str):
+        """Return pyparsing parser name for the given command name.
 
+        Returns:
+            A triple consisting of the pyparsing parser, its attribute name, and a list of the names of all commands
+            that share the parser.
+        Note:
+            Command names can be obtained by visiting
+            https://www.doxygen.nl/manual/commands.html
+            and clicking on the individual commands in the alphabetic list.
+            The command name then appears as #cmd{name} in the URL shown
+            by the browser.
+            Example: ``https://www.doxygen.nl/manual/commands.html#cmdfdollar``
         Note:
             Multiple commands may share the same parser.
-        Returns:
-            A tuple consisting of the parser and a list of command names
-            that share the parser.
         Raises:
             KeyError: If 'cmd' could not be mapped to a parser.
+        See:
+            https://www.doxygen.nl/manual/commands.html
         """
+        if cmd.startswith("cmd"):
+            cmd = cmd[3:]
         for kind, cmds in self.kinds:
             if cmd in cmds:
-                return (self.__dict__[kind], cmds)
+                return kind
         raise KeyError("No parser found for command '{cmd}'")
 
     def walk_pyparsers(self):
@@ -575,21 +638,100 @@ class DoxygenGrammar:
             yield self.__dict__[kind]
 
     @property
-    def output_style(self):
+    def style(self):
         return self._output_style
 
-    @output_style.setter
-    def output_style(self,output_style):
+    @style.setter
+    def style(self,output_style):
         self._output_style = output_style
-        suppress_action = lambda tokens: []
         # suppress all
         for kind in self.kinds:
             pyparser = self.__dict__[kind]
-            if hasattr(output_style, kind):
+            try:
                 pyparser.setParseAction(getattr(output_style, kind))
-            else:
-                pyparser.setParseAction(suppress_action)
+            except AttributeError:
+                pyparser.setParseAction(styles.KeepAll.identity)
 
-    def transform(self,text: str):
-        result = self.formatters.transformString(text)
-        return self.transformers.transformString(result)
+    def remove_doxygen_cpp_comments(self,text: str):
+        pass
+
+    def _create_text_blocks(self,text: str):
+        """Splits the text into verbatim and non-verbatim blocks.
+        """
+        blocks = []
+        previous_end = 0
+        verbatim_environment = None
+        open = self._pyp_cmd(
+            r"((dot|verbatim|code)\b|f[$[({])", words=False
+        ).setParseAction(lambda tokens: (True,tokens))
+        close = self._pyp_cmd(
+            r"(end(dot|verbatim|code)\b|f[$)\]}])", words=False
+        ).setParseAction(lambda tokens: (False,tokens))
+        open_close = open | close
+        for tokens, start, end in open_close.scanString(text):
+            tokens = tokens[0]
+            #print(tokens)
+            is_open = tokens[0]
+            prefixed_cmd = tokens[1][0]
+            cmd = prefixed_cmd[1:]
+            if cmd == "f$":
+                is_open = (verbatim_environment == None)
+            if is_open:
+                if verbatim_environment == None:
+                    blocks.append( (text[previous_end:end], False) ) # keep the command itself in previous non-verbatim block
+                    verbatim_environment = cmd
+                    previous_end = end
+                    continue
+            # Regarding 'f$', note the 'continue' in the line above
+            if not is_open:
+                if verbatim_environment == None and cmd != "f$":
+                    warnings.warn(f"found '{tokens[0]}' but the respective environment has not been opened")
+                if verbatim_environment != None:
+                    if cmd.startswith("end"):
+                        is_matching_close = cmd[3:] == verbatim_environment
+                    else:
+                        is_matching_close = cmd.replace("]","[").replace(")","(").replace("}","{") == verbatim_environment[0:2]
+                    #
+                    if is_matching_close:
+                        blocks.append( (text[previous_end:start], True) ) # put the command itself in next non-verbatim block
+                        previous_end = start
+                        verbatim_environment = None
+        if verbatim_environment != None:
+            raise RuntimeError(f"environment {verbatim_environment} has never been closed")
+        blocks.append((text[previous_end:],False))
+        return blocks
+
+    def transform_string(self,text: str,**kwargs):    
+        result = ""
+        for content, verbatim in self._create_text_blocks(text):
+            #print(f"{content=}")
+            if verbatim:
+                result += content
+            else:
+                partial_result = self.formatters.transformString(content,**kwargs)
+                #print(f"{partial_result=}")
+                partial_result = self.transformers.transformString(partial_result,**kwargs)
+                result += partial_result
+        return result
+    
+    def search_string(self,text: str,**kwargs):
+        """
+        See:
+            https://pyparsing-docs.readthedocs.io/en/latest/pyparsing.html#pyparsing.ParserElement.search_string
+        """
+        return self.all.searchString(text,**kwargs)
+
+    def scan_string(self,text: str,**kwargs):
+        """
+        See:
+            https://pyparsing-docs.readthedocs.io/en/latest/pyparsing.html#pyparsing.ParserElement.scan_string
+        """
+        return self.all.scanString(text,**kwargs)
+
+    def parse_expr(self,text: str, **kwargs):
+        """Parses a single doxygen command expression.
+
+        See:
+            https://pyparsing-docs.readthedocs.io/en/latest/pyparsing.html#pyparsing.ParserElement.parse_string
+        """ 
+        return self.all.parseString(text,**kwargs)
