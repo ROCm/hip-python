@@ -295,8 +295,8 @@ def ncclGetVersion():
      Return the NCCL_VERSION_CODE of the NCCL library in the supplied integer.
 
     Details:
-        This integer is coded with the MAJOR, MINOR and PATCH level of the
-        NCCL library
+       This integer is coded with the MAJOR, MINOR and PATCH level of the
+       NCCL library
 
 
     """
@@ -318,19 +318,19 @@ def pncclGetVersion():
 @cython.embedsignature(True)
 def ncclGetUniqueId(object uniqueId):
     """
-       Generates an ID for ncclCommInitRank
+    Generates an ID for ncclCommInitRank
 
-       Details:
-        Generates an ID to be used in ncclCommInitRank. ncclGetUniqueId should be
-        called once and the Id should be distributed to all ranks in the
-        communicator before calling ncclCommInitRank.
+    Details:
+    Generates an ID to be used in ncclCommInitRank. ncclGetUniqueId should be
+    called once and the Id should be distributed to all ranks in the
+    communicator before calling ncclCommInitRank.
 
 
-   
+
     Args:
-        uniqueId: ncclUniqueId*
-            pointer to uniqueId
-            /
+       uniqueId: ncclUniqueId*
+          pointer to uniqueId
+          /
     """
     _ncclGetUniqueId__retval = ncclResult_t(crccl.ncclGetUniqueId(
         ncclUniqueId.from_pyobj(uniqueId)._ptr))    # fully specified
@@ -353,18 +353,15 @@ def ncclCommInitRank(int nranks, object commId, int rank):
     Creates a new communicator (multi thread/process version).
 
     Details:
-        rank must be between 0 and nranks-1 and unique within a communicator clique.
-        Each rank is associated to a CUDA device, which has to be set before calling
-        ncclCommInitRank.
-        ncclCommInitRank implicitly syncronizes with other ranks, so it must be
-        called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
+       rank must be between 0 and nranks-1 and unique within a communicator clique.
+       Each rank is associated to a CUDA device, which has to be set before calling
+       ncclCommInitRank.
+       ncclCommInitRank implicitly syncronizes with other ranks, so it must be
+       called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
 
 
 
-    Args:
-        comm: ncclComm_t*
-            communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
     _ncclCommInitRank__retval = ncclResult_t(crccl.ncclCommInitRank(&comm._ptr,nranks,
@@ -389,21 +386,18 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
     Creates a new communicator (multi thread/process version) allowing multiple ranks per device.
 
     Details:
-        rank must be between 0 and nranks-1 and unique within a communicator clique.
-        Each rank is associated to a HIP device, which has to be set before calling
-        ncclCommInitRankMulti.
-        Since this version of the function allows multiple ranks to utilize the same
-        HIP device, a unique virtualId per device has to be provided by each calling
-        rank.
-        ncclCommInitRankMulti implicitly syncronizes with other ranks, so it must be
-        called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
+       rank must be between 0 and nranks-1 and unique within a communicator clique.
+       Each rank is associated to a HIP device, which has to be set before calling
+       ncclCommInitRankMulti.
+       Since this version of the function allows multiple ranks to utilize the same
+       HIP device, a unique virtualId per device has to be provided by each calling
+       rank.
+       ncclCommInitRankMulti implicitly syncronizes with other ranks, so it must be
+       called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
 
 
 
-    Args:
-        comm: ncclComm_t*
-            communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
     _ncclCommInitRankMulti__retval = ncclResult_t(crccl.ncclCommInitRankMulti(&comm._ptr,nranks,
@@ -428,11 +422,11 @@ def ncclCommInitAll(object comm, int ndev, object devlist):
      Creates a clique of communicators (single process version).
 
     Details:
-        This is a convenience function to create a single-process communicator clique.
-        Returns an array of ndev newly initialized communicators in comm.
-        comm should be pre-allocated with size at least ndev*sizeof(ncclComm_t).
-        If devlist is NULL, the first ndev HIP devices are used.
-        Order of devlist defines user-order of processors within the communicator.
+       This is a convenience function to create a single-process communicator clique.
+       Returns an array of ndev newly initialized communicators in comm.
+       comm should be pre-allocated with size at least ndev*sizeof(ncclComm_t).
+       If devlist is NULL, the first ndev HIP devices are used.
+       Order of devlist defines user-order of processors within the communicator.
 
 
     """
@@ -518,7 +512,7 @@ def pncclGetErrorString(object result):
 @cython.embedsignature(True)
 def ncclGetLastError(object comm):
     """
-     Returns a human-readable message of the last error that occurred. comm is currently unused and can be set to NULL
+    Returns a human-readable message of the last error that occurred. comm is currently unused and can be set to NULL
 
     """
     cdef const char * _ncclGetLastError__retval = crccl.ncclGetLastError(
@@ -757,13 +751,13 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
     Reduce
 
     Details:
-        Reduces data arrays of length count in sendbuff into recvbuff using op
-        operation.
-        recvbuff may be NULL on all calls except for root device.
-        root is the rank (not the CUDA device) where data will reside after the
-        operation is complete.
+       Reduces data arrays of length count in sendbuff into recvbuff using op
+       operation.
+       recvbuff may be NULL on all calls except for root device.
+       root is the rank (not the CUDA device) where data will reside after the
+       operation is complete.
 
-        In-place operation will happen if sendbuff == recvbuff.
+       In-place operation will happen if sendbuff == recvbuff.
 
 
     """
@@ -802,11 +796,11 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
      (deprecated) Broadcast (in-place)
 
     Details:
-        Copies count values from root to all other devices.
-        root is the rank (not the CUDA device) where data resides before the
-        operation is started.
+       Copies count values from root to all other devices.
+       root is the rank (not the CUDA device) where data resides before the
+       operation is started.
 
-        This operation is implicitely in place.
+       This operation is implicitely in place.
 
 
     """
@@ -839,11 +833,11 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
      Broadcast
 
     Details:
-        Copies count values from root to all other devices.
-        root is the rank (not the HIP device) where data resides before the
-        operation is started.
+       Copies count values from root to all other devices.
+       root is the rank (not the HIP device) where data resides before the
+       operation is started.
 
-        In-place operation will happen if sendbuff == recvbuff.
+       In-place operation will happen if sendbuff == recvbuff.
 
 
     """
@@ -878,10 +872,10 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
      All-Reduce
 
     Details:
-        Reduces data arrays of length count in sendbuff using op operation, and
-        leaves identical copies of result on each recvbuff.
+       Reduces data arrays of length count in sendbuff using op operation, and
+       leaves identical copies of result on each recvbuff.
 
-        In-place operation will happen if sendbuff == recvbuff.
+       In-place operation will happen if sendbuff == recvbuff.
 
 
     """
@@ -921,13 +915,13 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
     Reduce-Scatter
 
     Details:
-        Reduces data in sendbuff using op operation and leaves reduced result
-        scattered over the devices so that recvbuff on rank i will contain the i-th
-        block of the result.
-        Assumes sendcount is equal to nranks*recvcount, which means that sendbuff
-        should have a size of at least nranks*recvcount elements.
+       Reduces data in sendbuff using op operation and leaves reduced result
+       scattered over the devices so that recvbuff on rank i will contain the i-th
+       block of the result.
+       Assumes sendcount is equal to nranks*recvcount, which means that sendbuff
+       should have a size of at least nranks*recvcount elements.
 
-        In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
+       In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
 
 
     """
@@ -966,12 +960,12 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
      All-Gather
 
     Details:
-        Each device gathers sendcount values from other GPUs into recvbuff,
-        receiving data from rank i at offset i*sendcount.
-        Assumes recvcount is equal to nranks*sendcount, which means that recvbuff
-        should have a size of at least nranks*sendcount elements.
+       Each device gathers sendcount values from other GPUs into recvbuff,
+       receiving data from rank i at offset i*sendcount.
+       Assumes recvcount is equal to nranks*sendcount, which means that recvbuff
+       should have a size of at least nranks*sendcount elements.
 
-        In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
+       In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
 
 
     """
@@ -1006,13 +1000,13 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
      Send
 
     Details:
-        Send data from sendbuff to rank peer.
-        Rank peer needs to call ncclRecv with the same datatype and the same count from this
-        rank.
+       Send data from sendbuff to rank peer.
+       Rank peer needs to call ncclRecv with the same datatype and the same count from this
+       rank.
 
-        This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
-        need to progress concurrently to complete, they must be fused within a ncclGroupStart/
-        ncclGroupEnd section.
+       This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
+       need to progress concurrently to complete, they must be fused within a ncclGroupStart/
+       ncclGroupEnd section.
 
 
     """
@@ -1045,13 +1039,13 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
      Receive
 
     Details:
-        Receive data from rank peer into recvbuff.
-        Rank peer needs to call ncclSend with the same datatype and the same count to this
-        rank.
+       Receive data from rank peer into recvbuff.
+       Rank peer needs to call ncclSend with the same datatype and the same count to this
+       rank.
 
-        This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
-        need to progress concurrently to complete, they must be fused within a ncclGroupStart/
-        ncclGroupEnd section.
+       This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
+       need to progress concurrently to complete, they must be fused within a ncclGroupStart/
+       ncclGroupEnd section.
 
 
     """
@@ -1084,13 +1078,13 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
      Gather
 
     Details:
-        Root device gathers sendcount values from other GPUs into recvbuff,
-        receiving data from rank i at offset i*sendcount.
+       Root device gathers sendcount values from other GPUs into recvbuff,
+       receiving data from rank i at offset i*sendcount.
 
-        Assumes recvcount is equal to nranks*sendcount, which means that recvbuff
-        should have a size of at least nranks*sendcount elements.
+       Assumes recvcount is equal to nranks*sendcount, which means that recvbuff
+       should have a size of at least nranks*sendcount elements.
 
-        In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
+       In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
 
 
     """
@@ -1125,13 +1119,13 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
      Scatter
 
     Details:
-        Scattered over the devices so that recvbuff on rank i will contain the i-th
-        block of the data on root.
+       Scattered over the devices so that recvbuff on rank i will contain the i-th
+       block of the data on root.
 
-        Assumes sendcount is equal to nranks*recvcount, which means that sendbuff
-        should have a size of at least nranks*recvcount elements.
+       Assumes sendcount is equal to nranks*recvcount, which means that sendbuff
+       should have a size of at least nranks*recvcount elements.
 
-        In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
+       In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
 
 
     """
@@ -1166,11 +1160,11 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
      All-To-All
 
     Details:
-        Device (i) send (j)th block of data to device (j) and be placed as (i)th
-        block. Each block for sending/receiving has count elements, which means
-        that recvbuff and sendbuff should have a size of nranks*count elements.
+       Device (i) send (j)th block of data to device (j) and be placed as (i)th
+       block. Each block for sending/receiving has count elements, which means
+       that recvbuff and sendbuff should have a size of nranks*count elements.
 
-        In-place operation will happen if sendbuff == recvbuff.
+       In-place operation will happen if sendbuff == recvbuff.
 
 
     """
@@ -1205,14 +1199,14 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
      All-To-Allv
 
     Details:
-        Device (i) sends sendcounts[j] of data from offset sdispls[j]
-        to device (j). In the same time, device (i) receives recvcounts[j] of data
-        from device (j) to be placed at rdispls[j].
+       Device (i) sends sendcounts[j] of data from offset sdispls[j]
+       to device (j). In the same time, device (i) receives recvcounts[j] of data
+       from device (j) to be placed at rdispls[j].
 
-        sendcounts, sdispls, recvcounts and rdispls are all measured in the units
-        of datatype, not bytes.
+       sendcounts, sdispls, recvcounts and rdispls are all measured in the units
+       of datatype, not bytes.
 
-        In-place operation will happen if sendbuff == recvbuff.
+       In-place operation will happen if sendbuff == recvbuff.
 
 
     """
@@ -1252,7 +1246,7 @@ def pncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object re
 @cython.embedsignature(True)
 def ncclGroupStart():
     """
-     Group Start  Start a group call. All calls to NCCL until ncclGroupEnd will be fused into a single NCCL operation. Nothing will be started on the CUDA stream until ncclGroupEnd.
+    Group Start  Start a group call. All calls to NCCL until ncclGroupEnd will be fused into a single NCCL operation. Nothing will be started on the CUDA stream until ncclGroupEnd.
 
     """
     _ncclGroupStart__retval = ncclResult_t(crccl.ncclGroupStart())    # fully specified
@@ -1271,7 +1265,7 @@ def pncclGroupStart():
 @cython.embedsignature(True)
 def ncclGroupEnd():
     """
-     Group End  End a group call. Start a fused NCCL operation consisting of all calls since ncclGroupStart. Operations on the CUDA stream depending on the NCCL operations need to be called after ncclGroupEnd.
+    Group End  End a group call. Start a fused NCCL operation consisting of all calls since ncclGroupStart. Operations on the CUDA stream depending on the NCCL operations need to be called after ncclGroupEnd.
 
     """
     _ncclGroupEnd__retval = ncclResult_t(crccl.ncclGroupEnd())    # fully specified

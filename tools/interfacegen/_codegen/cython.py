@@ -998,7 +998,7 @@ cdef void* {funptr_name} = NULL
 
         assert isinstance(self, tree.Function)
 
-        indent = " "*4
+        indent = " "*3
         #brief = None
         #return_ = None
         #result = None
@@ -1064,12 +1064,12 @@ cdef void* {funptr_name} = NULL
                 }
                 name = tokens[2]
                 descr = tokens[3]
-                dir = dir_map[tokens[1]]
+                dir = dir_map[tokens[1].replace(" ","")]
                 doxygen_parms.append((name,dir,descr))
                 return []
 
         grammar = doxyparser.DoxygenGrammar(Formatter)
-        docstring_body = grammar.transform_string(self._raw_comment_stripped())
+        docstring_body = textwrap.dedent(grammar.transform_string(self._raw_comment_stripped()))
         args = []
         #retvals = [] # TODO
         for (name, _, descr) in doxygen_parms:
@@ -1133,7 +1133,8 @@ cdef void* {funptr_name} = NULL
             nonlocal cprefix
 
             parm_name = parm.cython_name
-
+            out_arg_names.append(parm.name) # append original name as we need to compare vs the documentation
+            
             if parm.is_pointer_to_basic_type(degree=1) or parm.is_pointer_to_char(
                 degree=2
             ):
@@ -1166,6 +1167,12 @@ cdef void* {funptr_name} = NULL
                     f"\n{indent*2}<{parm_typename}>&{parm_name}._ptr"
                 )
                 out_args.append(parm_name)
+            else:
+                # If the argument was not removed from the parameter list,
+                # we did not add an additional return value.
+                # Hence, we remove the previously added original 
+                # name (see top of routine) from the out_arg_names list.
+                out_arg_names.pop(-1)
 
         def handle_in_inout_ptr_no_char_ptr_(parm: tree.Parm):
             global indent

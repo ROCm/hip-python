@@ -25984,23 +25984,21 @@ def hipDriverGetVersion():
     Returns the approximate HIP driver version.
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        The HIP feature set does not correspond to an exact CUDA SDK driver revision.
-        This function always set *driverVersion to 4 as an approximation though HIP supports
-        some features which were introduced in later CUDA SDK revisions.
-        HIP apps code should not rely on the driver revision number here and should
-        use arch feature flags to test device capabilities or conditional compilation.
+       The HIP feature set does not correspond to an exact CUDA SDK driver revision.
+       This function always set *driverVersion to 4 as an approximation though HIP supports
+       some features which were introduced in later CUDA SDK revisions.
+       HIP apps code should not rely on the driver revision number here and should
+       use arch feature flags to test device capabilities or conditional compilation.
 
 
     See:
-        hipRuntimeGetVersion
+       hipRuntimeGetVersion
 
 
-    Args:
-        driverVersion:
     """
     cdef int driverVersion
     _hipDriverGetVersion__retval = hipError_t(chip.hipDriverGetVersion(&driverVersion))    # fully specified
@@ -26014,22 +26012,20 @@ def hipRuntimeGetVersion():
     Returns the approximate HIP Runtime version.
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        The version definition of HIP runtime is different from CUDA.
-        On AMD platform, the function returns HIP runtime version,
-        while on NVIDIA platform, it returns CUDA runtime version.
-        And there is no mapping/correlation between HIP version and CUDA version.
+       The version definition of HIP runtime is different from CUDA.
+       On AMD platform, the function returns HIP runtime version,
+       while on NVIDIA platform, it returns CUDA runtime version.
+       And there is no mapping/correlation between HIP version and CUDA version.
 
 
     See:
-        hipDriverGetVersion
+       hipDriverGetVersion
 
 
-    Args:
-        runtimeVersion:
     """
     cdef int runtimeVersion
     _hipRuntimeGetVersion__retval = hipError_t(chip.hipRuntimeGetVersion(&runtimeVersion))    # fully specified
@@ -26042,12 +26038,11 @@ def hipDeviceGet(int ordinal):
 
     Returns a handle to a compute device
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidDevice
 
 
     Args:
-        device:
-        ordinal:
+       ordinal:
     """
     cdef int device
     _hipDeviceGet__retval = hipError_t(chip.hipDeviceGet(&device,ordinal))    # fully specified
@@ -26060,13 +26055,11 @@ def hipDeviceComputeCapability(int device):
 
     Returns the compute capability of the device
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidDevice
 
 
     Args:
-        major:
-        minor:
-        device:
+       device:
     """
     cdef int major
     cdef int minor
@@ -26080,13 +26073,13 @@ def hipDeviceGetName(char * name, int len, int device):
 
     Returns an identifer string for the device.
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidDevice
 
 
     Args:
-        name:
-        len:
-        device:
+       name:
+       len:
+       device:
     """
     _hipDeviceGetName__retval = hipError_t(chip.hipDeviceGetName(name,len,device))    # fully specified
     return (_hipDeviceGetName__retval,)
@@ -26100,14 +26093,14 @@ def hipDeviceGetUuid(object uuid, int device):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotInitialized,
-        #hipErrorDeinitialized
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotInitialized,
+       #hipErrorDeinitialized
 
 
     Args:
-        uuid:
-        device: @beta This API is marked as beta, meaning, while this is feature complete,
-            it is still open to changes and may have outstanding issues.
+       uuid:
+       device: @beta This API is marked as beta, meaning, while this is feature complete,
+          it is still open to changes and may have outstanding issues.
     """
     _hipDeviceGetUuid__retval = hipError_t(chip.hipDeviceGetUuid(
         hipUUID_t.from_pyobj(uuid)._ptr,device))    # fully specified
@@ -26120,14 +26113,13 @@ def hipDeviceGetP2PAttribute(object attr, int srcDevice, int dstDevice):
 
     Returns a value for attr of link between two devices
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidDevice
 
 
     Args:
-        value:
-        attr:
-        srcDevice:
-        dstDevice:
+       attr:
+       srcDevice:
+       dstDevice:
     """
     cdef int value
     if not isinstance(attr,_hipDeviceP2PAttr__Base):
@@ -26142,13 +26134,13 @@ def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
 
     Returns a PCI Bus Id string for the device, overloaded to take int device ID.
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidDevice
 
 
     Args:
-        pciBusId:
-        len:
-        device:
+       pciBusId:
+       len:
+       device:
     """
     _hipDeviceGetPCIBusId__retval = hipError_t(chip.hipDeviceGetPCIBusId(pciBusId,len,device))    # fully specified
     return (_hipDeviceGetPCIBusId__retval,)
@@ -26163,12 +26155,11 @@ def hipDeviceGetByPCIBusId(const char * pciBusId):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
 
     Args:
-        device: handle
-        PCI: Bus ID
+       PCI: Bus ID
     """
     cdef int device
     _hipDeviceGetByPCIBusId__retval = hipError_t(chip.hipDeviceGetByPCIBusId(&device,pciBusId))    # fully specified
@@ -26181,12 +26172,11 @@ def hipDeviceTotalMem(int device):
 
     Returns the total amount of memory on the device.
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidDevice
 
 
     Args:
-        bytes:
-        device:
+       device:
     """
     cdef unsigned long bytes
     _hipDeviceTotalMem__retval = hipError_t(chip.hipDeviceTotalMem(&bytes,device))    # fully specified
@@ -26208,11 +26198,11 @@ def hipDeviceSynchronize():
     Waits on all active streams on current device  When this command is invoked, the host thread gets blocked until all the commands associated with streams associated with the device. HIP does not support multiple blocking modes (yet!).
 
     Returns:
-        #hipSuccess
+       #hipSuccess
 
 
     See:
-        hipSetDevice, hipDeviceReset
+       hipSetDevice, hipDeviceReset
 
 
     """
@@ -26227,11 +26217,11 @@ def hipDeviceReset():
     The state of current device is discarded and updated to a fresh state.  Calling this function deletes all streams created, memory allocated, kernels running, events created. Make sure that no other thread is using the device or streams, memory, kernels, events associated with the current device.
 
     Returns:
-        #hipSuccess
+       #hipSuccess
 
 
     See:
-        hipDeviceSynchronize
+       hipDeviceSynchronize
 
 
     """
@@ -26248,32 +26238,32 @@ def hipSetDevice(int deviceId):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorDeviceAlreadyInUse
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorDeviceAlreadyInUse
 
 
     See:
-        hipGetDevice, hipGetDeviceCount
+       hipGetDevice, hipGetDeviceCount
 
 
     Args:
-        deviceId: Valid device in range 0...hipGetDeviceCount().
-            Sets ``device`` as the default device for the calling host thread.  Valid device id's are 0...
-            (hipGetDeviceCount()-1).
-            Many HIP APIs implicitly use the "default device" :
-            - Any device memory subsequently allocated from this host thread (using hipMalloc) will be
-            allocated on device.
-            - Any streams or events created from this host thread will be associated with device.
-            - Any kernels launched from this host thread (using hipLaunchKernel) will be executed on device
-            (unless a specific stream is specified, in which case the device associated with that stream will
-            be used).
-            This function may be called from any host thread.  Multiple host threads may use the same device.
-            This function does no synchronization with the previous or new device, and has very little
-            runtime overhead. Applications can use hipSetDevice to quickly switch the default device before
-            making a HIP runtime call which uses the default device.
-            The default device is stored in thread-local-storage for each thread.
-            Thread-pool implementations may inherit the default device of the previous thread.  A good
-            practice is to always call hipSetDevice at the start of HIP coding sequency to establish a known
-            standard device.
+       deviceId: Valid device in range 0...hipGetDeviceCount().
+          Sets ``device`` as the default device for the calling host thread.  Valid device id's are 0...
+          (hipGetDeviceCount()-1).
+          Many HIP APIs implicitly use the "default device" :
+          - Any device memory subsequently allocated from this host thread (using hipMalloc) will be
+          allocated on device.
+          - Any streams or events created from this host thread will be associated with device.
+          - Any kernels launched from this host thread (using hipLaunchKernel) will be executed on device
+          (unless a specific stream is specified, in which case the device associated with that stream will
+          be used).
+          This function may be called from any host thread.  Multiple host threads may use the same device.
+          This function does no synchronization with the previous or new device, and has very little
+          runtime overhead. Applications can use hipSetDevice to quickly switch the default device before
+          making a HIP runtime call which uses the default device.
+          The default device is stored in thread-local-storage for each thread.
+          Thread-pool implementations may inherit the default device of the previous thread.  A good
+          practice is to always call hipSetDevice at the start of HIP coding sequency to establish a known
+          standard device.
     """
     _hipSetDevice__retval = hipError_t(chip.hipSetDevice(deviceId))    # fully specified
     return (_hipSetDevice__retval,)
@@ -26288,18 +26278,18 @@ def hipGetDevice():
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
 
     See:
-        hipSetDevice, hipGetDevicesizeBytes
+       hipSetDevice, hipGetDevicesizeBytes
 
 
     Args:
-        device: *device is written with the default device
-            HIP maintains an default device for each thread using thread-local-storage.
-            This device is used implicitly for HIP runtime APIs called by this thread.
-            hipGetDevice returns in * ``device`` the default device for the calling host thread.
+       device: *device is written with the default device
+          HIP maintains an default device for each thread using thread-local-storage.
+          This device is used implicitly for HIP runtime APIs called by this thread.
+          hipGetDevice returns in * ``device`` the default device for the calling host thread.
     """
     cdef int deviceId
     _hipGetDevice__retval = hipError_t(chip.hipGetDevice(&deviceId))    # fully specified
@@ -26315,11 +26305,11 @@ def hipGetDeviceCount():
     @param [output] count Returns number of compute-capable devices.
 
     Returns:
-        #hipSuccess, #hipErrorNoDevice
+       #hipSuccess, #hipErrorNoDevice
 
 
-        Returns in ``*count`` the number of devices that have ability to run compute commands.  If there
-        are no such devices, then
+       Returns in ``*count`` the number of devices that have ability to run compute commands.  If there
+       are no such devices, then
      @ref hipGetDeviceCount will return #hipErrorNoDevice. If 1 or more
     devices can be found, then hipGetDeviceCount returns #hipSuccess.
 
@@ -26340,13 +26330,13 @@ def hipDeviceGetAttribute(object pi, object attr, int deviceId):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
 
     Args:
-        pi: pointer to value to return
-        attr: attribute to query
-        deviceId: which device to query for information
+       pi: pointer to value to return
+       attr: attribute to query
+       deviceId: which device to query for information
     """
     if not isinstance(attr,_hipDeviceAttribute_t__Base):
         raise TypeError("argument 'attr' must be of type '_hipDeviceAttribute_t__Base'")
@@ -26365,22 +26355,21 @@ def hipDeviceGetDefaultMemPool(int device):
 
 
     Returns:
-        #chipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotSupported
+       #chipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotSupported
 
 
     See:
-        hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+       hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
+       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        mem_pool: Default memory pool to return
-        device: Device index for query the default memory pool
+       device: Device index for query the default memory pool
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipDeviceGetDefaultMemPool__retval = hipError_t(chip.hipDeviceGetDefaultMemPool(&mem_pool._ptr,device))    # fully specified
@@ -26394,30 +26383,30 @@ def hipDeviceSetMemPool(int device, object mem_pool):
     Sets the current memory pool of a device  The memory pool must be local to the specified device. ``hipMallocAsync`` allocates from the current mempool of the provided stream's device. By default, a device's current memory pool is its default memory pool.
 
     Note:
-        Use ``hipMallocFromPoolAsync`` for asynchronous memory allocations from a device
-        different than the one the stream runs on.
+       Use ``hipMallocFromPoolAsync`` for asynchronous memory allocations from a device
+       different than the one the stream runs on.
 
 
 
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice, #hipErrorNotSupported
 
 
     See:
-        hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+       hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
+       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        device: Device index for the update
-        mem_pool: Memory pool for update as the current on the specified device
+       device: Device index for the update
+       mem_pool: Memory pool for update as the current on the specified device
     """
     _hipDeviceSetMemPool__retval = hipError_t(chip.hipDeviceSetMemPool(device,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr))    # fully specified
@@ -26434,22 +26423,21 @@ def hipDeviceGetMemPool(int device):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
 
     See:
-        hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+       hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
+       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        mem_pool: Current memory pool on the specified device
-        device: Device index to query the current memory pool
+       device: Device index to query the current memory pool
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipDeviceGetMemPool__retval = hipError_t(chip.hipDeviceGetMemPool(&mem_pool._ptr,device))    # fully specified
@@ -26466,23 +26454,23 @@ def hipGetDeviceProperties(object prop, int deviceId):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidDevice
 
     Bug:
-        HCC always returns 0 for maxThreadsPerMultiProcessor
+       HCC always returns 0 for maxThreadsPerMultiProcessor
 
     Bug:
-        HCC always returns 0 for regsPerBlock
+       HCC always returns 0 for regsPerBlock
 
     Bug:
-        HCC always returns 0 for l2CacheSize
+       HCC always returns 0 for l2CacheSize
 
-        Populates hipGetDeviceProperties with information for the specified device.
+       Populates hipGetDeviceProperties with information for the specified device.
 
 
     Args:
-        prop: written with device properties
-        deviceId: which device to query for information
+       prop: written with device properties
+       deviceId: which device to query for information
     """
     _hipGetDeviceProperties__retval = hipError_t(chip.hipGetDeviceProperties(
         hipDeviceProp_t.from_pyobj(prop)._ptr,deviceId))    # fully specified
@@ -26496,14 +26484,14 @@ def hipDeviceSetCacheConfig(object cacheConfig):
     Set L1/Shared cache partition.
 
     Returns:
-        #hipSuccess, #hipErrorNotInitialized
-        Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
-        on those architectures.
+       #hipSuccess, #hipErrorNotInitialized
+       Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
+       on those architectures.
 
 
 
     Args:
-        cacheConfig:
+       cacheConfig:
     """
     if not isinstance(cacheConfig,_hipFuncCache_t__Base):
         raise TypeError("argument 'cacheConfig' must be of type '_hipFuncCache_t__Base'")
@@ -26518,14 +26506,12 @@ def hipDeviceGetCacheConfig():
     Get Cache configuration for a specific Device
 
     Returns:
-        #hipSuccess, #hipErrorNotInitialized
-        Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
-        on those architectures.
+       #hipSuccess, #hipErrorNotInitialized
+       Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
+       on those architectures.
 
 
 
-    Args:
-        cacheConfig:
     """
     cdef chip.hipFuncCache_t cacheConfig
     _hipDeviceGetCacheConfig__retval = hipError_t(chip.hipDeviceGetCacheConfig(&cacheConfig))    # fully specified
@@ -26539,14 +26525,13 @@ def hipDeviceGetLimit(object limit):
     Get Resource limits of current device
 
     Returns:
-        #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
-        Note: Currently, only hipLimitMallocHeapSize is available
+       #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
+       Note: Currently, only hipLimitMallocHeapSize is available
 
 
 
     Args:
-        pValue:
-        limit:
+       limit:
     """
     cdef unsigned long pValue
     if not isinstance(limit,_hipLimit_t__Base):
@@ -26562,13 +26547,13 @@ def hipDeviceSetLimit(object limit, unsigned long value):
     Set Resource limits of current device
 
     Returns:
-        #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
 
 
 
     Args:
-        limit:
-        value:
+       limit:
+       value:
     """
     if not isinstance(limit,_hipLimit_t__Base):
         raise TypeError("argument 'limit' must be of type '_hipLimit_t__Base'")
@@ -26583,15 +26568,13 @@ def hipDeviceGetSharedMemConfig():
     Returns bank width of shared memory for current device
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 
-        Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-        ignored on those architectures.
+       Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+       ignored on those architectures.
 
 
 
-    Args:
-        pConfig:
     """
     cdef chip.hipSharedMemConfig pConfig
     _hipDeviceGetSharedMemConfig__retval = hipError_t(chip.hipDeviceGetSharedMemConfig(&pConfig))    # fully specified
@@ -26605,11 +26588,9 @@ def hipGetDeviceFlags():
     Gets the flags set for current device
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
 
-    Args:
-        flags:
     """
     cdef unsigned int flags
     _hipGetDeviceFlags__retval = hipError_t(chip.hipGetDeviceFlags(&flags))    # fully specified
@@ -26623,15 +26604,15 @@ def hipDeviceSetSharedMemConfig(object config):
     The bank width of shared memory on current device is set
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 
-        Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-        ignored on those architectures.
+       Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+       ignored on those architectures.
 
 
 
     Args:
-        config:
+       config:
     """
     if not isinstance(config,_hipSharedMemConfig__Base):
         raise TypeError("argument 'config' must be of type '_hipSharedMemConfig__Base'")
@@ -26646,28 +26627,28 @@ def hipSetDeviceFlags(unsigned int flags):
     The current device behavior is changed according the flags passed.
 
      Warning:
-        ROCm silently ignores this flag.
+       ROCm silently ignores this flag.
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorSetOnActiveProcess
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorSetOnActiveProcess
 
 
 
 
     Args:
-        flags: The schedule flags impact how HIP waits for the completion of a command running on a device.
-            hipDeviceScheduleSpin         : HIP runtime will actively spin in the thread which submitted the
-            work until the command completes.  This offers the lowest latency, but will consume a CPU core
-            and may increase power. hipDeviceScheduleYield        : The HIP runtime will yield the CPU to
-            system so that other tasks can use it.  This may increase latency to detect the completion but
-            will consume less power and is friendlier to other tasks in the system.
-            hipDeviceScheduleBlockingSync : On ROCm platform, this is a synonym for hipDeviceScheduleYield.
-            hipDeviceScheduleAuto         : Use a hueristic to select between Spin and Yield modes.  If the
-            number of HIP contexts is greater than the number of logical processors in the system, use Spin
-            scheduling.  Else use Yield scheduling.
-            hipDeviceMapHost              : Allow mapping host memory.  On ROCM, this is always allowed and
-            the flag is ignored. hipDeviceLmemResizeToMax      :
+       flags: The schedule flags impact how HIP waits for the completion of a command running on a device.
+          hipDeviceScheduleSpin         : HIP runtime will actively spin in the thread which submitted the
+          work until the command completes.  This offers the lowest latency, but will consume a CPU core
+          and may increase power. hipDeviceScheduleYield        : The HIP runtime will yield the CPU to
+          system so that other tasks can use it.  This may increase latency to detect the completion but
+          will consume less power and is friendlier to other tasks in the system.
+          hipDeviceScheduleBlockingSync : On ROCm platform, this is a synonym for hipDeviceScheduleYield.
+          hipDeviceScheduleAuto         : Use a hueristic to select between Spin and Yield modes.  If the
+          number of HIP contexts is greater than the number of logical processors in the system, use Spin
+          scheduling.  Else use Yield scheduling.
+          hipDeviceMapHost              : Allow mapping host memory.  On ROCM, this is always allowed and
+          the flag is ignored. hipDeviceLmemResizeToMax      :
     """
     _hipSetDeviceFlags__retval = hipError_t(chip.hipSetDeviceFlags(flags))    # fully specified
     return (_hipSetDeviceFlags__retval,)
@@ -26683,12 +26664,9 @@ def hipChooseDevice(object prop):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
-    Args:
-        device: ID
-        device: properties pointer
     """
     cdef int device
     _hipChooseDevice__retval = hipError_t(chip.hipChooseDevice(&device,
@@ -26708,15 +26686,12 @@ def hipExtGetLinkTypeAndHopCount(int device1, int device2):
 
 
     Returns:
-        #hipSuccess, #hipInvalidDevice, #hipErrorRuntimeOther
+       #hipSuccess, #hipInvalidDevice, #hipErrorRuntimeOther
 
 
     Args:
-        device1: Ordinal for device1
-        device2: Ordinal for device2
-        linktype: Returns the link type (See hsa_amd_link_info_type_t) between the two devices
-        hopcount: Returns the hop count between the two devices
-            Queries and returns the HSA link type and the hop count between the two specified devices.
+       device1: Ordinal for device1
+       device2: Ordinal for device2
     """
     cdef unsigned int linktype
     cdef unsigned int hopcount
@@ -26735,10 +26710,10 @@ def hipIpcGetMemHandle(object handle, object devPtr):
     @param devPtr - Base pointer to previously allocated device memory
 
     Returns:
-        hipSuccess,
-        hipErrorInvalidHandle,
-        hipErrorOutOfMemory,
-        hipErrorMapFailed,
+       hipSuccess,
+       hipErrorInvalidHandle,
+       hipErrorOutOfMemory,
+       hipErrorMapFailed,
 
 
 
@@ -26760,16 +26735,16 @@ def hipIpcOpenMemHandle(object handle, unsigned int flags):
     @param flags  - Flags for this operation. Must be specified as hipIpcMemLazyEnablePeerAccess
 
     Returns:
-        hipSuccess,
-        hipErrorMapFailed,
-        hipErrorInvalidHandle,
-        hipErrorTooManyPeers
+       hipSuccess,
+       hipErrorMapFailed,
+       hipErrorInvalidHandle,
+       hipErrorTooManyPeers
 
 
     Note:
-        During multiple processes, using the same memory handle opened by the current context,
-        there is no guarantee that the same device poiter will be returned in ``*devPtr.``
-        This is diffrent from CUDA.
+       During multiple processes, using the same memory handle opened by the current context,
+       there is no guarantee that the same device poiter will be returned in ``*devPtr.``
+       This is diffrent from CUDA.
 
 
 
@@ -26790,9 +26765,9 @@ def hipIpcCloseMemHandle(object devPtr):
     @param devPtr - Device pointer returned by hipIpcOpenMemHandle
 
     Returns:
-        hipSuccess,
-        hipErrorMapFailed,
-        hipErrorInvalidHandle,
+       hipSuccess,
+       hipErrorMapFailed,
+       hipErrorInvalidHandle,
 
 
 
@@ -26812,13 +26787,13 @@ def hipIpcGetEventHandle(object handle, object event):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidConfiguration, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidConfiguration, #hipErrorInvalidValue
 
 
 
     Args:
-        handle: Pointer to hipIpcEventHandle to return the opaque event handle
-        event: Event allocated with hipEventInterprocess and hipEventDisableTiming flags
+       handle: Pointer to hipIpcEventHandle to return the opaque event handle
+       event: Event allocated with hipEventInterprocess and hipEventDisableTiming flags
     """
     _hipIpcGetEventHandle__retval = hipError_t(chip.hipIpcGetEventHandle(
         hipIpcEventHandle_st.from_pyobj(handle)._ptr,
@@ -26836,13 +26811,12 @@ def hipIpcOpenEventHandle(object handle):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext
 
 
 
     Args:
-        event: Pointer to hipEvent_t to return the event
-        handle: The opaque interprocess handle to open
+       handle: The opaque interprocess handle to open
     """
     event = ihipEvent_t.from_ptr(NULL)
     _hipIpcOpenEventHandle__retval = hipError_t(chip.hipIpcOpenEventHandle(&event._ptr,
@@ -26871,17 +26845,17 @@ def hipFuncSetAttribute(object func, object attr, int value):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
 
-        Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-        ignored on those architectures.
+       Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+       ignored on those architectures.
 
 
 
     Args:
-        func: ;
-        attr: ;
-        value: ;
+       func: ;
+       attr: ;
+       value: ;
     """
     if not isinstance(attr,_hipFuncAttribute__Base):
         raise TypeError("argument 'attr' must be of type '_hipFuncAttribute__Base'")
@@ -26899,14 +26873,14 @@ def hipFuncSetCacheConfig(object func, object config):
 
 
     Returns:
-        #hipSuccess, #hipErrorNotInitialized
-        Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
-        on those architectures.
+       #hipSuccess, #hipErrorNotInitialized
+       Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
+       on those architectures.
 
 
 
     Args:
-        config: ;
+       config: ;
     """
     if not isinstance(config,_hipFuncCache_t__Base):
         raise TypeError("argument 'config' must be of type '_hipFuncCache_t__Base'")
@@ -26922,16 +26896,16 @@ def hipFuncSetSharedMemConfig(object func, object config):
     Set shared memory configuation for a specific function
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
 
-        Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-        ignored on those architectures.
+       Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+       ignored on those architectures.
 
 
 
     Args:
-        func:
-        config:
+       func:
+       config:
     """
     if not isinstance(config,_hipSharedMemConfig__Base):
         raise TypeError("argument 'config' must be of type '_hipSharedMemConfig__Base'")
@@ -26957,14 +26931,14 @@ def hipGetLastError():
      Return last error returned by any HIP runtime API call and resets the stored error code to  #hipSuccess
 
      Returns:
-        return code from last HIP called from the active host thread
+       return code from last HIP called from the active host thread
 
-        Returns the last error that has been returned by any of the runtime calls in the same host
-        thread, and then resets the saved error to #hipSuccess.
+       Returns the last error that has been returned by any of the runtime calls in the same host
+       thread, and then resets the saved error to #hipSuccess.
 
 
      See:
-        hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
+       hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
 
 
     """
@@ -26979,14 +26953,14 @@ def hipPeekAtLastError():
     Return last error returned by any HIP runtime API call.
 
     Return:
-        #hipSuccess
+       #hipSuccess
 
-        Returns the last error that has been returned by any of the runtime calls in the same host
-        thread. Unlike hipGetLastError, this function does not reset the saved error code.
+       Returns the last error that has been returned by any of the runtime calls in the same host
+       thread. Unlike hipGetLastError, this function does not reset the saved error code.
 
 
     See:
-        hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
+       hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
 
 
     """
@@ -27002,11 +26976,11 @@ def hipGetErrorName(object hip_error):
 
     @param hip_error Error code to convert to name.
     Return:
-        const char pointer to the NULL-terminated error name
+       const char pointer to the NULL-terminated error name
 
 
     See:
-        hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
+       hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
 
 
     """
@@ -27024,11 +26998,11 @@ def hipGetErrorString(object hipError):
 
     @param hipError Error code to convert to string.
     Return:
-        const char pointer to the NULL-terminated error string
+       const char pointer to the NULL-terminated error string
 
 
     See:
-        hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
+       hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
 
 
     """
@@ -27047,16 +27021,16 @@ def hipDrvGetErrorName(object hipError, object errorString):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
+       hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
 
 
     Args:
-        hipError: Error code to convert to string.
-        const: char pointer to the NULL-terminated error string
+       hipError: Error code to convert to string.
+       const: char pointer to the NULL-terminated error string
     """
     if not isinstance(hipError,_hipError_t__Base):
         raise TypeError("argument 'hipError' must be of type '_hipError_t__Base'")
@@ -27074,16 +27048,16 @@ def hipDrvGetErrorString(object hipError, object errorString):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
+       hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
 
 
     Args:
-        hipError: Error code to convert to string.
-        const: char pointer to the NULL-terminated error string
+       hipError: Error code to convert to string.
+       const: char pointer to the NULL-terminated error string
     """
     if not isinstance(hipError,_hipError_t__Base):
         raise TypeError("argument 'hipError' must be of type '_hipError_t__Base'")
@@ -27098,23 +27072,22 @@ def hipStreamCreate():
 
     Create an asynchronous stream.
 
-    @param[in, out] stream Valid pointer to hipStream_t.  This function writes the memory with the
-    newly created stream.
-    Return:
-        #hipSuccess, #hipErrorInvalidValue
-
-        Create a new asynchronous stream.  ``stream`` returns an opaque handle that can be used to
-        reference the newly created stream in subsequent hipStream* commands.  The stream is allocated on
-        the heap and will remain allocated even if the handle goes out-of-scope.  To release the memory
-        used by the stream, applicaiton must call hipStreamDestroy.
-
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
+
+       Create a new asynchronous stream.  ``stream`` returns an opaque handle that can be used to
+       reference the newly created stream in subsequent hipStream* commands.  The stream is allocated on
+       the heap and will remain allocated even if the handle goes out-of-scope.  To release the memory
+       used by the stream, applicaiton must call hipStreamDestroy.
+
+
+    Return:
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
+       hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 
 
     """
@@ -27129,23 +27102,25 @@ def hipStreamCreateWithFlags(unsigned int flags):
 
     Create an asynchronous stream.
 
-    @param[in, out] stream Pointer to new stream
-    @param[in ] flags to control stream creation.
-    Return:
-        #hipSuccess, #hipErrorInvalidValue
 
-        Create a new asynchronous stream.  ``stream`` returns an opaque handle that can be used to
-        reference the newly created stream in subsequent hipStream* commands.  The stream is allocated on
-        the heap and will remain allocated even if the handle goes out-of-scope.  To release the memory
-        used by the stream, applicaiton must call hipStreamDestroy. Flags controls behavior of the
-        stream.  See #hipStreamDefault, #hipStreamNonBlocking.
+
+    Return:
+       #hipSuccess, #hipErrorInvalidValue
+
+       Create a new asynchronous stream.  ``stream`` returns an opaque handle that can be used to
+       reference the newly created stream in subsequent hipStream* commands.  The stream is allocated on
+       the heap and will remain allocated even if the handle goes out-of-scope.  To release the memory
+       used by the stream, applicaiton must call hipStreamDestroy. Flags controls behavior of the
+       stream.  See #hipStreamDefault, #hipStreamNonBlocking.
 
 
 
     See:
-        hipStreamCreate, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
+       hipStreamCreate, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 
 
+    Args:
+       flags: to control stream creation.
     """
     stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreateWithFlags__retval = hipError_t(chip.hipStreamCreateWithFlags(&stream._ptr,flags))    # fully specified
@@ -27158,24 +27133,27 @@ def hipStreamCreateWithPriority(unsigned int flags, int priority):
 
     Create an asynchronous stream with the specified priority.
 
-    @param[in, out] stream Pointer to new stream
-    @param[in ] flags to control stream creation.
-    @param[in ] priority of the stream. Lower numbers represent higher priorities.
-    Return:
-        #hipSuccess, #hipErrorInvalidValue
 
-        Create a new asynchronous stream with the specified priority.  ``stream`` returns an opaque handle
-        that can be used to reference the newly created stream in subsequent hipStream* commands.  The
-        stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
-        To release the memory used by the stream, applicaiton must call hipStreamDestroy. Flags controls
-        behavior of the stream.  See #hipStreamDefault, #hipStreamNonBlocking.
+
+
+    Return:
+       #hipSuccess, #hipErrorInvalidValue
+
+       Create a new asynchronous stream with the specified priority.  ``stream`` returns an opaque handle
+       that can be used to reference the newly created stream in subsequent hipStream* commands.  The
+       stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
+       To release the memory used by the stream, applicaiton must call hipStreamDestroy. Flags controls
+       behavior of the stream.  See #hipStreamDefault, #hipStreamNonBlocking.
 
 
 
     See:
-        hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
+       hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 
 
+    Args:
+       flags: to control stream creation.
+       priority: of the stream. Lower numbers represent higher priorities.
     """
     stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreateWithPriority__retval = hipError_t(chip.hipStreamCreateWithPriority(&stream._ptr,flags,priority))    # fully specified
@@ -27188,15 +27166,8 @@ def hipDeviceGetStreamPriorityRange():
 
     Returns numerical values that correspond to the least and greatest stream priority.
 
-    @param[in, out] leastPriority pointer in which value corresponding to least priority is returned.
-    @param[in, out] greatestPriority pointer in which value corresponding to greatest priority is returned.
 
-    Returns in *leastPriority and *greatestPriority the numerical values that correspond to the least
-    and greatest stream priority respectively. Stream priorities follow a convention where lower numbers
-    imply greater priorities. The range of meaningful stream priorities is given by
-    [*greatestPriority, *leastPriority]. If the user attempts to create a stream with a priority value
-    that is outside the the meaningful range as specified by this API, the priority is automatically
-    clamped to within the valid range.
+
 
     """
     cdef int leastPriority
@@ -27211,25 +27182,27 @@ def hipStreamDestroy(object stream):
 
     Destroys the specified stream.
 
-    @param[in, out] stream Valid pointer to hipStream_t.  This function writes the memory with the
-    newly created stream.
+
     Return:
-        #hipSuccess #hipErrorInvalidHandle
+       #hipSuccess #hipErrorInvalidHandle
 
-        Destroys the specified stream.
+       Destroys the specified stream.
 
-        If commands are still executing on the specified stream, some may complete execution before the
-        queue is deleted.
+       If commands are still executing on the specified stream, some may complete execution before the
+       queue is deleted.
 
-        The queue may be destroyed while some commands are still inflight, or may wait for all commands
-        queued to the stream before destroying it.
+       The queue may be destroyed while some commands are still inflight, or may wait for all commands
+       queued to the stream before destroying it.
 
 
     See:
-        hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamQuery, hipStreamWaitEvent,
-        hipStreamSynchronize
+       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamQuery, hipStreamWaitEvent,
+       hipStreamSynchronize
 
 
+    Args:
+       stream: Valid pointer to hipStream_t.  This function writes the memory with the
+          newly created stream.
     """
     _hipStreamDestroy__retval = hipError_t(chip.hipStreamDestroy(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
@@ -27245,20 +27218,20 @@ def hipStreamQuery(object stream):
 
 
     Return:
-        #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle
+       #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle
 
-        This is thread-safe and returns a snapshot of the current state of the queue.  However, if other
-        host threads are sending work to the stream, the status may change immediately after the function
-        is called.  It is typically used for debug.
+       This is thread-safe and returns a snapshot of the current state of the queue.  However, if other
+       host threads are sending work to the stream, the status may change immediately after the function
+       is called.  It is typically used for debug.
 
 
     See:
-        hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamSynchronize,
-        hipStreamDestroy
+       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamSynchronize,
+       hipStreamDestroy
 
 
     Args:
-        stream: stream to query
+       stream: stream to query
     """
     _hipStreamQuery__retval = hipError_t(chip.hipStreamQuery(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
@@ -27274,25 +27247,25 @@ def hipStreamSynchronize(object stream):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidHandle
+       #hipSuccess, #hipErrorInvalidHandle
 
-        This command is host-synchronous : the host will block until the specified stream is empty.
+       This command is host-synchronous : the host will block until the specified stream is empty.
 
-        This command follows standard null-stream semantics.  Specifically, specifying the null stream
-        will cause the command to wait for other streams on the same device to complete all pending
-        operations.
+       This command follows standard null-stream semantics.  Specifically, specifying the null stream
+       will cause the command to wait for other streams on the same device to complete all pending
+       operations.
 
-        This command honors the hipDeviceLaunchBlocking flag, which controls whether the wait is active
-        or blocking.
+       This command honors the hipDeviceLaunchBlocking flag, which controls whether the wait is active
+       or blocking.
 
 
     See:
-        hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamDestroy
+       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamDestroy
 
 
 
     Args:
-        stream: stream identifier.
+       stream: stream identifier.
     """
     _hipStreamSynchronize__retval = hipError_t(chip.hipStreamSynchronize(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
@@ -27310,25 +27283,25 @@ def hipStreamWaitEvent(object stream, object event, unsigned int flags):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidHandle
+       #hipSuccess, #hipErrorInvalidHandle
 
-        This function inserts a wait operation into the specified stream.
-        All future work submitted to ``stream`` will wait until ``event`` reports completion before
-        beginning execution.
+       This function inserts a wait operation into the specified stream.
+       All future work submitted to ``stream`` will wait until ``event`` reports completion before
+       beginning execution.
 
-        This function only waits for commands in the current stream to complete.  Notably,, this function
-        does not impliciy wait for commands in the default stream to complete, even if the specified
-        stream is created with hipStreamNonBlocking = 0.
+       This function only waits for commands in the current stream to complete.  Notably,, this function
+       does not impliciy wait for commands in the default stream to complete, even if the specified
+       stream is created with hipStreamNonBlocking = 0.
 
 
     See:
-        hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamDestroy
+       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamDestroy
 
 
     Args:
-        stream: stream to make wait.
-        event: event to wait on
-        flags: control operation [must be 0]
+       stream: stream to make wait.
+       event: event to wait on
+       flags: control operation [must be 0]
     """
     _hipStreamWaitEvent__retval = hipError_t(chip.hipStreamWaitEvent(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27345,22 +27318,21 @@ def hipStreamGetFlags(object stream):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidHandle
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidHandle
 
 
     Returns:
-        #hipSuccess #hipErrorInvalidValue #hipErrorInvalidHandle
+       #hipSuccess #hipErrorInvalidValue #hipErrorInvalidHandle
 
-        Return flags associated with this stream in *``flags.``
+       Return flags associated with this stream in *``flags.``
 
 
     See:
-        hipStreamCreateWithFlags
+       hipStreamCreateWithFlags
 
 
     Args:
-        stream: stream to be queried
-        flags: Pointer to an unsigned integer in which the stream's flags are returned
+       stream: stream to be queried
     """
     cdef unsigned int flags
     _hipStreamGetFlags__retval = hipError_t(chip.hipStreamGetFlags(
@@ -27377,22 +27349,21 @@ def hipStreamGetPriority(object stream):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidHandle
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidHandle
 
 
     Returns:
-        #hipSuccess #hipErrorInvalidValue #hipErrorInvalidHandle
+       #hipSuccess #hipErrorInvalidValue #hipErrorInvalidHandle
 
-        Query the priority of a stream. The priority is returned in in priority.
+       Query the priority of a stream. The priority is returned in in priority.
 
 
     See:
-        hipStreamCreateWithFlags
+       hipStreamCreateWithFlags
 
 
     Args:
-        stream: stream to be queried
-        priority: Pointer to an unsigned integer in which the stream's priority is returned
+       stream: stream to be queried
     """
     cdef int priority
     _hipStreamGetPriority__retval = hipError_t(chip.hipStreamGetPriority(
@@ -27406,26 +27377,25 @@ def hipExtStreamCreateWithCUMask(unsigned int cuMaskSize):
 
     Create an asynchronous stream with the specified CU mask.
 
-    @param[in, out] stream Pointer to new stream
-    @param[in ] cuMaskSize Size of CU mask bit array passed in.
-    @param[in ] cuMask Bit-vector representing the CU mask. Each active bit represents using one CU.
-    The first 32 bits represent the first 32 CUs, and so on. If its size is greater than physical
-    CU number (i.e., multiProcessorCount member of hipDeviceProp_t), the extra elements are ignored.
-    It is user's responsibility to make sure the input is meaningful.
-    Return:
-        #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
 
-        Create a new asynchronous stream with the specified CU mask.  ``stream`` returns an opaque handle
-        that can be used to reference the newly created stream in subsequent hipStream* commands.  The
-        stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
-        To release the memory used by the stream, application must call hipStreamDestroy.
+
+
+    Return:
+       #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
+
+       Create a new asynchronous stream with the specified CU mask.  ``stream`` returns an opaque handle
+       that can be used to reference the newly created stream in subsequent hipStream* commands.  The
+       stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
+       To release the memory used by the stream, application must call hipStreamDestroy.
 
 
 
     See:
-        hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
+       hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 
 
+    Args:
+       cuMaskSize: Size of CU mask bit array passed in.
     """
     stream = ihipStream_t.from_ptr(NULL)
     cdef const unsigned int cuMask
@@ -27443,19 +27413,16 @@ def hipExtStreamGetCUMask(object stream, unsigned int cuMaskSize):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
 
 
     See:
-        hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
+       hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 
 
     Args:
-        stream: stream to be queried
-        cuMaskSize: number of the block of memories (uint32_t *) allocated by user
-        cuMask: Pointer to a pre-allocated block of memories (uint32_t *) in which
-            the stream's CU mask is returned. The CU mask is returned in a chunck of 32 bits where
-            each active bit represents one active CU
+       stream: stream to be queried
+       cuMaskSize: number of the block of memories (uint32_t *) allocated by user
     """
     cdef unsigned int cuMask
     _hipExtStreamGetCUMask__retval = hipError_t(chip.hipExtStreamGetCUMask(
@@ -27539,20 +27506,20 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidHandle, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidHandle, #hipErrorNotSupported
 
 
     See:
-        hipStreamCreate, hipStreamCreateWithFlags, hipStreamQuery, hipStreamSynchronize,
-        hipStreamWaitEvent, hipStreamDestroy, hipStreamCreateWithPriority
+       hipStreamCreate, hipStreamCreateWithFlags, hipStreamQuery, hipStreamSynchronize,
+       hipStreamWaitEvent, hipStreamDestroy, hipStreamCreateWithPriority
 
 
 
     Args:
-        stream: - Stream to add callback to
-        callback: - The function to call once preceding stream operations are complete
-        userData: - User specified data to be passed to the callback function
-        flags: - Reserved for future use, must be 0
+       stream: - Stream to add callback to
+       callback: - The function to call once preceding stream operations are complete
+       userData: - User specified data to be passed to the callback function
+       flags: - Reserved for future use, must be 0
     """
     _hipStreamAddCallback__retval = hipError_t(chip.hipStreamAddCallback(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27577,49 +27544,49 @@ def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned
 
      Enqueues a wait command to the stream.[BETA]
 
- 
- 
- 
- 
- 
+
+
+
+
+
 
      Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
-        Enqueues a wait command to the stream, all operations enqueued  on this stream after this, will
-        not execute until the defined wait condition is true.
+       Enqueues a wait command to the stream, all operations enqueued  on this stream after this, will
+       not execute until the defined wait condition is true.
 
-        hipStreamWaitValueGte: waits until *ptr&mask >= value
-        hipStreamWaitValueEq : waits until *ptr&mask == value
-        hipStreamWaitValueAnd: waits until ((*ptr&mask) & value) != 0
-        hipStreamWaitValueNor: waits until ~((*ptr&mask) | (value&mask)) != 0
-
-
-     Note:
-        when using 'hipStreamWaitValueNor', mask is applied on both 'value' and '*ptr'.
+       hipStreamWaitValueGte: waits until *ptr&mask >= value
+       hipStreamWaitValueEq : waits until *ptr&mask == value
+       hipStreamWaitValueAnd: waits until ((*ptr&mask) & value) != 0
+       hipStreamWaitValueNor: waits until ~((*ptr&mask) | (value&mask)) != 0
 
 
      Note:
-        Support for hipStreamWaitValue32 can be queried using 'hipDeviceGetAttribute()' and
-        'hipDeviceAttributeCanUseStreamWaitValue' flag.
+       when using 'hipStreamWaitValueNor', mask is applied on both 'value' and '*ptr'.
 
-        @beta This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+
+     Note:
+       Support for hipStreamWaitValue32 can be queried using 'hipDeviceGetAttribute()' and
+       'hipDeviceAttributeCanUseStreamWaitValue' flag.
+
+       @beta This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
      See:
-        hipExtMallocWithFlags, hipFree, hipStreamWaitValue64, hipStreamWriteValue64,
-        hipStreamWriteValue32, hipDeviceGetAttribute
+       hipExtMallocWithFlags, hipFree, hipStreamWaitValue64, hipStreamWriteValue64,
+       hipStreamWriteValue32, hipDeviceGetAttribute
 
 
     Args:
-        stream: - Stream identifier
-        ptr: - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
-        value: - Value to be used in compare operation
-        flags: - Defines the compare operation, supported values are hipStreamWaitValueGte
-            hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor
-        mask: - Mask to be applied on value at memory before it is compared with value,
-            default value is set to enable every bit
+       stream: - Stream identifier
+       ptr: - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
+       value: - Value to be used in compare operation
+       flags: - Defines the compare operation, supported values are hipStreamWaitValueGte
+          hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor
+       mask: - Mask to be applied on value at memory before it is compared with value,
+          default value is set to enable every bit
     """
     _hipStreamWaitValue32__retval = hipError_t(chip.hipStreamWaitValue32(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27640,42 +27607,42 @@ def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigne
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
-        Enqueues a wait command to the stream, all operations enqueued  on this stream after this, will
-        not execute until the defined wait condition is true.
+       Enqueues a wait command to the stream, all operations enqueued  on this stream after this, will
+       not execute until the defined wait condition is true.
 
-        hipStreamWaitValueGte: waits until *ptr&mask >= value
-        hipStreamWaitValueEq : waits until *ptr&mask == value
-        hipStreamWaitValueAnd: waits until ((*ptr&mask) & value) != 0
-        hipStreamWaitValueNor: waits until ~((*ptr&mask) | (value&mask)) != 0
-
-
-    Note:
-        when using 'hipStreamWaitValueNor', mask is applied on both 'value' and '*ptr'.
+       hipStreamWaitValueGte: waits until *ptr&mask >= value
+       hipStreamWaitValueEq : waits until *ptr&mask == value
+       hipStreamWaitValueAnd: waits until ((*ptr&mask) & value) != 0
+       hipStreamWaitValueNor: waits until ~((*ptr&mask) | (value&mask)) != 0
 
 
     Note:
-        Support for hipStreamWaitValue64 can be queried using 'hipDeviceGetAttribute()' and
-        'hipDeviceAttributeCanUseStreamWaitValue' flag.
+       when using 'hipStreamWaitValueNor', mask is applied on both 'value' and '*ptr'.
 
-        @beta This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+
+    Note:
+       Support for hipStreamWaitValue64 can be queried using 'hipDeviceGetAttribute()' and
+       'hipDeviceAttributeCanUseStreamWaitValue' flag.
+
+       @beta This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     See:
-        hipExtMallocWithFlags, hipFree, hipStreamWaitValue32, hipStreamWriteValue64,
-        hipStreamWriteValue32, hipDeviceGetAttribute
+       hipExtMallocWithFlags, hipFree, hipStreamWaitValue32, hipStreamWriteValue64,
+       hipStreamWriteValue32, hipDeviceGetAttribute
 
 
     Args:
-        stream: - Stream identifier
-        ptr: - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
-        value: - Value to be used in compare operation
-        flags: - Defines the compare operation, supported values are hipStreamWaitValueGte
-            hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor.
-        mask: - Mask to be applied on value at memory before it is compared with value
-            default value is set to enable every bit
+       stream: - Stream identifier
+       ptr: - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
+       value: - Value to be used in compare operation
+       flags: - Defines the compare operation, supported values are hipStreamWaitValueGte
+          hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor.
+       mask: - Mask to be applied on value at memory before it is compared with value
+          default value is set to enable every bit
     """
     _hipStreamWaitValue64__retval = hipError_t(chip.hipStreamWaitValue64(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27695,25 +27662,25 @@ def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigne
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
-        Enqueues a write command to the stream, write operation is performed after all earlier commands
-        on this stream have completed the execution.
+       Enqueues a write command to the stream, write operation is performed after all earlier commands
+       on this stream have completed the execution.
 
-        @beta This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       @beta This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     See:
-        hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
-        hipStreamWaitValue64
+       hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
+       hipStreamWaitValue64
 
 
     Args:
-        stream: - Stream identifier
-        ptr: - Pointer to a GPU accessible memory object
-        value: - Value to be written
-        flags: - reserved, ignored for now, will be used in future releases
+       stream: - Stream identifier
+       ptr: - Pointer to a GPU accessible memory object
+       value: - Value to be written
+       flags: - reserved, ignored for now, will be used in future releases
     """
     _hipStreamWriteValue32__retval = hipError_t(chip.hipStreamWriteValue32(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27733,25 +27700,25 @@ def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsign
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
-        Enqueues a write command to the stream, write operation is performed after all earlier commands
-        on this stream have completed the execution.
+       Enqueues a write command to the stream, write operation is performed after all earlier commands
+       on this stream have completed the execution.
 
-        @beta This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       @beta This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     See:
-        hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
-        hipStreamWaitValue64
+       hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
+       hipStreamWaitValue64
 
 
     Args:
-        stream: - Stream identifier
-        ptr: - Pointer to a GPU accessible memory object
-        value: - Value to be written
-        flags: - reserved, ignored for now, will be used in future releases
+       stream: - Stream identifier
+       ptr: - Pointer to a GPU accessible memory object
+       value: - Value to be written
+       flags: - reserved, ignored for now, will be used in future releases
     """
     _hipStreamWriteValue64__retval = hipError_t(chip.hipStreamWriteValue64(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27763,44 +27730,43 @@ def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsign
 def hipEventCreateWithFlags(unsigned int flags):
     """
 
-      @}
+     @}
 
 
-     -------------------------------------------------------------------------------------------------
-     -------------------------------------------------------------------------------------------------
-       @defgroup Event Event Management
-       @{
-       This section describes the event management functions of HIP runtime API.
+    -------------------------------------------------------------------------------------------------
+    -------------------------------------------------------------------------------------------------
+      @defgroup Event Event Management
+      @{
+      This section describes the event management functions of HIP runtime API.
 
 
-      Create an event with the specified flags
-
-  
-  
-
-      Returns:
-        #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
-        #hipErrorLaunchFailure, #hipErrorOutOfMemory
+     Create an event with the specified flags
 
 
-      See:
-        hipEventCreate, hipEventSynchronize, hipEventDestroy, hipEventElapsedTime
+
+
+     Returns:
+      #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
+      #hipErrorLaunchFailure, #hipErrorOutOfMemory
+
+
+     See:
+      hipEventCreate, hipEventSynchronize, hipEventDestroy, hipEventElapsedTime
 
 
     Args:
-        event: Returns the newly created event.
-        flags: Flags to control event behavior.  Valid values are #hipEventDefault,
-            #hipEventBlockingSync, #hipEventDisableTiming, #hipEventInterprocess
-            #hipEventDefault : Default flag.  The event will use active synchronization and will support
-            timing.  Blocking synchronization provides lowest possible latency at the expense of dedicating a
-            CPU to poll on the event.
-            #hipEventBlockingSync : The event will use blocking synchronization : if hipEventSynchronize is
-            called on this event, the thread will block until the event completes.  This can increase latency
-            for the synchroniation but can result in lower power and more resources for other CPU threads.
-            #hipEventDisableTiming : Disable recording of timing information. Events created with this flag
-            would not record profiling data and provide best performance if used for synchronization.
-            #hipEventInterprocess : The event can be used as an interprocess event. hipEventDisableTiming
-            flag also must be set when hipEventInterprocess flag is set.
+       flags: Flags to control event behavior.  Valid values are #hipEventDefault,
+          #hipEventBlockingSync, #hipEventDisableTiming, #hipEventInterprocess
+          #hipEventDefault : Default flag.  The event will use active synchronization and will support
+          timing.  Blocking synchronization provides lowest possible latency at the expense of dedicating a
+          CPU to poll on the event.
+          #hipEventBlockingSync : The event will use blocking synchronization : if hipEventSynchronize is
+          called on this event, the thread will block until the event completes.  This can increase latency
+          for the synchroniation but can result in lower power and more resources for other CPU threads.
+          #hipEventDisableTiming : Disable recording of timing information. Events created with this flag
+          would not record profiling data and provide best performance if used for synchronization.
+          #hipEventInterprocess : The event can be used as an interprocess event. hipEventDisableTiming
+          flag also must be set when hipEventInterprocess flag is set.
     """
     event = ihipEvent_t.from_ptr(NULL)
     _hipEventCreateWithFlags__retval = hipError_t(chip.hipEventCreateWithFlags(&event._ptr,flags))    # fully specified
@@ -27816,17 +27782,15 @@ def hipEventCreate():
 
 
     Returns:
-        #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
-        #hipErrorLaunchFailure, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
+       #hipErrorLaunchFailure, #hipErrorOutOfMemory
 
 
     See:
-        hipEventCreateWithFlags, hipEventRecord, hipEventQuery, hipEventSynchronize,
-        hipEventDestroy, hipEventElapsedTime
+       hipEventCreateWithFlags, hipEventRecord, hipEventQuery, hipEventSynchronize,
+       hipEventDestroy, hipEventElapsedTime
 
 
-    Args:
-        event: Returns the newly created event.
     """
     event = ihipEvent_t.from_ptr(NULL)
     _hipEventCreate__retval = hipError_t(chip.hipEventCreate(&event._ptr))    # fully specified
@@ -27850,27 +27814,27 @@ def hipEventDestroy(object event):
 
      Destroy the specified event.
 
- 
-     Returns:
-        #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
-        #hipErrorLaunchFailure
 
-        Releases memory associated with the event.  If the event is recording but has not completed
-        recording when hipEventDestroy() is called, the function will return immediately and the
-        completion_future resources will be released later, when the hipDevice is synchronized.
+     Returns:
+       #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
+       #hipErrorLaunchFailure
+
+       Releases memory associated with the event.  If the event is recording but has not completed
+       recording when hipEventDestroy() is called, the function will return immediately and the
+       completion_future resources will be released later, when the hipDevice is synchronized.
 
 
     See:
-        hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventSynchronize, hipEventRecord,
-        hipEventElapsedTime
+       hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventSynchronize, hipEventRecord,
+       hipEventElapsedTime
 
 
     Returns:
-        #hipSuccess
+       #hipSuccess
 
 
     Args:
-        event: Event to destroy.
+       event: Event to destroy.
     """
     _hipEventDestroy__retval = hipError_t(chip.hipEventDestroy(
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
@@ -27881,21 +27845,21 @@ def hipEventDestroy(object event):
 def hipEventSynchronize(object event):
     """
 
-     Wait for an event to complete.   This function will block until the event is ready, waiting for all previous work in the stream specified when event was recorded with hipEventRecord().   If hipEventRecord() has not been called on ``event,`` this function returns immediately.   TODO-hip- This function needs to support hipEventBlockingSync parameter.
-
- 
-     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized,
-        #hipErrorInvalidHandle, #hipErrorLaunchFailure
+    Wait for an event to complete.   This function will block until the event is ready, waiting for all previous work in the stream specified when event was recorded with hipEventRecord().   If hipEventRecord() has not been called on ``event,`` this function returns immediately.   TODO-hip- This function needs to support hipEventBlockingSync parameter.
 
 
-     See:
-        hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
-        hipEventElapsedTime
+    Returns:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized,
+      #hipErrorInvalidHandle, #hipErrorLaunchFailure
+
+
+    See:
+      hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
+      hipEventElapsedTime
 
 
     Args:
-        event: Event on which to wait.
+       event: Event on which to wait.
     """
     _hipEventSynchronize__retval = hipError_t(chip.hipEventSynchronize(
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
@@ -27912,35 +27876,34 @@ def hipEventElapsedTime(object start, object stop):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotReady, #hipErrorInvalidHandle,
-        #hipErrorNotInitialized, #hipErrorLaunchFailure
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotReady, #hipErrorInvalidHandle,
+       #hipErrorNotInitialized, #hipErrorLaunchFailure
 
-        Computes the elapsed time between two events. Time is computed in ms, with
-        a resolution of approximately 1 us.
+       Computes the elapsed time between two events. Time is computed in ms, with
+       a resolution of approximately 1 us.
 
-        Events which are recorded in a NULL stream will block until all commands
-        on all other streams complete execution, and then record the timestamp.
+       Events which are recorded in a NULL stream will block until all commands
+       on all other streams complete execution, and then record the timestamp.
 
-        Events which are recorded in a non-NULL stream will record their timestamp
-        when they reach the head of the specified stream, after all previous
-        commands in that stream have completed executing.  Thus the time that
-        the event recorded may be significantly after the host calls hipEventRecord().
+       Events which are recorded in a non-NULL stream will record their timestamp
+       when they reach the head of the specified stream, after all previous
+       commands in that stream have completed executing.  Thus the time that
+       the event recorded may be significantly after the host calls hipEventRecord().
 
-        If hipEventRecord() has not been called on either event, then #hipErrorInvalidHandle is
-        returned. If hipEventRecord() has been called on both events, but the timestamp has not yet been
-        recorded on one or both events (that is, hipEventQuery() would return #hipErrorNotReady on at
-        least one of the events), then #hipErrorNotReady is returned.
+       If hipEventRecord() has not been called on either event, then #hipErrorInvalidHandle is
+       returned. If hipEventRecord() has been called on both events, but the timestamp has not yet been
+       recorded on one or both events (that is, hipEventQuery() would return #hipErrorNotReady on at
+       least one of the events), then #hipErrorNotReady is returned.
 
 
     See:
-        hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
-        hipEventSynchronize
+       hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
+       hipEventSynchronize
 
 
     Args:
-        ms: : Return time between start and stop in ms.
-        start: : Start event.
-        stop: : Stop event.
+       start: : Start event.
+       stop: : Stop event.
     """
     cdef float ms
     _hipEventElapsedTime__retval = hipError_t(chip.hipEventElapsedTime(&ms,
@@ -27957,22 +27920,22 @@ def hipEventQuery(object event):
 
 
     Returns:
-        #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle, #hipErrorInvalidValue,
-        #hipErrorNotInitialized, #hipErrorLaunchFailure
+       #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle, #hipErrorInvalidValue,
+       #hipErrorNotInitialized, #hipErrorLaunchFailure
 
-        Query the status of the specified event.  This function will return #hipSuccess if all
-        commands in the appropriate stream (specified to hipEventRecord()) have completed.  If that work
-        has not completed, or if hipEventRecord() was not called on the event, then #hipErrorNotReady is
-        returned.
+       Query the status of the specified event.  This function will return #hipSuccess if all
+       commands in the appropriate stream (specified to hipEventRecord()) have completed.  If that work
+       has not completed, or if hipEventRecord() was not called on the event, then #hipErrorNotReady is
+       returned.
 
 
     See:
-        hipEventCreate, hipEventCreateWithFlags, hipEventRecord, hipEventDestroy,
-        hipEventSynchronize, hipEventElapsedTime
+       hipEventCreate, hipEventCreateWithFlags, hipEventRecord, hipEventDestroy,
+       hipEventSynchronize, hipEventElapsedTime
 
 
     Args:
-        event: Event to query.
+       event: Event to query.
     """
     _hipEventQuery__retval = hipError_t(chip.hipEventQuery(
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
@@ -28001,20 +27964,20 @@ def hipPointerGetAttributes(object attributes, object ptr):
 
       Return attributes for the specified pointer
 
-  
-  
+
+
 
       Return:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
 
       See:
-        hipPointerGetAttribute
+       hipPointerGetAttribute
 
 
     Args:
-        attributes: attributes for the specified pointer
-        ptr: pointer to get attributes for
+       attributes: attributes for the specified pointer
+       ptr: pointer to get attributes for
     """
     _hipPointerGetAttributes__retval = hipError_t(chip.hipPointerGetAttributes(
         hipPointerAttribute_t.from_pyobj(attributes)._ptr,
@@ -28028,24 +27991,25 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
 
     Returns information about the specified pointer.[BETA]
 
-    @param [in, out] data     returned pointer attribute value
+
 
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
-        @beta This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       @beta This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     See:
-        hipPointerGetAttributes
+       hipPointerGetAttributes
 
 
     Args:
-        atribute: attribute to query for
-        ptr: pointer to get attributes for
+       data: returned pointer attribute value
+       atribute: attribute to query for
+       ptr: pointer to get attributes for
     """
     if not isinstance(attribute,_hipPointer_attribute__Base):
         raise TypeError("argument 'attribute' must be of type '_hipPointer_attribute__Base'")
@@ -28063,25 +28027,23 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
 
 
 
-    @param [in, out] data        a two-dimensional containing pointers to memory locations
-                                 where the result of each attribute query will be written to
+
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
-        @beta This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       @beta This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     See:
-        hipPointerGetAttribute
+       hipPointerGetAttribute
 
 
     Args:
-        numAttributes: number of attributes to query for
-        attributes: attributes to query for
-        ptr: pointer to get attributes for
+       numAttributes: number of attributes to query for
+       ptr: pointer to get attributes for
     """
     cdef chip.hipPointer_attribute attributes
     data = hip._util.types.DataHandle.from_ptr(NULL)
@@ -28101,7 +28063,7 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
 
     See:
@@ -28109,8 +28071,8 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
 
 
     Args:
-        extSem_out: External semaphores to be waited on
-        semHandleDesc: Semaphore import handle descriptor
+       extSem_out: External semaphores to be waited on
+       semHandleDesc: Semaphore import handle descriptor
     """
     _hipImportExternalSemaphore__retval = hipError_t(chip.hipImportExternalSemaphore(
         <void **>hip._util.types.DataHandle.from_pyobj(extSem_out)._ptr,
@@ -28130,7 +28092,7 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
 
     See:
@@ -28138,10 +28100,10 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
 
 
     Args:
-        extSem_out: External semaphores to be waited on
-        paramsArray: Array of semaphore parameters
-        numExtSems: Number of semaphores to wait on
-        stream: Stream to enqueue the wait operations in
+       extSem_out: External semaphores to be waited on
+       paramsArray: Array of semaphore parameters
+       numExtSems: Number of semaphores to wait on
+       stream: Stream to enqueue the wait operations in
     """
     _hipSignalExternalSemaphoresAsync__retval = hipError_t(chip.hipSignalExternalSemaphoresAsync(
         <void *const *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
@@ -28162,7 +28124,7 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
 
     See:
@@ -28170,10 +28132,10 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
 
 
     Args:
-        extSem_out: External semaphores to be waited on
-        paramsArray: Array of semaphore parameters
-        numExtSems: Number of semaphores to wait on
-        stream: Stream to enqueue the wait operations in
+       extSem_out: External semaphores to be waited on
+       paramsArray: Array of semaphore parameters
+       numExtSems: Number of semaphores to wait on
+       stream: Stream to enqueue the wait operations in
     """
     _hipWaitExternalSemaphoresAsync__retval = hipError_t(chip.hipWaitExternalSemaphoresAsync(
         <void *const *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
@@ -28191,7 +28153,7 @@ def hipDestroyExternalSemaphore(object extSem):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
 
     See:
@@ -28199,7 +28161,7 @@ def hipDestroyExternalSemaphore(object extSem):
 
 
     Args:
-        extSem: handle to an external memory object
+       extSem: handle to an external memory object
     """
     _hipDestroyExternalSemaphore__retval = hipError_t(chip.hipDestroyExternalSemaphore(
         <void *>hip._util.types.DataHandle.from_pyobj(extSem)._ptr))    # fully specified
@@ -28210,21 +28172,21 @@ def hipDestroyExternalSemaphore(object extSem):
 def hipImportExternalMemory(object extMem_out, object memHandleDesc):
     """
 
-      Imports an external memory object.
-
-  
-  
-
-      Return:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    Imports an external memory object.
 
 
-      See:
-        /
+
+
+    Return:
+     #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+
+
+    See:
+     /
 
     Args:
-        extMem_out: Returned handle to an external memory object
-        memHandleDesc: Memory import handle descriptor
+       extMem_out: Returned handle to an external memory object
+       memHandleDesc: Memory import handle descriptor
     """
     _hipImportExternalMemory__retval = hipError_t(chip.hipImportExternalMemory(
         <void **>hip._util.types.DataHandle.from_pyobj(extMem_out)._ptr,
@@ -28236,23 +28198,22 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
 def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
     """
 
-      Maps a buffer onto an imported memory object.
-
-  
-  
-  
-
-      Return:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    Maps a buffer onto an imported memory object.
 
 
-      See:
-        /
+
+
+
+    Return:
+     #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+
+
+    See:
+     /
 
     Args:
-        devPtr: Returned device pointer to buffer
-        extMem: Handle to external memory object
-        bufferDesc: Buffer descriptor
+       extMem: Handle to external memory object
+       bufferDesc: Buffer descriptor
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipExternalMemoryGetMappedBuffer__retval = hipError_t(chip.hipExternalMemoryGetMappedBuffer(
@@ -28266,19 +28227,19 @@ def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
 def hipDestroyExternalMemory(object extMem):
     """
 
-      Destroys an external memory object.
-
-  
-
-      Return:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    Destroys an external memory object.
 
 
-      See:
-        /
+
+    Return:
+     #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+
+
+    See:
+     /
 
     Args:
-        extMem: External memory object to be destroyed
+       extMem: External memory object to be destroyed
     """
     _hipDestroyExternalMemory__retval = hipError_t(chip.hipDestroyExternalMemory(
         <void *>hip._util.types.DataHandle.from_pyobj(extMem)._ptr))    # fully specified
@@ -28289,24 +28250,23 @@ def hipDestroyExternalMemory(object extMem):
 def hipMalloc(unsigned long size):
     """
 
-     Allocate memory on the default accelerator
-
- 
- 
-
-     Return:
-        #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
+    Allocate memory on the default accelerator
 
 
-     See:
-        hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
-        hipHostFree, hipHostMalloc
+
+
+    Return:
+      #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
+
+
+    See:
+      hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
+      hipHostFree, hipHostMalloc
 
 
     Args:
-        ptr: Pointer to the allocated memory
-        size: Requested memory size
-            If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+       size: Requested memory size
+          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
     """
     ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMalloc__retval = hipError_t(chip.hipMalloc(
@@ -28319,26 +28279,25 @@ def hipMalloc(unsigned long size):
 def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
     """
 
-     Allocate memory on the default accelerator
-
- 
- 
- 
-
-     Return:
-        #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
+    Allocate memory on the default accelerator
 
 
-     See:
-        hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
-        hipHostFree, hipHostMalloc
+
+
+
+    Return:
+      #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
+
+
+    See:
+      hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
+      hipHostFree, hipHostMalloc
 
 
     Args:
-        ptr: Pointer to the allocated memory
-        size: Requested memory size
-        flags: Type of memory allocation
-            If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+       size: Requested memory size
+       flags: Type of memory allocation
+          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
     """
     ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipExtMallocWithFlags__retval = hipError_t(chip.hipExtMallocWithFlags(
@@ -28357,17 +28316,16 @@ def hipMallocHost(unsigned long size):
 
 
     Return:
-        #hipSuccess, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorOutOfMemory
 
 
     Deprecated:
-        use hipHostMalloc() instead
+       use hipHostMalloc() instead
 
 
     Args:
-        ptr: Pointer to the allocated host pinned memory
-        size: Requested memory size
-            If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+       size: Requested memory size
+          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMallocHost__retval = hipError_t(chip.hipMallocHost(
@@ -28385,17 +28343,16 @@ def hipMemAllocHost(unsigned long size):
 
 
     Return:
-        #hipSuccess, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorOutOfMemory
 
 
     Deprecated:
-        use hipHostMalloc() instead
+       use hipHostMalloc() instead
 
 
     Args:
-        ptr: Pointer to the allocated host pinned memory
-        size: Requested memory size
-            If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+       size: Requested memory size
+          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMemAllocHost__retval = hipError_t(chip.hipMemAllocHost(
@@ -28414,18 +28371,17 @@ def hipHostMalloc(unsigned long size, unsigned int flags):
 
 
     Return:
-        #hipSuccess, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorOutOfMemory
 
 
     See:
-        hipSetDeviceFlags, hipHostFree
+       hipSetDeviceFlags, hipHostFree
 
 
     Args:
-        ptr: Pointer to the allocated host pinned memory
-        size: Requested memory size
-        flags: Type of host memory allocation
-            If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+       size: Requested memory size
+       flags: Type of host memory allocation
+          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipHostMalloc__retval = hipError_t(chip.hipHostMalloc(
@@ -28448,19 +28404,18 @@ def hipMallocManaged(unsigned long size, unsigned int flags):
 
      Allocates memory that will be automatically managed by HIP.
 
- 
- 
- 
+
+
+
 
      Returns:
-        #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
 
 
     Args:
-        dev_ptr: - pointer to allocated device memory
-        size: - requested allocation size in bytes
-        flags: - must be either hipMemAttachGlobal or hipMemAttachHost
-            (defaults to hipMemAttachGlobal)
+       size: - requested allocation size in bytes
+       flags: - must be either hipMemAttachGlobal or hipMemAttachHost
+          (defaults to hipMemAttachGlobal)
     """
     dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocManaged__retval = hipError_t(chip.hipMallocManaged(
@@ -28481,14 +28436,14 @@ def hipMemPrefetchAsync(object dev_ptr, unsigned long count, int device, object 
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Args:
-        dev_ptr: pointer to be prefetched
-        count: size in bytes for prefetching
-        device: destination device to prefetch to
-        stream: stream to enqueue prefetch operation
+       dev_ptr: pointer to be prefetched
+       count: size in bytes for prefetching
+       device: destination device to prefetch to
+       stream: stream to enqueue prefetch operation
     """
     _hipMemPrefetchAsync__retval = hipError_t(chip.hipMemPrefetchAsync(
         <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count,device,
@@ -28508,14 +28463,14 @@ def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device)
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Args:
-        dev_ptr: pointer to memory to set the advice for
-        count: size in bytes of the memory range
-        advice: advice to be applied for the specified memory range
-        device: device to apply the advice for
+       dev_ptr: pointer to memory to set the advice for
+       count: size in bytes of the memory range
+       advice: advice to be applied for the specified memory range
+       device: device to apply the advice for
     """
     if not isinstance(advice,_hipMemoryAdvise__Base):
         raise TypeError("argument 'advice' must be of type '_hipMemoryAdvise__Base'")
@@ -28537,16 +28492,16 @@ def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribu
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Args:
-        data: a pointer to a memory location where the result of each
-            attribute query will be written to
-        data_size: the size of data
-        attribute: the attribute to query
-        dev_ptr: start of the range to query
-        count: size of the range to query
+       data: a pointer to a memory location where the result of each
+          attribute query will be written to
+       data_size: the size of data
+       attribute: the attribute to query
+       dev_ptr: start of the range to query
+       count: size of the range to query
     """
     if not isinstance(attribute,_hipMemRangeAttribute__Base):
         raise TypeError("argument 'attribute' must be of type '_hipMemRangeAttribute__Base'")
@@ -28570,18 +28525,14 @@ def hipMemRangeGetAttributes(unsigned long num_attributes, object dev_ptr, unsig
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Args:
-        data: a two-dimensional array containing pointers to memory locations
-            where the result of each attribute query will be written to
-        data_sizes: an array, containing the sizes of each result
-        attributes: the attribute to query
-        num_attributes: an array of attributes to query (numAttributes and the number
-            of attributes in this array should match)
-        dev_ptr: start of the range to query
-        count: size of the range to query
+       num_attributes: an array of attributes to query (numAttributes and the number
+          of attributes in this array should match)
+       dev_ptr: start of the range to query
+       count: size of the range to query
     """
     data = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long data_sizes
@@ -28604,16 +28555,16 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length,
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Args:
-        stream: - stream in which to enqueue the attach operation
-        dev_ptr: - pointer to memory (must be a pointer to managed memory or
-            to a valid host-accessible region of system-allocated memory)
-        length: - length of memory (defaults to zero)
-        flags: - must be one of hipMemAttachGlobal, hipMemAttachHost or
-            hipMemAttachSingle (defaults to hipMemAttachSingle)
+       stream: - stream in which to enqueue the attach operation
+       dev_ptr: - pointer to memory (must be a pointer to managed memory or
+          to a valid host-accessible region of system-allocated memory)
+       length: - length of memory (defaults to zero)
+       flags: - must be one of hipMemAttachGlobal, hipMemAttachHost or
+          hipMemAttachSingle (defaults to hipMemAttachSingle)
     """
     _hipStreamAttachMemAsync__retval = hipError_t(chip.hipStreamAttachMemAsync(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -28628,17 +28579,17 @@ def hipMallocAsync(unsigned long size, object stream):
     Allocates memory with stream ordered semantics  Inserts a memory allocation operation into ``stream.`` A pointer to the allocated memory is returned immediately in *dptr. The allocation must not be accessed until the the allocation operation completes. The allocation comes from the memory pool associated with the stream's device.
 
     Note:
-        The default memory pool of a device contains device memory from that device.
+       The default memory pool of a device contains device memory from that device.
 
     Note:
-        Basic stream ordering allows future work submitted into the same stream to use the allocation.
-        Stream query, stream synchronize, and HIP events can be used to guarantee that the allocation
-        operation completes before work submitted in a separate stream runs.
+       Basic stream ordering allows future work submitted into the same stream to use the allocation.
+       Stream query, stream synchronize, and HIP events can be used to guarantee that the allocation
+       operation completes before work submitted in a separate stream runs.
 
     Note:
-        During stream capture, this function results in the creation of an allocation node. In this case,
-        the allocation is owned by the graph instead of the memory pool. The memory pool's properties
-        are used to set the node's creation parameters.
+       During stream capture, this function results in the creation of an allocation node. In this case,
+       the allocation is owned by the graph instead of the memory pool. The memory pool's properties
+       are used to set the node's creation parameters.
 
 
 
@@ -28646,24 +28597,23 @@ def hipMallocAsync(unsigned long size, object stream):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
 
 
     See:
-        hipMallocFromPoolAsync, hipFreeAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+       hipMallocFromPoolAsync, hipFreeAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
+       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        dev_ptr: Returned device pointer of memory allocation
-        size: Number of bytes to allocate
-        stream: The stream establishing the stream ordering contract and
-            the memory pool to allocate from
+       size: Number of bytes to allocate
+       stream: The stream establishing the stream ordering contract and
+          the memory pool to allocate from
     """
     dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocAsync__retval = hipError_t(chip.hipMallocAsync(
@@ -28680,30 +28630,30 @@ def hipFreeAsync(object dev_ptr, object stream):
     Frees memory with stream ordered semantics  Inserts a free operation into ``stream.`` The allocation must not be used after stream execution reaches the free. After this API returns, accessing the memory from any subsequent work launched on the GPU or querying its pointer attributes results in undefined behavior.
 
     Note:
-        During stream capture, this function results in the creation of a free node and
-        must therefore be passed the address of a graph allocation.
+       During stream capture, this function results in the creation of a free node and
+       must therefore be passed the address of a graph allocation.
 
 
 
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue, hipErrorNotSupported
+       hipSuccess, hipErrorInvalidValue, hipErrorNotSupported
 
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+       hipMallocFromPoolAsync, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
+       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        dev_ptr: Pointer to device memory to free
-        stream: The stream, where the destruciton will occur according to the execution order
+       dev_ptr: Pointer to device memory to free
+       stream: The stream, where the destruciton will occur according to the execution order
     """
     _hipFreeAsync__retval = hipError_t(chip.hipFreeAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,
@@ -28718,35 +28668,35 @@ def hipMemPoolTrimTo(object mem_pool, unsigned long min_bytes_to_hold):
     Releases freed memory back to the OS  Releases memory back to the OS until the pool contains fewer than ``min_bytes_to_keep`` reserved bytes, or there is no more memory that the allocator can safely release. The allocator cannot release OS allocations that back outstanding asynchronous allocations. The OS allocations may happen at different granularity from the user allocations.
 
     Note:
-        : Allocations that have not been freed count as outstanding.
+       : Allocations that have not been freed count as outstanding.
 
     Note:
-        : Allocations that have been asynchronously freed but whose completion has
-        not been observed on the host (eg. by a synchronize) can count as outstanding.
+       : Allocations that have been asynchronously freed but whose completion has
+       not been observed on the host (eg. by a synchronize) can count as outstanding.
 
 
 
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
+       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        mem_pool: The memory pool to trim allocations
-        min_bytes_to_hold: If the pool has less than min_bytes_to_hold reserved,
-            then the TrimTo operation is a no-op.  Otherwise the memory pool will contain
-            at least min_bytes_to_hold bytes reserved after the operation.
+       mem_pool: The memory pool to trim allocations
+       min_bytes_to_hold: If the pool has less than min_bytes_to_hold reserved,
+          then the TrimTo operation is a no-op.  Otherwise the memory pool will contain
+          at least min_bytes_to_hold bytes reserved after the operation.
     """
     _hipMemPoolTrimTo__retval = hipError_t(chip.hipMemPoolTrimTo(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,min_bytes_to_hold))    # fully specified
@@ -28764,23 +28714,23 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAccess, hipMemPoolGetAccess
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
+       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAccess, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        mem_pool: The memory pool to modify
-        attr: The attribute to modify
-        value: Pointer to the value to assign
+       mem_pool: The memory pool to modify
+       attr: The attribute to modify
+       value: Pointer to the value to assign
     """
     if not isinstance(attr,_hipMemPoolAttr__Base):
         raise TypeError("argument 'attr' must be of type '_hipMemPoolAttr__Base'")
@@ -28801,23 +28751,23 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync,
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync,
+       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        mem_pool: The memory pool to get attributes of
-        attr: The attribute to get
-        value: Retrieved value
+       mem_pool: The memory pool to get attributes of
+       attr: The attribute to get
+       value: Retrieved value
     """
     if not isinstance(attr,_hipMemPoolAttr__Base):
         raise TypeError("argument 'attr' must be of type '_hipMemPoolAttr__Base'")
@@ -28838,23 +28788,23 @@ def hipMemPoolSetAccess(object mem_pool, object desc_list, unsigned long count):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolGetAccess
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
+       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        mem_pool: Memory pool for acccess change
-        desc_list: Array of access descriptors. Each descriptor instructs the access to enable for a single gpu
-        count: Number of descriptors in the map array.
+       mem_pool: Memory pool for acccess change
+       desc_list: Array of access descriptors. Each descriptor instructs the access to enable for a single gpu
+       count: Number of descriptors in the map array.
     """
     _hipMemPoolSetAccess__retval = hipError_t(chip.hipMemPoolSetAccess(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
@@ -28873,23 +28823,22 @@ def hipMemPoolGetAccess(object mem_pool, object location):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
+       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        flags: Accessibility of the memory pool from the specified location/device
-        mem_pool: Memory pool being queried
-        location: Location/device for memory pool access
+       mem_pool: Memory pool being queried
+       location: Location/device for memory pool access
     """
     cdef chip.hipMemAccessFlags flags
     _hipMemPoolGetAccess__retval = hipError_t(chip.hipMemPoolGetAccess(&flags,
@@ -28908,26 +28857,25 @@ def hipMemPoolCreate(object pool_props):
 
 
     Note:
-        Specifying hipMemHandleTypeNone creates a memory pool that will not support IPC.
+       Specifying hipMemHandleTypeNone creates a memory pool that will not support IPC.
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolDestroy,
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolDestroy,
+       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        mem_pool: Contains createed memory pool
-        pool_props: Memory pool properties
+       pool_props: Memory pool properties
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipMemPoolCreate__retval = hipError_t(chip.hipMemPoolCreate(&mem_pool._ptr,
@@ -28944,25 +28892,25 @@ def hipMemPoolDestroy(object mem_pool):
 
 
     Note:
-        A device's default memory pool cannot be destroyed.
+       A device's default memory pool cannot be destroyed.
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolCreate
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolCreate
+       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        mem_pool: Memory pool for destruction
+       mem_pool: Memory pool for destruction
     """
     _hipMemPoolDestroy__retval = hipError_t(chip.hipMemPoolDestroy(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr))    # fully specified
@@ -28976,17 +28924,17 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
     Allocates memory from a specified pool with stream ordered semantics.  Inserts an allocation operation into ``stream.`` A pointer to the allocated memory is returned immediately in ``dev_ptr.`` The allocation must not be accessed until the the allocation operation completes. The allocation comes from the specified memory pool.
 
     Note:
-        The specified memory pool may be from a device different than that of the specified ``stream.``
+       The specified memory pool may be from a device different than that of the specified ``stream.``
 
-        Basic stream ordering allows future work submitted into the same stream to use the allocation.
-        Stream query, stream synchronize, and HIP events can be used to guarantee that the allocation
-        operation completes before work submitted in a separate stream runs.
+       Basic stream ordering allows future work submitted into the same stream to use the allocation.
+       Stream query, stream synchronize, and HIP events can be used to guarantee that the allocation
+       operation completes before work submitted in a separate stream runs.
 
 
     Note:
-        During stream capture, this function results in the creation of an allocation node. In this case,
-        the allocation is owned by the graph instead of the memory pool. The memory pool's properties
-        are used to set the node's creation parameters.
+       During stream capture, this function results in the creation of an allocation node. In this case,
+       the allocation is owned by the graph instead of the memory pool. The memory pool's properties
+       are used to set the node's creation parameters.
 
 
 
@@ -28995,24 +28943,23 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
 
 
     See:
-        hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolCreate
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess,
+       hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolCreate
+       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess,
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        dev_ptr: Returned device pointer
-        size: Number of bytes to allocate
-        mem_pool: The pool to allocate from
-        stream: The stream establishing the stream ordering semantic
+       size: Number of bytes to allocate
+       mem_pool: The pool to allocate from
+       stream: The stream establishing the stream ordering semantic
     """
     dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocFromPoolAsync__retval = hipError_t(chip.hipMallocFromPoolAsync(
@@ -29030,8 +28977,8 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
     Exports a memory pool to the requested handle type.  Given an IPC capable mempool, create an OS handle to share the pool with another process. A recipient process can convert the shareable handle into a mempool with ``hipMemPoolImportFromShareableHandle.`` Individual pointers can then be shared with the ``hipMemPoolExportPointer`` and ``hipMemPoolImportPointer`` APIs. The implementation of what the shareable handle is and how it can be transferred is defined by the requested handle type.
 
     Note:
-        : To create an IPC capable mempool, create a mempool with a ``hipMemAllocationHandleType`` other
-        than ``hipMemHandleTypeNone.``
+       : To create an IPC capable mempool, create a mempool with a ``hipMemAllocationHandleType`` other
+       than ``hipMemHandleTypeNone.``
 
 
 
@@ -29040,23 +28987,23 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
 
 
     See:
-        hipMemPoolImportFromShareableHandle
+       hipMemPoolImportFromShareableHandle
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        shared_handle: Pointer to the location in which to store the requested handle
-        mem_pool: Pool to export
-        handle_type: The type of handle to create
-        flags: Must be 0
+       shared_handle: Pointer to the location in which to store the requested handle
+       mem_pool: Pool to export
+       handle_type: The type of handle to create
+       flags: Must be 0
     """
     if not isinstance(handle_type,_hipMemAllocationHandleType__Base):
         raise TypeError("argument 'handle_type' must be of type '_hipMemAllocationHandleType__Base'")
@@ -29073,9 +29020,9 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
     Imports a memory pool from a shared handle.  Specific allocations can be imported from the imported pool with ``hipMemPoolImportPointer.``
 
     Note:
-        Imported memory pools do not support creating new allocations.
-        As such imported memory pools may not be used in ``hipDeviceSetMemPool``
-        or ``hipMallocFromPoolAsync`` calls.
+       Imported memory pools do not support creating new allocations.
+       As such imported memory pools may not be used in ``hipDeviceSetMemPool``
+       or ``hipMallocFromPoolAsync`` calls.
 
 
 
@@ -29084,23 +29031,22 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
 
 
     See:
-        hipMemPoolExportToShareableHandle
+       hipMemPoolExportToShareableHandle
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        mem_pool: Returned memory pool
-        shared_handle: OS handle of the pool to open
-        handle_type: The type of handle being imported
-        flags: Must be 0
+       shared_handle: OS handle of the pool to open
+       handle_type: The type of handle being imported
+       flags: Must be 0
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     if not isinstance(handle_type,_hipMemAllocationHandleType__Base):
@@ -29120,21 +29066,21 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
 
 
     See:
-        hipMemPoolImportPointer
+       hipMemPoolImportPointer
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        export_data: Returned export data
-        dev_ptr: Pointer to memory being exported
+       export_data: Returned export data
+       dev_ptr: Pointer to memory being exported
     """
     _hipMemPoolExportPointer__retval = hipError_t(chip.hipMemPoolExportPointer(
         hipMemPoolPtrExportData.from_pyobj(export_data)._ptr,
@@ -29149,10 +29095,10 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
     Import a memory pool allocation from another process.  Returns in ``dev_ptr`` a pointer to the imported memory. The imported memory must not be accessed before the allocation operation completes in the exporting process. The imported memory must be freed from all importing processes before being freed in the exporting process. The pointer may be freed with ``hipFree`` or ``hipFreeAsync.`` If ``hipFreeAsync`` is used, the free must be completed on the importing process before the free operation on the exporting process.
 
     Note:
-        The ``hipFreeAsync`` api may be used in the exporting process before
-        the ``hipFreeAsync`` operation completes in its stream as long as the
-        ``hipFreeAsync`` in the exporting process specifies a stream with
-        a stream dependency on the importing process's ``hipFreeAsync.``
+       The ``hipFreeAsync`` api may be used in the exporting process before
+       the ``hipFreeAsync`` operation completes in its stream as long as the
+       ``hipFreeAsync`` in the exporting process specifies a stream with
+       a stream dependency on the importing process's ``hipFreeAsync.``
 
 
 
@@ -29160,22 +29106,21 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized, #hipErrorOutOfMemory
 
 
     See:
-        hipMemPoolExportPointer
+       hipMemPoolExportPointer
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        dev_ptr: Pointer to imported memory
-        mem_pool: Memory pool from which to import a pointer
-        export_data: Data specifying the memory to import
+       mem_pool: Memory pool from which to import a pointer
+       export_data: Data specifying the memory to import
     """
     dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMemPoolImportPointer__retval = hipError_t(chip.hipMemPoolImportPointer(
@@ -29196,18 +29141,17 @@ def hipHostAlloc(unsigned long size, unsigned int flags):
 
 
     Return:
-        #hipSuccess, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorOutOfMemory
 
 
     Deprecated:
-        use hipHostMalloc() instead
+       use hipHostMalloc() instead
 
 
     Args:
-        ptr: Pointer to the allocated host pinned memory
-        size: Requested memory size
-        flags: Type of host memory allocation
-            If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+       size: Requested memory size
+       flags: Type of host memory allocation
+          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipHostAlloc__retval = hipError_t(chip.hipHostAlloc(
@@ -29226,17 +29170,17 @@ def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
 
 
     See:
-        hipSetDeviceFlags, hipHostMalloc
+       hipSetDeviceFlags, hipHostMalloc
 
 
     Args:
-        dstPtr: Device Pointer mapped to passed host pointer
-        hstPtr: Host Pointer allocated through hipHostMalloc
-        flags: Flags to be passed for extension
+       dstPtr: Device Pointer mapped to passed host pointer
+       hstPtr: Host Pointer allocated through hipHostMalloc
+       flags: Flags to be passed for extension
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipHostGetDevicePointer__retval = hipError_t(chip.hipHostGetDevicePointer(
@@ -29254,16 +29198,15 @@ def hipHostGetFlags(object hostPtr):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipHostMalloc
+       hipHostMalloc
 
 
     Args:
-        flagsPtr: Memory location to store flags
-        hostPtr: Host Pointer allocated through hipHostMalloc
+       hostPtr: Host Pointer allocated through hipHostMalloc
     """
     cdef unsigned int flagsPtr
     _hipHostGetFlags__retval = hipError_t(chip.hipHostGetFlags(&flagsPtr,
@@ -29275,43 +29218,43 @@ def hipHostGetFlags(object hostPtr):
 def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags):
     """
 
-     Register host memory so it can be accessed from the current device.
-
- 
- 
- 
-
-     Return:
-        #hipSuccess, #hipErrorOutOfMemory
+    Register host memory so it can be accessed from the current device.
 
 
-     See:
-        hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
+
+
+
+    Return:
+      #hipSuccess, #hipErrorOutOfMemory
+
+
+    See:
+      hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
 
 
     Args:
-        hostPtr: Pointer to host memory to be registered.
-        sizeBytes: size of the host memory
-        flags: .  See below.
-            Flags:
-            - #hipHostRegisterDefault   Memory is Mapped and Portable
-            - #hipHostRegisterPortable  Memory is considered registered by all contexts.  HIP only supports
-            one context so this is always assumed true.
-            - #hipHostRegisterMapped    Map the allocation into the address space for the current device.
-            The device pointer can be obtained with #hipHostGetDevicePointer.
-            After registering the memory, use #hipHostGetDevicePointer to obtain the mapped device pointer.
-            On many systems, the mapped device pointer will have a different value than the mapped host
-            pointer.  Applications must use the device pointer in device code, and the host pointer in device
-            code.
-            On some systems, registered memory is pinned.  On some systems, registered memory may not be
-            actually be pinned but uses OS or hardware facilities to all GPU access to the host memory.
-            Developers are strongly encouraged to register memory blocks which are aligned to the host
-            cache-line size. (typically 64-bytes but can be obtains from the CPUID instruction).
-            If registering non-aligned pointers, the application must take care when register pointers from
-            the same cache line on different devices.  HIP's coarse-grained synchronization model does not
-            guarantee correct results if different devices write to different parts of the same cache block -
-            typically one of the writes will "win" and overwrite data from the other registered memory
-            region.
+       hostPtr: Pointer to host memory to be registered.
+       sizeBytes: size of the host memory
+       flags: .  See below.
+          Flags:
+          - #hipHostRegisterDefault   Memory is Mapped and Portable
+          - #hipHostRegisterPortable  Memory is considered registered by all contexts.  HIP only supports
+          one context so this is always assumed true.
+          - #hipHostRegisterMapped    Map the allocation into the address space for the current device.
+          The device pointer can be obtained with #hipHostGetDevicePointer.
+          After registering the memory, use #hipHostGetDevicePointer to obtain the mapped device pointer.
+          On many systems, the mapped device pointer will have a different value than the mapped host
+          pointer.  Applications must use the device pointer in device code, and the host pointer in device
+          code.
+          On some systems, registered memory is pinned.  On some systems, registered memory may not be
+          actually be pinned but uses OS or hardware facilities to all GPU access to the host memory.
+          Developers are strongly encouraged to register memory blocks which are aligned to the host
+          cache-line size. (typically 64-bytes but can be obtains from the CPUID instruction).
+          If registering non-aligned pointers, the application must take care when register pointers from
+          the same cache line on different devices.  HIP's coarse-grained synchronization model does not
+          guarantee correct results if different devices write to different parts of the same cache block -
+          typically one of the writes will "win" and overwrite data from the other registered memory
+          region.
     """
     _hipHostRegister__retval = hipError_t(chip.hipHostRegister(
         <void *>hip._util.types.DataHandle.from_pyobj(hostPtr)._ptr,sizeBytes,flags))    # fully specified
@@ -29326,15 +29269,15 @@ def hipHostUnregister(object hostPtr):
 
 
     Return:
-        Error code
+       Error code
 
 
     See:
-        hipHostRegister
+       hipHostRegister
 
 
     Args:
-        hostPtr: Host pointer previously registered with #hipHostRegister
+       hostPtr: Host pointer previously registered with #hipHostRegister
     """
     _hipHostUnregister__retval = hipError_t(chip.hipHostUnregister(
         <void *>hip._util.types.DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
@@ -29345,31 +29288,29 @@ def hipHostUnregister(object hostPtr):
 def hipMallocPitch(unsigned long width, unsigned long height):
     """
 
-     Allocates at least width (in bytes) * height bytes of linear memory
-     Padding may occur to ensure alighnment requirements are met for the given row
-     The change in width size due to padding will be returned in *pitch.
-     Currently the alignment is set to 128 bytes
-
- 
- 
- 
- 
-
-     Return:
-        Error code
+    Allocates at least width (in bytes) * height bytes of linear memory
+    Padding may occur to ensure alighnment requirements are met for the given row
+    The change in width size due to padding will be returned in *pitch.
+    Currently the alignment is set to 128 bytes
 
 
-     See:
-        hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
-        hipMalloc3DArray, hipHostMalloc
+
+
+
+
+    Return:
+      Error code
+
+
+    See:
+      hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
+      hipMalloc3DArray, hipHostMalloc
 
 
     Args:
-        ptr: Pointer to the allocated device memory
-        pitch: Pitch for allocation (in bytes)
-        width: Requested pitched allocation width (in bytes)
-        height: Requested pitched allocation height
-            If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+       width: Requested pitched allocation width (in bytes)
+       height: Requested pitched allocation height
+          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long pitch
@@ -29382,34 +29323,32 @@ def hipMallocPitch(unsigned long width, unsigned long height):
 def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned int elementSizeBytes):
     """
 
-     Allocates at least width (in bytes) * height bytes of linear memory
-     Padding may occur to ensure alighnment requirements are met for the given row
-     The change in width size due to padding will be returned in *pitch.
-     Currently the alignment is set to 128 bytes
-
- 
- 
- 
- 
-
-     Return:
-        Error code
+    Allocates at least width (in bytes) * height bytes of linear memory
+    Padding may occur to ensure alighnment requirements are met for the given row
+    The change in width size due to padding will be returned in *pitch.
+    Currently the alignment is set to 128 bytes
 
 
-     See:
-        hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
-        hipMalloc3DArray, hipHostMalloc
+
+
+
+
+    Return:
+      Error code
+
+
+    See:
+      hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
+      hipMalloc3DArray, hipHostMalloc
 
 
     Args:
-        dptr: Pointer to the allocated device memory
-        pitch: Pitch for allocation (in bytes)
-        width: Requested pitched allocation width (in bytes)
-        height: Requested pitched allocation height
-            If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
-            The intended usage of pitch is as a separate parameter of the allocation, used to compute addresses within the 2D array.
-            Given the row and column of an array element of type T, the address is computed as:
-            T* pElement = (T*)((char*)BaseAddress + Row * Pitch) + Column;
+       width: Requested pitched allocation width (in bytes)
+       height: Requested pitched allocation height
+          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+          The intended usage of pitch is as a separate parameter of the allocation, used to compute addresses within the 2D array.
+          Given the row and column of an array element of type T, the address is computed as:
+          T* pElement = (T*)((char*)BaseAddress + Row * Pitch) + Column;
     """
     dptr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long pitch
@@ -29422,24 +29361,24 @@ def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned 
 def hipFree(object ptr):
     """
 
-     Free memory allocated by the hcc hip memory allocation API.  This API performs an implicit hipDeviceSynchronize() call.  If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
-
- 
-     Return:
-        #hipSuccess
-
-     Return:
-        #hipErrorInvalidDevicePointer (if pointer is invalid, including host pointers allocated
-        with hipHostMalloc)
+    Free memory allocated by the hcc hip memory allocation API.  This API performs an implicit hipDeviceSynchronize() call.  If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
 
 
-     See:
-        hipMalloc, hipMallocPitch, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
-        hipMalloc3DArray, hipHostMalloc
+    Return:
+      #hipSuccess
+
+    Return:
+      #hipErrorInvalidDevicePointer (if pointer is invalid, including host pointers allocated
+      with hipHostMalloc)
+
+
+    See:
+      hipMalloc, hipMallocPitch, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
+      hipMalloc3DArray, hipHostMalloc
 
 
     Args:
-        ptr: Pointer to memory to be freed
+       ptr: Pointer to memory to be freed
     """
     _hipFree__retval = hipError_t(chip.hipFree(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
@@ -29450,20 +29389,20 @@ def hipFree(object ptr):
 def hipFreeHost(object ptr):
     """
 
-       Free memory allocated by the hcc hip host memory allocation API.  [Deprecated]
+    Free memory allocated by the hcc hip host memory allocation API.  [Deprecated]
 
-   
-       Return:
-        #hipSuccess,
-        #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
-        hipMalloc)
 
-       Deprecated:
-        use hipHostFree() instead
+    Return:
+    #hipSuccess,
+    #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
+    hipMalloc)
+
+    Deprecated:
+    use hipHostFree() instead
 
 
     Args:
-        ptr: Pointer to memory to be freed
+       ptr: Pointer to memory to be freed
     """
     _hipFreeHost__retval = hipError_t(chip.hipFreeHost(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
@@ -29474,22 +29413,22 @@ def hipFreeHost(object ptr):
 def hipHostFree(object ptr):
     """
 
-     Free memory allocated by the hcc hip host memory allocation API  This API performs an implicit hipDeviceSynchronize() call.  If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
-
- 
-     Return:
-        #hipSuccess,
-        #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
-        hipMalloc)
+    Free memory allocated by the hcc hip host memory allocation API  This API performs an implicit hipDeviceSynchronize() call.  If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
 
 
-     See:
-        hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D,
-        hipMalloc3DArray, hipHostMalloc
+    Return:
+      #hipSuccess,
+      #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
+      hipMalloc)
+
+
+    See:
+      hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D,
+      hipMalloc3DArray, hipHostMalloc
 
 
     Args:
-        ptr: Pointer to memory to be freed
+       ptr: Pointer to memory to be freed
     """
     _hipHostFree__retval = hipError_t(chip.hipHostFree(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
@@ -29500,30 +29439,30 @@ def hipHostFree(object ptr):
 def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
     """
 
-     Copy data from src to dst.   It supports memory from host to device,  device to host, device to device and host to host  The src and dst must not overlap.   For hipMemcpy, the copy is always performed by the current device (set by hipSetDevice).  For multi-gpu or peer-to-peer configurations, it is recommended to set the current device to the  device where the src data is physically located. For optimal peer-to-peer copies, the copy device  must be able to access the src and dst pointers (by calling hipDeviceEnablePeerAccess with copy  agent as the current device and src/dest as the peerDevice argument.  if this is not done, the  hipMemcpy will still work, but will perform the copy using a staging buffer on the host.  Calling hipMemcpy with dst and src pointers that do not match the hipMemcpyKind results in  undefined behavior.
-
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknowni
+    Copy data from src to dst.   It supports memory from host to device,  device to host, device to device and host to host  The src and dst must not overlap.   For hipMemcpy, the copy is always performed by the current device (set by hipSetDevice).  For multi-gpu or peer-to-peer configurations, it is recommended to set the current device to the  device where the src data is physically located. For optimal peer-to-peer copies, the copy device  must be able to access the src and dst pointers (by calling hipDeviceEnablePeerAccess with copy  agent as the current device and src/dest as the peerDevice argument.  if this is not done, the  hipMemcpy will still work, but will perform the copy using a staging buffer on the host.  Calling hipMemcpy with dst and src pointers that do not match the hipMemcpyKind results in  undefined behavior.
 
 
-     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknowni
+
+
+    See:
+      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
+      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+      hipMemHostAlloc, hipMemHostGetDevicePointer
 
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
-        copyType: Memory copy type
+       dst: Data being copy to
+       src: Data being copy from
+       sizeBytes: Data size in bytes
+       copyType: Memory copy type
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29551,30 +29490,30 @@ def hipMemcpyWithStream(object dst, object src, unsigned long sizeBytes, object 
 def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
     """
 
-     Copy data from Host to Device
-
- 
- 
- 
-
-     Return:
-        #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-        #hipErrorInvalidValue
+    Copy data from Host to Device
 
 
-     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+
+
+
+    Return:
+      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+      #hipErrorInvalidValue
+
+
+    See:
+      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
+      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+      hipMemHostAlloc, hipMemHostGetDevicePointer
 
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+       dst: Data being copy to
+       src: Data being copy from
+       sizeBytes: Data size in bytes
     """
     _hipMemcpyHtoD__retval = hipError_t(chip.hipMemcpyHtoD(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29586,30 +29525,30 @@ def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
 def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
     """
 
-     Copy data from Device to Host
-
- 
- 
- 
-
-     Return:
-        #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-        #hipErrorInvalidValue
+    Copy data from Device to Host
 
 
-     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+
+
+
+    Return:
+      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+      #hipErrorInvalidValue
+
+
+    See:
+      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
+      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+      hipMemHostAlloc, hipMemHostGetDevicePointer
 
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+       dst: Data being copy to
+       src: Data being copy from
+       sizeBytes: Data size in bytes
     """
     _hipMemcpyDtoH__retval = hipError_t(chip.hipMemcpyDtoH(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29621,30 +29560,30 @@ def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
 def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
     """
 
-     Copy data from Device to Device
-
- 
- 
- 
-
-     Return:
-        #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-        #hipErrorInvalidValue
+    Copy data from Device to Device
 
 
-     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+
+
+
+    Return:
+      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+      #hipErrorInvalidValue
+
+
+    See:
+      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
+      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+      hipMemHostAlloc, hipMemHostGetDevicePointer
 
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+       dst: Data being copy to
+       src: Data being copy from
+       sizeBytes: Data size in bytes
     """
     _hipMemcpyDtoD__retval = hipError_t(chip.hipMemcpyDtoD(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29656,30 +29595,30 @@ def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
 def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object stream):
     """
 
-     Copy data from Host to Device asynchronously
-
- 
- 
- 
-
-     Return:
-        #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-        #hipErrorInvalidValue
+    Copy data from Host to Device asynchronously
 
 
-     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+
+
+
+    Return:
+      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+      #hipErrorInvalidValue
+
+
+    See:
+      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
+      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+      hipMemHostAlloc, hipMemHostGetDevicePointer
 
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+       dst: Data being copy to
+       src: Data being copy from
+       sizeBytes: Data size in bytes
     """
     _hipMemcpyHtoDAsync__retval = hipError_t(chip.hipMemcpyHtoDAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29692,30 +29631,30 @@ def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object s
 def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object stream):
     """
 
-     Copy data from Device to Host asynchronously
-
- 
- 
- 
-
-     Return:
-        #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-        #hipErrorInvalidValue
+    Copy data from Device to Host asynchronously
 
 
-     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+
+
+
+    Return:
+      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+      #hipErrorInvalidValue
+
+
+    See:
+      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
+      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+      hipMemHostAlloc, hipMemHostGetDevicePointer
 
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+       dst: Data being copy to
+       src: Data being copy from
+       sizeBytes: Data size in bytes
     """
     _hipMemcpyDtoHAsync__retval = hipError_t(chip.hipMemcpyDtoHAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29728,30 +29667,30 @@ def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object s
 def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object stream):
     """
 
-     Copy data from Device to Device asynchronously
-
- 
- 
- 
-
-     Return:
-        #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-        #hipErrorInvalidValue
+    Copy data from Device to Device asynchronously
 
 
-     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+
+
+
+    Return:
+      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+      #hipErrorInvalidValue
+
+
+    See:
+      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
+      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+      hipMemHostAlloc, hipMemHostGetDevicePointer
 
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+       dst: Data being copy to
+       src: Data being copy from
+       sizeBytes: Data size in bytes
     """
     _hipMemcpyDtoDAsync__retval = hipError_t(chip.hipMemcpyDtoDAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29772,15 +29711,13 @@ def hipModuleGetGlobal(object hmod, const char * name):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
 
 
 
     Args:
-        dptr: Returns global device pointer
-        bytes: Returns global size in bytes
-        hmod: Module to retrieve global from
-        name: Name of global to retrieve
+       hmod: Module to retrieve global from
+       name: Name of global to retrieve
     """
     dptr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long bytes
@@ -29800,13 +29737,12 @@ def hipGetSymbolAddress(object symbol):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
 
     Args:
-        devPtr: pointer to the device associated the symbole
-        symbol: pointer to the symbole of the device
+       symbol: pointer to the symbole of the device
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipGetSymbolAddress__retval = hipError_t(chip.hipGetSymbolAddress(
@@ -29825,13 +29761,12 @@ def hipGetSymbolSize(object symbol):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
 
     Args:
-        symbol: pointer to the device symbole
-        size: pointer to the size
+       symbol: pointer to the device symbole
     """
     cdef unsigned long size
     _hipGetSymbolSize__retval = hipError_t(chip.hipGetSymbolSize(&size,
@@ -29843,25 +29778,25 @@ def hipGetSymbolSize(object symbol):
 def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind):
     """
 
-     Copies data to the given symbol on the device. Symbol HIP APIs allow a kernel to define a device-side data symbol which can be accessed on the host side. The symbol can be in __constant or device space. Note that the symbol name needs to be encased in the HIP_SYMBOL macro. This also applies to hipMemcpyFromSymbol, hipGetSymbolAddress, and hipGetSymbolSize. For detail usage, see the example at https://github.com/ROCm-Developer-Tools/HIP/blob/rocm-5.0.x/docs/markdown/hip_porting_guide.md
+    Copies data to the given symbol on the device. Symbol HIP APIs allow a kernel to define a device-side data symbol which can be accessed on the host side. The symbol can be in __constant or device space. Note that the symbol name needs to be encased in the HIP_SYMBOL macro. This also applies to hipMemcpyFromSymbol, hipGetSymbolAddress, and hipGetSymbolSize. For detail usage, see the example at https://github.com/ROCm-Developer-Tools/HIP/blob/rocm-5.0.x/docs/markdown/hip_porting_guide.md
 
- 
- 
- 
- 
- 
 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue
+
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue
 
 
 
     Args:
-        symbol: pointer to the device symbole
-        src: pointer to the source address
-        sizeBytes: size in bytes to copy
-        offset: offset in bytes from start of symbole
-        kind: type of memory transfer
+       symbol: pointer to the device symbole
+       src: pointer to the source address
+       sizeBytes: size in bytes to copy
+       offset: offset in bytes from start of symbole
+       kind: type of memory transfer
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29885,17 +29820,17 @@ def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, u
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
 
     Args:
-        symbol: pointer to the device symbole
-        src: pointer to the source address
-        sizeBytes: size in bytes to copy
-        offset: offset in bytes from start of symbole
-        kind: type of memory transfer
-        stream: stream identifier
+       symbol: pointer to the device symbole
+       src: pointer to the source address
+       sizeBytes: size in bytes to copy
+       offset: offset in bytes from start of symbole
+       kind: type of memory transfer
+       stream: stream identifier
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29919,16 +29854,16 @@ def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsi
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
 
     Args:
-        dptr: Returns pointer to destinition memory address
-        symbol: pointer to the symbole address on the device
-        sizeBytes: size in bytes to copy
-        offset: offset in bytes from the start of symbole
-        kind: type of memory transfer
+       dptr: Returns pointer to destinition memory address
+       symbol: pointer to the symbole address on the device
+       sizeBytes: size in bytes to copy
+       offset: offset in bytes from the start of symbole
+       kind: type of memory transfer
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29952,17 +29887,17 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
 
     Args:
-        dptr: Returns pointer to destinition memory address
-        symbol: pointer to the symbole address on the device
-        sizeBytes: size in bytes to copy
-        offset: offset in bytes from the start of symbole
-        kind: type of memory transfer
-        stream: stream identifier
+       dptr: Returns pointer to destinition memory address
+       symbol: pointer to the symbole address on the device
+       sizeBytes: size in bytes to copy
+       offset: offset in bytes from the start of symbole
+       kind: type of memory transfer
+       stream: stream identifier
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29977,46 +29912,46 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
 def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind, object stream):
     """
 
-     Copy data from src to dst asynchronously.
+    Copy data from src to dst asynchronously.
 
-     Warning:
-        If host or dest are not pinned, the memory copy will be performed synchronously.  For
-        best performance, use hipHostMalloc to allocate host memory that is transferred asynchronously.
-
-
-     Warning:
-        on HCC hipMemcpyAsync does not support overlapped H2D and D2H copies.
-        For hipMemcpy, the copy is always performed by the device associated with the specified stream.
-
-        For multi-gpu or peer-to-peer configurations, it is recommended to use a stream which is a
-        attached to the device where the src data is physically located. For optimal peer-to-peer copies,
-        the copy device must be able to access the src and dst pointers (by calling
-        hipDeviceEnablePeerAccess with copy agent as the current device and src/dest as the peerDevice
-        argument.  if this is not done, the hipMemcpy will still work, but will perform the copy using a
-        staging buffer on the host.
+    Warning:
+      If host or dest are not pinned, the memory copy will be performed synchronously.  For
+      best performance, use hipHostMalloc to allocate host memory that is transferred asynchronously.
 
 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknown
+    Warning:
+      on HCC hipMemcpyAsync does not support overlapped H2D and D2H copies.
+      For hipMemcpy, the copy is always performed by the device associated with the specified stream.
+
+      For multi-gpu or peer-to-peer configurations, it is recommended to use a stream which is a
+      attached to the device where the src data is physically located. For optimal peer-to-peer copies,
+      the copy device must be able to access the src and dst pointers (by calling
+      hipDeviceEnablePeerAccess with copy agent as the current device and src/dest as the peerDevice
+      argument.  if this is not done, the hipMemcpy will still work, but will perform the copy using a
+      staging buffer on the host.
 
 
-     See:
-        hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-        hipMemcpy2DFromArray, hipMemcpyArrayToArray, hipMemcpy2DArrayToArray, hipMemcpyToSymbol,
-        hipMemcpyFromSymbol, hipMemcpy2DAsync, hipMemcpyToArrayAsync, hipMemcpy2DToArrayAsync,
-        hipMemcpyFromArrayAsync, hipMemcpy2DFromArrayAsync, hipMemcpyToSymbolAsync,
-        hipMemcpyFromSymbolAsync
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknown
+
+
+    See:
+      hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
+      hipMemcpy2DFromArray, hipMemcpyArrayToArray, hipMemcpy2DArrayToArray, hipMemcpyToSymbol,
+      hipMemcpyFromSymbol, hipMemcpy2DAsync, hipMemcpyToArrayAsync, hipMemcpy2DToArrayAsync,
+      hipMemcpyFromArrayAsync, hipMemcpy2DFromArrayAsync, hipMemcpyToSymbolAsync,
+      hipMemcpyFromSymbolAsync
 
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
-        accelerator_view: Accelerator view which the copy is being enqueued
+       dst: Data being copy to
+       src: Data being copy from
+       sizeBytes: Data size in bytes
+       accelerator_view: Accelerator view which the copy is being enqueued
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30031,19 +29966,19 @@ def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind,
 def hipMemset(object dst, int value, unsigned long sizeBytes):
     """
 
-     Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant byte value value.
+    Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant byte value value.
 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 
 
     Args:
-        dst: Data being filled
-        constant: value to be set
-        sizeBytes: Data size in bytes
+       dst: Data being filled
+       constant: value to be set
+       sizeBytes: Data size in bytes
     """
     _hipMemset__retval = hipError_t(chip.hipMemset(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
@@ -30054,19 +29989,19 @@ def hipMemset(object dst, int value, unsigned long sizeBytes):
 def hipMemsetD8(object dest, unsigned char value, unsigned long count):
     """
 
-     Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant byte value value.
+    Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant byte value value.
 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 
 
     Args:
-        dst: Data ptr to be filled
-        constant: value to be set
-        number: of values to be set
+       dst: Data ptr to be filled
+       constant: value to be set
+       number: of values to be set
     """
     _hipMemsetD8__retval = hipError_t(chip.hipMemsetD8(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
@@ -30077,21 +30012,21 @@ def hipMemsetD8(object dest, unsigned char value, unsigned long count):
 def hipMemsetD8Async(object dest, unsigned char value, unsigned long count, object stream):
     """
 
-     Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant byte value value.  hipMemsetD8Async() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
+    Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant byte value value.  hipMemsetD8Async() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 
 
     Args:
-        dst: Data ptr to be filled
-        constant: value to be set
-        number: of values to be set
-        stream: - Stream identifier
+       dst: Data ptr to be filled
+       constant: value to be set
+       number: of values to be set
+       stream: - Stream identifier
     """
     _hipMemsetD8Async__retval = hipError_t(chip.hipMemsetD8Async(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
@@ -30103,19 +30038,19 @@ def hipMemsetD8Async(object dest, unsigned char value, unsigned long count, obje
 def hipMemsetD16(object dest, unsigned short value, unsigned long count):
     """
 
-     Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant short value value.
+    Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant short value value.
 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 
 
     Args:
-        dst: Data ptr to be filled
-        constant: value to be set
-        number: of values to be set
+       dst: Data ptr to be filled
+       constant: value to be set
+       number: of values to be set
     """
     _hipMemsetD16__retval = hipError_t(chip.hipMemsetD16(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
@@ -30126,21 +30061,21 @@ def hipMemsetD16(object dest, unsigned short value, unsigned long count):
 def hipMemsetD16Async(object dest, unsigned short value, unsigned long count, object stream):
     """
 
-     Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant short value value.  hipMemsetD16Async() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
+    Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant short value value.  hipMemsetD16Async() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 
 
     Args:
-        dst: Data ptr to be filled
-        constant: value to be set
-        number: of values to be set
-        stream: - Stream identifier
+       dst: Data ptr to be filled
+       constant: value to be set
+       number: of values to be set
+       stream: - Stream identifier
     """
     _hipMemsetD16Async__retval = hipError_t(chip.hipMemsetD16Async(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
@@ -30152,19 +30087,19 @@ def hipMemsetD16Async(object dest, unsigned short value, unsigned long count, ob
 def hipMemsetD32(object dest, int value, unsigned long count):
     """
 
-     Fills the memory area pointed to by dest with the constant integer value for specified number of times.
+    Fills the memory area pointed to by dest with the constant integer value for specified number of times.
 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 
 
     Args:
-        dst: Data being filled
-        constant: value to be set
-        number: of values to be set
+       dst: Data being filled
+       constant: value to be set
+       number: of values to be set
     """
     _hipMemsetD32__retval = hipError_t(chip.hipMemsetD32(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
@@ -30175,21 +30110,21 @@ def hipMemsetD32(object dest, int value, unsigned long count):
 def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream):
     """
 
-     Fills the first sizeBytes bytes of the memory area pointed to by dev with the constant byte value value.   hipMemsetAsync() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
+    Fills the first sizeBytes bytes of the memory area pointed to by dev with the constant byte value value.   hipMemsetAsync() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
 
 
     Args:
-        dst: Pointer to device memory
-        value: - Value to set for each byte of specified memory
-        sizeBytes: - Size in bytes to set
-        stream: - Stream identifier
+       dst: Pointer to device memory
+       value: - Value to set for each byte of specified memory
+       sizeBytes: - Size in bytes to set
+       stream: - Stream identifier
     """
     _hipMemsetAsync__retval = hipError_t(chip.hipMemsetAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
@@ -30201,21 +30136,21 @@ def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream
 def hipMemsetD32Async(object dst, int value, unsigned long count, object stream):
     """
 
-     Fills the memory area pointed to by dev with the constant integer value for specified number of times.   hipMemsetD32Async() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
+    Fills the memory area pointed to by dev with the constant integer value for specified number of times.   hipMemsetD32Async() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
 
 
     Args:
-        dst: Pointer to device memory
-        value: - Value to set for each byte of specified memory
-        count: - number of values to be set
-        stream: - Stream identifier
+       dst: Pointer to device memory
+       value: - Value to set for each byte of specified memory
+       count: - number of values to be set
+       stream: - Stream identifier
     """
     _hipMemsetD32Async__retval = hipError_t(chip.hipMemsetD32Async(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,count,
@@ -30233,15 +30168,15 @@ def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width,
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
 
 
     Args:
-        dst: Pointer to device memory
-        pitch: - data size in bytes
-        value: - constant value to be set
-        width:
-        height:
+       dst: Pointer to device memory
+       pitch: - data size in bytes
+       value: - constant value to be set
+       width:
+       height:
     """
     _hipMemset2D__retval = hipError_t(chip.hipMemset2D(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
@@ -30258,16 +30193,16 @@ def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long w
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
 
 
     Args:
-        dst: Pointer to device memory
-        pitch: - data size in bytes
-        value: - constant value to be set
-        width:
-        height:
-        stream:
+       dst: Pointer to device memory
+       pitch: - data size in bytes
+       value: - constant value to be set
+       width:
+       height:
+       stream:
     """
     _hipMemset2DAsync__retval = hipError_t(chip.hipMemset2DAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
@@ -30283,13 +30218,13 @@ def hipMemset3D(object pitchedDevPtr, int value, object extent):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
 
 
     Args:
-        pitchedDevPtr:
-        value: - constant value to be set
-        extent:
+       pitchedDevPtr:
+       value: - constant value to be set
+       extent:
     """
     _hipMemset3D__retval = hipError_t(chip.hipMemset3D(
         hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr[0],value,
@@ -30305,14 +30240,14 @@ def hipMemset3DAsync(object pitchedDevPtr, int value, object extent, object stre
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
 
 
     Args:
-        pitchedDevPtr:
-        value: - constant value to be set
-        extent:
-        stream:
+       pitchedDevPtr:
+       value: - constant value to be set
+       extent:
+       stream:
     """
     _hipMemset3DAsync__retval = hipError_t(chip.hipMemset3DAsync(
         hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr[0],value,
@@ -30325,13 +30260,13 @@ def hipMemset3DAsync(object pitchedDevPtr, int value, object extent, object stre
 def hipMemGetInfo():
     """
 
-     Query memory info.  Return snapshot of free memory, and total allocatable memory on the device.   Returns in *free a snapshot of the current free memory.
-     Returns:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    Query memory info.  Return snapshot of free memory, and total allocatable memory on the device.   Returns in *free a snapshot of the current free memory.
+    Returns:
+      #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
 
-     Warning:
-        On HCC, the free memory only accounts for memory allocated by this process and may be
-        optimistic.
+    Warning:
+      On HCC, the free memory only accounts for memory allocated by this process and may be
+      optimistic.
 
 
     """
@@ -30364,19 +30299,18 @@ def hipMallocArray(object desc, unsigned long width, unsigned long height, unsig
 
 
     Return:
-        #hipSuccess, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorOutOfMemory
 
 
     See:
-        hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
+       hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
 
 
     Args:
-        array: Pointer to allocated array in device memory
-        desc: Requested channel format
-        width: Requested array allocation width
-        height: Requested array allocation height
-        flags: Requested properties of allocated array
+       desc: Requested channel format
+       width: Requested array allocation width
+       height: Requested array allocation height
+       flags: Requested properties of allocated array
     """
     array = hipArray.from_ptr(NULL)
     _hipMallocArray__retval = hipError_t(chip.hipMallocArray(&array._ptr,
@@ -30435,15 +30369,15 @@ def hipFreeArray(object array):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
 
 
     See:
-        hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipHostMalloc, hipHostFree
+       hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipHostMalloc, hipHostFree
 
 
     Args:
-        array: Pointer to array to free
+       array: Pointer to array to free
     """
     _hipFreeArray__retval = hipError_t(chip.hipFreeArray(
         hipArray.from_pyobj(array)._ptr))    # fully specified
@@ -30459,11 +30393,11 @@ def hipFreeMipmappedArray(object mipmappedArray):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Args:
-        mipmappedArray: - Pointer to mipmapped array to free
+       mipmappedArray: - Pointer to mipmapped array to free
     """
     _hipFreeMipmappedArray__retval = hipError_t(chip.hipFreeMipmappedArray(
         hipMipmappedArray.from_pyobj(mipmappedArray)._ptr))    # fully specified
@@ -30481,18 +30415,17 @@ def hipMalloc3DArray(object desc, object extent, unsigned int flags):
 
 
     Return:
-        #hipSuccess, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorOutOfMemory
 
 
     See:
-        hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
+       hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
 
 
     Args:
-        array: Pointer to allocated array in device memory
-        desc: Requested channel format
-        extent: Requested array allocation width, height and depth
-        flags: Requested properties of allocated array
+       desc: Requested channel format
+       extent: Requested array allocation width, height and depth
+       flags: Requested properties of allocated array
     """
     array = hipArray.from_ptr(NULL)
     _hipMalloc3DArray__retval = hipError_t(chip.hipMalloc3DArray(&array._ptr,
@@ -30514,15 +30447,14 @@ def hipMallocMipmappedArray(object desc, object extent, unsigned int numLevels, 
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
 
 
     Args:
-        mipmappedArray: - Pointer to allocated mipmapped array in device memory
-        desc: - Requested channel format
-        extent: - Requested allocation size (width field in elements)
-        numLevels: - Number of mipmap levels to allocate
-        flags: - Flags for extensions
+       desc: - Requested channel format
+       extent: - Requested allocation size (width field in elements)
+       numLevels: - Number of mipmap levels to allocate
+       flags: - Flags for extensions
     """
     mipmappedArray = hipMipmappedArray.from_ptr(NULL)
     _hipMallocMipmappedArray__retval = hipError_t(chip.hipMallocMipmappedArray(&mipmappedArray._ptr,
@@ -30542,13 +30474,12 @@ def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
 
 
     Return:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Args:
-        levelArray: - Returned mipmap level HIP array
-        mipmappedArray: - HIP mipmapped array
-        level: - Mipmap level
+       mipmappedArray: - HIP mipmapped array
+       level: - Mipmap level
     """
     levelArray = hipArray.from_ptr(NULL)
     _hipGetMipmappedArrayLevel__retval = hipError_t(chip.hipGetMipmappedArrayLevel(&levelArray._ptr,
@@ -30560,33 +30491,33 @@ def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
 def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
     """
 
-     Copies data between host and device.
-
- 
- 
- 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        dst: Destination memory address
-        dpitch: Pitch of destination memory
-        src: Source memory address
-        spitch: Pitch of source memory
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
+       dst: Destination memory address
+       dpitch: Pitch of destination memory
+       src: Source memory address
+       spitch: Pitch of source memory
+       width: Width of matrix transfer (columns in bytes)
+       height: Height of matrix transfer (rows)
+       kind: Type of transfer
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30600,20 +30531,20 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
 def hipMemcpyParam2D(object pCopy):
     """
 
-       Copies memory for 2D arrays.
-   
-       Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies memory for 2D arrays.
+
+    Return:
+    #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
 
-       See:
-        hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-        hipMemcpyToSymbol, hipMemcpyAsync
-        /
+    See:
+    hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
+    hipMemcpyToSymbol, hipMemcpyAsync
+    /
 
     Args:
-        pCopy: Parameters for the memory copy
+       pCopy: Parameters for the memory copy
     """
     _hipMemcpyParam2D__retval = hipError_t(chip.hipMemcpyParam2D(
         hip_Memcpy2D.from_pyobj(pCopy)._ptr))    # fully specified
@@ -30624,22 +30555,22 @@ def hipMemcpyParam2D(object pCopy):
 def hipMemcpyParam2DAsync(object pCopy, object stream):
     """
 
-       Copies memory for 2D arrays.
-   
-   
-       Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies memory for 2D arrays.
 
 
-       See:
-        hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-        hipMemcpyToSymbol, hipMemcpyAsync
-        /
+    Return:
+    #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+    hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
+    hipMemcpyToSymbol, hipMemcpyAsync
+    /
 
     Args:
-        pCopy: Parameters for the memory copy
-        stream: Stream to use
+       pCopy: Parameters for the memory copy
+       stream: Stream to use
     """
     _hipMemcpyParam2DAsync__retval = hipError_t(chip.hipMemcpyParam2DAsync(
         hip_Memcpy2D.from_pyobj(pCopy)._ptr,
@@ -30651,35 +30582,35 @@ def hipMemcpyParam2DAsync(object pCopy, object stream):
 def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
     """
 
-     Copies data between host and device.
-
- 
- 
- 
- 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+
+
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        dst: Destination memory address
-        dpitch: Pitch of destination memory
-        src: Source memory address
-        spitch: Pitch of source memory
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
-        stream: Stream to use
+       dst: Destination memory address
+       dpitch: Pitch of destination memory
+       src: Source memory address
+       spitch: Pitch of source memory
+       width: Width of matrix transfer (columns in bytes)
+       height: Height of matrix transfer (rows)
+       kind: Type of transfer
+       stream: Stream to use
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30694,35 +30625,35 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
 def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
     """
 
-     Copies data between host and device.
-
- 
- 
- 
- 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+
+
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        dst: Destination memory address
-        wOffset: Destination starting X offset
-        hOffset: Destination starting Y offset
-        src: Source memory address
-        spitch: Pitch of source memory
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
+       dst: Destination memory address
+       wOffset: Destination starting X offset
+       hOffset: Destination starting Y offset
+       src: Source memory address
+       spitch: Pitch of source memory
+       width: Width of matrix transfer (columns in bytes)
+       height: Height of matrix transfer (rows)
+       kind: Type of transfer
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30736,37 +30667,37 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
 def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
     """
 
-     Copies data between host and device.
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+
+
+
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        dst: Destination memory address
-        wOffset: Destination starting X offset
-        hOffset: Destination starting Y offset
-        src: Source memory address
-        spitch: Pitch of source memory
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
-        stream: Accelerator view which the copy is being enqueued
+       dst: Destination memory address
+       wOffset: Destination starting X offset
+       hOffset: Destination starting Y offset
+       src: Source memory address
+       spitch: Pitch of source memory
+       width: Width of matrix transfer (columns in bytes)
+       height: Height of matrix transfer (rows)
+       kind: Type of transfer
+       stream: Accelerator view which the copy is being enqueued
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30781,31 +30712,31 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
 def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long count, object kind):
     """
 
-     Copies data between host and device.
-
- 
- 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        dst: Destination memory address
-        wOffset: Destination starting X offset
-        hOffset: Destination starting Y offset
-        src: Source memory address
-        count: size in bytes to copy
-        kind: Type of transfer
+       dst: Destination memory address
+       wOffset: Destination starting X offset
+       hOffset: Destination starting Y offset
+       src: Source memory address
+       count: size in bytes to copy
+       kind: Type of transfer
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30819,31 +30750,31 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
 def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsigned long hOffset, unsigned long count, object kind):
     """
 
-     Copies data between host and device.
-
- 
- 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        dst: Destination memory address
-        srcArray: Source memory address
-        woffset: Source starting X offset
-        hOffset: Source starting Y offset
-        count: Size in bytes to copy
-        kind: Type of transfer
+       dst: Destination memory address
+       srcArray: Source memory address
+       woffset: Source starting X offset
+       hOffset: Source starting Y offset
+       count: Size in bytes to copy
+       kind: Type of transfer
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30857,35 +30788,35 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
 def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned long wOffset, unsigned long hOffset, unsigned long width, unsigned long height, object kind):
     """
 
-     Copies data between host and device.
-
- 
- 
- 
- 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+
+
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        dst: Destination memory address
-        dpitch: Pitch of destination memory
-        src: Source memory address
-        wOffset: Source starting X offset
-        hOffset: Source starting Y offset
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
+       dst: Destination memory address
+       dpitch: Pitch of destination memory
+       src: Source memory address
+       wOffset: Source starting X offset
+       hOffset: Source starting Y offset
+       width: Width of matrix transfer (columns in bytes)
+       height: Height of matrix transfer (rows)
+       kind: Type of transfer
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30899,37 +30830,37 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
 def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsigned long wOffset, unsigned long hOffset, unsigned long width, unsigned long height, object kind, object stream):
     """
 
-     Copies data between host and device asynchronously.
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device asynchronously.
 
 
-     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+
+
+
+
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        dst: Destination memory address
-        dpitch: Pitch of destination memory
-        src: Source memory address
-        wOffset: Source starting X offset
-        hOffset: Source starting Y offset
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
-        stream: Accelerator view which the copy is being enqueued
+       dst: Destination memory address
+       dpitch: Pitch of destination memory
+       src: Source memory address
+       wOffset: Source starting X offset
+       hOffset: Source starting Y offset
+       width: Width of matrix transfer (columns in bytes)
+       height: Height of matrix transfer (rows)
+       kind: Type of transfer
+       stream: Accelerator view which the copy is being enqueued
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30944,27 +30875,27 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
 def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned long count):
     """
 
-     Copies data between host and device.
-
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        dst: Destination memory address
-        srcArray: Source array
-        srcoffset: Offset in bytes of source array
-        count: Size of memory copy in bytes
+       dst: Destination memory address
+       srcArray: Source array
+       srcoffset: Offset in bytes of source array
+       count: Size of memory copy in bytes
     """
     _hipMemcpyAtoH__retval = hipError_t(chip.hipMemcpyAtoH(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -30976,27 +30907,27 @@ def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned
 def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsigned long count):
     """
 
-     Copies data between host and device.
-
- 
- 
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        dstArray: Destination memory address
-        dstOffset: Offset in bytes of destination array
-        srcHost: Source host pointer
-        count: Size of memory copy in bytes
+       dstArray: Destination memory address
+       dstOffset: Offset in bytes of destination array
+       srcHost: Source host pointer
+       count: Size of memory copy in bytes
     """
     _hipMemcpyHtoA__retval = hipError_t(chip.hipMemcpyHtoA(
         hipArray.from_pyobj(dstArray)._ptr,dstOffset,
@@ -31008,21 +30939,21 @@ def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsi
 def hipMemcpy3D(object p):
     """
 
-     Copies data between host and device.
-
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        p: 3D memory copy parameters
+       p: 3D memory copy parameters
     """
     _hipMemcpy3D__retval = hipError_t(chip.hipMemcpy3D(
         hipMemcpy3DParms.from_pyobj(p)._ptr))    # fully specified
@@ -31033,23 +30964,23 @@ def hipMemcpy3D(object p):
 def hipMemcpy3DAsync(object p, object stream):
     """
 
-     Copies data between host and device asynchronously.
-
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device asynchronously.
 
 
-     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        p: 3D memory copy parameters
-        stream: Stream to use
+       p: 3D memory copy parameters
+       stream: Stream to use
     """
     _hipMemcpy3DAsync__retval = hipError_t(chip.hipMemcpy3DAsync(
         hipMemcpy3DParms.from_pyobj(p)._ptr,
@@ -31061,21 +30992,21 @@ def hipMemcpy3DAsync(object p, object stream):
 def hipDrvMemcpy3D(object pCopy):
     """
 
-     Copies data between host and device.
-
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device.
 
 
-     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        pCopy: 3D memory copy parameters
+       pCopy: 3D memory copy parameters
     """
     _hipDrvMemcpy3D__retval = hipError_t(chip.hipDrvMemcpy3D(
         HIP_MEMCPY3D.from_pyobj(pCopy)._ptr))    # fully specified
@@ -31086,23 +31017,23 @@ def hipDrvMemcpy3D(object pCopy):
 def hipDrvMemcpy3DAsync(object pCopy, object stream):
     """
 
-     Copies data between host and device asynchronously.
-
- 
- 
-     Return:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-        #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    Copies data between host and device asynchronously.
 
 
-     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+
+    Return:
+      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+
+
+    See:
+      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
+      hipMemcpyAsync
 
 
     Args:
-        pCopy: 3D memory copy parameters
-        stream: Stream to use
+       pCopy: 3D memory copy parameters
+       stream: Stream to use
     """
     _hipDrvMemcpy3DAsync__retval = hipError_t(chip.hipDrvMemcpy3DAsync(
         HIP_MEMCPY3D.from_pyobj(pCopy)._ptr,
@@ -31122,32 +31053,31 @@ def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
       @defgroup PeerToPeer PeerToPeer Device Memory Access
       @{
       Warning:
-        PeerToPeer support is experimental.
-        This section describes the PeerToPeer device memory access functions of HIP runtime API.
+       PeerToPeer support is experimental.
+       This section describes the PeerToPeer device memory access functions of HIP runtime API.
 
 
 
      Determine if a device can access a peer's memory.
 
- 
- 
- 
+
+
+
 
      Returns:
-        #hipSuccess,
+       #hipSuccess,
 
      Returns:
-        #hipErrorInvalidDevice if deviceId or peerDeviceId are not valid devices
+       #hipErrorInvalidDevice if deviceId or peerDeviceId are not valid devices
 
 
     Args:
-        canAccessPeer: Returns the peer access capability (0 or 1)
-        device: - device from where memory may be accessed.
-        peerDevice: - device where memory is physically located
-            Returns "1" in ``canAccessPeer`` if the specified ``device`` is capable
-            of directly accessing memory physically located on peerDevice , or "0" if not.
-            Returns "0" in ``canAccessPeer`` if deviceId == peerDeviceId, and both are valid devices : a
-            device is not a peer of itself.
+       device: - device from where memory may be accessed.
+       peerDevice: - device where memory is physically located
+          Returns "1" in ``canAccessPeer`` if the specified ``device`` is capable
+          of directly accessing memory physically located on peerDevice , or "0" if not.
+          Returns "0" in ``canAccessPeer`` if deviceId == peerDeviceId, and both are valid devices : a
+          device is not a peer of itself.
     """
     cdef int canAccessPeer
     _hipDeviceCanAccessPeer__retval = hipError_t(chip.hipDeviceCanAccessPeer(&canAccessPeer,deviceId,peerDeviceId))    # fully specified
@@ -31163,12 +31093,12 @@ def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
 
 
     Returns:
-        #hipErrorPeerAccessAlreadyEnabled if peer access is already enabled for this device.
+       #hipErrorPeerAccessAlreadyEnabled if peer access is already enabled for this device.
 
 
     Args:
-        peerDeviceId:
-        flags: Returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
+       peerDeviceId:
+       flags: Returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
     """
     _hipDeviceEnablePeerAccess__retval = hipError_t(chip.hipDeviceEnablePeerAccess(peerDeviceId,flags))    # fully specified
     return (_hipDeviceEnablePeerAccess__retval,)
@@ -31181,11 +31111,11 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
     Disable direct access from current device's virtual address space to memory allocations physically located on a peer device.  Returns hipErrorPeerAccessNotEnabled if direct access to memory on peerDevice has not yet been enabled from the current device.
 
     Returns:
-        #hipSuccess, #hipErrorPeerAccessNotEnabled
+       #hipSuccess, #hipErrorPeerAccessNotEnabled
 
 
     Args:
-        peerDeviceId:
+       peerDeviceId:
     """
     _hipDeviceDisablePeerAccess__retval = hipError_t(chip.hipDeviceDisablePeerAccess(peerDeviceId))    # fully specified
     return (_hipDeviceDisablePeerAccess__retval,)
@@ -31202,18 +31132,17 @@ def hipMemGetAddressRange(object pbase, object dptr):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevicePointer
+       #hipSuccess, #hipErrorInvalidDevicePointer
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        pbase: - BAse pointer address
-        psize: - Size of allocation
-        dptr: - Device Pointer
+       pbase: - BAse pointer address
+       dptr: - Device Pointer
     """
     cdef unsigned long psize
     _hipMemGetAddressRange__retval = hipError_t(chip.hipMemGetAddressRange(
@@ -31235,15 +31164,15 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsi
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
 
 
     Args:
-        dst: - Destination device pointer.
-        dstDeviceId: - Destination device
-        src: - Source device pointer
-        srcDeviceId: - Source device
-        sizeBytes: - Size of memory copy in bytes
+       dst: - Destination device pointer.
+       dstDeviceId: - Destination device
+       src: - Source device pointer
+       srcDeviceId: - Source device
+       sizeBytes: - Size of memory copy in bytes
     """
     _hipMemcpyPeer__retval = hipError_t(chip.hipMemcpyPeer(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
@@ -31265,16 +31194,16 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, u
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
 
 
     Args:
-        dst: - Destination device pointer.
-        dstDevice: - Destination device
-        src: - Source device pointer
-        srcDevice: - Source device
-        sizeBytes: - Size of memory copy in bytes
-        stream: - Stream identifier
+       dst: - Destination device pointer.
+       dstDevice: - Destination device
+       src: - Source device pointer
+       srcDevice: - Source device
+       sizeBytes: - Size of memory copy in bytes
+       stream: - Stream identifier
     """
     _hipMemcpyPeerAsync__retval = hipError_t(chip.hipMemcpyPeerAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
@@ -31306,21 +31235,20 @@ def hipCtxCreate(unsigned int flags, int device):
 
      Create a context and set it as current/ default context
 
- 
+
 
      Return:
-        #hipSuccess
+       #hipSuccess
 
 
      See:
-        hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
-        hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
+       hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        ctx:
-        flags:
-        associated: device handle
+       flags:
+       associated: device handle
     """
     ctx = ihipCtx_t.from_ptr(NULL)
     _hipCtxCreate__retval = hipError_t(chip.hipCtxCreate(&ctx._ptr,flags,device))    # fully specified
@@ -31336,16 +31264,16 @@ def hipCtxDestroy(object ctx):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     See:
-        hipCtxCreate, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,hipCtxSetCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
+       hipCtxCreate, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,hipCtxSetCurrent,
+       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 
 
     Args:
-        ctx: Context to destroy
+       ctx: Context to destroy
     """
     _hipCtxDestroy__retval = hipError_t(chip.hipCtxDestroy(
         ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
@@ -31359,16 +31287,14 @@ def hipCtxPopCurrent():
     Pop the current/default context and return the popped context.
 
     Returns:
-        #hipSuccess, #hipErrorInvalidContext
+       #hipSuccess, #hipErrorInvalidContext
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxSetCurrent, hipCtxGetCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxSetCurrent, hipCtxGetCurrent,
+       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
-    Args:
-        ctx:
     """
     ctx = ihipCtx_t.from_ptr(NULL)
     _hipCtxPopCurrent__retval = hipError_t(chip.hipCtxPopCurrent(&ctx._ptr))    # fully specified
@@ -31382,16 +31308,16 @@ def hipCtxPushCurrent(object ctx):
     Push the context to be set as current/ default context
 
     Returns:
-        #hipSuccess, #hipErrorInvalidContext
+       #hipSuccess, #hipErrorInvalidContext
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 
 
     Args:
-        ctx:
+       ctx:
     """
     _hipCtxPushCurrent__retval = hipError_t(chip.hipCtxPushCurrent(
         ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
@@ -31405,16 +31331,16 @@ def hipCtxSetCurrent(object ctx):
     Set the passed context as current/default
 
     Returns:
-        #hipSuccess, #hipErrorInvalidContext
+       #hipSuccess, #hipErrorInvalidContext
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 
 
     Args:
-        ctx:
+       ctx:
     """
     _hipCtxSetCurrent__retval = hipError_t(chip.hipCtxSetCurrent(
         ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
@@ -31428,16 +31354,14 @@ def hipCtxGetCurrent():
     Get the handle of the current/ default context
 
     Returns:
-        #hipSuccess, #hipErrorInvalidContext
+       #hipSuccess, #hipErrorInvalidContext
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
+       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
-    Args:
-        ctx:
     """
     ctx = ihipCtx_t.from_ptr(NULL)
     _hipCtxGetCurrent__retval = hipError_t(chip.hipCtxGetCurrent(&ctx._ptr))    # fully specified
@@ -31451,16 +31375,14 @@ def hipCtxGetDevice():
     Get the handle of the device associated with current/default context
 
     Returns:
-        #hipSuccess, #hipErrorInvalidContext
+       #hipSuccess, #hipErrorInvalidContext
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
 
 
-    Args:
-        device:
     """
     cdef int device
     _hipCtxGetDevice__retval = hipError_t(chip.hipCtxGetDevice(&device))    # fully specified
@@ -31475,25 +31397,24 @@ def hipCtxGetApiVersion(object ctx):
 
 
     Return:
-        #hipSuccess
+       #hipSuccess
 
 
     Warning:
-        The HIP feature set does not correspond to an exact CUDA SDK api revision.
-        This function always set *apiVersion to 4 as an approximation though HIP supports
-        some features which were introduced in later CUDA SDK revisions.
-        HIP apps code should not rely on the api revision number here and should
-        use arch feature flags to test device capabilities or conditional compilation.
+       The HIP feature set does not correspond to an exact CUDA SDK api revision.
+       This function always set *apiVersion to 4 as an approximation though HIP supports
+       some features which were introduced in later CUDA SDK revisions.
+       HIP apps code should not rely on the api revision number here and should
+       use arch feature flags to test device capabilities or conditional compilation.
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
+       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        ctx: Context to check
-        apiVersion:
+       ctx: Context to check
     """
     cdef int apiVersion
     _hipCtxGetApiVersion__retval = hipError_t(chip.hipCtxGetApiVersion(
@@ -31508,21 +31429,21 @@ def hipCtxGetCacheConfig():
     Set Cache configuration for a specific function
 
     Return:
-        #hipSuccess
+       #hipSuccess
 
 
     Warning:
-        AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is
-        ignored on those architectures.
+       AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is
+       ignored on those architectures.
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        cacheConfiguration:
+       cacheConfiguration:
     """
     cdef chip.hipFuncCache_t cacheConfig
     _hipCtxGetCacheConfig__retval = hipError_t(chip.hipCtxGetCacheConfig(&cacheConfig))    # fully specified
@@ -31536,21 +31457,21 @@ def hipCtxSetCacheConfig(object cacheConfig):
     Set L1/Shared cache partition.
 
     Return:
-        #hipSuccess
+       #hipSuccess
 
 
     Warning:
-        AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is
-        ignored on those architectures.
+       AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is
+       ignored on those architectures.
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        cacheConfiguration:
+       cacheConfiguration:
     """
     if not isinstance(cacheConfig,_hipFuncCache_t__Base):
         raise TypeError("argument 'cacheConfig' must be of type '_hipFuncCache_t__Base'")
@@ -31565,21 +31486,21 @@ def hipCtxSetSharedMemConfig(object config):
     Set Shared memory bank configuration.
 
     Return:
-        #hipSuccess
+       #hipSuccess
 
 
     Warning:
-        AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-        ignored on those architectures.
+       AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+       ignored on those architectures.
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        sharedMemoryConfiguration:
+       sharedMemoryConfiguration:
     """
     if not isinstance(config,_hipSharedMemConfig__Base):
         raise TypeError("argument 'config' must be of type '_hipSharedMemConfig__Base'")
@@ -31594,21 +31515,21 @@ def hipCtxGetSharedMemConfig():
     Get Shared memory bank configuration.
 
     Return:
-        #hipSuccess
+       #hipSuccess
 
 
     Warning:
-        AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-        ignored on those architectures.
+       AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+       ignored on those architectures.
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        sharedMemoryConfiguration:
+       sharedMemoryConfiguration:
     """
     cdef chip.hipSharedMemConfig pConfig
     _hipCtxGetSharedMemConfig__retval = hipError_t(chip.hipCtxGetSharedMemConfig(&pConfig))    # fully specified
@@ -31622,17 +31543,17 @@ def hipCtxSynchronize():
     Blocks until the default context has completed all preceding requested tasks.
 
     Return:
-        #hipSuccess
+       #hipSuccess
 
 
     Warning:
-        This function waits for all streams on the default context to complete execution, and
-        then returns.
+       This function waits for all streams on the default context to complete execution, and
+       then returns.
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxGetDevice
 
 
     """
@@ -31647,16 +31568,14 @@ def hipCtxGetFlags():
     Return flags used for creating default context.
 
     Returns:
-        #hipSuccess
+       #hipSuccess
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
-    Args:
-        flags:
     """
     cdef unsigned int flags
     _hipCtxGetFlags__retval = hipError_t(chip.hipCtxGetFlags(&flags))    # fully specified
@@ -31671,21 +31590,21 @@ def hipCtxEnablePeerAccess(object peerCtx, unsigned int flags):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
-        #hipErrorPeerAccessAlreadyEnabled
+       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
+       #hipErrorPeerAccessAlreadyEnabled
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Warning:
-        PeerToPeer support is experimental.
+       PeerToPeer support is experimental.
 
 
     Args:
-        peerCtx:
-        flags:
+       peerCtx:
+       flags:
     """
     _hipCtxEnablePeerAccess__retval = hipError_t(chip.hipCtxEnablePeerAccess(
         ihipCtx_t.from_pyobj(peerCtx)._ptr,flags))    # fully specified
@@ -31699,19 +31618,19 @@ def hipCtxDisablePeerAccess(object peerCtx):
     Disable direct access from current context's virtual address space to memory allocations physically located on a peer context.Disables direct access to memory allocations in a peer context and unregisters any registered allocations.  Returns hipErrorPeerAccessNotEnabled if direct access to memory on peerDevice has not yet been enabled from the current device.
 
     Returns:
-        #hipSuccess, #hipErrorPeerAccessNotEnabled
+       #hipSuccess, #hipErrorPeerAccessNotEnabled
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Warning:
-        PeerToPeer support is experimental.
+       PeerToPeer support is experimental.
 
 
     Args:
-        peerCtx:
+       peerCtx:
     """
     _hipCtxDisablePeerAccess__retval = hipError_t(chip.hipCtxDisablePeerAccess(
         ihipCtx_t.from_pyobj(peerCtx)._ptr))    # fully specified
@@ -31732,18 +31651,18 @@ def hipDevicePrimaryCtxGetState(int dev):
 
 
     Returns:
-        #hipSuccess
+       #hipSuccess
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        Device: to get primary context flags for
-        Pointer: to store flags
-        Pointer: to store context state; 0 = inactive, 1 = active
+       Device: to get primary context flags for
+       Pointer: to store flags
+       Pointer: to store context state; 0 = inactive, 1 = active
     """
     cdef unsigned int flags
     cdef int active
@@ -31760,20 +31679,20 @@ def hipDevicePrimaryCtxRelease(int dev):
 
 
     Returns:
-        #hipSuccess
+       #hipSuccess
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Warning:
-        This function return #hipSuccess though doesn't release the primaryCtx by design on
-        HIP/HCC path.
+       This function return #hipSuccess though doesn't release the primaryCtx by design on
+       HIP/HCC path.
 
 
     Args:
-        Device: which primary context is released
+       Device: which primary context is released
     """
     _hipDevicePrimaryCtxRelease__retval = hipError_t(chip.hipDevicePrimaryCtxRelease(dev))    # fully specified
     return (_hipDevicePrimaryCtxRelease__retval,)
@@ -31789,17 +31708,17 @@ def hipDevicePrimaryCtxRetain(int dev):
 
 
     Returns:
-        #hipSuccess
+       #hipSuccess
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        Returned: context handle of the new context
-        Device: which primary context is released
+       Returned: context handle of the new context
+       Device: which primary context is released
     """
     pctx = ihipCtx_t.from_ptr(NULL)
     _hipDevicePrimaryCtxRetain__retval = hipError_t(chip.hipDevicePrimaryCtxRetain(&pctx._ptr,dev))    # fully specified
@@ -31815,16 +31734,16 @@ def hipDevicePrimaryCtxReset(int dev):
 
 
     Returns:
-        #hipSuccess
+       #hipSuccess
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        Device: which primary context is reset
+       Device: which primary context is reset
     """
     _hipDevicePrimaryCtxReset__retval = hipError_t(chip.hipDevicePrimaryCtxReset(dev))    # fully specified
     return (_hipDevicePrimaryCtxReset__retval,)
@@ -31840,17 +31759,17 @@ def hipDevicePrimaryCtxSetFlags(int dev, unsigned int flags):
 
 
     Returns:
-        #hipSuccess, #hipErrorContextAlreadyInUse
+       #hipSuccess, #hipErrorContextAlreadyInUse
 
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
 
     Args:
-        Device: for which the primary context flags are set
-        New: flags for the device
+       Device: for which the primary context flags are set
+       New: flags for the device
     """
     _hipDevicePrimaryCtxSetFlags__retval = hipError_t(chip.hipDevicePrimaryCtxSetFlags(dev,flags))    # fully specified
     return (_hipDevicePrimaryCtxSetFlags__retval,)
@@ -31873,19 +31792,18 @@ def hipModuleLoad(const char * fname):
     Loads code object from file into a hipModule_t
 
     Warning:
-        File/memory resources allocated in this function are released only in hipModuleUnload.
+       File/memory resources allocated in this function are released only in hipModuleUnload.
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorFileNotFound,
-        hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
+       hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorFileNotFound,
+       hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
 
 
 
 
     Args:
-        fname:
-        module:
+       fname:
     """
     module = ihipModule_t.from_ptr(NULL)
     _hipModuleLoad__retval = hipError_t(chip.hipModuleLoad(&module._ptr,fname))    # fully specified
@@ -31899,13 +31817,13 @@ def hipModuleUnload(object module):
     Frees the module
 
     Returns:
-        hipSuccess, hipInvalidValue
-        module is freed and the code objects associated with it are destroyed
+       hipSuccess, hipInvalidValue
+       module is freed and the code objects associated with it are destroyed
 
 
 
     Args:
-        module:
+       module:
     """
     _hipModuleUnload__retval = hipError_t(chip.hipModuleUnload(
         ihipModule_t.from_pyobj(module)._ptr))    # fully specified
@@ -31919,14 +31837,13 @@ def hipModuleGetFunction(object module, const char * kname):
     Function with kname will be extracted if present in module
 
     Returns:
-        hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorNotInitialized,
-        hipErrorNotFound,
+       hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorNotInitialized,
+       hipErrorNotFound,
 
 
     Args:
-        module:
-        kname:
-        function:
+       module:
+       kname:
     """
     function = ihipModuleSymbol_t.from_ptr(NULL)
     _hipModuleGetFunction__retval = hipError_t(chip.hipModuleGetFunction(&function._ptr,
@@ -31941,12 +31858,12 @@ def hipFuncGetAttributes(object attr, object func):
     Find out attributes for a given function.
 
     Returns:
-        hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
+       hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
 
 
     Args:
-        attr:
-        func:
+       attr:
+       func:
     """
     _hipFuncGetAttributes__retval = hipError_t(chip.hipFuncGetAttributes(
         hipFuncAttributes.from_pyobj(attr)._ptr,
@@ -31961,13 +31878,12 @@ def hipFuncGetAttribute(object attrib, object hfunc):
     Find out a specific attribute for a given function.
 
     Returns:
-        hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
+       hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
 
 
     Args:
-        value:
-        attrib:
-        hfunc:
+       attrib:
+       hfunc:
     """
     cdef int value
     if not isinstance(attrib,_hipFunction_attribute__Base):
@@ -31984,13 +31900,12 @@ def hipModuleGetTexRef(object hmod, const char * name):
     returns the handle of the texture reference with the name from the module.
 
     Returns:
-        hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
+       hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
 
 
     Args:
-        hmod:
-        name:
-        texRef:
+       hmod:
+       name:
     """
     texRef = textureReference.from_ptr(NULL)
     _hipModuleGetTexRef__retval = hipError_t(chip.hipModuleGetTexRef(&texRef._ptr,
@@ -32005,12 +31920,11 @@ def hipModuleLoadData(object image):
     builds module from code object which resides in host memory. Image is pointer to that location.
 
     Returns:
-        hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
+       hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
 
 
     Args:
-        image:
-        module:
+       image:
     """
     module = ihipModule_t.from_ptr(NULL)
     _hipModuleLoadData__retval = hipError_t(chip.hipModuleLoadData(&module._ptr,
@@ -32029,15 +31943,13 @@ def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValu
 
 
     Returns:
-        hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
+       hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
 
 
     Args:
-        image:
-        module:
-        number: of options
-        options: for JIT
-        option: values for JIT
+       image:
+       number: of options
+       option: values for JIT
     """
     module = ihipModule_t.from_ptr(NULL)
     cdef chip.hipJitOption options
@@ -32065,32 +31977,32 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
 
 
     Returns:
-        hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
+       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
 
 
     Warning:
-        kernellParams argument is not yet implemented in HIP. Please use extra instead. Please
-        refer to hip_porting_driver_api.md for sample usage.
+       kernellParams argument is not yet implemented in HIP. Please use extra instead. Please
+       refer to hip_porting_driver_api.md for sample usage.
 
 
     Args:
-        f: Kernel to launch.
-        gridDimX: X grid dimension specified as multiple of blockDimX.
-        gridDimY: Y grid dimension specified as multiple of blockDimY.
-        gridDimZ: Z grid dimension specified as multiple of blockDimZ.
-        blockDimX: X block dimensions specified in work-items
-        blockDimY: Y grid dimension specified in work-items
-        blockDimZ: Z grid dimension specified in work-items
-        sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel. The
-            HIP-Clang compiler provides support for extern shared declarations.
-        stream: Stream where the kernel should be dispatched.  May be 0, in which case th
-            default stream is used with associated synchronization rules.
-        kernelParams:
-        extra: Pointer to kernel arguments.   These are passed directly to the kernel and
-            must be in the memory layout and alignment expected by the kernel.
-            Please note, HIP does not support kernel launch with total work items defined in dimension with
-            size gridDim x blockDim >= 2^32. So gridDim.x * blockDim.x, gridDim.y * blockDim.y
-            and gridDim.z * blockDim.z are always less than 2^32.
+       f: Kernel to launch.
+       gridDimX: X grid dimension specified as multiple of blockDimX.
+       gridDimY: Y grid dimension specified as multiple of blockDimY.
+       gridDimZ: Z grid dimension specified as multiple of blockDimZ.
+       blockDimX: X block dimensions specified in work-items
+       blockDimY: Y grid dimension specified in work-items
+       blockDimZ: Z grid dimension specified in work-items
+       sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel. The
+          HIP-Clang compiler provides support for extern shared declarations.
+       stream: Stream where the kernel should be dispatched.  May be 0, in which case th
+          default stream is used with associated synchronization rules.
+       kernelParams:
+       extra: Pointer to kernel arguments.   These are passed directly to the kernel and
+          must be in the memory layout and alignment expected by the kernel.
+          Please note, HIP does not support kernel launch with total work items defined in dimension with
+          size gridDim x blockDim >= 2^32. So gridDim.x * blockDim.x, gridDim.y * blockDim.y
+          and gridDim.z * blockDim.z are always less than 2^32.
     """
     _hipModuleLaunchKernel__retval = hipError_t(chip.hipModuleLaunchKernel(
         ihipModuleSymbol_t.from_pyobj(f)._ptr,gridDimX,gridDimY,gridDimZ,blockDimX,blockDimY,blockDimZ,sharedMemBytes,
@@ -32114,20 +32026,20 @@ def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, objec
 
 
     Returns:
-        hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
+       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
 
 
     Args:
-        f: Kernel to launch.
-        gridDim: Grid dimensions specified as multiple of blockDim.
-        blockDim: Block dimensions specified in work-items
-        kernelParams: A list of kernel arguments
-        sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel. The
-            HIP-Clang compiler provides support for extern shared declarations.
-        stream: Stream where the kernel should be dispatched.  May be 0, in which case th
-            default stream is used with associated synchronization rules.
-            Please note, HIP does not support kernel launch with total work items defined in dimension with
-            size gridDim x blockDim >= 2^32.
+       f: Kernel to launch.
+       gridDim: Grid dimensions specified as multiple of blockDim.
+       blockDim: Block dimensions specified in work-items
+       kernelParams: A list of kernel arguments
+       sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel. The
+          HIP-Clang compiler provides support for extern shared declarations.
+       stream: Stream where the kernel should be dispatched.  May be 0, in which case th
+          default stream is used with associated synchronization rules.
+          Please note, HIP does not support kernel launch with total work items defined in dimension with
+          size gridDim x blockDim >= 2^32.
     """
     _hipLaunchCooperativeKernel__retval = hipError_t(chip.hipLaunchCooperativeKernel(
         <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
@@ -32149,13 +32061,13 @@ def hipLaunchCooperativeKernelMultiDevice(object launchParamsList, int numDevice
 
 
     Returns:
-        hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
+       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
 
 
     Args:
-        launchParamsList: List of launch parameters, one per device.
-        numDevices: Size of the launchParamsList array.
-        flags: Flags to control launch behavior.
+       launchParamsList: List of launch parameters, one per device.
+       numDevices: Size of the launchParamsList array.
+       flags: Flags to control launch behavior.
     """
     _hipLaunchCooperativeKernelMultiDevice__retval = hipError_t(chip.hipLaunchCooperativeKernelMultiDevice(
         hipLaunchParams_t.from_pyobj(launchParamsList)._ptr,numDevices,flags))    # fully specified
@@ -32174,13 +32086,13 @@ def hipExtLaunchMultiKernelMultiDevice(object launchParamsList, int numDevices, 
 
 
     Returns:
-        hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
+       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
 
 
     Args:
-        hipLaunchParams: List of launch parameters, one per device.
-        numDevices: Size of the launchParamsList array.
-        flags: Flags to control launch behavior.
+       hipLaunchParams: List of launch parameters, one per device.
+       numDevices: Size of the launchParamsList array.
+       flags: Flags to control launch behavior.
     """
     _hipExtLaunchMultiKernelMultiDevice__retval = hipError_t(chip.hipExtLaunchMultiKernelMultiDevice(
         hipLaunchParams_t.from_pyobj(launchParamsList)._ptr,numDevices,flags))    # fully specified
@@ -32210,17 +32122,15 @@ def hipModuleOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMem
 
 
     Returns:
-        hipSuccess, hipInvalidDevice, hipErrorInvalidValue
+       hipSuccess, hipInvalidDevice, hipErrorInvalidValue
 
 
     Args:
-        gridSize: minimum grid size for maximum potential occupancy
-        blockSize: block size for maximum potential occupancy
-        f: kernel function for which occupancy is calulated
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
-        blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
-            Please note, HIP does not support kernel launch with total work items defined in dimension with
-            size gridDim x blockDim >= 2^32.
+       f: kernel function for which occupancy is calulated
+       dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+       blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
+          Please note, HIP does not support kernel launch with total work items defined in dimension with
+          size gridDim x blockDim >= 2^32.
     """
     cdef int gridSize
     cdef int blockSize
@@ -32243,18 +32153,16 @@ def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, unsigned long dyn
 
 
     Returns:
-        hipSuccess, hipInvalidDevice, hipErrorInvalidValue
+       hipSuccess, hipInvalidDevice, hipErrorInvalidValue
 
 
     Args:
-        gridSize: minimum grid size for maximum potential occupancy
-        blockSize: block size for maximum potential occupancy
-        f: kernel function for which occupancy is calulated
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
-        blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
-        flags: Extra flags for occupancy calculation (only default supported)
-            Please note, HIP does not support kernel launch with total work items defined in dimension with
-            size gridDim x blockDim >= 2^32.
+       f: kernel function for which occupancy is calulated
+       dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+       blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
+       flags: Extra flags for occupancy calculation (only default supported)
+          Please note, HIP does not support kernel launch with total work items defined in dimension with
+          size gridDim x blockDim >= 2^32.
     """
     cdef int gridSize
     cdef int blockSize
@@ -32275,10 +32183,9 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, 
 
 
     Args:
-        numBlocks: Returned occupancy
-        func: Kernel function (hipFunction) for which occupancy is calulated
-        blockSize: Block size the kernel is intended to be launched with
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+       func: Kernel function (hipFunction) for which occupancy is calulated
+       blockSize: Block size the kernel is intended to be launched with
+       dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
     """
     cdef int numBlocks
     _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,
@@ -32299,11 +32206,10 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int bl
 
 
     Args:
-        numBlocks: Returned occupancy
-        f: Kernel function(hipFunction_t) for which occupancy is calulated
-        blockSize: Block size the kernel is intended to be launched with
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
-        flags: Extra flags for occupancy calculation (only default supported)
+       f: Kernel function(hipFunction_t) for which occupancy is calulated
+       blockSize: Block size the kernel is intended to be launched with
+       dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+       flags: Extra flags for occupancy calculation (only default supported)
     """
     cdef int numBlocks
     _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,
@@ -32323,10 +32229,9 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsign
 
 
     Args:
-        numBlocks: Returned occupancy
-        func: Kernel function for which occupancy is calulated
-        blockSize: Block size the kernel is intended to be launched with
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+       func: Kernel function for which occupancy is calulated
+       blockSize: Block size the kernel is intended to be launched with
+       dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
     """
     cdef int numBlocks
     _hipOccupancyMaxActiveBlocksPerMultiprocessor__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,
@@ -32347,11 +32252,10 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSiz
 
 
     Args:
-        numBlocks: Returned occupancy
-        f: Kernel function for which occupancy is calulated
-        blockSize: Block size the kernel is intended to be launched with
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
-        flags: Extra flags for occupancy calculation (currently ignored)
+       f: Kernel function for which occupancy is calulated
+       blockSize: Block size the kernel is intended to be launched with
+       dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+       flags: Extra flags for occupancy calculation (currently ignored)
     """
     cdef int numBlocks
     _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,
@@ -32372,17 +32276,15 @@ def hipOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk
 
 
     Returns:
-        hipSuccess, hipInvalidDevice, hipErrorInvalidValue
+       hipSuccess, hipInvalidDevice, hipErrorInvalidValue
 
 
     Args:
-        gridSize: minimum grid size for maximum potential occupancy
-        blockSize: block size for maximum potential occupancy
-        f: kernel function for which occupancy is calulated
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
-        blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
-            Please note, HIP does not support kernel launch with total work items defined in dimension with
-            size gridDim x blockDim >= 2^32.
+       f: kernel function for which occupancy is calulated
+       dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+       blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
+          Please note, HIP does not support kernel launch with total work items defined in dimension with
+          size gridDim x blockDim >= 2^32.
     """
     cdef int gridSize
     cdef int blockSize
@@ -32397,7 +32299,7 @@ def hipProfilerStart():
 
     Start recording of profiling information When using this API, start the profiler with profiling disabled.  (--startdisabled)
     Warning:
-        : hipProfilerStart API is under development.
+       : hipProfilerStart API is under development.
 
 
     """
@@ -32411,7 +32313,7 @@ def hipProfilerStop():
 
     Stop recording of profiling information. When using this API, start the profiler with profiling disabled.  (--startdisabled)
     Warning:
-        : hipProfilerStop API is under development.
+       : hipProfilerStop API is under development.
 
 
     """
@@ -32435,25 +32337,25 @@ def hipConfigureCall(object gridDim, object blockDim, unsigned long sharedMem, o
 
      Configure a kernel launch.
 
- 
- 
- 
- 
+
+
+
+
 
      Returns:
-        hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
+       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
 
 
 
     Args:
-        gridDim: grid dimension specified as multiple of blockDim.
-        blockDim: block dimensions specified in work-items
-        sharedMem: Amount of dynamic shared memory to allocate for this kernel. The
-            HIP-Clang compiler provides support for extern shared declarations.
-        stream: Stream where the kernel should be dispatched.  May be 0, in which case the
-            default stream is used with associated synchronization rules.
-            Please note, HIP does not support kernel launch with total work items defined in dimension with
-            size gridDim x blockDim >= 2^32.
+       gridDim: grid dimension specified as multiple of blockDim.
+       blockDim: block dimensions specified in work-items
+       sharedMem: Amount of dynamic shared memory to allocate for this kernel. The
+          HIP-Clang compiler provides support for extern shared declarations.
+       stream: Stream where the kernel should be dispatched.  May be 0, in which case the
+          default stream is used with associated synchronization rules.
+          Please note, HIP does not support kernel launch with total work items defined in dimension with
+          size gridDim x blockDim >= 2^32.
     """
     _hipConfigureCall__retval = hipError_t(chip.hipConfigureCall(
         dim3.from_pyobj(gridDim)._ptr[0],
@@ -32469,7 +32371,7 @@ def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
     Set a kernel argument.
 
     Returns:
-        hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
+       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
 
 
 
@@ -32478,9 +32380,9 @@ def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
 
 
     Args:
-        arg: Pointer the argument in host memory.
-        size: Size of the argument.
-        offset: Offset of the argument on the argument stack.
+       arg: Pointer the argument in host memory.
+       size: Size of the argument.
+       offset: Offset of the argument on the argument stack.
     """
     _hipSetupArgument__retval = hipError_t(chip.hipSetupArgument(
         <const void *>hip._util.types.DataHandle.from_pyobj(arg)._ptr,size,offset))    # fully specified
@@ -32496,12 +32398,12 @@ def hipLaunchByPtr(object func):
 
 
     Returns:
-        hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
+       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
 
 
 
     Args:
-        func: Kernel to launch.
+       func: Kernel to launch.
     """
     _hipLaunchByPtr__retval = hipError_t(chip.hipLaunchByPtr(
         <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr))    # fully specified
@@ -32522,19 +32424,19 @@ def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks,
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, hipInvalidDevice
+       #hipSuccess, #hipErrorInvalidValue, hipInvalidDevice
 
 
 
     Args:
-        function_address: - kernel stub function pointer.
-        numBlocks: - number of blocks
-        dimBlocks: - dimension of a block
-        args: - kernel arguments
-        sharedMemBytes: - Amount of dynamic shared memory to allocate for this kernel. The
-            HIP-Clang compiler provides support for extern shared declarations.
-        stream: - Stream where the kernel should be dispatched.  May be 0, in which case th
-            default stream is used with associated synchronization rules.
+       function_address: - kernel stub function pointer.
+       numBlocks: - number of blocks
+       dimBlocks: - dimension of a block
+       args: - kernel arguments
+       sharedMemBytes: - Amount of dynamic shared memory to allocate for this kernel. The
+          HIP-Clang compiler provides support for extern shared declarations.
+       stream: - Stream where the kernel should be dispatched.  May be 0, in which case th
+          default stream is used with associated synchronization rules.
     """
     _hipLaunchKernel__retval = hipError_t(chip.hipLaunchKernel(
         <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
@@ -32555,18 +32457,18 @@ def hipLaunchHostFunc(object stream, object fn, object userData):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidResourceHandle, #hipErrorInvalidValue,
-        #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidResourceHandle, #hipErrorInvalidValue,
+       #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        stream: - stream to enqueue work to.
-        fn: - function to call once operations enqueued preceeding are complete.
-        userData: - User-specified data to be passed to the function.
+       stream: - stream to enqueue work to.
+       fn: - function to call once operations enqueued preceeding are complete.
+       userData: - User-specified data to be passed to the function.
     """
     _hipLaunchHostFunc__retval = hipError_t(chip.hipLaunchHostFunc(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -32584,7 +32486,7 @@ def hipDrvMemcpy2DUnaligned(object pCopy):
     @param pCopy           - Parameters for the memory copy
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     """
@@ -32609,25 +32511,25 @@ def hipExtLaunchKernel(object function_address, object numBlocks, object dimBloc
 
 
     Returns:
-        hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
+       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
 
 
 
     Args:
-        function_address: pointer to the Kernel to launch.
-        numBlocks: number of blocks.
-        dimBlocks: dimension of a block.
-        args: pointer to kernel arguments.
-        sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel.
-            HIP-Clang compiler provides support for extern shared declarations.
-        stream: Stream where the kernel should be dispatched.
-        startEvent: If non-null, specified event will be updated to track the start time of
-            the kernel launch. The event must be created before calling this API.
-        stopEvent: If non-null, specified event will be updated to track the stop time of
-            the kernel launch. The event must be created before calling this API.
-            May be 0, in which case the default stream is used with associated synchronization rules.
-        flags: . The value of hipExtAnyOrderLaunch, signifies if kernel can be
-            launched in any order.
+       function_address: pointer to the Kernel to launch.
+       numBlocks: number of blocks.
+       dimBlocks: dimension of a block.
+       args: pointer to kernel arguments.
+       sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel.
+          HIP-Clang compiler provides support for extern shared declarations.
+       stream: Stream where the kernel should be dispatched.
+       startEvent: If non-null, specified event will be updated to track the start time of
+          the kernel launch. The event must be created before calling this API.
+       stopEvent: If non-null, specified event will be updated to track the stop time of
+          the kernel launch. The event must be created before calling this API.
+          May be 0, in which case the default stream is used with associated synchronization rules.
+       flags: . The value of hipExtAnyOrderLaunch, signifies if kernel can be
+          launched in any order.
     """
     _hipExtLaunchKernel__retval = hipError_t(chip.hipExtLaunchKernel(
         <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
@@ -32651,14 +32553,14 @@ def hipBindTextureToMipmappedArray(object tex, object mipmappedArray, object des
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue
+       hipSuccess, hipErrorInvalidValue
 
 
 
     Args:
-        tex: pointer to the texture reference to bind
-        mipmappedArray: memory mipmapped array on the device
-        desc: opointer to the channel format
+       tex: pointer to the texture reference to bind
+       mipmappedArray: memory mipmapped array on the device
+       desc: opointer to the channel format
     """
     _hipBindTextureToMipmappedArray__retval = hipError_t(chip.hipBindTextureToMipmappedArray(
         textureReference.from_pyobj(tex)._ptr,
@@ -32679,20 +32581,19 @@ def hipCreateTextureObject(object pResDesc, object pTexDesc, object pResViewDesc
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue, hipErrorNotSupported, hipErrorOutOfMemory
+       hipSuccess, hipErrorInvalidValue, hipErrorNotSupported, hipErrorOutOfMemory
 
 
     Note:
-        3D liner filter isn't supported on GFX90A boards, on which the API ``hipCreateTextureObject`` will
-        return hipErrorNotSupported.
+       3D liner filter isn't supported on GFX90A boards, on which the API ``hipCreateTextureObject`` will
+       return hipErrorNotSupported.
 
 
 
     Args:
-        pTexObject: pointer to the texture object to create
-        pResDesc: pointer to resource descriptor
-        pTexDesc: pointer to texture descriptor
-        pResViewDesc: pointer to resource view descriptor
+       pResDesc: pointer to resource descriptor
+       pTexDesc: pointer to texture descriptor
+       pResViewDesc: pointer to resource view descriptor
     """
     pTexObject = __hip_texture.from_ptr(NULL)
     _hipCreateTextureObject__retval = hipError_t(chip.hipCreateTextureObject(&pTexObject._ptr,
@@ -32711,12 +32612,12 @@ def hipDestroyTextureObject(object textureObject):
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue
+       hipSuccess, hipErrorInvalidValue
 
 
 
     Args:
-        textureObject: texture object to destroy
+       textureObject: texture object to destroy
     """
     _hipDestroyTextureObject__retval = hipError_t(chip.hipDestroyTextureObject(
         __hip_texture.from_pyobj(textureObject)._ptr))    # fully specified
@@ -32733,13 +32634,13 @@ def hipGetChannelDesc(object desc, object array):
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue
+       hipSuccess, hipErrorInvalidValue
 
 
 
     Args:
-        desc: pointer to channel format descriptor
-        array: memory array on the device
+       desc: pointer to channel format descriptor
+       array: memory array on the device
     """
     _hipGetChannelDesc__retval = hipError_t(chip.hipGetChannelDesc(
         hipChannelFormatDesc.from_pyobj(desc)._ptr,
@@ -32757,13 +32658,13 @@ def hipGetTextureObjectResourceDesc(object pResDesc, object textureObject):
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue
+       hipSuccess, hipErrorInvalidValue
 
 
 
     Args:
-        pResDesc: pointer to resource descriptor
-        textureObject: texture object
+       pResDesc: pointer to resource descriptor
+       textureObject: texture object
     """
     _hipGetTextureObjectResourceDesc__retval = hipError_t(chip.hipGetTextureObjectResourceDesc(
         hipResourceDesc.from_pyobj(pResDesc)._ptr,
@@ -32781,13 +32682,13 @@ def hipGetTextureObjectResourceViewDesc(object pResViewDesc, object textureObjec
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue
+       hipSuccess, hipErrorInvalidValue
 
 
 
     Args:
-        pResViewDesc: pointer to resource view descriptor
-        textureObject: texture object
+       pResViewDesc: pointer to resource view descriptor
+       textureObject: texture object
     """
     _hipGetTextureObjectResourceViewDesc__retval = hipError_t(chip.hipGetTextureObjectResourceViewDesc(
         hipResourceViewDesc.from_pyobj(pResViewDesc)._ptr,
@@ -32805,13 +32706,13 @@ def hipGetTextureObjectTextureDesc(object pTexDesc, object textureObject):
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue
+       hipSuccess, hipErrorInvalidValue
 
 
 
     Args:
-        pTexDesc: pointer to texture descriptor
-        textureObject: texture object
+       pTexDesc: pointer to texture descriptor
+       textureObject: texture object
     """
     _hipGetTextureObjectTextureDesc__retval = hipError_t(chip.hipGetTextureObjectTextureDesc(
         hipTextureDesc.from_pyobj(pTexDesc)._ptr,
@@ -32831,15 +32732,14 @@ def hipTexObjectCreate(object pResDesc, object pTexDesc, object pResViewDesc):
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue
+       hipSuccess, hipErrorInvalidValue
 
 
 
     Args:
-        pTexObject: pointer to texture object to create
-        pResDesc: pointer to resource descriptor
-        pTexDesc: pointer to texture descriptor
-        pResViewDesc: pointer to resource view descriptor
+       pResDesc: pointer to resource descriptor
+       pTexDesc: pointer to texture descriptor
+       pResViewDesc: pointer to resource view descriptor
     """
     pTexObject = __hip_texture.from_ptr(NULL)
     _hipTexObjectCreate__retval = hipError_t(chip.hipTexObjectCreate(&pTexObject._ptr,
@@ -32858,12 +32758,12 @@ def hipTexObjectDestroy(object texObject):
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue
+       hipSuccess, hipErrorInvalidValue
 
 
 
     Args:
-        texObject: texture object to destroy
+       texObject: texture object to destroy
     """
     _hipTexObjectDestroy__retval = hipError_t(chip.hipTexObjectDestroy(
         __hip_texture.from_pyobj(texObject)._ptr))    # fully specified
@@ -32880,13 +32780,13 @@ def hipTexObjectGetResourceDesc(object pResDesc, object texObject):
 
 
     Returns:
-        hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
+       hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
 
 
 
     Args:
-        pResDesc: pointer to resource descriptor
-        texObject: texture object
+       pResDesc: pointer to resource descriptor
+       texObject: texture object
     """
     _hipTexObjectGetResourceDesc__retval = hipError_t(chip.hipTexObjectGetResourceDesc(
         HIP_RESOURCE_DESC_st.from_pyobj(pResDesc)._ptr,
@@ -32904,13 +32804,13 @@ def hipTexObjectGetResourceViewDesc(object pResViewDesc, object texObject):
 
 
     Returns:
-        hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
+       hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
 
 
 
     Args:
-        pResViewDesc: pointer to resource view descriptor
-        texObject: texture object
+       pResViewDesc: pointer to resource view descriptor
+       texObject: texture object
     """
     _hipTexObjectGetResourceViewDesc__retval = hipError_t(chip.hipTexObjectGetResourceViewDesc(
         HIP_RESOURCE_VIEW_DESC_st.from_pyobj(pResViewDesc)._ptr,
@@ -32928,13 +32828,13 @@ def hipTexObjectGetTextureDesc(object pTexDesc, object texObject):
 
 
     Returns:
-        hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
+       hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
 
 
 
     Args:
-        pTexDesc: pointer to texture descriptor
-        texObject: texture object
+       pTexDesc: pointer to texture descriptor
+       texObject: texture object
     """
     _hipTexObjectGetTextureDesc__retval = hipError_t(chip.hipTexObjectGetTextureDesc(
         HIP_TEXTURE_DESC_st.from_pyobj(pTexDesc)._ptr,
@@ -32959,13 +32859,12 @@ def hipGetTextureReference(object symbol):
 
 
     Returns:
-        hipSuccess, hipErrorInvalidValue
+       hipSuccess, hipErrorInvalidValue
 
 
 
     Args:
-        texref: texture reference
-        symbol: pointer to the symbol related with the texture for the reference
+       symbol: pointer to the symbol related with the texture for the reference
     """
     texref = textureReference.from_ptr(NULL)
     _hipGetTextureReference__retval = hipError_t(chip.hipGetTextureReference(&texref._ptr,
@@ -33383,19 +33282,19 @@ def hipStreamBeginCapture(object stream, object mode):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        stream: - Stream to initiate capture.
-        mode: - Controls the interaction of this capture sequence with other API calls that
-            are not safe.
+       stream: - Stream to initiate capture.
+       mode: - Controls the interaction of this capture sequence with other API calls that
+          are not safe.
     """
     if not isinstance(mode,_hipStreamCaptureMode__Base):
         raise TypeError("argument 'mode' must be of type '_hipStreamCaptureMode__Base'")
@@ -33414,18 +33313,17 @@ def hipStreamEndCapture(object stream):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        stream: - Stream to end capture.
-        pGraph: - returns the graph captured.
+       stream: - Stream to end capture.
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipStreamEndCapture__retval = hipError_t(chip.hipStreamEndCapture(
@@ -33444,19 +33342,17 @@ def hipStreamGetCaptureInfo(object stream):
 
 
     Returns:
-        #hipSuccess, #hipErrorStreamCaptureImplicit
+       #hipSuccess, #hipErrorStreamCaptureImplicit
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        stream: - Stream under capture.
-        pCaptureStatus: - returns current status of the capture.
-        pId: - unique ID of the capture.
+       stream: - Stream under capture.
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     cdef unsigned long long pId
@@ -33479,22 +33375,18 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        stream: - Stream under capture.
-        captureStatus_out: - returns current status of the capture.
-        id_out: - unique ID of the capture.
-        graph_out: - returns the graph being captured into.
-        dependencies_out: - returns pointer to an array of nodes.
-        numDependencies_out: - returns size of the array returned in dependencies_out.
+       stream: - Stream under capture.
+       dependencies_out: - returns pointer to an array of nodes.
     """
     cdef chip.hipStreamCaptureStatus captureStatus_out
     cdef unsigned long long id_out
@@ -33516,18 +33408,17 @@ def hipStreamIsCapturing(object stream):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        stream: - Stream under capture.
-        pCaptureStatus: - returns current status of the capture.
+       stream: - Stream under capture.
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     _hipStreamIsCapturing__retval = hipError_t(chip.hipStreamIsCapturing(
@@ -33545,19 +33436,18 @@ def hipStreamUpdateCaptureDependencies(object stream, unsigned long numDependenc
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorIllegalState
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorIllegalState
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        stream: - Stream under capture.
-        dependencies: - pointer to an array of nodes to Add/Replace.
-        numDependencies: - size of the array in dependencies.
+       stream: - Stream under capture.
+       numDependencies: - size of the array in dependencies.
     """
     dependencies = hipGraphNode.from_ptr(NULL)
     _hipStreamUpdateCaptureDependencies__retval = hipError_t(chip.hipStreamUpdateCaptureDependencies(
@@ -33573,17 +33463,15 @@ def hipThreadExchangeStreamCaptureMode():
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
-    Args:
-        mode: - Pointer to mode value to swap with the current mode
     """
     cdef chip.hipStreamCaptureMode mode
     _hipThreadExchangeStreamCaptureMode__retval = hipError_t(chip.hipThreadExchangeStreamCaptureMode(&mode))    # fully specified
@@ -33600,18 +33488,17 @@ def hipGraphCreate(unsigned int flags):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        pGraph: - pointer to graph to create.
-        flags: - flags for graph creation, must be 0.
+       flags: - flags for graph creation, must be 0.
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipGraphCreate__retval = hipError_t(chip.hipGraphCreate(&pGraph._ptr,flags))    # fully specified
@@ -33627,17 +33514,17 @@ def hipGraphDestroy(object graph):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        graph: - instance of graph to destroy.
+       graph: - instance of graph to destroy.
     """
     _hipGraphDestroy__retval = hipError_t(chip.hipGraphDestroy(
         ihipGraph.from_pyobj(graph)._ptr))    # fully specified
@@ -33655,20 +33542,18 @@ def hipGraphAddDependencies(object graph, unsigned long numDependencies):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        graph: - instance of the graph to add dependencies.
-        from: - pointer to the graph nodes with dependenties to add from.
-        to: - pointer to the graph nodes to add dependenties to.
-        numDependencies: - the number of dependencies to add.
+       graph: - instance of the graph to add dependencies.
+       numDependencies: - the number of dependencies to add.
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -33688,20 +33573,18 @@ def hipGraphRemoveDependencies(object graph, unsigned long numDependencies):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        graph: - instance of the graph to remove dependencies.
-        from: - Array of nodes that provide the dependencies.
-        to: - Array of dependent nodes.
-        numDependencies: - the number of dependencies to remove.
+       graph: - instance of the graph to remove dependencies.
+       numDependencies: - the number of dependencies to remove.
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -33721,24 +33604,21 @@ def hipGraphGetEdges(object graph):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
-        from and to may both be NULL, in which case this function only returns the number of edges in
-        numEdges. Otherwise, numEdges entries will be filled in. If numEdges is higher than the actual
-        number of edges, the remaining entries in from and to will be set to NULL, and the number of
-        edges actually returned will be written to numEdges
+       from and to may both be NULL, in which case this function only returns the number of edges in
+       numEdges. Otherwise, numEdges entries will be filled in. If numEdges is higher than the actual
+       number of edges, the remaining entries in from and to will be set to NULL, and the number of
+       edges actually returned will be written to numEdges
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        graph: - instance of the graph to get the edges from.
-        from: - pointer to the graph nodes to return edge endpoints.
-        to: - pointer to the graph nodes to return edge endpoints.
-        numEdges: - returns number of edges.
+       graph: - instance of the graph to get the edges from.
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -33758,23 +33638,21 @@ def hipGraphGetNodes(object graph):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
-        nodes may be NULL, in which case this function will return the number of nodes in numNodes.
-        Otherwise, numNodes entries will be filled in. If numNodes is higher than the actual number of
-        nodes, the remaining entries in nodes will be set to NULL, and the number of nodes actually
-        obtained will be returned in numNodes.
+       nodes may be NULL, in which case this function will return the number of nodes in numNodes.
+       Otherwise, numNodes entries will be filled in. If numNodes is higher than the actual number of
+       nodes, the remaining entries in nodes will be set to NULL, and the number of nodes actually
+       obtained will be returned in numNodes.
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        graph: - instance of graph to get the nodes.
-        nodes: - pointer to return the  graph nodes.
-        numNodes: - returns number of graph nodes.
+       graph: - instance of graph to get the nodes.
     """
     nodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long numNodes
@@ -33793,23 +33671,21 @@ def hipGraphGetRootNodes(object graph):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
-        pRootNodes may be NULL, in which case this function will return the number of root nodes in
-        pNumRootNodes. Otherwise, pNumRootNodes entries will be filled in. If pNumRootNodes is higher
-        than the actual number of root nodes, the remaining entries in pRootNodes will be set to NULL,
-        and the number of nodes actually obtained will be returned in pNumRootNodes.
+       pRootNodes may be NULL, in which case this function will return the number of root nodes in
+       pNumRootNodes. Otherwise, pNumRootNodes entries will be filled in. If pNumRootNodes is higher
+       than the actual number of root nodes, the remaining entries in pRootNodes will be set to NULL,
+       and the number of nodes actually obtained will be returned in pNumRootNodes.
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        graph: - instance of the graph to get the nodes.
-        pRootNodes: - pointer to return the graph's root nodes.
-        pNumRootNodes: - returns the number of graph's root nodes.
+       graph: - instance of the graph to get the nodes.
     """
     pRootNodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumRootNodes
@@ -33828,23 +33704,21 @@ def hipGraphNodeGetDependencies(object node):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
-        pDependencies may be NULL, in which case this function will return the number of dependencies in
-        pNumDependencies. Otherwise, pNumDependencies entries will be filled in. If pNumDependencies is
-        higher than the actual number of dependencies, the remaining entries in pDependencies will be set
-        to NULL, and the number of nodes actually obtained will be returned in pNumDependencies.
+       pDependencies may be NULL, in which case this function will return the number of dependencies in
+       pNumDependencies. Otherwise, pNumDependencies entries will be filled in. If pNumDependencies is
+       higher than the actual number of dependencies, the remaining entries in pDependencies will be set
+       to NULL, and the number of nodes actually obtained will be returned in pNumDependencies.
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        node: - graph node to get the dependencies from.
-        pDependencies: - pointer to to return the dependencies.
-        pNumDependencies: -  returns the number of graph node dependencies.
+       node: - graph node to get the dependencies from.
     """
     pDependencies = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumDependencies
@@ -33863,24 +33737,22 @@ def hipGraphNodeGetDependentNodes(object node):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
-        DependentNodes may be NULL, in which case this function will return the number of dependent nodes
-        in pNumDependentNodes. Otherwise, pNumDependentNodes entries will be filled in. If
-        pNumDependentNodes is higher than the actual number of dependent nodes, the remaining entries in
-        pDependentNodes will be set to NULL, and the number of nodes actually obtained will be returned
-        in pNumDependentNodes.
+       DependentNodes may be NULL, in which case this function will return the number of dependent nodes
+       in pNumDependentNodes. Otherwise, pNumDependentNodes entries will be filled in. If
+       pNumDependentNodes is higher than the actual number of dependent nodes, the remaining entries in
+       pDependentNodes will be set to NULL, and the number of nodes actually obtained will be returned
+       in pNumDependentNodes.
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        node: - graph node to get the Dependent nodes from.
-        pDependentNodes: - pointer to return the graph dependent nodes.
-        pNumDependentNodes: - returns the number of graph node dependent nodes.
+       node: - graph node to get the Dependent nodes from.
     """
     pDependentNodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumDependentNodes
@@ -33898,18 +33770,17 @@ def hipGraphNodeGetType(object node):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        node: - instance of the graph to add dependencies.
-        pType: - pointer to the return the type
+       node: - instance of the graph to add dependencies.
     """
     cdef chip.hipGraphNodeType pType
     _hipGraphNodeGetType__retval = hipError_t(chip.hipGraphNodeGetType(
@@ -33925,17 +33796,17 @@ def hipGraphDestroyNode(object node):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        node: - graph node to remove
+       node: - graph node to remove
     """
     _hipGraphDestroyNode__retval = hipError_t(chip.hipGraphDestroyNode(
         hipGraphNode.from_pyobj(node)._ptr))    # fully specified
@@ -33951,18 +33822,17 @@ def hipGraphClone(object originalGraph):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        pGraphClone: - Returns newly created cloned graph.
-        originalGraph: - original graph to clone from.
+       originalGraph: - original graph to clone from.
     """
     pGraphClone = ihipGraph.from_ptr(NULL)
     _hipGraphClone__retval = hipError_t(chip.hipGraphClone(&pGraphClone._ptr,
@@ -33980,19 +33850,18 @@ def hipGraphNodeFindInClone(object originalNode, object clonedGraph):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        pNode: - Returns the cloned node.
-        originalNode: - original node handle.
-        clonedGraph: - Cloned graph to query.
+       originalNode: - original node handle.
+       clonedGraph: - Cloned graph to query.
     """
     pNode = hipGraphNode.from_ptr(NULL)
     _hipGraphNodeFindInClone__retval = hipError_t(chip.hipGraphNodeFindInClone(&pNode._ptr,
@@ -34014,22 +33883,19 @@ def hipGraphInstantiate(object graph, char * pLogBuffer, unsigned long bufferSiz
 
 
     Returns:
-        #hipSuccess, #hipErrorOutOfMemory
+       #hipSuccess, #hipErrorOutOfMemory
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        pGraphExec: - pointer to instantiated executable graph that is created.
-        graph: - instance of graph to instantiate.
-        pErrorNode: - pointer to error node in case error occured in graph instantiation,
-            it could modify the correponding node.
-        pLogBuffer: - pointer to log buffer.
-        bufferSize: - the size of log buffer.
+       graph: - instance of graph to instantiate.
+       pLogBuffer: - pointer to log buffer.
+       bufferSize: - the size of log buffer.
     """
     pGraphExec = hipGraphExec.from_ptr(NULL)
     pErrorNode = hipGraphNode.from_ptr(NULL)
@@ -34048,19 +33914,18 @@ def hipGraphInstantiateWithFlags(object graph, unsigned long long flags):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
 
     Args:
-        pGraphExec: - pointer to instantiated executable graph that is created.
-        graph: - instance of graph to instantiate.
-        flags: - Flags to control instantiation.
+       graph: - instance of graph to instantiate.
+       flags: - Flags to control instantiation.
     """
     pGraphExec = hipGraphExec.from_ptr(NULL)
     _hipGraphInstantiateWithFlags__retval = hipError_t(chip.hipGraphInstantiateWithFlags(&pGraphExec._ptr,
@@ -34077,17 +33942,17 @@ def hipGraphLaunch(object graphExec, object stream):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        graphExec: - instance of executable graph to launch.
-        stream: - instance of stream in which to launch executable graph.
+       graphExec: - instance of executable graph to launch.
+       stream: - instance of stream in which to launch executable graph.
     """
     _hipGraphLaunch__retval = hipError_t(chip.hipGraphLaunch(
         hipGraphExec.from_pyobj(graphExec)._ptr,
@@ -34104,17 +33969,17 @@ def hipGraphUpload(object graphExec, object stream):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        graphExec: - instance of executable graph to launch.
-        stream: - instance of stream in which to launch executable graph.
+       graphExec: - instance of executable graph to launch.
+       stream: - instance of stream in which to launch executable graph.
     """
     _hipGraphUpload__retval = hipError_t(chip.hipGraphUpload(
         hipGraphExec.from_pyobj(graphExec)._ptr,
@@ -34131,16 +33996,16 @@ def hipGraphExecDestroy(object graphExec):
 
 
     Returns:
-        #hipSuccess.
+       #hipSuccess.
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphExec: - instance of executable graph to destry.
+       pGraphExec: - instance of executable graph to destry.
     """
     _hipGraphExecDestroy__retval = hipError_t(chip.hipGraphExecDestroy(
         hipGraphExec.from_pyobj(graphExec)._ptr))    # fully specified
@@ -34158,19 +34023,17 @@ def hipGraphExecUpdate(object hGraphExec, object hGraph):
 
 
     Returns:
-        #hipSuccess, #hipErrorGraphExecUpdateFailure
+       #hipSuccess, #hipErrorGraphExecUpdateFailure
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of executable graph to update.
-        hGraph: - graph that contains the updated parameters.
-        hErrorNode_out: -  node which caused the permissibility check to forbid the update.
-        updateResult_out: - Whether the graph update was permitted.
+       hGraphExec: - instance of executable graph to update.
+       hGraph: - graph that contains the updated parameters.
     """
     hErrorNode_out = hipGraphNode.from_ptr(NULL)
     cdef chip.hipGraphExecUpdateResult updateResult_out
@@ -34192,19 +34055,17 @@ def hipGraphAddKernelNode(object graph, unsigned long numDependencies, object pN
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to graph node to create.
-        graph: - instance of graph to add the created node.
-        pDependencies: - pointer to the dependencies on the kernel execution node.
-        numDependencies: - the number of the dependencies.
-        pNodeParams: - pointer to the parameters to the kernel execution node on the GPU.
+       graph: - instance of graph to add the created node.
+       numDependencies: - the number of the dependencies.
+       pNodeParams: - pointer to the parameters to the kernel execution node on the GPU.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34223,16 +34084,16 @@ def hipGraphKernelNodeGetParams(object node, object pNodeParams):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instance of the node to get parameters from.
-        pNodeParams: - pointer to the parameters
+       node: - instance of the node to get parameters from.
+       pNodeParams: - pointer to the parameters
     """
     _hipGraphKernelNodeGetParams__retval = hipError_t(chip.hipGraphKernelNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34249,16 +34110,16 @@ def hipGraphKernelNodeSetParams(object node, object pNodeParams):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instance of the node to set parameters to.
-        pNodeParams: - const pointer to the parameters.
+       node: - instance of the node to set parameters to.
+       pNodeParams: - const pointer to the parameters.
     """
     _hipGraphKernelNodeSetParams__retval = hipError_t(chip.hipGraphKernelNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34276,17 +34137,17 @@ def hipGraphExecKernelNodeSetParams(object hGraphExec, object node, object pNode
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        pNodeParams: - const pointer to the kernel node parameters.
+       hGraphExec: - instance of the executable graph with the node.
+       node: - instance of the node to set parameters to.
+       pNodeParams: - const pointer to the kernel node parameters.
     """
     _hipGraphExecKernelNodeSetParams__retval = hipError_t(chip.hipGraphExecKernelNodeSetParams(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -34307,19 +34168,17 @@ def hipGraphAddMemcpyNode(object graph, unsigned long numDependencies, object pC
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to graph node to create.
-        graph: - instance of graph to add the created node.
-        pDependencies: - const pointer to the dependencies on the memcpy execution node.
-        numDependencies: - the number of the dependencies.
-        pCopyParams: - const pointer to the parameters for the memory copy.
+       graph: - instance of graph to add the created node.
+       numDependencies: - the number of the dependencies.
+       pCopyParams: - const pointer to the parameters for the memory copy.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34338,16 +34197,16 @@ def hipGraphMemcpyNodeGetParams(object node, object pNodeParams):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instance of the node to get parameters from.
-        pNodeParams: - pointer to the parameters.
+       node: - instance of the node to get parameters from.
+       pNodeParams: - pointer to the parameters.
     """
     _hipGraphMemcpyNodeGetParams__retval = hipError_t(chip.hipGraphMemcpyNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34364,16 +34223,16 @@ def hipGraphMemcpyNodeSetParams(object node, object pNodeParams):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instance of the node to set parameters to.
-        pNodeParams: - const pointer to the parameters.
+       node: - instance of the node to set parameters to.
+       pNodeParams: - const pointer to the parameters.
     """
     _hipGraphMemcpyNodeSetParams__retval = hipError_t(chip.hipGraphMemcpyNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34391,17 +34250,17 @@ def hipGraphKernelNodeSetAttribute(object hNode, object attr, object value):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hNode: - instance of the node to set parameters to.
-        attr: - the attribute node is set to.
-        value: - const pointer to the parameters.
+       hNode: - instance of the node to set parameters to.
+       attr: - the attribute node is set to.
+       value: - const pointer to the parameters.
     """
     if not isinstance(attr,_hipKernelNodeAttrID__Base):
         raise TypeError("argument 'attr' must be of type '_hipKernelNodeAttrID__Base'")
@@ -34421,17 +34280,17 @@ def hipGraphKernelNodeGetAttribute(object hNode, object attr, object value):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hNode: - instance of the node to set parameters to.
-        attr: - the attribute node is set to.
-        value: - const pointer to the parameters.
+       hNode: - instance of the node to set parameters to.
+       attr: - the attribute node is set to.
+       value: - const pointer to the parameters.
     """
     if not isinstance(attr,_hipKernelNodeAttrID__Base):
         raise TypeError("argument 'attr' must be of type '_hipKernelNodeAttrID__Base'")
@@ -34451,17 +34310,17 @@ def hipGraphExecMemcpyNodeSetParams(object hGraphExec, object node, object pNode
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        pNodeParams: - const pointer to the kernel node parameters.
+       hGraphExec: - instance of the executable graph with the node.
+       node: - instance of the node to set parameters to.
+       pNodeParams: - const pointer to the kernel node parameters.
     """
     _hipGraphExecMemcpyNodeSetParams__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParams(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -34485,22 +34344,20 @@ def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object 
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to graph node to create.
-        graph: - instance of graph to add the created node.
-        pDependencies: - const pointer to the dependencies on the memcpy execution node.
-        numDependencies: - the number of the dependencies.
-        dst: - pointer to memory address to the destination.
-        src: - pointer to memory address to the source.
-        count: - the size of the memory to copy.
-        kind: - the type of memory copy.
+       graph: - instance of graph to add the created node.
+       numDependencies: - the number of the dependencies.
+       dst: - pointer to memory address to the destination.
+       src: - pointer to memory address to the source.
+       count: - the size of the memory to copy.
+       kind: - the type of memory copy.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34525,19 +34382,19 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned 
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instance of the node to set parameters to.
-        dst: - pointer to memory address to the destination.
-        src: - pointer to memory address to the source.
-        count: - the size of the memory to copy.
-        kind: - the type of memory copy.
+       node: - instance of the node to set parameters to.
+       dst: - pointer to memory address to the destination.
+       src: - pointer to memory address to the source.
+       count: - the size of the memory to copy.
+       kind: - the type of memory copy.
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34561,20 +34418,20 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        dst: - pointer to memory address to the destination.
-        src: - pointer to memory address to the source.
-        count: - the size of the memory to copy.
-        kind: - the type of memory copy.
+       hGraphExec: - instance of the executable graph with the node.
+       node: - instance of the node to set parameters to.
+       dst: - pointer to memory address to the destination.
+       src: - pointer to memory address to the source.
+       count: - the size of the memory to copy.
+       kind: - the type of memory copy.
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34602,23 +34459,21 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies,
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to graph node to create.
-        graph: - instance of graph to add the created node.
-        pDependencies: - const pointer to the dependencies on the memcpy execution node.
-        numDependencies: - the number of the dependencies.
-        dst: - pointer to memory address to the destination.
-        symbol: - Device symbol address.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+       graph: - instance of graph to add the created node.
+       numDependencies: - the number of the dependencies.
+       dst: - pointer to memory address to the destination.
+       symbol: - Device symbol address.
+       count: - the size of the memory to copy.
+       offset: - Offset from start of symbol in bytes.
+       kind: - the type of memory copy.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34644,20 +34499,20 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instance of the node to set parameters to.
-        dst: - pointer to memory address to the destination.
-        symbol: - Device symbol address.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+       node: - instance of the node to set parameters to.
+       dst: - pointer to memory address to the destination.
+       symbol: - Device symbol address.
+       count: - the size of the memory to copy.
+       offset: - Offset from start of symbol in bytes.
+       kind: - the type of memory copy.
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34682,21 +34537,21 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        dst: - pointer to memory address to the destination.
-        symbol: - Device symbol address.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+       hGraphExec: - instance of the executable graph with the node.
+       node: - instance of the node to set parameters to.
+       dst: - pointer to memory address to the destination.
+       symbol: - Device symbol address.
+       count: - the size of the memory to copy.
+       offset: - Offset from start of symbol in bytes.
+       kind: - the type of memory copy.
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34724,23 +34579,21 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, o
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to graph node to create.
-        graph: - instance of graph to add the created node.
-        pDependencies: - const pointer to the dependencies on the memcpy execution node.
-        numDependencies: - the number of the dependencies.
-        symbol: - Device symbol address.
-        src: - pointer to memory address of the src.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+       graph: - instance of graph to add the created node.
+       numDependencies: - the number of the dependencies.
+       symbol: - Device symbol address.
+       src: - pointer to memory address of the src.
+       count: - the size of the memory to copy.
+       offset: - Offset from start of symbol in bytes.
+       kind: - the type of memory copy.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34766,20 +34619,20 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instance of the node to set parameters to.
-        symbol: - Device symbol address.
-        src: - pointer to memory address of the src.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+       node: - instance of the node to set parameters to.
+       symbol: - Device symbol address.
+       src: - pointer to memory address of the src.
+       count: - the size of the memory to copy.
+       offset: - Offset from start of symbol in bytes.
+       kind: - the type of memory copy.
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34803,21 +34656,21 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        symbol: - Device symbol address.
-        src: - pointer to memory address of the src.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+       hGraphExec: - instance of the executable graph with the node.
+       node: - instance of the node to set parameters to.
+       symbol: - Device symbol address.
+       src: - pointer to memory address of the src.
+       count: - the size of the memory to copy.
+       offset: - Offset from start of symbol in bytes.
+       kind: - the type of memory copy.
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34841,19 +34694,17 @@ def hipGraphAddMemsetNode(object graph, unsigned long numDependencies, object pM
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to the graph node to create.
-        graph: - instance of the graph to add the created node.
-        pDependencies: - const pointer to the dependencies on the memset execution node.
-        numDependencies: - the number of the dependencies.
-        pMemsetParams: - const pointer to the parameters for the memory set.
+       graph: - instance of the graph to add the created node.
+       numDependencies: - the number of the dependencies.
+       pMemsetParams: - const pointer to the parameters for the memory set.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34872,16 +34723,16 @@ def hipGraphMemsetNodeGetParams(object node, object pNodeParams):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instane of the node to get parameters from.
-        pNodeParams: - pointer to the parameters.
+       node: - instane of the node to get parameters from.
+       pNodeParams: - pointer to the parameters.
     """
     _hipGraphMemsetNodeGetParams__retval = hipError_t(chip.hipGraphMemsetNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34898,16 +34749,16 @@ def hipGraphMemsetNodeSetParams(object node, object pNodeParams):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instance of the node to set parameters to.
-        pNodeParams: - pointer to the parameters.
+       node: - instance of the node to set parameters to.
+       pNodeParams: - pointer to the parameters.
     """
     _hipGraphMemsetNodeSetParams__retval = hipError_t(chip.hipGraphMemsetNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34925,17 +34776,17 @@ def hipGraphExecMemsetNodeSetParams(object hGraphExec, object node, object pNode
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        pNodeParams: - pointer to the parameters.
+       hGraphExec: - instance of the executable graph with the node.
+       node: - instance of the node to set parameters to.
+       pNodeParams: - pointer to the parameters.
     """
     _hipGraphExecMemsetNodeSetParams__retval = hipError_t(chip.hipGraphExecMemsetNodeSetParams(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -34956,19 +34807,17 @@ def hipGraphAddHostNode(object graph, unsigned long numDependencies, object pNod
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to the graph node to create.
-        graph: - instance of the graph to add the created node.
-        pDependencies: - const pointer to the dependencies on the memset execution node.
-        numDependencies: - the number of the dependencies.
-        pNodeParams: -pointer to the parameters.
+       graph: - instance of the graph to add the created node.
+       numDependencies: - the number of the dependencies.
+       pNodeParams: -pointer to the parameters.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34987,16 +34836,16 @@ def hipGraphHostNodeGetParams(object node, object pNodeParams):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instane of the node to get parameters from.
-        pNodeParams: - pointer to the parameters.
+       node: - instane of the node to get parameters from.
+       pNodeParams: - pointer to the parameters.
     """
     _hipGraphHostNodeGetParams__retval = hipError_t(chip.hipGraphHostNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -35013,16 +34862,16 @@ def hipGraphHostNodeSetParams(object node, object pNodeParams):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instance of the node to set parameters to.
-        pNodeParams: - pointer to the parameters.
+       node: - instance of the node to set parameters to.
+       pNodeParams: - pointer to the parameters.
     """
     _hipGraphHostNodeSetParams__retval = hipError_t(chip.hipGraphHostNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -35040,17 +34889,17 @@ def hipGraphExecHostNodeSetParams(object hGraphExec, object node, object pNodePa
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        pNodeParams: - pointer to the parameters.
+       hGraphExec: - instance of the executable graph with the node.
+       node: - instance of the node to set parameters to.
+       pNodeParams: - pointer to the parameters.
     """
     _hipGraphExecHostNodeSetParams__retval = hipError_t(chip.hipGraphExecHostNodeSetParams(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -35071,19 +34920,17 @@ def hipGraphAddChildGraphNode(object graph, unsigned long numDependencies, objec
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to the graph node to create.
-        graph: - instance of the graph to add the created node.
-        pDependencies: - const pointer to the dependencies on the memset execution node.
-        numDependencies: - the number of the dependencies.
-        childGraph: - the graph to clone into this node
+       graph: - instance of the graph to add the created node.
+       numDependencies: - the number of the dependencies.
+       childGraph: - the graph to clone into this node
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -35102,16 +34949,15 @@ def hipGraphChildGraphNodeGetGraph(object node):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instane of the node to get child graph.
-        pGraph: - pointer to get the graph.
+       node: - instane of the node to get child graph.
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipGraphChildGraphNodeGetGraph__retval = hipError_t(chip.hipGraphChildGraphNodeGetGraph(
@@ -35129,17 +34975,17 @@ def hipGraphExecChildGraphNodeSetParams(object hGraphExec, object node, object c
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - node from the graph which was used to instantiate graphExec.
-        childGraph: - child graph with updated parameters.
+       hGraphExec: - instance of the executable graph with the node.
+       node: - node from the graph which was used to instantiate graphExec.
+       childGraph: - child graph with updated parameters.
     """
     _hipGraphExecChildGraphNodeSetParams__retval = hipError_t(chip.hipGraphExecChildGraphNodeSetParams(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -35159,18 +35005,16 @@ def hipGraphAddEmptyNode(object graph, unsigned long numDependencies):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to the graph node to create and add to the graph.
-        graph: - instane of the graph the node is add to.
-        pDependencies: - const pointer to the node dependenties.
-        numDependencies: - the number of dependencies.
+       graph: - instane of the graph the node is add to.
+       numDependencies: - the number of dependencies.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -35191,19 +35035,17 @@ def hipGraphAddEventRecordNode(object graph, unsigned long numDependencies, obje
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to the graph node to create and add to the graph.
-        graph: - instane of the graph the node to be added.
-        pDependencies: - const pointer to the node dependenties.
-        numDependencies: - the number of dependencies.
-        event: - Event for the node.
+       graph: - instane of the graph the node to be added.
+       numDependencies: - the number of dependencies.
+       event: - Event for the node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -35222,16 +35064,15 @@ def hipGraphEventRecordNodeGetEvent(object node):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: -  instane of the node to get event from.
-        event_out: - Pointer to return the event.
+       node: -  instane of the node to get event from.
     """
     event_out = ihipEvent_t.from_ptr(NULL)
     _hipGraphEventRecordNodeGetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeGetEvent(
@@ -35248,16 +35089,16 @@ def hipGraphEventRecordNodeSetEvent(object node, object event):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instane of the node to set event to.
-        event: - pointer to the event.
+       node: - instane of the node to set event to.
+       event: - pointer to the event.
     """
     _hipGraphEventRecordNodeSetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeSetEvent(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -35275,17 +35116,17 @@ def hipGraphExecEventRecordNodeSetEvent(object hGraphExec, object hNode, object 
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        hNode: - node from the graph which was used to instantiate graphExec.
-        event: - pointer to the event.
+       hGraphExec: - instance of the executable graph with the node.
+       hNode: - node from the graph which was used to instantiate graphExec.
+       event: - pointer to the event.
     """
     _hipGraphExecEventRecordNodeSetEvent__retval = hipError_t(chip.hipGraphExecEventRecordNodeSetEvent(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -35306,19 +35147,17 @@ def hipGraphAddEventWaitNode(object graph, unsigned long numDependencies, object
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        pGraphNode: - pointer to the graph node to create and add to the graph.
-        graph: - instane of the graph the node to be added.
-        pDependencies: - const pointer to the node dependenties.
-        numDependencies: - the number of dependencies.
-        event: - Event for the node.
+       graph: - instane of the graph the node to be added.
+       numDependencies: - the number of dependencies.
+       event: - Event for the node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -35337,16 +35176,15 @@ def hipGraphEventWaitNodeGetEvent(object node):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: -  instane of the node to get event from.
-        event_out: - Pointer to return the event.
+       node: -  instane of the node to get event from.
     """
     event_out = ihipEvent_t.from_ptr(NULL)
     _hipGraphEventWaitNodeGetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeGetEvent(
@@ -35363,16 +35201,16 @@ def hipGraphEventWaitNodeSetEvent(object node, object event):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        node: - instane of the node to set event to.
-        event: - pointer to the event.
+       node: - instane of the node to set event to.
+       event: - pointer to the event.
     """
     _hipGraphEventWaitNodeSetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeSetEvent(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -35390,17 +35228,17 @@ def hipGraphExecEventWaitNodeSetEvent(object hGraphExec, object hNode, object ev
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        hNode: - node from the graph which was used to instantiate graphExec.
-        event: - pointer to the event.
+       hGraphExec: - instance of the executable graph with the node.
+       hNode: - node from the graph which was used to instantiate graphExec.
+       event: - pointer to the event.
     """
     _hipGraphExecEventWaitNodeSetEvent__retval = hipError_t(chip.hipGraphExecEventWaitNodeSetEvent(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -35419,17 +35257,17 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidDevice
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        device: - device the attr is get for.
-        attr: - attr to get.
-        value: - value for specific attr.
+       device: - device the attr is get for.
+       attr: - attr to get.
+       value: - value for specific attr.
     """
     if not isinstance(attr,_hipGraphMemAttributeType__Base):
         raise TypeError("argument 'attr' must be of type '_hipGraphMemAttributeType__Base'")
@@ -35448,17 +35286,17 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidDevice
+       #hipSuccess, #hipErrorInvalidDevice
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        device: - device the attr is set for.
-        attr: - attr to set.
-        value: - value for specific attr.
+       device: - device the attr is set for.
+       attr: - attr to set.
+       value: - value for specific attr.
     """
     if not isinstance(attr,_hipGraphMemAttributeType__Base):
         raise TypeError("argument 'attr' must be of type '_hipGraphMemAttributeType__Base'")
@@ -35475,12 +35313,12 @@ def hipDeviceGraphMemTrim(int device):
 
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        device: - device the memory is used for graphs
+       device: - device the memory is used for graphs
     """
     _hipDeviceGraphMemTrim__retval = hipError_t(chip.hipDeviceGraphMemTrim(device))    # fully specified
     return (_hipDeviceGraphMemTrim__retval,)
@@ -35498,19 +35336,18 @@ def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        object_out: - pointer to instace of userobj.
-        ptr: - pointer to pass to destroy function.
-        destroy: - destroy callback to remove resource.
-        initialRefcount: - reference to resource.
-        flags: - flags passed to API.
+       ptr: - pointer to pass to destroy function.
+       destroy: - destroy callback to remove resource.
+       initialRefcount: - reference to resource.
+       flags: - flags passed to API.
     """
     object_out = hipUserObject.from_ptr(NULL)
     _hipUserObjectCreate__retval = hipError_t(chip.hipUserObjectCreate(&object_out._ptr,
@@ -35528,16 +35365,16 @@ def hipUserObjectRelease(object object, unsigned int count):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        object: - pointer to instace of userobj.
-        count: - reference to resource to be retained.
+       object: - pointer to instace of userobj.
+       count: - reference to resource to be retained.
     """
     _hipUserObjectRelease__retval = hipError_t(chip.hipUserObjectRelease(
         hipUserObject.from_pyobj(object)._ptr,count))    # fully specified
@@ -35553,16 +35390,16 @@ def hipUserObjectRetain(object object, unsigned int count):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        object: - pointer to instace of userobj.
-        count: - reference to resource to be retained.
+       object: - pointer to instace of userobj.
+       count: - reference to resource to be retained.
     """
     _hipUserObjectRetain__retval = hipError_t(chip.hipUserObjectRetain(
         hipUserObject.from_pyobj(object)._ptr,count))    # fully specified
@@ -35580,18 +35417,18 @@ def hipGraphRetainUserObject(object graph, object object, unsigned int count, un
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        graph: - pointer to graph to retain the user object for.
-        object: - pointer to instace of userobj.
-        count: - reference to resource to be retained.
-        flags: - flags passed to API.
+       graph: - pointer to graph to retain the user object for.
+       object: - pointer to instace of userobj.
+       count: - reference to resource to be retained.
+       flags: - flags passed to API.
     """
     _hipGraphRetainUserObject__retval = hipError_t(chip.hipGraphRetainUserObject(
         ihipGraph.from_pyobj(graph)._ptr,
@@ -35609,17 +35446,17 @@ def hipGraphReleaseUserObject(object graph, object object, unsigned int count):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue
+       #hipSuccess, #hipErrorInvalidValue
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        graph: - pointer to graph to retain the user object for.
-        object: - pointer to instace of userobj.
-        count: - reference to resource to be retained.
+       graph: - pointer to graph to retain the user object for.
+       object: - pointer to instace of userobj.
+       count: - reference to resource to be retained.
     """
     _hipGraphReleaseUserObject__retval = hipError_t(chip.hipGraphReleaseUserObject(
         ihipGraph.from_pyobj(graph)._ptr,
@@ -35636,16 +35473,16 @@ def hipMemAddressFree(object devPtr, unsigned long size):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        devPtr: - starting address of the range.
-        size: - size of the range.
+       devPtr: - starting address of the range.
+       size: - size of the range.
     """
     _hipMemAddressFree__retval = hipError_t(chip.hipMemAddressFree(
         <void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr,size))    # fully specified
@@ -35664,19 +35501,18 @@ def hipMemAddressReserve(unsigned long size, unsigned long alignment, object add
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        ptr: - starting address of the reserved range.
-        size: - size of the reservation.
-        alignment: - alignment of the address.
-        addr: - requested starting address of the range.
-        flags: - currently unused, must be zero.
+       size: - size of the reservation.
+       alignment: - alignment of the address.
+       addr: - requested starting address of the range.
+       flags: - currently unused, must be zero.
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMemAddressReserve__retval = hipError_t(chip.hipMemAddressReserve(
@@ -35696,18 +35532,17 @@ def hipMemCreate(unsigned long size, object prop, unsigned long long flags):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        handle: - value of the returned handle.
-        size: - size of the allocation.
-        prop: - properties of the allocation.
-        flags: - currently unused, must be zero.
+       size: - size of the allocation.
+       prop: - properties of the allocation.
+       flags: - currently unused, must be zero.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemCreate__retval = hipError_t(chip.hipMemCreate(&handle._ptr,size,
@@ -35726,18 +35561,18 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        shareableHandle: - value of the returned handle.
-        handle: - handle to share.
-        handleType: - type of the shareable handle.
-        flags: - currently unused, must be zero.
+       shareableHandle: - value of the returned handle.
+       handle: - handle to share.
+       handleType: - type of the shareable handle.
+       flags: - currently unused, must be zero.
     """
     if not isinstance(handleType,_hipMemAllocationHandleType__Base):
         raise TypeError("argument 'handleType' must be of type '_hipMemAllocationHandleType__Base'")
@@ -35757,17 +35592,16 @@ def hipMemGetAccess(object location, object ptr):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        flags: - flags for this location.
-        location: - target location.
-        ptr: - address to check the access flags.
+       location: - target location.
+       ptr: - address to check the access flags.
     """
     cdef unsigned long long flags
     _hipMemGetAccess__retval = hipError_t(chip.hipMemGetAccess(&flags,
@@ -35786,17 +35620,16 @@ def hipMemGetAllocationGranularity(object prop, object option):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        granularity: - returned granularity.
-        prop: - location properties.
-        option: - determines which granularity to return.
+       prop: - location properties.
+       option: - determines which granularity to return.
     """
     cdef unsigned long granularity
     if not isinstance(option,_hipMemAllocationGranularity_flags__Base):
@@ -35815,16 +35648,16 @@ def hipMemGetAllocationPropertiesFromHandle(object prop, object handle):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        prop: - properties of the given handle.
-        handle: - handle to perform the query on.
+       prop: - properties of the given handle.
+       handle: - handle to perform the query on.
     """
     _hipMemGetAllocationPropertiesFromHandle__retval = hipError_t(chip.hipMemGetAllocationPropertiesFromHandle(
         hipMemAllocationProp.from_pyobj(prop)._ptr,
@@ -35842,17 +35675,16 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        handle: - returned value.
-        osHandle: - shareable handle representing the memory allocation.
-        shHandleType: - handle type.
+       osHandle: - shareable handle representing the memory allocation.
+       shHandleType: - handle type.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     if not isinstance(shHandleType,_hipMemAllocationHandleType__Base):
@@ -35874,19 +35706,19 @@ def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handl
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        ptr: - address where the memory will be mapped.
-        size: - size of the mapping.
-        offset: - offset into the memory, currently must be zero.
-        handle: - memory allocation to be mapped.
-        flags: - currently unused, must be zero.
+       ptr: - address where the memory will be mapped.
+       size: - size of the mapping.
+       offset: - offset into the memory, currently must be zero.
+       handle: - memory allocation to be mapped.
+       flags: - currently unused, must be zero.
     """
     _hipMemMap__retval = hipError_t(chip.hipMemMap(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size,offset,
@@ -35904,17 +35736,17 @@ def hipMemMapArrayAsync(object mapInfoList, unsigned int count, object stream):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        mapInfoList: - list of hipArrayMapInfo.
-        count: - number of hipArrayMapInfo in mapInfoList.
-        stream: - stream identifier for the stream to use for map or unmap operations.
+       mapInfoList: - list of hipArrayMapInfo.
+       count: - number of hipArrayMapInfo in mapInfoList.
+       stream: - stream identifier for the stream to use for map or unmap operations.
     """
     _hipMemMapArrayAsync__retval = hipError_t(chip.hipMemMapArrayAsync(
         hipArrayMapInfo.from_pyobj(mapInfoList)._ptr,count,
@@ -35930,15 +35762,15 @@ def hipMemRelease(object handle):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        handle: - handle of the memory allocation.
+       handle: - handle of the memory allocation.
     """
     _hipMemRelease__retval = hipError_t(chip.hipMemRelease(
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr))    # fully specified
@@ -35954,16 +35786,15 @@ def hipMemRetainAllocationHandle(object addr):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        handle: - handle representing addr.
-        addr: - address to look up.
+       addr: - address to look up.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemRetainAllocationHandle__retval = hipError_t(chip.hipMemRetainAllocationHandle(&handle._ptr,
@@ -35982,18 +35813,18 @@ def hipMemSetAccess(object ptr, unsigned long size, object desc, unsigned long c
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        ptr: - starting address of the virtual address range.
-        size: - size of the range.
-        desc: - array of hipMemAccessDesc.
-        count: - number of hipMemAccessDesc in desc.
+       ptr: - starting address of the virtual address range.
+       size: - size of the range.
+       desc: - array of hipMemAccessDesc.
+       count: - number of hipMemAccessDesc in desc.
     """
     _hipMemSetAccess__retval = hipError_t(chip.hipMemSetAccess(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size,
@@ -36010,16 +35841,16 @@ def hipMemUnmap(object ptr, unsigned long size):
 
 
     Returns:
-        #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
 
     Warning:
-        : This API is marked as beta, meaning, while this is feature complete,
-        it is still open to changes and may have outstanding issues.
+       : This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
 
 
     Args:
-        ptr: - starting address of the range to unmap.
-        size: - size of the virtual address range.
+       ptr: - starting address of the range to unmap.
+       size: - size of the virtual address range.
     """
     _hipMemUnmap__retval = hipError_t(chip.hipMemUnmap(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size))    # fully specified
