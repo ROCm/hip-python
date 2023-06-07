@@ -2,6 +2,7 @@
 
 __author__ = "AMD_AUTHOR"
 
+import re
 import sys
 import os
 import keyword
@@ -999,11 +1000,12 @@ cdef void* {funptr_name} = NULL
         assert isinstance(self, tree.Function)
 
         indent = " "*3
-        #brief = None
-        #return_ = None
-        #result = None
-        #returns = None
-        doxygen_parms = []
+        doxygen_brief = None
+        doxygen_details = None
+        doxygen_other_sections = []
+        docstring_returns = []
+        docstring_out_arg_returns = []
+        docstring_args = []
         class Formatter(doxyparser.styles.PythonDocstrings):
 
             @staticmethod
@@ -1015,78 +1017,115 @@ cdef void* {funptr_name} = NULL
 
             @staticmethod
             def paragraphs_no_args(tokens):
+                nonlocal out_arg_names
+                nonlocal doxygen_details
+                nonlocal doxygen_brief
+                nonlocal doxygen_other_sections
+                nonlocal docstring_args
+                nonlocal docstring_returns
+                nonlocal docstring_out_arg_returns
+
                 cmd = tokens[0][1:]
                 text_lines = tokens[1].lstrip().splitlines(keepends=False)
+                text = textwrap.indent("\n".join([ln.lstrip(" \t:") for ln in text_lines]),indent)
                 if cmd in ("short","brief"):
-                    return " ".join(text_lines)
+                    doxygen_brief =  " ".join(text_lines)
+                elif cmd == "details":
+                    doxygen_details = textwrap.dedent(text)
                 elif cmd in (
-                    #"arg",
+                    "result", # same as return
+                    "return",
+                    "returns", # same as return
+                ):
+                    docstring_returns.append(text)
+                elif cmd in (
+                    #"arg", TODO
                     "attention",
                     "author",
                     "authors",
-                    #"brief",
                     "bug",
                     "copyright",
                     "date",
                     "deprecated",
-                    "details",
                     "invariant",
-                    #"li",
+                    #"li", TODO
                     "note",
                     "post",
                     "pre",
                     "remark",
                     "remarks",
-                    "result",
-                    "return",
-                    "returns",
                     "sa",
                     "see",
-                    #"short",
                     "since",
                     "test",
                     "todo",
                     "version",
                     "warning",
                 ):
-                    text = textwrap.indent("\n".join([ln.lstrip() for ln in text_lines]),indent)
-                    return cmd[0].upper() + cmd[1:] +":\n" + text + "\n"
-                else:
-                    return []
+                    doxygen_other_sections.append(cmd[0].upper() + cmd[1:] +":\n" + text + "\n")
+                return []
             
             @staticmethod
             def param(tokens):
                 # ['\\param', '[in]', 'param1', 'Description text is here.']
                 dir_map = {
-                    "[in]": control.ParmIntent.IN,
-                    "[in,out]": control.ParmIntent.INOUT,
-                    "[out]": control.ParmIntent.OUT,
+                    "in": control.ParmIntent.IN,
+                    "in,out": control.ParmIntent.INOUT,
+                    "out": control.ParmIntent.OUT,
                 }
                 name = tokens[2]
                 descr = tokens[3]
-                dir = dir_map[tokens[1].replace(" ","")]
-                doxygen_parms.append((name,dir,descr))
+                dir = dir_map[tokens[1]]
+                if name in out_arg_names:
+                    docstring_out_arg_returns.append(f"{name}: {descr}")
+                else:
+                    docstring_args.append((name,dir,descr))
                 return []
 
+        # Strip everything above @brief (or equivalent) away
+        stripped_doxygen_doc = self._raw_comment_stripped()
+        m = re.search(r"[@\\](brief|short)",stripped_doxygen_doc)
+        if m:
+            stripped_doxygen_doc = stripped_doxygen_doc[m.start():]
+        # Parse
         grammar = doxyparser.DoxygenGrammar(Formatter)
-        docstring_body = textwrap.dedent(grammar.transform_string(self._raw_comment_stripped()))
-        args = []
-        #retvals = [] # TODO
-        for (name, _, descr) in doxygen_parms:
-            descr_lines = [ln.lstrip() for ln in descr.splitlines(keepends=True)]
-            if name in out_arg_names:
-                pass
-                #retvals.append(
-                #    f"f{name}: {descr_lines[0]}{textwrap.indent(''.join(descr_lines),indent)}"
-                #)
-            else:
-                args.append(
-                    f"{name}: {''.join(descr_lines[0:1])}{textwrap.indent(''.join(descr_lines[1:]),indent)}".rstrip()
-                )
-        if len(args):
+        remainder = textwrap.dedent(grammar.transform_string(stripped_doxygen_doc))
+        if doxygen_brief:
+            docstring_body = doxygen_brief.rstrip() +"\n\n"
+        else:
+            docstring_body = "(No brief)\n\n"
+        if doxygen_details:
+            docstring_body += doxygen_details
+        docstring_body += remainder
+        # Args
+        if len(docstring_args):
             docstring_body += "\nArgs:\n"
-            docstring_body += textwrap.indent("\n".join(args),indent)
-        return f'"""\n{docstring_body}\n"""'
+            for (name, _, descr) in docstring_args:
+                descr_lines = [ln.lstrip() for ln in descr.splitlines(keepends=True)]
+                docstring_body += textwrap.indent(
+                    f"{name}: {''.join(descr_lines[0:1])}{textwrap.indent(''.join(descr_lines[1:]),indent)}".rstrip(),
+                    indent
+                ).rstrip() + "\n"
+        # Return values
+        docstring_returns += docstring_out_arg_returns # add the additional return parameter
+        if len(docstring_returns):
+            docstring_body += "\nReturns:\n"
+            if len(docstring_returns) > 1 or python_interface_always_return_tuple:
+                docstring_body += f"{indent}A ``tuple`` of size {len(docstring_returns)} that contains (in that order):\n"
+                prefix = "- "
+            else:
+                prefix = ""
+            for descr in docstring_returns:
+                docstring_body += textwrap.indent(
+                    prefix + descr.lstrip(" \t\n*-"),
+                    indent
+                ).rstrip() + "\n"
+        # Other sections
+        for section in doxygen_other_sections:
+            docstring_body += section
+        # remove multiple blank lines
+        docstring_body = re.sub(r"(\n\s*)+\n+", "\n\n", docstring_body).rstrip()
+        return f'"""{docstring_body}\n"""'
 
     def _analyze_parms(self, cprefix: str):
         from . import tree

@@ -183,26 +183,20 @@ hiprtcLinkState = ihiprtcLinkState
 
 @cython.embedsignature(True)
 def hiprtcGetErrorString(object result):
-    """
+    """Returns text string message to explain the error which occurred
 
-    Returns text string message to explain the error which occurred
-
-
-    Return:
-       const char pointer to the NULL-terminated error string
-
-
-    Warning:
-       In HIP, this function returns the name of the error,
-       if the hiprtc result is defined, it will return "Invalid HIPRTC error code"
-
-
-    See:
-       hiprtcResult
-
+    if the hiprtc result is defined, it will return "Invalid HIPRTC error code"
 
     Args:
        result: code to convert to string.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - const char pointer to the NULL-terminated error string
+    Warning:
+       In HIP, this function returns the name of the error,
+    See:
+       hiprtcResult
     """
     if not isinstance(result,_hiprtcResult__Base):
         raise TypeError("argument 'result' must be of type '_hiprtcResult__Base'")
@@ -212,14 +206,12 @@ def hiprtcGetErrorString(object result):
 
 @cython.embedsignature(True)
 def hiprtcVersion():
-    """
+    """Sets the parameters as major and minor version.
 
-    Sets the parameters as major and minor version.
-
-
-
-
-
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - major: HIP Runtime Compilation major version.
+       - minor: HIP Runtime Compilation minor version.
     """
     cdef int major
     cdef int minor
@@ -325,25 +317,19 @@ hiprtcProgram = _hiprtcProgram
 
 @cython.embedsignature(True)
 def hiprtcAddNameExpression(object prog, const char * name_expression):
-    """
+    """Adds the given name exprssion to the runtime compilation program.
 
-    Adds the given name exprssion to the runtime compilation program.
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-       If const char pointer is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
-
-
-    See:
-       hiprtcResult
-
+    If const char pointer is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
 
     Args:
        prog: runtime compilation program instance.
        name_expression: const char pointer to the name expression.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRTC_SUCCESS
+    See:
+       hiprtcResult
     """
     _hiprtcAddNameExpression__retval = hiprtcResult(chiprtc.hiprtcAddNameExpression(
         _hiprtcProgram.from_pyobj(prog)._ptr,name_expression))    # fully specified
@@ -352,28 +338,21 @@ def hiprtcAddNameExpression(object prog, const char * name_expression):
 
 @cython.embedsignature(True)
 def hiprtcCompileProgram(object prog, int numOptions, object options):
-    """
+    """Compiles the given runtime compilation program.
 
-    Compiles the given runtime compilation program.
-
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-       If the compiler failed to build the runtime compilation program,
-       it will return HIPRTC_ERROR_COMPILATION.
-
-
-    See:
-       hiprtcResult
-
+    If the compiler failed to build the runtime compilation program,
+    it will return HIPRTC_ERROR_COMPILATION.
 
     Args:
        prog: runtime compilation program instance.
        numOptions: number of compiler options.
        options: compiler options as const array of strins.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRTC_SUCCESS
+    See:
+       hiprtcResult
     """
     _hiprtcCompileProgram__retval = hiprtcResult(chiprtc.hiprtcCompileProgram(
         _hiprtcProgram.from_pyobj(prog)._ptr,numOptions,
@@ -383,28 +362,14 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
 
 @cython.embedsignature(True)
 def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, object headers, object includeNames):
-    """
+    """Creates an instance of hiprtcProgram with the given input parameters,
 
-    Creates an instance of hiprtcProgram with the given input parameters, and sets the output hiprtcProgram prog with it.
+    and sets the output hiprtcProgram prog with it.
 
+    Any invalide input parameter, it will return HIPRTC_ERROR_INVALID_INPUT
+    or HIPRTC_ERROR_INVALID_PROGRAM.
 
-
-
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-       Any invalide input parameter, it will return HIPRTC_ERROR_INVALID_INPUT
-       or HIPRTC_ERROR_INVALID_PROGRAM.
-
-       If failed to create the program, it will return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE.
-
-
-    See:
-       hiprtcResult
-
+    If failed to create the program, it will return HIPRTC_ERROR_PROGRAM_CREATION_FAILURE.
 
     Args:
        src: const char pointer to the program source.
@@ -412,6 +377,13 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
        numHeaders: number of headers.
        headers: array of strings pointing to headers.
        includeNames: array of strings pointing to names included in program source.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - HIPRTC_SUCCESS
+       - prog: runtime compilation program instance.
+    See:
+       hiprtcResult
     """
     prog = _hiprtcProgram.from_ptr(NULL)
     _hiprtcCreateProgram__retval = hiprtcResult(chiprtc.hiprtcCreateProgram(&prog._ptr,src,name,numHeaders,
@@ -422,23 +394,18 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
 
 @cython.embedsignature(True)
 def hiprtcDestroyProgram(object prog):
-    """
+    """Destroys an instance of given hiprtcProgram.
 
-    Destroys an instance of given hiprtcProgram.
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-       If prog is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
-
-
-    See:
-       hiprtcResult
-
+    If prog is NULL, it will return HIPRTC_ERROR_INVALID_INPUT.
 
     Args:
        prog: runtime compilation program instance.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRTC_SUCCESS
+    See:
+       hiprtcResult
     """
     _hiprtcDestroyProgram__retval = hiprtcResult(chiprtc.hiprtcDestroyProgram(
         <chiprtc.hiprtcProgram*>hip._util.types.DataHandle.from_pyobj(prog)._ptr))    # fully specified
@@ -447,30 +414,26 @@ def hiprtcDestroyProgram(object prog):
 
 @cython.embedsignature(True)
 def hiprtcGetLoweredName(object prog, const char * name_expression):
-    """
+    """Gets the lowered (mangled) name from an instance of hiprtcProgram with the given input parameters,
 
-    Gets the lowered (mangled) name from an instance of hiprtcProgram with the given input parameters, and sets the output lowered_name with it.
+    and sets the output lowered_name with it.
 
+    If any invalide nullptr input parameters, it will return HIPRTC_ERROR_INVALID_INPUT
 
+    If name_expression is not found, it will return HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID
 
-
-    Return:
-       HIPRTC_SUCCESS
-
-       If any invalide nullptr input parameters, it will return HIPRTC_ERROR_INVALID_INPUT
-
-       If name_expression is not found, it will return HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID
-
-       If failed to get lowered_name from the program, it will return HIPRTC_ERROR_COMPILATION.
-
-
-    See:
-       hiprtcResult
-
+    If failed to get lowered_name from the program, it will return HIPRTC_ERROR_COMPILATION.
 
     Args:
        prog: runtime compilation program instance.
        name_expression: const char pointer to the name expression.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - HIPRTC_SUCCESS
+       - lowered_name: const char array to the lowered (mangled) name.
+    See:
+       hiprtcResult
     """
     cdef const char * lowered_name
     _hiprtcGetLoweredName__retval = hiprtcResult(chiprtc.hiprtcGetLoweredName(
@@ -480,23 +443,17 @@ def hiprtcGetLoweredName(object prog, const char * name_expression):
 
 @cython.embedsignature(True)
 def hiprtcGetProgramLog(object prog, object log):
-    """
-
-    Gets the log generated by the runtime compilation program instance.
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-
-    See:
-       hiprtcResult
-
+    """Gets the log generated by the runtime compilation program instance.
 
     Args:
        prog: runtime compilation program instance.
        log: memory pointer to the generated log.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRTC_SUCCESS
+    See:
+       hiprtcResult
     """
     _hiprtcGetProgramLog__retval = hiprtcResult(chiprtc.hiprtcGetProgramLog(
         _hiprtcProgram.from_pyobj(prog)._ptr,
@@ -506,22 +463,17 @@ def hiprtcGetProgramLog(object prog, object log):
 
 @cython.embedsignature(True)
 def hiprtcGetProgramLogSize(object prog):
-    """
-
-    Gets the size of log generated by the runtime compilation program instance.
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-
-    See:
-       hiprtcResult
-
+    """Gets the size of log generated by the runtime compilation program instance.
 
     Args:
        prog: runtime compilation program instance.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - HIPRTC_SUCCESS
+       - logSizeRet: size of generated log.
+    See:
+       hiprtcResult
     """
     cdef unsigned long logSizeRet
     _hiprtcGetProgramLogSize__retval = hiprtcResult(chiprtc.hiprtcGetProgramLogSize(
@@ -531,23 +483,17 @@ def hiprtcGetProgramLogSize(object prog):
 
 @cython.embedsignature(True)
 def hiprtcGetCode(object prog, object code):
-    """
-
-    Gets the pointer of compilation binary by the runtime compilation program instance.
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-
-    See:
-       hiprtcResult
-
+    """Gets the pointer of compilation binary by the runtime compilation program instance.
 
     Args:
        prog: runtime compilation program instance.
        code: char pointer to binary.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRTC_SUCCESS
+    See:
+       hiprtcResult
     """
     _hiprtcGetCode__retval = hiprtcResult(chiprtc.hiprtcGetCode(
         _hiprtcProgram.from_pyobj(prog)._ptr,
@@ -557,23 +503,17 @@ def hiprtcGetCode(object prog, object code):
 
 @cython.embedsignature(True)
 def hiprtcGetCodeSize(object prog):
-    """
-
-    Gets the size of compilation binary by the runtime compilation program instance.
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-
-    See:
-       hiprtcResult
-
+    """Gets the size of compilation binary by the runtime compilation program instance.
 
     Args:
        prog: runtime compilation program instance.
        code: the size of binary.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRTC_SUCCESS
+    See:
+       hiprtcResult
     """
     cdef unsigned long codeSizeRet
     _hiprtcGetCodeSize__retval = hiprtcResult(chiprtc.hiprtcGetCodeSize(
@@ -583,23 +523,17 @@ def hiprtcGetCodeSize(object prog):
 
 @cython.embedsignature(True)
 def hiprtcGetBitcode(object prog, object bitcode):
-    """
-
-    Gets the pointer of compiled bitcode by the runtime compilation program instance.
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-
-    See:
-       hiprtcResult
-
+    """Gets the pointer of compiled bitcode by the runtime compilation program instance.
 
     Args:
        prog: runtime compilation program instance.
        code: char pointer to bitcode.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRTC_SUCCESS
+    See:
+       hiprtcResult
     """
     _hiprtcGetBitcode__retval = hiprtcResult(chiprtc.hiprtcGetBitcode(
         _hiprtcProgram.from_pyobj(prog)._ptr,
@@ -609,24 +543,17 @@ def hiprtcGetBitcode(object prog, object bitcode):
 
 @cython.embedsignature(True)
 def hiprtcGetBitcodeSize(object prog):
-    """
-
-    Gets the size of compiled bitcode by the runtime compilation program instance.
-
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-
-    See:
-       hiprtcResult
-
+    """Gets the size of compiled bitcode by the runtime compilation program instance.
 
     Args:
        prog: runtime compilation program instance.
        code: the size of bitcode.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRTC_SUCCESS
+    See:
+       hiprtcResult
     """
     cdef unsigned long bitcode_size
     _hiprtcGetBitcodeSize__retval = hiprtcResult(chiprtc.hiprtcGetBitcodeSize(
@@ -636,22 +563,17 @@ def hiprtcGetBitcodeSize(object prog):
 
 @cython.embedsignature(True)
 def hiprtcLinkCreate(unsigned int num_options, object option_ptr, object option_vals_pptr):
-    """
-
-    Creates the link instance via hiprtc APIs.
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-
-    See:
-       hiprtcResult
-
+    """Creates the link instance via hiprtc APIs.
 
     Args:
        hip_jit_options:
        hiprtc: link state instance
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRTC_SUCCESS
+    See:
+       hiprtcResult
     """
     hip_link_state_ptr = ihiprtcLinkState.from_ptr(NULL)
     _hiprtcLinkCreate__retval = hiprtcResult(chiprtc.hiprtcLinkCreate(num_options,
@@ -662,29 +584,21 @@ def hiprtcLinkCreate(unsigned int num_options, object option_ptr, object option_
 
 @cython.embedsignature(True)
 def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * file_path, unsigned int num_options, object options_ptr, object option_values):
-    """
+    """Adds a file with bit code to be linked with options
 
-    Adds a file with bit code to be linked with options
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-       If input values are invalid, it will
-
-    Return:
-       HIPRTC_ERROR_INVALID_INPUT
-
-
-    See:
-       hiprtcResult
-
+    If input values are invalid, it will
 
     Args:
        hiprtc: link state, jit input type, file path,
           option reated parameters.
        None: .
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - HIPRTC_SUCCESS
+       - HIPRTC_ERROR_INVALID_INPUT
+    See:
+       hiprtcResult
     """
     if not isinstance(input_type,_hiprtcJITInputType__Base):
         raise TypeError("argument 'input_type' must be of type '_hiprtcJITInputType__Base'")
@@ -697,29 +611,21 @@ def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * fil
 
 @cython.embedsignature(True)
 def hiprtcLinkAddData(object hip_link_state, object input_type, object image, unsigned long image_size, const char * name, unsigned int num_options, object options_ptr, object option_values):
-    """
+    """Completes the linking of the given program.
 
-    Completes the linking of the given program.
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-       If adding the file fails, it will
-
-    Return:
-       HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
-
-
-    See:
-       hiprtcResult
-
+    If adding the file fails, it will
 
     Args:
        hiprtc: link state, jit input type, image_ptr ,
           option reated parameters.
        None: .
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - HIPRTC_SUCCESS
+       - HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
+    See:
+       hiprtcResult
     """
     if not isinstance(input_type,_hiprtcJITInputType__Base):
         raise TypeError("argument 'input_type' must be of type '_hiprtcJITInputType__Base'")
@@ -733,28 +639,20 @@ def hiprtcLinkAddData(object hip_link_state, object input_type, object image, un
 
 @cython.embedsignature(True)
 def hiprtcLinkComplete(object hip_link_state):
-    """
+    """Completes the linking of the given program.
 
-    Completes the linking of the given program.
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-       If adding the data fails, it will
-
-    Return:
-       HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
-
-
-    See:
-       hiprtcResult
-
+    If adding the data fails, it will
 
     Args:
        hiprtc: link state instance
        linked_binary: linked_binary_size
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - HIPRTC_SUCCESS
+       - HIPRTC_ERROR_PROGRAM_CREATION_FAILURE
+    See:
+       hiprtcResult
     """
     bin_out = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long size_out
@@ -766,28 +664,20 @@ def hiprtcLinkComplete(object hip_link_state):
 
 @cython.embedsignature(True)
 def hiprtcLinkDestroy(object hip_link_state):
-    """
+    """Deletes the link instance via hiprtc APIs.
 
-    Deletes the link instance via hiprtc APIs.
-
-
-
-    Return:
-       HIPRTC_SUCCESS
-
-       If linking fails, it will
-
-    Return:
-       HIPRTC_ERROR_LINKING
-
-
-    See:
-       hiprtcResult
-
+    If linking fails, it will
 
     Args:
        hiprtc: link state instance
        code: the size of binary.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - HIPRTC_SUCCESS
+       - HIPRTC_ERROR_LINKING
+    See:
+       hiprtcResult
     """
     _hiprtcLinkDestroy__retval = hiprtcResult(chiprtc.hiprtcLinkDestroy(
         ihiprtcLinkState.from_pyobj(hip_link_state)._ptr))    # fully specified

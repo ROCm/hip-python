@@ -1,17 +1,33 @@
-import addtoplevelpath
-from doxyparser import DoxygenGrammar, styles
+import textwrap
 
-grammar = DoxygenGrammar()
+import addtoplevelpath
+import doxyparser
+
+grammar = doxyparser.DoxygenGrammar()
 
 print(grammar.all.parseString(r"\a TEST"))
 
-param_list = r"""
+doxygen_input = r"""
+@brief Gets an opaque interprocess handle for an event.
+  
+This opaque handle may be copied into other processes and opened with hipIpcOpenEventHandle.
+Then hipEventRecord, hipEventSynchronize, hipStreamWaitEvent and hipEventQuery may be used in
+either process. Operations on the imported event after the exported event has been freed with hipEventDestroy
+will result in undefined behavior.
+
 
 \param[in] param1 My description ending at the next param section. \a Italic text.
 \param[in,out] param2 My multiline
                 description ending
                 at a blank line. \b BOLD text.
 
+\note My note ending at a blank line.
+
+\note My multiline note 
+      ending at a blank line.
+
+\note My multiline note ending at the begin
+      of a parameter.
 \param[out] param3 My multiline 
                 description ending
                 at the end of the text. \c Monotype text.
@@ -34,18 +50,29 @@ param_list = r"""
 @f}
 """
 
-for mtch in grammar.all.scanString(param_list):
+for mtch in grammar.all.scanString(doxygen_input):
     print(mtch)
 
-class MyParamFormatter(styles.PythonDocstrings):
+class MyParamFormatter(doxyparser.styles.PythonDocstrings):
+
+    @staticmethod
+    def paragraphs_no_args(tokens):
+        cmd = tokens[0][1:]
+        text_lines = tokens[1].lstrip().splitlines(keepends=False)
+        if cmd in ("short","brief"):
+            doxygen_brief =  " ".join(text_lines)
+            return doxygen_brief + "\n"
+        if cmd == "note":
+            return "Note:\n"+textwrap.indent("\n".join([ln.lstrip() for ln in text_lines])," "*3)
+        return None
 
     @staticmethod
     def param(tokens):
         # ['\\param', '[in]', 'param1', 'My description ending at the next param section.']
         dir_map = {
-            "[in]": "IN",
-            "[in,out]": "INOUT",
-            "[out]": "OUT",
+            "in": "IN",
+            "in,out": "INOUT",
+            "out": "OUT",
         }
         name = tokens[2]
         descr = tokens[3]
@@ -54,7 +81,7 @@ class MyParamFormatter(styles.PythonDocstrings):
     
 grammar.style = MyParamFormatter
 
-print(grammar.transform_string(param_list))
+print(grammar.transform_string(doxygen_input))
 
 #
 
@@ -95,4 +122,4 @@ comments = """\
 #for tokens,start,end in pyp.cppStyleComment.scanString(comments):
 #    print(tokens)
 
-print(grammar.remove_doxygen_cpp_comments(comments))
+print(doxyparser.remove_doxygen_cpp_comments(comments))

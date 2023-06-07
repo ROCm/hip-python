@@ -379,13 +379,11 @@ class DoxygenGrammar:
         DQUOT = pyp.Literal('"')
         IDENT = pyp.pyparsing_common.identifier
         INTEGER = pyp.pyparsing_common.integer
-        BLANK_LINE = (pyp.LineStart() + pyp.LineEnd())
-        UNTIL_LINE_END = (
-            pyp.SkipTo(pyp.LineEnd(), failOn=BLANK_LINE)
-        )
+        BLANK_LINE = pyp.Optional(pyp.LineEnd()) + pyp.LineStart()
+        UNTIL_LINE_END = pyp.SkipTo(pyp.LineEnd())
         OPT_UNTIL_LINE_END = pyp.Optional(UNTIL_LINE_END,default=None)
         SECTION_INDICATOR = self._pyp_section_indicator()
-        SECTION_TERMINATOR = SECTION_INDICATOR | BLANK_LINE | pyp.StringEnd()
+        SECTION_TERMINATOR = BLANK_LINE | SECTION_INDICATOR | pyp.StringEnd()
         UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE = pyp.SkipTo(
             SECTION_TERMINATOR
         )
@@ -510,6 +508,12 @@ class DoxygenGrammar:
         # \f$
         fdollar = self._pyp_cmd(r"f\$",words=False)
 
+        # \{
+        groupopen = self._pyp_cmd(r"\{",words=False)
+        
+        # \}
+        groupclose = self._pyp_cmd(r"\}",words=False)
+
         # \file [<name>]
         file = self._pyp_cmd("file") + OPT_WORD_OF_PRINTABLES
 
@@ -577,12 +581,14 @@ class DoxygenGrammar:
         )
 
         # \param '['dir']' <parameter-name> { parameter description }
-        param_dir = pyp.Regex(r"\[\s*(in|out|(\s*in,\s*out))\s*\]")
-        param_names = pyp.delimitedList(IDENT)
+        PARAM_DIR = pyp.Regex(r"\[\s*(in|out|(\s*in,\s*out))\s*\]").setParseAction(
+            lambda tokens: tokens[0][1:-1].replace(" ","")
+        ) # remove [] and whitespace
+        PARAM_NAMES = pyp.delimitedList(IDENT)
         param = (
             self._pyp_cmd("param")
-            + param_dir
-            + param_names
+            + PARAM_DIR
+            + PARAM_NAMES
             + UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE
         )
 

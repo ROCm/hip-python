@@ -644,30 +644,44 @@ hiprandRngType_t = hiprandRngType
 
 @cython.embedsignature(True)
 def hiprandCreateGenerator(object rng_type):
-    """
+    """Creates a new random number generator.
 
-    Creates a new random number generator.  Creates a new random number generator of type ``rng_type,`` and returns it in ``generator.`` That generator will use GPU to create random numbers.  Values for ``rng_type`` are: - HIPRAND_RNG_PSEUDO_DEFAULT - HIPRAND_RNG_PSEUDO_XORWOW - HIPRAND_RNG_PSEUDO_MRG32K3A - HIPRAND_RNG_PSEUDO_MTGP32 - HIPRAND_RNG_PSEUDO_MT19937 - HIPRAND_RNG_PSEUDO_PHILOX4_32_10 - HIPRAND_RNG_QUASI_DEFAULT - HIPRAND_RNG_QUASI_SOBOL32 - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32 - HIPRAND_RNG_QUASI_SOBOL64 - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64
+    Creates a new random number generator of type ``rng_type,``
+    and returns it in ``generator.`` That generator will use
+    GPU to create random numbers.
+
+    Values for ``rng_type`` are:
+    - HIPRAND_RNG_PSEUDO_DEFAULT
+    - HIPRAND_RNG_PSEUDO_XORWOW
+    - HIPRAND_RNG_PSEUDO_MRG32K3A
+    - HIPRAND_RNG_PSEUDO_MTGP32
+    - HIPRAND_RNG_PSEUDO_MT19937
+    - HIPRAND_RNG_PSEUDO_PHILOX4_32_10
+    - HIPRAND_RNG_QUASI_DEFAULT
+    - HIPRAND_RNG_QUASI_SOBOL32
+    - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32
+    - HIPRAND_RNG_QUASI_SOBOL64
+    - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64
 
     \param generator - Pointer to generator
     \param rng_type - Type of random number generator to create
 
-    Return:
-       - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
+    - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
 
-       - HIPRAND_STATUS_INITIALIZATION_FAILED if there was a problem setting up the GPU 
+    - HIPRAND_STATUS_INITIALIZATION_FAILED if there was a problem setting up the GPU 
 
-       - HIPRAND_STATUS_VERSION_MISMATCH if the header file version does not match the
-       dynamically linked library version 
+    - HIPRAND_STATUS_VERSION_MISMATCH if the header file version does not match the
+      dynamically linked library version 
 
-       - HIPRAND_STATUS_TYPE_ERROR if the value for ``rng_type`` is invalid 
+    - HIPRAND_STATUS_TYPE_ERROR if the value for ``rng_type`` is invalid 
 
-       - HIPRAND_STATUS_NOT_IMPLEMENTED if generator of type ``rng_type`` is not implemented yet 
+    - HIPRAND_STATUS_NOT_IMPLEMENTED if generator of type ``rng_type`` is not implemented yet 
 
-       - HIPRAND_STATUS_SUCCESS if generator was created successfully
+    - HIPRAND_STATUS_SUCCESS if generator was created successfully 
 
-
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     generator = rocrand_generator_base_type.from_ptr(NULL)
     if not isinstance(rng_type,_hiprandRngType__Base):
@@ -678,27 +692,42 @@ def hiprandCreateGenerator(object rng_type):
 
 @cython.embedsignature(True)
 def hiprandCreateGeneratorHost(object rng_type):
-    """
+    """Creates a new random number generator on host.
 
-    Creates a new random number generator on host.  Creates a new host random number generator of type ``rng_type`` and returns it in ``generator.`` Created generator will use host CPU to generate random numbers.  Values for ``rng_type`` are: - HIPRAND_RNG_PSEUDO_DEFAULT - HIPRAND_RNG_PSEUDO_XORWOW - HIPRAND_RNG_PSEUDO_MRG32K3A - HIPRAND_RNG_PSEUDO_MTGP32 - HIPRAND_RNG_PSEUDO_MT19937 - HIPRAND_RNG_PSEUDO_PHILOX4_32_10 - HIPRAND_RNG_QUASI_DEFAULT - HIPRAND_RNG_QUASI_SOBOL32 - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32 - HIPRAND_RNG_QUASI_SOBOL64 - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64
+    Creates a new host random number generator of type ``rng_type``
+    and returns it in ``generator.`` Created generator will use
+    host CPU to generate random numbers.
+
+    Values for ``rng_type`` are:
+    - HIPRAND_RNG_PSEUDO_DEFAULT
+    - HIPRAND_RNG_PSEUDO_XORWOW
+    - HIPRAND_RNG_PSEUDO_MRG32K3A
+    - HIPRAND_RNG_PSEUDO_MTGP32
+    - HIPRAND_RNG_PSEUDO_MT19937
+    - HIPRAND_RNG_PSEUDO_PHILOX4_32_10
+    - HIPRAND_RNG_QUASI_DEFAULT
+    - HIPRAND_RNG_QUASI_SOBOL32
+    - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32
+    - HIPRAND_RNG_QUASI_SOBOL64
+    - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64
 
     \param generator - Pointer to generator
     \param rng_type - Type of random number generator to create
 
-    Return:
-       - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
+    - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
 
-       - HIPRAND_STATUS_VERSION_MISMATCH if the header file version does not match the
-       dynamically linked library version 
+    - HIPRAND_STATUS_VERSION_MISMATCH if the header file version does not match the
+      dynamically linked library version 
 
-       - HIPRAND_STATUS_TYPE_ERROR if the value for ``rng_type`` is invalid 
+    - HIPRAND_STATUS_TYPE_ERROR if the value for ``rng_type`` is invalid 
 
-       - HIPRAND_STATUS_NOT_IMPLEMENTED if host generator of type ``rng_type`` is not implemented yet 
+    - HIPRAND_STATUS_NOT_IMPLEMENTED if host generator of type ``rng_type`` is not implemented yet 
 
-       - HIPRAND_STATUS_SUCCESS if generator was created successfully
+    - HIPRAND_STATUS_SUCCESS if generator was created successfully 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     generator = rocrand_generator_base_type.from_ptr(NULL)
     if not isinstance(rng_type,_hiprandRngType__Base):
@@ -709,19 +738,19 @@ def hiprandCreateGeneratorHost(object rng_type):
 
 @cython.embedsignature(True)
 def hiprandDestroyGenerator(object generator):
-    """
+    """Destroys random number generator.
 
-    Destroys random number generator.  Destroys random number generator and frees related memory.
+    Destroys random number generator and frees related memory.
 
     \param generator - Generator to be destroyed
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_SUCCESS if generator was destroyed successfully
+    - HIPRAND_STATUS_SUCCESS if generator was destroyed successfully 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandDestroyGenerator__retval = hiprandStatus(chiprand.hiprandDestroyGenerator(
         rocrand_generator_base_type.from_pyobj(generator)._ptr))    # fully specified
@@ -730,23 +759,27 @@ def hiprandDestroyGenerator(object generator):
 
 @cython.embedsignature(True)
 def hiprandGenerate(object generator, object output_data, unsigned long n):
-    """
+    """Generates uniformly distributed 32-bit unsigned integers.
 
-    Generates uniformly distributed 32-bit unsigned integers.  Generates ``n`` uniformly distributed 32-bit unsigned integers and saves them to ``output_data.``  Generated numbers are between ``0`` and ``2^32,`` including ``0`` and excluding ``2^32.``
+    Generates ``n`` uniformly distributed 32-bit unsigned integers and
+    saves them to ``output_data.``
+
+    Generated numbers are between ``0`` and ``2^32,`` including ``0`` and
+    excluding ``2^32.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
     \param n - Number of 32-bit unsigned integers to generate
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerate__retval = hiprandStatus(chiprand.hiprandGenerate(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -756,23 +789,27 @@ def hiprandGenerate(object generator, object output_data, unsigned long n):
 
 @cython.embedsignature(True)
 def hiprandGenerateChar(object generator, object output_data, unsigned long n):
-    """
+    """Generates uniformly distributed 8-bit unsigned integers.
 
-    Generates uniformly distributed 8-bit unsigned integers.  Generates ``n`` uniformly distributed 8-bit unsigned integers and saves them to ``output_data.``  Generated numbers are between ``0`` and ``2^8,`` including ``0`` and excluding ``2^8.``
+    Generates ``n`` uniformly distributed 8-bit unsigned integers and
+    saves them to ``output_data.``
+
+    Generated numbers are between ``0`` and ``2^8,`` including ``0`` and
+    excluding ``2^8.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
     \param n - Number of 8-bit unsigned integers to generate
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerateChar__retval = hiprandStatus(chiprand.hiprandGenerateChar(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -782,23 +819,27 @@ def hiprandGenerateChar(object generator, object output_data, unsigned long n):
 
 @cython.embedsignature(True)
 def hiprandGenerateShort(object generator, object output_data, unsigned long n):
-    """
+    """Generates uniformly distributed 16-bit unsigned integers.
 
-    Generates uniformly distributed 16-bit unsigned integers.  Generates ``n`` uniformly distributed 16-bit unsigned integers and saves them to ``output_data.``  Generated numbers are between ``0`` and ``2^16,`` including ``0`` and excluding ``2^16.``
+    Generates ``n`` uniformly distributed 16-bit unsigned integers and
+    saves them to ``output_data.``
+
+    Generated numbers are between ``0`` and ``2^16,`` including ``0`` and
+    excluding ``2^16.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
     \param n - Number of 16-bit unsigned integers to generate
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerateShort__retval = hiprandStatus(chiprand.hiprandGenerateShort(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -808,26 +849,30 @@ def hiprandGenerateShort(object generator, object output_data, unsigned long n):
 
 @cython.embedsignature(True)
 def hiprandGenerateUniform(object generator, object output_data, unsigned long n):
-    """
+    """Generates uniformly distributed floats.
 
-    Generates uniformly distributed floats.  Generates ``n`` uniformly distributed 32-bit floating-point values and saves them to ``output_data.``  Generated numbers are between ``0.0f`` and ``1.0f,`` excluding ``0.0f`` and including ``1.0f.``
+    Generates ``n`` uniformly distributed 32-bit floating-point values
+    and saves them to ``output_data.``
+
+    Generated numbers are between ``0.0f`` and ``1.0f,`` excluding ``0.0f`` and
+    including ``1.0f.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
     \param n - Number of floats to generate
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
-       of used quasi-random generator 
+    - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
+    of used quasi-random generator 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerateUniform__retval = hiprandStatus(chiprand.hiprandGenerateUniform(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -837,9 +882,13 @@ def hiprandGenerateUniform(object generator, object output_data, unsigned long n
 
 @cython.embedsignature(True)
 def hiprandGenerateUniformDouble(object generator, object output_data, unsigned long n):
-    """
+    """Generates uniformly distributed double-precision floating-point values.
 
-    Generates uniformly distributed double-precision floating-point values.  Generates ``n`` uniformly distributed 64-bit double-precision floating-point values and saves them to ``output_data.``  Generated numbers are between ``0.0`` and ``1.0,`` excluding ``0.0`` and including ``1.0.``
+    Generates ``n`` uniformly distributed 64-bit double-precision floating-point
+    values and saves them to ``output_data.``
+
+    Generated numbers are between ``0.0`` and ``1.0,`` excluding ``0.0`` and
+    including ``1.0.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
@@ -850,18 +899,18 @@ def hiprandGenerateUniformDouble(object generator, object output_data, unsigned 
     then the returned ``double`` values are generated from only 32 random bits
     each (one <tt>unsigned int</tt> value per one generated ``double).``
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
-       of used quasi-random generator 
+    - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
+    of used quasi-random generator 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerateUniformDouble__retval = hiprandStatus(chiprand.hiprandGenerateUniformDouble(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -871,26 +920,23 @@ def hiprandGenerateUniformDouble(object generator, object output_data, unsigned 
 
 @cython.embedsignature(True)
 def hiprandGenerateUniformHalf(object generator, object output_data, unsigned long n):
-    """
+    """Generates uniformly distributed half-precision floating-point values.   Generates ``n`` uniformly distributed 16-bit half-precision floating-point  values and saves them to ``output_data.``   Generated numbers are between ``0.0`` and ``1.0,`` excluding ``0.0`` and  including ``1.0.``
 
-    Generates uniformly distributed half-precision floating-point values.   Generates ``n`` uniformly distributed 16-bit half-precision floating-point  values and saves them to ``output_data.``   Generated numbers are between ``0.0`` and ``1.0,`` excluding ``0.0`` and  including ``1.0.``
+     \param generator - Generator to use
+     \param output_data - Pointer to memory to store generated numbers
+     \param n - Number of halfs to generate
 
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of halfs to generate
+    /
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-    Return:
-      - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+          - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-      - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+          - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
+          of used quasi-random generator 
 
-      - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
-      of used quasi-random generator 
-
-      - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
-
-      /
-
+          - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
     """
     _hiprandGenerateUniformHalf__retval = hiprandStatus(chiprand.hiprandGenerateUniformHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -900,9 +946,10 @@ def hiprandGenerateUniformHalf(object generator, object output_data, unsigned lo
 
 @cython.embedsignature(True)
 def hiprandGenerateNormal(object generator, object output_data, unsigned long n, float mean, float stddev):
-    """
+    """Generates normally distributed floats.
 
-    Generates normally distributed floats.  Generates ``n`` normally distributed 32-bit floating-point values and saves them to ``output_data.``
+    Generates ``n`` normally distributed 32-bit floating-point
+    values and saves them to ``output_data.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
@@ -910,19 +957,19 @@ def hiprandGenerateNormal(object generator, object output_data, unsigned long n,
     \param mean - Mean value of normal distribution
     \param stddev - Standard deviation value of normal distribution
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
-       aligned to ``sizeof(float2)`` bytes, or ``n`` is not a multiple of the dimension
-       of used quasi-random generator 
+    - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
+    aligned to ``sizeof(float2)`` bytes, or ``n`` is not a multiple of the dimension
+    of used quasi-random generator 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerateNormal__retval = hiprandStatus(chiprand.hiprandGenerateNormal(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -932,9 +979,10 @@ def hiprandGenerateNormal(object generator, object output_data, unsigned long n,
 
 @cython.embedsignature(True)
 def hiprandGenerateNormalDouble(object generator, object output_data, unsigned long n, double mean, double stddev):
-    """
+    """Generates normally distributed doubles.
 
-    Generates normally distributed doubles.  Generates ``n`` normally distributed 64-bit double-precision floating-point numbers and saves them to ``output_data.``
+    Generates ``n`` normally distributed 64-bit double-precision floating-point
+    numbers and saves them to ``output_data.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
@@ -942,19 +990,19 @@ def hiprandGenerateNormalDouble(object generator, object output_data, unsigned l
     \param mean - Mean value of normal distribution
     \param stddev - Standard deviation value of normal distribution
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
-       aligned to ``sizeof(double2)`` bytes, or ``n`` is not a multiple of the dimension
-       of used quasi-random generator 
+    - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
+    aligned to ``sizeof(double2)`` bytes, or ``n`` is not a multiple of the dimension
+    of used quasi-random generator 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerateNormalDouble__retval = hiprandStatus(chiprand.hiprandGenerateNormalDouble(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -964,9 +1012,10 @@ def hiprandGenerateNormalDouble(object generator, object output_data, unsigned l
 
 @cython.embedsignature(True)
 def hiprandGenerateNormalHalf(object generator, object output_data, unsigned long n, int mean, int stddev):
-    """
+    """Generates normally distributed halfs.
 
-    Generates normally distributed halfs.  Generates ``n`` normally distributed 16-bit half-precision floating-point numbers and saves them to ``output_data.``
+    Generates ``n`` normally distributed 16-bit half-precision floating-point
+    numbers and saves them to ``output_data.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
@@ -974,19 +1023,19 @@ def hiprandGenerateNormalHalf(object generator, object output_data, unsigned lon
     \param mean - Mean value of normal distribution
     \param stddev - Standard deviation value of normal distribution
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
-       aligned to ``sizeof(half2)`` bytes, or ``n`` is not a multiple of the dimension
-       of used quasi-random generator 
+    - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
+    aligned to ``sizeof(half2)`` bytes, or ``n`` is not a multiple of the dimension
+    of used quasi-random generator 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerateNormalHalf__retval = hiprandStatus(chiprand.hiprandGenerateNormalHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -996,9 +1045,10 @@ def hiprandGenerateNormalHalf(object generator, object output_data, unsigned lon
 
 @cython.embedsignature(True)
 def hiprandGenerateLogNormal(object generator, object output_data, unsigned long n, float mean, float stddev):
-    """
+    """Generates log-normally distributed floats.
 
-    Generates log-normally distributed floats.  Generates ``n`` log-normally distributed 32-bit floating-point values and saves them to ``output_data.``
+    Generates ``n`` log-normally distributed 32-bit floating-point values
+    and saves them to ``output_data.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
@@ -1006,19 +1056,19 @@ def hiprandGenerateLogNormal(object generator, object output_data, unsigned long
     \param mean - Mean value of log normal distribution
     \param stddev - Standard deviation value of log normal distribution
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
-       aligned to ``sizeof(float2)`` bytes, or ``n`` is not a multiple of the dimension
-       of used quasi-random generator 
+    - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
+    aligned to ``sizeof(float2)`` bytes, or ``n`` is not a multiple of the dimension
+    of used quasi-random generator 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerateLogNormal__retval = hiprandStatus(chiprand.hiprandGenerateLogNormal(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -1028,9 +1078,10 @@ def hiprandGenerateLogNormal(object generator, object output_data, unsigned long
 
 @cython.embedsignature(True)
 def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigned long n, double mean, double stddev):
-    """
+    """Generates log-normally distributed doubles.
 
-    Generates log-normally distributed doubles.  Generates ``n`` log-normally distributed 64-bit double-precision floating-point values and saves them to ``output_data.``
+    Generates ``n`` log-normally distributed 64-bit double-precision floating-point
+    values and saves them to ``output_data.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
@@ -1038,19 +1089,19 @@ def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigne
     \param mean - Mean value of log normal distribution
     \param stddev - Standard deviation value of log normal distribution
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
-       aligned to ``sizeof(double2)`` bytes, or ``n`` is not a multiple of the dimension
-       of used quasi-random generator 
+    - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
+    aligned to ``sizeof(double2)`` bytes, or ``n`` is not a multiple of the dimension
+    of used quasi-random generator 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerateLogNormalDouble__retval = hiprandStatus(chiprand.hiprandGenerateLogNormalDouble(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -1060,29 +1111,26 @@ def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigne
 
 @cython.embedsignature(True)
 def hiprandGenerateLogNormalHalf(object generator, object output_data, unsigned long n, int mean, int stddev):
-    """
+    """Generates log-normally distributed halfs.   Generates ``n`` log-normally distributed 16-bit half-precision floating-point  values and saves them to ``output_data.``
 
-    Generates log-normally distributed halfs.   Generates ``n`` log-normally distributed 16-bit half-precision floating-point  values and saves them to ``output_data.``
+     \param generator - Generator to use
+     \param output_data - Pointer to memory to store generated numbers
+     \param n - Number of halfs to generate
+     \param mean - Mean value of log normal distribution
+     \param stddev - Standard deviation value of log normal distribution
 
-    \param generator - Generator to use
-    \param output_data - Pointer to memory to store generated numbers
-    \param n - Number of halfs to generate
-    \param mean - Mean value of log normal distribution
-    \param stddev - Standard deviation value of log normal distribution
+    /
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-    Return:
-      - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+          - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-      - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+          - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
+          aligned to ``sizeof(half2)`` bytes, or ``n`` is not a multiple of the dimension
+          of used quasi-random generator 
 
-      - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not even, ``output_data`` is not
-      aligned to ``sizeof(half2)`` bytes, or ``n`` is not a multiple of the dimension
-      of used quasi-random generator 
-
-      - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
-
-      /
-
+          - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
     """
     _hiprandGenerateLogNormalHalf__retval = hiprandStatus(chiprand.hiprandGenerateLogNormalHalf(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -1092,29 +1140,30 @@ def hiprandGenerateLogNormalHalf(object generator, object output_data, unsigned 
 
 @cython.embedsignature(True)
 def hiprandGeneratePoisson(object generator, object output_data, unsigned long n, double lambda_):
-    """
+    """Generates Poisson-distributed 32-bit unsigned integers.
 
-    Generates Poisson-distributed 32-bit unsigned integers.  Generates ``n`` Poisson-distributed 32-bit unsigned integers and saves them to ``output_data.``
+    Generates ``n`` Poisson-distributed 32-bit unsigned integers and
+    saves them to ``output_data.``
 
     \param generator - Generator to use
     \param output_data - Pointer to memory to store generated numbers
     \param n - Number of 32-bit unsigned integers to generate
     \param lambda - lambda for the Poisson distribution
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
 
-       - HIPRAND_STATUS_OUT_OF_RANGE if lambda is non-positive 
+    - HIPRAND_STATUS_OUT_OF_RANGE if lambda is non-positive 
 
-       - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
-       of used quasi-random generator 
+    - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if ``n`` is not a multiple of the dimension
+    of used quasi-random generator 
 
-       - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated
+    - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGeneratePoisson__retval = hiprandStatus(chiprand.hiprandGeneratePoisson(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -1124,24 +1173,28 @@ def hiprandGeneratePoisson(object generator, object output_data, unsigned long n
 
 @cython.embedsignature(True)
 def hiprandGenerateSeeds(object generator):
-    """
+    """Initializes the generator's state on GPU or host.
 
-    Initializes the generator's state on GPU or host.  Initializes the generator's state on GPU or host.  If hiprandGenerateSeeds() was not called for a generator, it will be automatically called by functions which generates random numbers like hiprandGenerate(), hiprandGenerateUniform(), hiprandGenerateNormal() etc.
+    Initializes the generator's state on GPU or host.
+
+    If hiprandGenerateSeeds() was not called for a generator, it will be
+    automatically called by functions which generates random numbers like
+    hiprandGenerate(), hiprandGenerateUniform(), hiprandGenerateNormal() etc.
 
     \param generator - Generator to initialize
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was never created 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was never created 
 
-       - HIPRAND_STATUS_PREEXISTING_FAILURE if there was an existing error from
-       a previous kernel launch 
+    - HIPRAND_STATUS_PREEXISTING_FAILURE if there was an existing error from
+      a previous kernel launch 
 
-       - HIPRAND_STATUS_LAUNCH_FAILURE if the kernel launch failed for any reason 
+    - HIPRAND_STATUS_LAUNCH_FAILURE if the kernel launch failed for any reason 
 
-       - HIPRAND_STATUS_SUCCESS if the seeds were generated successfully
+    - HIPRAND_STATUS_SUCCESS if the seeds were generated successfully 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandGenerateSeeds__retval = hiprandStatus(chiprand.hiprandGenerateSeeds(
         rocrand_generator_base_type.from_pyobj(generator)._ptr))    # fully specified
@@ -1150,20 +1203,21 @@ def hiprandGenerateSeeds(object generator):
 
 @cython.embedsignature(True)
 def hiprandSetStream(object generator, object stream):
-    """
+    """Sets the current stream for kernel launches.
 
-    Sets the current stream for kernel launches.  Sets the current stream for all kernel launches of the generator. All functions will use this stream.
+    Sets the current stream for all kernel launches of the generator.
+    All functions will use this stream.
 
     \param generator - Generator to modify
     \param stream - Stream to use or NULL for default stream
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_SUCCESS if stream was set successfully
+    - HIPRAND_STATUS_SUCCESS if stream was set successfully 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandSetStream__retval = hiprandStatus(chiprand.hiprandSetStream(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,
@@ -1173,22 +1227,25 @@ def hiprandSetStream(object generator, object stream):
 
 @cython.embedsignature(True)
 def hiprandSetPseudoRandomGeneratorSeed(object generator, unsigned long long seed):
-    """
+    """Sets the seed of a pseudo-random number generator.
 
-    Sets the seed of a pseudo-random number generator.  Sets the seed of the pseudo-random number generator.  - This operation resets the generator's internal state. - This operation does not change the generator's offset.
+    Sets the seed of the pseudo-random number generator.
+
+    - This operation resets the generator's internal state.
+    - This operation does not change the generator's offset.
 
     \param generator - Pseudo-random number generator
     \param seed - New seed value
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_TYPE_ERROR if the generator is a quasi random number generator 
+    - HIPRAND_STATUS_TYPE_ERROR if the generator is a quasi random number generator 
 
-       - HIPRAND_STATUS_SUCCESS if seed was set successfully
+    - HIPRAND_STATUS_SUCCESS if seed was set successfully 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandSetPseudoRandomGeneratorSeed__retval = hiprandStatus(chiprand.hiprandSetPseudoRandomGeneratorSeed(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,seed))    # fully specified
@@ -1197,23 +1254,29 @@ def hiprandSetPseudoRandomGeneratorSeed(object generator, unsigned long long see
 
 @cython.embedsignature(True)
 def hiprandSetGeneratorOffset(object generator, unsigned long long offset):
-    """
+    """Sets the offset of a random number generator.
 
-    Sets the offset of a random number generator.  Sets the absolute offset of the random number generator.  - This operation resets the generator's internal state. - This operation does not change the generator's seed.  Absolute offset cannot be set if generator's type is HIPRAND_RNG_PSEUDO_MTGP32 or HIPRAND_RNG_PSEUDO_MT19937.
+    Sets the absolute offset of the random number generator.
+
+    - This operation resets the generator's internal state.
+    - This operation does not change the generator's seed.
+
+    Absolute offset cannot be set if generator's type is
+    HIPRAND_RNG_PSEUDO_MTGP32 or HIPRAND_RNG_PSEUDO_MT19937.
 
     \param generator - Random number generator
     \param offset - New absolute offset
 
-    Return:
-       - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
+    - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
-       - HIPRAND_STATUS_SUCCESS if offset was successfully set 
+    - HIPRAND_STATUS_SUCCESS if offset was successfully set 
 
-       - HIPRAND_STATUS_TYPE_ERROR if generator's type is HIPRAND_RNG_PSEUDO_MTGP32
-       or HIPRAND_RNG_PSEUDO_MT19937
+    - HIPRAND_STATUS_TYPE_ERROR if generator's type is HIPRAND_RNG_PSEUDO_MTGP32
+    or HIPRAND_RNG_PSEUDO_MT19937 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandSetGeneratorOffset__retval = hiprandStatus(chiprand.hiprandSetGeneratorOffset(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,offset))    # fully specified
@@ -1222,24 +1285,28 @@ def hiprandSetGeneratorOffset(object generator, unsigned long long offset):
 
 @cython.embedsignature(True)
 def hiprandSetQuasiRandomGeneratorDimensions(object generator, unsigned int dimensions):
-    """
+    """Set the number of dimensions of a quasi-random number generator.
 
-    Set the number of dimensions of a quasi-random number generator.  Set the number of dimensions of a quasi-random number generator. Supported values of ``dimensions`` are 1 to 20000.  - This operation resets the generator's internal state. - This operation does not change the generator's offset.
+    Set the number of dimensions of a quasi-random number generator.
+    Supported values of ``dimensions`` are 1 to 20000.
+
+    - This operation resets the generator's internal state.
+    - This operation does not change the generator's offset.
 
     \param generator - Quasi-random number generator
     \param dimensions - Number of dimensions
 
-    Return:
-       - HIPRAND_STATUS_NOT_CREATED if the generator wasn't created 
+    - HIPRAND_STATUS_NOT_CREATED if the generator wasn't created 
 
-       - HIPRAND_STATUS_TYPE_ERROR if the generator is not a quasi-random number generator 
+    - HIPRAND_STATUS_TYPE_ERROR if the generator is not a quasi-random number generator 
 
-       - HIPRAND_STATUS_OUT_OF_RANGE if ``dimensions`` is out of range 
+    - HIPRAND_STATUS_OUT_OF_RANGE if ``dimensions`` is out of range 
 
-       - HIPRAND_STATUS_SUCCESS if the number of dimensions was set successfully
+    - HIPRAND_STATUS_SUCCESS if the number of dimensions was set successfully 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandSetQuasiRandomGeneratorDimensions__retval = hiprandStatus(chiprand.hiprandSetQuasiRandomGeneratorDimensions(
         rocrand_generator_base_type.from_pyobj(generator)._ptr,dimensions))    # fully specified
@@ -1248,19 +1315,20 @@ def hiprandSetQuasiRandomGeneratorDimensions(object generator, unsigned int dime
 
 @cython.embedsignature(True)
 def hiprandGetVersion():
-    """
+    """Returns the version number of the cuRAND or rocRAND library.
 
-    Returns the version number of the cuRAND or rocRAND library.  Returns in ``version`` the version number of the underlying cuRAND or rocRAND library.
+    Returns in ``version`` the version number of the underlying cuRAND or
+    rocRAND library.
 
     \param version - Version of the library
 
-    Return:
-       - HIPRAND_STATUS_OUT_OF_RANGE if ``version`` is NULL 
+    - HIPRAND_STATUS_OUT_OF_RANGE if ``version`` is NULL 
 
-       - HIPRAND_STATUS_SUCCESS if the version number was successfully returned
+    - HIPRAND_STATUS_SUCCESS if the version number was successfully returned 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     cdef int version
     _hiprandGetVersion__retval = hiprandStatus(chiprand.hiprandGetVersion(&version))    # fully specified
@@ -1269,24 +1337,24 @@ def hiprandGetVersion():
 
 @cython.embedsignature(True)
 def hiprandCreatePoissonDistribution(double lambda_):
-    """
+    """Construct the histogram for a Poisson distribution.
 
-    Construct the histogram for a Poisson distribution.  Construct the histogram for the Poisson distribution with lambda ``lambda.``
+    Construct the histogram for the Poisson distribution with lambda ``lambda.``
 
     \param lambda - lambda for the Poisson distribution
     \param discrete_distribution - pointer to the histogram in device memory
 
-    Return:
-       - HIPRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated 
+    - HIPRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated 
 
-       - HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` pointer was null 
+    - HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` pointer was null 
 
-       - HIPRAND_STATUS_OUT_OF_RANGE if lambda is non-positive 
+    - HIPRAND_STATUS_OUT_OF_RANGE if lambda is non-positive 
 
-       - HIPRAND_STATUS_SUCCESS if the histogram was constructed successfully
+    - HIPRAND_STATUS_SUCCESS if the histogram was constructed successfully 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     discrete_distribution = rocrand_discrete_distribution_st.from_ptr(NULL)
     _hiprandCreatePoissonDistribution__retval = hiprandStatus(chiprand.hiprandCreatePoissonDistribution(lambda_,&discrete_distribution._ptr))    # fully specified
@@ -1295,19 +1363,20 @@ def hiprandCreatePoissonDistribution(double lambda_):
 
 @cython.embedsignature(True)
 def hiprandDestroyDistribution(object discrete_distribution):
-    """
+    """Destroy the histogram array for a discrete distribution.
 
-    Destroy the histogram array for a discrete distribution.  Destroy the histogram array for a discrete distribution created by hiprandCreatePoissonDistribution.
+    Destroy the histogram array for a discrete distribution created by
+    hiprandCreatePoissonDistribution.
 
     \param discrete_distribution - pointer to the histogram in device memory
 
-    Return:
-       - HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` was null 
+    - HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` was null 
 
-       - HIPRAND_STATUS_SUCCESS if the histogram was destroyed successfully
+    - HIPRAND_STATUS_SUCCESS if the histogram was destroyed successfully 
 
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hiprandDestroyDistribution__retval = hiprandStatus(chiprand.hiprandDestroyDistribution(
         rocrand_discrete_distribution_st.from_pyobj(discrete_distribution)._ptr))    # fully specified
