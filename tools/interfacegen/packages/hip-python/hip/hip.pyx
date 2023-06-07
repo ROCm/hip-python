@@ -16541,8 +16541,7 @@ cdef class double4:
 
 @cython.embedsignature(True)
 def hipCreateChannelDesc(int x, int y, int z, int w, object f):
-    """
-
+    """(No brief)
     """
     if not isinstance(f,_hipChannelFormatKind__Base):
         raise TypeError("argument 'f' must be of type '_hipChannelFormatKind__Base'")
@@ -25956,22 +25955,10 @@ cdef class hipArrayMapInfo:
 
 @cython.embedsignature(True)
 def hipInit(unsigned int flags):
-    """
+    """Explicitly initializes the HIP runtime.
 
-     @defgroup API HIP API
-     @{
-
-     Defines the HIP API.  See the individual sections for more information.
-
-
-     @defgroup Driver Initialization and Version
-     @{
-     This section describes the initializtion and version functions of HIP runtime API.
-
-
-
-    Explicitly initializes the HIP runtime.  Most HIP APIs implicitly initialize the HIP runtime. This API provides control over the timing of the initialization.
-
+    Most HIP APIs implicitly initialize the HIP runtime.
+    This API provides control over the timing of the initialization.
     """
     _hipInit__retval = hipError_t(chip.hipInit(flags))    # fully specified
     return (_hipInit__retval,)
@@ -25979,26 +25966,21 @@ def hipInit(unsigned int flags):
 
 @cython.embedsignature(True)
 def hipDriverGetVersion():
-    """
+    """Returns the approximate HIP driver version.
 
-    Returns the approximate HIP driver version.
+    This function always set *driverVersion to 4 as an approximation though HIP supports
+    some features which were introduced in later CUDA SDK revisions.
+    HIP apps code should not rely on the driver revision number here and should
+    use arch feature flags to test device capabilities or conditional compilation.
 
     Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - driverVersion:
     Warning:
        The HIP feature set does not correspond to an exact CUDA SDK driver revision.
-       This function always set *driverVersion to 4 as an approximation though HIP supports
-       some features which were introduced in later CUDA SDK revisions.
-       HIP apps code should not rely on the driver revision number here and should
-       use arch feature flags to test device capabilities or conditional compilation.
-
-
     See:
        hipRuntimeGetVersion
-
-
     """
     cdef int driverVersion
     _hipDriverGetVersion__retval = hipError_t(chip.hipDriverGetVersion(&driverVersion))    # fully specified
@@ -26007,25 +25989,20 @@ def hipDriverGetVersion():
 
 @cython.embedsignature(True)
 def hipRuntimeGetVersion():
-    """
+    """Returns the approximate HIP Runtime version.
 
-    Returns the approximate HIP Runtime version.
+    On AMD platform, the function returns HIP runtime version,
+    while on NVIDIA platform, it returns CUDA runtime version.
+    And there is no mapping/correlation between HIP version and CUDA version.
 
     Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - runtimeVersion:
     Warning:
        The version definition of HIP runtime is different from CUDA.
-       On AMD platform, the function returns HIP runtime version,
-       while on NVIDIA platform, it returns CUDA runtime version.
-       And there is no mapping/correlation between HIP version and CUDA version.
-
-
     See:
        hipDriverGetVersion
-
-
     """
     cdef int runtimeVersion
     _hipRuntimeGetVersion__retval = hipError_t(chip.hipRuntimeGetVersion(&runtimeVersion))    # fully specified
@@ -26034,15 +26011,15 @@ def hipRuntimeGetVersion():
 
 @cython.embedsignature(True)
 def hipDeviceGet(int ordinal):
-    """
-
-    Returns a handle to a compute device
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice
-
+    """Returns a handle to a compute device
 
     Args:
        ordinal:
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice
+       - device:
     """
     cdef int device
     _hipDeviceGet__retval = hipError_t(chip.hipDeviceGet(&device,ordinal))    # fully specified
@@ -26051,15 +26028,16 @@ def hipDeviceGet(int ordinal):
 
 @cython.embedsignature(True)
 def hipDeviceComputeCapability(int device):
-    """
-
-    Returns the compute capability of the device
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice
-
+    """Returns the compute capability of the device
 
     Args:
        device:
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice
+       - major:
+       - minor:
     """
     cdef int major
     cdef int minor
@@ -26069,17 +26047,16 @@ def hipDeviceComputeCapability(int device):
 
 @cython.embedsignature(True)
 def hipDeviceGetName(char * name, int len, int device):
-    """
-
-    Returns an identifer string for the device.
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice
-
+    """Returns an identifer string for the device.
 
     Args:
        name:
        len:
        device:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice
     """
     _hipDeviceGetName__retval = hipError_t(chip.hipDeviceGetName(name,len,device))    # fully specified
     return (_hipDeviceGetName__retval,)
@@ -26087,20 +26064,20 @@ def hipDeviceGetName(char * name, int len, int device):
 
 @cython.embedsignature(True)
 def hipDeviceGetUuid(object uuid, int device):
-    """
+    """Returns an UUID for the device.[BETA]
 
-    Returns an UUID for the device.[BETA]
+    @beta This API is marked as beta, meaning, while this is feature complete,
+    it is still open to changes and may have outstanding issues.
 
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotInitialized,
-       #hipErrorDeinitialized
-
+    #hipErrorDeinitialized
 
     Args:
        uuid:
-       device: @beta This API is marked as beta, meaning, while this is feature complete,
-          it is still open to changes and may have outstanding issues.
+       device:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotInitialized,
     """
     _hipDeviceGetUuid__retval = hipError_t(chip.hipDeviceGetUuid(
         hipUUID_t.from_pyobj(uuid)._ptr,device))    # fully specified
@@ -26109,17 +26086,17 @@ def hipDeviceGetUuid(object uuid, int device):
 
 @cython.embedsignature(True)
 def hipDeviceGetP2PAttribute(object attr, int srcDevice, int dstDevice):
-    """
-
-    Returns a value for attr of link between two devices
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice
-
+    """Returns a value for attr of link between two devices
 
     Args:
        attr:
        srcDevice:
        dstDevice:
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice
+       - value:
     """
     cdef int value
     if not isinstance(attr,_hipDeviceP2PAttr__Base):
@@ -26130,17 +26107,16 @@ def hipDeviceGetP2PAttribute(object attr, int srcDevice, int dstDevice):
 
 @cython.embedsignature(True)
 def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
-    """
-
-    Returns a PCI Bus Id string for the device, overloaded to take int device ID.
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice
-
+    """Returns a PCI Bus Id string for the device, overloaded to take int device ID.
 
     Args:
        pciBusId:
        len:
        device:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice
     """
     _hipDeviceGetPCIBusId__retval = hipError_t(chip.hipDeviceGetPCIBusId(pciBusId,len,device))    # fully specified
     return (_hipDeviceGetPCIBusId__retval,)
@@ -26148,18 +26124,15 @@ def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
 
 @cython.embedsignature(True)
 def hipDeviceGetByPCIBusId(const char * pciBusId):
-    """
-
-    Returns a handle to a compute device.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
+    """Returns a handle to a compute device.
 
     Args:
        PCI: Bus ID
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       - device: handle
     """
     cdef int device
     _hipDeviceGetByPCIBusId__retval = hipError_t(chip.hipDeviceGetByPCIBusId(&device,pciBusId))    # fully specified
@@ -26168,15 +26141,15 @@ def hipDeviceGetByPCIBusId(const char * pciBusId):
 
 @cython.embedsignature(True)
 def hipDeviceTotalMem(int device):
-    """
-
-    Returns the total amount of memory on the device.
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice
-
+    """Returns the total amount of memory on the device.
 
     Args:
        device:
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice
+       - bytes:
     """
     cdef unsigned long bytes
     _hipDeviceTotalMem__retval = hipError_t(chip.hipDeviceTotalMem(&bytes,device))    # fully specified
@@ -26185,26 +26158,16 @@ def hipDeviceTotalMem(int device):
 
 @cython.embedsignature(True)
 def hipDeviceSynchronize():
-    """
+    """Waits on all active streams on current device
 
-    @}
-
-
-     @defgroup Device Device Management
-     @{
-     This section describes the device management functions of HIP runtime API.
-
-
-    Waits on all active streams on current device  When this command is invoked, the host thread gets blocked until all the commands associated with streams associated with the device. HIP does not support multiple blocking modes (yet!).
+    When this command is invoked, the host thread gets blocked until all the commands associated
+    with streams associated with the device. HIP does not support multiple blocking modes (yet!).
 
     Returns:
-       #hipSuccess
-
-
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
     See:
        hipSetDevice, hipDeviceReset
-
-
     """
     _hipDeviceSynchronize__retval = hipError_t(chip.hipDeviceSynchronize())    # fully specified
     return (_hipDeviceSynchronize__retval,)
@@ -26212,18 +26175,17 @@ def hipDeviceSynchronize():
 
 @cython.embedsignature(True)
 def hipDeviceReset():
-    """
+    """The state of current device is discarded and updated to a fresh state.
 
-    The state of current device is discarded and updated to a fresh state.  Calling this function deletes all streams created, memory allocated, kernels running, events created. Make sure that no other thread is using the device or streams, memory, kernels, events associated with the current device.
+    Calling this function deletes all streams created, memory allocated, kernels running, events
+    created. Make sure that no other thread is using the device or streams, memory, kernels, events
+    associated with the current device.
 
     Returns:
-       #hipSuccess
-
-
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
     See:
        hipDeviceSynchronize
-
-
     """
     _hipDeviceReset__retval = hipError_t(chip.hipDeviceReset())    # fully specified
     return (_hipDeviceReset__retval,)
@@ -26231,39 +26193,38 @@ def hipDeviceReset():
 
 @cython.embedsignature(True)
 def hipSetDevice(int deviceId):
-    """
+    """Set default device to be used for subsequent hip API calls from this thread.
 
-    Set default device to be used for subsequent hip API calls from this thread.
+    Sets ``device`` as the default device for the calling host thread.  Valid device id's are 0...
+    (hipGetDeviceCount()-1).
 
+    Many HIP APIs implicitly use the "default device" :
 
+    - Any device memory subsequently allocated from this host thread (using hipMalloc) will be
+    allocated on device.
+    - Any streams or events created from this host thread will be associated with device.
+    - Any kernels launched from this host thread (using hipLaunchKernel) will be executed on device
+    (unless a specific stream is specified, in which case the device associated with that stream will
+    be used).
 
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorDeviceAlreadyInUse
+    This function may be called from any host thread.  Multiple host threads may use the same device.
+    This function does no synchronization with the previous or new device, and has very little
+    runtime overhead. Applications can use hipSetDevice to quickly switch the default device before
+    making a HIP runtime call which uses the default device.
 
-
-    See:
-       hipGetDevice, hipGetDeviceCount
-
+    The default device is stored in thread-local-storage for each thread.
+    Thread-pool implementations may inherit the default device of the previous thread.  A good
+    practice is to always call hipSetDevice at the start of HIP coding sequency to establish a known
+    standard device.
 
     Args:
        deviceId: Valid device in range 0...hipGetDeviceCount().
-          Sets ``device`` as the default device for the calling host thread.  Valid device id's are 0...
-          (hipGetDeviceCount()-1).
-          Many HIP APIs implicitly use the "default device" :
-          - Any device memory subsequently allocated from this host thread (using hipMalloc) will be
-          allocated on device.
-          - Any streams or events created from this host thread will be associated with device.
-          - Any kernels launched from this host thread (using hipLaunchKernel) will be executed on device
-          (unless a specific stream is specified, in which case the device associated with that stream will
-          be used).
-          This function may be called from any host thread.  Multiple host threads may use the same device.
-          This function does no synchronization with the previous or new device, and has very little
-          runtime overhead. Applications can use hipSetDevice to quickly switch the default device before
-          making a HIP runtime call which uses the default device.
-          The default device is stored in thread-local-storage for each thread.
-          Thread-pool implementations may inherit the default device of the previous thread.  A good
-          practice is to always call hipSetDevice at the start of HIP coding sequency to establish a known
-          standard device.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorDeviceAlreadyInUse
+    See:
+       hipGetDevice, hipGetDeviceCount
     """
     _hipSetDevice__retval = hipError_t(chip.hipSetDevice(deviceId))    # fully specified
     return (_hipSetDevice__retval,)
@@ -26271,25 +26232,20 @@ def hipSetDevice(int deviceId):
 
 @cython.embedsignature(True)
 def hipGetDevice():
-    """
+    """Return the default device id for the calling host thread.
 
-    Return the default device id for the calling host thread.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-
-    See:
-       hipSetDevice, hipGetDevicesizeBytes
-
+    HIP maintains an default device for each thread using thread-local-storage.
+    This device is used implicitly for HIP runtime APIs called by this thread.
+    hipGetDevice returns in * ``device`` the default device for the calling host thread.
 
     Args:
        device: *device is written with the default device
-          HIP maintains an default device for each thread using thread-local-storage.
-          This device is used implicitly for HIP runtime APIs called by this thread.
-          hipGetDevice returns in * ``device`` the default device for the calling host thread.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    See:
+       hipSetDevice, hipGetDevicesizeBytes
     """
     cdef int deviceId
     _hipGetDevice__retval = hipError_t(chip.hipGetDevice(&deviceId))    # fully specified
@@ -26298,21 +26254,17 @@ def hipGetDevice():
 
 @cython.embedsignature(True)
 def hipGetDeviceCount():
-    """
-
-    Return number of compute-capable devices.
+    """Return number of compute-capable devices.
 
     @param [output] count Returns number of compute-capable devices.
 
-    Returns:
-       #hipSuccess, #hipErrorNoDevice
-
-
-       Returns in ``*count`` the number of devices that have ability to run compute commands.  If there
-       are no such devices, then
-     @ref hipGetDeviceCount will return #hipErrorNoDevice. If 1 or more
+    Returns in ``*count`` the number of devices that have ability to run compute commands.  If there
+    are no such devices, then @ref hipGetDeviceCount will return #hipErrorNoDevice. If 1 or more
     devices can be found, then hipGetDeviceCount returns #hipSuccess.
 
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorNoDevice
     """
     cdef int count
     _hipGetDeviceCount__retval = hipError_t(chip.hipGetDeviceCount(&count))    # fully specified
@@ -26321,22 +26273,16 @@ def hipGetDeviceCount():
 
 @cython.embedsignature(True)
 def hipDeviceGetAttribute(object pi, object attr, int deviceId):
-    """
-
-    Query for a specific device attribute.
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
+    """Query for a specific device attribute.
 
     Args:
        pi: pointer to value to return
        attr: attribute to query
        deviceId: which device to query for information
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     if not isinstance(attr,_hipDeviceAttribute_t__Base):
         raise TypeError("argument 'attr' must be of type '_hipDeviceAttribute_t__Base'")
@@ -26347,29 +26293,23 @@ def hipDeviceGetAttribute(object pi, object attr, int deviceId):
 
 @cython.embedsignature(True)
 def hipDeviceGetDefaultMemPool(int device):
-    """
+    """Returns the default memory pool of the specified device
 
-    Returns the default memory pool of the specified device
+    hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
-
-
-
-    Returns:
-       #chipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotSupported
-
-
-    See:
-       hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        device: Device index for query the default memory pool
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #chipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotSupported
+       - mem_pool: Default memory pool to return
+    See:
+       hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipDeviceGetDefaultMemPool__retval = hipError_t(chip.hipDeviceGetDefaultMemPool(&mem_pool._ptr,device))    # fully specified
@@ -26378,35 +26318,31 @@ def hipDeviceGetDefaultMemPool(int device):
 
 @cython.embedsignature(True)
 def hipDeviceSetMemPool(int device, object mem_pool):
-    """
+    """Sets the current memory pool of a device
 
-    Sets the current memory pool of a device  The memory pool must be local to the specified device. ``hipMallocAsync`` allocates from the current mempool of the provided stream's device. By default, a device's current memory pool is its default memory pool.
+    The memory pool must be local to the specified device.
+    ``hipMallocAsync`` allocates from the current mempool of the provided stream's device.
+    By default, a device's current memory pool is its default memory pool.
 
-    Note:
-       Use ``hipMallocFromPoolAsync`` for asynchronous memory allocations from a device
-       different than the one the stream runs on.
+    different than the one the stream runs on.
 
+    hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice, #hipErrorNotSupported
-
-
-    See:
-       hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        device: Device index for the update
        mem_pool: Memory pool for update as the current on the specified device
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice, #hipErrorNotSupported
+    Note:
+       Use ``hipMallocFromPoolAsync`` for asynchronous memory allocations from a device
+    See:
+       hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipDeviceSetMemPool__retval = hipError_t(chip.hipDeviceSetMemPool(device,
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr))    # fully specified
@@ -26415,29 +26351,28 @@ def hipDeviceSetMemPool(int device, object mem_pool):
 
 @cython.embedsignature(True)
 def hipDeviceGetMemPool(int device):
-    """
+    """Gets the current memory pool for the specified device
 
-    Gets the current memory pool for the specified device  Returns the last pool provided to ``hipDeviceSetMemPool`` for this device or the device's default memory pool if ``hipDeviceSetMemPool`` has never been called. By default the current mempool is the default mempool for a device, otherwise the returned pool must have been set with ``hipDeviceSetMemPool.``
+    Returns the last pool provided to ``hipDeviceSetMemPool`` for this device
+    or the device's default memory pool if ``hipDeviceSetMemPool`` has never been called.
+    By default the current mempool is the default mempool for a device,
+    otherwise the returned pool must have been set with ``hipDeviceSetMemPool.``
 
+    hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-
-    See:
-       hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        device: Device index to query the current memory pool
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       - mem_pool: Current memory pool on the specified device
+    See:
+       hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipDeviceGetMemPool__retval = hipError_t(chip.hipDeviceGetMemPool(&mem_pool._ptr,device))    # fully specified
@@ -26446,31 +26381,23 @@ def hipDeviceGetMemPool(int device):
 
 @cython.embedsignature(True)
 def hipGetDeviceProperties(object prop, int deviceId):
-    """
+    """Returns device properties.
 
-    Returns device properties.
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidDevice
-
-    Bug:
-       HCC always returns 0 for maxThreadsPerMultiProcessor
-
-    Bug:
-       HCC always returns 0 for regsPerBlock
-
-    Bug:
-       HCC always returns 0 for l2CacheSize
-
-       Populates hipGetDeviceProperties with information for the specified device.
-
+    Populates hipGetDeviceProperties with information for the specified device.
 
     Args:
        prop: written with device properties
        deviceId: which device to query for information
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice
+    Bug:
+       HCC always returns 0 for maxThreadsPerMultiProcessor
+    Bug:
+       HCC always returns 0 for regsPerBlock
+    Bug:
+       HCC always returns 0 for l2CacheSize
     """
     _hipGetDeviceProperties__retval = hipError_t(chip.hipGetDeviceProperties(
         hipDeviceProp_t.from_pyobj(prop)._ptr,deviceId))    # fully specified
@@ -26479,19 +26406,17 @@ def hipGetDeviceProperties(object prop, int deviceId):
 
 @cython.embedsignature(True)
 def hipDeviceSetCacheConfig(object cacheConfig):
-    """
+    """Set L1/Shared cache partition.
 
-    Set L1/Shared cache partition.
-
-    Returns:
-       #hipSuccess, #hipErrorNotInitialized
-       Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
-       on those architectures.
-
-
+    Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
+    on those architectures.
 
     Args:
        cacheConfig:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorNotInitialized
     """
     if not isinstance(cacheConfig,_hipFuncCache_t__Base):
         raise TypeError("argument 'cacheConfig' must be of type '_hipFuncCache_t__Base'")
@@ -26501,17 +26426,15 @@ def hipDeviceSetCacheConfig(object cacheConfig):
 
 @cython.embedsignature(True)
 def hipDeviceGetCacheConfig():
-    """
+    """Get Cache configuration for a specific Device
 
-    Get Cache configuration for a specific Device
+    Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
+    on those architectures.
 
     Returns:
-       #hipSuccess, #hipErrorNotInitialized
-       Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
-       on those architectures.
-
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorNotInitialized
+       - cacheConfig:
     """
     cdef chip.hipFuncCache_t cacheConfig
     _hipDeviceGetCacheConfig__retval = hipError_t(chip.hipDeviceGetCacheConfig(&cacheConfig))    # fully specified
@@ -26520,18 +26443,17 @@ def hipDeviceGetCacheConfig():
 
 @cython.embedsignature(True)
 def hipDeviceGetLimit(object limit):
-    """
+    """Get Resource limits of current device
 
-    Get Resource limits of current device
-
-    Returns:
-       #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
-       Note: Currently, only hipLimitMallocHeapSize is available
-
-
+    Note: Currently, only hipLimitMallocHeapSize is available
 
     Args:
        limit:
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
+       - pValue:
     """
     cdef unsigned long pValue
     if not isinstance(limit,_hipLimit_t__Base):
@@ -26542,18 +26464,15 @@ def hipDeviceGetLimit(object limit):
 
 @cython.embedsignature(True)
 def hipDeviceSetLimit(object limit, unsigned long value):
-    """
-
-    Set Resource limits of current device
-
-    Returns:
-       #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
-
-
+    """Set Resource limits of current device
 
     Args:
        limit:
        value:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
     """
     if not isinstance(limit,_hipLimit_t__Base):
         raise TypeError("argument 'limit' must be of type '_hipLimit_t__Base'")
@@ -26563,18 +26482,15 @@ def hipDeviceSetLimit(object limit, unsigned long value):
 
 @cython.embedsignature(True)
 def hipDeviceGetSharedMemConfig():
-    """
+    """Returns bank width of shared memory for current device
 
-    Returns bank width of shared memory for current device
+    Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+    ignored on those architectures.
 
     Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-
-       Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-       ignored on those architectures.
-
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+       - pConfig:
     """
     cdef chip.hipSharedMemConfig pConfig
     _hipDeviceGetSharedMemConfig__retval = hipError_t(chip.hipDeviceGetSharedMemConfig(&pConfig))    # fully specified
@@ -26583,14 +26499,12 @@ def hipDeviceGetSharedMemConfig():
 
 @cython.embedsignature(True)
 def hipGetDeviceFlags():
-    """
-
-    Gets the flags set for current device
+    """Gets the flags set for current device
 
     Returns:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       - flags:
     """
     cdef unsigned int flags
     _hipGetDeviceFlags__retval = hipError_t(chip.hipGetDeviceFlags(&flags))    # fully specified
@@ -26599,20 +26513,17 @@ def hipGetDeviceFlags():
 
 @cython.embedsignature(True)
 def hipDeviceSetSharedMemConfig(object config):
-    """
+    """The bank width of shared memory on current device is set
 
-    The bank width of shared memory on current device is set
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-
-       Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-       ignored on those architectures.
-
-
+    Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+    ignored on those architectures.
 
     Args:
        config:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     if not isinstance(config,_hipSharedMemConfig__Base):
         raise TypeError("argument 'config' must be of type '_hipSharedMemConfig__Base'")
@@ -26622,33 +26533,30 @@ def hipDeviceSetSharedMemConfig(object config):
 
 @cython.embedsignature(True)
 def hipSetDeviceFlags(unsigned int flags):
-    """
+    """The current device behavior is changed according the flags passed.
 
-    The current device behavior is changed according the flags passed.
+    The schedule flags impact how HIP waits for the completion of a command running on a device.
+    hipDeviceScheduleSpin         : HIP runtime will actively spin in the thread which submitted the
+    work until the command completes.  This offers the lowest latency, but will consume a CPU core
+    and may increase power. hipDeviceScheduleYield        : The HIP runtime will yield the CPU to
+    system so that other tasks can use it.  This may increase latency to detect the completion but
+    will consume less power and is friendlier to other tasks in the system.
+    hipDeviceScheduleBlockingSync : On ROCm platform, this is a synonym for hipDeviceScheduleYield.
+    hipDeviceScheduleAuto         : Use a hueristic to select between Spin and Yield modes.  If the
+    number of HIP contexts is greater than the number of logical processors in the system, use Spin
+    scheduling.  Else use Yield scheduling.
 
-     Warning:
-       ROCm silently ignores this flag.
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorSetOnActiveProcess
-
-
-
+    hipDeviceMapHost              : Allow mapping host memory.  On ROCM, this is always allowed and
+    the flag is ignored. hipDeviceLmemResizeToMax      : 
 
     Args:
-       flags: The schedule flags impact how HIP waits for the completion of a command running on a device.
-          hipDeviceScheduleSpin         : HIP runtime will actively spin in the thread which submitted the
-          work until the command completes.  This offers the lowest latency, but will consume a CPU core
-          and may increase power. hipDeviceScheduleYield        : The HIP runtime will yield the CPU to
-          system so that other tasks can use it.  This may increase latency to detect the completion but
-          will consume less power and is friendlier to other tasks in the system.
-          hipDeviceScheduleBlockingSync : On ROCm platform, this is a synonym for hipDeviceScheduleYield.
-          hipDeviceScheduleAuto         : Use a hueristic to select between Spin and Yield modes.  If the
-          number of HIP contexts is greater than the number of logical processors in the system, use Spin
-          scheduling.  Else use Yield scheduling.
-          hipDeviceMapHost              : Allow mapping host memory.  On ROCM, this is always allowed and
-          the flag is ignored. hipDeviceLmemResizeToMax      :
+       flags:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorSetOnActiveProcess
+    Warning:
+       ROCm silently ignores this flag.
     """
     _hipSetDeviceFlags__retval = hipError_t(chip.hipSetDeviceFlags(flags))    # fully specified
     return (_hipSetDeviceFlags__retval,)
@@ -26656,17 +26564,13 @@ def hipSetDeviceFlags(unsigned int flags):
 
 @cython.embedsignature(True)
 def hipChooseDevice(object prop):
-    """
-
-    Device which matches hipDeviceProp_t is returned
-
-
-
+    """Device which matches hipDeviceProp_t is returned
 
     Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - device: ID
+       - device: properties pointer
     """
     cdef int device
     _hipChooseDevice__retval = hipError_t(chip.hipChooseDevice(&device,
@@ -26676,22 +26580,19 @@ def hipChooseDevice(object prop):
 
 @cython.embedsignature(True)
 def hipExtGetLinkTypeAndHopCount(int device1, int device2):
-    """
+    """Returns the link type and hop count between two devices
 
-    Returns the link type and hop count between two devices
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipInvalidDevice, #hipErrorRuntimeOther
-
+    Queries and returns the HSA link type and the hop count between the two specified devices.
 
     Args:
        device1: Ordinal for device1
        device2: Ordinal for device2
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipInvalidDevice, #hipErrorRuntimeOther
+       - linktype: Returns the link type (See hsa_amd_link_info_type_t) between the two devices
+       - hopcount: Returns the hop count between the two devices
     """
     cdef unsigned int linktype
     cdef unsigned int hopcount
@@ -26701,22 +26602,30 @@ def hipExtGetLinkTypeAndHopCount(int device1, int device2):
 
 @cython.embedsignature(True)
 def hipIpcGetMemHandle(object handle, object devPtr):
-    """
+    """Gets an interprocess memory handle for an existing device memory          allocation
 
-    Gets an interprocess memory handle for an existing device memory          allocation  Takes a pointer to the base of an existing device memory allocation created with hipMalloc and exports it for use in another process. This is a lightweight operation and may be called multiple times on an allocation without adverse effects.  If a region of memory is freed with hipFree and a subsequent call to hipMalloc returns memory with the same device address, hipIpcGetMemHandle will return a unique handle for the new memory.
+    Takes a pointer to the base of an existing device memory allocation created
+    with hipMalloc and exports it for use in another process. This is a
+    lightweight operation and may be called multiple times on an allocation
+    without adverse effects.
+
+    If a region of memory is freed with hipFree and a subsequent call
+    to hipMalloc returns memory with the same device address,
+    hipIpcGetMemHandle will return a unique handle for the
+    new memory.
 
     @param handle - Pointer to user allocated hipIpcMemHandle to return
                        the handle in.
     @param devPtr - Base pointer to previously allocated device memory
 
+    hipSuccess,
+    hipErrorInvalidHandle,
+    hipErrorOutOfMemory,
+    hipErrorMapFailed,
+
     Returns:
-       hipSuccess,
-       hipErrorInvalidHandle,
-       hipErrorOutOfMemory,
-       hipErrorMapFailed,
-
-
-
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hipIpcGetMemHandle__retval = hipError_t(chip.hipIpcGetMemHandle(
         hipIpcMemHandle_st.from_pyobj(handle)._ptr,
@@ -26726,28 +26635,43 @@ def hipIpcGetMemHandle(object handle, object devPtr):
 
 @cython.embedsignature(True)
 def hipIpcOpenMemHandle(object handle, unsigned int flags):
-    """
+    """Opens an interprocess memory handle exported from another process          and returns a device pointer usable in the local process.
 
-    Opens an interprocess memory handle exported from another process          and returns a device pointer usable in the local process.  Maps memory exported from another process with hipIpcGetMemHandle into the current device address space. For contexts on different devices hipIpcOpenMemHandle can attempt to enable peer access between the devices as if the user called hipDeviceEnablePeerAccess. This behavior is controlled by the hipIpcMemLazyEnablePeerAccess flag. hipDeviceCanAccessPeer can determine if a mapping is possible.  Contexts that may open hipIpcMemHandles are restricted in the following way. hipIpcMemHandles from each device in a given process may only be opened by one context per device per other process.  Memory returned from hipIpcOpenMemHandle must be freed with hipIpcCloseMemHandle.  Calling hipFree on an exported memory region before calling hipIpcCloseMemHandle in the importing context will result in undefined behavior.
+    Maps memory exported from another process with hipIpcGetMemHandle into
+    the current device address space. For contexts on different devices
+    hipIpcOpenMemHandle can attempt to enable peer access between the
+    devices as if the user called hipDeviceEnablePeerAccess. This behavior is
+    controlled by the hipIpcMemLazyEnablePeerAccess flag.
+    hipDeviceCanAccessPeer can determine if a mapping is possible.
+
+    Contexts that may open hipIpcMemHandles are restricted in the following way.
+    hipIpcMemHandles from each device in a given process may only be opened
+    by one context per device per other process.
+
+    Memory returned from hipIpcOpenMemHandle must be freed with
+    hipIpcCloseMemHandle.
+
+    Calling hipFree on an exported memory region before calling
+    hipIpcCloseMemHandle in the importing context will result in undefined
+    behavior.
 
     @param devPtr - Returned device pointer
     @param handle - hipIpcMemHandle to open
     @param flags  - Flags for this operation. Must be specified as hipIpcMemLazyEnablePeerAccess
 
+    hipSuccess,
+    hipErrorMapFailed,
+    hipErrorInvalidHandle,
+    hipErrorTooManyPeers
+
+    there is no guarantee that the same device poiter will be returned in ``*devPtr.``
+    This is diffrent from CUDA.
+
     Returns:
-       hipSuccess,
-       hipErrorMapFailed,
-       hipErrorInvalidHandle,
-       hipErrorTooManyPeers
-
-
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     Note:
        During multiple processes, using the same memory handle opened by the current context,
-       there is no guarantee that the same device poiter will be returned in ``*devPtr.``
-       This is diffrent from CUDA.
-
-
-
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipIpcOpenMemHandle__retval = hipError_t(chip.hipIpcOpenMemHandle(
@@ -26758,19 +26682,24 @@ def hipIpcOpenMemHandle(object handle, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipIpcCloseMemHandle(object devPtr):
-    """
+    """Close memory mapped with hipIpcOpenMemHandle
 
-    Close memory mapped with hipIpcOpenMemHandle  Unmaps memory returnd by hipIpcOpenMemHandle. The original allocation in the exporting process as well as imported mappings in other processes will be unaffected.  Any resources used to enable peer access will be freed if this is the last mapping using them.
+    Unmaps memory returnd by hipIpcOpenMemHandle. The original allocation
+    in the exporting process as well as imported mappings in other processes
+    will be unaffected.
+
+    Any resources used to enable peer access will be freed if this is the
+    last mapping using them.
 
     @param devPtr - Device pointer returned by hipIpcOpenMemHandle
 
+    hipSuccess,
+    hipErrorMapFailed,
+    hipErrorInvalidHandle,
+
     Returns:
-       hipSuccess,
-       hipErrorMapFailed,
-       hipErrorInvalidHandle,
-
-
-
+       A ``tuple`` of size 1 that contains (in that order):
+       -
     """
     _hipIpcCloseMemHandle__retval = hipError_t(chip.hipIpcCloseMemHandle(
         <void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr))    # fully specified
@@ -26779,21 +26708,20 @@ def hipIpcCloseMemHandle(object devPtr):
 
 @cython.embedsignature(True)
 def hipIpcGetEventHandle(object handle, object event):
-    """
+    """Gets an opaque interprocess handle for an event.
 
-    Gets an opaque interprocess handle for an event.  This opaque handle may be copied into other processes and opened with hipIpcOpenEventHandle. Then hipEventRecord, hipEventSynchronize, hipStreamWaitEvent and hipEventQuery may be used in either process. Operations on the imported event after the exported event has been freed with hipEventDestroy will result in undefined behavior.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidConfiguration, #hipErrorInvalidValue
-
-
+    This opaque handle may be copied into other processes and opened with hipIpcOpenEventHandle.
+    Then hipEventRecord, hipEventSynchronize, hipStreamWaitEvent and hipEventQuery may be used in
+    either process. Operations on the imported event after the exported event has been freed with hipEventDestroy
+    will result in undefined behavior.
 
     Args:
        handle: Pointer to hipIpcEventHandle to return the opaque event handle
        event: Event allocated with hipEventInterprocess and hipEventDisableTiming flags
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidConfiguration, #hipErrorInvalidValue
     """
     _hipIpcGetEventHandle__retval = hipError_t(chip.hipIpcGetEventHandle(
         hipIpcEventHandle_st.from_pyobj(handle)._ptr,
@@ -26803,20 +26731,21 @@ def hipIpcGetEventHandle(object handle, object event):
 
 @cython.embedsignature(True)
 def hipIpcOpenEventHandle(object handle):
-    """
+    """Opens an interprocess event handles.
 
-    Opens an interprocess event handles.  Opens an interprocess event handle exported from another process with cudaIpcGetEventHandle. The returned hipEvent_t behaves like a locally created event with the hipEventDisableTiming flag specified. This event need be freed with hipEventDestroy. Operations on the imported event after the exported event has been freed with hipEventDestroy will result in undefined behavior. If the function is called within the same process where handle is returned by hipIpcGetEventHandle, it will return hipErrorInvalidContext.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext
-
-
+    Opens an interprocess event handle exported from another process with cudaIpcGetEventHandle. The returned
+    hipEvent_t behaves like a locally created event with the hipEventDisableTiming flag specified. This event
+    need be freed with hipEventDestroy. Operations on the imported event after the exported event has been freed
+    with hipEventDestroy will result in undefined behavior. If the function is called within the same process where
+    handle is returned by hipIpcGetEventHandle, it will return hipErrorInvalidContext.
 
     Args:
        handle: The opaque interprocess handle to open
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext
+       - event: Pointer to hipEvent_t to return the event
     """
     event = ihipEvent_t.from_ptr(NULL)
     _hipIpcOpenEventHandle__retval = hipError_t(chip.hipIpcOpenEventHandle(&event._ptr,
@@ -26826,36 +26755,19 @@ def hipIpcOpenEventHandle(object handle):
 
 @cython.embedsignature(True)
 def hipFuncSetAttribute(object func, object attr, int value):
-    """
+    """Set attribute for a specific function
 
-    @}
-
-
-
-     @defgroup Execution Execution Control
-     @{
-     This section describes the execution control functions of HIP runtime API.
-
-
-
-    Set attribute for a specific function
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
-
-       Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-       ignored on those architectures.
-
-
+    Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+    ignored on those architectures.
 
     Args:
        func: ;
        attr: ;
        value: ;
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
     """
     if not isinstance(attr,_hipFuncAttribute__Base):
         raise TypeError("argument 'attr' must be of type '_hipFuncAttribute__Base'")
@@ -26866,21 +26778,17 @@ def hipFuncSetAttribute(object func, object attr, int value):
 
 @cython.embedsignature(True)
 def hipFuncSetCacheConfig(object func, object config):
-    """
+    """Set Cache configuration for a specific function
 
-    Set Cache configuration for a specific function
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorNotInitialized
-       Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
-       on those architectures.
-
-
+    Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
+    on those architectures.
 
     Args:
        config: ;
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorNotInitialized
     """
     if not isinstance(config,_hipFuncCache_t__Base):
         raise TypeError("argument 'config' must be of type '_hipFuncCache_t__Base'")
@@ -26891,21 +26799,18 @@ def hipFuncSetCacheConfig(object func, object config):
 
 @cython.embedsignature(True)
 def hipFuncSetSharedMemConfig(object func, object config):
-    """
+    """Set shared memory configuation for a specific function
 
-    Set shared memory configuation for a specific function
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
-
-       Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-       ignored on those architectures.
-
-
+    Note: AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+    ignored on those architectures.
 
     Args:
        func:
        config:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
     """
     if not isinstance(config,_hipSharedMemConfig__Base):
         raise TypeError("argument 'config' must be of type '_hipSharedMemConfig__Base'")
@@ -26916,31 +26821,16 @@ def hipFuncSetSharedMemConfig(object func, object config):
 
 @cython.embedsignature(True)
 def hipGetLastError():
-    """
+    """Return last error returned by any HIP runtime API call and resets the stored error code to  #hipSuccess
 
-     @}
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - return code from last HIP called from the active host thread
 
-
-    -------------------------------------------------------------------------------------------------
-    -------------------------------------------------------------------------------------------------
-      @defgroup Error Error Handling
-      @{
-      This section describes the error handling functions of HIP runtime API.
-
-
-     Return last error returned by any HIP runtime API call and resets the stored error code to  #hipSuccess
-
-     Returns:
-       return code from last HIP called from the active host thread
-
-       Returns the last error that has been returned by any of the runtime calls in the same host
-       thread, and then resets the saved error to #hipSuccess.
-
-
-     See:
+          Returns the last error that has been returned by any of the runtime calls in the same host
+          thread, and then resets the saved error to #hipSuccess.
+    See:
        hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
-
-
     """
     _hipGetLastError__retval = hipError_t(chip.hipGetLastError())    # fully specified
     return (_hipGetLastError__retval,)
@@ -26948,21 +26838,16 @@ def hipGetLastError():
 
 @cython.embedsignature(True)
 def hipPeekAtLastError():
-    """
+    """Return last error returned by any HIP runtime API call.
 
-    Return last error returned by any HIP runtime API call.
+    Returns the last error that has been returned by any of the runtime calls in the same host
+    thread. Unlike hipGetLastError, this function does not reset the saved error code.
 
-    Return:
-       #hipSuccess
-
-       Returns the last error that has been returned by any of the runtime calls in the same host
-       thread. Unlike hipGetLastError, this function does not reset the saved error code.
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
     See:
        hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
-
-
     """
     _hipPeekAtLastError__retval = hipError_t(chip.hipPeekAtLastError())    # fully specified
     return (_hipPeekAtLastError__retval,)
@@ -26970,19 +26855,15 @@ def hipPeekAtLastError():
 
 @cython.embedsignature(True)
 def hipGetErrorName(object hip_error):
-    """
-
-    Return hip error as text string form.
+    """Return hip error as text string form.
 
     @param hip_error Error code to convert to name.
-    Return:
-       const char pointer to the NULL-terminated error name
 
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - const char pointer to the NULL-terminated error name
     See:
        hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
-
-
     """
     if not isinstance(hip_error,_hipError_t__Base):
         raise TypeError("argument 'hip_error' must be of type '_hipError_t__Base'")
@@ -26992,19 +26873,15 @@ def hipGetErrorName(object hip_error):
 
 @cython.embedsignature(True)
 def hipGetErrorString(object hipError):
-    """
-
-    Return handy text string message to explain the error which occurred
+    """Return handy text string message to explain the error which occurred
 
     @param hipError Error code to convert to string.
-    Return:
-       const char pointer to the NULL-terminated error string
 
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - const char pointer to the NULL-terminated error string
     See:
        hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
-
-
     """
     if not isinstance(hipError,_hipError_t__Base):
         raise TypeError("argument 'hipError' must be of type '_hipError_t__Base'")
@@ -27014,23 +26891,17 @@ def hipGetErrorString(object hipError):
 
 @cython.embedsignature(True)
 def hipDrvGetErrorName(object hipError, object errorString):
-    """
-
-    Return hip error as text string form.
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    See:
-       hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
-
+    """Return hip error as text string form.
 
     Args:
        hipError: Error code to convert to string.
        const: char pointer to the NULL-terminated error string
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    See:
+       hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
     """
     if not isinstance(hipError,_hipError_t__Base):
         raise TypeError("argument 'hipError' must be of type '_hipError_t__Base'")
@@ -27041,23 +26912,17 @@ def hipDrvGetErrorName(object hipError, object errorString):
 
 @cython.embedsignature(True)
 def hipDrvGetErrorString(object hipError, object errorString):
-    """
-
-    Return handy text string message to explain the error which occurred
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    See:
-       hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
-
+    """Return handy text string message to explain the error which occurred
 
     Args:
        hipError: Error code to convert to string.
        const: char pointer to the NULL-terminated error string
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    See:
+       hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
     """
     if not isinstance(hipError,_hipError_t__Base):
         raise TypeError("argument 'hipError' must be of type '_hipError_t__Base'")
@@ -27068,28 +26933,22 @@ def hipDrvGetErrorString(object hipError, object errorString):
 
 @cython.embedsignature(True)
 def hipStreamCreate():
-    """
+    """Create an asynchronous stream.
 
-    Create an asynchronous stream.
+    newly created stream.
 
+    Create a new asynchronous stream.  ``stream`` returns an opaque handle that can be used to
+    reference the newly created stream in subsequent hipStream* commands.  The stream is allocated on
+    the heap and will remain allocated even if the handle goes out-of-scope.  To release the memory
+    used by the stream, applicaiton must call hipStreamDestroy.
 
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-       Create a new asynchronous stream.  ``stream`` returns an opaque handle that can be used to
-       reference the newly created stream in subsequent hipStream* commands.  The stream is allocated on
-       the heap and will remain allocated even if the handle goes out-of-scope.  To release the memory
-       used by the stream, applicaiton must call hipStreamDestroy.
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - #hipSuccess, #hipErrorInvalidValue
+       - stream: Valid pointer to hipStream_t.  This function writes the memory with the
     See:
        hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-
-
     """
     stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreate__retval = hipError_t(chip.hipStreamCreate(&stream._ptr))    # fully specified
@@ -27098,29 +26957,23 @@ def hipStreamCreate():
 
 @cython.embedsignature(True)
 def hipStreamCreateWithFlags(unsigned int flags):
-    """
+    """Create an asynchronous stream.
 
-    Create an asynchronous stream.
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-       Create a new asynchronous stream.  ``stream`` returns an opaque handle that can be used to
-       reference the newly created stream in subsequent hipStream* commands.  The stream is allocated on
-       the heap and will remain allocated even if the handle goes out-of-scope.  To release the memory
-       used by the stream, applicaiton must call hipStreamDestroy. Flags controls behavior of the
-       stream.  See #hipStreamDefault, #hipStreamNonBlocking.
-
-
-
-    See:
-       hipStreamCreate, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-
+    Create a new asynchronous stream.  ``stream`` returns an opaque handle that can be used to
+    reference the newly created stream in subsequent hipStream* commands.  The stream is allocated on
+    the heap and will remain allocated even if the handle goes out-of-scope.  To release the memory
+    used by the stream, applicaiton must call hipStreamDestroy. Flags controls behavior of the
+    stream.  See #hipStreamDefault, #hipStreamNonBlocking.
 
     Args:
        flags: to control stream creation.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - stream: Pointer to new stream
+    See:
+       hipStreamCreate, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
     stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreateWithFlags__retval = hipError_t(chip.hipStreamCreateWithFlags(&stream._ptr,flags))    # fully specified
@@ -27129,31 +26982,24 @@ def hipStreamCreateWithFlags(unsigned int flags):
 
 @cython.embedsignature(True)
 def hipStreamCreateWithPriority(unsigned int flags, int priority):
-    """
+    """Create an asynchronous stream with the specified priority.
 
-    Create an asynchronous stream with the specified priority.
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-       Create a new asynchronous stream with the specified priority.  ``stream`` returns an opaque handle
-       that can be used to reference the newly created stream in subsequent hipStream* commands.  The
-       stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
-       To release the memory used by the stream, applicaiton must call hipStreamDestroy. Flags controls
-       behavior of the stream.  See #hipStreamDefault, #hipStreamNonBlocking.
-
-
-
-    See:
-       hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-
+    Create a new asynchronous stream with the specified priority.  ``stream`` returns an opaque handle
+    that can be used to reference the newly created stream in subsequent hipStream* commands.  The
+    stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
+    To release the memory used by the stream, applicaiton must call hipStreamDestroy. Flags controls
+    behavior of the stream.  See #hipStreamDefault, #hipStreamNonBlocking.
 
     Args:
        flags: to control stream creation.
        priority: of the stream. Lower numbers represent higher priorities.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - stream: Pointer to new stream
+    See:
+       hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
     stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreateWithPriority__retval = hipError_t(chip.hipStreamCreateWithPriority(&stream._ptr,flags,priority))    # fully specified
@@ -27162,13 +27008,19 @@ def hipStreamCreateWithPriority(unsigned int flags, int priority):
 
 @cython.embedsignature(True)
 def hipDeviceGetStreamPriorityRange():
-    """
+    """Returns numerical values that correspond to the least and greatest stream priority.
 
-    Returns numerical values that correspond to the least and greatest stream priority.
+    Returns in *leastPriority and *greatestPriority the numerical values that correspond to the least
+    and greatest stream priority respectively. Stream priorities follow a convention where lower numbers
+    imply greater priorities. The range of meaningful stream priorities is given by
+    [*greatestPriority, *leastPriority]. If the user attempts to create a stream with a priority value
+    that is outside the the meaningful range as specified by this API, the priority is automatically
+    clamped to within the valid range.
 
-
-
-
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - leastPriority: pointer in which value corresponding to least priority is returned.
+       - greatestPriority: pointer in which value corresponding to greatest priority is returned.
     """
     cdef int leastPriority
     cdef int greatestPriority
@@ -27178,31 +27030,28 @@ def hipDeviceGetStreamPriorityRange():
 
 @cython.embedsignature(True)
 def hipStreamDestroy(object stream):
-    """
+    """Destroys the specified stream.
+
+    newly created stream.
 
     Destroys the specified stream.
 
+    If commands are still executing on the specified stream, some may complete execution before the
+    queue is deleted.
 
-    Return:
-       #hipSuccess #hipErrorInvalidHandle
+    The queue may be destroyed while some commands are still inflight, or may wait for all commands
+    queued to the stream before destroying it.
 
-       Destroys the specified stream.
-
-       If commands are still executing on the specified stream, some may complete execution before the
-       queue is deleted.
-
-       The queue may be destroyed while some commands are still inflight, or may wait for all commands
-       queued to the stream before destroying it.
-
-
-    See:
-       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamQuery, hipStreamWaitEvent,
-       hipStreamSynchronize
-
+    hipStreamSynchronize
 
     Args:
        stream: Valid pointer to hipStream_t.  This function writes the memory with the
-          newly created stream.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess #hipErrorInvalidHandle
+    See:
+       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamQuery, hipStreamWaitEvent,
     """
     _hipStreamDestroy__retval = hipError_t(chip.hipStreamDestroy(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
@@ -27211,27 +27060,24 @@ def hipStreamDestroy(object stream):
 
 @cython.embedsignature(True)
 def hipStreamQuery(object stream):
-    """
+    """Return #hipSuccess if all of the operations in the specified ``stream`` have completed, or
 
-    Return #hipSuccess if all of the operations in the specified ``stream`` have completed, or #hipErrorNotReady if not.
+    #hipErrorNotReady if not.
 
+    This is thread-safe and returns a snapshot of the current state of the queue.  However, if other
+    host threads are sending work to the stream, the status may change immediately after the function
+    is called.  It is typically used for debug.
 
-
-    Return:
-       #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle
-
-       This is thread-safe and returns a snapshot of the current state of the queue.  However, if other
-       host threads are sending work to the stream, the status may change immediately after the function
-       is called.  It is typically used for debug.
-
-
-    See:
-       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamSynchronize,
-       hipStreamDestroy
-
+    hipStreamDestroy
 
     Args:
        stream: stream to query
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle
+    See:
+       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamSynchronize,
     """
     _hipStreamQuery__retval = hipError_t(chip.hipStreamQuery(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
@@ -27240,32 +27086,25 @@ def hipStreamQuery(object stream):
 
 @cython.embedsignature(True)
 def hipStreamSynchronize(object stream):
-    """
+    """Wait for all commands in stream to complete.
 
-    Wait for all commands in stream to complete.
+    This command is host-synchronous : the host will block until the specified stream is empty.
 
+    This command follows standard null-stream semantics.  Specifically, specifying the null stream
+    will cause the command to wait for other streams on the same device to complete all pending
+    operations.
 
-
-    Return:
-       #hipSuccess, #hipErrorInvalidHandle
-
-       This command is host-synchronous : the host will block until the specified stream is empty.
-
-       This command follows standard null-stream semantics.  Specifically, specifying the null stream
-       will cause the command to wait for other streams on the same device to complete all pending
-       operations.
-
-       This command honors the hipDeviceLaunchBlocking flag, which controls whether the wait is active
-       or blocking.
-
-
-    See:
-       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamDestroy
-
-
+    This command honors the hipDeviceLaunchBlocking flag, which controls whether the wait is active
+    or blocking.
 
     Args:
        stream: stream identifier.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidHandle
+    See:
+       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamDestroy
     """
     _hipStreamSynchronize__retval = hipError_t(chip.hipStreamSynchronize(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
@@ -27274,34 +27113,26 @@ def hipStreamSynchronize(object stream):
 
 @cython.embedsignature(True)
 def hipStreamWaitEvent(object stream, object event, unsigned int flags):
-    """
+    """Make the specified compute stream wait for an event
 
-    Make the specified compute stream wait for an event
+    This function inserts a wait operation into the specified stream.
+    All future work submitted to ``stream`` will wait until ``event`` reports completion before
+    beginning execution.
 
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidHandle
-
-       This function inserts a wait operation into the specified stream.
-       All future work submitted to ``stream`` will wait until ``event`` reports completion before
-       beginning execution.
-
-       This function only waits for commands in the current stream to complete.  Notably,, this function
-       does not impliciy wait for commands in the default stream to complete, even if the specified
-       stream is created with hipStreamNonBlocking = 0.
-
-
-    See:
-       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamDestroy
-
+    This function only waits for commands in the current stream to complete.  Notably,, this function
+    does not impliciy wait for commands in the default stream to complete, even if the specified
+    stream is created with hipStreamNonBlocking = 0.
 
     Args:
        stream: stream to make wait.
        event: event to wait on
        flags: control operation [must be 0]
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidHandle
+    See:
+       hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamDestroy
     """
     _hipStreamWaitEvent__retval = hipError_t(chip.hipStreamWaitEvent(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27311,28 +27142,20 @@ def hipStreamWaitEvent(object stream, object event, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipStreamGetFlags(object stream):
-    """
+    """Return flags associated with this stream.
 
-    Return flags associated with this stream.
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidHandle
-
-
-    Returns:
-       #hipSuccess #hipErrorInvalidValue #hipErrorInvalidHandle
-
-       Return flags associated with this stream in *``flags.``
-
-
-    See:
-       hipStreamCreateWithFlags
-
+    Return flags associated with this stream in *``flags.``
 
     Args:
        stream: stream to be queried
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidHandle
+       - #hipSuccess #hipErrorInvalidValue #hipErrorInvalidHandle
+       - flags: Pointer to an unsigned integer in which the stream's flags are returned
+    See:
+       hipStreamCreateWithFlags
     """
     cdef unsigned int flags
     _hipStreamGetFlags__retval = hipError_t(chip.hipStreamGetFlags(
@@ -27342,28 +27165,20 @@ def hipStreamGetFlags(object stream):
 
 @cython.embedsignature(True)
 def hipStreamGetPriority(object stream):
-    """
+    """Query the priority of a stream.
 
-    Query the priority of a stream.
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidHandle
-
-
-    Returns:
-       #hipSuccess #hipErrorInvalidValue #hipErrorInvalidHandle
-
-       Query the priority of a stream. The priority is returned in in priority.
-
-
-    See:
-       hipStreamCreateWithFlags
-
+    Query the priority of a stream. The priority is returned in in priority.
 
     Args:
        stream: stream to be queried
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidHandle
+       - #hipSuccess #hipErrorInvalidValue #hipErrorInvalidHandle
+       - priority: Pointer to an unsigned integer in which the stream's priority is returned
+    See:
+       hipStreamCreateWithFlags
     """
     cdef int priority
     _hipStreamGetPriority__retval = hipError_t(chip.hipStreamGetPriority(
@@ -27373,29 +27188,27 @@ def hipStreamGetPriority(object stream):
 
 @cython.embedsignature(True)
 def hipExtStreamCreateWithCUMask(unsigned int cuMaskSize):
-    """
+    """Create an asynchronous stream with the specified CU mask.
 
-    Create an asynchronous stream with the specified CU mask.
+    The first 32 bits represent the first 32 CUs, and so on. If its size is greater than physical
+    CU number (i.e., multiProcessorCount member of hipDeviceProp_t), the extra elements are ignored.
+    It is user's responsibility to make sure the input is meaningful.
 
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
-
-       Create a new asynchronous stream with the specified CU mask.  ``stream`` returns an opaque handle
-       that can be used to reference the newly created stream in subsequent hipStream* commands.  The
-       stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
-       To release the memory used by the stream, application must call hipStreamDestroy.
-
-
-
-    See:
-       hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-
+    Create a new asynchronous stream with the specified CU mask.  ``stream`` returns an opaque handle
+    that can be used to reference the newly created stream in subsequent hipStream* commands.  The
+    stream is allocated on the heap and will remain allocated even if the handle goes out-of-scope.
+    To release the memory used by the stream, application must call hipStreamDestroy.
 
     Args:
        cuMaskSize: Size of CU mask bit array passed in.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
+       - stream: Pointer to new stream
+       - cuMask: Bit-vector representing the CU mask. Each active bit represents using one CU.
+    See:
+       hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
     stream = ihipStream_t.from_ptr(NULL)
     cdef const unsigned int cuMask
@@ -27405,24 +27218,21 @@ def hipExtStreamCreateWithCUMask(unsigned int cuMaskSize):
 
 @cython.embedsignature(True)
 def hipExtStreamGetCUMask(object stream, unsigned int cuMaskSize):
-    """
+    """Get CU mask associated with an asynchronous stream
 
-    Get CU mask associated with an asynchronous stream
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
-
-
-    See:
-       hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
-
+    the stream's CU mask is returned. The CU mask is returned in a chunck of 32 bits where
+    each active bit represents one active CU
 
     Args:
        stream: stream to be queried
        cuMaskSize: number of the block of memories (uint32_t *) allocated by user
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
+       - cuMask: Pointer to a pre-allocated block of memories (uint32_t *) in which
+    See:
+       hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
     """
     cdef unsigned int cuMask
     _hipExtStreamGetCUMask__retval = hipError_t(chip.hipExtStreamGetCUMask(
@@ -27498,28 +27308,25 @@ cdef class hipStreamCallback_t:
 
 @cython.embedsignature(True)
 def hipStreamAddCallback(object stream, object callback, object userData, unsigned int flags):
-    """
+    """Adds a callback to be called on the host after all currently enqueued
 
-    Adds a callback to be called on the host after all currently enqueued items in the stream have completed.  For each hipStreamAddCallback call, a callback will be executed exactly once. The callback will block later work in the stream until it is finished.
+    items in the stream have completed.  For each
+    hipStreamAddCallback call, a callback will be executed exactly once.
+    The callback will block later work in the stream until it is finished.
 
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidHandle, #hipErrorNotSupported
-
-
-    See:
-       hipStreamCreate, hipStreamCreateWithFlags, hipStreamQuery, hipStreamSynchronize,
-       hipStreamWaitEvent, hipStreamDestroy, hipStreamCreateWithPriority
-
-
+    hipStreamWaitEvent, hipStreamDestroy, hipStreamCreateWithPriority
 
     Args:
        stream: - Stream to add callback to
        callback: - The function to call once preceding stream operations are complete
        userData: - User specified data to be passed to the callback function
        flags: - Reserved for future use, must be 0
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidHandle, #hipErrorNotSupported
+    See:
+       hipStreamCreate, hipStreamCreateWithFlags, hipStreamQuery, hipStreamSynchronize,
     """
     _hipStreamAddCallback__retval = hipError_t(chip.hipStreamAddCallback(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27530,54 +27337,7 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
 
 @cython.embedsignature(True)
 def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned int flags, unsigned int mask):
-    """
-
-     @}
-
-
-    -------------------------------------------------------------------------------------------------
-    -------------------------------------------------------------------------------------------------
-      @defgroup StreamM Stream Memory Operations
-      @{
-      This section describes Stream Memory Wait and Write functions of HIP runtime API.
-
-
-     Enqueues a wait command to the stream.[BETA]
-
-
-
-
-
-
-
-     Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-       Enqueues a wait command to the stream, all operations enqueued  on this stream after this, will
-       not execute until the defined wait condition is true.
-
-       hipStreamWaitValueGte: waits until *ptr&mask >= value
-       hipStreamWaitValueEq : waits until *ptr&mask == value
-       hipStreamWaitValueAnd: waits until ((*ptr&mask) & value) != 0
-       hipStreamWaitValueNor: waits until ~((*ptr&mask) | (value&mask)) != 0
-
-
-     Note:
-       when using 'hipStreamWaitValueNor', mask is applied on both 'value' and '*ptr'.
-
-
-     Note:
-       Support for hipStreamWaitValue32 can be queried using 'hipDeviceGetAttribute()' and
-       'hipDeviceAttributeCanUseStreamWaitValue' flag.
-
-       @beta This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
-     See:
-       hipExtMallocWithFlags, hipFree, hipStreamWaitValue64, hipStreamWriteValue64,
-       hipStreamWriteValue32, hipDeviceGetAttribute
-
+    """Enqueues a wait command to the stream.[BETA]
 
     Args:
        stream: - Stream identifier
@@ -27587,6 +27347,29 @@ def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned
           hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor
        mask: - Mask to be applied on value at memory before it is compared with value,
           default value is set to enable every bit
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+
+          Enqueues a wait command to the stream, all operations enqueued  on this stream after this, will
+          not execute until the defined wait condition is true.
+
+          hipStreamWaitValueGte: waits until *ptr&mask >= value
+          hipStreamWaitValueEq : waits until *ptr&mask == value
+          hipStreamWaitValueAnd: waits until ((*ptr&mask) & value) != 0
+          hipStreamWaitValueNor: waits until ~((*ptr&mask) | (value&mask)) != 0
+    Note:
+       when using 'hipStreamWaitValueNor', mask is applied on both 'value' and '*ptr'.
+    Note:
+       Support for hipStreamWaitValue32 can be queried using 'hipDeviceGetAttribute()' and
+       'hipDeviceAttributeCanUseStreamWaitValue' flag.
+
+       @beta This API is marked as beta, meaning, while this is feature complete,
+       it is still open to changes and may have outstanding issues.
+    See:
+       hipExtMallocWithFlags, hipFree, hipStreamWaitValue64, hipStreamWriteValue64,
+       hipStreamWriteValue32, hipDeviceGetAttribute
     """
     _hipStreamWaitValue32__retval = hipError_t(chip.hipStreamWaitValue32(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27596,53 +27379,43 @@ def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned
 
 @cython.embedsignature(True)
 def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigned int flags, unsigned long mask):
-    """
+    """Enqueues a wait command to the stream.[BETA]
 
-    Enqueues a wait command to the stream.[BETA]
+    hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor.
 
+    default value is set to enable every bit
 
+    Enqueues a wait command to the stream, all operations enqueued  on this stream after this, will
+    not execute until the defined wait condition is true.
 
+    hipStreamWaitValueGte: waits until *ptr&mask >= value
+    hipStreamWaitValueEq : waits until *ptr&mask == value
+    hipStreamWaitValueAnd: waits until ((*ptr&mask) & value) != 0
+    hipStreamWaitValueNor: waits until ~((*ptr&mask) | (value&mask)) != 0
 
+    'hipDeviceAttributeCanUseStreamWaitValue' flag.
 
+    @beta This API is marked as beta, meaning, while this is feature complete,
+    it is still open to changes and may have outstanding issues.
 
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-       Enqueues a wait command to the stream, all operations enqueued  on this stream after this, will
-       not execute until the defined wait condition is true.
-
-       hipStreamWaitValueGte: waits until *ptr&mask >= value
-       hipStreamWaitValueEq : waits until *ptr&mask == value
-       hipStreamWaitValueAnd: waits until ((*ptr&mask) & value) != 0
-       hipStreamWaitValueNor: waits until ~((*ptr&mask) | (value&mask)) != 0
-
-
-    Note:
-       when using 'hipStreamWaitValueNor', mask is applied on both 'value' and '*ptr'.
-
-
-    Note:
-       Support for hipStreamWaitValue64 can be queried using 'hipDeviceGetAttribute()' and
-       'hipDeviceAttributeCanUseStreamWaitValue' flag.
-
-       @beta This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
-    See:
-       hipExtMallocWithFlags, hipFree, hipStreamWaitValue32, hipStreamWriteValue64,
-       hipStreamWriteValue32, hipDeviceGetAttribute
-
+    hipStreamWriteValue32, hipDeviceGetAttribute
 
     Args:
        stream: - Stream identifier
        ptr: - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
        value: - Value to be used in compare operation
        flags: - Defines the compare operation, supported values are hipStreamWaitValueGte
-          hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor.
        mask: - Mask to be applied on value at memory before it is compared with value
-          default value is set to enable every bit
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Note:
+       when using 'hipStreamWaitValueNor', mask is applied on both 'value' and '*ptr'.
+    Note:
+       Support for hipStreamWaitValue64 can be queried using 'hipDeviceGetAttribute()' and
+    See:
+       hipExtMallocWithFlags, hipFree, hipStreamWaitValue32, hipStreamWriteValue64,
     """
     _hipStreamWaitValue64__retval = hipError_t(chip.hipStreamWaitValue64(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27652,35 +27425,27 @@ def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigne
 
 @cython.embedsignature(True)
 def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigned int flags):
-    """
+    """Enqueues a write command to the stream.[BETA]
 
-    Enqueues a write command to the stream.[BETA]
+    Enqueues a write command to the stream, write operation is performed after all earlier commands
+    on this stream have completed the execution.
 
+    @beta This API is marked as beta, meaning, while this is feature complete,
+    it is still open to changes and may have outstanding issues.
 
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-       Enqueues a write command to the stream, write operation is performed after all earlier commands
-       on this stream have completed the execution.
-
-       @beta This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
-    See:
-       hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
-       hipStreamWaitValue64
-
+    hipStreamWaitValue64
 
     Args:
        stream: - Stream identifier
        ptr: - Pointer to a GPU accessible memory object
        value: - Value to be written
        flags: - reserved, ignored for now, will be used in future releases
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    See:
+       hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
     """
     _hipStreamWriteValue32__retval = hipError_t(chip.hipStreamWriteValue32(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27690,35 +27455,27 @@ def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigne
 
 @cython.embedsignature(True)
 def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsigned int flags):
-    """
+    """Enqueues a write command to the stream.[BETA]
 
-    Enqueues a write command to the stream.[BETA]
+    Enqueues a write command to the stream, write operation is performed after all earlier commands
+    on this stream have completed the execution.
 
+    @beta This API is marked as beta, meaning, while this is feature complete,
+    it is still open to changes and may have outstanding issues.
 
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-       Enqueues a write command to the stream, write operation is performed after all earlier commands
-       on this stream have completed the execution.
-
-       @beta This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
-    See:
-       hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
-       hipStreamWaitValue64
-
+    hipStreamWaitValue64
 
     Args:
        stream: - Stream identifier
        ptr: - Pointer to a GPU accessible memory object
        value: - Value to be written
        flags: - reserved, ignored for now, will be used in future releases
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    See:
+       hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
     """
     _hipStreamWriteValue64__retval = hipError_t(chip.hipStreamWriteValue64(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -27728,45 +27485,31 @@ def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsign
 
 @cython.embedsignature(True)
 def hipEventCreateWithFlags(unsigned int flags):
-    """
+    """Create an event with the specified flags
 
-     @}
+    #hipEventBlockingSync, #hipEventDisableTiming, #hipEventInterprocess
+      #hipEventDefault : Default flag.  The event will use active synchronization and will support
+    timing.  Blocking synchronization provides lowest possible latency at the expense of dedicating a
+    CPU to poll on the event.
+      #hipEventBlockingSync : The event will use blocking synchronization : if hipEventSynchronize is
+    called on this event, the thread will block until the event completes.  This can increase latency
+    for the synchroniation but can result in lower power and more resources for other CPU threads.
+      #hipEventDisableTiming : Disable recording of timing information. Events created with this flag
+    would not record profiling data and provide best performance if used for synchronization.
+      #hipEventInterprocess : The event can be used as an interprocess event. hipEventDisableTiming
+    flag also must be set when hipEventInterprocess flag is set.
 
-
-    -------------------------------------------------------------------------------------------------
-    -------------------------------------------------------------------------------------------------
-      @defgroup Event Event Management
-      @{
-      This section describes the event management functions of HIP runtime API.
-
-
-     Create an event with the specified flags
-
-
-
-
-     Returns:
-      #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
-      #hipErrorLaunchFailure, #hipErrorOutOfMemory
-
-
-     See:
-      hipEventCreate, hipEventSynchronize, hipEventDestroy, hipEventElapsedTime
-
+    #hipErrorLaunchFailure, #hipErrorOutOfMemory
 
     Args:
        flags: Flags to control event behavior.  Valid values are #hipEventDefault,
-          #hipEventBlockingSync, #hipEventDisableTiming, #hipEventInterprocess
-          #hipEventDefault : Default flag.  The event will use active synchronization and will support
-          timing.  Blocking synchronization provides lowest possible latency at the expense of dedicating a
-          CPU to poll on the event.
-          #hipEventBlockingSync : The event will use blocking synchronization : if hipEventSynchronize is
-          called on this event, the thread will block until the event completes.  This can increase latency
-          for the synchroniation but can result in lower power and more resources for other CPU threads.
-          #hipEventDisableTiming : Disable recording of timing information. Events created with this flag
-          would not record profiling data and provide best performance if used for synchronization.
-          #hipEventInterprocess : The event can be used as an interprocess event. hipEventDisableTiming
-          flag also must be set when hipEventInterprocess flag is set.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
+       - event: Returns the newly created event.
+    See:
+       hipEventCreate, hipEventSynchronize, hipEventDestroy, hipEventElapsedTime
     """
     event = ihipEvent_t.from_ptr(NULL)
     _hipEventCreateWithFlags__retval = hipError_t(chip.hipEventCreateWithFlags(&event._ptr,flags))    # fully specified
@@ -27775,22 +27518,20 @@ def hipEventCreateWithFlags(unsigned int flags):
 
 @cython.embedsignature(True)
 def hipEventCreate():
-    """
+    """(No brief)
 
      Create an event
 
+    #hipErrorLaunchFailure, #hipErrorOutOfMemory
 
+    hipEventDestroy, hipEventElapsedTime
 
     Returns:
-       #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
-       #hipErrorLaunchFailure, #hipErrorOutOfMemory
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
+       - event: Returns the newly created event.
     See:
        hipEventCreateWithFlags, hipEventRecord, hipEventQuery, hipEventSynchronize,
-       hipEventDestroy, hipEventElapsedTime
-
-
     """
     event = ihipEvent_t.from_ptr(NULL)
     _hipEventCreate__retval = hipError_t(chip.hipEventCreate(&event._ptr))    # fully specified
@@ -27799,8 +27540,7 @@ def hipEventCreate():
 
 @cython.embedsignature(True)
 def hipEventRecord(object event, object stream):
-    """
-
+    """(No brief)
     """
     _hipEventRecord__retval = hipError_t(chip.hipEventRecord(
         ihipEvent_t.from_pyobj(event)._ptr,
@@ -27810,31 +27550,25 @@ def hipEventRecord(object event, object stream):
 
 @cython.embedsignature(True)
 def hipEventDestroy(object event):
-    """
+    """Destroy the specified event.
 
-     Destroy the specified event.
+    #hipErrorLaunchFailure
 
+     Releases memory associated with the event.  If the event is recording but has not completed
+    recording when hipEventDestroy() is called, the function will return immediately and the
+    completion_future resources will be released later, when the hipDevice is synchronized.
 
-     Returns:
-       #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
-       #hipErrorLaunchFailure
-
-       Releases memory associated with the event.  If the event is recording but has not completed
-       recording when hipEventDestroy() is called, the function will return immediately and the
-       completion_future resources will be released later, when the hipDevice is synchronized.
-
-
-    See:
-       hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventSynchronize, hipEventRecord,
-       hipEventElapsedTime
-
-
-    Returns:
-       #hipSuccess
-
+    hipEventElapsedTime
 
     Args:
        event: Event to destroy.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
+       - #hipSuccess
+    See:
+       hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventSynchronize, hipEventRecord,
     """
     _hipEventDestroy__retval = hipError_t(chip.hipEventDestroy(
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
@@ -27843,23 +27577,26 @@ def hipEventDestroy(object event):
 
 @cython.embedsignature(True)
 def hipEventSynchronize(object event):
-    """
+    """Wait for an event to complete.   This function will block until the event is ready, waiting for all previous work in the stream
 
-    Wait for an event to complete.   This function will block until the event is ready, waiting for all previous work in the stream specified when event was recorded with hipEventRecord().   If hipEventRecord() has not been called on ``event,`` this function returns immediately.   TODO-hip- This function needs to support hipEventBlockingSync parameter.
+    specified when event was recorded with hipEventRecord().
 
+     If hipEventRecord() has not been called on ``event,`` this function returns immediately.
 
-    Returns:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized,
-      #hipErrorInvalidHandle, #hipErrorLaunchFailure
+     TODO-hip- This function needs to support hipEventBlockingSync parameter.
 
+    #hipErrorInvalidHandle, #hipErrorLaunchFailure
 
-    See:
-      hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
-      hipEventElapsedTime
-
+    hipEventElapsedTime
 
     Args:
        event: Event on which to wait.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized,
+    See:
+       hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
     """
     _hipEventSynchronize__retval = hipError_t(chip.hipEventSynchronize(
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
@@ -27868,42 +27605,38 @@ def hipEventSynchronize(object event):
 
 @cython.embedsignature(True)
 def hipEventElapsedTime(object start, object stop):
-    """
+    """Return the elapsed time between two events.
 
-    Return the elapsed time between two events.
+    #hipErrorNotInitialized, #hipErrorLaunchFailure
 
+    Computes the elapsed time between two events. Time is computed in ms, with
+    a resolution of approximately 1 us.
 
+    Events which are recorded in a NULL stream will block until all commands
+    on all other streams complete execution, and then record the timestamp.
 
+    Events which are recorded in a non-NULL stream will record their timestamp
+    when they reach the head of the specified stream, after all previous
+    commands in that stream have completed executing.  Thus the time that
+    the event recorded may be significantly after the host calls hipEventRecord().
 
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotReady, #hipErrorInvalidHandle,
-       #hipErrorNotInitialized, #hipErrorLaunchFailure
+    If hipEventRecord() has not been called on either event, then #hipErrorInvalidHandle is
+    returned. If hipEventRecord() has been called on both events, but the timestamp has not yet been
+    recorded on one or both events (that is, hipEventQuery() would return #hipErrorNotReady on at
+    least one of the events), then #hipErrorNotReady is returned.
 
-       Computes the elapsed time between two events. Time is computed in ms, with
-       a resolution of approximately 1 us.
-
-       Events which are recorded in a NULL stream will block until all commands
-       on all other streams complete execution, and then record the timestamp.
-
-       Events which are recorded in a non-NULL stream will record their timestamp
-       when they reach the head of the specified stream, after all previous
-       commands in that stream have completed executing.  Thus the time that
-       the event recorded may be significantly after the host calls hipEventRecord().
-
-       If hipEventRecord() has not been called on either event, then #hipErrorInvalidHandle is
-       returned. If hipEventRecord() has been called on both events, but the timestamp has not yet been
-       recorded on one or both events (that is, hipEventQuery() would return #hipErrorNotReady on at
-       least one of the events), then #hipErrorNotReady is returned.
-
-
-    See:
-       hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
-       hipEventSynchronize
-
+    hipEventSynchronize
 
     Args:
        start: : Start event.
        stop: : Stop event.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotReady, #hipErrorInvalidHandle,
+       - ms: : Return time between start and stop in ms.
+    See:
+       hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
     """
     cdef float ms
     _hipEventElapsedTime__retval = hipError_t(chip.hipEventElapsedTime(&ms,
@@ -27914,28 +27647,25 @@ def hipEventElapsedTime(object start, object stop):
 
 @cython.embedsignature(True)
 def hipEventQuery(object event):
-    """
+    """Query event status
 
-    Query event status
+    #hipErrorNotInitialized, #hipErrorLaunchFailure
 
+    Query the status of the specified event.  This function will return #hipSuccess if all
+    commands in the appropriate stream (specified to hipEventRecord()) have completed.  If that work
+    has not completed, or if hipEventRecord() was not called on the event, then #hipErrorNotReady is
+    returned.
 
-    Returns:
-       #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle, #hipErrorInvalidValue,
-       #hipErrorNotInitialized, #hipErrorLaunchFailure
-
-       Query the status of the specified event.  This function will return #hipSuccess if all
-       commands in the appropriate stream (specified to hipEventRecord()) have completed.  If that work
-       has not completed, or if hipEventRecord() was not called on the event, then #hipErrorNotReady is
-       returned.
-
-
-    See:
-       hipEventCreate, hipEventCreateWithFlags, hipEventRecord, hipEventDestroy,
-       hipEventSynchronize, hipEventElapsedTime
-
+    hipEventSynchronize, hipEventElapsedTime
 
     Args:
        event: Event to query.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle, #hipErrorInvalidValue,
+    See:
+       hipEventCreate, hipEventCreateWithFlags, hipEventRecord, hipEventDestroy,
     """
     _hipEventQuery__retval = hipError_t(chip.hipEventQuery(
         ihipEvent_t.from_pyobj(event)._ptr))    # fully specified
@@ -27944,40 +27674,17 @@ def hipEventQuery(object event):
 
 @cython.embedsignature(True)
 def hipPointerGetAttributes(object attributes, object ptr):
-    """
-
-     @}
-
-
-    -------------------------------------------------------------------------------------------------
-    -------------------------------------------------------------------------------------------------
-      @defgroup Memory Memory Management
-      @{
-      This section describes the memory management functions of HIP runtime API.
-      The following CUDA APIs are not currently supported:
-      - cudaMalloc3D
-      - cudaMalloc3DArray
-      - TODO - more 2D, 3D, array APIs here.
-
-
-
-
-      Return attributes for the specified pointer
-
-
-
-
-      Return:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-
-      See:
-       hipPointerGetAttribute
-
+    """Return attributes for the specified pointer
 
     Args:
        attributes: attributes for the specified pointer
        ptr: pointer to get attributes for
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    See:
+       hipPointerGetAttribute
     """
     _hipPointerGetAttributes__retval = hipError_t(chip.hipPointerGetAttributes(
         hipPointerAttribute_t.from_pyobj(attributes)._ptr,
@@ -27987,29 +27694,21 @@ def hipPointerGetAttributes(object attributes, object ptr):
 
 @cython.embedsignature(True)
 def hipPointerGetAttribute(object data, object attribute, object ptr):
-    """
+    """Returns information about the specified pointer.[BETA]
 
-    Returns information about the specified pointer.[BETA]
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-       @beta This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
-    See:
-       hipPointerGetAttributes
-
+    @beta This API is marked as beta, meaning, while this is feature complete,
+    it is still open to changes and may have outstanding issues.
 
     Args:
        data: returned pointer attribute value
        atribute: attribute to query for
        ptr: pointer to get attributes for
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    See:
+       hipPointerGetAttributes
     """
     if not isinstance(attribute,_hipPointer_attribute__Base):
         raise TypeError("argument 'attribute' must be of type '_hipPointer_attribute__Base'")
@@ -28021,29 +27720,23 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
 
 @cython.embedsignature(True)
 def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
-    """
+    """Returns information about the specified pointer.[BETA]
 
-    Returns information about the specified pointer.[BETA]
-
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-       @beta This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
-    See:
-       hipPointerGetAttribute
-
+    @beta This API is marked as beta, meaning, while this is feature complete,
+    it is still open to changes and may have outstanding issues.
 
     Args:
        numAttributes: number of attributes to query for
        ptr: pointer to get attributes for
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       - attributes: attributes to query for
+       - data: a two-dimensional containing pointers to memory locations
+                                    where the result of each attribute query will be written to
+    See:
+       hipPointerGetAttribute
     """
     cdef chip.hipPointer_attribute attributes
     data = hip._util.types.DataHandle.from_ptr(NULL)
@@ -28055,24 +27748,16 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
 
 @cython.embedsignature(True)
 def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
-    """
-
-    Imports an external semaphore.
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-
-    See:
-
-
+    """Imports an external semaphore.
 
     Args:
        extSem_out: External semaphores to be waited on
        semHandleDesc: Semaphore import handle descriptor
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    See:
     """
     _hipImportExternalSemaphore__retval = hipError_t(chip.hipImportExternalSemaphore(
         <void **>hip._util.types.DataHandle.from_pyobj(extSem_out)._ptr,
@@ -28082,28 +27767,18 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
 
 @cython.embedsignature(True)
 def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, unsigned int numExtSems, object stream):
-    """
-
-    Signals a set of external semaphore objects.
-
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-
-    See:
-
-
+    """Signals a set of external semaphore objects.
 
     Args:
        extSem_out: External semaphores to be waited on
        paramsArray: Array of semaphore parameters
        numExtSems: Number of semaphores to wait on
        stream: Stream to enqueue the wait operations in
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    See:
     """
     _hipSignalExternalSemaphoresAsync__retval = hipError_t(chip.hipSignalExternalSemaphoresAsync(
         <void *const *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
@@ -28114,28 +27789,18 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
 
 @cython.embedsignature(True)
 def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsigned int numExtSems, object stream):
-    """
-
-    Waits on a set of external semaphore objects
-
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-
-    See:
-
-
+    """Waits on a set of external semaphore objects
 
     Args:
        extSem_out: External semaphores to be waited on
        paramsArray: Array of semaphore parameters
        numExtSems: Number of semaphores to wait on
        stream: Stream to enqueue the wait operations in
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    See:
     """
     _hipWaitExternalSemaphoresAsync__retval = hipError_t(chip.hipWaitExternalSemaphoresAsync(
         <void *const *>hip._util.types.DataHandle.from_pyobj(extSemArray)._ptr,
@@ -28146,22 +27811,15 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
 
 @cython.embedsignature(True)
 def hipDestroyExternalSemaphore(object extSem):
-    """
-
-    Destroys an external semaphore object and releases any references to the underlying resource. Any outstanding signals or waits must have completed before the semaphore is destroyed.
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-
-    See:
-
-
+    """Destroys an external semaphore object and releases any references to the underlying resource. Any outstanding signals or waits must have completed before the semaphore is destroyed.
 
     Args:
        extSem: handle to an external memory object
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    See:
     """
     _hipDestroyExternalSemaphore__retval = hipError_t(chip.hipDestroyExternalSemaphore(
         <void *>hip._util.types.DataHandle.from_pyobj(extSem)._ptr))    # fully specified
@@ -28170,23 +27828,17 @@ def hipDestroyExternalSemaphore(object extSem):
 
 @cython.embedsignature(True)
 def hipImportExternalMemory(object extMem_out, object memHandleDesc):
-    """
+    """Imports an external memory object.
 
-    Imports an external memory object.
-
-
-
-
-    Return:
-     #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-
-    See:
-     /
-
+    /
     Args:
        extMem_out: Returned handle to an external memory object
        memHandleDesc: Memory import handle descriptor
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    See:
     """
     _hipImportExternalMemory__retval = hipError_t(chip.hipImportExternalMemory(
         <void **>hip._util.types.DataHandle.from_pyobj(extMem_out)._ptr,
@@ -28196,24 +27848,18 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
 
 @cython.embedsignature(True)
 def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
-    """
+    """Maps a buffer onto an imported memory object.
 
-    Maps a buffer onto an imported memory object.
-
-
-
-
-
-    Return:
-     #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-
-    See:
-     /
-
+    /
     Args:
        extMem: Handle to external memory object
        bufferDesc: Buffer descriptor
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+       - devPtr: Returned device pointer to buffer
+    See:
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipExternalMemoryGetMappedBuffer__retval = hipError_t(chip.hipExternalMemoryGetMappedBuffer(
@@ -28225,21 +27871,16 @@ def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
 
 @cython.embedsignature(True)
 def hipDestroyExternalMemory(object extMem):
-    """
+    """Destroys an external memory object.
 
-    Destroys an external memory object.
-
-
-
-    Return:
-     #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
-
-    See:
-     /
-
+    /
     Args:
        extMem: External memory object to be destroyed
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
+    See:
     """
     _hipDestroyExternalMemory__retval = hipError_t(chip.hipDestroyExternalMemory(
         <void *>hip._util.types.DataHandle.from_pyobj(extMem)._ptr))    # fully specified
@@ -28248,25 +27889,20 @@ def hipDestroyExternalMemory(object extMem):
 
 @cython.embedsignature(True)
 def hipMalloc(unsigned long size):
-    """
+    """Allocate memory on the default accelerator
 
-    Allocate memory on the default accelerator
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
-
-
-    See:
-      hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
-      hipHostFree, hipHostMalloc
-
+    hipHostFree, hipHostMalloc
 
     Args:
        size: Requested memory size
           If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
+       - ptr: Pointer to the allocated memory
+    See:
+       hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
     """
     ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMalloc__retval = hipError_t(chip.hipMalloc(
@@ -28277,27 +27913,21 @@ def hipMalloc(unsigned long size):
 
 @cython.embedsignature(True)
 def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
-    """
+    """Allocate memory on the default accelerator
 
-    Allocate memory on the default accelerator
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
-
-
-    See:
-      hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
-      hipHostFree, hipHostMalloc
-
+    hipHostFree, hipHostMalloc
 
     Args:
        size: Requested memory size
        flags: Type of memory allocation
           If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
+       - ptr: Pointer to the allocated memory
+    See:
+       hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
     """
     ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipExtMallocWithFlags__retval = hipError_t(chip.hipExtMallocWithFlags(
@@ -28308,24 +27938,19 @@ def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipMallocHost(unsigned long size):
-    """
+    """Allocate pinned host memory [Deprecated]
 
-    Allocate pinned host memory [Deprecated]
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorOutOfMemory
-
-
-    Deprecated:
-       use hipHostMalloc() instead
-
+    If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 
     Args:
        size: Requested memory size
-          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorOutOfMemory
+       - ptr: Pointer to the allocated host pinned memory
+    Deprecated:
+       use hipHostMalloc() instead
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMallocHost__retval = hipError_t(chip.hipMallocHost(
@@ -28335,24 +27960,19 @@ def hipMallocHost(unsigned long size):
 
 @cython.embedsignature(True)
 def hipMemAllocHost(unsigned long size):
-    """
+    """Allocate pinned host memory [Deprecated]
 
-    Allocate pinned host memory [Deprecated]
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorOutOfMemory
-
-
-    Deprecated:
-       use hipHostMalloc() instead
-
+    If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 
     Args:
        size: Requested memory size
-          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorOutOfMemory
+       - ptr: Pointer to the allocated host pinned memory
+    Deprecated:
+       use hipHostMalloc() instead
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMemAllocHost__retval = hipError_t(chip.hipMemAllocHost(
@@ -28362,26 +27982,20 @@ def hipMemAllocHost(unsigned long size):
 
 @cython.embedsignature(True)
 def hipHostMalloc(unsigned long size, unsigned int flags):
-    """
+    """Allocate device accessible page locked host memory
 
-    Allocate device accessible page locked host memory
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorOutOfMemory
-
-
-    See:
-       hipSetDeviceFlags, hipHostFree
-
+    If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 
     Args:
        size: Requested memory size
        flags: Type of host memory allocation
-          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorOutOfMemory
+       - ptr: Pointer to the allocated host pinned memory
+    See:
+       hipSetDeviceFlags, hipHostFree
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipHostMalloc__retval = hipError_t(chip.hipHostMalloc(
@@ -28391,31 +28005,17 @@ def hipHostMalloc(unsigned long size, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipMallocManaged(unsigned long size, unsigned int flags):
-    """
-
-    -------------------------------------------------------------------------------------------------
-    -------------------------------------------------------------------------------------------------
-      @addtogroup MemoryM Managed Memory
-      @{
-      @ingroup Memory
-      This section describes the managed memory management functions of HIP runtime API.
-
-
-
-     Allocates memory that will be automatically managed by HIP.
-
-
-
-
-
-     Returns:
-       #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
-
+    """Allocates memory that will be automatically managed by HIP.
 
     Args:
        size: - requested allocation size in bytes
        flags: - must be either hipMemAttachGlobal or hipMemAttachHost
           (defaults to hipMemAttachGlobal)
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
+       - dev_ptr: - pointer to allocated device memory
     """
     dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocManaged__retval = hipError_t(chip.hipMallocManaged(
@@ -28426,24 +28026,17 @@ def hipMallocManaged(unsigned long size, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipMemPrefetchAsync(object dev_ptr, unsigned long count, int device, object stream):
-    """
-
-    Prefetches memory to the specified destination device using HIP.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
+    """Prefetches memory to the specified destination device using HIP.
 
     Args:
        dev_ptr: pointer to be prefetched
        count: size in bytes for prefetching
        device: destination device to prefetch to
        stream: stream to enqueue prefetch operation
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
     """
     _hipMemPrefetchAsync__retval = hipError_t(chip.hipMemPrefetchAsync(
         <const void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,count,device,
@@ -28453,24 +28046,17 @@ def hipMemPrefetchAsync(object dev_ptr, unsigned long count, int device, object 
 
 @cython.embedsignature(True)
 def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device):
-    """
-
-    Advise about the usage of a given memory range to HIP.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
+    """Advise about the usage of a given memory range to HIP.
 
     Args:
        dev_ptr: pointer to memory to set the advice for
        count: size in bytes of the memory range
        advice: advice to be applied for the specified memory range
        device: device to apply the advice for
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(advice,_hipMemoryAdvise__Base):
         raise TypeError("argument 'advice' must be of type '_hipMemoryAdvise__Base'")
@@ -28481,19 +28067,7 @@ def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device)
 
 @cython.embedsignature(True)
 def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribute, object dev_ptr, unsigned long count):
-    """
-
-    Query an attribute of a given memory range in HIP.
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
+    """Query an attribute of a given memory range in HIP.
 
     Args:
        data: a pointer to a memory location where the result of each
@@ -28502,6 +28076,10 @@ def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribu
        attribute: the attribute to query
        dev_ptr: start of the range to query
        count: size of the range to query
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(attribute,_hipMemRangeAttribute__Base):
         raise TypeError("argument 'attribute' must be of type '_hipMemRangeAttribute__Base'")
@@ -28513,26 +28091,21 @@ def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribu
 
 @cython.embedsignature(True)
 def hipMemRangeGetAttributes(unsigned long num_attributes, object dev_ptr, unsigned long count):
-    """
-
-    Query attributes of a given memory range in HIP.
-
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
+    """Query attributes of a given memory range in HIP.
 
     Args:
        num_attributes: an array of attributes to query (numAttributes and the number
           of attributes in this array should match)
        dev_ptr: start of the range to query
        count: size of the range to query
+
+    Returns:
+       A ``tuple`` of size 4 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - data: a two-dimensional array containing pointers to memory locations
+                                where the result of each attribute query will be written to
+       - data_sizes: an array, containing the sizes of each result
+       - attributes: the attribute to query
     """
     data = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long data_sizes
@@ -28545,18 +28118,7 @@ def hipMemRangeGetAttributes(unsigned long num_attributes, object dev_ptr, unsig
 
 @cython.embedsignature(True)
 def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length, unsigned int flags):
-    """
-
-    Attach memory to a stream asynchronously in HIP.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
+    """Attach memory to a stream asynchronously in HIP.
 
     Args:
        stream: - stream in which to enqueue the attach operation
@@ -28565,6 +28127,10 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length,
        length: - length of memory (defaults to zero)
        flags: - must be one of hipMemAttachGlobal, hipMemAttachHost or
           hipMemAttachSingle (defaults to hipMemAttachSingle)
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
     """
     _hipStreamAttachMemAsync__retval = hipError_t(chip.hipStreamAttachMemAsync(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -28574,46 +28140,42 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length,
 
 @cython.embedsignature(True)
 def hipMallocAsync(unsigned long size, object stream):
-    """
+    """Allocates memory with stream ordered semantics
 
-    Allocates memory with stream ordered semantics  Inserts a memory allocation operation into ``stream.`` A pointer to the allocated memory is returned immediately in *dptr. The allocation must not be accessed until the the allocation operation completes. The allocation comes from the memory pool associated with the stream's device.
+    Inserts a memory allocation operation into ``stream.``
+    A pointer to the allocated memory is returned immediately in *dptr.
+    The allocation must not be accessed until the the allocation operation completes.
+    The allocation comes from the memory pool associated with the stream's device.
 
-    Note:
-       The default memory pool of a device contains device memory from that device.
+    Stream query, stream synchronize, and HIP events can be used to guarantee that the allocation
+    operation completes before work submitted in a separate stream runs.
 
-    Note:
-       Basic stream ordering allows future work submitted into the same stream to use the allocation.
-       Stream query, stream synchronize, and HIP events can be used to guarantee that the allocation
-       operation completes before work submitted in a separate stream runs.
+    the allocation is owned by the graph instead of the memory pool. The memory pool's properties
+    are used to set the node's creation parameters.
 
-    Note:
-       During stream capture, this function results in the creation of an allocation node. In this case,
-       the allocation is owned by the graph instead of the memory pool. The memory pool's properties
-       are used to set the node's creation parameters.
+    hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
-
-
-    See:
-       hipMallocFromPoolAsync, hipFreeAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        size: Number of bytes to allocate
        stream: The stream establishing the stream ordering contract and
           the memory pool to allocate from
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
+       - dev_ptr: Returned device pointer of memory allocation
+    Note:
+       The default memory pool of a device contains device memory from that device.
+    Note:
+       Basic stream ordering allows future work submitted into the same stream to use the allocation.
+    Note:
+       During stream capture, this function results in the creation of an allocation node. In this case,
+    See:
+       hipMallocFromPoolAsync, hipFreeAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocAsync__retval = hipError_t(chip.hipMallocAsync(
@@ -28625,35 +28187,32 @@ def hipMallocAsync(unsigned long size, object stream):
 
 @cython.embedsignature(True)
 def hipFreeAsync(object dev_ptr, object stream):
-    """
+    """Frees memory with stream ordered semantics
 
-    Frees memory with stream ordered semantics  Inserts a free operation into ``stream.`` The allocation must not be used after stream execution reaches the free. After this API returns, accessing the memory from any subsequent work launched on the GPU or querying its pointer attributes results in undefined behavior.
+    Inserts a free operation into ``stream.``
+    The allocation must not be used after stream execution reaches the free.
+    After this API returns, accessing the memory from any subsequent work launched on the GPU
+    or querying its pointer attributes results in undefined behavior.
 
-    Note:
-       During stream capture, this function results in the creation of a free node and
-       must therefore be passed the address of a graph allocation.
+    must therefore be passed the address of a graph allocation.
 
+    hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue, hipErrorNotSupported
-
-
-    See:
-       hipMallocFromPoolAsync, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        dev_ptr: Pointer to device memory to free
        stream: The stream, where the destruciton will occur according to the execution order
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue, hipErrorNotSupported
+    Note:
+       During stream capture, this function results in the creation of a free node and
+    See:
+       hipMallocFromPoolAsync, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipFreeAsync__retval = hipError_t(chip.hipFreeAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dev_ptr)._ptr,
@@ -28663,40 +28222,37 @@ def hipFreeAsync(object dev_ptr, object stream):
 
 @cython.embedsignature(True)
 def hipMemPoolTrimTo(object mem_pool, unsigned long min_bytes_to_hold):
-    """
+    """Releases freed memory back to the OS
 
-    Releases freed memory back to the OS  Releases memory back to the OS until the pool contains fewer than ``min_bytes_to_keep`` reserved bytes, or there is no more memory that the allocator can safely release. The allocator cannot release OS allocations that back outstanding asynchronous allocations. The OS allocations may happen at different granularity from the user allocations.
+    Releases memory back to the OS until the pool contains fewer than ``min_bytes_to_keep``
+    reserved bytes, or there is no more memory that the allocator can safely release.
+    The allocator cannot release OS allocations that back outstanding asynchronous allocations.
+    The OS allocations may happen at different granularity from the user allocations.
 
-    Note:
-       : Allocations that have not been freed count as outstanding.
+    not been observed on the host (eg. by a synchronize) can count as outstanding.
 
-    Note:
-       : Allocations that have been asynchronously freed but whose completion has
-       not been observed on the host (eg. by a synchronize) can count as outstanding.
+    then the TrimTo operation is a no-op.  Otherwise the memory pool will contain
+    at least min_bytes_to_hold bytes reserved after the operation.
 
+    hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    See:
-       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-       hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        mem_pool: The memory pool to trim allocations
        min_bytes_to_hold: If the pool has less than min_bytes_to_hold reserved,
-          then the TrimTo operation is a no-op.  Otherwise the memory pool will contain
-          at least min_bytes_to_hold bytes reserved after the operation.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Note:
+       Allocations that have not been freed count as outstanding.
+    Note:
+       Allocations that have been asynchronously freed but whose completion has
+    See:
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemPoolTrimTo__retval = hipError_t(chip.hipMemPoolTrimTo(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,min_bytes_to_hold))    # fully specified
@@ -28705,32 +28261,45 @@ def hipMemPoolTrimTo(object mem_pool, unsigned long min_bytes_to_hold):
 
 @cython.embedsignature(True)
 def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
-    """
+    """Sets attributes of a memory pool
 
-    Sets attributes of a memory pool  Supported attributes are: - ``hipMemPoolAttrReleaseThreshold:`` (value type = cuuint64_t)                                  Amount of reserved memory in bytes to hold onto before trying                                  to release memory back to the OS. When more than the release                                  threshold bytes of memory are held by the memory pool, the                                  allocator will try to release memory back to the OS on the                                  next call to stream, event or context synchronize. (default 0) - ``hipMemPoolReuseFollowEventDependencies:`` (value type = int)                                  Allow ``hipMallocAsync`` to use memory asynchronously freed                                  in another stream as long as a stream ordering dependency                                  of the allocating stream on the free action exists.                                  HIP events and null stream interactions can create the required                                  stream ordered dependencies. (default enabled) - ``hipMemPoolReuseAllowOpportunistic:`` (value type = int)                                  Allow reuse of already completed frees when there is no dependency                                  between the free and allocation. (default enabled) - ``hipMemPoolReuseAllowInternalDependencies:`` (value type = int)                                  Allow ``hipMallocAsync`` to insert new stream dependencies                                  in order to establish the stream ordering required to reuse                                  a piece of memory released by ``hipFreeAsync`` (default enabled).
+    Supported attributes are:
+    - ``hipMemPoolAttrReleaseThreshold:`` (value type = cuuint64_t)
+                                     Amount of reserved memory in bytes to hold onto before trying
+                                     to release memory back to the OS. When more than the release
+                                     threshold bytes of memory are held by the memory pool, the
+                                     allocator will try to release memory back to the OS on the
+                                     next call to stream, event or context synchronize. (default 0)
+    - ``hipMemPoolReuseFollowEventDependencies:`` (value type = int)
+                                     Allow ``hipMallocAsync`` to use memory asynchronously freed
+                                     in another stream as long as a stream ordering dependency
+                                     of the allocating stream on the free action exists.
+                                     HIP events and null stream interactions can create the required
+                                     stream ordered dependencies. (default enabled)
+    - ``hipMemPoolReuseAllowOpportunistic:`` (value type = int)
+                                     Allow reuse of already completed frees when there is no dependency
+                                     between the free and allocation. (default enabled)
+    - ``hipMemPoolReuseAllowInternalDependencies:`` (value type = int)
+                                     Allow ``hipMallocAsync`` to insert new stream dependencies
+                                     in order to establish the stream ordering required to reuse
+                                     a piece of memory released by ``hipFreeAsync`` (default enabled).
 
+    hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAccess, hipMemPoolGetAccess
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    See:
-       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAccess, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        mem_pool: The memory pool to modify
        attr: The attribute to modify
        value: Pointer to the value to assign
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    See:
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(attr,_hipMemPoolAttr__Base):
         raise TypeError("argument 'attr' must be of type '_hipMemPoolAttr__Base'")
@@ -28742,32 +28311,45 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
 
 @cython.embedsignature(True)
 def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
-    """
+    """Gets attributes of a memory pool
 
-    Gets attributes of a memory pool  Supported attributes are: - ``hipMemPoolAttrReleaseThreshold:`` (value type = cuuint64_t)                                  Amount of reserved memory in bytes to hold onto before trying                                  to release memory back to the OS. When more than the release                                  threshold bytes of memory are held by the memory pool, the                                  allocator will try to release memory back to the OS on the                                  next call to stream, event or context synchronize. (default 0) - ``hipMemPoolReuseFollowEventDependencies:`` (value type = int)                                  Allow ``hipMallocAsync`` to use memory asynchronously freed                                  in another stream as long as a stream ordering dependency                                  of the allocating stream on the free action exists.                                  HIP events and null stream interactions can create the required                                  stream ordered dependencies. (default enabled) - ``hipMemPoolReuseAllowOpportunistic:`` (value type = int)                                  Allow reuse of already completed frees when there is no dependency                                  between the free and allocation. (default enabled) - ``hipMemPoolReuseAllowInternalDependencies:`` (value type = int)                                  Allow ``hipMallocAsync`` to insert new stream dependencies                                  in order to establish the stream ordering required to reuse                                  a piece of memory released by ``hipFreeAsync`` (default enabled).
+    Supported attributes are:
+    - ``hipMemPoolAttrReleaseThreshold:`` (value type = cuuint64_t)
+                                     Amount of reserved memory in bytes to hold onto before trying
+                                     to release memory back to the OS. When more than the release
+                                     threshold bytes of memory are held by the memory pool, the
+                                     allocator will try to release memory back to the OS on the
+                                     next call to stream, event or context synchronize. (default 0)
+    - ``hipMemPoolReuseFollowEventDependencies:`` (value type = int)
+                                     Allow ``hipMallocAsync`` to use memory asynchronously freed
+                                     in another stream as long as a stream ordering dependency
+                                     of the allocating stream on the free action exists.
+                                     HIP events and null stream interactions can create the required
+                                     stream ordered dependencies. (default enabled)
+    - ``hipMemPoolReuseAllowOpportunistic:`` (value type = int)
+                                     Allow reuse of already completed frees when there is no dependency
+                                     between the free and allocation. (default enabled)
+    - ``hipMemPoolReuseAllowInternalDependencies:`` (value type = int)
+                                     Allow ``hipMallocAsync`` to insert new stream dependencies
+                                     in order to establish the stream ordering required to reuse
+                                     a piece of memory released by ``hipFreeAsync`` (default enabled).
 
+    hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    See:
-       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync,
-       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        mem_pool: The memory pool to get attributes of
        attr: The attribute to get
        value: Retrieved value
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    See:
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(attr,_hipMemPoolAttr__Base):
         raise TypeError("argument 'attr' must be of type '_hipMemPoolAttr__Base'")
@@ -28779,32 +28361,24 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
 
 @cython.embedsignature(True)
 def hipMemPoolSetAccess(object mem_pool, object desc_list, unsigned long count):
-    """
+    """Controls visibility of the specified pool between devices
 
-    Controls visibility of the specified pool between devices
+    hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolGetAccess
 
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    See:
-       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        mem_pool: Memory pool for acccess change
        desc_list: Array of access descriptors. Each descriptor instructs the access to enable for a single gpu
        count: Number of descriptors in the map array.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    See:
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemPoolSetAccess__retval = hipError_t(chip.hipMemPoolSetAccess(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr,
@@ -28814,31 +28388,26 @@ def hipMemPoolSetAccess(object mem_pool, object desc_list, unsigned long count):
 
 @cython.embedsignature(True)
 def hipMemPoolGetAccess(object mem_pool, object location):
-    """
+    """Returns the accessibility of a pool from a device
 
-    Returns the accessibility of a pool from a device  Returns the accessibility of the pool's memory from the specified location.
+    Returns the accessibility of the pool's memory from the specified location.
 
+    hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    See:
-       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        mem_pool: Memory pool being queried
        location: Location/device for memory pool access
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - flags: Accessibility of the memory pool from the specified location/device
+    See:
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     cdef chip.hipMemAccessFlags flags
     _hipMemPoolGetAccess__retval = hipError_t(chip.hipMemPoolGetAccess(&flags,
@@ -28849,33 +28418,30 @@ def hipMemPoolGetAccess(object mem_pool, object location):
 
 @cython.embedsignature(True)
 def hipMemPoolCreate(object pool_props):
-    """
+    """Creates a memory pool
 
-    Creates a memory pool  Creates a HIP memory pool and returns the handle in ``mem_pool.`` The ``pool_props`` determines the properties of the pool such as the backing device and IPC capabilities.  By default, the memory pool will be accessible from the device it is allocated on.
+    Creates a HIP memory pool and returns the handle in ``mem_pool.`` The ``pool_props`` determines
+    the properties of the pool such as the backing device and IPC capabilities.
 
+    By default, the memory pool will be accessible from the device it is allocated on.
 
+    hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
-
-    Note:
-       Specifying hipMemHandleTypeNone creates a memory pool that will not support IPC.
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-
-    See:
-       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolDestroy,
-       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        pool_props: Memory pool properties
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       - mem_pool: Contains createed memory pool
+    Note:
+       Specifying hipMemHandleTypeNone creates a memory pool that will not support IPC.
+    See:
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolDestroy,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     _hipMemPoolCreate__retval = hipError_t(chip.hipMemPoolCreate(&mem_pool._ptr,
@@ -28885,32 +28451,33 @@ def hipMemPoolCreate(object pool_props):
 
 @cython.embedsignature(True)
 def hipMemPoolDestroy(object mem_pool):
-    """
+    """Destroys the specified memory pool
 
-    Destroys the specified memory pool  If any pointers obtained from this pool haven't been freed or the pool has free operations that haven't completed when ``hipMemPoolDestroy`` is invoked, the function will return immediately and the resources associated with the pool will be released automatically once there are no more outstanding allocations.  Destroying the current mempool of a device sets the default mempool of that device as the current mempool for that device.
+    If any pointers obtained from this pool haven't been freed or
+    the pool has free operations that haven't completed
+    when ``hipMemPoolDestroy`` is invoked, the function will return immediately and the
+    resources associated with the pool will be released automatically
+    once there are no more outstanding allocations.
 
+    Destroying the current mempool of a device sets the default mempool of
+    that device as the current mempool for that device.
 
+    hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
 
-    Note:
-       A device's default memory pool cannot be destroyed.
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    See:
-       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolCreate
-       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        mem_pool: Memory pool for destruction
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Note:
+       A device's default memory pool cannot be destroyed.
+    See:
+       hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolCreate
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemPoolDestroy__retval = hipError_t(chip.hipMemPoolDestroy(
         ihipMemPoolHandle_t.from_pyobj(mem_pool)._ptr))    # fully specified
@@ -28919,47 +28486,41 @@ def hipMemPoolDestroy(object mem_pool):
 
 @cython.embedsignature(True)
 def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
-    """
+    """Allocates memory from a specified pool with stream ordered semantics.
 
-    Allocates memory from a specified pool with stream ordered semantics.  Inserts an allocation operation into ``stream.`` A pointer to the allocated memory is returned immediately in ``dev_ptr.`` The allocation must not be accessed until the the allocation operation completes. The allocation comes from the specified memory pool.
+    Inserts an allocation operation into ``stream.``
+    A pointer to the allocated memory is returned immediately in ``dev_ptr.``
+    The allocation must not be accessed until the the allocation operation completes.
+    The allocation comes from the specified memory pool.
 
-    Note:
-       The specified memory pool may be from a device different than that of the specified ``stream.``
+    Basic stream ordering allows future work submitted into the same stream to use the allocation.
+    Stream query, stream synchronize, and HIP events can be used to guarantee that the allocation
+    operation completes before work submitted in a separate stream runs.
 
-       Basic stream ordering allows future work submitted into the same stream to use the allocation.
-       Stream query, stream synchronize, and HIP events can be used to guarantee that the allocation
-       operation completes before work submitted in a separate stream runs.
+    the allocation is owned by the graph instead of the memory pool. The memory pool's properties
+    are used to set the node's creation parameters.
 
+    hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess,
 
-    Note:
-       During stream capture, this function results in the creation of an allocation node. In this case,
-       the allocation is owned by the graph instead of the memory pool. The memory pool's properties
-       are used to set the node's creation parameters.
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
-
-
-    See:
-       hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolCreate
-       hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess,
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        size: Number of bytes to allocate
        mem_pool: The pool to allocate from
        stream: The stream establishing the stream ordering semantic
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
+       - dev_ptr: Returned device pointer
+    Note:
+       The specified memory pool may be from a device different than that of the specified ``stream.``
+    Note:
+       During stream capture, this function results in the creation of an allocation node. In this case,
+    See:
+       hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolCreate
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocFromPoolAsync__retval = hipError_t(chip.hipMallocFromPoolAsync(
@@ -28972,38 +28533,33 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
 
 @cython.embedsignature(True)
 def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, object handle_type, unsigned int flags):
-    """
+    """Exports a memory pool to the requested handle type.
 
-    Exports a memory pool to the requested handle type.  Given an IPC capable mempool, create an OS handle to share the pool with another process. A recipient process can convert the shareable handle into a mempool with ``hipMemPoolImportFromShareableHandle.`` Individual pointers can then be shared with the ``hipMemPoolExportPointer`` and ``hipMemPoolImportPointer`` APIs. The implementation of what the shareable handle is and how it can be transferred is defined by the requested handle type.
+    Given an IPC capable mempool, create an OS handle to share the pool with another process.
+    A recipient process can convert the shareable handle into a mempool with ``hipMemPoolImportFromShareableHandle.``
+    Individual pointers can then be shared with the ``hipMemPoolExportPointer`` and ``hipMemPoolImportPointer`` APIs.
+    The implementation of what the shareable handle is and how it can be transferred is defined by the requested
+    handle type.
 
-    Note:
-       : To create an IPC capable mempool, create a mempool with a ``hipMemAllocationHandleType`` other
-       than ``hipMemHandleTypeNone.``
+    than ``hipMemHandleTypeNone.``
 
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
-
-
-    See:
-       hipMemPoolImportFromShareableHandle
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        shared_handle: Pointer to the location in which to store the requested handle
        mem_pool: Pool to export
        handle_type: The type of handle to create
        flags: Must be 0
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
+    Note:
+       To create an IPC capable mempool, create a mempool with a ``hipMemAllocationHandleType`` other
+    See:
+       hipMemPoolImportFromShareableHandle
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(handle_type,_hipMemAllocationHandleType__Base):
         raise TypeError("argument 'handle_type' must be of type '_hipMemAllocationHandleType__Base'")
@@ -29015,38 +28571,30 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
 
 @cython.embedsignature(True)
 def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type, unsigned int flags):
-    """
+    """Imports a memory pool from a shared handle.
 
-    Imports a memory pool from a shared handle.  Specific allocations can be imported from the imported pool with ``hipMemPoolImportPointer.``
+    Specific allocations can be imported from the imported pool with ``hipMemPoolImportPointer.``
 
-    Note:
-       Imported memory pools do not support creating new allocations.
-       As such imported memory pools may not be used in ``hipDeviceSetMemPool``
-       or ``hipMallocFromPoolAsync`` calls.
+    As such imported memory pools may not be used in ``hipDeviceSetMemPool``
+    or ``hipMallocFromPoolAsync`` calls.
 
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
-
-
-    See:
-       hipMemPoolExportToShareableHandle
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        shared_handle: OS handle of the pool to open
        handle_type: The type of handle being imported
        flags: Must be 0
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
+       - mem_pool: Returned memory pool
+    Note:
+       Imported memory pools do not support creating new allocations.
+    See:
+       hipMemPoolExportToShareableHandle
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     mem_pool = ihipMemPoolHandle_t.from_ptr(NULL)
     if not isinstance(handle_type,_hipMemAllocationHandleType__Base):
@@ -29058,29 +28606,25 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
 
 @cython.embedsignature(True)
 def hipMemPoolExportPointer(object export_data, object dev_ptr):
-    """
+    """Export data to share a memory pool allocation between processes.
 
-    Export data to share a memory pool allocation between processes.  Constructs ``export_data`` for sharing a specific allocation from an already shared memory pool. The recipient process can import the allocation with the ``hipMemPoolImportPointer`` api. The data is not a handle and may be shared through any IPC mechanism.
+    Constructs ``export_data`` for sharing a specific allocation from an already shared memory pool.
+    The recipient process can import the allocation with the ``hipMemPoolImportPointer`` api.
+    The data is not a handle and may be shared through any IPC mechanism.
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
-
-
-    See:
-       hipMemPoolImportPointer
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        export_data: Returned export data
        dev_ptr: Pointer to memory being exported
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
+    See:
+       hipMemPoolImportPointer
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemPoolExportPointer__retval = hipError_t(chip.hipMemPoolExportPointer(
         hipMemPoolPtrExportData.from_pyobj(export_data)._ptr,
@@ -29090,37 +28634,35 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
 
 @cython.embedsignature(True)
 def hipMemPoolImportPointer(object mem_pool, object export_data):
-    """
+    """Import a memory pool allocation from another process.
 
-    Import a memory pool allocation from another process.  Returns in ``dev_ptr`` a pointer to the imported memory. The imported memory must not be accessed before the allocation operation completes in the exporting process. The imported memory must be freed from all importing processes before being freed in the exporting process. The pointer may be freed with ``hipFree`` or ``hipFreeAsync.`` If ``hipFreeAsync`` is used, the free must be completed on the importing process before the free operation on the exporting process.
+    Returns in ``dev_ptr`` a pointer to the imported memory.
+    The imported memory must not be accessed before the allocation operation completes
+    in the exporting process. The imported memory must be freed from all importing processes before
+    being freed in the exporting process. The pointer may be freed with ``hipFree``
+    or ``hipFreeAsync.`` If ``hipFreeAsync`` is used, the free must be completed
+    on the importing process before the free operation on the exporting process.
 
-    Note:
-       The ``hipFreeAsync`` api may be used in the exporting process before
-       the ``hipFreeAsync`` operation completes in its stream as long as the
-       ``hipFreeAsync`` in the exporting process specifies a stream with
-       a stream dependency on the importing process's ``hipFreeAsync.``
+    the ``hipFreeAsync`` operation completes in its stream as long as the
+    ``hipFreeAsync`` in the exporting process specifies a stream with
+    a stream dependency on the importing process's ``hipFreeAsync.``
 
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized, #hipErrorOutOfMemory
-
-
-    See:
-       hipMemPoolExportPointer
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        mem_pool: Memory pool from which to import a pointer
        export_data: Data specifying the memory to import
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized, #hipErrorOutOfMemory
+       - dev_ptr: Pointer to imported memory
+    Note:
+       The ``hipFreeAsync`` api may be used in the exporting process before
+    See:
+       hipMemPoolExportPointer
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMemPoolImportPointer__retval = hipError_t(chip.hipMemPoolImportPointer(
@@ -29132,26 +28674,20 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
 
 @cython.embedsignature(True)
 def hipHostAlloc(unsigned long size, unsigned int flags):
-    """
+    """Allocate device accessible page locked host memory [Deprecated]
 
-    Allocate device accessible page locked host memory [Deprecated]
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorOutOfMemory
-
-
-    Deprecated:
-       use hipHostMalloc() instead
-
+    If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 
     Args:
        size: Requested memory size
        flags: Type of host memory allocation
-          If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorOutOfMemory
+       - ptr: Pointer to the allocated host pinned memory
+    Deprecated:
+       use hipHostMalloc() instead
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipHostAlloc__retval = hipError_t(chip.hipHostAlloc(
@@ -29161,26 +28697,18 @@ def hipHostAlloc(unsigned long size, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
-    """
-
-    Get Device pointer from Host Pointer allocated through hipHostMalloc
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
-
-
-    See:
-       hipSetDeviceFlags, hipHostMalloc
-
+    """Get Device pointer from Host Pointer allocated through hipHostMalloc
 
     Args:
        dstPtr: Device Pointer mapped to passed host pointer
        hstPtr: Host Pointer allocated through hipHostMalloc
        flags: Flags to be passed for extension
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
+    See:
+       hipSetDeviceFlags, hipHostMalloc
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipHostGetDevicePointer__retval = hipError_t(chip.hipHostGetDevicePointer(
@@ -29191,22 +28719,17 @@ def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipHostGetFlags(object hostPtr):
-    """
-
-    Return flags associated with host pointer
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    See:
-       hipHostMalloc
-
+    """Return flags associated with host pointer
 
     Args:
        hostPtr: Host Pointer allocated through hipHostMalloc
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - flagsPtr: Memory location to store flags
+    See:
+       hipHostMalloc
     """
     cdef unsigned int flagsPtr
     _hipHostGetFlags__retval = hipError_t(chip.hipHostGetFlags(&flagsPtr,
@@ -29216,21 +28739,28 @@ def hipHostGetFlags(object hostPtr):
 
 @cython.embedsignature(True)
 def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags):
-    """
+    """Register host memory so it can be accessed from the current device.
 
-    Register host memory so it can be accessed from the current device.
+    one context so this is always assumed true.
+     - #hipHostRegisterMapped    Map the allocation into the address space for the current device.
+    The device pointer can be obtained with #hipHostGetDevicePointer.
 
+     After registering the memory, use #hipHostGetDevicePointer to obtain the mapped device pointer.
+     On many systems, the mapped device pointer will have a different value than the mapped host
+    pointer.  Applications must use the device pointer in device code, and the host pointer in device
+    code.
 
+     On some systems, registered memory is pinned.  On some systems, registered memory may not be
+    actually be pinned but uses OS or hardware facilities to all GPU access to the host memory.
 
+     Developers are strongly encouraged to register memory blocks which are aligned to the host
+    cache-line size. (typically 64-bytes but can be obtains from the CPUID instruction).
 
-
-    Return:
-      #hipSuccess, #hipErrorOutOfMemory
-
-
-    See:
-      hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
-
+     If registering non-aligned pointers, the application must take care when register pointers from
+    the same cache line on different devices.  HIP's coarse-grained synchronization model does not
+    guarantee correct results if different devices write to different parts of the same cache block -
+    typically one of the writes will "win" and overwrite data from the other registered memory
+    region.
 
     Args:
        hostPtr: Pointer to host memory to be registered.
@@ -29239,22 +28769,12 @@ def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags)
           Flags:
           - #hipHostRegisterDefault   Memory is Mapped and Portable
           - #hipHostRegisterPortable  Memory is considered registered by all contexts.  HIP only supports
-          one context so this is always assumed true.
-          - #hipHostRegisterMapped    Map the allocation into the address space for the current device.
-          The device pointer can be obtained with #hipHostGetDevicePointer.
-          After registering the memory, use #hipHostGetDevicePointer to obtain the mapped device pointer.
-          On many systems, the mapped device pointer will have a different value than the mapped host
-          pointer.  Applications must use the device pointer in device code, and the host pointer in device
-          code.
-          On some systems, registered memory is pinned.  On some systems, registered memory may not be
-          actually be pinned but uses OS or hardware facilities to all GPU access to the host memory.
-          Developers are strongly encouraged to register memory blocks which are aligned to the host
-          cache-line size. (typically 64-bytes but can be obtains from the CPUID instruction).
-          If registering non-aligned pointers, the application must take care when register pointers from
-          the same cache line on different devices.  HIP's coarse-grained synchronization model does not
-          guarantee correct results if different devices write to different parts of the same cache block -
-          typically one of the writes will "win" and overwrite data from the other registered memory
-          region.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorOutOfMemory
+    See:
+       hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
     """
     _hipHostRegister__retval = hipError_t(chip.hipHostRegister(
         <void *>hip._util.types.DataHandle.from_pyobj(hostPtr)._ptr,sizeBytes,flags))    # fully specified
@@ -29263,21 +28783,16 @@ def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags)
 
 @cython.embedsignature(True)
 def hipHostUnregister(object hostPtr):
-    """
-
-    Un-register host pointer
-
-
-    Return:
-       Error code
-
-
-    See:
-       hipHostRegister
-
+    """Un-register host pointer
 
     Args:
        hostPtr: Host pointer previously registered with #hipHostRegister
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - Error code
+    See:
+       hipHostRegister
     """
     _hipHostUnregister__retval = hipError_t(chip.hipHostUnregister(
         <void *>hip._util.types.DataHandle.from_pyobj(hostPtr)._ptr))    # fully specified
@@ -29286,31 +28801,27 @@ def hipHostUnregister(object hostPtr):
 
 @cython.embedsignature(True)
 def hipMallocPitch(unsigned long width, unsigned long height):
-    """
+    """(No brief)
 
-    Allocates at least width (in bytes) * height bytes of linear memory
-    Padding may occur to ensure alighnment requirements are met for the given row
-    The change in width size due to padding will be returned in *pitch.
-    Currently the alignment is set to 128 bytes
+     Allocates at least width (in bytes) * height bytes of linear memory
+     Padding may occur to ensure alighnment requirements are met for the given row
+     The change in width size due to padding will be returned in *pitch.
+     Currently the alignment is set to 128 bytes
 
-
-
-
-
-
-    Return:
-      Error code
-
-
-    See:
-      hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
-      hipMalloc3DArray, hipHostMalloc
-
+    hipMalloc3DArray, hipHostMalloc
 
     Args:
        width: Requested pitched allocation width (in bytes)
        height: Requested pitched allocation height
           If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - Error code
+       - ptr: Pointer to the allocated device memory
+       - pitch: Pitch for allocation (in bytes)
+    See:
+       hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long pitch
@@ -29321,26 +28832,14 @@ def hipMallocPitch(unsigned long width, unsigned long height):
 
 @cython.embedsignature(True)
 def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned int elementSizeBytes):
-    """
+    """(No brief)
 
-    Allocates at least width (in bytes) * height bytes of linear memory
-    Padding may occur to ensure alighnment requirements are met for the given row
-    The change in width size due to padding will be returned in *pitch.
-    Currently the alignment is set to 128 bytes
+     Allocates at least width (in bytes) * height bytes of linear memory
+     Padding may occur to ensure alighnment requirements are met for the given row
+     The change in width size due to padding will be returned in *pitch.
+     Currently the alignment is set to 128 bytes
 
-
-
-
-
-
-    Return:
-      Error code
-
-
-    See:
-      hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
-      hipMalloc3DArray, hipHostMalloc
-
+    hipMalloc3DArray, hipHostMalloc
 
     Args:
        width: Requested pitched allocation width (in bytes)
@@ -29349,6 +28848,14 @@ def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned 
           The intended usage of pitch is as a separate parameter of the allocation, used to compute addresses within the 2D array.
           Given the row and column of an array element of type T, the address is computed as:
           T* pElement = (T*)((char*)BaseAddress + Row * Pitch) + Column;
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - Error code
+       - dptr: Pointer to the allocated device memory
+       - pitch: Pitch for allocation (in bytes)
+    See:
+       hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
     """
     dptr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long pitch
@@ -29359,26 +28866,21 @@ def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned 
 
 @cython.embedsignature(True)
 def hipFree(object ptr):
-    """
+    """Free memory allocated by the hcc hip memory allocation API.  This API performs an implicit hipDeviceSynchronize() call.  If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
 
-    Free memory allocated by the hcc hip memory allocation API.  This API performs an implicit hipDeviceSynchronize() call.  If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
+    with hipHostMalloc)
 
-
-    Return:
-      #hipSuccess
-
-    Return:
-      #hipErrorInvalidDevicePointer (if pointer is invalid, including host pointers allocated
-      with hipHostMalloc)
-
-
-    See:
-      hipMalloc, hipMallocPitch, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
-      hipMalloc3DArray, hipHostMalloc
-
+    hipMalloc3DArray, hipHostMalloc
 
     Args:
        ptr: Pointer to memory to be freed
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess
+       - #hipErrorInvalidDevicePointer (if pointer is invalid, including host pointers allocated
+    See:
+       hipMalloc, hipMallocPitch, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
     """
     _hipFree__retval = hipError_t(chip.hipFree(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
@@ -29387,22 +28889,19 @@ def hipFree(object ptr):
 
 @cython.embedsignature(True)
 def hipFreeHost(object ptr):
-    """
+    """Free memory allocated by the hcc hip host memory allocation API.  [Deprecated]
 
-    Free memory allocated by the hcc hip host memory allocation API.  [Deprecated]
-
-
-    Return:
-    #hipSuccess,
-    #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
     hipMalloc)
-
-    Deprecated:
-    use hipHostFree() instead
-
 
     Args:
        ptr: Pointer to memory to be freed
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess,
+          #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
+    Deprecated:
+       use hipHostFree() instead
     """
     _hipFreeHost__retval = hipError_t(chip.hipFreeHost(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
@@ -29411,24 +28910,21 @@ def hipFreeHost(object ptr):
 
 @cython.embedsignature(True)
 def hipHostFree(object ptr):
-    """
+    """Free memory allocated by the hcc hip host memory allocation API  This API performs an implicit hipDeviceSynchronize() call.  If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
 
-    Free memory allocated by the hcc hip host memory allocation API  This API performs an implicit hipDeviceSynchronize() call.  If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
+    hipMalloc)
 
-
-    Return:
-      #hipSuccess,
-      #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
-      hipMalloc)
-
-
-    See:
-      hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D,
-      hipMalloc3DArray, hipHostMalloc
-
+    hipMalloc3DArray, hipHostMalloc
 
     Args:
        ptr: Pointer to memory to be freed
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess,
+          #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
+    See:
+       hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D,
     """
     _hipHostFree__retval = hipError_t(chip.hipHostFree(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr))    # fully specified
@@ -29437,32 +28933,25 @@ def hipHostFree(object ptr):
 
 @cython.embedsignature(True)
 def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
-    """
+    """Copy data from src to dst.   It supports memory from host to device,  device to host, device to device and host to host  The src and dst must not overlap.   For hipMemcpy, the copy is always performed by the current device (set by hipSetDevice).  For multi-gpu or peer-to-peer configurations, it is recommended to set the current device to the  device where the src data is physically located. For optimal peer-to-peer copies, the copy device  must be able to access the src and dst pointers (by calling hipDeviceEnablePeerAccess with copy  agent as the current device and src/dest as the peerDevice argument.  if this is not done, the  hipMemcpy will still work, but will perform the copy using a staging buffer on the host.  Calling hipMemcpy with dst and src pointers that do not match the hipMemcpyKind results in  undefined behavior.
 
-    Copy data from src to dst.   It supports memory from host to device,  device to host, device to device and host to host  The src and dst must not overlap.   For hipMemcpy, the copy is always performed by the current device (set by hipSetDevice).  For multi-gpu or peer-to-peer configurations, it is recommended to set the current device to the  device where the src data is physically located. For optimal peer-to-peer copies, the copy device  must be able to access the src and dst pointers (by calling hipDeviceEnablePeerAccess with copy  agent as the current device and src/dest as the peerDevice argument.  if this is not done, the  hipMemcpy will still work, but will perform the copy using a staging buffer on the host.  Calling hipMemcpy with dst and src pointers that do not match the hipMemcpyKind results in  undefined behavior.
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknowni
-
-
-    See:
-      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-      hipMemHostAlloc, hipMemHostGetDevicePointer
-
+    hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+    hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+    hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+    hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+    hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
        dst: Data being copy to
        src: Data being copy from
        sizeBytes: Data size in bytes
        copyType: Memory copy type
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknowni
+    See:
+       hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29474,8 +28963,7 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
 
 @cython.embedsignature(True)
 def hipMemcpyWithStream(object dst, object src, unsigned long sizeBytes, object kind, object stream):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29488,32 +28976,26 @@ def hipMemcpyWithStream(object dst, object src, unsigned long sizeBytes, object 
 
 @cython.embedsignature(True)
 def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
-    """
+    """Copy data from Host to Device
 
-    Copy data from Host to Device
+    #hipErrorInvalidValue
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-      #hipErrorInvalidValue
-
-
-    See:
-      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-      hipMemHostAlloc, hipMemHostGetDevicePointer
-
+    hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+    hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+    hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+    hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+    hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
        dst: Data being copy to
        src: Data being copy from
        sizeBytes: Data size in bytes
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+    See:
+       hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
     """
     _hipMemcpyHtoD__retval = hipError_t(chip.hipMemcpyHtoD(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29523,32 +29005,26 @@ def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
 
 @cython.embedsignature(True)
 def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
-    """
+    """Copy data from Device to Host
 
-    Copy data from Device to Host
+    #hipErrorInvalidValue
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-      #hipErrorInvalidValue
-
-
-    See:
-      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-      hipMemHostAlloc, hipMemHostGetDevicePointer
-
+    hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+    hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+    hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+    hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+    hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
        dst: Data being copy to
        src: Data being copy from
        sizeBytes: Data size in bytes
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+    See:
+       hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
     """
     _hipMemcpyDtoH__retval = hipError_t(chip.hipMemcpyDtoH(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29558,32 +29034,26 @@ def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
 
 @cython.embedsignature(True)
 def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
-    """
+    """Copy data from Device to Device
 
-    Copy data from Device to Device
+    #hipErrorInvalidValue
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-      #hipErrorInvalidValue
-
-
-    See:
-      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-      hipMemHostAlloc, hipMemHostGetDevicePointer
-
+    hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+    hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+    hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+    hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+    hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
        dst: Data being copy to
        src: Data being copy from
        sizeBytes: Data size in bytes
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+    See:
+       hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
     """
     _hipMemcpyDtoD__retval = hipError_t(chip.hipMemcpyDtoD(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29593,32 +29063,26 @@ def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
 
 @cython.embedsignature(True)
 def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object stream):
-    """
+    """Copy data from Host to Device asynchronously
 
-    Copy data from Host to Device asynchronously
+    #hipErrorInvalidValue
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-      #hipErrorInvalidValue
-
-
-    See:
-      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-      hipMemHostAlloc, hipMemHostGetDevicePointer
-
+    hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+    hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+    hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+    hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+    hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
        dst: Data being copy to
        src: Data being copy from
        sizeBytes: Data size in bytes
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+    See:
+       hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
     """
     _hipMemcpyHtoDAsync__retval = hipError_t(chip.hipMemcpyHtoDAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29629,32 +29093,26 @@ def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object s
 
 @cython.embedsignature(True)
 def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object stream):
-    """
+    """Copy data from Device to Host asynchronously
 
-    Copy data from Device to Host asynchronously
+    #hipErrorInvalidValue
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-      #hipErrorInvalidValue
-
-
-    See:
-      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-      hipMemHostAlloc, hipMemHostGetDevicePointer
-
+    hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+    hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+    hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+    hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+    hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
        dst: Data being copy to
        src: Data being copy from
        sizeBytes: Data size in bytes
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+    See:
+       hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
     """
     _hipMemcpyDtoHAsync__retval = hipError_t(chip.hipMemcpyDtoHAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29665,32 +29123,26 @@ def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object s
 
 @cython.embedsignature(True)
 def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object stream):
-    """
+    """Copy data from Device to Device asynchronously
 
-    Copy data from Device to Device asynchronously
+    #hipErrorInvalidValue
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
-      #hipErrorInvalidValue
-
-
-    See:
-      hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-      hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-      hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-      hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-      hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-      hipMemHostAlloc, hipMemHostGetDevicePointer
-
+    hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
+    hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
+    hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
+    hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
+    hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
        dst: Data being copy to
        src: Data being copy from
        sizeBytes: Data size in bytes
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
+    See:
+       hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
     """
     _hipMemcpyDtoDAsync__retval = hipError_t(chip.hipMemcpyDtoDAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -29701,23 +29153,21 @@ def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object s
 
 @cython.embedsignature(True)
 def hipModuleGetGlobal(object hmod, const char * name):
-    """
+    """Returns a global pointer from a module.
 
-    Returns a global pointer from a module. Returns in *dptr and *bytes the pointer and size of the global of name name located in module hmod. If no variable of that name exists, it returns hipErrorNotFound. Both parameters dptr and bytes are optional. If one of them is NULL, it is ignored and hipSuccess is returned.
-
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
-
-
+    Returns in *dptr and *bytes the pointer and size of the global of name name located in module hmod.
+    If no variable of that name exists, it returns hipErrorNotFound. Both parameters dptr and bytes are optional.
+    If one of them is NULL, it is ignored and hipSuccess is returned.
 
     Args:
        hmod: Module to retrieve global from
        name: Name of global to retrieve
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
+       - dptr: Returns global device pointer
+       - bytes: Returns global size in bytes
     """
     dptr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long bytes
@@ -29729,20 +29179,15 @@ def hipModuleGetGlobal(object hmod, const char * name):
 
 @cython.embedsignature(True)
 def hipGetSymbolAddress(object symbol):
-    """
-
-    Gets device pointer associated with symbol on the device.
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+    """Gets device pointer associated with symbol on the device.
 
     Args:
        symbol: pointer to the symbole of the device
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - devPtr: pointer to the device associated the symbole
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipGetSymbolAddress__retval = hipError_t(chip.hipGetSymbolAddress(
@@ -29753,20 +29198,15 @@ def hipGetSymbolAddress(object symbol):
 
 @cython.embedsignature(True)
 def hipGetSymbolSize(object symbol):
-    """
-
-    Gets the size of the given symbol on the device.
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+    """Gets the size of the given symbol on the device.
 
     Args:
        symbol: pointer to the device symbole
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - size: pointer to the size
     """
     cdef unsigned long size
     _hipGetSymbolSize__retval = hipError_t(chip.hipGetSymbolSize(&size,
@@ -29776,20 +29216,14 @@ def hipGetSymbolSize(object symbol):
 
 @cython.embedsignature(True)
 def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind):
-    """
+    """Copies data to the given symbol on the device.
 
-    Copies data to the given symbol on the device. Symbol HIP APIs allow a kernel to define a device-side data symbol which can be accessed on the host side. The symbol can be in __constant or device space. Note that the symbol name needs to be encased in the HIP_SYMBOL macro. This also applies to hipMemcpyFromSymbol, hipGetSymbolAddress, and hipGetSymbolSize. For detail usage, see the example at https://github.com/ROCm-Developer-Tools/HIP/blob/rocm-5.0.x/docs/markdown/hip_porting_guide.md
-
-
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue
-
-
+    Symbol HIP APIs allow a kernel to define a device-side data symbol which can be accessed on
+    the host side. The symbol can be in __constant or device space.
+    Note that the symbol name needs to be encased in the HIP_SYMBOL macro.
+    This also applies to hipMemcpyFromSymbol, hipGetSymbolAddress, and hipGetSymbolSize.
+    For detail usage, see the example at
+    https://github.com/ROCm-Developer-Tools/HIP/blob/rocm-5.0.x/docs/markdown/hip_porting_guide.md
 
     Args:
        symbol: pointer to the device symbole
@@ -29797,6 +29231,10 @@ def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsign
        sizeBytes: size in bytes to copy
        offset: offset in bytes from start of symbole
        kind: type of memory transfer
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29808,21 +29246,7 @@ def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsign
 
 @cython.embedsignature(True)
 def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
-    """
-
-    Copies data to the given symbol on the device asynchronously.
-
-
-
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+    """Copies data to the given symbol on the device asynchronously.
 
     Args:
        symbol: pointer to the device symbole
@@ -29831,6 +29255,10 @@ def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, u
        offset: offset in bytes from start of symbole
        kind: type of memory transfer
        stream: stream identifier
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29843,20 +29271,7 @@ def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, u
 
 @cython.embedsignature(True)
 def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind):
-    """
-
-    Copies data from the given symbol on the device.
-
-
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+    """Copies data from the given symbol on the device.
 
     Args:
        dptr: Returns pointer to destinition memory address
@@ -29864,6 +29279,10 @@ def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsi
        sizeBytes: size in bytes to copy
        offset: offset in bytes from the start of symbole
        kind: type of memory transfer
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29875,21 +29294,7 @@ def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsi
 
 @cython.embedsignature(True)
 def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
-    """
-
-    Copies data from the given symbol on the device asynchronously.
-
-
-
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+    """Copies data from the given symbol on the device asynchronously.
 
     Args:
        dptr: Returns pointer to destinition memory address
@@ -29898,6 +29303,10 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
        offset: offset in bytes from the start of symbole
        kind: type of memory transfer
        stream: stream identifier
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29910,48 +29319,39 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
 
 @cython.embedsignature(True)
 def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind, object stream):
-    """
+    """Copy data from src to dst asynchronously.
 
-    Copy data from src to dst asynchronously.
+    best performance, use hipHostMalloc to allocate host memory that is transferred asynchronously.
 
-    Warning:
-      If host or dest are not pinned, the memory copy will be performed synchronously.  For
-      best performance, use hipHostMalloc to allocate host memory that is transferred asynchronously.
+    attached to the device where the src data is physically located. For optimal peer-to-peer copies,
+    the copy device must be able to access the src and dst pointers (by calling
+    hipDeviceEnablePeerAccess with copy agent as the current device and src/dest as the peerDevice
+    argument.  if this is not done, the hipMemcpy will still work, but will perform the copy using a
+    staging buffer on the host.
 
-
-    Warning:
-      on HCC hipMemcpyAsync does not support overlapped H2D and D2H copies.
-      For hipMemcpy, the copy is always performed by the device associated with the specified stream.
-
-      For multi-gpu or peer-to-peer configurations, it is recommended to use a stream which is a
-      attached to the device where the src data is physically located. For optimal peer-to-peer copies,
-      the copy device must be able to access the src and dst pointers (by calling
-      hipDeviceEnablePeerAccess with copy agent as the current device and src/dest as the peerDevice
-      argument.  if this is not done, the hipMemcpy will still work, but will perform the copy using a
-      staging buffer on the host.
-
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknown
-
-
-    See:
-      hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-      hipMemcpy2DFromArray, hipMemcpyArrayToArray, hipMemcpy2DArrayToArray, hipMemcpyToSymbol,
-      hipMemcpyFromSymbol, hipMemcpy2DAsync, hipMemcpyToArrayAsync, hipMemcpy2DToArrayAsync,
-      hipMemcpyFromArrayAsync, hipMemcpy2DFromArrayAsync, hipMemcpyToSymbolAsync,
-      hipMemcpyFromSymbolAsync
-
+    hipMemcpy2DFromArray, hipMemcpyArrayToArray, hipMemcpy2DArrayToArray, hipMemcpyToSymbol,
+    hipMemcpyFromSymbol, hipMemcpy2DAsync, hipMemcpyToArrayAsync, hipMemcpy2DToArrayAsync,
+    hipMemcpyFromArrayAsync, hipMemcpy2DFromArrayAsync, hipMemcpyToSymbolAsync,
+    hipMemcpyFromSymbolAsync
 
     Args:
        dst: Data being copy to
        src: Data being copy from
        sizeBytes: Data size in bytes
        accelerator_view: Accelerator view which the copy is being enqueued
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknown
+    Warning:
+       If host or dest are not pinned, the memory copy will be performed synchronously.  For
+    Warning:
+       on HCC hipMemcpyAsync does not support overlapped H2D and D2H copies.
+       For hipMemcpy, the copy is always performed by the device associated with the specified stream.
+
+       For multi-gpu or peer-to-peer configurations, it is recommended to use a stream which is a
+    See:
+       hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -29964,21 +29364,18 @@ def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind,
 
 @cython.embedsignature(True)
 def hipMemset(object dst, int value, unsigned long sizeBytes):
-    """
+    """Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
 
-    Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant byte value value.
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-
+    byte value value.
 
     Args:
        dst: Data being filled
        constant: value to be set
        sizeBytes: Data size in bytes
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemset__retval = hipError_t(chip.hipMemset(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
@@ -29987,21 +29384,18 @@ def hipMemset(object dst, int value, unsigned long sizeBytes):
 
 @cython.embedsignature(True)
 def hipMemsetD8(object dest, unsigned char value, unsigned long count):
-    """
+    """Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
 
-    Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant byte value value.
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-
+    byte value value.
 
     Args:
        dst: Data ptr to be filled
        constant: value to be set
        number: of values to be set
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD8__retval = hipError_t(chip.hipMemsetD8(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
@@ -30010,23 +29404,24 @@ def hipMemsetD8(object dest, unsigned char value, unsigned long count):
 
 @cython.embedsignature(True)
 def hipMemsetD8Async(object dest, unsigned char value, unsigned long count, object stream):
-    """
+    """Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
 
-    Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant byte value value.  hipMemsetD8Async() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
+    byte value value.
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-
+    hipMemsetD8Async() is asynchronous with respect to the host, so the call may return before the
+    memset is complete. The operation can optionally be associated to a stream by passing a non-zero
+    stream argument. If stream is non-zero, the operation may overlap with operations in other
+    streams.
 
     Args:
        dst: Data ptr to be filled
        constant: value to be set
        number: of values to be set
        stream: - Stream identifier
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD8Async__retval = hipError_t(chip.hipMemsetD8Async(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
@@ -30036,21 +29431,18 @@ def hipMemsetD8Async(object dest, unsigned char value, unsigned long count, obje
 
 @cython.embedsignature(True)
 def hipMemsetD16(object dest, unsigned short value, unsigned long count):
-    """
+    """Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
 
-    Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant short value value.
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-
+    short value value.
 
     Args:
        dst: Data ptr to be filled
        constant: value to be set
        number: of values to be set
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD16__retval = hipError_t(chip.hipMemsetD16(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
@@ -30059,23 +29451,24 @@ def hipMemsetD16(object dest, unsigned short value, unsigned long count):
 
 @cython.embedsignature(True)
 def hipMemsetD16Async(object dest, unsigned short value, unsigned long count, object stream):
-    """
+    """Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant
 
-    Fills the first sizeBytes bytes of the memory area pointed to by dest with the constant short value value.  hipMemsetD16Async() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
+    short value value.
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-
+    hipMemsetD16Async() is asynchronous with respect to the host, so the call may return before the
+    memset is complete. The operation can optionally be associated to a stream by passing a non-zero
+    stream argument. If stream is non-zero, the operation may overlap with operations in other
+    streams.
 
     Args:
        dst: Data ptr to be filled
        constant: value to be set
        number: of values to be set
        stream: - Stream identifier
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD16Async__retval = hipError_t(chip.hipMemsetD16Async(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count,
@@ -30085,21 +29478,18 @@ def hipMemsetD16Async(object dest, unsigned short value, unsigned long count, ob
 
 @cython.embedsignature(True)
 def hipMemsetD32(object dest, int value, unsigned long count):
-    """
+    """Fills the memory area pointed to by dest with the constant integer
 
-    Fills the memory area pointed to by dest with the constant integer value for specified number of times.
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-
+    value for specified number of times.
 
     Args:
        dst: Data being filled
        constant: value to be set
        number: of values to be set
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD32__retval = hipError_t(chip.hipMemsetD32(
         <void *>hip._util.types.DataHandle.from_pyobj(dest)._ptr,value,count))    # fully specified
@@ -30108,23 +29498,24 @@ def hipMemsetD32(object dest, int value, unsigned long count):
 
 @cython.embedsignature(True)
 def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream):
-    """
+    """Fills the first sizeBytes bytes of the memory area pointed to by dev with the constant
 
-    Fills the first sizeBytes bytes of the memory area pointed to by dev with the constant byte value value.   hipMemsetAsync() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
+    byte value value.
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-
+     hipMemsetAsync() is asynchronous with respect to the host, so the call may return before the
+    memset is complete. The operation can optionally be associated to a stream by passing a non-zero
+    stream argument. If stream is non-zero, the operation may overlap with operations in other
+    streams.
 
     Args:
        dst: Pointer to device memory
        value: - Value to set for each byte of specified memory
        sizeBytes: - Size in bytes to set
        stream: - Stream identifier
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemsetAsync__retval = hipError_t(chip.hipMemsetAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
@@ -30134,23 +29525,24 @@ def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream
 
 @cython.embedsignature(True)
 def hipMemsetD32Async(object dst, int value, unsigned long count, object stream):
-    """
+    """Fills the memory area pointed to by dev with the constant integer
 
-    Fills the memory area pointed to by dev with the constant integer value for specified number of times.   hipMemsetD32Async() is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero stream argument. If stream is non-zero, the operation may overlap with operations in other streams.
+    value for specified number of times.
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-
+     hipMemsetD32Async() is asynchronous with respect to the host, so the call may return before the
+    memset is complete. The operation can optionally be associated to a stream by passing a non-zero
+    stream argument. If stream is non-zero, the operation may overlap with operations in other
+    streams.
 
     Args:
        dst: Pointer to device memory
        value: - Value to set for each byte of specified memory
        count: - number of values to be set
        stream: - Stream identifier
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemsetD32Async__retval = hipError_t(chip.hipMemsetD32Async(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,count,
@@ -30160,16 +29552,7 @@ def hipMemsetD32Async(object dst, int value, unsigned long count, object stream)
 
 @cython.embedsignature(True)
 def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width, unsigned long height):
-    """
-
-    Fills the memory area pointed to by dst with the constant value.
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-
+    """Fills the memory area pointed to by dst with the constant value.
 
     Args:
        dst: Pointer to device memory
@@ -30177,6 +29560,10 @@ def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width,
        value: - constant value to be set
        width:
        height:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemset2D__retval = hipError_t(chip.hipMemset2D(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
@@ -30185,16 +29572,7 @@ def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width,
 
 @cython.embedsignature(True)
 def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long width, unsigned long height, object stream):
-    """
-
-    Fills asynchronously the memory area pointed to by dst with the constant value.
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-
+    """Fills asynchronously the memory area pointed to by dst with the constant value.
 
     Args:
        dst: Pointer to device memory
@@ -30203,6 +29581,10 @@ def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long w
        width:
        height:
        stream:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemset2DAsync__retval = hipError_t(chip.hipMemset2DAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
@@ -30212,19 +29594,16 @@ def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long w
 
 @cython.embedsignature(True)
 def hipMemset3D(object pitchedDevPtr, int value, object extent):
-    """
-
-    Fills synchronously the memory area pointed to by pitchedDevPtr with the constant value.
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-
+    """Fills synchronously the memory area pointed to by pitchedDevPtr with the constant value.
 
     Args:
        pitchedDevPtr:
        value: - constant value to be set
        extent:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemset3D__retval = hipError_t(chip.hipMemset3D(
         hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr[0],value,
@@ -30234,20 +29613,17 @@ def hipMemset3D(object pitchedDevPtr, int value, object extent):
 
 @cython.embedsignature(True)
 def hipMemset3DAsync(object pitchedDevPtr, int value, object extent, object stream):
-    """
-
-    Fills asynchronously the memory area pointed to by pitchedDevPtr with the constant value.
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
-
+    """Fills asynchronously the memory area pointed to by pitchedDevPtr with the constant value.
 
     Args:
        pitchedDevPtr:
        value: - constant value to be set
        extent:
        stream:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemset3DAsync__retval = hipError_t(chip.hipMemset3DAsync(
         hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr[0],value,
@@ -30258,17 +29634,15 @@ def hipMemset3DAsync(object pitchedDevPtr, int value, object extent, object stre
 
 @cython.embedsignature(True)
 def hipMemGetInfo():
-    """
+    """Query memory info.  Return snapshot of free memory, and total allocatable memory on the device.   Returns in *free a snapshot of the current free memory.
 
-    Query memory info.  Return snapshot of free memory, and total allocatable memory on the device.   Returns in *free a snapshot of the current free memory.
+    optimistic.
+
     Returns:
-      #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
-
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     Warning:
-      On HCC, the free memory only accounts for memory allocated by this process and may be
-      optimistic.
-
-
+       On HCC, the free memory only accounts for memory allocated by this process and may be
     """
     cdef unsigned long free
     cdef unsigned long total
@@ -30278,8 +29652,7 @@ def hipMemGetInfo():
 
 @cython.embedsignature(True)
 def hipMemPtrGetInfo(object ptr):
-    """
-
+    """(No brief)
     """
     cdef unsigned long size
     _hipMemPtrGetInfo__retval = hipError_t(chip.hipMemPtrGetInfo(
@@ -30289,28 +29662,20 @@ def hipMemPtrGetInfo(object ptr):
 
 @cython.embedsignature(True)
 def hipMallocArray(object desc, unsigned long width, unsigned long height, unsigned int flags):
-    """
-
-    Allocate an array on the device.
-
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorOutOfMemory
-
-
-    See:
-       hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
-
+    """Allocate an array on the device.
 
     Args:
        desc: Requested channel format
        width: Requested array allocation width
        height: Requested array allocation height
        flags: Requested properties of allocated array
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorOutOfMemory
+       - array: Pointer to allocated array in device memory
+    See:
+       hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
     """
     array = hipArray.from_ptr(NULL)
     _hipMallocArray__retval = hipError_t(chip.hipMallocArray(&array._ptr,
@@ -30320,8 +29685,7 @@ def hipMallocArray(object desc, unsigned long width, unsigned long height, unsig
 
 @cython.embedsignature(True)
 def hipArrayCreate(object pAllocateArray):
-    """
-
+    """(No brief)
     """
     pHandle = hipArray.from_ptr(NULL)
     _hipArrayCreate__retval = hipError_t(chip.hipArrayCreate(&pHandle._ptr,
@@ -30331,8 +29695,7 @@ def hipArrayCreate(object pAllocateArray):
 
 @cython.embedsignature(True)
 def hipArrayDestroy(object array):
-    """
-
+    """(No brief)
     """
     _hipArrayDestroy__retval = hipError_t(chip.hipArrayDestroy(
         hipArray.from_pyobj(array)._ptr))    # fully specified
@@ -30341,8 +29704,7 @@ def hipArrayDestroy(object array):
 
 @cython.embedsignature(True)
 def hipArray3DCreate(object pAllocateArray):
-    """
-
+    """(No brief)
     """
     array = hipArray.from_ptr(NULL)
     _hipArray3DCreate__retval = hipError_t(chip.hipArray3DCreate(&array._ptr,
@@ -30352,8 +29714,7 @@ def hipArray3DCreate(object pAllocateArray):
 
 @cython.embedsignature(True)
 def hipMalloc3D(object pitchedDevPtr, object extent):
-    """
-
+    """(No brief)
     """
     _hipMalloc3D__retval = hipError_t(chip.hipMalloc3D(
         hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr,
@@ -30363,21 +29724,16 @@ def hipMalloc3D(object pitchedDevPtr, object extent):
 
 @cython.embedsignature(True)
 def hipFreeArray(object array):
-    """
-
-    Frees an array on the device.
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
-
-
-    See:
-       hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipHostMalloc, hipHostFree
-
+    """Frees an array on the device.
 
     Args:
        array: Pointer to array to free
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
+    See:
+       hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipHostMalloc, hipHostFree
     """
     _hipFreeArray__retval = hipError_t(chip.hipFreeArray(
         hipArray.from_pyobj(array)._ptr))    # fully specified
@@ -30386,18 +29742,14 @@ def hipFreeArray(object array):
 
 @cython.embedsignature(True)
 def hipFreeMipmappedArray(object mipmappedArray):
-    """
-
-    Frees a mipmapped array on the device
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
+    """Frees a mipmapped array on the device
 
     Args:
        mipmappedArray: - Pointer to mipmapped array to free
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
     """
     _hipFreeMipmappedArray__retval = hipError_t(chip.hipFreeMipmappedArray(
         hipMipmappedArray.from_pyobj(mipmappedArray)._ptr))    # fully specified
@@ -30406,26 +29758,19 @@ def hipFreeMipmappedArray(object mipmappedArray):
 
 @cython.embedsignature(True)
 def hipMalloc3DArray(object desc, object extent, unsigned int flags):
-    """
-
-    Allocate an array on the device.
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorOutOfMemory
-
-
-    See:
-       hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
-
+    """Allocate an array on the device.
 
     Args:
        desc: Requested channel format
        extent: Requested array allocation width, height and depth
        flags: Requested properties of allocated array
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorOutOfMemory
+       - array: Pointer to allocated array in device memory
+    See:
+       hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
     """
     array = hipArray.from_ptr(NULL)
     _hipMalloc3DArray__retval = hipError_t(chip.hipMalloc3DArray(&array._ptr,
@@ -30436,25 +29781,18 @@ def hipMalloc3DArray(object desc, object extent, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipMallocMipmappedArray(object desc, object extent, unsigned int numLevels, unsigned int flags):
-    """
-
-    Allocate a mipmapped array on the device
-
-
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
-
+    """Allocate a mipmapped array on the device
 
     Args:
        desc: - Requested channel format
        extent: - Requested allocation size (width field in elements)
        numLevels: - Number of mipmap levels to allocate
        flags: - Flags for extensions
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
+       - mipmappedArray: - Pointer to allocated mipmapped array in device memory
     """
     mipmappedArray = hipMipmappedArray.from_ptr(NULL)
     _hipMallocMipmappedArray__retval = hipError_t(chip.hipMallocMipmappedArray(&mipmappedArray._ptr,
@@ -30465,21 +29803,16 @@ def hipMallocMipmappedArray(object desc, object extent, unsigned int numLevels, 
 
 @cython.embedsignature(True)
 def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
-    """
-
-    Gets a mipmap level of a HIP mipmapped array
-
-
-
-
-
-    Return:
-       #hipSuccess, #hipErrorInvalidValue
-
+    """Gets a mipmap level of a HIP mipmapped array
 
     Args:
        mipmappedArray: - HIP mipmapped array
        level: - Mipmap level
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - levelArray: - Returned mipmap level HIP array
     """
     levelArray = hipArray.from_ptr(NULL)
     _hipGetMipmappedArrayLevel__retval = hipError_t(chip.hipGetMipmappedArrayLevel(&levelArray._ptr,
@@ -30489,26 +29822,11 @@ def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
 
 @cython.embedsignature(True)
 def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        dst: Destination memory address
@@ -30518,6 +29836,12 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
        width: Width of matrix transfer (columns in bytes)
        height: Height of matrix transfer (rows)
        kind: Type of transfer
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30529,22 +29853,19 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
 
 @cython.embedsignature(True)
 def hipMemcpyParam2D(object pCopy):
-    """
+    """Copies memory for 2D arrays.
 
-    Copies memory for 2D arrays.
-
-    Return:
-    #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-    hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-    hipMemcpyToSymbol, hipMemcpyAsync
     /
-
     Args:
        pCopy: Parameters for the memory copy
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+          #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    See:
+       hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
+       hipMemcpyToSymbol, hipMemcpyAsync
     """
     _hipMemcpyParam2D__retval = hipError_t(chip.hipMemcpyParam2D(
         hip_Memcpy2D.from_pyobj(pCopy)._ptr))    # fully specified
@@ -30553,24 +29874,20 @@ def hipMemcpyParam2D(object pCopy):
 
 @cython.embedsignature(True)
 def hipMemcpyParam2DAsync(object pCopy, object stream):
-    """
+    """Copies memory for 2D arrays.
 
-    Copies memory for 2D arrays.
-
-
-    Return:
-    #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-    hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-    hipMemcpyToSymbol, hipMemcpyAsync
     /
-
     Args:
        pCopy: Parameters for the memory copy
        stream: Stream to use
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+          #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    See:
+       hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
+       hipMemcpyToSymbol, hipMemcpyAsync
     """
     _hipMemcpyParam2DAsync__retval = hipError_t(chip.hipMemcpyParam2DAsync(
         hip_Memcpy2D.from_pyobj(pCopy)._ptr,
@@ -30580,27 +29897,11 @@ def hipMemcpyParam2DAsync(object pCopy, object stream):
 
 @cython.embedsignature(True)
 def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        dst: Destination memory address
@@ -30611,6 +29912,12 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
        height: Height of matrix transfer (rows)
        kind: Type of transfer
        stream: Stream to use
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30623,27 +29930,11 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
 
 @cython.embedsignature(True)
 def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        dst: Destination memory address
@@ -30654,6 +29945,12 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
        width: Width of matrix transfer (columns in bytes)
        height: Height of matrix transfer (rows)
        kind: Type of transfer
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30665,28 +29962,11 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
 
 @cython.embedsignature(True)
 def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-
-
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        dst: Destination memory address
@@ -30698,6 +29978,12 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
        height: Height of matrix transfer (rows)
        kind: Type of transfer
        stream: Accelerator view which the copy is being enqueued
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30710,25 +29996,11 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
 
 @cython.embedsignature(True)
 def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long count, object kind):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        dst: Destination memory address
@@ -30737,6 +30009,12 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
        src: Source memory address
        count: size in bytes to copy
        kind: Type of transfer
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30748,25 +30026,11 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
 
 @cython.embedsignature(True)
 def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsigned long hOffset, unsigned long count, object kind):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        dst: Destination memory address
@@ -30775,6 +30039,12 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
        hOffset: Source starting Y offset
        count: Size in bytes to copy
        kind: Type of transfer
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30786,27 +30056,11 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
 
 @cython.embedsignature(True)
 def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned long wOffset, unsigned long hOffset, unsigned long width, unsigned long height, object kind):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        dst: Destination memory address
@@ -30817,6 +30071,12 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
        width: Width of matrix transfer (columns in bytes)
        height: Height of matrix transfer (rows)
        kind: Type of transfer
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30828,28 +30088,11 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
 
 @cython.embedsignature(True)
 def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsigned long wOffset, unsigned long hOffset, unsigned long width, unsigned long height, object kind, object stream):
-    """
+    """Copies data between host and device asynchronously.
 
-    Copies data between host and device asynchronously.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-
-
-
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        dst: Destination memory address
@@ -30861,6 +30104,12 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
        height: Height of matrix transfer (rows)
        kind: Type of transfer
        stream: Accelerator view which the copy is being enqueued
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -30873,29 +30122,23 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
 
 @cython.embedsignature(True)
 def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned long count):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        dst: Destination memory address
        srcArray: Source array
        srcoffset: Offset in bytes of source array
        count: Size of memory copy in bytes
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     _hipMemcpyAtoH__retval = hipError_t(chip.hipMemcpyAtoH(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,
@@ -30905,29 +30148,23 @@ def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned
 
 @cython.embedsignature(True)
 def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsigned long count):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        dstArray: Destination memory address
        dstOffset: Offset in bytes of destination array
        srcHost: Source host pointer
        count: Size of memory copy in bytes
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     _hipMemcpyHtoA__retval = hipError_t(chip.hipMemcpyHtoA(
         hipArray.from_pyobj(dstArray)._ptr,dstOffset,
@@ -30937,23 +30174,20 @@ def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsi
 
 @cython.embedsignature(True)
 def hipMemcpy3D(object p):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        p: 3D memory copy parameters
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     _hipMemcpy3D__retval = hipError_t(chip.hipMemcpy3D(
         hipMemcpy3DParms.from_pyobj(p)._ptr))    # fully specified
@@ -30962,25 +30196,21 @@ def hipMemcpy3D(object p):
 
 @cython.embedsignature(True)
 def hipMemcpy3DAsync(object p, object stream):
-    """
+    """Copies data between host and device asynchronously.
 
-    Copies data between host and device asynchronously.
+    #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
 
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        p: 3D memory copy parameters
        stream: Stream to use
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+    See:
+       hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     _hipMemcpy3DAsync__retval = hipError_t(chip.hipMemcpy3DAsync(
         hipMemcpy3DParms.from_pyobj(p)._ptr,
@@ -30990,23 +30220,19 @@ def hipMemcpy3DAsync(object p, object stream):
 
 @cython.embedsignature(True)
 def hipDrvMemcpy3D(object pCopy):
-    """
+    """Copies data between host and device.
 
-    Copies data between host and device.
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        pCopy: 3D memory copy parameters
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+          #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    See:
+       hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     _hipDrvMemcpy3D__retval = hipError_t(chip.hipDrvMemcpy3D(
         HIP_MEMCPY3D.from_pyobj(pCopy)._ptr))    # fully specified
@@ -31015,25 +30241,20 @@ def hipDrvMemcpy3D(object pCopy):
 
 @cython.embedsignature(True)
 def hipDrvMemcpy3DAsync(object pCopy, object stream):
-    """
+    """Copies data between host and device asynchronously.
 
-    Copies data between host and device asynchronously.
-
-
-
-    Return:
-      #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
-      #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
-
-
-    See:
-      hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-      hipMemcpyAsync
-
+    hipMemcpyAsync
 
     Args:
        pCopy: 3D memory copy parameters
        stream: Stream to use
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
+          #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
+    See:
+       hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
     """
     _hipDrvMemcpy3DAsync__retval = hipError_t(chip.hipDrvMemcpy3DAsync(
         HIP_MEMCPY3D.from_pyobj(pCopy)._ptr,
@@ -31043,33 +30264,7 @@ def hipDrvMemcpy3DAsync(object pCopy, object stream):
 
 @cython.embedsignature(True)
 def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
-    """
-
-     @}
-
-
-    -------------------------------------------------------------------------------------------------
-    -------------------------------------------------------------------------------------------------
-      @defgroup PeerToPeer PeerToPeer Device Memory Access
-      @{
-      Warning:
-       PeerToPeer support is experimental.
-       This section describes the PeerToPeer device memory access functions of HIP runtime API.
-
-
-
-     Determine if a device can access a peer's memory.
-
-
-
-
-
-     Returns:
-       #hipSuccess,
-
-     Returns:
-       #hipErrorInvalidDevice if deviceId or peerDeviceId are not valid devices
-
+    """Determine if a device can access a peer's memory.
 
     Args:
        device: - device from where memory may be accessed.
@@ -31078,6 +30273,12 @@ def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
           of directly accessing memory physically located on peerDevice , or "0" if not.
           Returns "0" in ``canAccessPeer`` if deviceId == peerDeviceId, and both are valid devices : a
           device is not a peer of itself.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess,
+       - #hipErrorInvalidDevice if deviceId or peerDeviceId are not valid devices
+       - canAccessPeer: Returns the peer access capability (0 or 1)
     """
     cdef int canAccessPeer
     _hipDeviceCanAccessPeer__retval = hipError_t(chip.hipDeviceCanAccessPeer(&canAccessPeer,deviceId,peerDeviceId))    # fully specified
@@ -31086,19 +30287,24 @@ def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
 
 @cython.embedsignature(True)
 def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
-    """
+    """Enable direct access from current device's virtual address space to memory allocations
 
-    Enable direct access from current device's virtual address space to memory allocations physically located on a peer device.  Memory which already allocated on peer device will be mapped into the address space of the current device.  In addition, all future memory allocations on peerDeviceId will be mapped into the address space of the current device when the memory is allocated. The peer memory remains accessible from the current device until a call to hipDeviceDisablePeerAccess or hipDeviceReset.
+    physically located on a peer device.
 
+    Memory which already allocated on peer device will be mapped into the address space of the
+    current device.  In addition, all future memory allocations on peerDeviceId will be mapped into
+    the address space of the current device when the memory is allocated. The peer memory remains
+    accessible from the current device until a call to hipDeviceDisablePeerAccess or hipDeviceReset.
 
-
-    Returns:
-       #hipErrorPeerAccessAlreadyEnabled if peer access is already enabled for this device.
-
+    Returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
 
     Args:
        peerDeviceId:
-       flags: Returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
+       flags:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipErrorPeerAccessAlreadyEnabled if peer access is already enabled for this device.
     """
     _hipDeviceEnablePeerAccess__retval = hipError_t(chip.hipDeviceEnablePeerAccess(peerDeviceId,flags))    # fully specified
     return (_hipDeviceEnablePeerAccess__retval,)
@@ -31106,16 +30312,19 @@ def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipDeviceDisablePeerAccess(int peerDeviceId):
-    """
+    """Disable direct access from current device's virtual address space to memory allocations
 
-    Disable direct access from current device's virtual address space to memory allocations physically located on a peer device.  Returns hipErrorPeerAccessNotEnabled if direct access to memory on peerDevice has not yet been enabled from the current device.
+    physically located on a peer device.
 
-    Returns:
-       #hipSuccess, #hipErrorPeerAccessNotEnabled
-
+    Returns hipErrorPeerAccessNotEnabled if direct access to memory on peerDevice has not yet been
+    enabled from the current device.
 
     Args:
        peerDeviceId:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorPeerAccessNotEnabled
     """
     _hipDeviceDisablePeerAccess__retval = hipError_t(chip.hipDeviceDisablePeerAccess(peerDeviceId))    # fully specified
     return (_hipDeviceDisablePeerAccess__retval,)
@@ -31123,26 +30332,20 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
 
 @cython.embedsignature(True)
 def hipMemGetAddressRange(object pbase, object dptr):
-    """
+    """Get information on memory allocations.
 
-    Get information on memory allocations.
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevicePointer
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        pbase: - BAse pointer address
        dptr: - Device Pointer
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevicePointer
+       - psize: - Size of allocation
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     cdef unsigned long psize
     _hipMemGetAddressRange__retval = hipError_t(chip.hipMemGetAddressRange(
@@ -31153,19 +30356,7 @@ def hipMemGetAddressRange(object pbase, object dptr):
 
 @cython.embedsignature(True)
 def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsigned long sizeBytes):
-    """
-
-    Copies memory from one device to memory on another device.
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
-
+    """Copies memory from one device to memory on another device.
 
     Args:
        dst: - Destination device pointer.
@@ -31173,6 +30364,10 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsi
        src: - Source device pointer
        srcDeviceId: - Source device
        sizeBytes: - Size of memory copy in bytes
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
     """
     _hipMemcpyPeer__retval = hipError_t(chip.hipMemcpyPeer(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
@@ -31182,20 +30377,7 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsi
 
 @cython.embedsignature(True)
 def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, unsigned long sizeBytes, object stream):
-    """
-
-    Copies memory from one device to memory on another device.
-
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
-
+    """Copies memory from one device to memory on another device.
 
     Args:
        dst: - Destination device pointer.
@@ -31204,6 +30386,10 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, u
        srcDevice: - Source device
        sizeBytes: - Size of memory copy in bytes
        stream: - Stream identifier
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
     """
     _hipMemcpyPeerAsync__retval = hipError_t(chip.hipMemcpyPeerAsync(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,dstDeviceId,
@@ -31214,41 +30400,19 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, u
 
 @cython.embedsignature(True)
 def hipCtxCreate(unsigned int flags, int device):
-    """
-
-     @}
-
-
-    -------------------------------------------------------------------------------------------------
-    -------------------------------------------------------------------------------------------------
-      @defgroup Context Context Management
-      @{
-      This section describes the context management functions of HIP runtime API.
-
-
-
-      @addtogroup ContextD Context Management [Deprecated]
-      @{
-      @ingroup Context
-      This section describes the deprecated context management functions of HIP runtime API.
-
-
-     Create a context and set it as current/ default context
-
-
-
-     Return:
-       #hipSuccess
-
-
-     See:
-       hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
-       hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    """Create a context and set it as current/ default context
 
     Args:
        flags:
        associated: device handle
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess
+       - ctx:
+    See:
+       hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
+       hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
     """
     ctx = ihipCtx_t.from_ptr(NULL)
     _hipCtxCreate__retval = hipError_t(chip.hipCtxCreate(&ctx._ptr,flags,device))    # fully specified
@@ -31257,23 +30421,18 @@ def hipCtxCreate(unsigned int flags, int device):
 
 @cython.embedsignature(True)
 def hipCtxDestroy(object ctx):
-    """
+    """Destroy a HIP context.
 
-    Destroy a HIP context.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    See:
-       hipCtxCreate, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,hipCtxSetCurrent,
-       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
-
+    hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 
     Args:
        ctx: Context to destroy
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    See:
+       hipCtxCreate, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,hipCtxSetCurrent,
     """
     _hipCtxDestroy__retval = hipError_t(chip.hipCtxDestroy(
         ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
@@ -31282,19 +30441,16 @@ def hipCtxDestroy(object ctx):
 
 @cython.embedsignature(True)
 def hipCtxPopCurrent():
-    """
+    """Pop the current/default context and return the popped context.
 
-    Pop the current/default context and return the popped context.
+    hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Returns:
-       #hipSuccess, #hipErrorInvalidContext
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidContext
+       - ctx:
     See:
        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxSetCurrent, hipCtxGetCurrent,
-       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
-
     """
     ctx = ihipCtx_t.from_ptr(NULL)
     _hipCtxPopCurrent__retval = hipError_t(chip.hipCtxPopCurrent(&ctx._ptr))    # fully specified
@@ -31303,21 +30459,18 @@ def hipCtxPopCurrent():
 
 @cython.embedsignature(True)
 def hipCtxPushCurrent(object ctx):
-    """
+    """Push the context to be set as current/ default context
 
-    Push the context to be set as current/ default context
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidContext
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
-
+    hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 
     Args:
        ctx:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidContext
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     _hipCtxPushCurrent__retval = hipError_t(chip.hipCtxPushCurrent(
         ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
@@ -31326,21 +30479,18 @@ def hipCtxPushCurrent(object ctx):
 
 @cython.embedsignature(True)
 def hipCtxSetCurrent(object ctx):
-    """
+    """Set the passed context as current/default
 
-    Set the passed context as current/default
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidContext
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
-
+    hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 
     Args:
        ctx:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidContext
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     _hipCtxSetCurrent__retval = hipError_t(chip.hipCtxSetCurrent(
         ihipCtx_t.from_pyobj(ctx)._ptr))    # fully specified
@@ -31349,19 +30499,16 @@ def hipCtxSetCurrent(object ctx):
 
 @cython.embedsignature(True)
 def hipCtxGetCurrent():
-    """
+    """Get the handle of the current/ default context
 
-    Get the handle of the current/ default context
+    hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Returns:
-       #hipSuccess, #hipErrorInvalidContext
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidContext
+       - ctx:
     See:
        hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
-       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
-
     """
     ctx = ihipCtx_t.from_ptr(NULL)
     _hipCtxGetCurrent__retval = hipError_t(chip.hipCtxGetCurrent(&ctx._ptr))    # fully specified
@@ -31370,19 +30517,16 @@ def hipCtxGetCurrent():
 
 @cython.embedsignature(True)
 def hipCtxGetDevice():
-    """
+    """Get the handle of the device associated with current/default context
 
-    Get the handle of the device associated with current/default context
+    hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
 
     Returns:
-       #hipSuccess, #hipErrorInvalidContext
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidContext
+       - device:
     See:
        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
-
-
     """
     cdef int device
     _hipCtxGetDevice__retval = hipError_t(chip.hipCtxGetDevice(&device))    # fully specified
@@ -31391,30 +30535,26 @@ def hipCtxGetDevice():
 
 @cython.embedsignature(True)
 def hipCtxGetApiVersion(object ctx):
-    """
+    """Returns the approximate HIP api version.
 
-    Returns the approximate HIP api version.
+    This function always set *apiVersion to 4 as an approximation though HIP supports
+    some features which were introduced in later CUDA SDK revisions.
+    HIP apps code should not rely on the api revision number here and should
+    use arch feature flags to test device capabilities or conditional compilation.
 
-
-    Return:
-       #hipSuccess
-
-
-    Warning:
-       The HIP feature set does not correspond to an exact CUDA SDK api revision.
-       This function always set *apiVersion to 4 as an approximation though HIP supports
-       some features which were introduced in later CUDA SDK revisions.
-       HIP apps code should not rely on the api revision number here and should
-       use arch feature flags to test device capabilities or conditional compilation.
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
-       hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        ctx: Context to check
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess
+       - apiVersion:
+    Warning:
+       The HIP feature set does not correspond to an exact CUDA SDK api revision.
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
     """
     cdef int apiVersion
     _hipCtxGetApiVersion__retval = hipError_t(chip.hipCtxGetApiVersion(
@@ -31424,26 +30564,22 @@ def hipCtxGetApiVersion(object ctx):
 
 @cython.embedsignature(True)
 def hipCtxGetCacheConfig():
-    """
+    """Set Cache configuration for a specific function
 
-    Set Cache configuration for a specific function
+    ignored on those architectures.
 
-    Return:
-       #hipSuccess
-
-
-    Warning:
-       AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is
-       ignored on those architectures.
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        cacheConfiguration:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
+    Warning:
+       AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     cdef chip.hipFuncCache_t cacheConfig
     _hipCtxGetCacheConfig__retval = hipError_t(chip.hipCtxGetCacheConfig(&cacheConfig))    # fully specified
@@ -31452,26 +30588,22 @@ def hipCtxGetCacheConfig():
 
 @cython.embedsignature(True)
 def hipCtxSetCacheConfig(object cacheConfig):
-    """
+    """Set L1/Shared cache partition.
 
-    Set L1/Shared cache partition.
+    ignored on those architectures.
 
-    Return:
-       #hipSuccess
-
-
-    Warning:
-       AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is
-       ignored on those architectures.
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        cacheConfiguration:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
+    Warning:
+       AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     if not isinstance(cacheConfig,_hipFuncCache_t__Base):
         raise TypeError("argument 'cacheConfig' must be of type '_hipFuncCache_t__Base'")
@@ -31481,26 +30613,22 @@ def hipCtxSetCacheConfig(object cacheConfig):
 
 @cython.embedsignature(True)
 def hipCtxSetSharedMemConfig(object config):
-    """
+    """Set Shared memory bank configuration.
 
-    Set Shared memory bank configuration.
+    ignored on those architectures.
 
-    Return:
-       #hipSuccess
-
-
-    Warning:
-       AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-       ignored on those architectures.
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        sharedMemoryConfiguration:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
+    Warning:
+       AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     if not isinstance(config,_hipSharedMemConfig__Base):
         raise TypeError("argument 'config' must be of type '_hipSharedMemConfig__Base'")
@@ -31510,26 +30638,22 @@ def hipCtxSetSharedMemConfig(object config):
 
 @cython.embedsignature(True)
 def hipCtxGetSharedMemConfig():
-    """
+    """Get Shared memory bank configuration.
 
-    Get Shared memory bank configuration.
+    ignored on those architectures.
 
-    Return:
-       #hipSuccess
-
-
-    Warning:
-       AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
-       ignored on those architectures.
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        sharedMemoryConfiguration:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
+    Warning:
+       AMD devices and some Nvidia GPUS do not support shared cache banking, and the hint is
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     cdef chip.hipSharedMemConfig pConfig
     _hipCtxGetSharedMemConfig__retval = hipError_t(chip.hipCtxGetSharedMemConfig(&pConfig))    # fully specified
@@ -31538,24 +30662,19 @@ def hipCtxGetSharedMemConfig():
 
 @cython.embedsignature(True)
 def hipCtxSynchronize():
-    """
+    """Blocks until the default context has completed all preceding requested tasks.
 
-    Blocks until the default context has completed all preceding requested tasks.
+    then returns.
 
-    Return:
-       #hipSuccess
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxGetDevice
 
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
     Warning:
        This function waits for all streams on the default context to complete execution, and
-       then returns.
-
-
     See:
        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxGetDevice
-
-
     """
     _hipCtxSynchronize__retval = hipError_t(chip.hipCtxSynchronize())    # fully specified
     return (_hipCtxSynchronize__retval,)
@@ -31563,19 +30682,16 @@ def hipCtxSynchronize():
 
 @cython.embedsignature(True)
 def hipCtxGetFlags():
-    """
+    """Return flags used for creating default context.
 
-    Return flags used for creating default context.
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Returns:
-       #hipSuccess
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess
+       - flags:
     See:
        hipCtxCreate, hipCtxDestroy, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
-
     """
     cdef unsigned int flags
     _hipCtxGetFlags__retval = hipError_t(chip.hipCtxGetFlags(&flags))    # fully specified
@@ -31584,27 +30700,28 @@ def hipCtxGetFlags():
 
 @cython.embedsignature(True)
 def hipCtxEnablePeerAccess(object peerCtx, unsigned int flags):
-    """
+    """Enables direct access to memory allocations in a peer context.
 
-    Enables direct access to memory allocations in a peer context.  Memory which already allocated on peer device will be mapped into the address space of the current device.  In addition, all future memory allocations on peerDeviceId will be mapped into the address space of the current device when the memory is allocated. The peer memory remains accessible from the current device until a call to hipDeviceDisablePeerAccess or hipDeviceReset.
+    Memory which already allocated on peer device will be mapped into the address space of the
+    current device.  In addition, all future memory allocations on peerDeviceId will be mapped into
+    the address space of the current device when the memory is allocated. The peer memory remains
+    accessible from the current device until a call to hipDeviceDisablePeerAccess or hipDeviceReset.
 
+    #hipErrorPeerAccessAlreadyEnabled
 
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
-       #hipErrorPeerAccessAlreadyEnabled
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
-    Warning:
-       PeerToPeer support is experimental.
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        peerCtx:
        flags:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+    Warning:
+       PeerToPeer support is experimental.
     """
     _hipCtxEnablePeerAccess__retval = hipError_t(chip.hipCtxEnablePeerAccess(
         ihipCtx_t.from_pyobj(peerCtx)._ptr,flags))    # fully specified
@@ -31613,24 +30730,26 @@ def hipCtxEnablePeerAccess(object peerCtx, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipCtxDisablePeerAccess(object peerCtx):
-    """
+    """Disable direct access from current context's virtual address space to memory allocations
 
-    Disable direct access from current context's virtual address space to memory allocations physically located on a peer context.Disables direct access to memory allocations in a peer context and unregisters any registered allocations.  Returns hipErrorPeerAccessNotEnabled if direct access to memory on peerDevice has not yet been enabled from the current device.
+    physically located on a peer context.Disables direct access to memory allocations in a peer
+    context and unregisters any registered allocations.
 
-    Returns:
-       #hipSuccess, #hipErrorPeerAccessNotEnabled
+    Returns hipErrorPeerAccessNotEnabled if direct access to memory on peerDevice has not yet been
+    enabled from the current device.
 
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
-    Warning:
-       PeerToPeer support is experimental.
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        peerCtx:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorPeerAccessNotEnabled
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+    Warning:
+       PeerToPeer support is experimental.
     """
     _hipCtxDisablePeerAccess__retval = hipError_t(chip.hipCtxDisablePeerAccess(
         ihipCtx_t.from_pyobj(peerCtx)._ptr))    # fully specified
@@ -31639,30 +30758,20 @@ def hipCtxDisablePeerAccess(object peerCtx):
 
 @cython.embedsignature(True)
 def hipDevicePrimaryCtxGetState(int dev):
-    """
+    """Get the state of the primary context.
 
-    @}
-
-
-    Get the state of the primary context.
-
-
-
-
-
-    Returns:
-       #hipSuccess
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        Device: to get primary context flags for
        Pointer: to store flags
        Pointer: to store context state; 0 = inactive, 1 = active
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     cdef unsigned int flags
     cdef int active
@@ -31672,27 +30781,22 @@ def hipDevicePrimaryCtxGetState(int dev):
 
 @cython.embedsignature(True)
 def hipDevicePrimaryCtxRelease(int dev):
-    """
+    """Release the primary context on the GPU.
 
-    Release the primary context on the GPU.
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
-
-
-    Returns:
-       #hipSuccess
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
-    Warning:
-       This function return #hipSuccess though doesn't release the primaryCtx by design on
-       HIP/HCC path.
-
+    HIP/HCC path.
 
     Args:
        Device: which primary context is released
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
+    Warning:
+       This function return #hipSuccess though doesn't release the primaryCtx by design on
     """
     _hipDevicePrimaryCtxRelease__retval = hipError_t(chip.hipDevicePrimaryCtxRelease(dev))    # fully specified
     return (_hipDevicePrimaryCtxRelease__retval,)
@@ -31700,25 +30804,19 @@ def hipDevicePrimaryCtxRelease(int dev):
 
 @cython.embedsignature(True)
 def hipDevicePrimaryCtxRetain(int dev):
-    """
+    """Retain the primary context on the GPU.
 
-    Retain the primary context on the GPU.
-
-
-
-
-    Returns:
-       #hipSuccess
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        Returned: context handle of the new context
        Device: which primary context is released
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     pctx = ihipCtx_t.from_ptr(NULL)
     _hipDevicePrimaryCtxRetain__retval = hipError_t(chip.hipDevicePrimaryCtxRetain(&pctx._ptr,dev))    # fully specified
@@ -31727,23 +30825,18 @@ def hipDevicePrimaryCtxRetain(int dev):
 
 @cython.embedsignature(True)
 def hipDevicePrimaryCtxReset(int dev):
-    """
+    """Resets the primary context on the GPU.
 
-    Resets the primary context on the GPU.
-
-
-
-    Returns:
-       #hipSuccess
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        Device: which primary context is reset
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     _hipDevicePrimaryCtxReset__retval = hipError_t(chip.hipDevicePrimaryCtxReset(dev))    # fully specified
     return (_hipDevicePrimaryCtxReset__retval,)
@@ -31751,25 +30844,19 @@ def hipDevicePrimaryCtxReset(int dev):
 
 @cython.embedsignature(True)
 def hipDevicePrimaryCtxSetFlags(int dev, unsigned int flags):
-    """
+    """Set flags for the primary context.
 
-    Set flags for the primary context.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorContextAlreadyInUse
-
-
-    See:
-       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-       hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
-
+    hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
        Device: for which the primary context flags are set
        New: flags for the device
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorContextAlreadyInUse
+    See:
+       hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
     """
     _hipDevicePrimaryCtxSetFlags__retval = hipError_t(chip.hipDevicePrimaryCtxSetFlags(dev,flags))    # fully specified
     return (_hipDevicePrimaryCtxSetFlags__retval,)
@@ -31777,33 +30864,19 @@ def hipDevicePrimaryCtxSetFlags(int dev, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipModuleLoad(const char * fname):
-    """
+    """Loads code object from file into a hipModule_t
 
-    @}
-
-
-
-     @defgroup Module Module Management
-     @{
-     This section describes the module management functions of HIP runtime API.
-
-
-
-    Loads code object from file into a hipModule_t
-
-    Warning:
-       File/memory resources allocated in this function are released only in hipModuleUnload.
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorFileNotFound,
-       hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
-
-
-
+    hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
 
     Args:
        fname:
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorFileNotFound,
+       - module:
+    Warning:
+       File/memory resources allocated in this function are released only in hipModuleUnload.
     """
     module = ihipModule_t.from_ptr(NULL)
     _hipModuleLoad__retval = hipError_t(chip.hipModuleLoad(&module._ptr,fname))    # fully specified
@@ -31812,18 +30885,16 @@ def hipModuleLoad(const char * fname):
 
 @cython.embedsignature(True)
 def hipModuleUnload(object module):
-    """
+    """Frees the module
 
-    Frees the module
-
-    Returns:
-       hipSuccess, hipInvalidValue
-       module is freed and the code objects associated with it are destroyed
-
-
+    module is freed and the code objects associated with it are destroyed
 
     Args:
        module:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipInvalidValue
     """
     _hipModuleUnload__retval = hipError_t(chip.hipModuleUnload(
         ihipModule_t.from_pyobj(module)._ptr))    # fully specified
@@ -31832,18 +30903,18 @@ def hipModuleUnload(object module):
 
 @cython.embedsignature(True)
 def hipModuleGetFunction(object module, const char * kname):
-    """
+    """Function with kname will be extracted if present in module
 
-    Function with kname will be extracted if present in module
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorNotInitialized,
-       hipErrorNotFound,
-
+    hipErrorNotFound,
 
     Args:
        module:
        kname:
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorNotInitialized,
+       - function:
     """
     function = ihipModuleSymbol_t.from_ptr(NULL)
     _hipModuleGetFunction__retval = hipError_t(chip.hipModuleGetFunction(&function._ptr,
@@ -31853,17 +30924,15 @@ def hipModuleGetFunction(object module, const char * kname):
 
 @cython.embedsignature(True)
 def hipFuncGetAttributes(object attr, object func):
-    """
-
-    Find out attributes for a given function.
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
-
+    """Find out attributes for a given function.
 
     Args:
        attr:
        func:
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
     """
     _hipFuncGetAttributes__retval = hipError_t(chip.hipFuncGetAttributes(
         hipFuncAttributes.from_pyobj(attr)._ptr,
@@ -31873,17 +30942,16 @@ def hipFuncGetAttributes(object attr, object func):
 
 @cython.embedsignature(True)
 def hipFuncGetAttribute(object attrib, object hfunc):
-    """
-
-    Find out a specific attribute for a given function.
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
-
+    """Find out a specific attribute for a given function.
 
     Args:
        attrib:
        hfunc:
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
+       - value:
     """
     cdef int value
     if not isinstance(attrib,_hipFunction_attribute__Base):
@@ -31895,17 +30963,16 @@ def hipFuncGetAttribute(object attrib, object hfunc):
 
 @cython.embedsignature(True)
 def hipModuleGetTexRef(object hmod, const char * name):
-    """
-
-    returns the handle of the texture reference with the name from the module.
-
-    Returns:
-       hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
-
+    """returns the handle of the texture reference with the name from the module.
 
     Args:
        hmod:
        name:
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
+       - texRef:
     """
     texRef = textureReference.from_ptr(NULL)
     _hipModuleGetTexRef__retval = hipError_t(chip.hipModuleGetTexRef(&texRef._ptr,
@@ -31915,16 +30982,17 @@ def hipModuleGetTexRef(object hmod, const char * name):
 
 @cython.embedsignature(True)
 def hipModuleLoadData(object image):
-    """
+    """builds module from code object which resides in host memory. Image is pointer to that
 
-    builds module from code object which resides in host memory. Image is pointer to that location.
-
-    Returns:
-       hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
-
+    location.
 
     Args:
        image:
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
+       - module:
     """
     module = ihipModule_t.from_ptr(NULL)
     _hipModuleLoadData__retval = hipError_t(chip.hipModuleLoadData(&module._ptr,
@@ -31934,22 +31002,20 @@ def hipModuleLoadData(object image):
 
 @cython.embedsignature(True)
 def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValues):
-    """
+    """builds module from code object which resides in host memory. Image is pointer to that
 
-    builds module from code object which resides in host memory. Image is pointer to that location. Options are not used. hipModuleLoadData is called.
-
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
-
+    location. Options are not used. hipModuleLoadData is called.
 
     Args:
        image:
        number: of options
        option: values for JIT
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
+       - module:
+       - options: for JIT
     """
     module = ihipModule_t.from_ptr(NULL)
     cdef chip.hipJitOption options
@@ -31961,29 +31027,21 @@ def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValu
 
 @cython.embedsignature(True)
 def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, object stream, object kernelParams, object extra):
-    """
+    """launches kernel f with launch parameters and shared memory on stream with arguments passed
 
-    launches kernel f with launch parameters and shared memory on stream with arguments passed to kernelparams or extra
+    to kernelparams or extra
 
+    HIP-Clang compiler provides support for extern shared declarations.
 
+    default stream is used with associated synchronization rules.
 
+    must be in the memory layout and alignment expected by the kernel.
 
+    Please note, HIP does not support kernel launch with total work items defined in dimension with
+    size gridDim x blockDim >= 2^32. So gridDim.x * blockDim.x, gridDim.y * blockDim.y
+    and gridDim.z * blockDim.z are always less than 2^32.
 
-
-
-
-
-
-
-
-    Returns:
-       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
-
-
-    Warning:
-       kernellParams argument is not yet implemented in HIP. Please use extra instead. Please
-       refer to hip_porting_driver_api.md for sample usage.
-
+    refer to hip_porting_driver_api.md for sample usage.
 
     Args:
        f: Kernel to launch.
@@ -31994,15 +31052,15 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
        blockDimY: Y grid dimension specified in work-items
        blockDimZ: Z grid dimension specified in work-items
        sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel. The
-          HIP-Clang compiler provides support for extern shared declarations.
        stream: Stream where the kernel should be dispatched.  May be 0, in which case th
-          default stream is used with associated synchronization rules.
        kernelParams:
        extra: Pointer to kernel arguments.   These are passed directly to the kernel and
-          must be in the memory layout and alignment expected by the kernel.
-          Please note, HIP does not support kernel launch with total work items defined in dimension with
-          size gridDim x blockDim >= 2^32. So gridDim.x * blockDim.x, gridDim.y * blockDim.y
-          and gridDim.z * blockDim.z are always less than 2^32.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
+    Warning:
+       kernellParams argument is not yet implemented in HIP. Please use extra instead. Please
     """
     _hipModuleLaunchKernel__retval = hipError_t(chip.hipModuleLaunchKernel(
         ihipModuleSymbol_t.from_pyobj(f)._ptr,gridDimX,gridDimY,gridDimZ,blockDimX,blockDimY,blockDimZ,sharedMemBytes,
@@ -32014,20 +31072,16 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
 
 @cython.embedsignature(True)
 def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, object kernelParams, unsigned int sharedMemBytes, object stream):
-    """
+    """launches kernel f with launch parameters and shared memory on stream with arguments passed
 
-    launches kernel f with launch parameters and shared memory on stream with arguments passed to kernelparams or extra, where thread blocks can cooperate and synchronize as they execute
+    to kernelparams or extra, where thread blocks can cooperate and synchronize as they execute
 
+    HIP-Clang compiler provides support for extern shared declarations.
 
+    default stream is used with associated synchronization rules.
 
-
-
-
-
-
-    Returns:
-       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
-
+    Please note, HIP does not support kernel launch with total work items defined in dimension with
+    size gridDim x blockDim >= 2^32.
 
     Args:
        f: Kernel to launch.
@@ -32035,11 +31089,11 @@ def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, objec
        blockDim: Block dimensions specified in work-items
        kernelParams: A list of kernel arguments
        sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel. The
-          HIP-Clang compiler provides support for extern shared declarations.
        stream: Stream where the kernel should be dispatched.  May be 0, in which case th
-          default stream is used with associated synchronization rules.
-          Please note, HIP does not support kernel launch with total work items defined in dimension with
-          size gridDim x blockDim >= 2^32.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
     """
     _hipLaunchCooperativeKernel__retval = hipError_t(chip.hipLaunchCooperativeKernel(
         <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
@@ -32052,22 +31106,18 @@ def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, objec
 
 @cython.embedsignature(True)
 def hipLaunchCooperativeKernelMultiDevice(object launchParamsList, int numDevices, unsigned int flags):
-    """
+    """Launches kernels on multiple devices where thread blocks can cooperate and
 
-    Launches kernels on multiple devices where thread blocks can cooperate and synchronize as they execute.
-
-
-
-
-
-    Returns:
-       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
-
+    synchronize as they execute.
 
     Args:
        launchParamsList: List of launch parameters, one per device.
        numDevices: Size of the launchParamsList array.
        flags: Flags to control launch behavior.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
     """
     _hipLaunchCooperativeKernelMultiDevice__retval = hipError_t(chip.hipLaunchCooperativeKernelMultiDevice(
         hipLaunchParams_t.from_pyobj(launchParamsList)._ptr,numDevices,flags))    # fully specified
@@ -32076,23 +31126,18 @@ def hipLaunchCooperativeKernelMultiDevice(object launchParamsList, int numDevice
 
 @cython.embedsignature(True)
 def hipExtLaunchMultiKernelMultiDevice(object launchParamsList, int numDevices, unsigned int flags):
-    """
+    """Launches kernels on multiple devices and guarantees all specified kernels are dispatched
 
-    Launches kernels on multiple devices and guarantees all specified kernels are dispatched on respective streams before enqueuing any other work on the specified streams from any other threads
-
-
-
-
-
-
-    Returns:
-       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
-
+    on respective streams before enqueuing any other work on the specified streams from any other threads
 
     Args:
        hipLaunchParams: List of launch parameters, one per device.
        numDevices: Size of the launchParamsList array.
        flags: Flags to control launch behavior.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipExtLaunchMultiKernelMultiDevice__retval = hipError_t(chip.hipExtLaunchMultiKernelMultiDevice(
         hipLaunchParams_t.from_pyobj(launchParamsList)._ptr,numDevices,flags))    # fully specified
@@ -32101,36 +31146,21 @@ def hipExtLaunchMultiKernelMultiDevice(object launchParamsList, int numDevices, 
 
 @cython.embedsignature(True)
 def hipModuleOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk, int blockSizeLimit):
-    """
+    """determine the grid and block sizes to achieves maximum occupancy for a kernel
 
-    @}
-
-
-
-     @defgroup Occupancy Occupancy
-     @{
-     This section describes the occupancy functions of HIP runtime API.
-
-
-
-    determine the grid and block sizes to achieves maximum occupancy for a kernel
-
-
-
-
-
-
-
-    Returns:
-       hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-
+    Please note, HIP does not support kernel launch with total work items defined in dimension with
+    size gridDim x blockDim >= 2^32.
 
     Args:
        f: kernel function for which occupancy is calulated
        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
        blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
-          Please note, HIP does not support kernel launch with total work items defined in dimension with
-          size gridDim x blockDim >= 2^32.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorInvalidValue
+       - gridSize: minimum grid size for maximum potential occupancy
+       - blockSize: block size for maximum potential occupancy
     """
     cdef int gridSize
     cdef int blockSize
@@ -32141,28 +31171,22 @@ def hipModuleOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMem
 
 @cython.embedsignature(True)
 def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, unsigned long dynSharedMemPerBlk, int blockSizeLimit, unsigned int flags):
-    """
+    """determine the grid and block sizes to achieves maximum occupancy for a kernel
 
-    determine the grid and block sizes to achieves maximum occupancy for a kernel
-
-
-
-
-
-
-
-
-    Returns:
-       hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-
+    Please note, HIP does not support kernel launch with total work items defined in dimension with
+    size gridDim x blockDim >= 2^32.
 
     Args:
        f: kernel function for which occupancy is calulated
        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
        blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
        flags: Extra flags for occupancy calculation (only default supported)
-          Please note, HIP does not support kernel launch with total work items defined in dimension with
-          size gridDim x blockDim >= 2^32.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorInvalidValue
+       - gridSize: minimum grid size for maximum potential occupancy
+       - blockSize: block size for maximum potential occupancy
     """
     cdef int gridSize
     cdef int blockSize
@@ -32173,19 +31197,16 @@ def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, unsigned long dyn
 
 @cython.embedsignature(True)
 def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsigned long dynSharedMemPerBlk):
-    """
-
-    Returns occupancy for a device function.
-
-
-
-
-
+    """Returns occupancy for a device function.
 
     Args:
        func: Kernel function (hipFunction) for which occupancy is calulated
        blockSize: Block size the kernel is intended to be launched with
        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - numBlocks: Returned occupancy
     """
     cdef int numBlocks
     _hipModuleOccupancyMaxActiveBlocksPerMultiprocessor__retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,
@@ -32195,21 +31216,17 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, 
 
 @cython.embedsignature(True)
 def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSize, unsigned long dynSharedMemPerBlk, unsigned int flags):
-    """
-
-    Returns occupancy for a device function.
-
-
-
-
-
-
+    """Returns occupancy for a device function.
 
     Args:
        f: Kernel function(hipFunction_t) for which occupancy is calulated
        blockSize: Block size the kernel is intended to be launched with
        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
        flags: Extra flags for occupancy calculation (only default supported)
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - numBlocks: Returned occupancy
     """
     cdef int numBlocks
     _hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval = hipError_t(chip.hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,
@@ -32219,19 +31236,16 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int bl
 
 @cython.embedsignature(True)
 def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsigned long dynSharedMemPerBlk):
-    """
-
-    Returns occupancy for a device function.
-
-
-
-
-
+    """Returns occupancy for a device function.
 
     Args:
        func: Kernel function for which occupancy is calulated
        blockSize: Block size the kernel is intended to be launched with
        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - numBlocks: Returned occupancy
     """
     cdef int numBlocks
     _hipOccupancyMaxActiveBlocksPerMultiprocessor__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocks,
@@ -32241,21 +31255,17 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsign
 
 @cython.embedsignature(True)
 def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSize, unsigned long dynSharedMemPerBlk, unsigned int flags):
-    """
-
-    Returns occupancy for a device function.
-
-
-
-
-
-
+    """Returns occupancy for a device function.
 
     Args:
        f: Kernel function for which occupancy is calulated
        blockSize: Block size the kernel is intended to be launched with
        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
        flags: Extra flags for occupancy calculation (currently ignored)
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - numBlocks: Returned occupancy
     """
     cdef int numBlocks
     _hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags__retval = hipError_t(chip.hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(&numBlocks,
@@ -32265,26 +31275,21 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSiz
 
 @cython.embedsignature(True)
 def hipOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk, int blockSizeLimit):
-    """
+    """determine the grid and block sizes to achieves maximum occupancy for a kernel
 
-    determine the grid and block sizes to achieves maximum occupancy for a kernel
-
-
-
-
-
-
-
-    Returns:
-       hipSuccess, hipInvalidDevice, hipErrorInvalidValue
-
+    Please note, HIP does not support kernel launch with total work items defined in dimension with
+    size gridDim x blockDim >= 2^32.
 
     Args:
        f: kernel function for which occupancy is calulated
        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
        blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
-          Please note, HIP does not support kernel launch with total work items defined in dimension with
-          size gridDim x blockDim >= 2^32.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorInvalidValue
+       - gridSize: minimum grid size for maximum potential occupancy
+       - blockSize: block size for maximum potential occupancy
     """
     cdef int gridSize
     cdef int blockSize
@@ -32295,13 +31300,12 @@ def hipOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk
 
 @cython.embedsignature(True)
 def hipProfilerStart():
-    """
+    """Start recording of profiling information
 
-    Start recording of profiling information When using this API, start the profiler with profiling disabled.  (--startdisabled)
+    When using this API, start the profiler with profiling disabled.  (--startdisabled)
+
     Warning:
-       : hipProfilerStart API is under development.
-
-
+       hipProfilerStart API is under development.
     """
     _hipProfilerStart__retval = hipError_t(chip.hipProfilerStart())    # fully specified
     return (_hipProfilerStart__retval,)
@@ -32309,13 +31313,12 @@ def hipProfilerStart():
 
 @cython.embedsignature(True)
 def hipProfilerStop():
-    """
+    """Stop recording of profiling information.
 
-    Stop recording of profiling information. When using this API, start the profiler with profiling disabled.  (--startdisabled)
+    When using this API, start the profiler with profiling disabled.  (--startdisabled)
+
     Warning:
-       : hipProfilerStop API is under development.
-
-
+       hipProfilerStop API is under development.
     """
     _hipProfilerStop__retval = hipError_t(chip.hipProfilerStop())    # fully specified
     return (_hipProfilerStop__retval,)
@@ -32323,29 +31326,7 @@ def hipProfilerStop():
 
 @cython.embedsignature(True)
 def hipConfigureCall(object gridDim, object blockDim, unsigned long sharedMem, object stream):
-    """
-
-     @}
-
-
-    -------------------------------------------------------------------------------------------------
-    -------------------------------------------------------------------------------------------------
-      @defgroup Clang Launch API to support the triple-chevron syntax
-      @{
-      This section describes the API to support the triple-chevron syntax.
-
-
-     Configure a kernel launch.
-
-
-
-
-
-
-     Returns:
-       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
-
-
+    """Configure a kernel launch.
 
     Args:
        gridDim: grid dimension specified as multiple of blockDim.
@@ -32356,6 +31337,10 @@ def hipConfigureCall(object gridDim, object blockDim, unsigned long sharedMem, o
           default stream is used with associated synchronization rules.
           Please note, HIP does not support kernel launch with total work items defined in dimension with
           size gridDim x blockDim >= 2^32.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipConfigureCall__retval = hipError_t(chip.hipConfigureCall(
         dim3.from_pyobj(gridDim)._ptr[0],
@@ -32366,23 +31351,16 @@ def hipConfigureCall(object gridDim, object blockDim, unsigned long sharedMem, o
 
 @cython.embedsignature(True)
 def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
-    """
-
-    Set a kernel argument.
-
-    Returns:
-       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
-
-
-
-
-
-
+    """Set a kernel argument.
 
     Args:
        arg: Pointer the argument in host memory.
        size: Size of the argument.
        offset: Offset of the argument on the argument stack.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipSetupArgument__retval = hipError_t(chip.hipSetupArgument(
         <const void *>hip._util.types.DataHandle.from_pyobj(arg)._ptr,size,offset))    # fully specified
@@ -32391,19 +31369,14 @@ def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
 
 @cython.embedsignature(True)
 def hipLaunchByPtr(object func):
-    """
-
-    Launch a kernel.
-
-
-
-    Returns:
-       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
-
-
+    """Launch a kernel.
 
     Args:
        func: Kernel to launch.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipLaunchByPtr__retval = hipError_t(chip.hipLaunchByPtr(
         <const void *>hip._util.types.DataHandle.from_pyobj(func)._ptr))    # fully specified
@@ -32412,21 +31385,9 @@ def hipLaunchByPtr(object func):
 
 @cython.embedsignature(True)
 def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks, object args, unsigned long sharedMemBytes, object stream):
-    """
+    """C compliant kernel launch API
 
-    C compliant kernel launch API
-
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, hipInvalidDevice
-
-
+    HIP-Clang compiler provides support for extern shared declarations.
 
     Args:
        function_address: - kernel stub function pointer.
@@ -32434,9 +31395,12 @@ def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks,
        dimBlocks: - dimension of a block
        args: - kernel arguments
        sharedMemBytes: - Amount of dynamic shared memory to allocate for this kernel. The
-          HIP-Clang compiler provides support for extern shared declarations.
        stream: - Stream where the kernel should be dispatched.  May be 0, in which case th
           default stream is used with associated synchronization rules.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, hipInvalidDevice
     """
     _hipLaunchKernel__retval = hipError_t(chip.hipLaunchKernel(
         <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
@@ -32449,26 +31413,22 @@ def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks,
 
 @cython.embedsignature(True)
 def hipLaunchHostFunc(object stream, object fn, object userData):
-    """
+    """Enqueues a host function call in a stream.
 
-    Enqueues a host function call in a stream.
+    #hipErrorNotSupported
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidResourceHandle, #hipErrorInvalidValue,
-       #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        stream: - stream to enqueue work to.
        fn: - function to call once operations enqueued preceeding are complete.
        userData: - User-specified data to be passed to the function.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidResourceHandle, #hipErrorInvalidValue,
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipLaunchHostFunc__retval = hipError_t(chip.hipLaunchHostFunc(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -32479,16 +31439,15 @@ def hipLaunchHostFunc(object stream, object fn, object userData):
 
 @cython.embedsignature(True)
 def hipDrvMemcpy2DUnaligned(object pCopy):
-    """
+    """(No brief)
 
     Copies memory for 2D arrays.
 
     @param pCopy           - Parameters for the memory copy
 
     Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
     """
     _hipDrvMemcpy2DUnaligned__retval = hipError_t(chip.hipDrvMemcpy2DUnaligned(
         hip_Memcpy2D.from_pyobj(pCopy)._ptr))    # fully specified
@@ -32497,23 +31456,16 @@ def hipDrvMemcpy2DUnaligned(object pCopy):
 
 @cython.embedsignature(True)
 def hipExtLaunchKernel(object function_address, object numBlocks, object dimBlocks, object args, unsigned long sharedMemBytes, object stream, object startEvent, object stopEvent, int flags):
-    """
+    """Launches kernel from the pointer address, with arguments and shared memory on stream.
 
-    Launches kernel from the pointer address, with arguments and shared memory on stream.
+    HIP-Clang compiler provides support for extern shared declarations.
 
+    the kernel launch. The event must be created before calling this API.
 
+    the kernel launch. The event must be created before calling this API.
+    May be 0, in which case the default stream is used with associated synchronization rules.
 
-
-
-
-
-
-
-
-    Returns:
-       hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
-
-
+    launched in any order.
 
     Args:
        function_address: pointer to the Kernel to launch.
@@ -32521,15 +31473,14 @@ def hipExtLaunchKernel(object function_address, object numBlocks, object dimBloc
        dimBlocks: dimension of a block.
        args: pointer to kernel arguments.
        sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel.
-          HIP-Clang compiler provides support for extern shared declarations.
        stream: Stream where the kernel should be dispatched.
        startEvent: If non-null, specified event will be updated to track the start time of
-          the kernel launch. The event must be created before calling this API.
        stopEvent: If non-null, specified event will be updated to track the stop time of
-          the kernel launch. The event must be created before calling this API.
-          May be 0, in which case the default stream is used with associated synchronization rules.
        flags: . The value of hipExtAnyOrderLaunch, signifies if kernel can be
-          launched in any order.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
     """
     _hipExtLaunchKernel__retval = hipError_t(chip.hipExtLaunchKernel(
         <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
@@ -32544,23 +31495,16 @@ def hipExtLaunchKernel(object function_address, object numBlocks, object dimBloc
 
 @cython.embedsignature(True)
 def hipBindTextureToMipmappedArray(object tex, object mipmappedArray, object desc):
-    """
-
-    Binds a mipmapped array to a texture.
-
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue
-
-
+    """Binds a mipmapped array to a texture.
 
     Args:
        tex: pointer to the texture reference to bind
        mipmappedArray: memory mipmapped array on the device
        desc: opointer to the channel format
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue
     """
     _hipBindTextureToMipmappedArray__retval = hipError_t(chip.hipBindTextureToMipmappedArray(
         textureReference.from_pyobj(tex)._ptr,
@@ -32571,29 +31515,21 @@ def hipBindTextureToMipmappedArray(object tex, object mipmappedArray, object des
 
 @cython.embedsignature(True)
 def hipCreateTextureObject(object pResDesc, object pTexDesc, object pResViewDesc):
-    """
+    """Creates a texture object.
 
-    Creates a texture object.
-
-
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue, hipErrorNotSupported, hipErrorOutOfMemory
-
-
-    Note:
-       3D liner filter isn't supported on GFX90A boards, on which the API ``hipCreateTextureObject`` will
-       return hipErrorNotSupported.
-
-
+    return hipErrorNotSupported.
 
     Args:
        pResDesc: pointer to resource descriptor
        pTexDesc: pointer to texture descriptor
        pResViewDesc: pointer to resource view descriptor
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue, hipErrorNotSupported, hipErrorOutOfMemory
+       - pTexObject: pointer to the texture object to create
+    Note:
+       3D liner filter isn't supported on GFX90A boards, on which the API ``hipCreateTextureObject`` will
     """
     pTexObject = __hip_texture.from_ptr(NULL)
     _hipCreateTextureObject__retval = hipError_t(chip.hipCreateTextureObject(&pTexObject._ptr,
@@ -32605,19 +31541,14 @@ def hipCreateTextureObject(object pResDesc, object pTexDesc, object pResViewDesc
 
 @cython.embedsignature(True)
 def hipDestroyTextureObject(object textureObject):
-    """
-
-    Destroys a texture object.
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue
-
-
+    """Destroys a texture object.
 
     Args:
        textureObject: texture object to destroy
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue
     """
     _hipDestroyTextureObject__retval = hipError_t(chip.hipDestroyTextureObject(
         __hip_texture.from_pyobj(textureObject)._ptr))    # fully specified
@@ -32626,21 +31557,15 @@ def hipDestroyTextureObject(object textureObject):
 
 @cython.embedsignature(True)
 def hipGetChannelDesc(object desc, object array):
-    """
-
-    Gets the channel descriptor in an array.
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue
-
-
+    """Gets the channel descriptor in an array.
 
     Args:
        desc: pointer to channel format descriptor
        array: memory array on the device
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue
     """
     _hipGetChannelDesc__retval = hipError_t(chip.hipGetChannelDesc(
         hipChannelFormatDesc.from_pyobj(desc)._ptr,
@@ -32650,21 +31575,15 @@ def hipGetChannelDesc(object desc, object array):
 
 @cython.embedsignature(True)
 def hipGetTextureObjectResourceDesc(object pResDesc, object textureObject):
-    """
-
-    Gets resource descriptor for the texture object.
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue
-
-
+    """Gets resource descriptor for the texture object.
 
     Args:
        pResDesc: pointer to resource descriptor
        textureObject: texture object
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue
     """
     _hipGetTextureObjectResourceDesc__retval = hipError_t(chip.hipGetTextureObjectResourceDesc(
         hipResourceDesc.from_pyobj(pResDesc)._ptr,
@@ -32674,21 +31593,15 @@ def hipGetTextureObjectResourceDesc(object pResDesc, object textureObject):
 
 @cython.embedsignature(True)
 def hipGetTextureObjectResourceViewDesc(object pResViewDesc, object textureObject):
-    """
-
-    Gets resource view descriptor for the texture object.
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue
-
-
+    """Gets resource view descriptor for the texture object.
 
     Args:
        pResViewDesc: pointer to resource view descriptor
        textureObject: texture object
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue
     """
     _hipGetTextureObjectResourceViewDesc__retval = hipError_t(chip.hipGetTextureObjectResourceViewDesc(
         hipResourceViewDesc.from_pyobj(pResViewDesc)._ptr,
@@ -32698,21 +31611,15 @@ def hipGetTextureObjectResourceViewDesc(object pResViewDesc, object textureObjec
 
 @cython.embedsignature(True)
 def hipGetTextureObjectTextureDesc(object pTexDesc, object textureObject):
-    """
-
-    Gets texture descriptor for the texture object.
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue
-
-
+    """Gets texture descriptor for the texture object.
 
     Args:
        pTexDesc: pointer to texture descriptor
        textureObject: texture object
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue
     """
     _hipGetTextureObjectTextureDesc__retval = hipError_t(chip.hipGetTextureObjectTextureDesc(
         hipTextureDesc.from_pyobj(pTexDesc)._ptr,
@@ -32722,24 +31629,17 @@ def hipGetTextureObjectTextureDesc(object pTexDesc, object textureObject):
 
 @cython.embedsignature(True)
 def hipTexObjectCreate(object pResDesc, object pTexDesc, object pResViewDesc):
-    """
-
-    Creates a texture object.
-
-
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue
-
-
+    """Creates a texture object.
 
     Args:
        pResDesc: pointer to resource descriptor
        pTexDesc: pointer to texture descriptor
        pResViewDesc: pointer to resource view descriptor
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue
+       - pTexObject: pointer to texture object to create
     """
     pTexObject = __hip_texture.from_ptr(NULL)
     _hipTexObjectCreate__retval = hipError_t(chip.hipTexObjectCreate(&pTexObject._ptr,
@@ -32751,19 +31651,14 @@ def hipTexObjectCreate(object pResDesc, object pTexDesc, object pResViewDesc):
 
 @cython.embedsignature(True)
 def hipTexObjectDestroy(object texObject):
-    """
-
-    Destroys a texture object.
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue
-
-
+    """Destroys a texture object.
 
     Args:
        texObject: texture object to destroy
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue
     """
     _hipTexObjectDestroy__retval = hipError_t(chip.hipTexObjectDestroy(
         __hip_texture.from_pyobj(texObject)._ptr))    # fully specified
@@ -32772,21 +31667,15 @@ def hipTexObjectDestroy(object texObject):
 
 @cython.embedsignature(True)
 def hipTexObjectGetResourceDesc(object pResDesc, object texObject):
-    """
-
-    Gets resource descriptor of a texture object.
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
-
-
+    """Gets resource descriptor of a texture object.
 
     Args:
        pResDesc: pointer to resource descriptor
        texObject: texture object
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
     _hipTexObjectGetResourceDesc__retval = hipError_t(chip.hipTexObjectGetResourceDesc(
         HIP_RESOURCE_DESC_st.from_pyobj(pResDesc)._ptr,
@@ -32796,21 +31685,15 @@ def hipTexObjectGetResourceDesc(object pResDesc, object texObject):
 
 @cython.embedsignature(True)
 def hipTexObjectGetResourceViewDesc(object pResViewDesc, object texObject):
-    """
-
-    Gets resource view descriptor of a texture object.
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
-
-
+    """Gets resource view descriptor of a texture object.
 
     Args:
        pResViewDesc: pointer to resource view descriptor
        texObject: texture object
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
     _hipTexObjectGetResourceViewDesc__retval = hipError_t(chip.hipTexObjectGetResourceViewDesc(
         HIP_RESOURCE_VIEW_DESC_st.from_pyobj(pResViewDesc)._ptr,
@@ -32820,21 +31703,15 @@ def hipTexObjectGetResourceViewDesc(object pResViewDesc, object texObject):
 
 @cython.embedsignature(True)
 def hipTexObjectGetTextureDesc(object pTexDesc, object texObject):
-    """
-
-    Gets texture descriptor of a texture object.
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
-
-
+    """Gets texture descriptor of a texture object.
 
     Args:
        pTexDesc: pointer to texture descriptor
        texObject: texture object
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
     _hipTexObjectGetTextureDesc__retval = hipError_t(chip.hipTexObjectGetTextureDesc(
         HIP_TEXTURE_DESC_st.from_pyobj(pTexDesc)._ptr,
@@ -32844,27 +31721,15 @@ def hipTexObjectGetTextureDesc(object pTexDesc, object texObject):
 
 @cython.embedsignature(True)
 def hipGetTextureReference(object symbol):
-    """
-
-
-     @addtogroup TextureD Texture Management [Deprecated]
-     @{
-     @ingroup Texture
-     This section describes the deprecated texture management functions of HIP runtime API.
-
-
-    Gets the texture reference related with the symbol.
-
-
-
-
-    Returns:
-       hipSuccess, hipErrorInvalidValue
-
-
+    """Gets the texture reference related with the symbol.
 
     Args:
        symbol: pointer to the symbol related with the texture for the reference
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - hipSuccess, hipErrorInvalidValue
+       - texref: texture reference
     """
     texref = textureReference.from_ptr(NULL)
     _hipGetTextureReference__retval = hipError_t(chip.hipGetTextureReference(&texref._ptr,
@@ -32874,8 +31739,7 @@ def hipGetTextureReference(object symbol):
 
 @cython.embedsignature(True)
 def hipTexRefSetAddressMode(object texRef, int dim, object am):
-    """
-
+    """(No brief)
     """
     if not isinstance(am,_hipTextureAddressMode__Base):
         raise TypeError("argument 'am' must be of type '_hipTextureAddressMode__Base'")
@@ -32886,8 +31750,7 @@ def hipTexRefSetAddressMode(object texRef, int dim, object am):
 
 @cython.embedsignature(True)
 def hipTexRefSetArray(object tex, object array, unsigned int flags):
-    """
-
+    """(No brief)
     """
     _hipTexRefSetArray__retval = hipError_t(chip.hipTexRefSetArray(
         textureReference.from_pyobj(tex)._ptr,
@@ -32897,8 +31760,7 @@ def hipTexRefSetArray(object tex, object array, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipTexRefSetFilterMode(object texRef, object fm):
-    """
-
+    """(No brief)
     """
     if not isinstance(fm,_hipTextureFilterMode__Base):
         raise TypeError("argument 'fm' must be of type '_hipTextureFilterMode__Base'")
@@ -32909,8 +31771,7 @@ def hipTexRefSetFilterMode(object texRef, object fm):
 
 @cython.embedsignature(True)
 def hipTexRefSetFlags(object texRef, unsigned int Flags):
-    """
-
+    """(No brief)
     """
     _hipTexRefSetFlags__retval = hipError_t(chip.hipTexRefSetFlags(
         textureReference.from_pyobj(texRef)._ptr,Flags))    # fully specified
@@ -32919,8 +31780,7 @@ def hipTexRefSetFlags(object texRef, unsigned int Flags):
 
 @cython.embedsignature(True)
 def hipTexRefSetFormat(object texRef, object fmt, int NumPackedComponents):
-    """
-
+    """(No brief)
     """
     if not isinstance(fmt,_hipArray_Format__Base):
         raise TypeError("argument 'fmt' must be of type '_hipArray_Format__Base'")
@@ -32931,8 +31791,7 @@ def hipTexRefSetFormat(object texRef, object fmt, int NumPackedComponents):
 
 @cython.embedsignature(True)
 def hipBindTexture(object tex, object devPtr, object desc, unsigned long size):
-    """
-
+    """(No brief)
     """
     cdef unsigned long offset
     _hipBindTexture__retval = hipError_t(chip.hipBindTexture(&offset,
@@ -32944,8 +31803,7 @@ def hipBindTexture(object tex, object devPtr, object desc, unsigned long size):
 
 @cython.embedsignature(True)
 def hipBindTexture2D(object tex, object devPtr, object desc, unsigned long width, unsigned long height, unsigned long pitch):
-    """
-
+    """(No brief)
     """
     cdef unsigned long offset
     _hipBindTexture2D__retval = hipError_t(chip.hipBindTexture2D(&offset,
@@ -32957,8 +31815,7 @@ def hipBindTexture2D(object tex, object devPtr, object desc, unsigned long width
 
 @cython.embedsignature(True)
 def hipBindTextureToArray(object tex, object array, object desc):
-    """
-
+    """(No brief)
     """
     _hipBindTextureToArray__retval = hipError_t(chip.hipBindTextureToArray(
         textureReference.from_pyobj(tex)._ptr,
@@ -32969,8 +31826,7 @@ def hipBindTextureToArray(object tex, object array, object desc):
 
 @cython.embedsignature(True)
 def hipGetTextureAlignmentOffset(object texref):
-    """
-
+    """(No brief)
     """
     cdef unsigned long offset
     _hipGetTextureAlignmentOffset__retval = hipError_t(chip.hipGetTextureAlignmentOffset(&offset,
@@ -32980,8 +31836,7 @@ def hipGetTextureAlignmentOffset(object texref):
 
 @cython.embedsignature(True)
 def hipUnbindTexture(object tex):
-    """
-
+    """(No brief)
     """
     _hipUnbindTexture__retval = hipError_t(chip.hipUnbindTexture(
         textureReference.from_pyobj(tex)._ptr))    # fully specified
@@ -32990,8 +31845,7 @@ def hipUnbindTexture(object tex):
 
 @cython.embedsignature(True)
 def hipTexRefGetAddress(object texRef):
-    """
-
+    """(No brief)
     """
     dev_ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipTexRefGetAddress__retval = hipError_t(chip.hipTexRefGetAddress(
@@ -33002,8 +31856,7 @@ def hipTexRefGetAddress(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetAddressMode(object texRef, int dim):
-    """
-
+    """(No brief)
     """
     cdef chip.hipTextureAddressMode pam
     _hipTexRefGetAddressMode__retval = hipError_t(chip.hipTexRefGetAddressMode(&pam,
@@ -33013,8 +31866,7 @@ def hipTexRefGetAddressMode(object texRef, int dim):
 
 @cython.embedsignature(True)
 def hipTexRefGetFilterMode(object texRef):
-    """
-
+    """(No brief)
     """
     cdef chip.hipTextureFilterMode pfm
     _hipTexRefGetFilterMode__retval = hipError_t(chip.hipTexRefGetFilterMode(&pfm,
@@ -33024,8 +31876,7 @@ def hipTexRefGetFilterMode(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetFlags(object texRef):
-    """
-
+    """(No brief)
     """
     cdef unsigned int pFlags
     _hipTexRefGetFlags__retval = hipError_t(chip.hipTexRefGetFlags(&pFlags,
@@ -33035,8 +31886,7 @@ def hipTexRefGetFlags(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetFormat(object texRef):
-    """
-
+    """(No brief)
     """
     cdef chip.hipArray_Format pFormat
     cdef int pNumChannels
@@ -33047,8 +31897,7 @@ def hipTexRefGetFormat(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetMaxAnisotropy(object texRef):
-    """
-
+    """(No brief)
     """
     cdef int pmaxAnsio
     _hipTexRefGetMaxAnisotropy__retval = hipError_t(chip.hipTexRefGetMaxAnisotropy(&pmaxAnsio,
@@ -33058,8 +31907,7 @@ def hipTexRefGetMaxAnisotropy(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetMipmapFilterMode(object texRef):
-    """
-
+    """(No brief)
     """
     cdef chip.hipTextureFilterMode pfm
     _hipTexRefGetMipmapFilterMode__retval = hipError_t(chip.hipTexRefGetMipmapFilterMode(&pfm,
@@ -33069,8 +31917,7 @@ def hipTexRefGetMipmapFilterMode(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetMipmapLevelBias(object texRef):
-    """
-
+    """(No brief)
     """
     cdef float pbias
     _hipTexRefGetMipmapLevelBias__retval = hipError_t(chip.hipTexRefGetMipmapLevelBias(&pbias,
@@ -33080,8 +31927,7 @@ def hipTexRefGetMipmapLevelBias(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetMipmapLevelClamp(object texRef):
-    """
-
+    """(No brief)
     """
     cdef float pminMipmapLevelClamp
     cdef float pmaxMipmapLevelClamp
@@ -33092,8 +31938,7 @@ def hipTexRefGetMipmapLevelClamp(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefGetMipMappedArray(object texRef):
-    """
-
+    """(No brief)
     """
     pArray = hipMipmappedArray.from_ptr(NULL)
     _hipTexRefGetMipMappedArray__retval = hipError_t(chip.hipTexRefGetMipMappedArray(&pArray._ptr,
@@ -33103,8 +31948,7 @@ def hipTexRefGetMipMappedArray(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefSetAddress(object texRef, object dptr, unsigned long bytes):
-    """
-
+    """(No brief)
     """
     cdef unsigned long ByteOffset
     _hipTexRefSetAddress__retval = hipError_t(chip.hipTexRefSetAddress(&ByteOffset,
@@ -33115,8 +31959,7 @@ def hipTexRefSetAddress(object texRef, object dptr, unsigned long bytes):
 
 @cython.embedsignature(True)
 def hipTexRefSetAddress2D(object texRef, object desc, object dptr, unsigned long Pitch):
-    """
-
+    """(No brief)
     """
     _hipTexRefSetAddress2D__retval = hipError_t(chip.hipTexRefSetAddress2D(
         textureReference.from_pyobj(texRef)._ptr,
@@ -33127,8 +31970,7 @@ def hipTexRefSetAddress2D(object texRef, object desc, object dptr, unsigned long
 
 @cython.embedsignature(True)
 def hipTexRefSetMaxAnisotropy(object texRef, unsigned int maxAniso):
-    """
-
+    """(No brief)
     """
     _hipTexRefSetMaxAnisotropy__retval = hipError_t(chip.hipTexRefSetMaxAnisotropy(
         textureReference.from_pyobj(texRef)._ptr,maxAniso))    # fully specified
@@ -33137,8 +31979,7 @@ def hipTexRefSetMaxAnisotropy(object texRef, unsigned int maxAniso):
 
 @cython.embedsignature(True)
 def hipTexRefSetBorderColor(object texRef):
-    """
-
+    """(No brief)
     """
     cdef float pBorderColor
     _hipTexRefSetBorderColor__retval = hipError_t(chip.hipTexRefSetBorderColor(
@@ -33148,8 +31989,7 @@ def hipTexRefSetBorderColor(object texRef):
 
 @cython.embedsignature(True)
 def hipTexRefSetMipmapFilterMode(object texRef, object fm):
-    """
-
+    """(No brief)
     """
     if not isinstance(fm,_hipTextureFilterMode__Base):
         raise TypeError("argument 'fm' must be of type '_hipTextureFilterMode__Base'")
@@ -33160,8 +32000,7 @@ def hipTexRefSetMipmapFilterMode(object texRef, object fm):
 
 @cython.embedsignature(True)
 def hipTexRefSetMipmapLevelBias(object texRef, float bias):
-    """
-
+    """(No brief)
     """
     _hipTexRefSetMipmapLevelBias__retval = hipError_t(chip.hipTexRefSetMipmapLevelBias(
         textureReference.from_pyobj(texRef)._ptr,bias))    # fully specified
@@ -33170,8 +32009,7 @@ def hipTexRefSetMipmapLevelBias(object texRef, float bias):
 
 @cython.embedsignature(True)
 def hipTexRefSetMipmapLevelClamp(object texRef, float minMipMapLevelClamp, float maxMipMapLevelClamp):
-    """
-
+    """(No brief)
     """
     _hipTexRefSetMipmapLevelClamp__retval = hipError_t(chip.hipTexRefSetMipmapLevelClamp(
         textureReference.from_pyobj(texRef)._ptr,minMipMapLevelClamp,maxMipMapLevelClamp))    # fully specified
@@ -33180,8 +32018,7 @@ def hipTexRefSetMipmapLevelClamp(object texRef, float minMipMapLevelClamp, float
 
 @cython.embedsignature(True)
 def hipTexRefSetMipmappedArray(object texRef, object mipmappedArray, unsigned int Flags):
-    """
-
+    """(No brief)
     """
     _hipTexRefSetMipmappedArray__retval = hipError_t(chip.hipTexRefSetMipmappedArray(
         textureReference.from_pyobj(texRef)._ptr,
@@ -33191,14 +32028,12 @@ def hipTexRefSetMipmappedArray(object texRef, object mipmappedArray, unsigned in
 
 @cython.embedsignature(True)
 def hipMipmappedArrayCreate(object pMipmappedArrayDesc, unsigned int numMipmapLevels):
-    """
-
+    """(No brief)
 
     @addtogroup TextureU Texture Management [Not supported]
     @{
     @ingroup Texture
     This section describes the texture management functions currently unsupported in HIP runtime.
-
     """
     pHandle = hipMipmappedArray.from_ptr(NULL)
     _hipMipmappedArrayCreate__retval = hipError_t(chip.hipMipmappedArrayCreate(&pHandle._ptr,
@@ -33208,8 +32043,7 @@ def hipMipmappedArrayCreate(object pMipmappedArrayDesc, unsigned int numMipmapLe
 
 @cython.embedsignature(True)
 def hipMipmappedArrayDestroy(object hMipmappedArray):
-    """
-
+    """(No brief)
     """
     _hipMipmappedArrayDestroy__retval = hipError_t(chip.hipMipmappedArrayDestroy(
         hipMipmappedArray.from_pyobj(hMipmappedArray)._ptr))    # fully specified
@@ -33218,8 +32052,7 @@ def hipMipmappedArrayDestroy(object hMipmappedArray):
 
 @cython.embedsignature(True)
 def hipMipmappedArrayGetLevel(object hMipMappedArray, unsigned int level):
-    """
-
+    """(No brief)
     """
     pLevelArray = hipArray.from_ptr(NULL)
     _hipMipmappedArrayGetLevel__retval = hipError_t(chip.hipMipmappedArrayGetLevel(&pLevelArray._ptr,
@@ -33229,13 +32062,11 @@ def hipMipmappedArrayGetLevel(object hMipMappedArray, unsigned int level):
 
 @cython.embedsignature(True)
 def hipApiName(unsigned int id):
-    """
-
+    """(No brief)
 
     @defgroup Callback Callback Activity APIs
     @{
     This section describes the callback/Activity of HIP runtime API.
-
     """
     cdef const char * _hipApiName__retval = chip.hipApiName(id)    # fully specified
     return (_hipApiName__retval,)
@@ -33243,8 +32074,7 @@ def hipApiName(unsigned int id):
 
 @cython.embedsignature(True)
 def hipKernelNameRef(object f):
-    """
-
+    """(No brief)
     """
     cdef const char * _hipKernelNameRef__retval = chip.hipKernelNameRef(
         ihipModuleSymbol_t.from_pyobj(f)._ptr)    # fully specified
@@ -33253,8 +32083,7 @@ def hipKernelNameRef(object f):
 
 @cython.embedsignature(True)
 def hipKernelNameRefByPtr(object hostFunction, object stream):
-    """
-
+    """(No brief)
     """
     cdef const char * _hipKernelNameRefByPtr__retval = chip.hipKernelNameRefByPtr(
         <const void *>hip._util.types.DataHandle.from_pyobj(hostFunction)._ptr,
@@ -33264,8 +32093,7 @@ def hipKernelNameRefByPtr(object hostFunction, object stream):
 
 @cython.embedsignature(True)
 def hipGetStreamDeviceId(object stream):
-    """
-
+    """(No brief)
     """
     cdef int _hipGetStreamDeviceId__retval = chip.hipGetStreamDeviceId(
         ihipStream_t.from_pyobj(stream)._ptr)    # fully specified
@@ -33274,27 +32102,21 @@ def hipGetStreamDeviceId(object stream):
 
 @cython.embedsignature(True)
 def hipStreamBeginCapture(object stream, object mode):
-    """
+    """Begins graph capture on a stream.
 
-    Begins graph capture on a stream.
+    are not safe.
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        stream: - Stream to initiate capture.
        mode: - Controls the interaction of this capture sequence with other API calls that
-          are not safe.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(mode,_hipStreamCaptureMode__Base):
         raise TypeError("argument 'mode' must be of type '_hipStreamCaptureMode__Base'")
@@ -33305,25 +32127,19 @@ def hipStreamBeginCapture(object stream, object mode):
 
 @cython.embedsignature(True)
 def hipStreamEndCapture(object stream):
-    """
+    """Ends capture on a stream, returning the captured graph.
 
-    Ends capture on a stream, returning the captured graph.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        stream: - Stream to end capture.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraph: - returns the graph captured.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipStreamEndCapture__retval = hipError_t(chip.hipStreamEndCapture(
@@ -33333,26 +32149,20 @@ def hipStreamEndCapture(object stream):
 
 @cython.embedsignature(True)
 def hipStreamGetCaptureInfo(object stream):
-    """
+    """Get capture status of a stream.
 
-    Get capture status of a stream.
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorStreamCaptureImplicit
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        stream: - Stream under capture.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorStreamCaptureImplicit
+       - pCaptureStatus: - returns current status of the capture.
+       - pId: - unique ID of the capture.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     cdef unsigned long long pId
@@ -33363,30 +32173,23 @@ def hipStreamGetCaptureInfo(object stream):
 
 @cython.embedsignature(True)
 def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
-    """
+    """Get stream's capture state
 
-    Get stream's capture state
-
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        stream: - Stream under capture.
        dependencies_out: - returns pointer to an array of nodes.
+
+    Returns:
+       A ``tuple`` of size 5 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
+       - captureStatus_out: - returns current status of the capture.
+       - id_out: - unique ID of the capture.
+       - graph_out: - returns the graph being captured into.
+       - numDependencies_out: - returns size of the array returned in dependencies_out.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     cdef chip.hipStreamCaptureStatus captureStatus_out
     cdef unsigned long long id_out
@@ -33400,25 +32203,19 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
 
 @cython.embedsignature(True)
 def hipStreamIsCapturing(object stream):
-    """
+    """Get stream's capture state
 
-    Get stream's capture state
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        stream: - Stream under capture.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
+       - pCaptureStatus: - returns current status of the capture.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     _hipStreamIsCapturing__retval = hipError_t(chip.hipStreamIsCapturing(
@@ -33428,26 +32225,20 @@ def hipStreamIsCapturing(object stream):
 
 @cython.embedsignature(True)
 def hipStreamUpdateCaptureDependencies(object stream, unsigned long numDependencies, unsigned int flags):
-    """
+    """Update the set of dependencies in a capturing stream
 
-    Update the set of dependencies in a capturing stream
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorIllegalState
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        stream: - Stream under capture.
        numDependencies: - size of the array in dependencies.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorIllegalState
+       - dependencies: - pointer to an array of nodes to Add/Replace.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     dependencies = hipGraphNode.from_ptr(NULL)
     _hipStreamUpdateCaptureDependencies__retval = hipError_t(chip.hipStreamUpdateCaptureDependencies(
@@ -33457,21 +32248,16 @@ def hipStreamUpdateCaptureDependencies(object stream, unsigned long numDependenc
 
 @cython.embedsignature(True)
 def hipThreadExchangeStreamCaptureMode():
-    """
+    """Swaps the stream capture mode of a thread.
 
-    Swaps the stream capture mode of a thread.
-
+    it is still open to changes and may have outstanding issues.
 
     Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - mode: - Pointer to mode value to swap with the current mode
     Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
-
+       This API is marked as beta, meaning, while this is feature complete,
     """
     cdef chip.hipStreamCaptureMode mode
     _hipThreadExchangeStreamCaptureMode__retval = hipError_t(chip.hipThreadExchangeStreamCaptureMode(&mode))    # fully specified
@@ -33480,25 +32266,19 @@ def hipThreadExchangeStreamCaptureMode():
 
 @cython.embedsignature(True)
 def hipGraphCreate(unsigned int flags):
-    """
+    """Creates a graph
 
-    Creates a graph
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        flags: - flags for graph creation, must be 0.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
+       - pGraph: - pointer to graph to create.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipGraphCreate__retval = hipError_t(chip.hipGraphCreate(&pGraph._ptr,flags))    # fully specified
@@ -33507,24 +32287,18 @@ def hipGraphCreate(unsigned int flags):
 
 @cython.embedsignature(True)
 def hipGraphDestroy(object graph):
-    """
+    """Destroys a graph
 
-    Destroys a graph
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of graph to destroy.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphDestroy__retval = hipError_t(chip.hipGraphDestroy(
         ihipGraph.from_pyobj(graph)._ptr))    # fully specified
@@ -33533,27 +32307,21 @@ def hipGraphDestroy(object graph):
 
 @cython.embedsignature(True)
 def hipGraphAddDependencies(object graph, unsigned long numDependencies):
-    """
+    """Adds dependency edges to a graph.
 
-    Adds dependency edges to a graph.
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of the graph to add dependencies.
        numDependencies: - the number of dependencies to add.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - from: - pointer to the graph nodes with dependenties to add from.
+       - to: - pointer to the graph nodes to add dependenties to.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -33564,27 +32332,21 @@ def hipGraphAddDependencies(object graph, unsigned long numDependencies):
 
 @cython.embedsignature(True)
 def hipGraphRemoveDependencies(object graph, unsigned long numDependencies):
-    """
+    """Removes dependency edges from a graph.
 
-    Removes dependency edges from a graph.
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of the graph to remove dependencies.
        numDependencies: - the number of dependencies to remove.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - from: - Array of nodes that provide the dependencies.
+       - to: - Array of dependent nodes.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -33595,30 +32357,26 @@ def hipGraphRemoveDependencies(object graph, unsigned long numDependencies):
 
 @cython.embedsignature(True)
 def hipGraphGetEdges(object graph):
-    """
+    """Returns a graph's dependency edges.
 
-    Returns a graph's dependency edges.
+    from and to may both be NULL, in which case this function only returns the number of edges in
+    numEdges. Otherwise, numEdges entries will be filled in. If numEdges is higher than the actual
+    number of edges, the remaining entries in from and to will be set to NULL, and the number of
+    edges actually returned will be written to numEdges
 
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-       from and to may both be NULL, in which case this function only returns the number of edges in
-       numEdges. Otherwise, numEdges entries will be filled in. If numEdges is higher than the actual
-       number of edges, the remaining entries in from and to will be set to NULL, and the number of
-       edges actually returned will be written to numEdges
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of the graph to get the edges from.
+
+    Returns:
+       A ``tuple`` of size 4 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - from: - pointer to the graph nodes to return edge endpoints.
+       - to: - pointer to the graph nodes to return edge endpoints.
+       - numEdges: - returns number of edges.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -33630,29 +32388,25 @@ def hipGraphGetEdges(object graph):
 
 @cython.embedsignature(True)
 def hipGraphGetNodes(object graph):
-    """
+    """Returns graph nodes.
 
-    Returns graph nodes.
+    nodes may be NULL, in which case this function will return the number of nodes in numNodes.
+    Otherwise, numNodes entries will be filled in. If numNodes is higher than the actual number of
+    nodes, the remaining entries in nodes will be set to NULL, and the number of nodes actually
+    obtained will be returned in numNodes.
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-       nodes may be NULL, in which case this function will return the number of nodes in numNodes.
-       Otherwise, numNodes entries will be filled in. If numNodes is higher than the actual number of
-       nodes, the remaining entries in nodes will be set to NULL, and the number of nodes actually
-       obtained will be returned in numNodes.
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of graph to get the nodes.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - nodes: - pointer to return the  graph nodes.
+       - numNodes: - returns number of graph nodes.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     nodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long numNodes
@@ -33663,29 +32417,25 @@ def hipGraphGetNodes(object graph):
 
 @cython.embedsignature(True)
 def hipGraphGetRootNodes(object graph):
-    """
+    """Returns graph's root nodes.
 
-    Returns graph's root nodes.
+    pRootNodes may be NULL, in which case this function will return the number of root nodes in
+    pNumRootNodes. Otherwise, pNumRootNodes entries will be filled in. If pNumRootNodes is higher
+    than the actual number of root nodes, the remaining entries in pRootNodes will be set to NULL,
+    and the number of nodes actually obtained will be returned in pNumRootNodes.
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-       pRootNodes may be NULL, in which case this function will return the number of root nodes in
-       pNumRootNodes. Otherwise, pNumRootNodes entries will be filled in. If pNumRootNodes is higher
-       than the actual number of root nodes, the remaining entries in pRootNodes will be set to NULL,
-       and the number of nodes actually obtained will be returned in pNumRootNodes.
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of the graph to get the nodes.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pRootNodes: - pointer to return the graph's root nodes.
+       - pNumRootNodes: - returns the number of graph's root nodes.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pRootNodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumRootNodes
@@ -33696,29 +32446,25 @@ def hipGraphGetRootNodes(object graph):
 
 @cython.embedsignature(True)
 def hipGraphNodeGetDependencies(object node):
-    """
+    """Returns a node's dependencies.
 
-    Returns a node's dependencies.
+    pDependencies may be NULL, in which case this function will return the number of dependencies in
+    pNumDependencies. Otherwise, pNumDependencies entries will be filled in. If pNumDependencies is
+    higher than the actual number of dependencies, the remaining entries in pDependencies will be set
+    to NULL, and the number of nodes actually obtained will be returned in pNumDependencies.
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-       pDependencies may be NULL, in which case this function will return the number of dependencies in
-       pNumDependencies. Otherwise, pNumDependencies entries will be filled in. If pNumDependencies is
-       higher than the actual number of dependencies, the remaining entries in pDependencies will be set
-       to NULL, and the number of nodes actually obtained will be returned in pNumDependencies.
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - graph node to get the dependencies from.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pDependencies: - pointer to to return the dependencies.
+       - pNumDependencies: -  returns the number of graph node dependencies.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pDependencies = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumDependencies
@@ -33729,30 +32475,26 @@ def hipGraphNodeGetDependencies(object node):
 
 @cython.embedsignature(True)
 def hipGraphNodeGetDependentNodes(object node):
-    """
+    """Returns a node's dependent nodes.
 
-    Returns a node's dependent nodes.
+    DependentNodes may be NULL, in which case this function will return the number of dependent nodes
+    in pNumDependentNodes. Otherwise, pNumDependentNodes entries will be filled in. If
+    pNumDependentNodes is higher than the actual number of dependent nodes, the remaining entries in
+    pDependentNodes will be set to NULL, and the number of nodes actually obtained will be returned
+    in pNumDependentNodes.
 
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-       DependentNodes may be NULL, in which case this function will return the number of dependent nodes
-       in pNumDependentNodes. Otherwise, pNumDependentNodes entries will be filled in. If
-       pNumDependentNodes is higher than the actual number of dependent nodes, the remaining entries in
-       pDependentNodes will be set to NULL, and the number of nodes actually obtained will be returned
-       in pNumDependentNodes.
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - graph node to get the Dependent nodes from.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pDependentNodes: - pointer to return the graph dependent nodes.
+       - pNumDependentNodes: - returns the number of graph node dependent nodes.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pDependentNodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumDependentNodes
@@ -33763,24 +32505,19 @@ def hipGraphNodeGetDependentNodes(object node):
 
 @cython.embedsignature(True)
 def hipGraphNodeGetType(object node):
-    """
+    """Returns a node's type.
 
-    Returns a node's type.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instance of the graph to add dependencies.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pType: - pointer to the return the type
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     cdef chip.hipGraphNodeType pType
     _hipGraphNodeGetType__retval = hipError_t(chip.hipGraphNodeGetType(
@@ -33790,23 +32527,18 @@ def hipGraphNodeGetType(object node):
 
 @cython.embedsignature(True)
 def hipGraphDestroyNode(object node):
-    """
+    """Remove a node from the graph.
 
-    Remove a node from the graph.
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - graph node to remove
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphDestroyNode__retval = hipError_t(chip.hipGraphDestroyNode(
         hipGraphNode.from_pyobj(node)._ptr))    # fully specified
@@ -33815,24 +32547,19 @@ def hipGraphDestroyNode(object node):
 
 @cython.embedsignature(True)
 def hipGraphClone(object originalGraph):
-    """
+    """Clones a graph.
 
-    Clones a graph.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        originalGraph: - original graph to clone from.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
+       - pGraphClone: - Returns newly created cloned graph.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphClone = ihipGraph.from_ptr(NULL)
     _hipGraphClone__retval = hipError_t(chip.hipGraphClone(&pGraphClone._ptr,
@@ -33842,26 +32569,20 @@ def hipGraphClone(object originalGraph):
 
 @cython.embedsignature(True)
 def hipGraphNodeFindInClone(object originalNode, object clonedGraph):
-    """
+    """Finds a cloned version of a node.
 
-    Finds a cloned version of a node.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        originalNode: - original node handle.
        clonedGraph: - Cloned graph to query.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pNode: - Returns the cloned node.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pNode = hipGraphNode.from_ptr(NULL)
     _hipGraphNodeFindInClone__retval = hipError_t(chip.hipGraphNodeFindInClone(&pNode._ptr,
@@ -33872,30 +32593,23 @@ def hipGraphNodeFindInClone(object originalNode, object clonedGraph):
 
 @cython.embedsignature(True)
 def hipGraphInstantiate(object graph, char * pLogBuffer, unsigned long bufferSize):
-    """
+    """Creates an executable graph from a graph
 
-    Creates an executable graph from a graph
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorOutOfMemory
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of graph to instantiate.
        pLogBuffer: - pointer to log buffer.
        bufferSize: - the size of log buffer.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorOutOfMemory
+       - pGraphExec: - pointer to instantiated executable graph that is created.
+       - pErrorNode: - pointer to error node in case error occured in graph instantiation,
+        it could modify the correponding node.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphExec = hipGraphExec.from_ptr(NULL)
     pErrorNode = hipGraphNode.from_ptr(NULL)
@@ -33906,26 +32620,20 @@ def hipGraphInstantiate(object graph, char * pLogBuffer, unsigned long bufferSiz
 
 @cython.embedsignature(True)
 def hipGraphInstantiateWithFlags(object graph, unsigned long long flags):
-    """
+    """Creates an executable graph from a graph.
 
-    Creates an executable graph from a graph.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of graph to instantiate.
        flags: - Flags to control instantiation.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphExec: - pointer to instantiated executable graph that is created.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphExec = hipGraphExec.from_ptr(NULL)
     _hipGraphInstantiateWithFlags__retval = hipError_t(chip.hipGraphInstantiateWithFlags(&pGraphExec._ptr,
@@ -33935,24 +32643,19 @@ def hipGraphInstantiateWithFlags(object graph, unsigned long long flags):
 
 @cython.embedsignature(True)
 def hipGraphLaunch(object graphExec, object stream):
-    """
+    """launches an executable graph in a stream
 
-    launches an executable graph in a stream
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graphExec: - instance of executable graph to launch.
        stream: - instance of stream in which to launch executable graph.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphLaunch__retval = hipError_t(chip.hipGraphLaunch(
         hipGraphExec.from_pyobj(graphExec)._ptr,
@@ -33962,24 +32665,19 @@ def hipGraphLaunch(object graphExec, object stream):
 
 @cython.embedsignature(True)
 def hipGraphUpload(object graphExec, object stream):
-    """
+    """uploads an executable graph in a stream
 
-    uploads an executable graph in a stream
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graphExec: - instance of executable graph to launch.
        stream: - instance of stream in which to launch executable graph.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphUpload__retval = hipError_t(chip.hipGraphUpload(
         hipGraphExec.from_pyobj(graphExec)._ptr,
@@ -33989,23 +32687,18 @@ def hipGraphUpload(object graphExec, object stream):
 
 @cython.embedsignature(True)
 def hipGraphExecDestroy(object graphExec):
-    """
+    """Destroys an executable graph
 
-    Destroys an executable graph
-
-
-
-    Returns:
-       #hipSuccess.
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        pGraphExec: - instance of executable graph to destry.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphExecDestroy__retval = hipError_t(chip.hipGraphExecDestroy(
         hipGraphExec.from_pyobj(graphExec)._ptr))    # fully specified
@@ -34014,26 +32707,23 @@ def hipGraphExecDestroy(object graphExec):
 
 @cython.embedsignature(True)
 def hipGraphExecUpdate(object hGraphExec, object hGraph):
-    """
+    """Check whether an executable graph can be updated with a graph and perform the update if  *
 
-    Check whether an executable graph can be updated with a graph and perform the update if  * possible.
+    possible.
 
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorGraphExecUpdateFailure
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of executable graph to update.
        hGraph: - graph that contains the updated parameters.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorGraphExecUpdateFailure
+       - hErrorNode_out: -  node which caused the permissibility check to forbid the update.
+       - updateResult_out: - Whether the graph update was permitted.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     hErrorNode_out = hipGraphNode.from_ptr(NULL)
     cdef chip.hipGraphExecUpdateResult updateResult_out
@@ -34045,27 +32735,22 @@ def hipGraphExecUpdate(object hGraphExec, object hGraph):
 
 @cython.embedsignature(True)
 def hipGraphAddKernelNode(object graph, unsigned long numDependencies, object pNodeParams):
-    """
+    """Creates a kernel execution node and adds it to a graph.
 
-    Creates a kernel execution node and adds it to a graph.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of graph to add the created node.
        numDependencies: - the number of the dependencies.
        pNodeParams: - pointer to the parameters to the kernel execution node on the GPU.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
+       - pGraphNode: - pointer to graph node to create.
+       - pDependencies: - pointer to the dependencies on the kernel execution node.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34077,23 +32762,19 @@ def hipGraphAddKernelNode(object graph, unsigned long numDependencies, object pN
 
 @cython.embedsignature(True)
 def hipGraphKernelNodeGetParams(object node, object pNodeParams):
-    """
+    """Gets kernel node's parameters.
 
-    Gets kernel node's parameters.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instance of the node to get parameters from.
        pNodeParams: - pointer to the parameters
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphKernelNodeGetParams__retval = hipError_t(chip.hipGraphKernelNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34103,23 +32784,19 @@ def hipGraphKernelNodeGetParams(object node, object pNodeParams):
 
 @cython.embedsignature(True)
 def hipGraphKernelNodeSetParams(object node, object pNodeParams):
-    """
+    """Sets a kernel node's parameters.
 
-    Sets a kernel node's parameters.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instance of the node to set parameters to.
        pNodeParams: - const pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphKernelNodeSetParams__retval = hipError_t(chip.hipGraphKernelNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34129,25 +32806,20 @@ def hipGraphKernelNodeSetParams(object node, object pNodeParams):
 
 @cython.embedsignature(True)
 def hipGraphExecKernelNodeSetParams(object hGraphExec, object node, object pNodeParams):
-    """
+    """Sets the parameters for a kernel node in the given graphExec.
 
-    Sets the parameters for a kernel node in the given graphExec.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of the executable graph with the node.
        node: - instance of the node to set parameters to.
        pNodeParams: - const pointer to the kernel node parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphExecKernelNodeSetParams__retval = hipError_t(chip.hipGraphExecKernelNodeSetParams(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -34158,27 +32830,22 @@ def hipGraphExecKernelNodeSetParams(object hGraphExec, object node, object pNode
 
 @cython.embedsignature(True)
 def hipGraphAddMemcpyNode(object graph, unsigned long numDependencies, object pCopyParams):
-    """
+    """Creates a memcpy node and adds it to a graph.
 
-    Creates a memcpy node and adds it to a graph.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of graph to add the created node.
        numDependencies: - the number of the dependencies.
        pCopyParams: - const pointer to the parameters for the memory copy.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphNode: - pointer to graph node to create.
+       - pDependencies: - const pointer to the dependencies on the memcpy execution node.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34190,23 +32857,19 @@ def hipGraphAddMemcpyNode(object graph, unsigned long numDependencies, object pC
 
 @cython.embedsignature(True)
 def hipGraphMemcpyNodeGetParams(object node, object pNodeParams):
-    """
+    """Gets a memcpy node's parameters.
 
-    Gets a memcpy node's parameters.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instance of the node to get parameters from.
        pNodeParams: - pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphMemcpyNodeGetParams__retval = hipError_t(chip.hipGraphMemcpyNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34216,23 +32879,19 @@ def hipGraphMemcpyNodeGetParams(object node, object pNodeParams):
 
 @cython.embedsignature(True)
 def hipGraphMemcpyNodeSetParams(object node, object pNodeParams):
-    """
+    """Sets a memcpy node's parameters.
 
-    Sets a memcpy node's parameters.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instance of the node to set parameters to.
        pNodeParams: - const pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphMemcpyNodeSetParams__retval = hipError_t(chip.hipGraphMemcpyNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34242,25 +32901,20 @@ def hipGraphMemcpyNodeSetParams(object node, object pNodeParams):
 
 @cython.embedsignature(True)
 def hipGraphKernelNodeSetAttribute(object hNode, object attr, object value):
-    """
+    """Sets a node attribute.
 
-    Sets a node attribute.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hNode: - instance of the node to set parameters to.
        attr: - the attribute node is set to.
        value: - const pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(attr,_hipKernelNodeAttrID__Base):
         raise TypeError("argument 'attr' must be of type '_hipKernelNodeAttrID__Base'")
@@ -34272,25 +32926,20 @@ def hipGraphKernelNodeSetAttribute(object hNode, object attr, object value):
 
 @cython.embedsignature(True)
 def hipGraphKernelNodeGetAttribute(object hNode, object attr, object value):
-    """
+    """Gets a node attribute.
 
-    Gets a node attribute.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hNode: - instance of the node to set parameters to.
        attr: - the attribute node is set to.
        value: - const pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(attr,_hipKernelNodeAttrID__Base):
         raise TypeError("argument 'attr' must be of type '_hipKernelNodeAttrID__Base'")
@@ -34302,25 +32951,20 @@ def hipGraphKernelNodeGetAttribute(object hNode, object attr, object value):
 
 @cython.embedsignature(True)
 def hipGraphExecMemcpyNodeSetParams(object hGraphExec, object node, object pNodeParams):
-    """
+    """Sets the parameters for a memcpy node in the given graphExec.
 
-    Sets the parameters for a memcpy node in the given graphExec.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of the executable graph with the node.
        node: - instance of the node to set parameters to.
        pNodeParams: - const pointer to the kernel node parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphExecMemcpyNodeSetParams__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParams(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -34331,25 +32975,9 @@ def hipGraphExecMemcpyNodeSetParams(object hGraphExec, object node, object pNode
 
 @cython.embedsignature(True)
 def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object dst, object src, unsigned long count, object kind):
-    """
+    """Creates a 1D memcpy node and adds it to a graph.
 
-    Creates a 1D memcpy node and adds it to a graph.
-
-
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of graph to add the created node.
@@ -34358,6 +32986,14 @@ def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object 
        src: - pointer to memory address to the source.
        count: - the size of the memory to copy.
        kind: - the type of memory copy.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphNode: - pointer to graph node to create.
+       - pDependencies: - const pointer to the dependencies on the memcpy execution node.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34372,22 +33008,9 @@ def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object 
 
 @cython.embedsignature(True)
 def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned long count, object kind):
-    """
+    """Sets a memcpy node's parameters to perform a 1-dimensional copy.
 
-    Sets a memcpy node's parameters to perform a 1-dimensional copy.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instance of the node to set parameters to.
@@ -34395,6 +33018,12 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned 
        src: - pointer to memory address to the source.
        count: - the size of the memory to copy.
        kind: - the type of memory copy.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34407,23 +33036,11 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned 
 
 @cython.embedsignature(True)
 def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst, object src, unsigned long count, object kind):
-    """
+    """Sets the parameters for a memcpy node in the given graphExec to perform a 1-dimensional
 
-    Sets the parameters for a memcpy node in the given graphExec to perform a 1-dimensional copy.
+    copy.
 
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of the executable graph with the node.
@@ -34432,6 +33049,12 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
        src: - pointer to memory address to the source.
        count: - the size of the memory to copy.
        kind: - the type of memory copy.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34445,26 +33068,9 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
 
 @cython.embedsignature(True)
 def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies, object dst, object symbol, unsigned long count, unsigned long offset, object kind):
-    """
+    """Creates a memcpy node to copy from a symbol on the device and adds it to a graph.
 
-    Creates a memcpy node to copy from a symbol on the device and adds it to a graph.
-
-
-
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of graph to add the created node.
@@ -34474,6 +33080,14 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies,
        count: - the size of the memory to copy.
        offset: - Offset from start of symbol in bytes.
        kind: - the type of memory copy.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphNode: - pointer to graph node to create.
+       - pDependencies: - const pointer to the dependencies on the memcpy execution node.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34488,23 +33102,9 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies,
 
 @cython.embedsignature(True)
 def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol, unsigned long count, unsigned long offset, object kind):
-    """
+    """Sets a memcpy node's parameters to copy from a symbol on the device.
 
-    Sets a memcpy node's parameters to copy from a symbol on the device.
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instance of the node to set parameters to.
@@ -34513,6 +33113,12 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
        count: - the size of the memory to copy.
        offset: - Offset from start of symbol in bytes.
        kind: - the type of memory copy.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34525,24 +33131,11 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
 
 @cython.embedsignature(True)
 def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, object dst, object symbol, unsigned long count, unsigned long offset, object kind):
-    """
+    """Sets the parameters for a memcpy node in the given graphExec to copy from a symbol on the
 
-    Sets the parameters for a memcpy node in the given graphExec to copy from a symbol on the * device.
+    * device.
 
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of the executable graph with the node.
@@ -34552,6 +33145,12 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
        count: - the size of the memory to copy.
        offset: - Offset from start of symbol in bytes.
        kind: - the type of memory copy.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34565,26 +33164,9 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
 
 @cython.embedsignature(True)
 def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, object symbol, object src, unsigned long count, unsigned long offset, object kind):
-    """
+    """Creates a memcpy node to copy to a symbol on the device and adds it to a graph.
 
-    Creates a memcpy node to copy to a symbol on the device and adds it to a graph.
-
-
-
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of graph to add the created node.
@@ -34594,6 +33176,14 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, o
        count: - the size of the memory to copy.
        offset: - Offset from start of symbol in bytes.
        kind: - the type of memory copy.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphNode: - pointer to graph node to create.
+       - pDependencies: - const pointer to the dependencies on the memcpy execution node.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34608,23 +33198,9 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, o
 
 @cython.embedsignature(True)
 def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, unsigned long count, unsigned long offset, object kind):
-    """
+    """Sets a memcpy node's parameters to copy to a symbol on the device.
 
-    Sets a memcpy node's parameters to copy to a symbol on the device.
-
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instance of the node to set parameters to.
@@ -34633,6 +33209,12 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
        count: - the size of the memory to copy.
        offset: - Offset from start of symbol in bytes.
        kind: - the type of memory copy.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34645,23 +33227,11 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
 
 @cython.embedsignature(True)
 def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, object symbol, object src, unsigned long count, unsigned long offset, object kind):
-    """
+    """Sets the parameters for a memcpy node in the given graphExec to copy to a symbol on the
 
-    Sets the parameters for a memcpy node in the given graphExec to copy to a symbol on the device.
+    device.
 
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of the executable graph with the node.
@@ -34671,6 +33241,12 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
        count: - the size of the memory to copy.
        offset: - Offset from start of symbol in bytes.
        kind: - the type of memory copy.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -34684,27 +33260,22 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
 
 @cython.embedsignature(True)
 def hipGraphAddMemsetNode(object graph, unsigned long numDependencies, object pMemsetParams):
-    """
+    """Creates a memset node and adds it to a graph.
 
-    Creates a memset node and adds it to a graph.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of the graph to add the created node.
        numDependencies: - the number of the dependencies.
        pMemsetParams: - const pointer to the parameters for the memory set.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphNode: - pointer to the graph node to create.
+       - pDependencies: - const pointer to the dependencies on the memset execution node.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34716,23 +33287,19 @@ def hipGraphAddMemsetNode(object graph, unsigned long numDependencies, object pM
 
 @cython.embedsignature(True)
 def hipGraphMemsetNodeGetParams(object node, object pNodeParams):
-    """
+    """Gets a memset node's parameters.
 
-    Gets a memset node's parameters.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instane of the node to get parameters from.
        pNodeParams: - pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphMemsetNodeGetParams__retval = hipError_t(chip.hipGraphMemsetNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34742,23 +33309,19 @@ def hipGraphMemsetNodeGetParams(object node, object pNodeParams):
 
 @cython.embedsignature(True)
 def hipGraphMemsetNodeSetParams(object node, object pNodeParams):
-    """
+    """Sets a memset node's parameters.
 
-    Sets a memset node's parameters.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instance of the node to set parameters to.
        pNodeParams: - pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphMemsetNodeSetParams__retval = hipError_t(chip.hipGraphMemsetNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34768,25 +33331,20 @@ def hipGraphMemsetNodeSetParams(object node, object pNodeParams):
 
 @cython.embedsignature(True)
 def hipGraphExecMemsetNodeSetParams(object hGraphExec, object node, object pNodeParams):
-    """
+    """Sets the parameters for a memset node in the given graphExec.
 
-    Sets the parameters for a memset node in the given graphExec.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of the executable graph with the node.
        node: - instance of the node to set parameters to.
        pNodeParams: - pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphExecMemsetNodeSetParams__retval = hipError_t(chip.hipGraphExecMemsetNodeSetParams(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -34797,27 +33355,22 @@ def hipGraphExecMemsetNodeSetParams(object hGraphExec, object node, object pNode
 
 @cython.embedsignature(True)
 def hipGraphAddHostNode(object graph, unsigned long numDependencies, object pNodeParams):
-    """
+    """Creates a host execution node and adds it to a graph.
 
-    Creates a host execution node and adds it to a graph.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of the graph to add the created node.
        numDependencies: - the number of the dependencies.
        pNodeParams: -pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphNode: - pointer to the graph node to create.
+       - pDependencies: - const pointer to the dependencies on the memset execution node.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34829,23 +33382,19 @@ def hipGraphAddHostNode(object graph, unsigned long numDependencies, object pNod
 
 @cython.embedsignature(True)
 def hipGraphHostNodeGetParams(object node, object pNodeParams):
-    """
+    """Returns a host node's parameters.
 
-    Returns a host node's parameters.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instane of the node to get parameters from.
        pNodeParams: - pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphHostNodeGetParams__retval = hipError_t(chip.hipGraphHostNodeGetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34855,23 +33404,19 @@ def hipGraphHostNodeGetParams(object node, object pNodeParams):
 
 @cython.embedsignature(True)
 def hipGraphHostNodeSetParams(object node, object pNodeParams):
-    """
+    """Sets a host node's parameters.
 
-    Sets a host node's parameters.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instance of the node to set parameters to.
        pNodeParams: - pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphHostNodeSetParams__retval = hipError_t(chip.hipGraphHostNodeSetParams(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -34881,25 +33426,20 @@ def hipGraphHostNodeSetParams(object node, object pNodeParams):
 
 @cython.embedsignature(True)
 def hipGraphExecHostNodeSetParams(object hGraphExec, object node, object pNodeParams):
-    """
+    """Sets the parameters for a host node in the given graphExec.
 
-    Sets the parameters for a host node in the given graphExec.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of the executable graph with the node.
        node: - instance of the node to set parameters to.
        pNodeParams: - pointer to the parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphExecHostNodeSetParams__retval = hipError_t(chip.hipGraphExecHostNodeSetParams(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -34910,27 +33450,22 @@ def hipGraphExecHostNodeSetParams(object hGraphExec, object node, object pNodePa
 
 @cython.embedsignature(True)
 def hipGraphAddChildGraphNode(object graph, unsigned long numDependencies, object childGraph):
-    """
+    """Creates a child graph node and adds it to a graph.
 
-    Creates a child graph node and adds it to a graph.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instance of the graph to add the created node.
        numDependencies: - the number of the dependencies.
        childGraph: - the graph to clone into this node
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphNode: - pointer to the graph node to create.
+       - pDependencies: - const pointer to the dependencies on the memset execution node.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -34942,22 +33477,19 @@ def hipGraphAddChildGraphNode(object graph, unsigned long numDependencies, objec
 
 @cython.embedsignature(True)
 def hipGraphChildGraphNodeGetGraph(object node):
-    """
+    """Gets a handle to the embedded graph of a child graph node.
 
-    Gets a handle to the embedded graph of a child graph node.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instane of the node to get child graph.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraph: - pointer to get the graph.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipGraphChildGraphNodeGetGraph__retval = hipError_t(chip.hipGraphChildGraphNodeGetGraph(
@@ -34967,25 +33499,20 @@ def hipGraphChildGraphNodeGetGraph(object node):
 
 @cython.embedsignature(True)
 def hipGraphExecChildGraphNodeSetParams(object hGraphExec, object node, object childGraph):
-    """
+    """Updates node parameters in the child graph node in the given graphExec.
 
-    Updates node parameters in the child graph node in the given graphExec.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of the executable graph with the node.
        node: - node from the graph which was used to instantiate graphExec.
        childGraph: - child graph with updated parameters.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphExecChildGraphNodeSetParams__retval = hipError_t(chip.hipGraphExecChildGraphNodeSetParams(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -34996,25 +33523,21 @@ def hipGraphExecChildGraphNodeSetParams(object hGraphExec, object node, object c
 
 @cython.embedsignature(True)
 def hipGraphAddEmptyNode(object graph, unsigned long numDependencies):
-    """
+    """Creates an empty node and adds it to a graph.
 
-    Creates an empty node and adds it to a graph.
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instane of the graph the node is add to.
        numDependencies: - the number of dependencies.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphNode: - pointer to the graph node to create and add to the graph.
+       - pDependencies: - const pointer to the node dependenties.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -35025,27 +33548,22 @@ def hipGraphAddEmptyNode(object graph, unsigned long numDependencies):
 
 @cython.embedsignature(True)
 def hipGraphAddEventRecordNode(object graph, unsigned long numDependencies, object event):
-    """
+    """Creates an event record node and adds it to a graph.
 
-    Creates an event record node and adds it to a graph.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instane of the graph the node to be added.
        numDependencies: - the number of dependencies.
        event: - Event for the node.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphNode: - pointer to the graph node to create and add to the graph.
+       - pDependencies: - const pointer to the node dependenties.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -35057,22 +33575,19 @@ def hipGraphAddEventRecordNode(object graph, unsigned long numDependencies, obje
 
 @cython.embedsignature(True)
 def hipGraphEventRecordNodeGetEvent(object node):
-    """
+    """Returns the event associated with an event record node.
 
-    Returns the event associated with an event record node.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: -  instane of the node to get event from.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - event_out: - Pointer to return the event.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     event_out = ihipEvent_t.from_ptr(NULL)
     _hipGraphEventRecordNodeGetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeGetEvent(
@@ -35082,23 +33597,19 @@ def hipGraphEventRecordNodeGetEvent(object node):
 
 @cython.embedsignature(True)
 def hipGraphEventRecordNodeSetEvent(object node, object event):
-    """
+    """Sets an event record node's event.
 
-    Sets an event record node's event.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instane of the node to set event to.
        event: - pointer to the event.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphEventRecordNodeSetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeSetEvent(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -35108,25 +33619,20 @@ def hipGraphEventRecordNodeSetEvent(object node, object event):
 
 @cython.embedsignature(True)
 def hipGraphExecEventRecordNodeSetEvent(object hGraphExec, object hNode, object event):
-    """
+    """Sets the event for an event record node in the given graphExec.
 
-    Sets the event for an event record node in the given graphExec.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of the executable graph with the node.
        hNode: - node from the graph which was used to instantiate graphExec.
        event: - pointer to the event.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphExecEventRecordNodeSetEvent__retval = hipError_t(chip.hipGraphExecEventRecordNodeSetEvent(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -35137,27 +33643,22 @@ def hipGraphExecEventRecordNodeSetEvent(object hGraphExec, object hNode, object 
 
 @cython.embedsignature(True)
 def hipGraphAddEventWaitNode(object graph, unsigned long numDependencies, object event):
-    """
+    """Creates an event wait node and adds it to a graph.
 
-    Creates an event wait node and adds it to a graph.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - instane of the graph the node to be added.
        numDependencies: - the number of dependencies.
        event: - Event for the node.
+
+    Returns:
+       A ``tuple`` of size 3 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - pGraphNode: - pointer to the graph node to create and add to the graph.
+       - pDependencies: - const pointer to the node dependenties.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -35169,22 +33670,19 @@ def hipGraphAddEventWaitNode(object graph, unsigned long numDependencies, object
 
 @cython.embedsignature(True)
 def hipGraphEventWaitNodeGetEvent(object node):
-    """
+    """Returns the event associated with an event wait node.
 
-    Returns the event associated with an event wait node.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: -  instane of the node to get event from.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - event_out: - Pointer to return the event.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     event_out = ihipEvent_t.from_ptr(NULL)
     _hipGraphEventWaitNodeGetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeGetEvent(
@@ -35194,23 +33692,19 @@ def hipGraphEventWaitNodeGetEvent(object node):
 
 @cython.embedsignature(True)
 def hipGraphEventWaitNodeSetEvent(object node, object event):
-    """
+    """Sets an event wait node's event.
 
-    Sets an event wait node's event.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        node: - instane of the node to set event to.
        event: - pointer to the event.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphEventWaitNodeSetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeSetEvent(
         hipGraphNode.from_pyobj(node)._ptr,
@@ -35220,25 +33714,20 @@ def hipGraphEventWaitNodeSetEvent(object node, object event):
 
 @cython.embedsignature(True)
 def hipGraphExecEventWaitNodeSetEvent(object hGraphExec, object hNode, object event):
-    """
+    """Sets the event for an event record node in the given graphExec.
 
-    Sets the event for an event record node in the given graphExec.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        hGraphExec: - instance of the executable graph with the node.
        hNode: - node from the graph which was used to instantiate graphExec.
        event: - pointer to the event.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphExecEventWaitNodeSetEvent__retval = hipError_t(chip.hipGraphExecEventWaitNodeSetEvent(
         hipGraphExec.from_pyobj(hGraphExec)._ptr,
@@ -35249,25 +33738,20 @@ def hipGraphExecEventWaitNodeSetEvent(object hGraphExec, object hNode, object ev
 
 @cython.embedsignature(True)
 def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
-    """
+    """Get the mem attribute for graphs.
 
-    Get the mem attribute for graphs.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        device: - device the attr is get for.
        attr: - attr to get.
        value: - value for specific attr.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(attr,_hipGraphMemAttributeType__Base):
         raise TypeError("argument 'attr' must be of type '_hipGraphMemAttributeType__Base'")
@@ -35278,25 +33762,20 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
 
 @cython.embedsignature(True)
 def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
-    """
+    """Set the mem attribute for graphs.
 
-    Set the mem attribute for graphs.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidDevice
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        device: - device the attr is set for.
        attr: - attr to set.
        value: - value for specific attr.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidDevice
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(attr,_hipGraphMemAttributeType__Base):
         raise TypeError("argument 'attr' must be of type '_hipGraphMemAttributeType__Base'")
@@ -35307,18 +33786,14 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
 
 @cython.embedsignature(True)
 def hipDeviceGraphMemTrim(int device):
-    """
+    """Free unused memory on specific device used for graph back to OS.
 
-    Free unused memory on specific device used for graph back to OS.
-
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        device: - device the memory is used for graphs
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipDeviceGraphMemTrim__retval = hipError_t(chip.hipDeviceGraphMemTrim(device))    # fully specified
     return (_hipDeviceGraphMemTrim__retval,)
@@ -35326,28 +33801,22 @@ def hipDeviceGraphMemTrim(int device):
 
 @cython.embedsignature(True)
 def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount, unsigned int flags):
-    """
+    """Create an instance of userObject to manage lifetime of a resource.
 
-    Create an instance of userObject to manage lifetime of a resource.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        ptr: - pointer to pass to destroy function.
        destroy: - destroy callback to remove resource.
        initialRefcount: - reference to resource.
        flags: - flags passed to API.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+       - object_out: - pointer to instace of userobj.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     object_out = hipUserObject.from_ptr(NULL)
     _hipUserObjectCreate__retval = hipError_t(chip.hipUserObjectCreate(&object_out._ptr,
@@ -35358,23 +33827,19 @@ def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount
 
 @cython.embedsignature(True)
 def hipUserObjectRelease(object object, unsigned int count):
-    """
+    """Release number of references to resource.
 
-    Release number of references to resource.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        object: - pointer to instace of userobj.
        count: - reference to resource to be retained.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipUserObjectRelease__retval = hipError_t(chip.hipUserObjectRelease(
         hipUserObject.from_pyobj(object)._ptr,count))    # fully specified
@@ -35383,23 +33848,19 @@ def hipUserObjectRelease(object object, unsigned int count):
 
 @cython.embedsignature(True)
 def hipUserObjectRetain(object object, unsigned int count):
-    """
+    """Retain number of references to resource.
 
-    Retain number of references to resource.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        object: - pointer to instace of userobj.
        count: - reference to resource to be retained.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipUserObjectRetain__retval = hipError_t(chip.hipUserObjectRetain(
         hipUserObject.from_pyobj(object)._ptr,count))    # fully specified
@@ -35408,27 +33869,21 @@ def hipUserObjectRetain(object object, unsigned int count):
 
 @cython.embedsignature(True)
 def hipGraphRetainUserObject(object graph, object object, unsigned int count, unsigned int flags):
-    """
+    """Retain user object for graphs.
 
-    Retain user object for graphs.
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - pointer to graph to retain the user object for.
        object: - pointer to instace of userobj.
        count: - reference to resource to be retained.
        flags: - flags passed to API.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphRetainUserObject__retval = hipError_t(chip.hipGraphRetainUserObject(
         ihipGraph.from_pyobj(graph)._ptr,
@@ -35438,25 +33893,20 @@ def hipGraphRetainUserObject(object graph, object object, unsigned int count, un
 
 @cython.embedsignature(True)
 def hipGraphReleaseUserObject(object graph, object object, unsigned int count):
-    """
+    """Release user object from graphs.
 
-    Release user object from graphs.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        graph: - pointer to graph to retain the user object for.
        object: - pointer to instace of userobj.
        count: - reference to resource to be retained.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipGraphReleaseUserObject__retval = hipError_t(chip.hipGraphReleaseUserObject(
         ihipGraph.from_pyobj(graph)._ptr,
@@ -35466,23 +33916,19 @@ def hipGraphReleaseUserObject(object graph, object object, unsigned int count):
 
 @cython.embedsignature(True)
 def hipMemAddressFree(object devPtr, unsigned long size):
-    """
+    """Frees an address range reservation made via hipMemAddressReserve
 
-    Frees an address range reservation made via hipMemAddressReserve
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        devPtr: - starting address of the range.
        size: - size of the range.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemAddressFree__retval = hipError_t(chip.hipMemAddressFree(
         <void *>hip._util.types.DataHandle.from_pyobj(devPtr)._ptr,size))    # fully specified
@@ -35491,28 +33937,22 @@ def hipMemAddressFree(object devPtr, unsigned long size):
 
 @cython.embedsignature(True)
 def hipMemAddressReserve(unsigned long size, unsigned long alignment, object addr, unsigned long long flags):
-    """
+    """Reserves an address range
 
-    Reserves an address range
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        size: - size of the reservation.
        alignment: - alignment of the address.
        addr: - requested starting address of the range.
        flags: - currently unused, must be zero.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       - ptr: - starting address of the reserved range.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMemAddressReserve__retval = hipError_t(chip.hipMemAddressReserve(
@@ -35523,26 +33963,21 @@ def hipMemAddressReserve(unsigned long size, unsigned long alignment, object add
 
 @cython.embedsignature(True)
 def hipMemCreate(unsigned long size, object prop, unsigned long long flags):
-    """
+    """Creates a memory allocation described by the properties and size
 
-    Creates a memory allocation described by the properties and size
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        size: - size of the allocation.
        prop: - properties of the allocation.
        flags: - currently unused, must be zero.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       - handle: - value of the returned handle.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemCreate__retval = hipError_t(chip.hipMemCreate(&handle._ptr,size,
@@ -35552,27 +33987,21 @@ def hipMemCreate(unsigned long size, object prop, unsigned long long flags):
 
 @cython.embedsignature(True)
 def hipMemExportToShareableHandle(object shareableHandle, object handle, object handleType, unsigned long long flags):
-    """
+    """Exports an allocation to a requested shareable handle type.
 
-    Exports an allocation to a requested shareable handle type.
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        shareableHandle: - value of the returned handle.
        handle: - handle to share.
        handleType: - type of the shareable handle.
        flags: - currently unused, must be zero.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     if not isinstance(handleType,_hipMemAllocationHandleType__Base):
         raise TypeError("argument 'handleType' must be of type '_hipMemAllocationHandleType__Base'")
@@ -35584,24 +34013,20 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
 
 @cython.embedsignature(True)
 def hipMemGetAccess(object location, object ptr):
-    """
+    """Get the access flags set for the given location and ptr.
 
-    Get the access flags set for the given location and ptr.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        location: - target location.
        ptr: - address to check the access flags.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       - flags: - flags for this location.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     cdef unsigned long long flags
     _hipMemGetAccess__retval = hipError_t(chip.hipMemGetAccess(&flags,
@@ -35612,24 +34037,20 @@ def hipMemGetAccess(object location, object ptr):
 
 @cython.embedsignature(True)
 def hipMemGetAllocationGranularity(object prop, object option):
-    """
+    """Calculates either the minimal or recommended granularity.
 
-    Calculates either the minimal or recommended granularity.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        prop: - location properties.
        option: - determines which granularity to return.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       - granularity: - returned granularity.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     cdef unsigned long granularity
     if not isinstance(option,_hipMemAllocationGranularity_flags__Base):
@@ -35641,23 +34062,19 @@ def hipMemGetAllocationGranularity(object prop, object option):
 
 @cython.embedsignature(True)
 def hipMemGetAllocationPropertiesFromHandle(object prop, object handle):
-    """
+    """Retrieve the property structure of the given handle.
 
-    Retrieve the property structure of the given handle.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        prop: - properties of the given handle.
        handle: - handle to perform the query on.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemGetAllocationPropertiesFromHandle__retval = hipError_t(chip.hipMemGetAllocationPropertiesFromHandle(
         hipMemAllocationProp.from_pyobj(prop)._ptr,
@@ -35667,24 +34084,20 @@ def hipMemGetAllocationPropertiesFromHandle(object prop, object handle):
 
 @cython.embedsignature(True)
 def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
-    """
+    """Imports an allocation from a requested shareable handle type.
 
-    Imports an allocation from a requested shareable handle type.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        osHandle: - shareable handle representing the memory allocation.
        shHandleType: - handle type.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       - handle: - returned value.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     if not isinstance(shHandleType,_hipMemAllocationHandleType__Base):
@@ -35696,22 +34109,9 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
 
 @cython.embedsignature(True)
 def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handle, unsigned long long flags):
-    """
+    """Maps an allocation handle to a reserved virtual address range.
 
-    Maps an allocation handle to a reserved virtual address range.
-
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        ptr: - address where the memory will be mapped.
@@ -35719,6 +34119,12 @@ def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handl
        offset: - offset into the memory, currently must be zero.
        handle: - memory allocation to be mapped.
        flags: - currently unused, must be zero.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemMap__retval = hipError_t(chip.hipMemMap(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size,offset,
@@ -35728,25 +34134,20 @@ def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handl
 
 @cython.embedsignature(True)
 def hipMemMapArrayAsync(object mapInfoList, unsigned int count, object stream):
-    """
+    """Maps or unmaps subregions of sparse HIP arrays and sparse HIP mipmapped arrays.
 
-    Maps or unmaps subregions of sparse HIP arrays and sparse HIP mipmapped arrays.
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        mapInfoList: - list of hipArrayMapInfo.
        count: - number of hipArrayMapInfo in mapInfoList.
        stream: - stream identifier for the stream to use for map or unmap operations.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemMapArrayAsync__retval = hipError_t(chip.hipMemMapArrayAsync(
         hipArrayMapInfo.from_pyobj(mapInfoList)._ptr,count,
@@ -35756,21 +34157,18 @@ def hipMemMapArrayAsync(object mapInfoList, unsigned int count, object stream):
 
 @cython.embedsignature(True)
 def hipMemRelease(object handle):
-    """
+    """Release a memory handle representing a memory allocation which was previously allocated through hipMemCreate.
 
-    Release a memory handle representing a memory allocation which was previously allocated through hipMemCreate.
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        handle: - handle of the memory allocation.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemRelease__retval = hipError_t(chip.hipMemRelease(
         ihipMemGenericAllocationHandle.from_pyobj(handle)._ptr))    # fully specified
@@ -35779,22 +34177,19 @@ def hipMemRelease(object handle):
 
 @cython.embedsignature(True)
 def hipMemRetainAllocationHandle(object addr):
-    """
+    """Returns the allocation handle of the backing memory allocation given the address.
 
-    Returns the allocation handle of the backing memory allocation given the address.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        addr: - address to look up.
+
+    Returns:
+       A ``tuple`` of size 2 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+       - handle: - handle representing addr.
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemRetainAllocationHandle__retval = hipError_t(chip.hipMemRetainAllocationHandle(&handle._ptr,
@@ -35804,27 +34199,21 @@ def hipMemRetainAllocationHandle(object addr):
 
 @cython.embedsignature(True)
 def hipMemSetAccess(object ptr, unsigned long size, object desc, unsigned long count):
-    """
+    """Set the access flags for each location specified in desc for the given virtual address range.
 
-    Set the access flags for each location specified in desc for the given virtual address range.
-
-
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        ptr: - starting address of the virtual address range.
        size: - size of the range.
        desc: - array of hipMemAccessDesc.
        count: - number of hipMemAccessDesc in desc.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemSetAccess__retval = hipError_t(chip.hipMemSetAccess(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size,
@@ -35834,23 +34223,19 @@ def hipMemSetAccess(object ptr, unsigned long size, object desc, unsigned long c
 
 @cython.embedsignature(True)
 def hipMemUnmap(object ptr, unsigned long size):
-    """
+    """Unmap memory allocation of a given address range.
 
-    Unmap memory allocation of a given address range.
-
-
-
-    Returns:
-       #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-
-    Warning:
-       : This API is marked as beta, meaning, while this is feature complete,
-       it is still open to changes and may have outstanding issues.
-
+    it is still open to changes and may have outstanding issues.
 
     Args:
        ptr: - starting address of the range to unmap.
        size: - size of the virtual address range.
+
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
+    Warning:
+       This API is marked as beta, meaning, while this is feature complete,
     """
     _hipMemUnmap__retval = hipError_t(chip.hipMemUnmap(
         <void *>hip._util.types.DataHandle.from_pyobj(ptr)._ptr,size))    # fully specified
@@ -35859,8 +34244,7 @@ def hipMemUnmap(object ptr, unsigned long size):
 
 @cython.embedsignature(True)
 def hipGLGetDevices(unsigned int hipDeviceCount, object deviceList):
-    """
-
+    """(No brief)
     """
     cdef unsigned int pHipDeviceCount
     cdef int pHipDevices
@@ -35872,8 +34256,7 @@ def hipGLGetDevices(unsigned int hipDeviceCount, object deviceList):
 
 @cython.embedsignature(True)
 def hipGraphicsGLRegisterBuffer(unsigned int buffer, unsigned int flags):
-    """
-
+    """(No brief)
     """
     resource = _hipGraphicsResource.from_ptr(NULL)
     _hipGraphicsGLRegisterBuffer__retval = hipError_t(chip.hipGraphicsGLRegisterBuffer(&resource._ptr,buffer,flags))    # fully specified
@@ -35882,8 +34265,7 @@ def hipGraphicsGLRegisterBuffer(unsigned int buffer, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipGraphicsGLRegisterImage(unsigned int image, unsigned int target, unsigned int flags):
-    """
-
+    """(No brief)
     """
     resource = _hipGraphicsResource.from_ptr(NULL)
     _hipGraphicsGLRegisterImage__retval = hipError_t(chip.hipGraphicsGLRegisterImage(&resource._ptr,image,target,flags))    # fully specified
@@ -35892,8 +34274,7 @@ def hipGraphicsGLRegisterImage(unsigned int image, unsigned int target, unsigned
 
 @cython.embedsignature(True)
 def hipGraphicsMapResources(int count, object stream):
-    """
-
+    """(No brief)
     """
     resources = _hipGraphicsResource.from_ptr(NULL)
     _hipGraphicsMapResources__retval = hipError_t(chip.hipGraphicsMapResources(count,&resources._ptr,
@@ -35903,8 +34284,7 @@ def hipGraphicsMapResources(int count, object stream):
 
 @cython.embedsignature(True)
 def hipGraphicsSubResourceGetMappedArray(object resource, unsigned int arrayIndex, unsigned int mipLevel):
-    """
-
+    """(No brief)
     """
     array = hipArray.from_ptr(NULL)
     _hipGraphicsSubResourceGetMappedArray__retval = hipError_t(chip.hipGraphicsSubResourceGetMappedArray(&array._ptr,
@@ -35914,8 +34294,7 @@ def hipGraphicsSubResourceGetMappedArray(object resource, unsigned int arrayInde
 
 @cython.embedsignature(True)
 def hipGraphicsResourceGetMappedPointer(object resource):
-    """
-
+    """(No brief)
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     cdef unsigned long size
@@ -35927,8 +34306,7 @@ def hipGraphicsResourceGetMappedPointer(object resource):
 
 @cython.embedsignature(True)
 def hipGraphicsUnmapResources(int count, object stream):
-    """
-
+    """(No brief)
     """
     resources = _hipGraphicsResource.from_ptr(NULL)
     _hipGraphicsUnmapResources__retval = hipError_t(chip.hipGraphicsUnmapResources(count,&resources._ptr,
@@ -35938,8 +34316,7 @@ def hipGraphicsUnmapResources(int count, object stream):
 
 @cython.embedsignature(True)
 def hipGraphicsUnregisterResource(object resource):
-    """
-
+    """(No brief)
     """
     _hipGraphicsUnregisterResource__retval = hipError_t(chip.hipGraphicsUnregisterResource(
         _hipGraphicsResource.from_pyobj(resource)._ptr))    # fully specified
@@ -35948,8 +34325,7 @@ def hipGraphicsUnregisterResource(object resource):
 
 @cython.embedsignature(True)
 def hipMemcpy_spt(object dst, object src, unsigned long sizeBytes, object kind):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -35961,8 +34337,7 @@ def hipMemcpy_spt(object dst, object src, unsigned long sizeBytes, object kind):
 
 @cython.embedsignature(True)
 def hipMemcpyToSymbol_spt(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -35974,8 +34349,7 @@ def hipMemcpyToSymbol_spt(object symbol, object src, unsigned long sizeBytes, un
 
 @cython.embedsignature(True)
 def hipMemcpyFromSymbol_spt(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -35987,8 +34361,7 @@ def hipMemcpyFromSymbol_spt(object dst, object symbol, unsigned long sizeBytes, 
 
 @cython.embedsignature(True)
 def hipMemcpy2D_spt(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -36000,8 +34373,7 @@ def hipMemcpy2D_spt(object dst, unsigned long dpitch, object src, unsigned long 
 
 @cython.embedsignature(True)
 def hipMemcpy2DFromArray_spt(object dst, unsigned long dpitch, object src, unsigned long wOffset, unsigned long hOffset, unsigned long width, unsigned long height, object kind):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -36013,8 +34385,7 @@ def hipMemcpy2DFromArray_spt(object dst, unsigned long dpitch, object src, unsig
 
 @cython.embedsignature(True)
 def hipMemcpy3D_spt(object p):
-    """
-
+    """(No brief)
     """
     _hipMemcpy3D_spt__retval = hipError_t(chip.hipMemcpy3D_spt(
         hipMemcpy3DParms.from_pyobj(p)._ptr))    # fully specified
@@ -36023,8 +34394,7 @@ def hipMemcpy3D_spt(object p):
 
 @cython.embedsignature(True)
 def hipMemset_spt(object dst, int value, unsigned long sizeBytes):
-    """
-
+    """(No brief)
     """
     _hipMemset_spt__retval = hipError_t(chip.hipMemset_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes))    # fully specified
@@ -36033,8 +34403,7 @@ def hipMemset_spt(object dst, int value, unsigned long sizeBytes):
 
 @cython.embedsignature(True)
 def hipMemsetAsync_spt(object dst, int value, unsigned long sizeBytes, object stream):
-    """
-
+    """(No brief)
     """
     _hipMemsetAsync_spt__retval = hipError_t(chip.hipMemsetAsync_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,value,sizeBytes,
@@ -36044,8 +34413,7 @@ def hipMemsetAsync_spt(object dst, int value, unsigned long sizeBytes, object st
 
 @cython.embedsignature(True)
 def hipMemset2D_spt(object dst, unsigned long pitch, int value, unsigned long width, unsigned long height):
-    """
-
+    """(No brief)
     """
     _hipMemset2D_spt__retval = hipError_t(chip.hipMemset2D_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height))    # fully specified
@@ -36054,8 +34422,7 @@ def hipMemset2D_spt(object dst, unsigned long pitch, int value, unsigned long wi
 
 @cython.embedsignature(True)
 def hipMemset2DAsync_spt(object dst, unsigned long pitch, int value, unsigned long width, unsigned long height, object stream):
-    """
-
+    """(No brief)
     """
     _hipMemset2DAsync_spt__retval = hipError_t(chip.hipMemset2DAsync_spt(
         <void *>hip._util.types.DataHandle.from_pyobj(dst)._ptr,pitch,value,width,height,
@@ -36065,8 +34432,7 @@ def hipMemset2DAsync_spt(object dst, unsigned long pitch, int value, unsigned lo
 
 @cython.embedsignature(True)
 def hipMemset3DAsync_spt(object pitchedDevPtr, int value, object extent, object stream):
-    """
-
+    """(No brief)
     """
     _hipMemset3DAsync_spt__retval = hipError_t(chip.hipMemset3DAsync_spt(
         hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr[0],value,
@@ -36077,8 +34443,7 @@ def hipMemset3DAsync_spt(object pitchedDevPtr, int value, object extent, object 
 
 @cython.embedsignature(True)
 def hipMemset3D_spt(object pitchedDevPtr, int value, object extent):
-    """
-
+    """(No brief)
     """
     _hipMemset3D_spt__retval = hipError_t(chip.hipMemset3D_spt(
         hipPitchedPtr.from_pyobj(pitchedDevPtr)._ptr[0],value,
@@ -36088,8 +34453,7 @@ def hipMemset3D_spt(object pitchedDevPtr, int value, object extent):
 
 @cython.embedsignature(True)
 def hipMemcpyAsync_spt(object dst, object src, unsigned long sizeBytes, object kind, object stream):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -36102,8 +34466,7 @@ def hipMemcpyAsync_spt(object dst, object src, unsigned long sizeBytes, object k
 
 @cython.embedsignature(True)
 def hipMemcpy3DAsync_spt(object p, object stream):
-    """
-
+    """(No brief)
     """
     _hipMemcpy3DAsync_spt__retval = hipError_t(chip.hipMemcpy3DAsync_spt(
         hipMemcpy3DParms.from_pyobj(p)._ptr,
@@ -36113,8 +34476,7 @@ def hipMemcpy3DAsync_spt(object p, object stream):
 
 @cython.embedsignature(True)
 def hipMemcpy2DAsync_spt(object dst, unsigned long dpitch, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -36127,8 +34489,7 @@ def hipMemcpy2DAsync_spt(object dst, unsigned long dpitch, object src, unsigned 
 
 @cython.embedsignature(True)
 def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -36141,8 +34502,7 @@ def hipMemcpyFromSymbolAsync_spt(object dst, object symbol, unsigned long sizeBy
 
 @cython.embedsignature(True)
 def hipMemcpyToSymbolAsync_spt(object symbol, object src, unsigned long sizeBytes, unsigned long offset, object kind, object stream):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -36155,8 +34515,7 @@ def hipMemcpyToSymbolAsync_spt(object symbol, object src, unsigned long sizeByte
 
 @cython.embedsignature(True)
 def hipMemcpyFromArray_spt(object dst, object src, unsigned long wOffsetSrc, unsigned long hOffset, unsigned long count, object kind):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -36168,8 +34527,7 @@ def hipMemcpyFromArray_spt(object dst, object src, unsigned long wOffsetSrc, uns
 
 @cython.embedsignature(True)
 def hipMemcpy2DToArray_spt(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -36181,8 +34539,7 @@ def hipMemcpy2DToArray_spt(object dst, unsigned long wOffset, unsigned long hOff
 
 @cython.embedsignature(True)
 def hipMemcpy2DFromArrayAsync_spt(object dst, unsigned long dpitch, object src, unsigned long wOffsetSrc, unsigned long hOffsetSrc, unsigned long width, unsigned long height, object kind, object stream):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -36195,8 +34552,7 @@ def hipMemcpy2DFromArrayAsync_spt(object dst, unsigned long dpitch, object src, 
 
 @cython.embedsignature(True)
 def hipMemcpy2DToArrayAsync_spt(object dst, unsigned long wOffset, unsigned long hOffset, object src, unsigned long spitch, unsigned long width, unsigned long height, object kind, object stream):
-    """
-
+    """(No brief)
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
         raise TypeError("argument 'kind' must be of type '_hipMemcpyKind__Base'")
@@ -36209,8 +34565,7 @@ def hipMemcpy2DToArrayAsync_spt(object dst, unsigned long wOffset, unsigned long
 
 @cython.embedsignature(True)
 def hipStreamQuery_spt(object stream):
-    """
-
+    """(No brief)
     """
     _hipStreamQuery_spt__retval = hipError_t(chip.hipStreamQuery_spt(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
@@ -36219,8 +34574,7 @@ def hipStreamQuery_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamSynchronize_spt(object stream):
-    """
-
+    """(No brief)
     """
     _hipStreamSynchronize_spt__retval = hipError_t(chip.hipStreamSynchronize_spt(
         ihipStream_t.from_pyobj(stream)._ptr))    # fully specified
@@ -36229,8 +34583,7 @@ def hipStreamSynchronize_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamGetPriority_spt(object stream):
-    """
-
+    """(No brief)
     """
     cdef int priority
     _hipStreamGetPriority_spt__retval = hipError_t(chip.hipStreamGetPriority_spt(
@@ -36240,8 +34593,7 @@ def hipStreamGetPriority_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamWaitEvent_spt(object stream, object event, unsigned int flags):
-    """
-
+    """(No brief)
     """
     _hipStreamWaitEvent_spt__retval = hipError_t(chip.hipStreamWaitEvent_spt(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -36251,8 +34603,7 @@ def hipStreamWaitEvent_spt(object stream, object event, unsigned int flags):
 
 @cython.embedsignature(True)
 def hipStreamGetFlags_spt(object stream):
-    """
-
+    """(No brief)
     """
     cdef unsigned int flags
     _hipStreamGetFlags_spt__retval = hipError_t(chip.hipStreamGetFlags_spt(
@@ -36262,8 +34613,7 @@ def hipStreamGetFlags_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamAddCallback_spt(object stream, object callback, object userData, unsigned int flags):
-    """
-
+    """(No brief)
     """
     _hipStreamAddCallback_spt__retval = hipError_t(chip.hipStreamAddCallback_spt(
         ihipStream_t.from_pyobj(stream)._ptr,
@@ -36274,8 +34624,7 @@ def hipStreamAddCallback_spt(object stream, object callback, object userData, un
 
 @cython.embedsignature(True)
 def hipEventRecord_spt(object event, object stream):
-    """
-
+    """(No brief)
     """
     _hipEventRecord_spt__retval = hipError_t(chip.hipEventRecord_spt(
         ihipEvent_t.from_pyobj(event)._ptr,
@@ -36285,8 +34634,7 @@ def hipEventRecord_spt(object event, object stream):
 
 @cython.embedsignature(True)
 def hipLaunchCooperativeKernel_spt(object f, object gridDim, object blockDim, object kernelParams, unsigned int sharedMemBytes, object hStream):
-    """
-
+    """(No brief)
     """
     _hipLaunchCooperativeKernel_spt__retval = hipError_t(chip.hipLaunchCooperativeKernel_spt(
         <const void *>hip._util.types.DataHandle.from_pyobj(f)._ptr,
@@ -36299,8 +34647,7 @@ def hipLaunchCooperativeKernel_spt(object f, object gridDim, object blockDim, ob
 
 @cython.embedsignature(True)
 def hipLaunchKernel_spt(object function_address, object numBlocks, object dimBlocks, object args, unsigned long sharedMemBytes, object stream):
-    """
-
+    """(No brief)
     """
     _hipLaunchKernel_spt__retval = hipError_t(chip.hipLaunchKernel_spt(
         <const void *>hip._util.types.DataHandle.from_pyobj(function_address)._ptr,
@@ -36313,8 +34660,7 @@ def hipLaunchKernel_spt(object function_address, object numBlocks, object dimBlo
 
 @cython.embedsignature(True)
 def hipGraphLaunch_spt(object graphExec, object stream):
-    """
-
+    """(No brief)
     """
     _hipGraphLaunch_spt__retval = hipError_t(chip.hipGraphLaunch_spt(
         hipGraphExec.from_pyobj(graphExec)._ptr,
@@ -36324,8 +34670,7 @@ def hipGraphLaunch_spt(object graphExec, object stream):
 
 @cython.embedsignature(True)
 def hipStreamBeginCapture_spt(object stream, object mode):
-    """
-
+    """(No brief)
     """
     if not isinstance(mode,_hipStreamCaptureMode__Base):
         raise TypeError("argument 'mode' must be of type '_hipStreamCaptureMode__Base'")
@@ -36336,8 +34681,7 @@ def hipStreamBeginCapture_spt(object stream, object mode):
 
 @cython.embedsignature(True)
 def hipStreamEndCapture_spt(object stream):
-    """
-
+    """(No brief)
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipStreamEndCapture_spt__retval = hipError_t(chip.hipStreamEndCapture_spt(
@@ -36347,8 +34691,7 @@ def hipStreamEndCapture_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamIsCapturing_spt(object stream):
-    """
-
+    """(No brief)
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     _hipStreamIsCapturing_spt__retval = hipError_t(chip.hipStreamIsCapturing_spt(
@@ -36358,8 +34701,7 @@ def hipStreamIsCapturing_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamGetCaptureInfo_spt(object stream):
-    """
-
+    """(No brief)
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     cdef unsigned long long pId
@@ -36370,8 +34712,7 @@ def hipStreamGetCaptureInfo_spt(object stream):
 
 @cython.embedsignature(True)
 def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
-    """
-
+    """(No brief)
     """
     cdef chip.hipStreamCaptureStatus captureStatus_out
     cdef unsigned long long id_out
@@ -36385,8 +34726,7 @@ def hipStreamGetCaptureInfo_v2_spt(object stream, object dependencies_out):
 
 @cython.embedsignature(True)
 def hipLaunchHostFunc_spt(object stream, object fn, object userData):
-    """
-
+    """(No brief)
     """
     _hipLaunchHostFunc_spt__retval = hipError_t(chip.hipLaunchHostFunc_spt(
         ihipStream_t.from_pyobj(stream)._ptr,

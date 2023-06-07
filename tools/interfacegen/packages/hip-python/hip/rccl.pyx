@@ -291,14 +291,11 @@ class ncclResult_t(_ncclResult_t__Base):
 
 @cython.embedsignature(True)
 def ncclGetVersion():
-    """
-     Return the NCCL_VERSION_CODE of the NCCL library in the supplied integer.
+    """Return the NCCL_VERSION_CODE of the NCCL library in the supplied integer.
 
-    Details:
-       This integer is coded with the MAJOR, MINOR and PATCH level of the
-       NCCL library
+    This integer is coded with the MAJOR, MINOR and PATCH level of the
 
-
+    NCCL library
     """
     cdef int version
     _ncclGetVersion__retval = ncclResult_t(crccl.ncclGetVersion(&version))    # fully specified
@@ -307,8 +304,9 @@ def ncclGetVersion():
 
 @cython.embedsignature(True)
 def pncclGetVersion():
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     cdef int version
     _pncclGetVersion__retval = ncclResult_t(crccl.pncclGetVersion(&version))    # fully specified
@@ -317,20 +315,16 @@ def pncclGetVersion():
 
 @cython.embedsignature(True)
 def ncclGetUniqueId(object uniqueId):
-    """
-    Generates an ID for ncclCommInitRank
+    """Generates an ID for ncclCommInitRank
 
-    Details:
     Generates an ID to be used in ncclCommInitRank. ncclGetUniqueId should be
     called once and the Id should be distributed to all ranks in the
     communicator before calling ncclCommInitRank.
 
-
-
+    /
     Args:
        uniqueId: ncclUniqueId*
           pointer to uniqueId
-          /
     """
     _ncclGetUniqueId__retval = ncclResult_t(crccl.ncclGetUniqueId(
         ncclUniqueId.from_pyobj(uniqueId)._ptr))    # fully specified
@@ -339,8 +333,9 @@ def ncclGetUniqueId(object uniqueId):
 
 @cython.embedsignature(True)
 def pncclGetUniqueId(object uniqueId):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     _pncclGetUniqueId__retval = ncclResult_t(crccl.pncclGetUniqueId(
         ncclUniqueId.from_pyobj(uniqueId)._ptr))    # fully specified
@@ -349,19 +344,18 @@ def pncclGetUniqueId(object uniqueId):
 
 @cython.embedsignature(True)
 def ncclCommInitRank(int nranks, object commId, int rank):
-    """
-    Creates a new communicator (multi thread/process version).
+    """Creates a new communicator (multi thread/process version).
 
-    Details:
-       rank must be between 0 and nranks-1 and unique within a communicator clique.
-       Each rank is associated to a CUDA device, which has to be set before calling
-       ncclCommInitRank.
-       ncclCommInitRank implicitly syncronizes with other ranks, so it must be
-       called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
+    rank must be between 0 and nranks-1 and unique within a communicator clique.
+    Each rank is associated to a CUDA device, which has to be set before calling
+    ncclCommInitRank.
+    ncclCommInitRank implicitly syncronizes with other ranks, so it must be
+    called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
-
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - comm: ncclComm_t*
+                   communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
     _ncclCommInitRank__retval = ncclResult_t(crccl.ncclCommInitRank(&comm._ptr,nranks,
@@ -371,8 +365,9 @@ def ncclCommInitRank(int nranks, object commId, int rank):
 
 @cython.embedsignature(True)
 def pncclCommInitRank(int nranks, object commId, int rank):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     comm = ncclComm.from_ptr(NULL)
     _pncclCommInitRank__retval = ncclResult_t(crccl.pncclCommInitRank(&comm._ptr,nranks,
@@ -382,22 +377,21 @@ def pncclCommInitRank(int nranks, object commId, int rank):
 
 @cython.embedsignature(True)
 def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
-    """
-    Creates a new communicator (multi thread/process version) allowing multiple ranks per device.
+    """Creates a new communicator (multi thread/process version) allowing multiple ranks per device.
 
-    Details:
-       rank must be between 0 and nranks-1 and unique within a communicator clique.
-       Each rank is associated to a HIP device, which has to be set before calling
-       ncclCommInitRankMulti.
-       Since this version of the function allows multiple ranks to utilize the same
-       HIP device, a unique virtualId per device has to be provided by each calling
-       rank.
-       ncclCommInitRankMulti implicitly syncronizes with other ranks, so it must be
-       called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
+    rank must be between 0 and nranks-1 and unique within a communicator clique.
+    Each rank is associated to a HIP device, which has to be set before calling
+    ncclCommInitRankMulti.
+    Since this version of the function allows multiple ranks to utilize the same
+    HIP device, a unique virtualId per device has to be provided by each calling
+    rank.
+    ncclCommInitRankMulti implicitly syncronizes with other ranks, so it must be
+    called by different threads/processes or use ncclGroupStart/ncclGroupEnd.
 
-
-
-
+    Returns:
+       A ``tuple`` of size 1 that contains (in that order):
+       - comm: ncclComm_t*
+                   communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
     _ncclCommInitRankMulti__retval = ncclResult_t(crccl.ncclCommInitRankMulti(&comm._ptr,nranks,
@@ -407,7 +401,8 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
 
 @cython.embedsignature(True)
 def pncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
-    """
+    """(No brief)
+
     @cond include_hidden
     """
     comm = ncclComm.from_ptr(NULL)
@@ -418,17 +413,14 @@ def pncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
 
 @cython.embedsignature(True)
 def ncclCommInitAll(object comm, int ndev, object devlist):
-    """
-     Creates a clique of communicators (single process version).
+    """Creates a clique of communicators (single process version).
 
-    Details:
-       This is a convenience function to create a single-process communicator clique.
-       Returns an array of ndev newly initialized communicators in comm.
-       comm should be pre-allocated with size at least ndev*sizeof(ncclComm_t).
-       If devlist is NULL, the first ndev HIP devices are used.
-       Order of devlist defines user-order of processors within the communicator.
+    This is a convenience function to create a single-process communicator clique.
 
-
+    Returns an array of ndev newly initialized communicators in comm.
+    comm should be pre-allocated with size at least ndev*sizeof(ncclComm_t).
+    If devlist is NULL, the first ndev HIP devices are used.
+    Order of devlist defines user-order of processors within the communicator.
     """
     _ncclCommInitAll__retval = ncclResult_t(crccl.ncclCommInitAll(
         <crccl.ncclComm_t*>hip._util.types.DataHandle.from_pyobj(comm)._ptr,ndev,
@@ -438,8 +430,9 @@ def ncclCommInitAll(object comm, int ndev, object devlist):
 
 @cython.embedsignature(True)
 def pncclCommInitAll(object comm, int ndev, object devlist):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     _pncclCommInitAll__retval = ncclResult_t(crccl.pncclCommInitAll(
         <crccl.ncclComm_t*>hip._util.types.DataHandle.from_pyobj(comm)._ptr,ndev,
@@ -449,8 +442,7 @@ def pncclCommInitAll(object comm, int ndev, object devlist):
 
 @cython.embedsignature(True)
 def ncclCommDestroy(object comm):
-    """
-    Frees resources associated with communicator object, but waits for any operations that might still be running on the device */
+    """Frees resources associated with communicator object, but waits for any operations that might still be running on the device */
     """
     _ncclCommDestroy__retval = ncclResult_t(crccl.ncclCommDestroy(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -459,8 +451,9 @@ def ncclCommDestroy(object comm):
 
 @cython.embedsignature(True)
 def pncclCommDestroy(object comm):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     _pncclCommDestroy__retval = ncclResult_t(crccl.pncclCommDestroy(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -469,8 +462,7 @@ def pncclCommDestroy(object comm):
 
 @cython.embedsignature(True)
 def ncclCommAbort(object comm):
-    """
-    Frees resources associated with communicator object and aborts any operations that might still be running on the device. */
+    """Frees resources associated with communicator object and aborts any operations that might still be running on the device. */
     """
     _ncclCommAbort__retval = ncclResult_t(crccl.ncclCommAbort(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -479,8 +471,9 @@ def ncclCommAbort(object comm):
 
 @cython.embedsignature(True)
 def pncclCommAbort(object comm):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     _pncclCommAbort__retval = ncclResult_t(crccl.pncclCommAbort(
         ncclComm.from_pyobj(comm)._ptr))    # fully specified
@@ -489,8 +482,7 @@ def pncclCommAbort(object comm):
 
 @cython.embedsignature(True)
 def ncclGetErrorString(object result):
-    """
-    Returns a string for each error code. */
+    """Returns a string for each error code. */
     """
     if not isinstance(result,_ncclResult_t__Base):
         raise TypeError("argument 'result' must be of type '_ncclResult_t__Base'")
@@ -500,8 +492,9 @@ def ncclGetErrorString(object result):
 
 @cython.embedsignature(True)
 def pncclGetErrorString(object result):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(result,_ncclResult_t__Base):
         raise TypeError("argument 'result' must be of type '_ncclResult_t__Base'")
@@ -511,9 +504,9 @@ def pncclGetErrorString(object result):
 
 @cython.embedsignature(True)
 def ncclGetLastError(object comm):
-    """
-    Returns a human-readable message of the last error that occurred. comm is currently unused and can be set to NULL
+    """Returns a human-readable message of the last error that occurred.
 
+    comm is currently unused and can be set to NULL
     """
     cdef const char * _ncclGetLastError__retval = crccl.ncclGetLastError(
         ncclComm.from_pyobj(comm)._ptr)    # fully specified
@@ -522,8 +515,9 @@ def ncclGetLastError(object comm):
 
 @cython.embedsignature(True)
 def pncclGetError(object comm):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     cdef const char * _pncclGetError__retval = crccl.pncclGetError(
         ncclComm.from_pyobj(comm)._ptr)    # fully specified
@@ -532,8 +526,7 @@ def pncclGetError(object comm):
 
 @cython.embedsignature(True)
 def ncclCommGetAsyncError(object comm, object asyncError):
-    """
-
+    """(No brief)
     """
     _ncclCommGetAsyncError__retval = ncclResult_t(crccl.ncclCommGetAsyncError(
         ncclComm.from_pyobj(comm)._ptr,
@@ -543,8 +536,9 @@ def ncclCommGetAsyncError(object comm, object asyncError):
 
 @cython.embedsignature(True)
 def pncclCommGetAsyncError(object comm, object asyncError):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     _pncclCommGetAsyncError__retval = ncclResult_t(crccl.pncclCommGetAsyncError(
         ncclComm.from_pyobj(comm)._ptr,
@@ -554,8 +548,7 @@ def pncclCommGetAsyncError(object comm, object asyncError):
 
 @cython.embedsignature(True)
 def ncclCommCount(object comm):
-    """
-    Gets the number of ranks in the communicator clique. */
+    """Gets the number of ranks in the communicator clique. */
     """
     cdef int count
     _ncclCommCount__retval = ncclResult_t(crccl.ncclCommCount(
@@ -565,8 +558,9 @@ def ncclCommCount(object comm):
 
 @cython.embedsignature(True)
 def pncclCommCount(object comm):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     cdef int count
     _pncclCommCount__retval = ncclResult_t(crccl.pncclCommCount(
@@ -576,8 +570,7 @@ def pncclCommCount(object comm):
 
 @cython.embedsignature(True)
 def ncclCommCuDevice(object comm):
-    """
-    Returns the rocm device number associated with the communicator. */
+    """Returns the rocm device number associated with the communicator. */
     """
     cdef int device
     _ncclCommCuDevice__retval = ncclResult_t(crccl.ncclCommCuDevice(
@@ -587,8 +580,9 @@ def ncclCommCuDevice(object comm):
 
 @cython.embedsignature(True)
 def pncclCommCuDevice(object comm):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     cdef int device
     _pncclCommCuDevice__retval = ncclResult_t(crccl.pncclCommCuDevice(
@@ -598,8 +592,7 @@ def pncclCommCuDevice(object comm):
 
 @cython.embedsignature(True)
 def ncclCommUserRank(object comm):
-    """
-    Returns the user-ordered "rank" associated with the communicator. */
+    """Returns the user-ordered "rank" associated with the communicator. */
     """
     cdef int rank
     _ncclCommUserRank__retval = ncclResult_t(crccl.ncclCommUserRank(
@@ -609,8 +602,9 @@ def ncclCommUserRank(object comm):
 
 @cython.embedsignature(True)
 def pncclCommUserRank(object comm):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     cdef int rank
     _pncclCommUserRank__retval = ncclResult_t(crccl.pncclCommUserRank(
@@ -690,8 +684,7 @@ class ncclScalarResidence_t(_ncclScalarResidence_t__Base):
 
 @cython.embedsignature(True)
 def ncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object residence, object comm):
-    """
-
+    """(No brief)
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -706,8 +699,7 @@ def ncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object r
 
 @cython.embedsignature(True)
 def pncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object residence, object comm):
-    """
-
+    """(No brief)
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -722,8 +714,7 @@ def pncclRedOpCreatePreMulSum(object op, object scalar, object datatype, object 
 
 @cython.embedsignature(True)
 def ncclRedOpDestroy(object op, object comm):
-    """
-
+    """(No brief)
     """
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
@@ -734,8 +725,7 @@ def ncclRedOpDestroy(object op, object comm):
 
 @cython.embedsignature(True)
 def pncclRedOpDestroy(object op, object comm):
-    """
-
+    """(No brief)
     """
     if not isinstance(op,_ncclRedOp_t__Base):
         raise TypeError("argument 'op' must be of type '_ncclRedOp_t__Base'")
@@ -746,20 +736,16 @@ def pncclRedOpDestroy(object op, object comm):
 
 @cython.embedsignature(True)
 def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, int root, object comm, object stream):
-    """
+    """Reduce
 
-    Reduce
+    Reduces data arrays of length count in sendbuff into recvbuff using op
 
-    Details:
-       Reduces data arrays of length count in sendbuff into recvbuff using op
-       operation.
-       recvbuff may be NULL on all calls except for root device.
-       root is the rank (not the CUDA device) where data will reside after the
-       operation is complete.
+    operation.
+    recvbuff may be NULL on all calls except for root device.
+    root is the rank (not the CUDA device) where data will reside after the
+    operation is complete.
 
-       In-place operation will happen if sendbuff == recvbuff.
-
-
+    In-place operation will happen if sendbuff == recvbuff.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -775,8 +761,9 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
 
 @cython.embedsignature(True)
 def pncclReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, int root, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -792,17 +779,14 @@ def pncclReduce(object sendbuff, object recvbuff, unsigned long count, object da
 
 @cython.embedsignature(True)
 def ncclBcast(object buff, unsigned long count, object datatype, int root, object comm, object stream):
-    """
-     (deprecated) Broadcast (in-place)
+    """(deprecated) Broadcast (in-place)
 
-    Details:
-       Copies count values from root to all other devices.
-       root is the rank (not the CUDA device) where data resides before the
-       operation is started.
+    Copies count values from root to all other devices.
 
-       This operation is implicitely in place.
+    root is the rank (not the CUDA device) where data resides before the
+    operation is started.
 
-
+    This operation is implicitely in place.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -815,8 +799,9 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
 
 @cython.embedsignature(True)
 def pncclBcast(object buff, unsigned long count, object datatype, int root, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -829,17 +814,14 @@ def pncclBcast(object buff, unsigned long count, object datatype, int root, obje
 
 @cython.embedsignature(True)
 def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object datatype, int root, object comm, object stream):
-    """
-     Broadcast
+    """Broadcast
 
-    Details:
-       Copies count values from root to all other devices.
-       root is the rank (not the HIP device) where data resides before the
-       operation is started.
+    Copies count values from root to all other devices.
 
-       In-place operation will happen if sendbuff == recvbuff.
+    root is the rank (not the HIP device) where data resides before the
+    operation is started.
 
-
+    In-place operation will happen if sendbuff == recvbuff.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -853,8 +835,9 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
 
 @cython.embedsignature(True)
 def pncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object datatype, int root, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -868,16 +851,13 @@ def pncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object
 
 @cython.embedsignature(True)
 def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, object comm, object stream):
-    """
-     All-Reduce
+    """All-Reduce
 
-    Details:
-       Reduces data arrays of length count in sendbuff using op operation, and
-       leaves identical copies of result on each recvbuff.
+    Reduces data arrays of length count in sendbuff using op operation, and
 
-       In-place operation will happen if sendbuff == recvbuff.
+    leaves identical copies of result on each recvbuff.
 
-
+    In-place operation will happen if sendbuff == recvbuff.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -893,8 +873,9 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
 
 @cython.embedsignature(True)
 def pncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object datatype, object op, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -910,20 +891,16 @@ def pncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object
 
 @cython.embedsignature(True)
 def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, object op, object comm, object stream):
-    """
+    """Reduce-Scatter
 
-    Reduce-Scatter
+    Reduces data in sendbuff using op operation and leaves reduced result
 
-    Details:
-       Reduces data in sendbuff using op operation and leaves reduced result
-       scattered over the devices so that recvbuff on rank i will contain the i-th
-       block of the result.
-       Assumes sendcount is equal to nranks*recvcount, which means that sendbuff
-       should have a size of at least nranks*recvcount elements.
+    scattered over the devices so that recvbuff on rank i will contain the i-th
+    block of the result.
+    Assumes sendcount is equal to nranks*recvcount, which means that sendbuff
+    should have a size of at least nranks*recvcount elements.
 
-       In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
-
-
+    In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -939,8 +916,9 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
 
 @cython.embedsignature(True)
 def pncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, object op, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")                    
@@ -956,18 +934,15 @@ def pncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount
 
 @cython.embedsignature(True)
 def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, object comm, object stream):
-    """
-     All-Gather
+    """All-Gather
 
-    Details:
-       Each device gathers sendcount values from other GPUs into recvbuff,
-       receiving data from rank i at offset i*sendcount.
-       Assumes recvcount is equal to nranks*sendcount, which means that recvbuff
-       should have a size of at least nranks*sendcount elements.
+    Each device gathers sendcount values from other GPUs into recvbuff,
 
-       In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
+    receiving data from rank i at offset i*sendcount.
+    Assumes recvcount is equal to nranks*sendcount, which means that recvbuff
+    should have a size of at least nranks*sendcount elements.
 
-
+    In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -981,8 +956,9 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
 
 @cython.embedsignature(True)
 def pncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -996,19 +972,16 @@ def pncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, ob
 
 @cython.embedsignature(True)
 def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, object comm, object stream):
-    """
-     Send
+    """Send
 
-    Details:
-       Send data from sendbuff to rank peer.
-       Rank peer needs to call ncclRecv with the same datatype and the same count from this
-       rank.
+    Send data from sendbuff to rank peer.
 
-       This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
-       need to progress concurrently to complete, they must be fused within a ncclGroupStart/
-       ncclGroupEnd section.
+    Rank peer needs to call ncclRecv with the same datatype and the same count from this
+    rank.
 
-
+    This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
+    need to progress concurrently to complete, they must be fused within a ncclGroupStart/
+    ncclGroupEnd section.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1021,8 +994,9 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
 
 @cython.embedsignature(True)
 def pncclSend(object sendbuff, unsigned long count, object datatype, int peer, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1035,19 +1009,16 @@ def pncclSend(object sendbuff, unsigned long count, object datatype, int peer, o
 
 @cython.embedsignature(True)
 def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, object comm, object stream):
-    """
-     Receive
+    """Receive
 
-    Details:
-       Receive data from rank peer into recvbuff.
-       Rank peer needs to call ncclSend with the same datatype and the same count to this
-       rank.
+    Receive data from rank peer into recvbuff.
 
-       This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
-       need to progress concurrently to complete, they must be fused within a ncclGroupStart/
-       ncclGroupEnd section.
+    Rank peer needs to call ncclSend with the same datatype and the same count to this
+    rank.
 
-
+    This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations
+    need to progress concurrently to complete, they must be fused within a ncclGroupStart/
+    ncclGroupEnd section.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1060,8 +1031,9 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
 
 @cython.embedsignature(True)
 def pncclRecv(object recvbuff, unsigned long count, object datatype, int peer, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1074,19 +1046,16 @@ def pncclRecv(object recvbuff, unsigned long count, object datatype, int peer, o
 
 @cython.embedsignature(True)
 def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, int root, object comm, object stream):
-    """
-     Gather
+    """Gather
 
-    Details:
-       Root device gathers sendcount values from other GPUs into recvbuff,
-       receiving data from rank i at offset i*sendcount.
+    Root device gathers sendcount values from other GPUs into recvbuff,
 
-       Assumes recvcount is equal to nranks*sendcount, which means that recvbuff
-       should have a size of at least nranks*sendcount elements.
+    receiving data from rank i at offset i*sendcount.
 
-       In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
+    Assumes recvcount is equal to nranks*sendcount, which means that recvbuff
+    should have a size of at least nranks*sendcount elements.
 
-
+    In-place operations will happen if sendbuff == recvbuff + rank * sendcount.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1100,8 +1069,9 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
 
 @cython.embedsignature(True)
 def pncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object datatype, int root, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1115,19 +1085,16 @@ def pncclGather(object sendbuff, object recvbuff, unsigned long sendcount, objec
 
 @cython.embedsignature(True)
 def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, int root, object comm, object stream):
-    """
-     Scatter
+    """Scatter
 
-    Details:
-       Scattered over the devices so that recvbuff on rank i will contain the i-th
-       block of the data on root.
+    Scattered over the devices so that recvbuff on rank i will contain the i-th
 
-       Assumes sendcount is equal to nranks*recvcount, which means that sendbuff
-       should have a size of at least nranks*recvcount elements.
+    block of the data on root.
 
-       In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
+    Assumes sendcount is equal to nranks*recvcount, which means that sendbuff
+    should have a size of at least nranks*recvcount elements.
 
-
+    In-place operations will happen if recvbuff == sendbuff + rank * recvcount.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1141,8 +1108,9 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
 
 @cython.embedsignature(True)
 def pncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, object datatype, int root, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1156,17 +1124,14 @@ def pncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, obje
 
 @cython.embedsignature(True)
 def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object datatype, object comm, object stream):
-    """
-     All-To-All
+    """All-To-All
 
-    Details:
-       Device (i) send (j)th block of data to device (j) and be placed as (i)th
-       block. Each block for sending/receiving has count elements, which means
-       that recvbuff and sendbuff should have a size of nranks*count elements.
+    Device (i) send (j)th block of data to device (j) and be placed as (i)th
 
-       In-place operation will happen if sendbuff == recvbuff.
+    block. Each block for sending/receiving has count elements, which means
+    that recvbuff and sendbuff should have a size of nranks*count elements.
 
-
+    In-place operation will happen if sendbuff == recvbuff.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1180,8 +1145,9 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
 
 @cython.embedsignature(True)
 def pncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object datatype, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1195,20 +1161,17 @@ def pncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object 
 
 @cython.embedsignature(True)
 def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object recvbuff, object recvcounts, object rdispls, object datatype, object comm, object stream):
-    """
-     All-To-Allv
+    """All-To-Allv
 
-    Details:
-       Device (i) sends sendcounts[j] of data from offset sdispls[j]
-       to device (j). In the same time, device (i) receives recvcounts[j] of data
-       from device (j) to be placed at rdispls[j].
+    Device (i) sends sendcounts[j] of data from offset sdispls[j]
 
-       sendcounts, sdispls, recvcounts and rdispls are all measured in the units
-       of datatype, not bytes.
+    to device (j). In the same time, device (i) receives recvcounts[j] of data
+    from device (j) to be placed at rdispls[j].
 
-       In-place operation will happen if sendbuff == recvbuff.
+    sendcounts, sdispls, recvcounts and rdispls are all measured in the units
+    of datatype, not bytes.
 
-
+    In-place operation will happen if sendbuff == recvbuff.
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1226,8 +1189,9 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
 
 @cython.embedsignature(True)
 def pncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object recvbuff, object recvcounts, object rdispls, object datatype, object comm, object stream):
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     if not isinstance(datatype,_ncclDataType_t__Base):
         raise TypeError("argument 'datatype' must be of type '_ncclDataType_t__Base'")
@@ -1245,9 +1209,11 @@ def pncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object re
 
 @cython.embedsignature(True)
 def ncclGroupStart():
-    """
-    Group Start  Start a group call. All calls to NCCL until ncclGroupEnd will be fused into a single NCCL operation. Nothing will be started on the CUDA stream until ncclGroupEnd.
+    """Group Start
 
+    Start a group call. All calls to NCCL until ncclGroupEnd will be fused into
+    a single NCCL operation. Nothing will be started on the CUDA stream until
+    ncclGroupEnd.
     """
     _ncclGroupStart__retval = ncclResult_t(crccl.ncclGroupStart())    # fully specified
     return (_ncclGroupStart__retval,)
@@ -1255,8 +1221,9 @@ def ncclGroupStart():
 
 @cython.embedsignature(True)
 def pncclGroupStart():
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     _pncclGroupStart__retval = ncclResult_t(crccl.pncclGroupStart())    # fully specified
     return (_pncclGroupStart__retval,)
@@ -1264,9 +1231,11 @@ def pncclGroupStart():
 
 @cython.embedsignature(True)
 def ncclGroupEnd():
-    """
-    Group End  End a group call. Start a fused NCCL operation consisting of all calls since ncclGroupStart. Operations on the CUDA stream depending on the NCCL operations need to be called after ncclGroupEnd.
+    """Group End
 
+    End a group call. Start a fused NCCL operation consisting of all calls since
+    ncclGroupStart. Operations on the CUDA stream depending on the NCCL operations
+    need to be called after ncclGroupEnd.
     """
     _ncclGroupEnd__retval = ncclResult_t(crccl.ncclGroupEnd())    # fully specified
     return (_ncclGroupEnd__retval,)
@@ -1274,8 +1243,9 @@ def ncclGroupEnd():
 
 @cython.embedsignature(True)
 def pncclGroupEnd():
-    """
-    @cond include_hidden 
+    """(No brief)
+
+    @cond include_hidden
     """
     _pncclGroupEnd__retval = ncclResult_t(crccl.pncclGroupEnd())    # fully specified
     return (_pncclGroupEnd__retval,)
