@@ -294,7 +294,6 @@ def ncclGetVersion():
     """Return the NCCL_VERSION_CODE of the NCCL library in the supplied integer.
 
     This integer is coded with the MAJOR, MINOR and PATCH level of the
-
     NCCL library
     """
     cdef int version
@@ -416,7 +415,6 @@ def ncclCommInitAll(object comm, int ndev, object devlist):
     """Creates a clique of communicators (single process version).
 
     This is a convenience function to create a single-process communicator clique.
-
     Returns an array of ndev newly initialized communicators in comm.
     comm should be pre-allocated with size at least ndev*sizeof(ncclComm_t).
     If devlist is NULL, the first ndev HIP devices are used.
@@ -504,9 +502,7 @@ def pncclGetErrorString(object result):
 
 @cython.embedsignature(True)
 def ncclGetLastError(object comm):
-    """Returns a human-readable message of the last error that occurred.
-
-    comm is currently unused and can be set to NULL
+    """Returns a human-readable message of the last error that occurred. comm is currently unused and can be set to NULL
     """
     cdef const char * _ncclGetLastError__retval = crccl.ncclGetLastError(
         ncclComm.from_pyobj(comm)._ptr)    # fully specified
@@ -739,7 +735,6 @@ def ncclReduce(object sendbuff, object recvbuff, unsigned long count, object dat
     """Reduce
 
     Reduces data arrays of length count in sendbuff into recvbuff using op
-
     operation.
     recvbuff may be NULL on all calls except for root device.
     root is the rank (not the CUDA device) where data will reside after the
@@ -782,7 +777,6 @@ def ncclBcast(object buff, unsigned long count, object datatype, int root, objec
     """(deprecated) Broadcast (in-place)
 
     Copies count values from root to all other devices.
-
     root is the rank (not the CUDA device) where data resides before the
     operation is started.
 
@@ -817,7 +811,6 @@ def ncclBroadcast(object sendbuff, object recvbuff, unsigned long count, object 
     """Broadcast
 
     Copies count values from root to all other devices.
-
     root is the rank (not the HIP device) where data resides before the
     operation is started.
 
@@ -854,7 +847,6 @@ def ncclAllReduce(object sendbuff, object recvbuff, unsigned long count, object 
     """All-Reduce
 
     Reduces data arrays of length count in sendbuff using op operation, and
-
     leaves identical copies of result on each recvbuff.
 
     In-place operation will happen if sendbuff == recvbuff.
@@ -894,7 +886,6 @@ def ncclReduceScatter(object sendbuff, object recvbuff, unsigned long recvcount,
     """Reduce-Scatter
 
     Reduces data in sendbuff using op operation and leaves reduced result
-
     scattered over the devices so that recvbuff on rank i will contain the i-th
     block of the result.
     Assumes sendcount is equal to nranks*recvcount, which means that sendbuff
@@ -937,7 +928,6 @@ def ncclAllGather(object sendbuff, object recvbuff, unsigned long sendcount, obj
     """All-Gather
 
     Each device gathers sendcount values from other GPUs into recvbuff,
-
     receiving data from rank i at offset i*sendcount.
     Assumes recvcount is equal to nranks*sendcount, which means that recvbuff
     should have a size of at least nranks*sendcount elements.
@@ -975,7 +965,6 @@ def ncclSend(object sendbuff, unsigned long count, object datatype, int peer, ob
     """Send
 
     Send data from sendbuff to rank peer.
-
     Rank peer needs to call ncclRecv with the same datatype and the same count from this
     rank.
 
@@ -1012,7 +1001,6 @@ def ncclRecv(object recvbuff, unsigned long count, object datatype, int peer, ob
     """Receive
 
     Receive data from rank peer into recvbuff.
-
     Rank peer needs to call ncclSend with the same datatype and the same count to this
     rank.
 
@@ -1049,7 +1037,6 @@ def ncclGather(object sendbuff, object recvbuff, unsigned long sendcount, object
     """Gather
 
     Root device gathers sendcount values from other GPUs into recvbuff,
-
     receiving data from rank i at offset i*sendcount.
 
     Assumes recvcount is equal to nranks*sendcount, which means that recvbuff
@@ -1088,7 +1075,6 @@ def ncclScatter(object sendbuff, object recvbuff, unsigned long recvcount, objec
     """Scatter
 
     Scattered over the devices so that recvbuff on rank i will contain the i-th
-
     block of the data on root.
 
     Assumes sendcount is equal to nranks*recvcount, which means that sendbuff
@@ -1127,7 +1113,6 @@ def ncclAllToAll(object sendbuff, object recvbuff, unsigned long count, object d
     """All-To-All
 
     Device (i) send (j)th block of data to device (j) and be placed as (i)th
-
     block. Each block for sending/receiving has count elements, which means
     that recvbuff and sendbuff should have a size of nranks*count elements.
 
@@ -1164,7 +1149,6 @@ def ncclAllToAllv(object sendbuff, object sendcounts, object sdispls, object rec
     """All-To-Allv
 
     Device (i) sends sendcounts[j] of data from offset sdispls[j]
-
     to device (j). In the same time, device (i) receives recvcounts[j] of data
     from device (j) to be placed at rdispls[j].
 
