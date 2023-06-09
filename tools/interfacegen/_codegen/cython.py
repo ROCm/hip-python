@@ -1006,14 +1006,8 @@ cdef void* {funptr_name} = NULL
         docstring_returns = []
         docstring_out_arg_returns = []
         docstring_args = []
-        class Formatter(doxyparser.styles.PythonDocstrings):
 
-            @staticmethod
-            def no_args(tokens):
-                cmd = tokens[0][1:]
-                if cmd in ("verbatim","endverbatim"):
-                    return '"""'
-                return []
+        class TranslationRules(doxyparser.styles.PythonDocstrings):
 
             @staticmethod
             def paragraphs_no_args(tokens):
@@ -1039,6 +1033,8 @@ cdef void* {funptr_name} = NULL
                 ):
                     docstring_returns.append(text)
                 elif cmd in (
+                    "alpha", # custom
+                    "beta", # custom
                     #"arg", TODO
                     "attention",
                     "author",
@@ -1072,15 +1068,42 @@ cdef void* {funptr_name} = NULL
                     "in": control.ParmIntent.IN,
                     "in,out": control.ParmIntent.INOUT,
                     "out": control.ParmIntent.OUT,
+                    None: control.ParmIntent.NONE,
                 }
                 name = tokens[2]
-                descr = tokens[3]
+                descr = tokens[3].lstrip(": \t")
                 dir = dir_map[tokens[1]]
                 if name in out_arg_names:
                     docstring_out_arg_returns.append(f"{name}: {descr}")
                 else:
                     docstring_args.append((name,dir,descr))
                 return []
+            
+            @staticmethod
+            def verbatim_begin(tokens):
+                cmd = tokens[0][1:]
+                if cmd == "code" and len(tokens) > 2:
+                    lang = tokens[2][1:]
+                    return f".. code-block:: {lang}\n"
+                return ".. code-block::\n"
+
+            @staticmethod
+            def verbatim_end(tokens):
+                return []
+
+            @staticmethod
+            def math_end(tokens):
+                cmd = tokens[0][1:]
+                if cmd == "f$":
+                    return "`"
+                return []
+
+            @staticmethod
+            def math_begin(tokens):
+                cmd = tokens[0][1:]
+                if cmd == "f$":
+                    return ":math:`"
+                return ".. math::\n"
 
         # Strip everything above @brief (or equivalent) away
         stripped_doxygen_doc = self._raw_comment_stripped()
@@ -1088,8 +1111,8 @@ cdef void* {funptr_name} = NULL
         if m:
             stripped_doxygen_doc = stripped_doxygen_doc[m.start():]
         # Parse
-        grammar = doxyparser.DoxygenGrammar(Formatter)
-        remainder = textwrap.dedent(grammar.transform_string(stripped_doxygen_doc))
+        translater = doxyparser.DoxygenGrammar(TranslationRules)
+        remainder = textwrap.dedent(translater.transform_part_1(stripped_doxygen_doc))
         if doxygen_brief:
             docstring_body = doxygen_brief.rstrip() +"\n\n"
         else:
@@ -1123,9 +1146,16 @@ cdef void* {funptr_name} = NULL
         # Other sections
         for section in doxygen_other_sections:
             docstring_body += section
+        if self.name == "hipsparseSbsrsm2_solve":
+            print(doxygen_details)
+            print("++++++")
+            print(self._raw_comment_stripped())
+            print("++++++")
+            print(docstring_body)
+        docstring_body = translater.transform_part_2(docstring_body,verbatim_indent=" "*3)
         # remove multiple blank lines
         docstring_body = re.sub(r"(\n\s*)+\n+", "\n\n", docstring_body).rstrip()
-        return f'"""{docstring_body}\n"""'
+        return f'r"""{docstring_body}\n"""' # r required if verbatim/code is in body
 
     def _analyze_parms(self, cprefix: str):
         from . import tree

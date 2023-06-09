@@ -197,7 +197,6 @@ def hipfftPlan2d(int nx, int ny, object type):
     """Create a new two-dimensional FFT plan.
 
     Allocate and initialize a new two-dimensional FFT plan.
-
     Two-dimensional data should be stored in C ordering (row-major
     format), so that indexes in y-direction (j index) vary the
     fastest.
@@ -223,7 +222,6 @@ def hipfftPlan3d(int nx, int ny, int nz, object type):
     """Create a new three-dimensional FFT plan.
 
     Allocate and initialize a new three-dimensional FFT plan.
-
     Three-dimensional data should be stored in C ordering (row-major
     format), so that indexes in z-direction (k index) vary the
     fastest.
@@ -327,7 +325,6 @@ def hipfftMakePlan1d(object plan, int nx, object type, int batch):
     """Initialize a new one-dimensional FFT plan.
 
     Assumes that the plan has been created already, and
-
     modifies the plan associated with the plan handle.
 
     Args:
@@ -349,7 +346,6 @@ def hipfftMakePlan2d(object plan, int nx, int ny, object type):
     """Initialize a new two-dimensional FFT plan.
 
     Assumes that the plan has been created already, and
-
     modifies the plan associated with the plan handle.
     Two-dimensional data should be stored in C ordering (row-major
     format), so that indexes in y-direction (j index) vary the
@@ -378,7 +374,6 @@ def hipfftMakePlan3d(object plan, int nx, int ny, int nz, object type):
     """Initialize a new two-dimensional FFT plan.
 
     Assumes that the plan has been created already, and
-
     modifies the plan associated with the plan handle.
     Three-dimensional data should be stored in C ordering (row-major
     format), so that indexes in z-direction (k index) vary the
@@ -408,7 +403,6 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
     """Initialize a new batched rank-dimensional FFT plan with advanced data layout.
 
     Assumes that the plan has been created already, and
-
     modifies the plan associated with the plan handle. The number
     of elements to transform in each direction of the input data
     in the FFT plan is specified in n.
@@ -721,13 +715,13 @@ def hipfftExecC2C(object plan, object idata, object odata, int direction):
     """Execute a (float) complex-to-complex FFT.
 
     If the input and output buffers are equal, an in-place
-
     transform is performed.
 
-    @param plan The FFT plan.
-    @param idata Input data (on device).
-    @param odata Output data (on device).
-    @param direction Either `HIPFFT_FORWARD` or `HIPFFT_BACKWARD`.
+    Args:
+       plan: The FFT plan.
+       idata: Input data (on device).
+       odata: Output data (on device).
+       direction: Either `HIPFFT_FORWARD` or `HIPFFT_BACKWARD`.
     """
     _hipfftExecC2C__retval = hipfftResult_t(chipfft.hipfftExecC2C(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -741,12 +735,12 @@ def hipfftExecR2C(object plan, object idata, object odata):
     """Execute a (float) real-to-complex FFT.
 
     If the input and output buffers are equal, an in-place
-
     transform is performed.
 
-    @param plan The FFT plan.
-    @param idata Input data (on device).
-    @param odata Output data (on device).
+    Args:
+       plan: The FFT plan.
+       idata: Input data (on device).
+       odata: Output data (on device).
     """
     _hipfftExecR2C__retval = hipfftResult_t(chipfft.hipfftExecR2C(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -760,12 +754,12 @@ def hipfftExecC2R(object plan, object idata, object odata):
     """Execute a (float) complex-to-real FFT.
 
     If the input and output buffers are equal, an in-place
-
     transform is performed.
 
-    @param plan The FFT plan.
-    @param idata Input data (on device).
-    @param odata Output data (on device).
+    Args:
+       plan: The FFT plan.
+       idata: Input data (on device).
+       odata: Output data (on device).
     """
     _hipfftExecC2R__retval = hipfftResult_t(chipfft.hipfftExecC2R(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -779,13 +773,13 @@ def hipfftExecZ2Z(object plan, object idata, object odata, int direction):
     """Execute a (double) complex-to-complex FFT.
 
     If the input and output buffers are equal, an in-place
-
     transform is performed.
 
-    @param plan The FFT plan.
-    @param idata Input data (on device).
-    @param odata Output data (on device).
-    @param direction Either `HIPFFT_FORWARD` or `HIPFFT_BACKWARD`.
+    Args:
+       plan: The FFT plan.
+       idata: Input data (on device).
+       odata: Output data (on device).
+       direction: Either `HIPFFT_FORWARD` or `HIPFFT_BACKWARD`.
     """
     _hipfftExecZ2Z__retval = hipfftResult_t(chipfft.hipfftExecZ2Z(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -799,12 +793,12 @@ def hipfftExecD2Z(object plan, object idata, object odata):
     """Execute a (double) real-to-complex FFT.
 
     If the input and output buffers are equal, an in-place
-
     transform is performed.
 
-    @param plan The FFT plan.
-    @param idata Input data (on device).
-    @param odata Output data (on device).
+    Args:
+       plan: The FFT plan.
+       idata: Input data (on device).
+       odata: Output data (on device).
     """
     _hipfftExecD2Z__retval = hipfftResult_t(chipfft.hipfftExecD2Z(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -818,12 +812,12 @@ def hipfftExecZ2D(object plan, object idata, object odata):
     """Execute a (double) complex-to-real FFT.
 
     If the input and output buffers are equal, an in-place
-
     transform is performed.
 
-    @param plan The FFT plan.
-    @param idata Input data (on device).
-    @param odata Output data (on device).
+    Args:
+       plan: The FFT plan.
+       idata: Input data (on device).
+       odata: Output data (on device).
     """
     _hipfftExecZ2D__retval = hipfftResult_t(chipfft.hipfftExecZ2D(
         hipfftHandle_t.from_pyobj(plan)._ptr,
@@ -837,11 +831,11 @@ def hipfftSetStream(object plan, object stream):
     """Set HIP stream to execute plan on.
 
     Associates a HIP stream with a hipFFT plan.  All kernels
-
     launched by this plan are associated with the provided stream.
 
-    @param plan The FFT plan.
-    @param stream The HIP stream.
+    Args:
+       plan: The FFT plan.
+       stream: The HIP stream.
     """
     _hipfftSetStream__retval = hipfftResult_t(chipfft.hipfftSetStream(
         hipfftHandle_t.from_pyobj(plan)._ptr,

@@ -8,6 +8,8 @@ import pyparsing as pyp
 
 import warnings
 
+pyp.ParserElement.setDefaultWhitespaceChars(' \t')
+
 def remove_doxygen_cpp_comments(text: str, dedent=True):
     """Strip away doxygen C++ comment delimiters.
 
@@ -54,39 +56,7 @@ class styles:
 
     """Collection of basic styles that users can base their custom
     style on.
-
-    To set at parse action for the DoxygenGrammar parsers,
-    a user must specify a ``@staticmethod`` with the same name 
-    in a class definition and pass this one
-    to an ``DoxygenGrammar`` instance via ``<mygrammar>.output_style = <mystyle>``.
     """
-
-    class SuppressAll(object):
-        """Suppresses all found expressions.
-        Note:
-            The implementation is complete as it does
-            not specify a parse action for any DoxygenGrammar parser.
-        """
-
-        pass
-
-    class KeepAll(object):
-        """Keeps all found expressions as they are.
-        """
-
-        @staticmethod
-        def identity(s: str,loc: int,tokens: list):
-            
-            tks = list(tokens)
-            offset = loc
-            while len(tks):
-                tk = tks.pop(0)
-                offset = s.find(tk,offset) + len(tk)
-            return s[loc:offset]
-        
-        def __getattribute__(self, name: str):
-            return self.identity
-
 
     class PythonDocstrings:
         """Base class for Python docstring output that
@@ -97,7 +67,7 @@ class styles:
         @staticmethod
         def escaped(tokens):
             expr = tokens[0]
-            if expr == r"\n":
+            if expr == r"\\n":
                 return "\n"
             else:
                 return expr
@@ -114,6 +84,166 @@ class styles:
                 return f"**{arg}**"
             else:  # if cmd in ("p","c"): # monotype
                 return f"``{arg}``"
+
+# for structuring the input
+
+class Node:
+
+    def __init__(self,s,loc,tokens):
+        self.s = s
+        self.parent = None
+        self.children = []
+        self.begin = loc
+        self.end = None
+        self.tokens = tokens
+
+    @property
+    def text(self):
+        if self.end != None:
+            return self.s[self.begin:self.end]
+        else:
+            raise RuntimeError("'end' must not be `None`")
+
+    @property
+    def level(self):
+        curr = self
+        level = 0
+        while curr.parent != None:
+            curr = curr.parent
+            level += 1
+        assert isinstance(self,Root) or level > 0, f"{str(self)}"
+        return level
+    
+    def walk(self,postorder=False):
+        if not postorder:
+            yield self
+        for child in self.children:
+            yield from child.walk()
+        if postorder:
+            yield self
+        
+class Root(Node):
+
+    def __init__(self,s):
+        self.s = s
+        self.parent = None
+        self.children = []
+
+    def add_details_section(self,start,end):
+        self.children.append(
+            Section(
+                self.s,
+                start,
+                [ "\\details", self.s[start:end] ]
+            )
+        )
+        self.children[-1].parent = self
+        self.children[-1].end = end
+        self.children[-1].add_body()
+        return self.children[-1]
+
+class TextBlock(Node):
+    
+    def __init__(self,s,loc,tokens):
+        Node.__init__(self,s,loc,tokens)
+
+class Section(Node):
+    
+    def __init__(self,s,loc,tokens):
+        Node.__init__(self,s,loc,tokens)
+        self.kind = tokens[0][1:]
+        self.end = None
+
+    def add_body(self):
+        assert len(self.children) == 0
+        self.children.append(
+            SectionBody(
+                self.s,
+                self.begin,
+                self.tokens,
+            )
+        )
+        self.children[-1].parent = self
+        self.children[-1].end = self.end
+        return self.children[-1]
+    
+    @property
+    def body(self):
+        result = self.children[0]
+        assert isinstance(result,SectionBody)
+        return result
+    
+    def set_body_from_tokens(self):
+        body = self.tokens[-1]
+        assert isinstance(body,SectionBody)
+        self.children.append(body)
+        self.children[-1].parent = self
+
+class SectionBody(Node):
+
+    def __init__(self,s,loc,tokens):
+        Node.__init__(self,s,loc,tokens)
+        self.kind = tokens[0][1:]
+        self.end = None
+
+    def add_text_block(self,s,start,tokens,end):
+        self.children.append(
+            TextBlock(
+                s,
+                start,
+                tokens,
+            )
+        )
+        self.children[-1].end = end
+        return self.children[-1]
+
+class VerbatimBlock(Node):
+    r"""Verbatim text block expression such
+    as \verbatim ... \endverbatim, \code ... \endcode, ...
+    """
+    
+    def __init__(self,s,loc,tokens):
+        Node.__init__(self,s,loc,tokens)
+        self.kind = tokens[0][1:]
+
+    @property
+    def body(self):
+        return self.tokens[-2]
+    
+    @property
+    def head(self):
+        return self.tokens[:-2]
+    
+    @property
+    def tail(self):
+        return self.tokens[-1]
+
+class MathBlock(Node):
+
+    r"""Math block expression such
+    as \f[ ... \f], \f{eqnarray} ... \f}, ...
+    """
+    
+    def __init__(self,s,loc,tokens):
+        Node.__init__(self,s,loc,tokens)
+        self.kind = tokens[0][1:]
+        if len(tokens) == 5:
+            # '\f{' 'env' '}' '...' '\f}'
+            self.env = tokens[2]
+    
+    @property
+    def body(self):
+        return self.tokens[-2]
+    
+    @property
+    def head(self):
+        return self.tokens[:-2]
+    
+    @property
+    def tail(self):
+        return self.tokens[-1]
+
+# Parser
 
 class DoxygenGrammar:
 
@@ -136,37 +266,41 @@ class DoxygenGrammar:
             "pipe",
             "quot",
         ],
+        "verbatim_end": [
+            "endcode", # yes
+            "enddocbookonly", # yes
+            "enddot", # yes
+            "endhtmlonly", # yes
+            "endlatexonly", # yes
+            "endmanonly", # yes
+            "endmsc", # yes
+            "endrtfonly", # yes
+            "enduml", # yes
+            "endverbatim", # yes
+            "endxmlonly", # yes
+        ],
+        "docbookonly": ["docbookonly"],
+        "latexonly": ["latexonly"],
+        "manonly": ["manonly"],
+        "rtfonly": ["rtfonly"],
+        "verbatim": ["verbatim"],
+        "xmlonly": ["xmlonly"],
         "no_args": [
             "callergraph",
             "callgraph",
-            "docbookonly",
             "else",
-            "endcode",
-            "endcond",
-            "enddocbookonly",
-            "enddot",
-            "endhtmlonly",
-            "endif",
-            "endinternal",
-            "endlatexonly",
-            "endlink",
-            "endmanonly",
-            "endmsc",
-            "endparblock",
-            "endrtfonly",
-            "endsecreflist",
-            "enduml",
-            "endverbatim",
-            "endxmlonly",
+            "endcond", # no
+            "endif", # no
+            "endinternal", # no
+            "endparblock", # no
+            "endsecreflist", # no
             "hidecallergraph",
             "hidecallgraph",
             "hideinitializer",
             "hiderefby",
             "hiderefs",
             "internal",
-            "latexonly",
             "lineinfo",
-            "manonly",
             "nosubgrouping",
             "parblock",
             "private",
@@ -176,14 +310,11 @@ class DoxygenGrammar:
             "public",
             "publicsection",
             "pure",
-            "rtfonly",
             "secreflist",
             "showinitializer",
             "showrefby",
             "showrefs",
             "static",
-            "verbatim",
-            "xmlonly",
         ],
         "with_single_line_text": [
             "addindex",
@@ -203,8 +334,10 @@ class DoxygenGrammar:
             "var",
         ],
         "cond": ["cond"],
-        "section_like": ["paragraph", "section", "subsection", "subsubsection"],
-        "paragraphs_no_args": [
+        "page_section": ["paragraph", "section", "subsection", "subsubsection"],
+        "section_no_args": [
+            "alpha", # custom
+            "beta", # custom
             "arg",
             "attention",
             "author",
@@ -271,8 +404,10 @@ class DoxygenGrammar:
         ],
         "with_exceptionobject": ["exception", "throw", "throws"],
         "with_file_caption": ["diafile", "dotfile", "mscfile"],
-        "with_caption": ["dot", "msc"],
-        "with_linkobject": ["copybrief", "copydetails", "copydoc", "link"],
+        "dot": ["dot"],
+        "msc": ["msc"],
+        "with_linkobject": ["copybrief", "copydetails", "copydoc", 
+                            "link"],
         "with_name_title": ["addtogroup", "weakgroup"],
         "with_name_text": ["ref", "subpage"],
         "with_filename_blockid": ["snippetdoc", "snippetlineno"],
@@ -307,7 +442,7 @@ class DoxygenGrammar:
         "retval": ["retval"],
         "showdate": ["showdate"],
         "snippet": ["snippet"],
-        "startuml": ["startuml"],
+        "startuml": ["startuml"], # yes
         "tableofcontents": ["tableofcontents"],
         "tilde": ["tilde"],
         "tparam": ["tparam"],
@@ -333,10 +468,13 @@ class DoxygenGrammar:
         "xmlonly",
     ]
 
-    def __init__(self,style = styles.KeepAll):
+    def __init__(self,cmd_prefix_chars=r"\\@"):
+        self.cmd_prefix_chars = cmd_prefix_chars
         self._construct_grammer()
-        self._output_style = None
-        self.style = style
+        # __tree: private instance that is not exposed to the user
+        self.__tree = DoxygenGrammar.__new__(DoxygenGrammar)
+        self.__tree.cmd_prefix_chars = cmd_prefix_chars
+        self.__tree._construct_grammer()
 
     def _pyp_cmd(self, cmd, words=True):
         if isinstance(cmd, list):
@@ -344,29 +482,11 @@ class DoxygenGrammar:
         else:
             cmds = [cmd]
         if words:
-            expr = r"[\\@](" + "|".join(cmds) + r")\b"
+            expr = r"["+self.cmd_prefix_chars+"](" + "|".join(cmds) + r")\b"
         else:
-            expr = r"[\\@](" + "|".join(cmds) + r")"
+            expr = r"["+self.cmd_prefix_chars+"](" + "|".join(cmds) + r")"
         #print(expr)
         return pyp.Regex(expr)
-
-    def _pyp_section_indicator(self):
-        """An pyparsing expression for a section indicatior.
-
-        While mentioning the term, doxygen documentation does not clearly define
-        what a 'section indicator' is; see https://www.doxygen.nl/manual/commands.html.
-
-        Here, we interpret section indicators as all commands other
-        than escaped characters and commands with a single <word> argument.
-
-        todo:
-            consider inline HTML
-        """
-        section_indicators = []
-        for kind, cmds in self.kinds.items():
-            if kind not in ["escaped", "with_word"]:
-                section_indicators += cmds
-        return self._pyp_cmd(section_indicators)
 
     def _construct_grammer(self):
         """
@@ -374,38 +494,74 @@ class DoxygenGrammar:
             Use better filename expression than Word of printables, as this
             does not allow whitespace.
         """
-        LPAR, RPAR = pyp.Literal("{"), pyp.Literal("{")
+        LBRACE, RBRACE = pyp.Literal("{"), pyp.Literal("}")
         LBPAR, RBPAR = pyp.Literal("["), pyp.Literal("]")
         DQUOT = pyp.Literal('"')
         IDENT = pyp.pyparsing_common.identifier
         INTEGER = pyp.pyparsing_common.integer
-        BLANK_LINE = pyp.Optional(pyp.LineEnd()) + pyp.LineStart()
+        BLANK_LINE = pyp.Regex("\n[ \t]*\n")
+        # pyp.Optional(pyp.LineEnd()) + pyp.LineStart()
         UNTIL_LINE_END = pyp.SkipTo(pyp.LineEnd())
         OPT_UNTIL_LINE_END = pyp.Optional(UNTIL_LINE_END,default=None)
-        SECTION_INDICATOR = self._pyp_section_indicator()
-        SECTION_TERMINATOR = BLANK_LINE | SECTION_INDICATOR | pyp.StringEnd()
-        UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE = pyp.SkipTo(
+        section = pyp.Forward()
+        SECTION_TERMINATOR = BLANK_LINE | section | pyp.StringEnd()
+        section_body = pyp.SkipTo(
             SECTION_TERMINATOR
         )
         WORD_OF_PRINTABLES = pyp.Word(pyp.printables, pyp.printables)
         OPT_WORD_OF_PRINTABLES = pyp.Optional(WORD_OF_PRINTABLES,default=None)
 
         # ex: \&
-        escaped = self._pyp_cmd(self.kinds["escaped"])
+        CHARS = (
+            r"&",#"amp"
+            r"@",#"at"
+            r"\\",#"backslash"
+            r"\.",#"chardot"
+            r"\$",#"dollar"
+            r"=",#"eq"
+            r">",#"gt"
+            r"#",#"hash"
+            r"<",#"lt"
+            r"n",#"n"
+            r"%",#"perc"
+            r"\|",#"pipe"
+            r"\"",#"quot"
+        )
+        escaped = pyp.Regex(r"\\(::|---?|["+ "".join(CHARS) + r"])").setParseAction(
+            lambda tk: tk[0][1:] if tk != "\\n" else "\n"
+        )
+        del CHARS
+        self._pyp_cmd(self.kinds["escaped"])
         # ex: \callergraph
         no_args = self._pyp_cmd(self.kinds["no_args"])
+        ENDDOCBOOKONLY = self._pyp_cmd("enddocbookonly")
+        ENDLATEXONLY   = self._pyp_cmd("endlatexonly")
+        ENDMANONLY     = self._pyp_cmd("endmanonly")
+        ENDRTFONLY     = self._pyp_cmd("endrtfonly")
+        ENDVERBATIM    = self._pyp_cmd("endverbatim")
+        ENDXMLONLY     = self._pyp_cmd("endxmlonly")
+
+        docbookonly = self._pyp_cmd("docbookonly") + pyp.SkipTo(ENDDOCBOOKONLY) + ENDDOCBOOKONLY
+        latexonly = self._pyp_cmd("latexonly") + pyp.SkipTo(ENDLATEXONLY) + ENDLATEXONLY
+        manonly = self._pyp_cmd("manonly") + pyp.SkipTo(ENDMANONLY) + ENDMANONLY
+        rtfonly = self._pyp_cmd("rtfonly") + pyp.SkipTo(ENDRTFONLY) + ENDRTFONLY
+        verbatim = self._pyp_cmd("verbatim") + pyp.SkipTo(ENDVERBATIM) + ENDVERBATIM
+        xmlonly = self._pyp_cmd("xmlonly") + pyp.SkipTo(ENDXMLONLY) + ENDXMLONLY
+        verbatim_no_args = docbookonly | latexonly | manonly | rtfonly | verbatim | xmlonly
+
+        verbatim_end = self._pyp_cmd(self.kinds["verbatim_end"])
         # ex: # \addindex (text)
         with_single_line_text = (
             self._pyp_cmd(self.kinds["with_single_line_text"]) + UNTIL_LINE_END
         )
         # \paragraph <paragraph-name> (paragraph title)
-        section_like = (
-            self._pyp_cmd(self.kinds["section_like"]) + IDENT + UNTIL_LINE_END
+        page_section = (
+            self._pyp_cmd(self.kinds["page_section"]) + IDENT + UNTIL_LINE_END
         )
         # ex: \arg { item-description }
-        paragraphs_no_args = (
-            self._pyp_cmd(self.kinds["paragraphs_no_args"])
-            + UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE
+        section_no_args = (
+            self._pyp_cmd(self.kinds["section_no_args"])
+            + section_body
         )
         # ex: \a <word>
         with_word = self._pyp_cmd(self.kinds["with_word"]) + WORD_OF_PRINTABLES
@@ -424,7 +580,7 @@ class DoxygenGrammar:
         with_exceptionobject = (
             self._pyp_cmd(self.kinds["with_exceptionobject"])
             + IDENT
-            + UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE
+            + section_body
         )
         # ex: \diafile <file> ["caption"] [<sizeindication>=<size>]
         size_indication = pyp.Regex(r"(width|height)=[0-9]+[a-z]{1,2}")
@@ -438,14 +594,27 @@ class DoxygenGrammar:
             + opt_caption
             + opt_size_indications
         )
-        # ex: \dot ["caption"] [<sizeindication>=<size>]
-        with_caption = (
-            self._pyp_cmd(self.kinds["with_caption"])
+
+        ENDDOT = self._pyp_cmd("enddot")
+        ENDMSC = self._pyp_cmd("endmsc")
+        dot = (
+            self._pyp_cmd("dot")
             + opt_caption
             + opt_size_indications
+            + pyp.SkipTo(ENDDOT) + ENDDOT
+            + ENDDOT
         )
+        msc = (
+            self._pyp_cmd("msc")
+            + opt_caption
+            + opt_size_indications
+            + pyp.SkipTo(ENDMSC) + ENDMSC
+            + ENDMSC
+        )
+        verbatim_with_caption = ENDDOT | ENDMSC
+        
         # ex: \copybrief <link-object>
-        LINK_OBJECT = pyp.Regex("\w+\s*(\(\))?")
+        LINK_OBJECT = pyp.Regex(r"\w+\s*(\(\))?")
         with_linkobject = self._pyp_cmd(self.kinds["with_linkobject"]) + LINK_OBJECT
         # ex: \addtogroup <name> [(title)]
         with_name_title = (
@@ -465,18 +634,19 @@ class DoxygenGrammar:
         # note: No whitespace between first bracket and
         with_lineno_filename = (
             self._pyp_cmd(self.kinds["with_lineno_filename"])
-            + pyp.Optional(LPAR + INTEGER + RPAR)
+            + pyp.Optional(LBRACE + INTEGER + RBRACE)
             + WORD_OF_PRINTABLES
         )
-
-        ## 
 
         # ex: \cite <label>
         cite = self._pyp_cmd("cite") + WORD_OF_PRINTABLES
 
         # \code['{'<word>'}']
         # ex: \code{.py}
-        code = self._pyp_cmd("code") + pyp.Optional(LPAR + WORD_OF_PRINTABLES + RPAR)
+        ENDCODE = self._pyp_cmd("endcode")
+        CODE = self._pyp_cmd("code") + pyp.Optional(LBRACE + pyp.Regex(r"\.\w+") + RBRACE, default=[None,None,None])
+        code = CODE + pyp.SkipTo(ENDCODE) + ENDCODE
+
 
         # \cond [(section-label)]
         cond = self._pyp_cmd("cond") + OPT_UNTIL_LINE_END
@@ -494,19 +664,24 @@ class DoxygenGrammar:
         emoji = self._pyp_cmd("emoji") + pyp.QuotedString('"')
 
         # \f]
-        fbrclose = self._pyp_cmd(r"f\]",words=False)
-
+        FBRCLOSE = self._pyp_cmd(r"f\]",words=False)
         # \f[
-        fbropen = self._pyp_cmd(r"f\[",words=False)
-
+        FBROPEN = self._pyp_cmd(r"f\[",words=False)
         # \f}
-        fcurlyclose = self._pyp_cmd(r"f\}",words=False)
-
+        FCURLYCLOSE = self._pyp_cmd(r"f\}",words=False)
         # \f{environment}{
-        fcurlyopen = self._pyp_cmd(r"f\{",words=False) + IDENT + RPAR + LPAR
-
+        FCURLYOPEN = self._pyp_cmd(r"f\{",words=False)
         # \f$
-        fdollar = self._pyp_cmd(r"f\$",words=False)
+        FDOLLAR = self._pyp_cmd(r"f\$",words=False)
+        # \f)
+        FRNDCLOSE = self._pyp_cmd(r"f\)",words=False)
+        # \f(
+        FRNDOPEN = self._pyp_cmd(r"f\(",words=False)
+
+        fdollar = FDOLLAR +  pyp.SkipTo(FDOLLAR) + FDOLLAR
+        fbr = FBROPEN +  pyp.SkipTo(FBRCLOSE) + FBRCLOSE
+        frnd = FRNDOPEN +  pyp.SkipTo(FRNDCLOSE) + FRNDCLOSE
+        fcurly = FCURLYOPEN + IDENT + RBRACE + LBRACE + pyp.SkipTo(FCURLYCLOSE) + FCURLYCLOSE
 
         # \{
         groupopen = self._pyp_cmd(r"\{",words=False)
@@ -519,14 +694,8 @@ class DoxygenGrammar:
 
         # \fileinfo['{'option'}']
         fileinfo = self._pyp_cmd("code") + pyp.Optional(
-            LPAR + WORD_OF_PRINTABLES + RPAR
+            LBRACE + WORD_OF_PRINTABLES + RBRACE
         )
-
-        # \f)
-        frndclose = self._pyp_cmd(r"f\)",words=False)
-
-        # \f(
-        frndopen = self._pyp_cmd(r"f\(",words=False)
 
         # \headerfile <header-file> [<header-name>]
         headerfile = (
@@ -544,7 +713,7 @@ class DoxygenGrammar:
         htmlonly = self._pyp_cmd("htmlonly") + pyp.Optional(LBPAR + IDENT + RBPAR)
 
         # \image['{'option[,option]'}'] <format> <file> ["caption"] [<sizeindication>=<size>]
-        image_options = pyp.Group(pyp.Optional(LPAR + pyp.delimitedList(IDENT) + RPAR))
+        image_options = pyp.Group(pyp.Optional(LBRACE + pyp.delimitedList(IDENT) + RBRACE))
         image = (
             self._pyp_cmd("image")
             + image_options
@@ -557,7 +726,7 @@ class DoxygenGrammar:
         # \include['{'option'}'] <file-name>
         include = (
             self._pyp_cmd("include")
-            + pyp.Optional(LPAR + IDENT + RPAR)
+            + pyp.Optional(LBRACE + IDENT + RBRACE)
             + WORD_OF_PRINTABLES
         )
 
@@ -577,7 +746,7 @@ class DoxygenGrammar:
         par = (
             self._pyp_cmd("par")
             + OPT_UNTIL_LINE_END
-            + UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE
+            + section_body
         )
 
         # \param '['dir']' <parameter-name> { parameter description }
@@ -587,10 +756,12 @@ class DoxygenGrammar:
         PARAM_NAMES = pyp.delimitedList(IDENT)
         param = (
             self._pyp_cmd("param")
-            + PARAM_DIR
+            + pyp.Optional(PARAM_DIR,default=None)
             + PARAM_NAMES
-            + UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE
+            + section_body
         )
+        del PARAM_DIR
+        del PARAM_NAMES
 
         # \qualifier <label> | "(text)"
         qualifier = self._pyp_cmd("qualifier") + (
@@ -599,7 +770,7 @@ class DoxygenGrammar:
 
         # \retval <return value> { description }
         retval = (
-            self._pyp_cmd("retval") + IDENT + UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE
+            self._pyp_cmd("retval") + IDENT + section_body
         )
 
         # \showdate "<format>" [ <date_time> ]
@@ -608,7 +779,7 @@ class DoxygenGrammar:
         # \snippet['{'option'}'] <file-name> ( block_id )
         snippet = (
             self._pyp_cmd("snippet")
-            + pyp.Optional(LPAR + IDENT + RPAR)
+            + pyp.Optional(LBRACE + IDENT + RBRACE)
             + WORD_OF_PRINTABLES
             + UNTIL_LINE_END
         )
@@ -630,7 +801,7 @@ class DoxygenGrammar:
 
         # \tparam <template-parameter-name> { description }
         tparam = (
-            self._pyp_cmd("tparam") + IDENT + UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE
+            self._pyp_cmd("tparam") + IDENT + section_body
         )
 
         # \vhdlflow [(title for the flow chart)]
@@ -642,142 +813,111 @@ class DoxygenGrammar:
             + IDENT
             + pyp.QuotedString('"')
             + pyp.QuotedString('"')
-            + UNTIL_NEXT_SECTION_INDICATOR_OR_BLANK_LINE
+            + section_body
         )
 
-        formatters = escaped | with_word
-        transformers = no_args
-        exprs = locals()
-        for expr_name in exprs:
-            if expr_name not in ("escaped","with_word") and expr_name in self.kinds:
-                # note: Anchors have unique names, so order is not important
-                transformers = transformers | exprs[expr_name]
-        all = formatters | transformers
+        section <<= section_no_args | param | tparam | retval | xrefitem | par | with_exceptionobject
+        verbatim = code | verbatim_no_args | verbatim_with_caption | startuml
+        math_block = fbr | frnd | fcurly
+        formatting = escaped | with_word | fdollar
+        other = (
+            no_args
+            |with_single_line_text
+            |cond
+            |page_section
+            |with_name
+            |with_filename
+            |with_headerfile_headername
+            |with_file_caption
+            |with_linkobject
+            |with_name_title
+            |with_name_text
+            |with_filename_blockid
+            |with_lineno_filename
+            |cite
+            |defgroup
+            |dir
+            |doxyconfig
+            |emoji
+            |file
+            |fileinfo
+            |headerfile
+            |htmlinclude
+            |image
+            |include
+            |mainpage
+            |name
+            |overload
+            |page
+            |qualifier
+            |showdate
+            |snippet
+            |tableofcontents
+            |tilde
+            |vhdlflow
+        )
+        all = section | verbatim | math_block | formatting | other
         self.__dict__.update(locals())
-
-    def get_parser_name_for_command(self, cmd: str):
-        """Return pyparsing parser name for the given command name.
-
-        Returns:
-            A triple consisting of the pyparsing parser, its attribute name, and a list of the names of all commands
-            that share the parser.
-        Note:
-            Command names can be obtained by visiting
-            https://www.doxygen.nl/manual/commands.html
-            and clicking on the individual commands in the alphabetic list.
-            The command name then appears as #cmd{name} in the URL shown
-            by the browser.
-            Example: ``https://www.doxygen.nl/manual/commands.html#cmdfdollar``
-        Note:
-            Multiple commands may share the same parser.
-        Raises:
-            KeyError: If 'cmd' could not be mapped to a parser.
-        See:
-            https://www.doxygen.nl/manual/commands.html
-        """
-        if cmd.startswith("cmd"):
-            cmd = cmd[3:]
-        for kind, cmds in self.kinds:
-            if cmd in cmds:
-                return kind
-        raise KeyError("No parser found for command '{cmd}'")
 
     def walk_pyparsers(self):
         for kind in self.kinds:
             yield self.__dict__[kind]
 
-    @property
-    def style(self):
-        return self._output_style
+    def parse(self,text: str):
+        """Parse a snippet of doxygen documentation.
 
-    @style.setter
-    def style(self,output_style):
-        self._output_style = output_style
-        # suppress all
-        for kind in self.kinds:
-            pyparser = self.__dict__[kind]
-            try:
-                pyparser.setParseAction(getattr(output_style, kind))
-            except AttributeError:
-                pyparser.setParseAction(styles.KeepAll.identity)
-
-    def _create_text_blocks(self,text: str):
-        """Splits the text into verbatim and non-verbatim blocks.
+        Note:
+            Limitation: Placing doxygen section commands into verbatim, math, and 
+                        code sections will break the parser as it will detect section inside of these environments.
+                        If it is really necessary, we advise to change the case of
+                        at least one of the command name letters or insert some other characters.
         """
-        blocks = []
-        previous_end = 0
-        verbatim_environment = None
-        open = self._pyp_cmd(
-            r"((dot|verbatim|code)\b|f[$[({])", words=False
-        ).setParseAction(lambda tokens: (True,tokens))
-        close = self._pyp_cmd(
-            r"(end(dot|verbatim|code)\b|f[$)\]}])", words=False
-        ).setParseAction(lambda tokens: (False,tokens))
-        open_close = open | close
-        for tokens, start, end in open_close.scanString(text):
-            tokens = tokens[0]
-            #print(tokens)
-            is_open = tokens[0]
-            prefixed_cmd = tokens[1][0]
-            cmd = prefixed_cmd[1:]
-            if cmd == "f$":
-                is_open = (verbatim_environment == None)
-            if is_open:
-                if verbatim_environment == None:
-                    blocks.append( (text[previous_end:end], False) ) # keep the command itself in previous non-verbatim block
-                    verbatim_environment = cmd
-                    previous_end = end
-                    continue
-            # Regarding 'f$', note the 'continue' in the line above
-            if not is_open:
-                if verbatim_environment == None and cmd != "f$":
-                    warnings.warn(f"found '{tokens[0]}' but the respective environment has not been opened")
-                if verbatim_environment != None:
-                    if cmd.startswith("end"):
-                        is_matching_close = cmd[3:] == verbatim_environment
-                    else:
-                        is_matching_close = cmd.replace("]","[").replace(")","(").replace("}","{") == verbatim_environment[0:2]
-                    #
-                    if is_matching_close:
-                        blocks.append( (text[previous_end:start], True) ) # put the command itself in next non-verbatim block
-                        previous_end = start
-                        verbatim_environment = None
-        if verbatim_environment != None:
-            raise RuntimeError(f"environment {verbatim_environment} has never been closed")
-        blocks.append((text[previous_end:],False))
-        return blocks
-
-    def transform_string(self,text: str,**kwargs):    
-        result = ""
-        for content, verbatim in self._create_text_blocks(text):
-            #print(f"{content=}")
-            if verbatim:
-                result += content
-            else:
-                partial_result = self.formatters.transformString(content,**kwargs)
-                #print(f"{partial_result=}")
-                partial_result = self.transformers.transformString(partial_result,**kwargs)
-                result += partial_result
-        return result
+        tree = self.__tree
+        tree.section.setParseAction(Section)
+        tree.section_body.setParseAction(SectionBody)
+        tree.verbatim.setParseAction(VerbatimBlock)
+        tree.math_block.setParseAction(MathBlock)
+        verbatim_or_math = tree.verbatim|tree.math_block
     
-    def search_string(self,text: str,**kwargs):
-        """
-        See:
-            https://pyparsing-docs.readthedocs.io/en/latest/pyparsing.html#pyparsing.ParserElement.search_string
-        """
-        return self.all.searchString(text,**kwargs)
+        def scan_for_verbatim_or_math_(section_body: SectionBody,text,text_start,text_end):
+            # look for verbatim/code
+            section_text = text[text_start:text_end]
+            previous_end = 0
+            print(f"{section_text=}")
+            for tokens, start, end in verbatim_or_math.scanString(section_text):
+                print(tokens)
+                if start != previous_end:
+                    block = section_body.add_text_block(text,text_start+previous_end,tokens,text_start+start)
+                    block.parent = section_body
+                block = tokens[0]
+                assert isinstance(block,(TextBlock,VerbatimBlock,MathBlock))
+                block.s = text
+                block.begin = text_start + start
+                block.end = text_start + end
+                block.parent = section_body
+                section_body.children.append(block)
+                previous_end = end
+                print(f"{block=}")
+            if not len(section_body.children):
+                block = section_body.add_text_block(text,text_start,[section_body.tokens[-1]],text_end)
+                block.parent = section_body
 
-    def scan_string(self,text: str,**kwargs):
-        """
-        See:
-            https://pyparsing-docs.readthedocs.io/en/latest/pyparsing.html#pyparsing.ParserElement.scan_string
-        """
-        return self.all.scanString(text,**kwargs)
-
-    def parse_expr(self,text: str, **kwargs):
-        """Parses a single doxygen command expression.
-
-        See:
-            https://pyparsing-docs.readthedocs.io/en/latest/pyparsing.html#pyparsing.ParserElement.parse_string
-        """ 
-        return self.all.parseString(text,**kwargs)
+        root = Root(text)
+        previous_end = 0
+        for tokens, start, end in tree.section.scanString(text):
+            if start != previous_end:
+                # insert fake details section
+                section = root.add_details_section(previous_end,start)
+                scan_for_verbatim_or_math_(section.body,text,previous_end,end)
+            section = tokens[0]
+            section.parent = root
+            section.end = end
+            section.set_body_from_tokens()
+            scan_for_verbatim_or_math_(section.body,text,start,end)
+            root.children.append(section)
+            previous_end = end
+        if previous_end < len(text):
+            # insert fake details section
+            section = root.add_details_section(previous_end,len(text))
+            scan_for_verbatim_or_math_(section.body,text,previous_end,len(text))
+        return root

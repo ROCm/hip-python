@@ -23,6 +23,7 @@ def DEFAULT_NODE_FILTER(node: "tree.Node"):
     return True
 
 class ParmIntent(enum.IntEnum):
+    NONE = -1
     IN = 0
     INOUT = 1
     OUT = 2

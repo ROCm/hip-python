@@ -185,8 +185,6 @@ hiprtcLinkState = ihiprtcLinkState
 def hiprtcGetErrorString(object result):
     """Returns text string message to explain the error which occurred
 
-    if the hiprtc result is defined, it will return "Invalid HIPRTC error code"
-
     Args:
        result: code to convert to string.
 
@@ -195,6 +193,7 @@ def hiprtcGetErrorString(object result):
        - const char pointer to the NULL-terminated error string
     Warning:
        In HIP, this function returns the name of the error,
+       if the hiprtc result is defined, it will return "Invalid HIPRTC error code"
     See:
        hiprtcResult
     """
@@ -362,9 +361,7 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
 
 @cython.embedsignature(True)
 def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, object headers, object includeNames):
-    """Creates an instance of hiprtcProgram with the given input parameters,
-
-    and sets the output hiprtcProgram prog with it.
+    """Creates an instance of hiprtcProgram with the given input parameters, and sets the output hiprtcProgram prog with it.
 
     Any invalide input parameter, it will return HIPRTC_ERROR_INVALID_INPUT
     or HIPRTC_ERROR_INVALID_PROGRAM.
@@ -414,9 +411,7 @@ def hiprtcDestroyProgram(object prog):
 
 @cython.embedsignature(True)
 def hiprtcGetLoweredName(object prog, const char * name_expression):
-    """Gets the lowered (mangled) name from an instance of hiprtcProgram with the given input parameters,
-
-    and sets the output lowered_name with it.
+    """Gets the lowered (mangled) name from an instance of hiprtcProgram with the given input parameters, and sets the output lowered_name with it.
 
     If any invalide nullptr input parameters, it will return HIPRTC_ERROR_INVALID_INPUT
 
