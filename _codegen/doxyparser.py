@@ -52,7 +52,7 @@ def remove_doxygen_cpp_comments(text: str, dedent=True):
     else:
         return result
 
-class styles:
+class format:
 
     """Collection of basic styles that users can base their custom
     style on.
@@ -84,6 +84,10 @@ class styles:
                 return f"**{arg}**"
             else:  # if cmd in ("p","c"): # monotype
                 return f"``{arg}``"
+            
+        @staticmethod
+        def fdollar(tokens):
+            return f"math:`{tokens[1]}`"
 
 # for structuring the input
 
@@ -97,12 +101,50 @@ class Node:
         self.end = None
         self.tokens = tokens
 
-    @property
-    def text(self):
+    def get_text(self,transform_formatting=False,transform_other=False):
+        """Returns the text contained by this node.
+
+        Args:
+            transforma_formatting (bool): Apply the ``DoxygenParser`` 
+               instance's ``formatting`` pyparser's ``transformString`` 
+               routine to the result. Defaults to False.
+            transform_other (bool): Apply the ``DoxygenParser`` instance's
+              ``other`` pyparser's ``transformString`` routine to the result.
+              Defaults to False.
+        """
         if self.end != None:
-            return self.s[self.begin:self.end]
+            result = self.s[self.begin:self.end]
+            if transform_formatting:
+                result = self.parser.formatting.transformString(result)
+            if transform_other:
+                result = self.parser.other.transformString(result)
+            return result
         else:
             raise RuntimeError("'end' must not be `None`")
+    
+    @property
+    def text(self):
+        r"""Shortcut for ```self.get_text(transform_formatting=False,transform_other=False)```.
+        """
+        return self.get_text()
+
+    @property
+    def transformed_text(self):
+        r"""Shortcut for ```self.get_text(transform_formatting=True,transform_other=True)```.
+        """
+        return self.get_text(transform_formatting=True,transform_other=True)
+
+    @property
+    def root(self):
+        curr = self
+        while curr.parent != None:
+            curr = curr.parent
+        assert isinstance(curr,Root)
+        return curr
+
+    @property
+    def parser(self):
+        return self.root._parser
 
     @property
     def level(self):
@@ -121,13 +163,20 @@ class Node:
             yield from child.walk()
         if postorder:
             yield self
+
+    def __len__(self):
+        return len(self.children)
+    
+    def __getitem__(self,key):
+        return self.children[key]
         
 class Root(Node):
 
-    def __init__(self,s):
+    def __init__(self,s,parser):
         self.s = s
         self.parent = None
         self.children = []
+        self._parser = parser
 
     def add_details_section(self,start,end):
         self.children.append(
@@ -166,12 +215,20 @@ class Section(Node):
         self.children[-1].parent = self
         self.children[-1].end = self.end
         return self.children[-1]
-    
+
     @property
     def body(self):
         result = self.children[0]
         assert isinstance(result,SectionBody)
         return result
+
+    @property
+    def first_block(self):
+        return self.body.children[0]
+
+    @property
+    def blocks(self):
+        return self.body.children
     
     def set_body_from_tokens(self):
         body = self.tokens[-1]
@@ -207,7 +264,7 @@ class VerbatimBlock(Node):
         self.kind = tokens[0][1:]
 
     @property
-    def body(self):
+    def code(self):
         return self.tokens[-2]
     
     @property
@@ -232,7 +289,7 @@ class MathBlock(Node):
             self.env = tokens[2]
     
     @property
-    def body(self):
+    def code(self):
         return self.tokens[-2]
     
     @property
@@ -622,7 +679,7 @@ class DoxygenGrammar:
         )
         # ex: \ref <name> ["(text)"]
         with_name_text = (
-            self._pyp_cmd(self.kinds["with_name_text"]) + IDENT + OPT_UNTIL_LINE_END
+            self._pyp_cmd(self.kinds["with_name_text"]) + IDENT + pyp.Optional(pyp.QuotedString('"'),default=None)
         )
         # ex: \snippetdoc <file-name> ( block_id )
         with_filename_blockid = (
@@ -753,7 +810,7 @@ class DoxygenGrammar:
         PARAM_DIR = pyp.Regex(r"\[\s*(in|out|(\s*in,\s*out))\s*\]").setParseAction(
             lambda tokens: tokens[0][1:-1].replace(" ","")
         ) # remove [] and whitespace
-        PARAM_NAMES = pyp.delimitedList(IDENT)
+        PARAM_NAMES = pyp.Group(pyp.delimitedList(IDENT))
         param = (
             self._pyp_cmd("param")
             + pyp.Optional(PARAM_DIR,default=None)
@@ -863,14 +920,37 @@ class DoxygenGrammar:
         for kind in self.kinds:
             yield self.__dict__[kind]
 
-    def parse(self,text: str):
-        """Parse a snippet of doxygen documentation.
+    def parse_structure(self,text: str) -> Root:
+        r"""Parses a snippet of doxygen documentation and
+        returns a high-level tree structure:
+
+        ```
+        Root
+        |---Section[]
+            |---SectionBody
+                |---(TextBlock|VerbatimBlock|MathBlock)[]
+        ```
+
+        where ``Root`` resembles the root of the tree and 
+        each ``Section`` corresponds to a doxygen section
+        such as `\param ...`, `\note`, ... .
+        The ``SectionBody` nodes contain the section body text, e.g.
+        for ``\note texttext`` it contains `texttext`.
+        `VerbatimBlock` and `MathBlock` instances contain
+        command tokens and text associated with the respective verbatim/math
+        environment. 
+        ``TextBlock` instances contain normal text, which may also
+        contain further untranslated doxygen commands.
+        
+        Such ``TextBlock`` content can then be further processed
+        by specifying a parse action for the respective
+        commands and then calling the ``<this_doxygenparser>.<pyparser>.transformString(text)``
+        routine. The former can be done individually, or collectively via the command groups ``<this_doxygenparser>.formatting`` 
+        and ``<this_doxygenparser>.other``. Returning ``None`` implies no action, ``[]`` that all
+        tokens get removed.
 
         Note:
-            Limitation: Placing doxygen section commands into verbatim, math, and 
-                        code sections will break the parser as it will detect section inside of these environments.
-                        If it is really necessary, we advise to change the case of
-                        at least one of the command name letters or insert some other characters.
+            Inserts fake 'details' sections for free text envclosed between other sections/begin of the docu.
         """
         tree = self.__tree
         tree.section.setParseAction(Section)
@@ -878,14 +958,30 @@ class DoxygenGrammar:
         tree.verbatim.setParseAction(VerbatimBlock)
         tree.math_block.setParseAction(MathBlock)
         verbatim_or_math = tree.verbatim|tree.math_block
+        verbatim_or_math_ext = verbatim_or_math|tree.fdollar # include inline math
+
+        verbatim_or_math_areas = []
+        for _, start, end in verbatim_or_math_ext.scanString(text):
+            verbatim_or_math_areas.append((start,end))
+
+        def overlaps_with_verbatim_or_math_area_(start,end):
+            for (area_start,area_end) in verbatim_or_math_areas:
+                if start > area_start and start < area_end:
+                    return True
+                elif end > area_start and end < area_end:
+                    return True
+            return False
     
+        #print(f"{verbatim_or_math_areas=}")
+
         def scan_for_verbatim_or_math_(section_body: SectionBody,text,text_start,text_end):
+            nonlocal verbatim_or_math
             # look for verbatim/code
             section_text = text[text_start:text_end]
             previous_end = 0
-            print(f"{section_text=}")
+            #print(f"{section_text=}")
             for tokens, start, end in verbatim_or_math.scanString(section_text):
-                print(tokens)
+                #print(tokens)
                 if start != previous_end:
                     block = section_body.add_text_block(text,text_start+previous_end,tokens,text_start+start)
                     block.parent = section_body
@@ -897,23 +993,30 @@ class DoxygenGrammar:
                 block.parent = section_body
                 section_body.children.append(block)
                 previous_end = end
-                print(f"{block=}")
+                #print(f"{block=}")
             if not len(section_body.children):
                 block = section_body.add_text_block(text,text_start,[section_body.tokens[-1]],text_end)
                 block.parent = section_body
 
-        root = Root(text)
+        root = Root(text,self)
         previous_end = 0
         for tokens, start, end in tree.section.scanString(text):
+            #print(f"{(start,end)=}")
+            if overlaps_with_verbatim_or_math_area_(start,end):
+                #print(f"is_in_verbatim_or_math_area_={str(tokens[1:])}")
+                continue
             if start != previous_end:
                 # insert fake details section
                 section = root.add_details_section(previous_end,start)
-                scan_for_verbatim_or_math_(section.body,text,previous_end,end)
+                scan_for_verbatim_or_math_(section.body,text,previous_end,start)
             section = tokens[0]
             section.parent = root
             section.end = end
             section.set_body_from_tokens()
-            scan_for_verbatim_or_math_(section.body,text,start,end)
+            scan_for_verbatim_or_math_(section.body,
+                                       text,
+                                       section.body.begin, # excludes the command and command parameters
+                                       end)
             root.children.append(section)
             previous_end = end
         if previous_end < len(text):

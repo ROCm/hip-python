@@ -41,20 +41,20 @@ will result in undefined behavior.
                 at the end of the text. \c Monotype text.
 
 \verbatim
-# changing doxygen command to lower case in verbatim-like environments will break the parser
-\PARAM[in,out] param4 this will not be changed.
+
+\param[in,out] param4 this will not be changed.
 
 \endverbatim
 
 \f[
 
-  \textit{\PARAM[in,out] param5 this will not be changed.}
+  \textit{\param[in,out] param5 this will not be changed.}
 
 \f]
 
 @f{eqnarray}{
 
-  \textit{\PARAM[in,out] param6 this will not be changed.}
+  \textit{\param[in,out] param6 this will not be changed.}
 
 @f}
 
@@ -73,79 +73,20 @@ hipHostFree, hipHostMalloc
 for mtch in grammar.all.scanString(doxygen_input):
     print(mtch)
 
-#class MyParamFormatter(doxyparser.styles.PythonDocstrings):
-#
-#    @staticmethod
-#    def paragraphs_no_args(tokens):
-#        cmd = tokens[0][1:]
-#        text_lines = tokens[1].lstrip().splitlines(keepends=False)
-#        if cmd in ("short","brief"):
-#            doxygen_brief =  " ".join(text_lines)
-#            return doxygen_brief + "\n"
-#        if cmd == "note":
-#            return "Note:\n"+textwrap.indent("\n".join([ln.lstrip() for ln in text_lines])," "*3)
-#        return None
-#
-#    @staticmethod
-#    def param(tokens):
-#        # ['\\param', '[in]', 'param1', 'My description ending at the next param section.']
-#        print(tokens)
-#        dir_map = {
-#            "in": "IN",
-#            "in,out": "INOUT",
-#            "out": "OUT",
-#            None: "Unspecified",
-#        }
-#        name = tokens[2]
-#        descr = tokens[3]
-#        dir = dir_map[tokens[1]]
-#        return f":param {name}: {descr.rstrip()}. Direction: {dir}\n"
-#
-#    @staticmethod
-#    def verbatim_begin(tokens):
-#        cmd = tokens[0][1:]
-#        if cmd == "code" and len(tokens) > 2:
-#            lang = tokens[2][1:]
-#            return f".. code-block:: {lang}\n"
-#        return ".. code-block::\n"
-#        
-#    
-#    @staticmethod
-#    def verbatim_end(tokens):
-#        return []
-#    
-#    @staticmethod
-#    def math_end(tokens):
-#        cmd = tokens[0][1:]
-#        if cmd == "f$":
-#            return "`"
-#        return []
-#    
-#    @staticmethod
-#    def math_begin(tokens):
-#        cmd = tokens[0][1:]
-#        if cmd == "f$":
-#            return ":math:`"
-#        return ".. math::"
+grammar.escaped.setParseAction(doxyparser.format.PythonDocstrings.escaped)
+grammar.with_word.setParseAction(doxyparser.format.PythonDocstrings.with_word)
+grammar.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
 
-for node in grammar.parse(doxygen_input).walk():
+for node in grammar.parse_structure(doxygen_input).walk():
     print(f"{' '*node.level}{str(node)}")
     if isinstance(node,doxyparser.MathBlock):
-        print(node.body)
-    if isinstance(node,doxyparser.VerbatimBlock):
-        print(node.body)
-    #if isinstance(node,doxyparser.Section):
-    #    print(f"{' '*node.level}{node.kind}")
-    #elif isinstance(node,doxyparser.TextBlock):
-    #    print(f"{' '*node.level}'{node.tokens[-1]}'")
-        
-    
-#grammar.style = MyParamFormatter
-#
-#text = grammar.transform_part_1(doxygen_input)
-##print(text)
-#text = grammar.transform_part_2(text,verbatim_indent=" "*3)
-#print(text)
+        print(node.text)
+    elif isinstance(node,doxyparser.VerbatimBlock):
+        print(node.text)
+    elif isinstance(node,doxyparser.TextBlock):
+        print(node.parent.parent.tokens)
+        print(node.parent.tokens)
+        print(node.transformed_text)
 
 #
 
