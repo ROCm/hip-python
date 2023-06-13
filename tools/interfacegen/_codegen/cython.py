@@ -992,9 +992,66 @@ cdef void* {funptr_name} = NULL
     return (<{typename} (*)({parm_types}){modifiers}> {funptr_name})({parm_names})
 """
 
+    @staticmethod
+    def _render_doxygen_section_body(section,single_level_indent,outer_indent) -> str:
+        """Renders the body of a doxygen section.
+        """
+        result = ""
+        for block in section.blocks:
+            if isinstance(block,doxyparser.TextBlock):
+                # variants we've seen
+                # \note: texttext => firstline == ": texttext"
+                # \note texttext
+                # \note texttext
+                #    texttext
+                lines = block.transformed_text.lstrip(":\n\t ").rstrip().splitlines()
+                if len(lines):
+                    firstline = lines[0]
+                    other_lines = lines[1:]
+                    if len(other_lines):
+                        transformed_text = (
+                            firstline + "\n"
+                            + textwrap.dedent("\n".join(other_lines))
+                        )
+                    else:
+                        transformed_text = firstline
+                    result += textwrap.indent(transformed_text,outer_indent) + "\n"
+            elif isinstance(block,doxyparser.VerbatimBlock):
+                result += f"\n{outer_indent}.. code-block::"
+                if block.kind == "code": # \code { lang } TEXT \endcode
+                    if block.tokens == 6:
+                        lang = block.tokens[2][1:]
+                        result += lang
+                result += "\n\n"
+                inner_indent = outer_indent+" "*3
+                code = textwrap.dedent(block.code)
+                result += textwrap.indent(code,inner_indent) + "\n\n"
+            elif isinstance(block,doxyparser.MathBlock):
+                inner_indent = outer_indent+" "*3
+                result += f"\n{outer_indent}.. math::\n"
+                if block.env != None:
+                    result += "{inner_indent}:nowrap:"
+                    result += rf"{inner_indent}\begin{{{block.env}}}\n"
+                result += "\n"
+                code = textwrap.dedent(block.code)
+                result += textwrap.indent(code,inner_indent).rstrip() + "\n"
+                if block.env != None:
+                    result += rf"{inner_indent}\end{{{block.env}}}\n"
+                result += "\n"
+        return result
+    
+    @staticmethod
+    def _dedent_first_line(text: str) -> str:
+        lines = text.splitlines(keepends=True)
+        result = lines[0].strip(" \t")
+        if len(lines) > 1:
+            result += "".join(lines[1:])
+        return result
+
     def _raw_comment_as_docstring(self,out_parms): # TODO make optional
         """Converts doxygen comment to a Python docstring using the doxyparser API.
         """
+        # TODO handle groups; issue detecting addgroup; detecting ingroup is easier
         from . import tree
 
         assert isinstance(self, tree.Function)
@@ -1009,60 +1066,16 @@ cdef void* {funptr_name} = NULL
         translater.escaped.setParseAction(doxyparser.format.PythonDocstrings.escaped)
         translater.with_word.setParseAction(doxyparser.format.PythonDocstrings.with_word)
         translater.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
+        translater.frnd.setParseAction(doxyparser.format.PythonDocstrings.frnd)
         def other_parse_action(tokens):
             cmd = tokens[0][1:]
             if cmd == "ref":
                 return f"``{tokens[1]}`` "
             return [] # suppress all others
         translater.other.setParseAction(other_parse_action)
+
         tree = translater.parse_structure(self._raw_comment_stripped())
         sections = list(tree.children)
-
-        def render_section_body_(section,outer_indent="") -> str:
-            nonlocal single_level_indent
-            result = ""
-            for block in section.blocks:
-                if isinstance(block,doxyparser.TextBlock):
-                    # variants we've seen
-                    # \note: texttext => firstline == ": texttext"
-                    # \note texttext
-                    # \note texttext
-                    #    texttext
-                    lines = block.transformed_text.lstrip(":\n\t ").rstrip().splitlines()
-                    if len(lines):
-                        firstline = lines[0]
-                        other_lines = lines[1:]
-                        if len(other_lines):
-                            transformed_text = (
-                                firstline + "\n"
-                                + textwrap.dedent("\n".join(other_lines))
-                            )
-                        else:
-                            transformed_text = firstline
-                        result += textwrap.indent(transformed_text,outer_indent) + "\n"
-                elif isinstance(block,doxyparser.VerbatimBlock):
-                    result += f"\n{outer_indent}.. code-block::"
-                    if block.kind == "code": # \code { lang } TEXT \endcode
-                        if block.tokens == 6:
-                            lang = block.tokens[2][1:]
-                            result += lang
-                    result += "\n\n"
-                    code = textwrap.dedent(block.code)
-                    result += textwrap.indent(code,outer_indent+single_level_indent) + "\n"
-                elif isinstance(block,doxyparser.MathBlock):
-                    # TODO better handling of '\f[' vs '\f(' vs '\f{env}{'
-                    result += f"\n{outer_indent}.. math::\n\n"
-                    code = textwrap.dedent(block.code)
-                    result += textwrap.indent(code,outer_indent+single_level_indent) + "\n"
-            return result
-        
-        def dedent_first_line_(text: str) -> str:
-            lines = text.splitlines(keepends=True)
-            result = lines[0].strip()
-            if len(lines) > 1:
-                result += "\n" + "".join(lines[1:])
-            return result
-
         # brief
         doxygen_brief = next((sec for sec in sections if sec.kind in ("brief","short")),None)
         if doxygen_brief != None:
@@ -1088,23 +1101,18 @@ cdef void* {funptr_name} = NULL
               "return",
               "returns",
             ):
-                descr = render_section_body_(section,outer_indent=single_level_indent).lstrip("-* \t")
+                descr = self._render_doxygen_section_body(section,single_level_indent,outer_indent=single_level_indent).lstrip("-* \t")
                 docstring_returns.append(descr)
             elif section.kind == "param":
                 # ['\\param', '[in]', 'param1', 'Description text is here.']
-                dir_map = {
-                    "in": control.ParmIntent.IN,
-                    "in,out": control.ParmIntent.INOUT,
-                    "out": control.ParmIntent.OUT,
-                    None: control.ParmIntent.NONE,
-                }
                 names = section.tokens[2]
                 # Args:
                 #    <arg>: line1
                 #       line2
                 # ^ hence, 2x indent for descr
-                descr = dedent_first_line_(render_section_body_(section,outer_indent=single_level_indent*3).rstrip()+"\n")
-                dir = dir_map[section.tokens[1]]
+                descr = self._dedent_first_line(self._render_doxygen_section_body(section,single_level_indent,outer_indent=single_level_indent*2).rstrip()+"\n")
+                descr = descr.lstrip("-*")
+                dir = (f"**{section.tokens[1].replace(' ','')}** ") if section.tokens[1] != None else ""
                 for name in names:
                     if not len(descr.strip()):
                         warnings.warn(f"function {self.name}: doxygen: doxygen param '{name}' has empty documentation")
@@ -1118,12 +1126,15 @@ cdef void* {funptr_name} = NULL
                         docstring_args.append((name,dir,descr))
             else:
                 docstring_body += "\n"
-                if section.kind == "details":
+                if section.kind in ("details","details*"):
                     outer_indent = ""
+                    if self.name == "hipsparseScsrmm2":
+                        print(section.kind)
+                        print(section.first_block.text)
                 else:
-                    docstring_body += section.kind[0].upper() + section.kind[1:] + ":\n"
+                    docstring_body += f"\n{section.kind[0].upper() + section.kind[1:]}:\n"
                     outer_indent = single_level_indent
-                docstring_body += render_section_body_(section,outer_indent)
+                docstring_body += self._render_doxygen_section_body(section,single_level_indent,outer_indent)
         # Args
         if len(undocumented_parms_dict):
             for name in undocumented_parms_dict:
@@ -1132,9 +1143,11 @@ cdef void* {funptr_name} = NULL
         if len(docstring_args):
             docstring_body += "\nArgs:\n"
 
-            for (name, _, descr) in docstring_args:
-                docstring_body += f"{single_level_indent}{name}: {descr}\n"
+            for (name, dir, descr) in docstring_args:
+                docstring_body += f"{single_level_indent}{name}: {dir}{descr}\n"
         # Return values
+        if not len(docstring_returns) and not self.is_void:
+            warnings.warn(f"function {self.name}: doxygen: undocumented return value")
         docstring_returns += docstring_out_arg_returns # add the additional return parameter
         if len(docstring_returns):
             docstring_body += "\nReturns:\n"

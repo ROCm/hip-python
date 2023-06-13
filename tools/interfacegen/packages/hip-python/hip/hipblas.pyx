@@ -733,20 +733,22 @@ def hipblasSetVector(int n, int elemSize, object x, int incx, object y, int incy
     r"""copy vector from host to device
 
     Args:
-        n: [int]
-                number of elements in the vector
+        n: **[in]** [int]
+            number of elements in the vector
 
-        elemSize: [int]
-                Size of both vectors in bytes
+        elemSize: **[in]** [int]
+            Size of both vectors in bytes
 
-        x: pointer to vector on the host
-        incx: [int]
-                specifies the increment for the elements of the vector
+        x: **[in]** pointer to vector on the host
 
-        y: pointer to vector on the device
-        incy: [int]
-                          specifies the increment for the elements of the vector
-                ******************************************************************
+        incx: **[in]** [int]
+            specifies the increment for the elements of the vector
+
+        y: **[out]** pointer to vector on the device
+
+        incy: **[in]** [int]
+                      specifies the increment for the elements of the vector
+            ******************************************************************
     """
     _hipblasSetVector__retval = hipblasStatus_t(chipblas.hipblasSetVector(n,elemSize,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -759,20 +761,22 @@ def hipblasGetVector(int n, int elemSize, object x, int incx, object y, int incy
     r"""copy vector from device to host
 
     Args:
-        n: [int]
-                number of elements in the vector
+        n: **[in]** [int]
+            number of elements in the vector
 
-        elemSize: [int]
-                Size of both vectors in bytes
+        elemSize: **[in]** [int]
+            Size of both vectors in bytes
 
-        x: pointer to vector on the device
-        incx: [int]
-                specifies the increment for the elements of the vector
+        x: **[in]** pointer to vector on the device
 
-        y: pointer to vector on the host
-        incy: [int]
-                          specifies the increment for the elements of the vector
-                ******************************************************************
+        incx: **[in]** [int]
+            specifies the increment for the elements of the vector
+
+        y: **[out]** pointer to vector on the host
+
+        incy: **[in]** [int]
+                      specifies the increment for the elements of the vector
+            ******************************************************************
     """
     _hipblasGetVector__retval = hipblasStatus_t(chipblas.hipblasGetVector(n,elemSize,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -785,23 +789,25 @@ def hipblasSetMatrix(int rows, int cols, int elemSize, object AP, int lda, objec
     r"""copy matrix from host to device
 
     Args:
-        rows: [int]
-                number of rows in matrices
+        rows: **[in]** [int]
+            number of rows in matrices
 
-        cols: [int]
-                number of columns in matrices
+        cols: **[in]** [int]
+            number of columns in matrices
 
-        elemSize: [int]
-                number of bytes per element in the matrix
+        elemSize: **[in]** [int]
+            number of bytes per element in the matrix
 
-        AP: pointer to matrix on the host
-        lda: [int]
-                specifies the leading dimension of A, lda >= rows
+        AP: **[in]** pointer to matrix on the host
 
-        BP: pointer to matrix on the GPU
-        ldb: [int]
-                          specifies the leading dimension of B, ldb >= rows
-                ******************************************************************
+        lda: **[in]** [int]
+            specifies the leading dimension of A, lda >= rows
+
+        BP: **[out]** pointer to matrix on the GPU
+
+        ldb: **[in]** [int]
+                      specifies the leading dimension of B, ldb >= rows
+            ******************************************************************
     """
     _hipblasSetMatrix__retval = hipblasStatus_t(chipblas.hipblasSetMatrix(rows,cols,elemSize,
         <const void *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -814,23 +820,25 @@ def hipblasGetMatrix(int rows, int cols, int elemSize, object AP, int lda, objec
     r"""copy matrix from device to host
 
     Args:
-        rows: [int]
-                number of rows in matrices
+        rows: **[in]** [int]
+            number of rows in matrices
 
-        cols: [int]
-                number of columns in matrices
+        cols: **[in]** [int]
+            number of columns in matrices
 
-        elemSize: [int]
-                number of bytes per element in the matrix
+        elemSize: **[in]** [int]
+            number of bytes per element in the matrix
 
-        AP: pointer to matrix on the GPU
-        lda: [int]
-                specifies the leading dimension of A, lda >= rows
+        AP: **[in]** pointer to matrix on the GPU
 
-        BP: pointer to matrix on the host
-        ldb: [int]
-                          specifies the leading dimension of B, ldb >= rows
-                ******************************************************************
+        lda: **[in]** [int]
+            specifies the leading dimension of A, lda >= rows
+
+        BP: **[out]** pointer to matrix on the host
+
+        ldb: **[in]** [int]
+                      specifies the leading dimension of B, ldb >= rows
+            ******************************************************************
     """
     _hipblasGetMatrix__retval = hipblasStatus_t(chipblas.hipblasGetMatrix(rows,cols,elemSize,
         <const void *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -846,22 +854,24 @@ def hipblasSetVectorAsync(int n, int elemSize, object x, int incx, object y, int
     Memory on the host must be allocated with hipHostMalloc or the transfer will be synchronous.
 
     Args:
-        n: [int]
-                number of elements in the vector
+        n: **[in]** [int]
+            number of elements in the vector
 
-        elemSize: [int]
-                number of bytes per element in the matrix
+        elemSize: **[in]** [int]
+            number of bytes per element in the matrix
 
-        x: pointer to vector on the host
-        incx: [int]
-                specifies the increment for the elements of the vector
+        x: **[in]** pointer to vector on the host
 
-        y: pointer to vector on the device
-        incy: [int]
-                specifies the increment for the elements of the vector
+        incx: **[in]** [int]
+            specifies the increment for the elements of the vector
 
-        stream: specifies the stream into which this transfer request is queued
-                ******************************************************************
+        y: **[out]** pointer to vector on the device
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of the vector
+
+        stream: **[in]** specifies the stream into which this transfer request is queued
+            ******************************************************************
     """
     _hipblasSetVectorAsync__retval = hipblasStatus_t(chipblas.hipblasSetVectorAsync(n,elemSize,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -878,22 +888,24 @@ def hipblasGetVectorAsync(int n, int elemSize, object x, int incx, object y, int
     Memory on the host must be allocated with hipHostMalloc or the transfer will be synchronous.
 
     Args:
-        n: [int]
-                number of elements in the vector
+        n: **[in]** [int]
+            number of elements in the vector
 
-        elemSize: [int]
-                number of bytes per element in the matrix
+        elemSize: **[in]** [int]
+            number of bytes per element in the matrix
 
-        x: pointer to vector on the device
-        incx: [int]
-                specifies the increment for the elements of the vector
+        x: **[in]** pointer to vector on the device
 
-        y: pointer to vector on the host
-        incy: [int]
-                specifies the increment for the elements of the vector
+        incx: **[in]** [int]
+            specifies the increment for the elements of the vector
 
-        stream: specifies the stream into which this transfer request is queued
-                ******************************************************************
+        y: **[out]** pointer to vector on the host
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of the vector
+
+        stream: **[in]** specifies the stream into which this transfer request is queued
+            ******************************************************************
     """
     _hipblasGetVectorAsync__retval = hipblasStatus_t(chipblas.hipblasGetVectorAsync(n,elemSize,
         <const void *>hip._util.types.DataHandle.from_pyobj(x)._ptr,incx,
@@ -910,25 +922,27 @@ def hipblasSetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
     Memory on the host must be allocated with hipHostMalloc or the transfer will be synchronous.
 
     Args:
-        rows: [int]
-                number of rows in matrices
+        rows: **[in]** [int]
+            number of rows in matrices
 
-        cols: [int]
-                number of columns in matrices
+        cols: **[in]** [int]
+            number of columns in matrices
 
-        elemSize: [int]
-                number of bytes per element in the matrix
+        elemSize: **[in]** [int]
+            number of bytes per element in the matrix
 
-        AP: pointer to matrix on the host
-        lda: [int]
-                specifies the leading dimension of A, lda >= rows
+        AP: **[in]** pointer to matrix on the host
 
-        BP: pointer to matrix on the GPU
-        ldb: [int]
-                specifies the leading dimension of B, ldb >= rows
+        lda: **[in]** [int]
+            specifies the leading dimension of A, lda >= rows
 
-        stream: specifies the stream into which this transfer request is queued
-                ******************************************************************
+        BP: **[out]** pointer to matrix on the GPU
+
+        ldb: **[in]** [int]
+            specifies the leading dimension of B, ldb >= rows
+
+        stream: **[in]** specifies the stream into which this transfer request is queued
+            ******************************************************************
     """
     _hipblasSetMatrixAsync__retval = hipblasStatus_t(chipblas.hipblasSetMatrixAsync(rows,cols,elemSize,
         <const void *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -945,25 +959,27 @@ def hipblasGetMatrixAsync(int rows, int cols, int elemSize, object AP, int lda, 
     Memory on the host must be allocated with hipHostMalloc or the transfer will be synchronous.
 
     Args:
-        rows: [int]
-                number of rows in matrices
+        rows: **[in]** [int]
+            number of rows in matrices
 
-        cols: [int]
-                number of columns in matrices
+        cols: **[in]** [int]
+            number of columns in matrices
 
-        elemSize: [int]
-                number of bytes per element in the matrix
+        elemSize: **[in]** [int]
+            number of bytes per element in the matrix
 
-        AP: pointer to matrix on the GPU
-        lda: [int]
-                specifies the leading dimension of A, lda >= rows
+        AP: **[in]** pointer to matrix on the GPU
 
-        BP: pointer to matrix on the host
-        ldb: [int]
-                specifies the leading dimension of B, ldb >= rows
+        lda: **[in]** [int]
+            specifies the leading dimension of A, lda >= rows
 
-        stream: specifies the stream into which this transfer request is queued
-                ******************************************************************
+        BP: **[out]** pointer to matrix on the host
+
+        ldb: **[in]** [int]
+            specifies the leading dimension of B, ldb >= rows
+
+        stream: **[in]** specifies the stream into which this transfer request is queued
+            ******************************************************************
     """
     _hipblasGetMatrixAsync__retval = hipblasStatus_t(chipblas.hipblasGetMatrixAsync(rows,cols,elemSize,
         <const void *>hip._util.types.DataHandle.from_pyobj(AP)._ptr,lda,
@@ -1003,20 +1019,20 @@ def hipblasIsamax(object handle, int n, object x, int incx, object result):
     - Supported precisions in cuBLAS  : s,d,c,z.
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x.
+        n: **[in]** [int]
+            the number of elements in x.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                result
-                          device pointer or host pointer to store the amax index.
-                          return is 0.0 if n, incx<=0.
-                 ******************************************************************
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        result: **[inout]** device pointer or host pointer to store the amax index.
+                     return is 0.0 if n, incx<=0.
+            ******************************************************************
     """
     _hipblasIsamax__retval = hipblasStatus_t(chipblas.hipblasIsamax(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1068,22 +1084,23 @@ def hipblasIsamaxBatched(object handle, int n, object x, int incx, int batchCoun
     - Supported precisions in cuBLAS  : No support.
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                number of elements in each vector x_i
+        n: **[in]** [int]
+            number of elements in each vector x_i
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i. incx must be > 0.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch, must be > 0.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i. incx must be > 0.
 
-        result: device or host array of pointers of batchCount size for results.
-                         return is 0 if n, incx<=0.
-                ******************************************************************
+        batchCount: **[in]** [int]
+            number of instances in the batch, must be > 0.
+
+        result: **[out]** device or host array of pointers of batchCount size for results.
+                     return is 0 if n, incx<=0.
+            ******************************************************************
     """
     _hipblasIsamaxBatched__retval = hipblasStatus_t(chipblas.hipblasIsamaxBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1137,24 +1154,25 @@ def hipblasIsamaxStridedBatched(object handle, int n, object x, int incx, long s
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                number of elements in each vector x_i
+        n: **[in]** [int]
+            number of elements in each vector x_i
 
-        x: device pointer to the first vector x_1.
-        incx: [int]
-                specifies the increment for the elements of each x_i. incx must be > 0.
+        x: **[in]** device pointer to the first vector x_1.
 
-        stridex: [hipblasStride]
-                specifies the pointer increment between one x_i and the next x_(i + 1).
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i. incx must be > 0.
 
-        batchCount: [int]
-                number of instances in the batch
+        stridex: **[in]** [hipblasStride]
+            specifies the pointer increment between one x_i and the next x_(i + 1).
 
-        result: device or host pointer for storing contiguous batchCount results.
-                return is 0 if n <= 0, incx<=0.
+        batchCount: **[in]** [int]
+            number of instances in the batch
+
+        result: **[out]** device or host pointer for storing contiguous batchCount results.
+            return is 0 if n <= 0, incx<=0.
     """
     _hipblasIsamaxStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIsamaxStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1206,20 +1224,20 @@ def hipblasIsamin(object handle, int n, object x, int incx, object result):
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x.
+        n: **[in]** [int]
+            the number of elements in x.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                result
-                          device pointer or host pointer to store the amin index.
-                          return is 0.0 if n, incx<=0.
-                 ******************************************************************
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        result: **[inout]** device pointer or host pointer to store the amin index.
+                     return is 0.0 if n, incx<=0.
+            ******************************************************************
     """
     _hipblasIsamin__retval = hipblasStatus_t(chipblas.hipblasIsamin(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1271,22 +1289,23 @@ def hipblasIsaminBatched(object handle, int n, object x, int incx, int batchCoun
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                number of elements in each vector x_i
+        n: **[in]** [int]
+            number of elements in each vector x_i
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i. incx must be > 0.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch, must be > 0.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i. incx must be > 0.
 
-        result: device or host pointers to array of batchCount size for results.
-                         return is 0 if n, incx<=0.
-                ******************************************************************
+        batchCount: **[in]** [int]
+            number of instances in the batch, must be > 0.
+
+        result: **[out]** device or host pointers to array of batchCount size for results.
+                     return is 0 if n, incx<=0.
+            ******************************************************************
     """
     _hipblasIsaminBatched__retval = hipblasStatus_t(chipblas.hipblasIsaminBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1340,24 +1359,25 @@ def hipblasIsaminStridedBatched(object handle, int n, object x, int incx, long s
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                number of elements in each vector x_i
+        n: **[in]** [int]
+            number of elements in each vector x_i
 
-        x: device pointer to the first vector x_1.
-        incx: [int]
-                specifies the increment for the elements of each x_i. incx must be > 0.
+        x: **[in]** device pointer to the first vector x_1.
 
-        stridex: [hipblasStride]
-                specifies the pointer increment between one x_i and the next x_(i + 1)
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i. incx must be > 0.
 
-        batchCount: [int]
-                number of instances in the batch
+        stridex: **[in]** [hipblasStride]
+            specifies the pointer increment between one x_i and the next x_(i + 1)
 
-        result: device or host pointer to array for storing contiguous batchCount results.
-                return is 0 if n <= 0, incx<=0.
+        batchCount: **[in]** [int]
+            number of instances in the batch
+
+        result: **[out]** device or host pointer to array for storing contiguous batchCount results.
+            return is 0 if n <= 0, incx<=0.
     """
     _hipblasIsaminStridedBatched__retval = hipblasStatus_t(chipblas.hipblasIsaminStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1412,19 +1432,19 @@ def hipblasSasum(object handle, int n, object x, int incx, object result):
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x and y.
+        n: **[in]** [int]
+            the number of elements in x and y.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                          specifies the increment for the elements of x. incx must be > 0.
-                @param[inout]
-                result
-                          device pointer or host pointer to store the asum product.
-                          return is 0.0 if n <= 0.
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x. incx must be > 0.
+
+        result: **[inout]** device pointer or host pointer to store the asum product.
+            return is 0.0 if n <= 0.
     """
     _hipblasSasum__retval = hipblasStatus_t(chipblas.hipblasSasum(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1478,22 +1498,23 @@ def hipblasSasumBatched(object handle, int n, object x, int incx, int batchCount
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                number of elements in each vector x_i
+        n: **[in]** [int]
+            number of elements in each vector x_i
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i. incx must be > 0.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i. incx must be > 0.
 
-        result: device array or host array of batchCount size for results.
-                         return is 0.0 if n, incx<=0.
-                ******************************************************************
+        batchCount: **[in]** [int]
+            number of instances in the batch.
+
+        result: **[out]** device array or host array of batchCount size for results.
+                     return is 0.0 if n, incx<=0.
+            ******************************************************************
     """
     _hipblasSasumBatched__retval = hipblasStatus_t(chipblas.hipblasSasumBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1547,28 +1568,29 @@ def hipblasSasumStridedBatched(object handle, int n, object x, int incx, long st
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                number of elements in each vector x_i
+        n: **[in]** [int]
+            number of elements in each vector x_i
 
-        x: device pointer to the first vector x_1.
-        incx: [int]
-                specifies the increment for the elements of each x_i. incx must be > 0.
+        x: **[in]** device pointer to the first vector x_1.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
-                There are no restrictions placed on stride_x, however the user should
-                take care to ensure that stride_x is of appropriate size, for a typical
-                case this means stride_x >= n * incx.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i. incx must be > 0.
 
-        batchCount: [int]
-                number of instances in the batch
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stride_x, however the user should
+            take care to ensure that stride_x is of appropriate size, for a typical
+            case this means stride_x >= n * incx.
 
-        result: device pointer or host pointer to array for storing contiguous batchCount results.
-                         return is 0.0 if n, incx<=0.
-                ******************************************************************
+        batchCount: **[in]** [int]
+            number of instances in the batch
+
+        result: **[out]** device pointer or host pointer to array for storing contiguous batchCount results.
+                     return is 0.0 if n, incx<=0.
+            ******************************************************************
     """
     _hipblasSasumStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSasumStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1624,21 +1646,23 @@ def hipblasHaxpy(object handle, int n, object alpha, object x, int incx, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x and y.
+        n: **[in]** [int]
+            the number of elements in x and y.
 
-        alpha: device pointer or host pointer to specify the scalar alpha.
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        alpha: **[in]** device pointer or host pointer to specify the scalar alpha.
 
-        y: device pointer storing vector y.
-                @param[inout]
-                incy      [int]
-                          specifies the increment for the elements of y.
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        y: **[out]** device pointer storing vector y.
+
+        incy: **[inout]** [int]
+            specifies the increment for the elements of y.
     """
     _hipblasHaxpy__retval = hipblasStatus_t(chipblas.hipblasHaxpy(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1706,25 +1730,27 @@ def hipblasHaxpyBatched(object handle, int n, object alpha, object x, int incx, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x and y.
+        n: **[in]** [int]
+            the number of elements in x and y.
 
-        alpha: specifies the scalar alpha.
-        x: pointer storing vector x on the GPU.
-        incx: [int]
-                specifies the increment for the elements of x.
+        alpha: **[in]** specifies the scalar alpha.
 
-        y: pointer storing vector y on the GPU.
-                @param[inout]
-                incy      [int]
-                          specifies the increment for the elements of y.
+        x: **[in]** pointer storing vector x on the GPU.
 
-        batchCount: [int]
-                         number of instances in the batch
-                ******************************************************************
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        y: **[out]** pointer storing vector y on the GPU.
+
+        incy: **[inout]** [int]
+            specifies the increment for the elements of y.
+
+        batchCount: **[in]** [int]
+                     number of instances in the batch
+            ******************************************************************
     """
     _hipblasHaxpyBatched__retval = hipblasStatus_t(chipblas.hipblasHaxpyBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1794,28 +1820,31 @@ def hipblasHaxpyStridedBatched(object handle, int n, object alpha, object x, int
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-        alpha: specifies the scalar alpha.
-        x: pointer storing vector x on the GPU.
-        incx: [int]
-                specifies the increment for the elements of x.
+        n: **[in]** [int]
 
-        stridex: [hipblasStride]
-                specifies the increment between vectors of x.
+        alpha: **[in]** specifies the scalar alpha.
 
-        y: pointer storing vector y on the GPU.
-                @param[inout]
-                incy      [int]
-                          specifies the increment for the elements of y.
+        x: **[in]** pointer storing vector x on the GPU.
 
-        stridey: [hipblasStride]
-                specifies the increment between vectors of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
 
-        batchCount: [int]
-                number of instances in the batch
+        stridex: **[in]** [hipblasStride]
+            specifies the increment between vectors of x.
+
+        y: **[out]** pointer storing vector y on the GPU.
+
+        incy: **[inout]** [int]
+            specifies the increment for the elements of y.
+
+        stridey: **[in]** [hipblasStride]
+            specifies the increment between vectors of y.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     _hipblasHaxpyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasHaxpyStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1887,19 +1916,21 @@ def hipblasScopy(object handle, int n, object x, int incx, object y, int incy):
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x to be copied to y.
+        n: **[in]** [int]
+            the number of elements in x to be copied to y.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        x: **[in]** device pointer storing vector x.
 
-        y: device pointer storing vector y.
-        incy: [int]
-                specifies the increment for the elements of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        y: **[out]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
     """
     _hipblasScopy__retval = hipblasStatus_t(chipblas.hipblasScopy(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -1958,22 +1989,24 @@ def hipblasScopyBatched(object handle, int n, object x, int incx, object y, int 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in each x_i to be copied to y_i.
+        n: **[in]** [int]
+            the number of elements in each x_i to be copied to y_i.
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each vector x_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        y: device array of device pointers storing each vector y_i.
-        incy: [int]
-                specifies the increment for the elements of each vector y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch
+        y: **[out]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each vector y_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     _hipblasScopyBatched__retval = hipblasStatus_t(chipblas.hipblasScopyBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -2032,34 +2065,36 @@ def hipblasScopyStridedBatched(object handle, int n, object x, int incx, long st
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in each x_i to be copied to y_i.
+        n: **[in]** [int]
+            the number of elements in each x_i to be copied to y_i.
 
-        x: device pointer to the first vector (x_1) in the batch.
-        incx: [int]
-                specifies the increments for the elements of vectors x_i.
+        x: **[in]** device pointer to the first vector (x_1) in the batch.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
-                There are no restrictions placed on stride_x, however the user should
-                take care to ensure that stride_x is of appropriate size, for a typical
-                case this means stride_x >= n * incx.
+        incx: **[in]** [int]
+            specifies the increments for the elements of vectors x_i.
 
-        y: device pointer to the first vector (y_1) in the batch.
-        incy: [int]
-                specifies the increment for the elements of vectors y_i.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stride_x, however the user should
+            take care to ensure that stride_x is of appropriate size, for a typical
+            case this means stride_x >= n * incx.
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1).
-                There are no restrictions placed on stride_y, however the user should
-                take care to ensure that stride_y is of appropriate size, for a typical
-                case this means stride_y >= n * incy. stridey should be non zero.
+        y: **[out]** device pointer to the first vector (y_1) in the batch.
 
-        batchCount: [int]
-                number of instances in the batch
+        incy: **[in]** [int]
+            specifies the increment for the elements of vectors y_i.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+            There are no restrictions placed on stride_y, however the user should
+            take care to ensure that stride_y is of appropriate size, for a typical
+            case this means stride_y >= n * incy. stridey should be non zero.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     _hipblasScopyStridedBatched__retval = hipblasStatus_t(chipblas.hipblasScopyStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -2119,23 +2154,24 @@ def hipblasHdot(object handle, int n, object x, int incx, object y, int incy, ob
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x and y.
+        n: **[in]** [int]
+            the number of elements in x and y.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of y.
+        x: **[in]** device pointer storing vector x.
 
-        y: device pointer storing vector y.
-        incy: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                result
-                          device pointer or host pointer to store the dot product.
-                          return is 0.0 if n <= 0.
+        incx: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        y: **[in]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        result: **[inout]** device pointer or host pointer to store the dot product.
+            return is 0.0 if n <= 0.
     """
     _hipblasHdot__retval = hipblasStatus_t(chipblas.hipblasHdot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -2250,26 +2286,27 @@ def hipblasHdotBatched(object handle, int n, object x, int incx, object y, int i
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in each x_i and y_i.
+        n: **[in]** [int]
+            the number of elements in each x_i and y_i.
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        y: device array of device pointers storing each vector y_i.
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                            number of instances in the batch
-                @param[inout]
-                result
-                          device array or host array of batchCount size to store the dot products of each batch.
-                          return 0.0 for each element if n <= 0.
+        y: **[in]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
+
+        result: **[inout]** device array or host array of batchCount size to store the dot products of each batch.
+            return 0.0 for each element if n <= 0.
     """
     _hipblasHdotBatched__retval = hipblasStatus_t(chipblas.hipblasHdotBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -2384,32 +2421,33 @@ def hipblasHdotStridedBatched(object handle, int n, object x, int incx, long str
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in each x_i and y_i.
+        n: **[in]** [int]
+            the number of elements in each x_i and y_i.
 
-        x: device pointer to the first vector (x_1) in the batch.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        x: **[in]** device pointer to the first vector (x_1) in the batch.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1)
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        y: device pointer to the first vector (y_1) in the batch.
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1)
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1)
+        y: **[in]** device pointer to the first vector (y_1) in the batch.
 
-        batchCount: [int]
-                            number of instances in the batch
-                @param[inout]
-                result
-                          device array or host array of batchCount size to store the dot products of each batch.
-                          return 0.0 for each element if n <= 0.
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
+
+        result: **[inout]** device array or host array of batchCount size to store the dot products of each batch.
+            return 0.0 for each element if n <= 0.
     """
     _hipblasHdotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasHdotStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -2516,20 +2554,20 @@ def hipblasSnrm2(object handle, int n, object x, int incx, object result):
     - Supported precisions in cuBLAS  : s,d,sc,dz
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x.
+        n: **[in]** [int]
+            the number of elements in x.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                result
-                          device pointer or host pointer to store the nrm2 product.
-                          return is 0.0 if n, incx<=0.
-                 ******************************************************************
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        result: **[inout]** device pointer or host pointer to store the nrm2 product.
+                     return is 0.0 if n, incx<=0.
+            ******************************************************************
     """
     _hipblasSnrm2__retval = hipblasStatus_t(chipblas.hipblasSnrm2(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -2586,21 +2624,22 @@ def hipblasSnrm2Batched(object handle, int n, object x, int incx, int batchCount
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                number of elements in each x_i.
+        n: **[in]** [int]
+            number of elements in each x_i.
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i. incx must be > 0.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i. incx must be > 0.
 
-        result: device pointer or host pointer to array of batchCount size for nrm2 results.
-                return is 0.0 for each element if n <= 0, incx<=0.
+        batchCount: **[in]** [int]
+            number of instances in the batch
+
+        result: **[out]** device pointer or host pointer to array of batchCount size for nrm2 results.
+            return is 0.0 for each element if n <= 0, incx<=0.
     """
     _hipblasSnrm2Batched__retval = hipblasStatus_t(chipblas.hipblasSnrm2Batched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -2657,27 +2696,28 @@ def hipblasSnrm2StridedBatched(object handle, int n, object x, int incx, long st
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                number of elements in each x_i.
+        n: **[in]** [int]
+            number of elements in each x_i.
 
-        x: device pointer to the first vector x_1.
-        incx: [int]
-                specifies the increment for the elements of each x_i. incx must be > 0.
+        x: **[in]** device pointer to the first vector x_1.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
-                There are no restrictions placed on stride_x, however the user should
-                take care to ensure that stride_x is of appropriate size, for a typical
-                case this means stride_x >= n * incx.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i. incx must be > 0.
 
-        batchCount: [int]
-                number of instances in the batch
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stride_x, however the user should
+            take care to ensure that stride_x is of appropriate size, for a typical
+            case this means stride_x >= n * incx.
 
-        result: device pointer or host pointer to array for storing contiguous batchCount results.
-                return is 0.0 for each element if n <= 0, incx<=0.
+        batchCount: **[in]** [int]
+            number of instances in the batch
+
+        result: **[out]** device pointer or host pointer to array for storing contiguous batchCount results.
+            return is 0.0 for each element if n <= 0, incx<=0.
     """
     _hipblasSnrm2StridedBatched__retval = hipblasStatus_t(chipblas.hipblasSnrm2StridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -2732,24 +2772,25 @@ def hipblasSrot(object handle, int n, object x, int incx, object y, int incy, ob
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                        number of elements in the x and y vectors.
-                @param[inout]
-                x       device pointer storing vector x.
+        n: **[in]** [int]
+            number of elements in the x and y vectors.
 
-        incx: [int]
-                        specifies the increment between elements of x.
-                @param[inout]
-                y       device pointer storing vector y.
+        x: **[inout]** device pointer storing vector x.
 
-        incy: [int]
-                specifies the increment between elements of y.
+        incx: **[in]** [int]
+            specifies the increment between elements of x.
 
-        c: device pointer or host pointer storing scalar cosine component of the rotation matrix.
-        s: device pointer or host pointer storing scalar sine component of the rotation matrix.
+        y: **[inout]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment between elements of y.
+
+        c: **[in]** device pointer or host pointer storing scalar cosine component of the rotation matrix.
+
+        s: **[in]** device pointer or host pointer storing scalar sine component of the rotation matrix.
     """
     _hipblasSrot__retval = hipblasStatus_t(chipblas.hipblasSrot(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -2838,26 +2879,28 @@ def hipblasSrotBatched(object handle, int n, object x, int incx, object y, int i
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                        number of elements in each x_i and y_i vectors.
-                @param[inout]
-                x       device array of deivce pointers storing each vector x_i.
+        n: **[in]** [int]
+            number of elements in each x_i and y_i vectors.
 
-        incx: [int]
-                        specifies the increment between elements of each x_i.
-                @param[inout]
-                y       device array of device pointers storing each vector y_i.
+        x: **[inout]** device array of deivce pointers storing each vector x_i.
 
-        incy: [int]
-                specifies the increment between elements of each y_i.
+        incx: **[in]** [int]
+            specifies the increment between elements of each x_i.
 
-        c: device pointer or host pointer to scalar cosine component of the rotation matrix.
-        s: device pointer or host pointer to scalar sine component of the rotation matrix.
-        batchCount: [int]
-                the number of x and y arrays, i.e. the number of batches.
+        y: **[inout]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment between elements of each y_i.
+
+        c: **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
+
+        s: **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
+
+        batchCount: **[in]** [int]
+            the number of x and y arrays, i.e. the number of batches.
     """
     _hipblasSrotBatched__retval = hipblasStatus_t(chipblas.hipblasSrotBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -2946,32 +2989,34 @@ def hipblasSrotStridedBatched(object handle, int n, object x, int incx, long str
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                        number of elements in each x_i and y_i vectors.
-                @param[inout]
-                x       device pointer to the first vector x_1.
+        n: **[in]** [int]
+            number of elements in each x_i and y_i vectors.
 
-        incx: [int]
-                specifies the increment between elements of each x_i.
+        x: **[inout]** device pointer to the first vector x_1.
 
-        stridex: [hipblasStride]
-                         specifies the increment from the beginning of x_i to the beginning of x_(i+1)
-                @param[inout]
-                y       device pointer to the first vector y_1.
+        incx: **[in]** [int]
+            specifies the increment between elements of each x_i.
 
-        incy: [int]
-                specifies the increment between elements of each y_i.
+        stridex: **[in]** [hipblasStride]
+            specifies the increment from the beginning of x_i to the beginning of x_(i+1)
 
-        stridey: [hipblasStride]
-                specifies the increment from the beginning of y_i to the beginning of y_(i+1)
+        y: **[inout]** device pointer to the first vector y_1.
 
-        c: device pointer or host pointer to scalar cosine component of the rotation matrix.
-        s: device pointer or host pointer to scalar sine component of the rotation matrix.
-        batchCount: [int]
-                the number of x and y arrays, i.e. the number of batches.
+        incy: **[in]** [int]
+            specifies the increment between elements of each y_i.
+
+        stridey: **[in]** [hipblasStride]
+            specifies the increment from the beginning of y_i to the beginning of y_(i+1)
+
+        c: **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
+
+        s: **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
+
+        batchCount: **[in]** [int]
+            the number of x and y arrays, i.e. the number of batches.
     """
     _hipblasSrotStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSrotStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -3062,16 +3107,16 @@ def hipblasSrotg(object handle, object a, object b, object c, object s):
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                        handle to the hipblas library context queue.
-                @param[inout]
-                a       device pointer or host pointer to input vector element, overwritten with r.
-                @param[inout]
-                b       device pointer or host pointer to input vector element, overwritten with z.
-                @param[inout]
-                c       device pointer or host pointer to cosine element of Givens rotation.
-                @param[inout]
-                s       device pointer or host pointer sine element of Givens rotation.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
+
+        a: **[inout]** device pointer or host pointer to input vector element, overwritten with r.
+
+        b: **[inout]** device pointer or host pointer to input vector element, overwritten with z.
+
+        c: **[inout]** device pointer or host pointer to cosine element of Givens rotation.
+
+        s: **[inout]** device pointer or host pointer sine element of Givens rotation.
     """
     _hipblasSrotg__retval = hipblasStatus_t(chipblas.hipblasSrotg(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -3136,19 +3181,19 @@ def hipblasSrotgBatched(object handle, object a, object b, object c, object s, i
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                        handle to the hipblas library context queue.
-                @param[inout]
-                a       device array of device pointers storing each single input vector element a_i, overwritten with r_i.
-                @param[inout]
-                b       device array of device pointers storing each single input vector element b_i, overwritten with z_i.
-                @param[inout]
-                c       device array of device pointers storing each cosine element of Givens rotation for the batch.
-                @param[inout]
-                s       device array of device pointers storing each sine element of Givens rotation for the batch.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        batchCount: [int]
-                number of batches (length of arrays a, b, c, and s).
+        a: **[inout]** device array of device pointers storing each single input vector element a_i, overwritten with r_i.
+
+        b: **[inout]** device array of device pointers storing each single input vector element b_i, overwritten with z_i.
+
+        c: **[inout]** device array of device pointers storing each cosine element of Givens rotation for the batch.
+
+        s: **[inout]** device array of device pointers storing each sine element of Givens rotation for the batch.
+
+        batchCount: **[in]** [int]
+            number of batches (length of arrays a, b, c, and s).
     """
     _hipblasSrotgBatched__retval = hipblasStatus_t(chipblas.hipblasSrotgBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -3213,31 +3258,31 @@ def hipblasSrotgStridedBatched(object handle, object a, long stridea, object b, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                        handle to the hipblas library context queue.
-                @param[inout]
-                a       device strided_batched pointer or host strided_batched pointer to first single input vector element a_1, overwritten with r.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        stridea: [hipblasStride]
-                         distance between elements of a in batch (distance between a_i and a_(i + 1))
-                @param[inout]
-                b       device strided_batched pointer or host strided_batched pointer to first single input vector element b_1, overwritten with z.
+        a: **[inout]** device strided_batched pointer or host strided_batched pointer to first single input vector element a_1, overwritten with r.
 
-        strideb: [hipblasStride]
-                         distance between elements of b in batch (distance between b_i and b_(i + 1))
-                @param[inout]
-                c       device strided_batched pointer or host strided_batched pointer to first cosine element of Givens rotations c_1.
+        stridea: **[in]** [hipblasStride]
+            distance between elements of a in batch (distance between a_i and a_(i + 1))
 
-        stridec: [hipblasStride]
-                         distance between elements of c in batch (distance between c_i and c_(i + 1))
-                @param[inout]
-                s       device strided_batched pointer or host strided_batched pointer to sine element of Givens rotations s_1.
+        b: **[inout]** device strided_batched pointer or host strided_batched pointer to first single input vector element b_1, overwritten with z.
 
-        strides: [hipblasStride]
-                distance between elements of s in batch (distance between s_i and s_(i + 1))
+        strideb: **[in]** [hipblasStride]
+            distance between elements of b in batch (distance between b_i and b_(i + 1))
 
-        batchCount: [int]
-                number of batches (length of arrays a, b, c, and s).
+        c: **[inout]** device strided_batched pointer or host strided_batched pointer to first cosine element of Givens rotations c_1.
+
+        stridec: **[in]** [hipblasStride]
+            distance between elements of c in batch (distance between c_i and c_(i + 1))
+
+        s: **[inout]** device strided_batched pointer or host strided_batched pointer to sine element of Givens rotations s_1.
+
+        strides: **[in]** [hipblasStride]
+            distance between elements of s in batch (distance between s_i and s_(i + 1))
+
+        batchCount: **[in]** [int]
+            number of batches (length of arrays a, b, c, and s).
     """
     _hipblasSrotgStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSrotgStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -3299,34 +3344,34 @@ def hipblasSrotm(object handle, int n, object x, int incx, object y, int incy, o
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                        number of elements in the x and y vectors.
-                @param[inout]
-                x       device pointer storing vector x.
+        n: **[in]** [int]
+            number of elements in the x and y vectors.
 
-        incx: [int]
-                        specifies the increment between elements of x.
-                @param[inout]
-                y       device pointer storing vector y.
+        x: **[inout]** device pointer storing vector x.
 
-        incy: [int]
-                specifies the increment between elements of y.
+        incx: **[in]** [int]
+            specifies the increment between elements of x.
 
-        param: device vector or host vector of 5 elements defining the rotation.
-                param[0] = flag
-                param[1] = H11
-                param[2] = H21
-                param[3] = H12
-                param[4] = H22
-                The flag parameter defines the form of H:
-                flag = -1 => H = ( H11 H12 H21 H22 )
-                flag =  0 => H = ( 1.0 H12 H21 1.0 )
-                flag =  1 => H = ( H11 1.0 -1.0 H22 )
-                flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
-                param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
+        y: **[inout]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment between elements of y.
+
+        param: **[in]** device vector or host vector of 5 elements defining the rotation.
+            param[0] = flag
+            param[1] = H11
+            param[2] = H21
+            param[3] = H12
+            param[4] = H22
+            The flag parameter defines the form of H:
+            flag = -1 => H = ( H11 H12 H21 H22 )
+            flag =  0 => H = ( 1.0 H12 H21 1.0 )
+            flag =  1 => H = ( H11 1.0 -1.0 H22 )
+            flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
+            param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
     """
     _hipblasSrotm__retval = hipblasStatus_t(chipblas.hipblasSrotm(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -3360,37 +3405,37 @@ def hipblasSrotmBatched(object handle, int n, object x, int incx, object y, int 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                        number of elements in the x and y vectors.
-                @param[inout]
-                x       device array of device pointers storing each vector x_i.
+        n: **[in]** [int]
+            number of elements in the x and y vectors.
 
-        incx: [int]
-                        specifies the increment between elements of each x_i.
-                @param[inout]
-                y       device array of device pointers storing each vector y_1.
+        x: **[inout]** device array of device pointers storing each vector x_i.
 
-        incy: [int]
-                specifies the increment between elements of each y_i.
+        incx: **[in]** [int]
+            specifies the increment between elements of each x_i.
 
-        param: device array of device vectors of 5 elements defining the rotation.
-                param[0] = flag
-                param[1] = H11
-                param[2] = H21
-                param[3] = H12
-                param[4] = H22
-                The flag parameter defines the form of H:
-                flag = -1 => H = ( H11 H12 H21 H22 )
-                flag =  0 => H = ( 1.0 H12 H21 1.0 )
-                flag =  1 => H = ( H11 1.0 -1.0 H22 )
-                flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
-                param may ONLY be stored on the device for the batched version of this function.
+        y: **[inout]** device array of device pointers storing each vector y_1.
 
-        batchCount: [int]
-                the number of x and y arrays, i.e. the number of batches.
+        incy: **[in]** [int]
+            specifies the increment between elements of each y_i.
+
+        param: **[in]** device array of device vectors of 5 elements defining the rotation.
+            param[0] = flag
+            param[1] = H11
+            param[2] = H21
+            param[3] = H12
+            param[4] = H22
+            The flag parameter defines the form of H:
+            flag = -1 => H = ( H11 H12 H21 H22 )
+            flag =  0 => H = ( 1.0 H12 H21 1.0 )
+            flag =  1 => H = ( H11 1.0 -1.0 H22 )
+            flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
+            param may ONLY be stored on the device for the batched version of this function.
+
+        batchCount: **[in]** [int]
+            the number of x and y arrays, i.e. the number of batches.
     """
     _hipblasSrotmBatched__retval = hipblasStatus_t(chipblas.hipblasSrotmBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -3424,46 +3469,46 @@ def hipblasSrotmStridedBatched(object handle, int n, object x, int incx, long st
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                        number of elements in the x and y vectors.
-                @param[inout]
-                x       device pointer pointing to first strided batched vector x_1.
+        n: **[in]** [int]
+            number of elements in the x and y vectors.
 
-        incx: [int]
-                specifies the increment between elements of each x_i.
+        x: **[inout]** device pointer pointing to first strided batched vector x_1.
 
-        stridex: [hipblasStride]
-                         specifies the increment between the beginning of x_i and x_(i + 1)
-                @param[inout]
-                y       device pointer pointing to first strided batched vector y_1.
+        incx: **[in]** [int]
+            specifies the increment between elements of each x_i.
 
-        incy: [int]
-                specifies the increment between elements of each y_i.
+        stridex: **[in]** [hipblasStride]
+            specifies the increment between the beginning of x_i and x_(i + 1)
 
-        stridey: [hipblasStride]
-                specifies the increment between the beginning of y_i and y_(i + 1)
+        y: **[inout]** device pointer pointing to first strided batched vector y_1.
 
-        param: device pointer pointing to first array of 5 elements defining the rotation (param_1).
-                param[0] = flag
-                param[1] = H11
-                param[2] = H21
-                param[3] = H12
-                param[4] = H22
-                The flag parameter defines the form of H:
-                flag = -1 => H = ( H11 H12 H21 H22 )
-                flag =  0 => H = ( 1.0 H12 H21 1.0 )
-                flag =  1 => H = ( H11 1.0 -1.0 H22 )
-                flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
-                param may ONLY be stored on the device for the strided_batched version of this function.
+        incy: **[in]** [int]
+            specifies the increment between elements of each y_i.
 
-        strideParam: [hipblasStride]
-                specifies the increment between the beginning of param_i and param_(i + 1)
+        stridey: **[in]** [hipblasStride]
+            specifies the increment between the beginning of y_i and y_(i + 1)
 
-        batchCount: [int]
-                the number of x and y arrays, i.e. the number of batches.
+        param: **[in]** device pointer pointing to first array of 5 elements defining the rotation (param_1).
+            param[0] = flag
+            param[1] = H11
+            param[2] = H21
+            param[3] = H12
+            param[4] = H22
+            The flag parameter defines the form of H:
+            flag = -1 => H = ( H11 H12 H21 H22 )
+            flag =  0 => H = ( 1.0 H12 H21 1.0 )
+            flag =  1 => H = ( H11 1.0 -1.0 H22 )
+            flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
+            param may ONLY be stored on the device for the strided_batched version of this function.
+
+        strideParam: **[in]** [hipblasStride]
+            specifies the increment between the beginning of param_i and param_(i + 1)
+
+        batchCount: **[in]** [int]
+            the number of x and y arrays, i.e. the number of batches.
     """
     _hipblasSrotmStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSrotmStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -3500,28 +3545,29 @@ def hipblasSrotmg(object handle, object d1, object d2, object x1, object y1, obj
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                        handle to the hipblas library context queue.
-                @param[inout]
-                d1      device pointer or host pointer to input scalar that is overwritten.
-                @param[inout]
-                d2      device pointer or host pointer to input scalar that is overwritten.
-                @param[inout]
-                x1      device pointer or host pointer to input scalar that is overwritten.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        y1: device pointer or host pointer to input scalar.
-        param: device vector or host vector of 5 elements defining the rotation.
-                param[0] = flag
-                param[1] = H11
-                param[2] = H21
-                param[3] = H12
-                param[4] = H22
-                The flag parameter defines the form of H:
-                flag = -1 => H = ( H11 H12 H21 H22 )
-                flag =  0 => H = ( 1.0 H12 H21 1.0 )
-                flag =  1 => H = ( H11 1.0 -1.0 H22 )
-                flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
-                param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
+        d1: **[inout]** device pointer or host pointer to input scalar that is overwritten.
+
+        d2: **[inout]** device pointer or host pointer to input scalar that is overwritten.
+
+        x1: **[inout]** device pointer or host pointer to input scalar that is overwritten.
+
+        y1: **[in]** device pointer or host pointer to input scalar.
+
+        param: **[out]** device vector or host vector of 5 elements defining the rotation.
+            param[0] = flag
+            param[1] = H11
+            param[2] = H21
+            param[3] = H12
+            param[4] = H22
+            The flag parameter defines the form of H:
+            flag = -1 => H = ( H11 H12 H21 H22 )
+            flag =  0 => H = ( 1.0 H12 H21 1.0 )
+            flag =  1 => H = ( H11 1.0 -1.0 H22 )
+            flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
+            param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
     """
     _hipblasSrotmg__retval = hipblasStatus_t(chipblas.hipblasSrotmg(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -3562,31 +3608,32 @@ def hipblasSrotmgBatched(object handle, object d1, object d2, object x1, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                        handle to the hipblas library context queue.
-                @param[inout]
-                d1      device batched array or host batched array of input scalars that is overwritten.
-                @param[inout]
-                d2      device batched array or host batched array of input scalars that is overwritten.
-                @param[inout]
-                x1      device batched array or host batched array of input scalars that is overwritten.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        y1: device batched array or host batched array of input scalars.
-        param: device batched array or host batched array of vectors of 5 elements defining the rotation.
-                param[0] = flag
-                param[1] = H11
-                param[2] = H21
-                param[3] = H12
-                param[4] = H22
-                The flag parameter defines the form of H:
-                flag = -1 => H = ( H11 H12 H21 H22 )
-                flag =  0 => H = ( 1.0 H12 H21 1.0 )
-                flag =  1 => H = ( H11 1.0 -1.0 H22 )
-                flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
-                param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
+        d1: **[inout]** device batched array or host batched array of input scalars that is overwritten.
 
-        batchCount: [int]
-                the number of instances in the batch.
+        d2: **[inout]** device batched array or host batched array of input scalars that is overwritten.
+
+        x1: **[inout]** device batched array or host batched array of input scalars that is overwritten.
+
+        y1: **[in]** device batched array or host batched array of input scalars.
+
+        param: **[out]** device batched array or host batched array of vectors of 5 elements defining the rotation.
+            param[0] = flag
+            param[1] = H11
+            param[2] = H21
+            param[3] = H12
+            param[4] = H22
+            The flag parameter defines the form of H:
+            flag = -1 => H = ( H11 H12 H21 H22 )
+            flag =  0 => H = ( 1.0 H12 H21 1.0 )
+            flag =  1 => H = ( H11 1.0 -1.0 H22 )
+            flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
+            param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
+
+        batchCount: **[in]** [int]
+            the number of instances in the batch.
     """
     _hipblasSrotmgBatched__retval = hipblasStatus_t(chipblas.hipblasSrotmgBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -3627,46 +3674,47 @@ def hipblasSrotmgStridedBatched(object handle, object d1, long strided1, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                        handle to the hipblas library context queue.
-                @param[inout]
-                d1      device strided_batched array or host strided_batched array of input scalars that is overwritten.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        strided1: [hipblasStride]
-                          specifies the increment between the beginning of d1_i and d1_(i+1)
-                @param[inout]
-                d2      device strided_batched array or host strided_batched array of input scalars that is overwritten.
+        d1: **[inout]** device strided_batched array or host strided_batched array of input scalars that is overwritten.
 
-        strided2: [hipblasStride]
-                          specifies the increment between the beginning of d2_i and d2_(i+1)
-                @param[inout]
-                x1      device strided_batched array or host strided_batched array of input scalars that is overwritten.
+        strided1: **[in]** [hipblasStride]
+            specifies the increment between the beginning of d1_i and d1_(i+1)
 
-        stridex1: [hipblasStride]
-                specifies the increment between the beginning of x1_i and x1_(i+1)
+        d2: **[inout]** device strided_batched array or host strided_batched array of input scalars that is overwritten.
 
-        y1: device strided_batched array or host strided_batched array of input scalars.
-        stridey1: [hipblasStride]
-                specifies the increment between the beginning of y1_i and y1_(i+1)
+        strided2: **[in]** [hipblasStride]
+            specifies the increment between the beginning of d2_i and d2_(i+1)
 
-        param: device stridedBatched array or host stridedBatched array of vectors of 5 elements defining the rotation.
-                param[0] = flag
-                param[1] = H11
-                param[2] = H21
-                param[3] = H12
-                param[4] = H22
-                The flag parameter defines the form of H:
-                flag = -1 => H = ( H11 H12 H21 H22 )
-                flag =  0 => H = ( 1.0 H12 H21 1.0 )
-                flag =  1 => H = ( H11 1.0 -1.0 H22 )
-                flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
-                param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
+        x1: **[inout]** device strided_batched array or host strided_batched array of input scalars that is overwritten.
 
-        strideParam: [hipblasStride]
-                specifies the increment between the beginning of param_i and param_(i + 1)
+        stridex1: **[in]** [hipblasStride]
+            specifies the increment between the beginning of x1_i and x1_(i+1)
 
-        batchCount: [int]
-                the number of instances in the batch.
+        y1: **[in]** device strided_batched array or host strided_batched array of input scalars.
+
+        stridey1: **[in]** [hipblasStride]
+            specifies the increment between the beginning of y1_i and y1_(i+1)
+
+        param: **[out]** device stridedBatched array or host stridedBatched array of vectors of 5 elements defining the rotation.
+            param[0] = flag
+            param[1] = H11
+            param[2] = H21
+            param[3] = H12
+            param[4] = H22
+            The flag parameter defines the form of H:
+            flag = -1 => H = ( H11 H12 H21 H22 )
+            flag =  0 => H = ( 1.0 H12 H21 1.0 )
+            flag =  1 => H = ( H11 1.0 -1.0 H22 )
+            flag = -2 => H = ( 1.0 0.0 0.0 1.0 )
+            param may be stored in either host or device memory, location is specified by calling hipblasSetPointerMode.
+
+        strideParam: **[in]** [hipblasStride]
+            specifies the increment between the beginning of param_i and param_(i + 1)
+
+        batchCount: **[in]** [int]
+            the number of instances in the batch.
     """
     _hipblasSrotmgStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSrotmgStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,
@@ -3706,18 +3754,18 @@ def hipblasSscal(object handle, int n, object alpha, object x, int incx):
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x.
+        n: **[in]** [int]
+            the number of elements in x.
 
-        alpha: device pointer or host pointer for the scalar alpha.
-                @param[inout]
-                x         device pointer storing vector x.
+        alpha: **[in]** device pointer or host pointer for the scalar alpha.
 
-        incx: [int]
-                specifies the increment for the elements of x.
+        x: **[inout]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
     """
     _hipblasSscal__retval = hipblasStatus_t(chipblas.hipblasSscal(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -3795,22 +3843,22 @@ def hipblasSscalBatched(object handle, int n, object alpha, object x, int incx, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in each x_i.
+        n: **[in]** [int]
+            the number of elements in each x_i.
 
-        alpha: host pointer or device pointer for the scalar alpha.
-                @param[inout]
-                x           device array of device pointers storing each vector x_i.
+        alpha: **[in]** host pointer or device pointer for the scalar alpha.
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        x: **[inout]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                          specifies the number of batches in x.
-                ******************************************************************
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        batchCount: **[in]** [int]
+                      specifies the number of batches in x.
+            ******************************************************************
     """
     _hipblasSscalBatched__retval = hipblasStatus_t(chipblas.hipblasSscalBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -3888,28 +3936,28 @@ def hipblasSscalStridedBatched(object handle, int n, object alpha, object x, int
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in each x_i.
+        n: **[in]** [int]
+            the number of elements in each x_i.
 
-        alpha: host pointer or device pointer for the scalar alpha.
-                @param[inout]
-                x           device pointer to the first vector (x_1) in the batch.
+        alpha: **[in]** host pointer or device pointer for the scalar alpha.
 
-        incx: [int]
-                specifies the increment for the elements of x.
+        x: **[inout]** device pointer to the first vector (x_1) in the batch.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
-                There are no restrictions placed on stride_x, however the user should
-                take care to ensure that stride_x is of appropriate size, for a typical
-                case this means stride_x >= n * incx.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
 
-        batchCount: [int]
-                          specifies the number of batches in x.
-                ******************************************************************
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stride_x, however the user should
+            take care to ensure that stride_x is of appropriate size, for a typical
+            case this means stride_x >= n * incx.
+
+        batchCount: **[in]** [int]
+                      specifies the number of batches in x.
+            ******************************************************************
     """
     _hipblasSscalStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSscalStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -3987,21 +4035,21 @@ def hipblasSswap(object handle, int n, object x, int incx, object y, int incy):
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                          the number of elements in x and y.
-                @param[inout]
-                x         device pointer storing vector x.
+        n: **[in]** [int]
+            the number of elements in x and y.
 
-        incx: [int]
-                          specifies the increment for the elements of x.
-                @param[inout]
-                y         device pointer storing vector y.
+        x: **[inout]** device pointer storing vector x.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        y: **[inout]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
     """
     _hipblasSswap__retval = hipblasStatus_t(chipblas.hipblasSswap(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -4057,24 +4105,24 @@ def hipblasSswapBatched(object handle, int n, object x, int incx, object y, int 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                          the number of elements in each x_i and y_i.
-                @param[inout]
-                x         device array of device pointers storing each vector x_i.
+        n: **[in]** [int]
+            the number of elements in each x_i and y_i.
 
-        incx: [int]
-                          specifies the increment for the elements of each x_i.
-                @param[inout]
-                y         device array of device pointers storing each vector y_i.
+        x: **[inout]** device array of device pointers storing each vector x_i.
 
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        y: **[inout]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     _hipblasSswapBatched__retval = hipblasStatus_t(chipblas.hipblasSswapBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -4130,36 +4178,36 @@ def hipblasSswapStridedBatched(object handle, int n, object x, int incx, long st
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                          the number of elements in each x_i and y_i.
-                @param[inout]
-                x         device pointer to the first vector x_1.
+        n: **[in]** [int]
+            the number of elements in each x_i and y_i.
 
-        incx: [int]
-                specifies the increment for the elements of x.
+        x: **[inout]** device pointer to the first vector x_1.
 
-        stridex: [hipblasStride]
-                          stride from the start of one vector (x_i) and the next one (x_i+1).
-                          There are no restrictions placed on stride_x, however the user should
-                          take care to ensure that stride_x is of appropriate size, for a typical
-                          case this means stride_x >= n * incx.
-                @param[inout]
-                y         device pointer to the first vector y_1.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stride_x, however the user should
+            take care to ensure that stride_x is of appropriate size, for a typical
+            case this means stride_x >= n * incx.
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1).
-                There are no restrictions placed on stride_x, however the user should
-                take care to ensure that stride_y is of appropriate size, for a typical
-                case this means stride_y >= n * incy. stridey should be non zero.
+        y: **[inout]** device pointer to the first vector y_1.
 
-        batchCount: [int]
-                number of instances in the batch.
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+            There are no restrictions placed on stride_x, however the user should
+            take care to ensure that stride_y is of appropriate size, for a typical
+            case this means stride_y >= n * incy. stridey should be non zero.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     _hipblasSswapStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSswapStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -4220,55 +4268,57 @@ def hipblasSgbmv(object handle, object trans, int m, int n, int kl, int ku, obje
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        trans: [hipblasOperation_t]
-                indicates whether matrix A is tranposed (conjugated) or not
+        trans: **[in]** [hipblasOperation_t]
+            indicates whether matrix A is tranposed (conjugated) or not
 
-        m: [int]
-                number of rows of matrix A
+        m: **[in]** [int]
+            number of rows of matrix A
 
-        n: [int]
-                number of columns of matrix A
+        n: **[in]** [int]
+            number of columns of matrix A
 
-        kl: [int]
-                number of sub-diagonals of A
+        kl: **[in]** [int]
+            number of sub-diagonals of A
 
-        ku: [int]
-                number of super-diagonals of A
+        ku: **[in]** [int]
+            number of super-diagonals of A
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device pointer storing banded matrix A.
-                Leading (kl + ku + 1) by n part of the matrix contains the coefficients
-                of the banded matrix. The leading diagonal resides in row (ku + 1) with
-                the first super-diagonal above on the RHS of row ku. The first sub-diagonal
-                resides below on the LHS of row ku + 2. This propogates up and down across
-                sub/super-diagonals.
-                  Ex: (m = n = 7; ku = 2, kl = 2)
-                  1 2 3 0 0 0 0             0 0 3 3 3 3 3
-                  4 1 2 3 0 0 0             0 2 2 2 2 2 2
-                  5 4 1 2 3 0 0    ---->    1 1 1 1 1 1 1
-                  0 5 4 1 2 3 0             4 4 4 4 4 4 0
-                  0 0 5 4 1 2 0             5 5 5 5 5 0 0
-                  0 0 0 5 4 1 2             0 0 0 0 0 0 0
-                  0 0 0 0 5 4 1             0 0 0 0 0 0 0
-                Note that the empty elements which don't correspond to data will not
-                be referenced.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of A. Must be >= (kl + ku + 1)
+        AP: **[in]** device pointer storing banded matrix A.
+            Leading (kl + ku + 1) by n part of the matrix contains the coefficients
+            of the banded matrix. The leading diagonal resides in row (ku + 1) with
+            the first super-diagonal above on the RHS of row ku. The first sub-diagonal
+            resides below on the LHS of row ku + 2. This propogates up and down across
+            sub/super-diagonals.
+              Ex: (m = n = 7; ku = 2, kl = 2)
+              1 2 3 0 0 0 0             0 0 3 3 3 3 3
+              4 1 2 3 0 0 0             0 2 2 2 2 2 2
+              5 4 1 2 3 0 0    ---->    1 1 1 1 1 1 1
+              0 5 4 1 2 3 0             4 4 4 4 4 4 0
+              0 0 5 4 1 2 0             5 5 5 5 5 0 0
+              0 0 0 5 4 1 2             0 0 0 0 0 0 0
+              0 0 0 0 5 4 1             0 0 0 0 0 0 0
+            Note that the empty elements which don't correspond to data will not
+            be referenced.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        lda: **[in]** [int]
+            specifies the leading dimension of A. Must be >= (kl + ku + 1)
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device pointer storing vector y.
+        x: **[in]** device pointer storing vector x.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -4351,58 +4401,60 @@ def hipblasSgbmvBatched(object handle, object trans, int m, int n, int kl, int k
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        trans: [hipblasOperation_t]
-                indicates whether matrix A is tranposed (conjugated) or not
+        trans: **[in]** [hipblasOperation_t]
+            indicates whether matrix A is tranposed (conjugated) or not
 
-        m: [int]
-                number of rows of each matrix A_i
+        m: **[in]** [int]
+            number of rows of each matrix A_i
 
-        n: [int]
-                number of columns of each matrix A_i
+        n: **[in]** [int]
+            number of columns of each matrix A_i
 
-        kl: [int]
-                number of sub-diagonals of each A_i
+        kl: **[in]** [int]
+            number of sub-diagonals of each A_i
 
-        ku: [int]
-                number of super-diagonals of each A_i
+        ku: **[in]** [int]
+            number of super-diagonals of each A_i
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device array of device pointers storing each banded matrix A_i.
-                Leading (kl + ku + 1) by n part of the matrix contains the coefficients
-                of the banded matrix. The leading diagonal resides in row (ku + 1) with
-                the first super-diagonal above on the RHS of row ku. The first sub-diagonal
-                resides below on the LHS of row ku + 2. This propogates up and down across
-                sub/super-diagonals.
-                  Ex: (m = n = 7; ku = 2, kl = 2)
-                  1 2 3 0 0 0 0             0 0 3 3 3 3 3
-                  4 1 2 3 0 0 0             0 2 2 2 2 2 2
-                  5 4 1 2 3 0 0    ---->    1 1 1 1 1 1 1
-                  0 5 4 1 2 3 0             4 4 4 4 4 4 0
-                  0 0 5 4 1 2 0             5 5 5 5 5 0 0
-                  0 0 0 5 4 1 2             0 0 0 0 0 0 0
-                  0 0 0 0 5 4 1             0 0 0 0 0 0 0
-                Note that the empty elements which don't correspond to data will not
-                be referenced.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of each A_i. Must be >= (kl + ku + 1)
+        AP: **[in]** device array of device pointers storing each banded matrix A_i.
+            Leading (kl + ku + 1) by n part of the matrix contains the coefficients
+            of the banded matrix. The leading diagonal resides in row (ku + 1) with
+            the first super-diagonal above on the RHS of row ku. The first sub-diagonal
+            resides below on the LHS of row ku + 2. This propogates up and down across
+            sub/super-diagonals.
+              Ex: (m = n = 7; ku = 2, kl = 2)
+              1 2 3 0 0 0 0             0 0 3 3 3 3 3
+              4 1 2 3 0 0 0             0 2 2 2 2 2 2
+              5 4 1 2 3 0 0    ---->    1 1 1 1 1 1 1
+              0 5 4 1 2 3 0             4 4 4 4 4 4 0
+              0 0 5 4 1 2 0             5 5 5 5 5 0 0
+              0 0 0 5 4 1 2             0 0 0 0 0 0 0
+              0 0 0 0 5 4 1             0 0 0 0 0 0 0
+            Note that the empty elements which don't correspond to data will not
+            be referenced.
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i. Must be >= (kl + ku + 1)
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device array of device pointers storing each vector y_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                specifies the number of instances in the batch.
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        batchCount: **[in]** [int]
+            specifies the number of instances in the batch.
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -4485,67 +4537,69 @@ def hipblasSgbmvStridedBatched(object handle, object trans, int m, int n, int kl
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        trans: [hipblasOperation_t]
-                indicates whether matrix A is tranposed (conjugated) or not
+        trans: **[in]** [hipblasOperation_t]
+            indicates whether matrix A is tranposed (conjugated) or not
 
-        m: [int]
-                number of rows of matrix A
+        m: **[in]** [int]
+            number of rows of matrix A
 
-        n: [int]
-                number of columns of matrix A
+        n: **[in]** [int]
+            number of columns of matrix A
 
-        kl: [int]
-                number of sub-diagonals of A
+        kl: **[in]** [int]
+            number of sub-diagonals of A
 
-        ku: [int]
-                number of super-diagonals of A
+        ku: **[in]** [int]
+            number of super-diagonals of A
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device pointer to first banded matrix (A_1).
-                Leading (kl + ku + 1) by n part of the matrix contains the coefficients
-                of the banded matrix. The leading diagonal resides in row (ku + 1) with
-                the first super-diagonal above on the RHS of row ku. The first sub-diagonal
-                resides below on the LHS of row ku + 2. This propogates up and down across
-                sub/super-diagonals.
-                  Ex: (m = n = 7; ku = 2, kl = 2)
-                  1 2 3 0 0 0 0             0 0 3 3 3 3 3
-                  4 1 2 3 0 0 0             0 2 2 2 2 2 2
-                  5 4 1 2 3 0 0    ---->    1 1 1 1 1 1 1
-                  0 5 4 1 2 3 0             4 4 4 4 4 4 0
-                  0 0 5 4 1 2 0             5 5 5 5 5 0 0
-                  0 0 0 5 4 1 2             0 0 0 0 0 0 0
-                  0 0 0 0 5 4 1             0 0 0 0 0 0 0
-                Note that the empty elements which don't correspond to data will not
-                be referenced.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of A. Must be >= (kl + ku + 1)
+        AP: **[in]** device pointer to first banded matrix (A_1).
+            Leading (kl + ku + 1) by n part of the matrix contains the coefficients
+            of the banded matrix. The leading diagonal resides in row (ku + 1) with
+            the first super-diagonal above on the RHS of row ku. The first sub-diagonal
+            resides below on the LHS of row ku + 2. This propogates up and down across
+            sub/super-diagonals.
+              Ex: (m = n = 7; ku = 2, kl = 2)
+              1 2 3 0 0 0 0             0 0 3 3 3 3 3
+              4 1 2 3 0 0 0             0 2 2 2 2 2 2
+              5 4 1 2 3 0 0    ---->    1 1 1 1 1 1 1
+              0 5 4 1 2 3 0             4 4 4 4 4 4 0
+              0 0 5 4 1 2 0             5 5 5 5 5 0 0
+              0 0 0 5 4 1 2             0 0 0 0 0 0 0
+              0 0 0 0 5 4 1             0 0 0 0 0 0 0
+            Note that the empty elements which don't correspond to data will not
+            be referenced.
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        lda: **[in]** [int]
+            specifies the leading dimension of A. Must be >= (kl + ku + 1)
 
-        x: device pointer to first vector (x_1).
-        incx: [int]
-                specifies the increment for the elements of x.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1)
+        x: **[in]** device pointer to first vector (x_1).
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device pointer to first vector (y_1).
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1)
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (x_i+1)
+        beta: **[in]** device pointer or host pointer to scalar beta.
 
-        batchCount: [int]
-                specifies the number of instances in the batch.
+        y: **[inout]** device pointer to first vector (y_1).
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (x_i+1)
+
+        batchCount: **[in]** [int]
+            specifies the number of instances in the batch.
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -4626,33 +4680,36 @@ def hipblasSgemv(object handle, object trans, int m, int n, object alpha, object
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        trans: [hipblasOperation_t]
-                indicates whether matrix A is tranposed (conjugated) or not
+        trans: **[in]** [hipblasOperation_t]
+            indicates whether matrix A is tranposed (conjugated) or not
 
-        m: [int]
-                number of rows of matrix A
+        m: **[in]** [int]
+            number of rows of matrix A
 
-        n: [int]
-                number of columns of matrix A
+        n: **[in]** [int]
+            number of columns of matrix A
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device pointer storing matrix A.
-        lda: [int]
-                specifies the leading dimension of A.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        AP: **[in]** device pointer storing matrix A.
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device pointer storing vector y.
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -4734,36 +4791,39 @@ def hipblasSgemvBatched(object handle, object trans, int m, int n, object alpha,
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        trans: [hipblasOperation_t]
-                indicates whether matrices A_i are tranposed (conjugated) or not
+        trans: **[in]** [hipblasOperation_t]
+            indicates whether matrices A_i are tranposed (conjugated) or not
 
-        m: [int]
-                number of rows of each matrix A_i
+        m: **[in]** [int]
+            number of rows of each matrix A_i
 
-        n: [int]
-                number of columns of each matrix A_i
+        n: **[in]** [int]
+            number of columns of each matrix A_i
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device array of device pointers storing each matrix A_i.
-        lda: [int]
-                specifies the leading dimension of each matrix A_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each vector x_i.
+        AP: **[in]** device array of device pointers storing each matrix A_i.
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y           device array of device pointers storing each vector y_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each matrix A_i.
 
-        incy: [int]
-                specifies the increment for the elements of each vector y_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch
+        incx: **[in]** [int]
+            specifies the increment for the elements of each vector x_i.
+
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each vector y_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -4845,51 +4905,54 @@ def hipblasSgemvStridedBatched(object handle, object transA, int m, int n, objec
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        transA: [hipblasOperation_t]
-                indicates whether matrices A_i are tranposed (conjugated) or not
+        transA: **[in]** [hipblasOperation_t]
+            indicates whether matrices A_i are tranposed (conjugated) or not
 
-        m: [int]
-                number of rows of matrices A_i
+        m: **[in]** [int]
+            number of rows of matrices A_i
 
-        n: [int]
-                number of columns of matrices A_i
+        n: **[in]** [int]
+            number of columns of matrices A_i
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device pointer to the first matrix (A_1) in the batch.
-        lda: [int]
-                specifies the leading dimension of matrices A_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        AP: **[in]** device pointer to the first matrix (A_1) in the batch.
 
-        x: device pointer to the first vector (x_1) in the batch.
-        incx: [int]
-                specifies the increment for the elements of vectors x_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of matrices A_i.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
-                There are no restrictions placed on stridex, however the user should
-                take care to ensure that stridex is of appropriate size. When trans equals HIPBLAS_OP_N
-                this typically means stridex >= n * incx, otherwise stridex >= m * incx.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y           device pointer to the first vector (y_1) in the batch.
+        x: **[in]** device pointer to the first vector (x_1) in the batch.
 
-        incy: [int]
-                specifies the increment for the elements of vectors y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of vectors x_i.
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1).
-                There are no restrictions placed on stridey, however the user should
-                take care to ensure that stridey is of appropriate size. When trans equals HIPBLAS_OP_N
-                this typically means stridey >= m * incy, otherwise stridey >= n * incy. stridey should be non zero.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stridex, however the user should
+            take care to ensure that stridex is of appropriate size. When trans equals HIPBLAS_OP_N
+            this typically means stridex >= n * incx, otherwise stridex >= m * incx.
 
-        batchCount: [int]
-                number of instances in the batch
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device pointer to the first vector (y_1) in the batch.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of vectors y_i.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+            There are no restrictions placed on stridey, however the user should
+            take care to ensure that stridey is of appropriate size. When trans equals HIPBLAS_OP_N
+            this typically means stridey >= m * incy, otherwise stridey >= n * incy. stridey should be non zero.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")
@@ -4969,28 +5032,31 @@ def hipblasSger(object handle, int m, int n, object alpha, object x, int incx, o
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        m: [int]
-                the number of rows of the matrix A.
+        m: **[in]** [int]
+            the number of rows of the matrix A.
 
-        n: [int]
-                the number of columns of the matrix A.
+        n: **[in]** [int]
+            the number of columns of the matrix A.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        y: device pointer storing vector y.
-        incy: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                AP         device pointer storing matrix A.
+        x: **[in]** device pointer storing vector x.
 
-        lda: [int]
-                specifies the leading dimension of A.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        y: **[in]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        AP: **[inout]** device pointer storing matrix A.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
     """
     _hipblasSger__retval = hipblasStatus_t(chipblas.hipblasSger(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5085,31 +5151,34 @@ def hipblasSgerBatched(object handle, int m, int n, object alpha, object x, int 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        m: [int]
-                the number of rows of each matrix A_i.
+        m: **[in]** [int]
+            the number of rows of each matrix A_i.
 
-        n: [int]
-                the number of columns of eaceh matrix A_i.
+        n: **[in]** [int]
+            the number of columns of eaceh matrix A_i.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each vector x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        y: device array of device pointers storing each vector y_i.
-        incy: [int]
-                          specifies the increment for the elements of each vector y_i.
-                @param[inout]
-                AP        device array of device pointers storing each matrix A_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch
+        y: **[in]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each vector y_i.
+
+        AP: **[inout]** device array of device pointers storing each matrix A_i.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     _hipblasSgerBatched__retval = hipblasStatus_t(chipblas.hipblasSgerBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5204,47 +5273,49 @@ def hipblasSgerStridedBatched(object handle, int m, int n, object alpha, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        m: [int]
-                the number of rows of each matrix A_i.
+        m: **[in]** [int]
+            the number of rows of each matrix A_i.
 
-        n: [int]
-                the number of columns of each matrix A_i.
+        n: **[in]** [int]
+            the number of columns of each matrix A_i.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer to the first vector (x_1) in the batch.
-        incx: [int]
-                specifies the increments for the elements of each vector x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        stridex: [hipblasStride]
-                          stride from the start of one vector (x_i) and the next one (x_i+1).
-                          There are no restrictions placed on stridex, however the user should
-                          take care to ensure that stridex is of appropriate size, for a typical
-                          case this means stridex >= m * incx.
-                @param[inout]
-                y         device pointer to the first vector (y_1) in the batch.
+        x: **[in]** device pointer to the first vector (x_1) in the batch.
 
-        incy: [int]
-                specifies the increment for the elements of each vector y_i.
+        incx: **[in]** [int]
+            specifies the increments for the elements of each vector x_i.
 
-        stridey: [hipblasStride]
-                          stride from the start of one vector (y_i) and the next one (y_i+1).
-                          There are no restrictions placed on stridey, however the user should
-                          take care to ensure that stridey is of appropriate size, for a typical
-                          case this means stridey >= n * incy.
-                @param[inout]
-                AP        device pointer to the first matrix (A_1) in the batch.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stridex, however the user should
+            take care to ensure that stridex is of appropriate size, for a typical
+            case this means stridex >= m * incx.
 
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        y: **[inout]** device pointer to the first vector (y_1) in the batch.
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        incy: **[in]** [int]
+            specifies the increment for the elements of each vector y_i.
 
-        batchCount: [int]
-                number of instances in the batch
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+            There are no restrictions placed on stridey, however the user should
+            take care to ensure that stridey is of appropriate size, for a typical
+            case this means stridey >= n * incy.
+
+        AP: **[inout]** device pointer to the first matrix (A_1) in the batch.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     _hipblasSgerStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgerStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -5353,47 +5424,49 @@ def hipblasChbmv(object handle, object uplo, int n, int k, object alpha, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is being supplied.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is being supplied.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is being supplied.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is being supplied.
 
-        n: [int]
-                the order of the matrix A.
+        n: **[in]** [int]
+            the order of the matrix A.
 
-        k: [int]
-                the number of super-diagonals of the matrix A. Must be >= 0.
+        k: **[in]** [int]
+            the number of super-diagonals of the matrix A. Must be >= 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device pointer storing matrix A. Of dimension (lda, n).
-                if uplo == HIPBLAS_FILL_MODE_UPPER:
-                  The leading (k + 1) by n part of A must contain the upper
-                  triangular band part of the Hermitian matrix, with the leading
-                  diagonal in row (k + 1), the first super-diagonal on the RHS
-                  of row k, etc.
-                  The top left k by x triangle of A will not be referenced.
-                      Ex (upper, lda = n = 4, k = 1):
-                      A                             Represented matrix
-                      (0,0) (5,9) (6,8) (7,7)       (1, 0) (5, 9) (0, 0) (0, 0)
-                      (1,0) (2,0) (3,0) (4,0)       (5,-9) (2, 0) (6, 8) (0, 0)
-                      (0,0) (0,0) (0,0) (0,0)       (0, 0) (6,-8) (3, 0) (7, 7)
-                      (0,0) (0,0) (0,0) (0,0)       (0, 0) (0, 0) (7,-7) (4, 0)
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of A. must be >= k + 1
+        AP: **[in]** device pointer storing matrix A. Of dimension (lda, n).
+            if uplo == HIPBLAS_FILL_MODE_UPPER:
+              The leading (k + 1) by n part of A must contain the upper
+              triangular band part of the Hermitian matrix, with the leading
+              diagonal in row (k + 1), the first super-diagonal on the RHS
+              of row k, etc.
+              The top left k by x triangle of A will not be referenced.
+                  Ex (upper, lda = n = 4, k = 1):
+                  A                             Represented matrix
+                  (0,0) (5,9) (6,8) (7,7)       (1, 0) (5, 9) (0, 0) (0, 0)
+                  (1,0) (2,0) (3,0) (4,0)       (5,-9) (2, 0) (6, 8) (0, 0)
+                  (0,0) (0,0) (0,0) (0,0)       (0, 0) (6,-8) (3, 0) (7, 7)
+                  (0,0) (0,0) (0,0) (0,0)       (0, 0) (0, 0) (7,-7) (4, 0)
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        lda: **[in]** [int]
+            specifies the leading dimension of A. must be >= k + 1
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device pointer storing vector y.
+        x: **[in]** device pointer storing vector x.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -5456,50 +5529,52 @@ def hipblasChbmvBatched(object handle, object uplo, int n, int k, object alpha, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is being supplied.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is being supplied.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is being supplied.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is being supplied.
 
-        n: [int]
-                the order of each matrix A_i.
+        n: **[in]** [int]
+            the order of each matrix A_i.
 
-        k: [int]
-                the number of super-diagonals of each matrix A_i. Must be >= 0.
+        k: **[in]** [int]
+            the number of super-diagonals of each matrix A_i. Must be >= 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device array of device pointers storing each matrix_i A of dimension (lda, n).
-                if uplo == HIPBLAS_FILL_MODE_UPPER:
-                  The leading (k + 1) by n part of each A_i must contain the upper
-                  triangular band part of the Hermitian matrix, with the leading
-                  diagonal in row (k + 1), the first super-diagonal on the RHS
-                  of row k, etc.
-                  The top left k by x triangle of each A_i will not be referenced.
-                      Ex (upper, lda = n = 4, k = 1):
-                      A                             Represented matrix
-                      (0,0) (5,9) (6,8) (7,7)       (1, 0) (5, 9) (0, 0) (0, 0)
-                      (1,0) (2,0) (3,0) (4,0)       (5,-9) (2, 0) (6, 8) (0, 0)
-                      (0,0) (0,0) (0,0) (0,0)       (0, 0) (6,-8) (3, 0) (7, 7)
-                      (0,0) (0,0) (0,0) (0,0)       (0, 0) (0, 0) (7,-7) (4, 0)
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of each A_i. must be >= max(1, n)
+        AP: **[in]** device array of device pointers storing each matrix_i A of dimension (lda, n).
+            if uplo == HIPBLAS_FILL_MODE_UPPER:
+              The leading (k + 1) by n part of each A_i must contain the upper
+              triangular band part of the Hermitian matrix, with the leading
+              diagonal in row (k + 1), the first super-diagonal on the RHS
+              of row k, etc.
+              The top left k by x triangle of each A_i will not be referenced.
+                  Ex (upper, lda = n = 4, k = 1):
+                  A                             Represented matrix
+                  (0,0) (5,9) (6,8) (7,7)       (1, 0) (5, 9) (0, 0) (0, 0)
+                  (1,0) (2,0) (3,0) (4,0)       (5,-9) (2, 0) (6, 8) (0, 0)
+                  (0,0) (0,0) (0,0) (0,0)       (0, 0) (6,-8) (3, 0) (7, 7)
+                  (0,0) (0,0) (0,0) (0,0)       (0, 0) (0, 0) (7,-7) (4, 0)
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i. must be >= max(1, n)
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device array of device pointers storing each vector y_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -5562,59 +5637,61 @@ def hipblasChbmvStridedBatched(object handle, object uplo, int n, int k, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is being supplied.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is being supplied.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is being supplied.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is being supplied.
 
-        n: [int]
-                the order of each matrix A_i.
+        n: **[in]** [int]
+            the order of each matrix A_i.
 
-        k: [int]
-                the number of super-diagonals of each matrix A_i. Must be >= 0.
+        k: **[in]** [int]
+            the number of super-diagonals of each matrix A_i. Must be >= 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device array pointing to the first matrix A_1. Each A_i is of dimension (lda, n).
-                if uplo == HIPBLAS_FILL_MODE_UPPER:
-                  The leading (k + 1) by n part of each A_i must contain the upper
-                  triangular band part of the Hermitian matrix, with the leading
-                  diagonal in row (k + 1), the first super-diagonal on the RHS
-                  of row k, etc.
-                  The top left k by x triangle of each A_i will not be referenced.
-                      Ex (upper, lda = n = 4, k = 1):
-                      A                             Represented matrix
-                      (0,0) (5,9) (6,8) (7,7)       (1, 0) (5, 9) (0, 0) (0, 0)
-                      (1,0) (2,0) (3,0) (4,0)       (5,-9) (2, 0) (6, 8) (0, 0)
-                      (0,0) (0,0) (0,0) (0,0)       (0, 0) (6,-8) (3, 0) (7, 7)
-                      (0,0) (0,0) (0,0) (0,0)       (0, 0) (0, 0) (7,-7) (4, 0)
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of each A_i. must be >= max(1, n)
+        AP: **[in]** device array pointing to the first matrix A_1. Each A_i is of dimension (lda, n).
+            if uplo == HIPBLAS_FILL_MODE_UPPER:
+              The leading (k + 1) by n part of each A_i must contain the upper
+              triangular band part of the Hermitian matrix, with the leading
+              diagonal in row (k + 1), the first super-diagonal on the RHS
+              of row k, etc.
+              The top left k by x triangle of each A_i will not be referenced.
+                  Ex (upper, lda = n = 4, k = 1):
+                  A                             Represented matrix
+                  (0,0) (5,9) (6,8) (7,7)       (1, 0) (5, 9) (0, 0) (0, 0)
+                  (1,0) (2,0) (3,0) (4,0)       (5,-9) (2, 0) (6, 8) (0, 0)
+                  (0,0) (0,0) (0,0) (0,0)       (0, 0) (6,-8) (3, 0) (7, 7)
+                  (0,0) (0,0) (0,0) (0,0)       (0, 0) (0, 0) (7,-7) (4, 0)
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i. must be >= max(1, n)
 
-        x: device array pointing to the first vector y_1.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1)
+        x: **[in]** device array pointing to the first vector y_1.
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device array pointing to the first vector y_1.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1)
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1)
+        beta: **[in]** device pointer or host pointer to scalar beta.
 
-        batchCount: [int]
-                number of instances in the batch.
+        y: **[inout]** device array pointing to the first vector y_1.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -5661,42 +5738,44 @@ def hipblasChemv(object handle, object uplo, int n, object alpha, object AP, int
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: the upper triangular part of the Hermitian matrix A is supplied.
-                HIPBLAS_FILL_MODE_LOWER: the lower triangular part of the Hermitian matrix A is supplied.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: the upper triangular part of the Hermitian matrix A is supplied.
+            HIPBLAS_FILL_MODE_LOWER: the lower triangular part of the Hermitian matrix A is supplied.
 
-        n: [int]
-                the order of the matrix A.
+        n: **[in]** [int]
+            the order of the matrix A.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device pointer storing matrix A. Of dimension (lda, n).
-                if uplo == HIPBLAS_FILL_MODE_UPPER:
-                  The upper triangular part of A must contain
-                  the upper triangular part of a Hermitian matrix. The lower
-                  triangular part of A will not be referenced.
-                if uplo == HIPBLAS_FILL_MODE_LOWER:
-                  The lower triangular part of A must contain
-                  the lower triangular part of a Hermitian matrix. The upper
-                  triangular part of A will not be referenced.
-                As a Hermitian matrix, the imaginary part of the main diagonal
-                of A will not be referenced and is assumed to be == 0.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of A. must be >= max(1, n)
+        AP: **[in]** device pointer storing matrix A. Of dimension (lda, n).
+            if uplo == HIPBLAS_FILL_MODE_UPPER:
+              The upper triangular part of A must contain
+              the upper triangular part of a Hermitian matrix. The lower
+              triangular part of A will not be referenced.
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+              The lower triangular part of A must contain
+              the lower triangular part of a Hermitian matrix. The upper
+              triangular part of A will not be referenced.
+            As a Hermitian matrix, the imaginary part of the main diagonal
+            of A will not be referenced and is assumed to be == 0.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        lda: **[in]** [int]
+            specifies the leading dimension of A. must be >= max(1, n)
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device pointer storing vector y.
+        x: **[in]** device pointer storing vector x.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -5743,45 +5822,47 @@ def hipblasChemvBatched(object handle, object uplo, int n, object alpha, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: the upper triangular part of the Hermitian matrix A is supplied.
-                HIPBLAS_FILL_MODE_LOWER: the lower triangular part of the Hermitian matrix A is supplied.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: the upper triangular part of the Hermitian matrix A is supplied.
+            HIPBLAS_FILL_MODE_LOWER: the lower triangular part of the Hermitian matrix A is supplied.
 
-        n: [int]
-                the order of each matrix A_i.
+        n: **[in]** [int]
+            the order of each matrix A_i.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device array of device pointers storing each matrix A_i of dimension (lda, n).
-                if uplo == HIPBLAS_FILL_MODE_UPPER:
-                  The upper triangular part of each A_i must contain
-                  the upper triangular part of a Hermitian matrix. The lower
-                  triangular part of each A_i will not be referenced.
-                if uplo == HIPBLAS_FILL_MODE_LOWER:
-                  The lower triangular part of each A_i must contain
-                  the lower triangular part of a Hermitian matrix. The upper
-                  triangular part of each A_i will not be referenced.
-                As a Hermitian matrix, the imaginary part of the main diagonal
-                of each A_i will not be referenced and is assumed to be == 0.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of each A_i. must be >= max(1, n)
+        AP: **[in]** device array of device pointers storing each matrix A_i of dimension (lda, n).
+            if uplo == HIPBLAS_FILL_MODE_UPPER:
+              The upper triangular part of each A_i must contain
+              the upper triangular part of a Hermitian matrix. The lower
+              triangular part of each A_i will not be referenced.
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+              The lower triangular part of each A_i must contain
+              the lower triangular part of a Hermitian matrix. The upper
+              triangular part of each A_i will not be referenced.
+            As a Hermitian matrix, the imaginary part of the main diagonal
+            of each A_i will not be referenced and is assumed to be == 0.
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i. must be >= max(1, n)
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device array of device pointers storing each vector y_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -5828,54 +5909,56 @@ def hipblasChemvStridedBatched(object handle, object uplo, int n, object alpha, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: the upper triangular part of the Hermitian matrix A is supplied.
-                HIPBLAS_FILL_MODE_LOWER: the lower triangular part of the Hermitian matrix A is supplied.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: the upper triangular part of the Hermitian matrix A is supplied.
+            HIPBLAS_FILL_MODE_LOWER: the lower triangular part of the Hermitian matrix A is supplied.
 
-        n: [int]
-                the order of each matrix A_i.
+        n: **[in]** [int]
+            the order of each matrix A_i.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device array of device pointers storing each matrix A_i of dimension (lda, n).
-                if uplo == HIPBLAS_FILL_MODE_UPPER:
-                  The upper triangular part of each A_i must contain
-                  the upper triangular part of a Hermitian matrix. The lower
-                  triangular part of each A_i will not be referenced.
-                if uplo == HIPBLAS_FILL_MODE_LOWER:
-                  The lower triangular part of each A_i must contain
-                  the lower triangular part of a Hermitian matrix. The upper
-                  triangular part of each A_i will not be referenced.
-                As a Hermitian matrix, the imaginary part of the main diagonal
-                of each A_i will not be referenced and is assumed to be == 0.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of each A_i. must be >= max(1, n)
+        AP: **[in]** device array of device pointers storing each matrix A_i of dimension (lda, n).
+            if uplo == HIPBLAS_FILL_MODE_UPPER:
+              The upper triangular part of each A_i must contain
+              the upper triangular part of a Hermitian matrix. The lower
+              triangular part of each A_i will not be referenced.
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+              The lower triangular part of each A_i must contain
+              the lower triangular part of a Hermitian matrix. The upper
+              triangular part of each A_i will not be referenced.
+            As a Hermitian matrix, the imaginary part of the main diagonal
+            of each A_i will not be referenced and is assumed to be == 0.
 
-        strideA: [hipblasStride]
-                stride from the start of one (A_i) to the next (A_i+1)
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i. must be >= max(1, n)
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one (A_i) to the next (A_i+1)
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device array of device pointers storing each vector y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1).
+        beta: **[in]** device pointer or host pointer to scalar beta.
 
-        batchCount: [int]
-                number of instances in the batch.
+        y: **[inout]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -5920,36 +6003,38 @@ def hipblasCher(object handle, object uplo, int n, object alpha, object x, int i
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied in A.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied in A.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied in A.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied in A.
 
-        n: [int]
-                the number of rows and columns of matrix A, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of matrix A, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer storing vector x.
-        incx: [int]
-                          specifies the increment for the elements of x.
-                @param[inout]
-                AP        device pointer storing the specified triangular portion of
-                          the Hermitian matrix A. Of size (lda * n).
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of the Hermitian matrix A is supplied. The lower
-                            triangluar portion will not be touched.
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of the Hermitian matrix A is supplied. The upper
-                            triangular portion will not be touched.
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                         specifies the leading dimension of A. Must be at least max(1, n).
-                ******************************************************************
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        AP: **[inout]** device pointer storing the specified triangular portion of
+              the Hermitian matrix A. Of size (lda * n).
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of the Hermitian matrix A is supplied. The lower
+                triangluar portion will not be touched.
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of the Hermitian matrix A is supplied. The upper
+                triangular portion will not be touched.
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
+
+        lda: **[in]** [int]
+                     specifies the leading dimension of A. Must be at least max(1, n).
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -5990,39 +6075,41 @@ def hipblasCherBatched(object handle, object uplo, int n, object alpha, object x
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in A.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in A.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in A.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in A.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                          specifies the increment for the elements of each x_i.
-                @param[inout]
-                AP       device array of device pointers storing the specified triangular portion of
-                          each Hermitian matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each Hermitian matrix A_i is supplied. The lower triangular portion
-                            of each A_i will not be touched.
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each Hermitian matrix A_i is supplied. The upper triangular portion
-                            of each A_i will not be touched.
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of each A_i. Must be at least max(1, n).
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        AP: **[inout]** device array of device pointers storing the specified triangular portion of
+              each Hermitian matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each Hermitian matrix A_i is supplied. The lower triangular portion
+                of each A_i will not be touched.
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each Hermitian matrix A_i is supplied. The upper triangular portion
+                of each A_i will not be touched.
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i. Must be at least max(1, n).
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6063,45 +6150,47 @@ def hipblasCherStridedBatched(object handle, object uplo, int n, object alpha, o
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in A.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in A.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in A.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in A.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer pointing to the first vector (x_1).
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        stridex: [hipblasStride]
-                          stride from the start of one vector (x_i) and the next one (x_i+1).
-                @param[inout]
-                AP        device array of device pointers storing the specified triangular portion of
-                          each Hermitian matrix A_i. Points to the first matrix (A_1).
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each Hermitian matrix A_i is supplied. The lower triangular
-                            portion of each A_i will not be touched.
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each Hermitian matrix A_i is supplied. The upper triangular
-                            portion of each A_i will not be touched.
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
+        x: **[in]** device pointer pointing to the first vector (x_1).
 
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        strideA: [hipblasStride]
-                stride from the start of one (A_i) and the next (A_i+1)
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        AP: **[inout]** device array of device pointers storing the specified triangular portion of
+              each Hermitian matrix A_i. Points to the first matrix (A_1).
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each Hermitian matrix A_i is supplied. The lower triangular
+                portion of each A_i will not be touched.
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each Hermitian matrix A_i is supplied. The upper triangular
+                portion of each A_i will not be touched.
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one (A_i) and the next (A_i+1)
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6142,40 +6231,43 @@ def hipblasCher2(object handle, object uplo, int n, object alpha, object x, int 
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied.
 
-        n: [int]
-                the number of rows and columns of matrix A, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of matrix A, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        y: device pointer storing vector y.
-        incy: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                AP         device pointer storing the specified triangular portion of
-                          the Hermitian matrix A. Of size (lda, n).
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of the Hermitian matrix A is supplied. The lower triangular
-                            portion of A will not be touched.
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of the Hermitian matrix A is supplied. The upper triangular
-                            portion of A will not be touched.
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
+        x: **[in]** device pointer storing vector x.
 
-        lda: [int]
-                         specifies the leading dimension of A. Must be at least max(lda, 1).
-                ******************************************************************
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        y: **[in]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        AP: **[inout]** device pointer storing the specified triangular portion of
+              the Hermitian matrix A. Of size (lda, n).
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of the Hermitian matrix A is supplied. The lower triangular
+                portion of A will not be touched.
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of the Hermitian matrix A is supplied. The upper triangular
+                portion of A will not be touched.
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
+
+        lda: **[in]** [int]
+                     specifies the leading dimension of A. Must be at least max(lda, 1).
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6218,43 +6310,46 @@ def hipblasCher2Batched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of x.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        y: device array of device pointers storing each vector y_i.
-        incy: [int]
-                          specifies the increment for the elements of each y_i.
-                @param[inout]
-                AP         device array of device pointers storing the specified triangular portion of
-                          each Hermitian matrix A_i of size (lda, n).
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each Hermitian matrix A_i is supplied. The lower triangular
-                            portion of each A_i will not be touched.
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each Hermitian matrix A_i is supplied. The upper triangular
-                            portion of each A_i will not be touched.
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        lda: [int]
-                specifies the leading dimension of each A_i. Must be at least max(lda, 1).
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        y: **[in]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        AP: **[inout]** device array of device pointers storing the specified triangular portion of
+              each Hermitian matrix A_i of size (lda, n).
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each Hermitian matrix A_i is supplied. The lower triangular
+                portion of each A_i will not be touched.
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each Hermitian matrix A_i is supplied. The upper triangular
+                portion of each A_i will not be touched.
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i. Must be at least max(lda, 1).
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6297,52 +6392,55 @@ def hipblasCher2StridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer pointing to the first vector x_1.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        stridex: [hipblasStride]
-                specifies the stride between the beginning of one vector (x_i) and the next (x_i+1).
+        x: **[in]** device pointer pointing to the first vector x_1.
 
-        y: device pointer pointing to the first vector y_i.
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        stridey: [hipblasStride]
-                          specifies the stride between the beginning of one vector (y_i) and the next (y_i+1).
-                @param[inout]
-                AP        device pointer pointing to the first matrix (A_1). Stores the specified triangular portion of
-                          each Hermitian matrix A_i.
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each Hermitian matrix A_i is supplied. The lower triangular
-                            portion of each A_i will not be touched.
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each Hermitian matrix A_i is supplied. The upper triangular
-                            portion of each A_i will not be touched.
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
+        stridex: **[in]** [hipblasStride]
+            specifies the stride between the beginning of one vector (x_i) and the next (x_i+1).
 
-        lda: [int]
-                specifies the leading dimension of each A_i. Must be at least max(lda, 1).
+        y: **[in]** device pointer pointing to the first vector y_i.
 
-        strideA: [hipblasStride]
-                specifies the stride between the beginning of one matrix (A_i) and the next (A_i+1).
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        stridey: **[in]** [hipblasStride]
+            specifies the stride between the beginning of one vector (y_i) and the next (y_i+1).
+
+        AP: **[inout]** device pointer pointing to the first matrix (A_1). Stores the specified triangular portion of
+              each Hermitian matrix A_i.
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each Hermitian matrix A_i is supplied. The lower triangular
+                portion of each A_i will not be touched.
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each Hermitian matrix A_i is supplied. The upper triangular
+                portion of each A_i will not be touched.
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i. Must be at least max(lda, 1).
+
+        strideA: **[in]** [hipblasStride]
+            specifies the stride between the beginning of one matrix (A_i) and the next (A_i+1).
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6387,54 +6485,56 @@ def hipblasChpmv(object handle, object uplo, int n, object alpha, object AP, obj
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: the upper triangular part of the Hermitian matrix A is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: the lower triangular part of the Hermitian matrix A is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: the upper triangular part of the Hermitian matrix A is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: the lower triangular part of the Hermitian matrix A is supplied in AP.
 
-        n: [int]
-                the order of the matrix A, must be >= 0.
+        n: **[in]** [int]
+            the order of the matrix A, must be >= 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device pointer storing the packed version of the specified triangular portion of
-                  the Hermitian matrix A. Of at least size ((n * (n + 1)) / 2).
-                  if uplo == HIPBLAS_FILL_MODE_UPPER:
-                    The upper triangular portion of the Hermitian matrix A is supplied.
-                    The matrix is compacted so that AP contains the triangular portion column-by-column
-                    so that:
-                    AP(0) = A(0,0)
-                    AP(1) = A(0,1)
-                    AP(2) = A(1,1), etc.
-                        Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
-                            (1, 0) (2, 1) (3, 2)
-                            (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,1), (4,0), (3,2), (5,-1), (6,0)]
-                            (3,-2) (5, 1) (6, 0)
-                if uplo == HIPBLAS_FILL_MODE_LOWER:
-                    The lower triangular portion of the Hermitian matrix A is supplied.
-                    The matrix is compacted so that AP contains the triangular portion column-by-column
-                    so that:
-                    AP(0) = A(0,0)
-                    AP(1) = A(1,0)
-                    AP(2) = A(2,1), etc.
-                        Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
-                            (1, 0) (2, 1) (3, 2)
-                            (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,-1), (3,-2), (4,0), (5,1), (6,0)]
-                            (3,-2) (5, 1) (6, 0)
-                Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                to be 0.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        AP: **[in]** device pointer storing the packed version of the specified triangular portion of
+              the Hermitian matrix A. Of at least size ((n * (n + 1)) / 2).
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of the Hermitian matrix A is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(0,1)
+                AP(2) = A(1,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
+                        (1, 0) (2, 1) (3, 2)
+                        (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,1), (4,0), (3,2), (5,-1), (6,0)]
+                        (3,-2) (5, 1) (6, 0)
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of the Hermitian matrix A is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(1,0)
+                AP(2) = A(2,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
+                        (1, 0) (2, 1) (3, 2)
+                        (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,-1), (3,-2), (4,0), (5,1), (6,0)]
+                        (3,-2) (5, 1) (6, 0)
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device pointer storing vector y.
+        x: **[in]** device pointer storing vector x.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6482,57 +6582,59 @@ def hipblasChpmvBatched(object handle, object uplo, int n, object alpha, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: the upper triangular part of each Hermitian matrix A_i is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: the lower triangular part of each Hermitian matrix A_i is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: the upper triangular part of each Hermitian matrix A_i is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: the lower triangular part of each Hermitian matrix A_i is supplied in AP.
 
-        n: [int]
-                the order of each matrix A_i.
+        n: **[in]** [int]
+            the order of each matrix A_i.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device pointer of device pointers storing the packed version of the specified triangular
-                    portion of each Hermitian matrix A_i. Each A_i is of at least size ((n * (n + 1)) / 2).
-                    if uplo == HIPBLAS_FILL_MODE_UPPER:
-                    The upper triangular portion of each Hermitian matrix A_i is supplied.
-                    The matrix is compacted so that each AP_i contains the triangular portion column-by-column
-                    so that:
-                    AP(0) = A(0,0)
-                    AP(1) = A(0,1)
-                    AP(2) = A(1,1), etc.
-                        Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
-                            (1, 0) (2, 1) (3, 2)
-                            (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,1), (4,0), (3,2), (5,-1), (6,0)]
-                            (3,-2) (5, 1) (6, 0)
-                if uplo == HIPBLAS_FILL_MODE_LOWER:
-                    The lower triangular portion of each Hermitian matrix A_i is supplied.
-                    The matrix is compacted so that each AP_i contains the triangular portion column-by-column
-                    so that:
-                    AP(0) = A(0,0)
-                    AP(1) = A(1,0)
-                    AP(2) = A(2,1), etc.
-                        Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
-                            (1, 0) (2, 1) (3, 2)
-                            (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,-1), (3,-2), (4,0), (5,1), (6,0)]
-                            (3,-2) (5, 1) (6, 0)
-                Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                to be 0.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        AP: **[in]** device pointer of device pointers storing the packed version of the specified triangular
+                portion of each Hermitian matrix A_i. Each A_i is of at least size ((n * (n + 1)) / 2).
+                if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each Hermitian matrix A_i is supplied.
+                The matrix is compacted so that each AP_i contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(0,1)
+                AP(2) = A(1,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
+                        (1, 0) (2, 1) (3, 2)
+                        (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,1), (4,0), (3,2), (5,-1), (6,0)]
+                        (3,-2) (5, 1) (6, 0)
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each Hermitian matrix A_i is supplied.
+                The matrix is compacted so that each AP_i contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(1,0)
+                AP(2) = A(2,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
+                        (1, 0) (2, 1) (3, 2)
+                        (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,-1), (3,-2), (4,0), (5,1), (6,0)]
+                        (3,-2) (5, 1) (6, 0)
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device array of device pointers storing each vector y_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        beta: **[in]** device pointer or host pointer to scalar beta.
+
+        y: **[inout]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6580,66 +6682,68 @@ def hipblasChpmvStridedBatched(object handle, object uplo, int n, object alpha, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: the upper triangular part of each Hermitian matrix A_i is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: the lower triangular part of each Hermitian matrix A_i is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: the upper triangular part of each Hermitian matrix A_i is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: the lower triangular part of each Hermitian matrix A_i is supplied in AP.
 
-        n: [int]
-                the order of each matrix A_i.
+        n: **[in]** [int]
+            the order of each matrix A_i.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        AP: device pointer pointing to the beginning of the first matrix (AP_1). Stores the packed
-                      version of the specified triangular portion of each Hermitian matrix AP_i of size ((n * (n + 1)) / 2).
-                      if uplo == HIPBLAS_FILL_MODE_UPPER:
-                        The upper triangular portion of each Hermitian matrix A_i is supplied.
-                        The matrix is compacted so that each AP_i contains the triangular portion column-by-column
-                        so that:
-                        AP(0) = A(0,0)
-                        AP(1) = A(0,1)
-                        AP(2) = A(1,1), etc.
-                            Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
-                                (1, 0) (2, 1) (3, 2)
-                                (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,1), (4,0), (3,2), (5,-1), (6,0)]
-                                (3,-2) (5, 1) (6, 0)
-                    if uplo == HIPBLAS_FILL_MODE_LOWER:
-                        The lower triangular portion of each Hermitian matrix A_i is supplied.
-                        The matrix is compacted so that each AP_i contains the triangular portion column-by-column
-                        so that:
-                        AP(0) = A(0,0)
-                        AP(1) = A(1,0)
-                        AP(2) = A(2,1), etc.
-                            Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
-                                (1, 0) (2, 1) (3, 2)
-                                (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,-1), (3,-2), (4,0), (5,1), (6,0)]
-                                (3,-2) (5, 1) (6, 0)
-                Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                to be 0.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (AP_i) and the next one (AP_i+1).
+        AP: **[in]** device pointer pointing to the beginning of the first matrix (AP_1). Stores the packed
+                  version of the specified triangular portion of each Hermitian matrix AP_i of size ((n * (n + 1)) / 2).
+                  if uplo == HIPBLAS_FILL_MODE_UPPER:
+                    The upper triangular portion of each Hermitian matrix A_i is supplied.
+                    The matrix is compacted so that each AP_i contains the triangular portion column-by-column
+                    so that:
+                    AP(0) = A(0,0)
+                    AP(1) = A(0,1)
+                    AP(2) = A(1,1), etc.
+                        Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
+                            (1, 0) (2, 1) (3, 2)
+                            (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,1), (4,0), (3,2), (5,-1), (6,0)]
+                            (3,-2) (5, 1) (6, 0)
+                if uplo == HIPBLAS_FILL_MODE_LOWER:
+                    The lower triangular portion of each Hermitian matrix A_i is supplied.
+                    The matrix is compacted so that each AP_i contains the triangular portion column-by-column
+                    so that:
+                    AP(0) = A(0,0)
+                    AP(1) = A(1,0)
+                    AP(2) = A(2,1), etc.
+                        Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
+                            (1, 0) (2, 1) (3, 2)
+                            (2,-1) (4, 0) (5,-1)    -----> [(1,0), (2,-1), (3,-2), (4,0), (5,1), (6,0)]
+                            (3,-2) (5, 1) (6, 0)
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
 
-        x: device array pointing to the beginning of the first vector (x_1).
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (AP_i) and the next one (AP_i+1).
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
+        x: **[in]** device array pointing to the beginning of the first vector (x_1).
 
-        beta: device pointer or host pointer to scalar beta.
-                @param[inout]
-                y         device array pointing to the beginning of the first vector (y_1).
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1).
+        beta: **[in]** device pointer or host pointer to scalar beta.
 
-        batchCount: [int]
-                number of instances in the batch.
+        y: **[inout]** device array pointing to the beginning of the first vector (y_1).
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6684,49 +6788,51 @@ def hipblasChpr(object handle, object uplo, int n, object alpha, object x, int i
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of matrix A, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of matrix A, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer storing vector x.
-        incx: [int]
-                          specifies the increment for the elements of x.
-                @param[inout]
-                AP        device pointer storing the packed version of the specified triangular portion of
-                          the Hermitian matrix A. Of at least size ((n * (n + 1)) / 2).
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of the Hermitian matrix A is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of the Hermitian matrix A is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(2) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
-                 ******************************************************************
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
+
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        AP: **[inout]** device pointer storing the packed version of the specified triangular portion of
+                     the Hermitian matrix A. Of at least size ((n * (n + 1)) / 2).
+                     if uplo == HIPBLAS_FILL_MODE_UPPER:
+                       The upper triangular portion of the Hermitian matrix A is supplied.
+                       The matrix is compacted so that AP contains the triangular portion column-by-column
+                       so that:
+                       AP(0) = A(0,0)
+                       AP(1) = A(0,1)
+                       AP(2) = A(1,1), etc.
+                           Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
+                               (1, 0) (2, 1) (4,9)
+                               (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
+                               (4,-9) (5,-3) (6,0)
+                   if uplo == HIPBLAS_FILL_MODE_LOWER:
+                       The lower triangular portion of the Hermitian matrix A is supplied.
+                       The matrix is compacted so that AP contains the triangular portion column-by-column
+                       so that:
+                       AP(0) = A(0,0)
+                       AP(1) = A(1,0)
+                       AP(2) = A(2,1), etc.
+                           Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
+                               (1, 0) (2, 1) (4,9)
+                               (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
+                               (4,-9) (5,-3) (6,0)
+                   Note that the imaginary part of the diagonal elements are not accessed and are assumed
+                   to be 0.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6767,52 +6873,54 @@ def hipblasChprBatched(object handle, object uplo, int n, object alpha, object x
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                          specifies the increment for the elements of each x_i.
-                @param[inout]
-                AP        device array of device pointers storing the packed version of the specified triangular portion of
-                          each Hermitian matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each Hermitian matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each Hermitian matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(2) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        x: **[in]** device array of device pointers storing each vector x_i.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        AP: **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
+              each Hermitian matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each Hermitian matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(0,1)
+                AP(2) = A(1,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
+                        (1, 0) (2, 1) (4,9)
+                        (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
+                        (4,-9) (5,-3) (6,0)
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each Hermitian matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(1,0)
+                AP(2) = A(2,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
+                        (1, 0) (2, 1) (4,9)
+                        (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
+                        (4,-9) (5,-3) (6,0)
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6853,58 +6961,60 @@ def hipblasChprStridedBatched(object handle, object uplo, int n, object alpha, o
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer pointing to the first vector (x_1).
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        stridex: [hipblasStride]
-                          stride from the start of one vector (x_i) and the next one (x_i+1).
-                @param[inout]
-                AP        device array of device pointers storing the packed version of the specified triangular portion of
-                          each Hermitian matrix A_i. Points to the first matrix (A_1).
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each Hermitian matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each Hermitian matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(2) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
+        x: **[in]** device pointer pointing to the first vector (x_1).
 
-        strideA: [hipblasStride]
-                stride from the start of one (A_i) and the next (A_i+1)
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+
+        AP: **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
+              each Hermitian matrix A_i. Points to the first matrix (A_1).
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each Hermitian matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(0,1)
+                AP(2) = A(1,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
+                        (1, 0) (2, 1) (4,9)
+                        (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
+                        (4,-9) (5,-3) (6,0)
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each Hermitian matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(1,0)
+                AP(2) = A(2,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
+                        (1, 0) (2, 1) (4,9)
+                        (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
+                        (4,-9) (5,-3) (6,0)
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
+
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one (A_i) and the next (A_i+1)
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -6945,53 +7055,56 @@ def hipblasChpr2(object handle, object uplo, int n, object alpha, object x, int 
     - Supported precisions in cuBLAS  : c,z
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of matrix A, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of matrix A, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        y: device pointer storing vector y.
-        incy: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                AP        device pointer storing the packed version of the specified triangular portion of
-                          the Hermitian matrix A. Of at least size ((n * (n + 1)) / 2).
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of the Hermitian matrix A is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of the Hermitian matrix A is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(2) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
-                 ******************************************************************
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        y: **[in]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        AP: **[inout]** device pointer storing the packed version of the specified triangular portion of
+                     the Hermitian matrix A. Of at least size ((n * (n + 1)) / 2).
+                     if uplo == HIPBLAS_FILL_MODE_UPPER:
+                       The upper triangular portion of the Hermitian matrix A is supplied.
+                       The matrix is compacted so that AP contains the triangular portion column-by-column
+                       so that:
+                       AP(0) = A(0,0)
+                       AP(1) = A(0,1)
+                       AP(2) = A(1,1), etc.
+                           Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
+                               (1, 0) (2, 1) (4,9)
+                               (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
+                               (4,-9) (5,-3) (6,0)
+                   if uplo == HIPBLAS_FILL_MODE_LOWER:
+                       The lower triangular portion of the Hermitian matrix A is supplied.
+                       The matrix is compacted so that AP contains the triangular portion column-by-column
+                       so that:
+                       AP(0) = A(0,0)
+                       AP(1) = A(1,0)
+                       AP(2) = A(2,1), etc.
+                           Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
+                               (1, 0) (2, 1) (4,9)
+                               (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
+                               (4,-9) (5,-3) (6,0)
+                   Note that the imaginary part of the diagonal elements are not accessed and are assumed
+                   to be 0.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7034,56 +7147,59 @@ def hipblasChpr2Batched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        y: device array of device pointers storing each vector y_i.
-        incy: [int]
-                          specifies the increment for the elements of each y_i.
-                @param[inout]
-                AP        device array of device pointers storing the packed version of the specified triangular portion of
-                          each Hermitian matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each Hermitian matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each Hermitian matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(2) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        y: **[in]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        AP: **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
+              each Hermitian matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each Hermitian matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(0,1)
+                AP(2) = A(1,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
+                        (1, 0) (2, 1) (4,9)
+                        (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
+                        (4,-9) (5,-3) (6,0)
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each Hermitian matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(1,0)
+                AP(2) = A(2,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
+                        (1, 0) (2, 1) (4,9)
+                        (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
+                        (4,-9) (5,-3) (6,0)
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7126,65 +7242,68 @@ def hipblasChpr2StridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer pointing to the first vector (x_1).
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
+        x: **[in]** device pointer pointing to the first vector (x_1).
 
-        y: device pointer pointing to the first vector (y_1).
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        stridey: [hipblasStride]
-                          stride from the start of one vector (y_i) and the next one (y_i+1).
-                @param[inout]
-                AP        device array of device pointers storing the packed version of the specified triangular portion of
-                          each Hermitian matrix A_i. Points to the first matrix (A_1).
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each Hermitian matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each Hermitian matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(2) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
-                                    (1, 0) (2, 1) (4,9)
-                                    (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
-                                    (4,-9) (5,-3) (6,0)
-                        Note that the imaginary part of the diagonal elements are not accessed and are assumed
-                        to be 0.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
 
-        strideA: [hipblasStride]
-                stride from the start of one (A_i) and the next (A_i+1)
+        y: **[in]** device pointer pointing to the first vector (y_1).
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+
+        AP: **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
+              each Hermitian matrix A_i. Points to the first matrix (A_1).
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each Hermitian matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(0,1)
+                AP(2) = A(1,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_UPPER; n = 3)
+                        (1, 0) (2, 1) (4,9)
+                        (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,1), (3,0), (4,9), (5,3), (6,0)]
+                        (4,-9) (5,-3) (6,0)
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each Hermitian matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(1,0)
+                AP(2) = A(2,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_LOWER; n = 3)
+                        (1, 0) (2, 1) (4,9)
+                        (2,-1) (3, 0) (5,3)  -----> [(1,0), (2,-1), (4,-9), (3,0), (5,-3), (6,0)]
+                        (4,-9) (5,-3) (6,0)
+            Note that the imaginary part of the diagonal elements are not accessed and are assumed
+            to be 0.
+
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one (A_i) and the next (A_i+1)
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7229,31 +7348,37 @@ def hipblasSsbmv(object handle, object uplo, int n, int k, object alpha, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-        k: [int]
-                specifies the number of sub- and super-diagonals
+        n: **[in]** [int]
 
-        alpha: specifies the scalar alpha
-        AP: pointer storing matrix A on the GPU
-        lda: [int]
-                specifies the leading dimension of matrix A
+        k: **[in]** [int]
+            specifies the number of sub- and super-diagonals
 
-        x: pointer storing vector x on the GPU
-        incx: [int]
-                specifies the increment for the elements of x
+        alpha: **[in]** specifies the scalar alpha
 
-        beta: specifies the scalar beta
-        y: pointer storing vector y on the GPU
-        incy: [int]
-                specifies the increment for the elements of y
+        AP: **[in]** pointer storing matrix A on the GPU
+
+        lda: **[in]** [int]
+            specifies the leading dimension of matrix A
+
+        x: **[in]** pointer storing vector x on the GPU
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x
+
+        beta: **[in]** specifies the scalar beta
+
+        y: **[out]** pointer storing vector y on the GPU
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7302,36 +7427,41 @@ def hipblasSsbmvBatched(object handle, object uplo, int n, int k, object alpha, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                number of rows and columns of each matrix A_i
+        n: **[in]** [int]
+            number of rows and columns of each matrix A_i
 
-        k: [int]
-                specifies the number of sub- and super-diagonals
+        k: **[in]** [int]
+            specifies the number of sub- and super-diagonals
 
-        alpha: device pointer or host pointer to scalar alpha
-        AP: device array of device pointers storing each matrix A_i
-        lda: [int]
-                specifies the leading dimension of each matrix A_i
+        alpha: **[in]** device pointer or host pointer to scalar alpha
 
-        x: device array of device pointers storing each vector x_i
-        incx: [int]
-                specifies the increment for the elements of each vector x_i
+        AP: **[in]** device array of device pointers storing each matrix A_i
 
-        beta: device pointer or host pointer to scalar beta
-        y: device array of device pointers storing each vector y_i
-        incy: [int]
-                specifies the increment for the elements of each vector y_i
+        lda: **[in]** [int]
+            specifies the leading dimension of each matrix A_i
 
-        batchCount: [int]
-                number of instances in the batch
+        x: **[in]** device array of device pointers storing each vector x_i
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of each vector x_i
+
+        beta: **[in]** device pointer or host pointer to scalar beta
+
+        y: **[out]** device array of device pointers storing each vector y_i
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each vector y_i
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7380,51 +7510,56 @@ def hipblasSsbmvStridedBatched(object handle, object uplo, int n, int k, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                number of rows and columns of each matrix A_i
+        n: **[in]** [int]
+            number of rows and columns of each matrix A_i
 
-        k: [int]
-                specifies the number of sub- and super-diagonals
+        k: **[in]** [int]
+            specifies the number of sub- and super-diagonals
 
-        alpha: device pointer or host pointer to scalar alpha
-        AP: Device pointer to the first matrix A_1 on the GPU
-        lda: [int]
-                specifies the leading dimension of each matrix A_i
+        alpha: **[in]** device pointer or host pointer to scalar alpha
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        AP: **[in]** Device pointer to the first matrix A_1 on the GPU
 
-        x: Device pointer to the first vector x_1 on the GPU
-        incx: [int]
-                specifies the increment for the elements of each vector x_i
+        lda: **[in]** [int]
+            specifies the leading dimension of each matrix A_i
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
-                There are no restrictions placed on stridex, however the user should
-                take care to ensure that stridex is of appropriate size.
-                This typically means stridex >= n * incx. stridex should be non zero.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        beta: device pointer or host pointer to scalar beta
-        y: Device pointer to the first vector y_1 on the GPU
-        incy: [int]
-                specifies the increment for the elements of each vector y_i
+        x: **[in]** Device pointer to the first vector x_1 on the GPU
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1).
-                There are no restrictions placed on stridey, however the user should
-                take care to ensure that stridey is of appropriate size.
-                This typically means stridey >= n * incy. stridey should be non zero.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each vector x_i
 
-        batchCount: [int]
-                number of instances in the batch
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stridex, however the user should
+            take care to ensure that stridex is of appropriate size.
+            This typically means stridex >= n * incx. stridex should be non zero.
+
+        beta: **[in]** device pointer or host pointer to scalar beta
+
+        y: **[out]** Device pointer to the first vector y_1 on the GPU
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each vector y_i
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+            There are no restrictions placed on stridey, however the user should
+            take care to ensure that stridey is of appropriate size.
+            This typically means stridey >= n * incy. stridey should be non zero.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7471,25 +7606,31 @@ def hipblasSspmv(object handle, object uplo, int n, object alpha, object AP, obj
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-        alpha: specifies the scalar alpha
-        AP: pointer storing matrix A on the GPU
-        x: pointer storing vector x on the GPU
-        incx: [int]
-                specifies the increment for the elements of x
+        n: **[in]** [int]
 
-        beta: specifies the scalar beta
-        y: pointer storing vector y on the GPU
-        incy: [int]
-                specifies the increment for the elements of y
+        alpha: **[in]** specifies the scalar alpha
+
+        AP: **[in]** pointer storing matrix A on the GPU
+
+        x: **[in]** pointer storing vector x on the GPU
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x
+
+        beta: **[in]** specifies the scalar beta
+
+        y: **[out]** pointer storing vector y on the GPU
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7538,30 +7679,35 @@ def hipblasSspmvBatched(object handle, object uplo, int n, object alpha, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                number of rows and columns of each matrix A_i
+        n: **[in]** [int]
+            number of rows and columns of each matrix A_i
 
-        alpha: device pointer or host pointer to scalar alpha
-        AP: device array of device pointers storing each matrix A_i
-        x: device array of device pointers storing each vector x_i
-        incx: [int]
-                specifies the increment for the elements of each vector x_i
+        alpha: **[in]** device pointer or host pointer to scalar alpha
 
-        beta: device pointer or host pointer to scalar beta
-        y: device array of device pointers storing each vector y_i
-        incy: [int]
-                specifies the increment for the elements of each vector y_i
+        AP: **[in]** device array of device pointers storing each matrix A_i
 
-        batchCount: [int]
-                number of instances in the batch
+        x: **[in]** device array of device pointers storing each vector x_i
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of each vector x_i
+
+        beta: **[in]** device pointer or host pointer to scalar beta
+
+        y: **[out]** device array of device pointers storing each vector y_i
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each vector y_i
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7610,45 +7756,50 @@ def hipblasSspmvStridedBatched(object handle, object uplo, int n, object alpha, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                number of rows and columns of each matrix A_i
+        n: **[in]** [int]
+            number of rows and columns of each matrix A_i
 
-        alpha: device pointer or host pointer to scalar alpha
-        AP: Device pointer to the first matrix A_1 on the GPU
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        alpha: **[in]** device pointer or host pointer to scalar alpha
 
-        x: Device pointer to the first vector x_1 on the GPU
-        incx: [int]
-                specifies the increment for the elements of each vector x_i
+        AP: **[in]** Device pointer to the first matrix A_1 on the GPU
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
-                There are no restrictions placed on stridex, however the user should
-                take care to ensure that stridex is of appropriate size.
-                This typically means stridex >= n * incx. stridex should be non zero.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        beta: device pointer or host pointer to scalar beta
-        y: Device pointer to the first vector y_1 on the GPU
-        incy: [int]
-                specifies the increment for the elements of each vector y_i
+        x: **[in]** Device pointer to the first vector x_1 on the GPU
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1).
-                There are no restrictions placed on stridey, however the user should
-                take care to ensure that stridey is of appropriate size.
-                This typically means stridey >= n * incy. stridey should be non zero.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each vector x_i
 
-        batchCount: [int]
-                number of instances in the batch
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stridex, however the user should
+            take care to ensure that stridex is of appropriate size.
+            This typically means stridex >= n * incx. stridex should be non zero.
+
+        beta: **[in]** device pointer or host pointer to scalar beta
+
+        y: **[out]** Device pointer to the first vector y_1 on the GPU
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each vector y_i
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+            There are no restrictions placed on stridey, however the user should
+            take care to ensure that stridey is of appropriate size.
+            This typically means stridey >= n * incy. stridey should be non zero.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7693,49 +7844,51 @@ def hipblasSspr(object handle, object uplo, int n, object alpha, object x, int i
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of matrix A, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of matrix A, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer storing vector x.
-        incx: [int]
-                          specifies the increment for the elements of x.
-                @param[inout]
-                AP        device pointer storing the packed version of the specified triangular portion of
-                          the symmetric matrix A. Of at least size ((n * (n + 1)) / 2).
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of the symmetric matrix A is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
-                                    1 2 4 7
-                                    2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    4 5 6 9
-                                    7 8 9 0
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of the symmetric matrix A is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(2) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
-                                    1 2 3 4
-                                    2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    3 6 8 9
-                                    4 7 9 0
-                 ******************************************************************
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
+
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        AP: **[inout]** device pointer storing the packed version of the specified triangular portion of
+                     the symmetric matrix A. Of at least size ((n * (n + 1)) / 2).
+                     if uplo == HIPBLAS_FILL_MODE_UPPER:
+                       The upper triangular portion of the symmetric matrix A is supplied.
+                       The matrix is compacted so that AP contains the triangular portion column-by-column
+                       so that:
+                       AP(0) = A(0,0)
+                       AP(1) = A(0,1)
+                       AP(2) = A(1,1), etc.
+                           Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
+                               1 2 4 7
+                               2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                               4 5 6 9
+                               7 8 9 0
+                   if uplo == HIPBLAS_FILL_MODE_LOWER:
+                       The lower triangular portion of the symmetric matrix A is supplied.
+                       The matrix is compacted so that AP contains the triangular portion column-by-column
+                       so that:
+                       AP(0) = A(0,0)
+                       AP(1) = A(1,0)
+                       AP(2) = A(2,1), etc.
+                           Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
+                               1 2 3 4
+                               2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                               3 6 8 9
+                               4 7 9 0
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7804,52 +7957,54 @@ def hipblasSsprBatched(object handle, object uplo, int n, object alpha, object x
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                          specifies the increment for the elements of each x_i.
-                @param[inout]
-                AP        device array of device pointers storing the packed version of the specified triangular portion of
-                          each symmetric matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each symmetric matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
-                                    1 2 4 7
-                                    2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    4 5 6 9
-                                    7 8 9 0
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each symmetric matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(2) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
-                                    1 2 3 4
-                                    2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    3 6 8 9
-                                    4 7 9 0
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        x: **[in]** device array of device pointers storing each vector x_i.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        AP: **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
+              each symmetric matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each symmetric matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(0,1)
+                AP(2) = A(1,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
+                        1 2 4 7
+                        2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                        4 5 6 9
+                        7 8 9 0
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each symmetric matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(1,0)
+                AP(2) = A(2,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
+                        1 2 3 4
+                        2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                        3 6 8 9
+                        4 7 9 0
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -7918,58 +8073,60 @@ def hipblasSsprStridedBatched(object handle, object uplo, int n, object alpha, o
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer pointing to the first vector (x_1).
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        stridex: [hipblasStride]
-                          stride from the start of one vector (x_i) and the next one (x_i+1).
-                @param[inout]
-                AP        device pointer storing the packed version of the specified triangular portion of
-                          each symmetric matrix A_i. Points to the first A_1.
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each symmetric matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
-                                    1 2 4 7
-                                    2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    4 5 6 9
-                                    7 8 9 0
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each symmetric matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(2) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
-                                    1 2 3 4
-                                    2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    3 6 8 9
-                                    4 7 9 0
+        x: **[in]** device pointer pointing to the first vector (x_1).
 
-        strideA: [hipblasStride]
-                stride from the start of one (A_i) and the next (A_i+1)
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+
+        AP: **[inout]** device pointer storing the packed version of the specified triangular portion of
+              each symmetric matrix A_i. Points to the first A_1.
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each symmetric matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(0,1)
+                AP(2) = A(1,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
+                        1 2 4 7
+                        2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                        4 5 6 9
+                        7 8 9 0
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each symmetric matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(1,0)
+                AP(2) = A(2,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
+                        1 2 3 4
+                        2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                        3 6 8 9
+                        4 7 9 0
+
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one (A_i) and the next (A_i+1)
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -8038,53 +8195,56 @@ def hipblasSspr2(object handle, object uplo, int n, object alpha, object x, int 
     - Supported precisions in cuBLAS  : s,d
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of A is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of A is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of matrix A, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of matrix A, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        y: device pointer storing vector y.
-        incy: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                AP        device pointer storing the packed version of the specified triangular portion of
-                          the symmetric matrix A. Of at least size ((n * (n + 1)) / 2).
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of the symmetric matrix A is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
-                                    1 2 4 7
-                                    2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    4 5 6 9
-                                    7 8 9 0
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of the symmetric matrix A is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(n) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
-                                    1 2 3 4
-                                    2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    3 6 8 9
-                                    4 7 9 0
-                 ******************************************************************
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        y: **[in]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        AP: **[inout]** device pointer storing the packed version of the specified triangular portion of
+                     the symmetric matrix A. Of at least size ((n * (n + 1)) / 2).
+                     if uplo == HIPBLAS_FILL_MODE_UPPER:
+                       The upper triangular portion of the symmetric matrix A is supplied.
+                       The matrix is compacted so that AP contains the triangular portion column-by-column
+                       so that:
+                       AP(0) = A(0,0)
+                       AP(1) = A(0,1)
+                       AP(2) = A(1,1), etc.
+                           Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
+                               1 2 4 7
+                               2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                               4 5 6 9
+                               7 8 9 0
+                   if uplo == HIPBLAS_FILL_MODE_LOWER:
+                       The lower triangular portion of the symmetric matrix A is supplied.
+                       The matrix is compacted so that AP contains the triangular portion column-by-column
+                       so that:
+                       AP(0) = A(0,0)
+                       AP(1) = A(1,0)
+                       AP(n) = A(2,1), etc.
+                           Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
+                               1 2 3 4
+                               2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                               3 6 8 9
+                               4 7 9 0
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -8127,56 +8287,59 @@ def hipblasSspr2Batched(object handle, object uplo, int n, object alpha, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        y: device array of device pointers storing each vector y_i.
-        incy: [int]
-                          specifies the increment for the elements of each y_i.
-                @param[inout]
-                AP        device array of device pointers storing the packed version of the specified triangular portion of
-                          each symmetric matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each symmetric matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
-                                    1 2 4 7
-                                    2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    4 5 6 9
-                                    7 8 9 0
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each symmetric matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(n) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
-                                    1 2 3 4
-                                    2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    3 6 8 9
-                                    4 7 9 0
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        y: **[in]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        AP: **[inout]** device array of device pointers storing the packed version of the specified triangular portion of
+              each symmetric matrix A_i of at least size ((n * (n + 1)) / 2). Array is of at least size batchCount.
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each symmetric matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(0,1)
+                AP(2) = A(1,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
+                        1 2 4 7
+                        2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                        4 5 6 9
+                        7 8 9 0
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each symmetric matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(1,0)
+                AP(n) = A(2,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
+                        1 2 3 4
+                        2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                        3 6 8 9
+                        4 7 9 0
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -8219,65 +8382,68 @@ def hipblasSspr2StridedBatched(object handle, object uplo, int n, object alpha, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
-                HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            HIPBLAS_FILL_MODE_UPPER: The upper triangular part of each A_i is supplied in AP.
+            HIPBLAS_FILL_MODE_LOWER: The lower triangular part of each A_i is supplied in AP.
 
-        n: [int]
-                the number of rows and columns of each matrix A_i, must be at least 0.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A_i, must be at least 0.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer pointing to the first vector (x_1).
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
+        x: **[in]** device pointer pointing to the first vector (x_1).
 
-        y: device pointer pointing to the first vector (y_1).
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        stridey: [hipblasStride]
-                          stride from the start of one vector (y_i) and the next one (y_i+1).
-                @param[inout]
-                AP        device pointer storing the packed version of the specified triangular portion of
-                          each symmetric matrix A_i. Points to the first A_1.
-                          if uplo == HIPBLAS_FILL_MODE_UPPER:
-                            The upper triangular portion of each symmetric matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(0,1)
-                            AP(2) = A(1,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
-                                    1 2 4 7
-                                    2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    4 5 6 9
-                                    7 8 9 0
-                        if uplo == HIPBLAS_FILL_MODE_LOWER:
-                            The lower triangular portion of each symmetric matrix A_i is supplied.
-                            The matrix is compacted so that AP contains the triangular portion column-by-column
-                            so that:
-                            AP(0) = A(0,0)
-                            AP(1) = A(1,0)
-                            AP(n) = A(2,1), etc.
-                                Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
-                                    1 2 3 4
-                                    2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                                    3 6 8 9
-                                    4 7 9 0
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
 
-        strideA: [hipblasStride]
-                stride from the start of one (A_i) and the next (A_i+1)
+        y: **[in]** device pointer pointing to the first vector (y_1).
 
-        batchCount: [int]
-                           number of instances in the batch.
-                ******************************************************************
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+
+        AP: **[inout]** device pointer storing the packed version of the specified triangular portion of
+              each symmetric matrix A_i. Points to the first A_1.
+              if uplo == HIPBLAS_FILL_MODE_UPPER:
+                The upper triangular portion of each symmetric matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(0,1)
+                AP(2) = A(1,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_UPPER; n = 4)
+                        1 2 4 7
+                        2 3 5 8   -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                        4 5 6 9
+                        7 8 9 0
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+                The lower triangular portion of each symmetric matrix A_i is supplied.
+                The matrix is compacted so that AP contains the triangular portion column-by-column
+                so that:
+                AP(0) = A(0,0)
+                AP(1) = A(1,0)
+                AP(n) = A(2,1), etc.
+                    Ex: (HIPBLAS_FILL_MODE_LOWER; n = 4)
+                        1 2 3 4
+                        2 5 6 7    -----> [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+                        3 6 8 9
+                        4 7 9 0
+
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one (A_i) and the next (A_i+1)
+
+        batchCount: **[in]** [int]
+                       number of instances in the batch.
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -8322,28 +8488,34 @@ def hipblasSsymv(object handle, object uplo, int n, object alpha, object AP, int
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-        alpha: specifies the scalar alpha
-        AP: pointer storing matrix A on the GPU
-        lda: [int]
-                specifies the leading dimension of A
+        n: **[in]** [int]
 
-        x: pointer storing vector x on the GPU
-        incx: [int]
-                specifies the increment for the elements of x
+        alpha: **[in]** specifies the scalar alpha
 
-        beta: specifies the scalar beta
-        y: pointer storing vector y on the GPU
-        incy: [int]
-                specifies the increment for the elements of y
+        AP: **[in]** pointer storing matrix A on the GPU
+
+        lda: **[in]** [int]
+            specifies the leading dimension of A
+
+        x: **[in]** pointer storing vector x on the GPU
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x
+
+        beta: **[in]** specifies the scalar beta
+
+        y: **[out]** pointer storing vector y on the GPU
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -8425,33 +8597,38 @@ def hipblasSsymvBatched(object handle, object uplo, int n, object alpha, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                number of rows and columns of each matrix A_i
+        n: **[in]** [int]
+            number of rows and columns of each matrix A_i
 
-        alpha: device pointer or host pointer to scalar alpha
-        AP: device array of device pointers storing each matrix A_i
-        lda: [int]
-                specifies the leading dimension of each matrix A_i
+        alpha: **[in]** device pointer or host pointer to scalar alpha
 
-        x: device array of device pointers storing each vector x_i
-        incx: [int]
-                specifies the increment for the elements of each vector x_i
+        AP: **[in]** device array of device pointers storing each matrix A_i
 
-        beta: device pointer or host pointer to scalar beta
-        y: device array of device pointers storing each vector y_i
-        incy: [int]
-                specifies the increment for the elements of each vector y_i
+        lda: **[in]** [int]
+            specifies the leading dimension of each matrix A_i
 
-        batchCount: [int]
-                number of instances in the batch
+        x: **[in]** device array of device pointers storing each vector x_i
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of each vector x_i
+
+        beta: **[in]** device pointer or host pointer to scalar beta
+
+        y: **[out]** device array of device pointers storing each vector y_i
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each vector y_i
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -8533,48 +8710,53 @@ def hipblasSsymvStridedBatched(object handle, object uplo, int n, object alpha, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                number of rows and columns of each matrix A_i
+        n: **[in]** [int]
+            number of rows and columns of each matrix A_i
 
-        alpha: device pointer or host pointer to scalar alpha
-        AP: Device pointer to the first matrix A_1 on the GPU
-        lda: [int]
-                specifies the leading dimension of each matrix A_i
+        alpha: **[in]** device pointer or host pointer to scalar alpha
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        AP: **[in]** Device pointer to the first matrix A_1 on the GPU
 
-        x: Device pointer to the first vector x_1 on the GPU
-        incx: [int]
-                specifies the increment for the elements of each vector x_i
+        lda: **[in]** [int]
+            specifies the leading dimension of each matrix A_i
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
-                There are no restrictions placed on stridex, however the user should
-                take care to ensure that stridex is of appropriate size.
-                This typically means stridex >= n * incx. stridex should be non zero.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        beta: device pointer or host pointer to scalar beta
-        y: Device pointer to the first vector y_1 on the GPU
-        incy: [int]
-                specifies the increment for the elements of each vector y_i
+        x: **[in]** Device pointer to the first vector x_1 on the GPU
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1).
-                There are no restrictions placed on stridey, however the user should
-                take care to ensure that stridey is of appropriate size.
-                This typically means stridey >= n * incy. stridey should be non zero.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each vector x_i
 
-        batchCount: [int]
-                number of instances in the batch
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stridex, however the user should
+            take care to ensure that stridex is of appropriate size.
+            This typically means stridex >= n * incx. stridex should be non zero.
+
+        beta: **[in]** device pointer or host pointer to scalar beta
+
+        y: **[out]** Device pointer to the first vector y_1 on the GPU
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each vector y_i
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1).
+            There are no restrictions placed on stridey, however the user should
+            take care to ensure that stridey is of appropriate size.
+            This typically means stridey >= n * incy. stridey should be non zero.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -8653,26 +8835,28 @@ def hipblasSsyr(object handle, object uplo, int n, object alpha, object x, int i
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                the number of rows and columns of matrix A.
+        n: **[in]** [int]
+            the number of rows and columns of matrix A.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer storing vector x.
-        incx: [int]
-                          specifies the increment for the elements of x.
-                @param[inout]
-                AP         device pointer storing matrix A.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of A.
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        AP: **[inout]** device pointer storing matrix A.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -8743,29 +8927,31 @@ def hipblasSsyrBatched(object handle, object uplo, int n, object alpha, object x
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                the number of rows and columns of matrix A.
+        n: **[in]** [int]
+            the number of rows and columns of matrix A.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                          specifies the increment for the elements of each x_i.
-                @param[inout]
-                AP         device array of device pointers storing each matrix A_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        AP: **[inout]** device array of device pointers storing each matrix A_i.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -8836,35 +9022,37 @@ def hipblasSsyrStridedBatched(object handle, object uplo, int n, object alpha, o
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                the number of rows and columns of each matrix A.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer to the first vector x_1.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        stridex: [hipblasStride]
-                          specifies the pointer increment between vectors (x_i) and (x_i+1).
-                @param[inout]
-                AP         device pointer to the first matrix A_1.
+        x: **[in]** device pointer to the first vector x_1.
 
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        stridex: **[in]** [hipblasStride]
+            specifies the pointer increment between vectors (x_i) and (x_i+1).
 
-        batchCount: [int]
-                number of instances in the batch
+        AP: **[inout]** device pointer to the first matrix A_1.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -8935,30 +9123,33 @@ def hipblasSsyr2(object handle, object uplo, int n, object alpha, object x, int 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                the number of rows and columns of matrix A.
+        n: **[in]** [int]
+            the number of rows and columns of matrix A.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        y: device pointer storing vector y.
-        incy: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                AP         device pointer storing matrix A.
+        x: **[in]** device pointer storing vector x.
 
-        lda: [int]
-                specifies the leading dimension of A.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        y: **[in]** device pointer storing vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        AP: **[inout]** device pointer storing matrix A.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -9033,33 +9224,36 @@ def hipblasSsyr2Batched(object handle, object uplo, int n, object alpha, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                the number of rows and columns of matrix A.
+        n: **[in]** [int]
+            the number of rows and columns of matrix A.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        y: device array of device pointers storing each vector y_i.
-        incy: [int]
-                          specifies the increment for the elements of each y_i.
-                @param[inout]
-                AP         device array of device pointers storing each matrix A_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                number of instances in the batch
+        y: **[in]** device array of device pointers storing each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        AP: **[inout]** device array of device pointers storing each matrix A_i.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -9134,42 +9328,45 @@ def hipblasSsyr2StridedBatched(object handle, object uplo, int n, object alpha, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        n: [int]
-                the number of rows and columns of each matrix A.
+        n: **[in]** [int]
+            the number of rows and columns of each matrix A.
 
-        alpha: device pointer or host pointer to scalar alpha.
-        x: device pointer to the first vector x_1.
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        alpha: **[in]** device pointer or host pointer to scalar alpha.
 
-        stridex: [hipblasStride]
-                specifies the pointer increment between vectors (x_i) and (x_i+1).
+        x: **[in]** device pointer to the first vector x_1.
 
-        y: device pointer to the first vector y_1.
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        stridey: [hipblasStride]
-                          specifies the pointer increment between vectors (y_i) and (y_i+1).
-                @param[inout]
-                AP         device pointer to the first matrix A_1.
+        stridex: **[in]** [hipblasStride]
+            specifies the pointer increment between vectors (x_i) and (x_i+1).
 
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        y: **[in]** device pointer to the first vector y_1.
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
 
-        batchCount: [int]
-                number of instances in the batch
+        stridey: **[in]** [hipblasStride]
+            specifies the pointer increment between vectors (y_i) and (y_i+1).
+
+        AP: **[inout]** device pointer to the first matrix A_1.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")
@@ -9245,65 +9442,65 @@ def hipblasStbmv(object handle, object uplo, object transA, object diag, int m, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: A is an upper banded triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER: A is a  lower banded triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: A is an upper banded triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER: A is a  lower banded triangular matrix.
 
-        transA: [hipblasOperation_t]
-                indicates whether matrix A is tranposed (conjugated) or not.
+        transA: **[in]** [hipblasOperation_t]
+            indicates whether matrix A is tranposed (conjugated) or not.
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT: The main diagonal of A is assumed to consist of only
-                                       1's and is not referenced.
-                HIPBLAS_DIAG_NON_UNIT: No assumptions are made of A's main diagonal.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT: The main diagonal of A is assumed to consist of only
+                                   1's and is not referenced.
+            HIPBLAS_DIAG_NON_UNIT: No assumptions are made of A's main diagonal.
 
-        m: [int]
-                the number of rows and columns of the matrix represented by A.
+        m: **[in]** [int]
+            the number of rows and columns of the matrix represented by A.
 
-        k: [int]
-                if uplo == HIPBLAS_FILL_MODE_UPPER, k specifies the number of super-diagonals
-                of the matrix A.
-                if uplo == HIPBLAS_FILL_MODE_LOWER, k specifies the number of sub-diagonals
-                of the matrix A.
-                k must satisfy k > 0 && k < lda.
+        k: **[in]** [int]
+            if uplo == HIPBLAS_FILL_MODE_UPPER, k specifies the number of super-diagonals
+            of the matrix A.
+            if uplo == HIPBLAS_FILL_MODE_LOWER, k specifies the number of sub-diagonals
+            of the matrix A.
+            k must satisfy k > 0 && k < lda.
 
-        AP: device pointer storing banded triangular matrix A.
-                if uplo == HIPBLAS_FILL_MODE_UPPER:
-                  The matrix represented is an upper banded triangular matrix
-                  with the main diagonal and k super-diagonals, everything
-                  else can be assumed to be 0.
-                  The matrix is compacted so that the main diagonal resides on the k'th
-                  row, the first super diagonal resides on the RHS of the k-1'th row, etc,
-                  with the k'th diagonal on the RHS of the 0'th row.
-                     Ex: (HIPBLAS_FILL_MODE_UPPER; m = 5; k = 2)
-                        1 6 9 0 0              0 0 9 8 7
-                        0 2 7 8 0              0 6 7 8 9
-                        0 0 3 8 7     ---->    1 2 3 4 5
-                        0 0 0 4 9              0 0 0 0 0
-                        0 0 0 0 5              0 0 0 0 0
-                if uplo == HIPBLAS_FILL_MODE_LOWER:
-                  The matrix represnted is a lower banded triangular matrix
-                  with the main diagonal and k sub-diagonals, everything else can be
-                  assumed to be 0.
-                  The matrix is compacted so that the main diagonal resides on the 0'th row,
-                  working up to the k'th diagonal residing on the LHS of the k'th row.
-                     Ex: (HIPBLAS_FILL_MODE_LOWER; m = 5; k = 2)
-                        1 0 0 0 0              1 2 3 4 5
-                        6 2 0 0 0              6 7 8 9 0
-                        9 7 3 0 0     ---->    9 8 7 0 0
-                        0 8 8 4 0              0 0 0 0 0
-                        0 0 7 9 5              0 0 0 0 0
+        AP: **[in]** device pointer storing banded triangular matrix A.
+            if uplo == HIPBLAS_FILL_MODE_UPPER:
+              The matrix represented is an upper banded triangular matrix
+              with the main diagonal and k super-diagonals, everything
+              else can be assumed to be 0.
+              The matrix is compacted so that the main diagonal resides on the k'th
+              row, the first super diagonal resides on the RHS of the k-1'th row, etc,
+              with the k'th diagonal on the RHS of the 0'th row.
+                 Ex: (HIPBLAS_FILL_MODE_UPPER; m = 5; k = 2)
+                    1 6 9 0 0              0 0 9 8 7
+                    0 2 7 8 0              0 6 7 8 9
+                    0 0 3 8 7     ---->    1 2 3 4 5
+                    0 0 0 4 9              0 0 0 0 0
+                    0 0 0 0 5              0 0 0 0 0
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+              The matrix represnted is a lower banded triangular matrix
+              with the main diagonal and k sub-diagonals, everything else can be
+              assumed to be 0.
+              The matrix is compacted so that the main diagonal resides on the 0'th row,
+              working up to the k'th diagonal residing on the LHS of the k'th row.
+                 Ex: (HIPBLAS_FILL_MODE_LOWER; m = 5; k = 2)
+                    1 0 0 0 0              1 2 3 4 5
+                    6 2 0 0 0              6 7 8 9 0
+                    9 7 3 0 0     ---->    9 8 7 0 0
+                    0 8 8 4 0              0 0 0 0 0
+                    0 0 7 9 5              0 0 0 0 0
 
-        lda: [int]
-                          specifies the leading dimension of A. lda must satisfy lda > k.
-                @param[inout]
-                x         device pointer storing vector x.
+        lda: **[in]** [int]
+            specifies the leading dimension of A. lda must satisfy lda > k.
 
-        incx: [int]
-                specifies the increment for the elements of x.
+        x: **[inout]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -9388,68 +9585,68 @@ def hipblasStbmvBatched(object handle, object uplo, object transA, object diag, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: each A_i is an upper banded triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER: each A_i is a  lower banded triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: each A_i is an upper banded triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER: each A_i is a  lower banded triangular matrix.
 
-        transA: [hipblasOperation_t]
-                indicates whether each matrix A_i is tranposed (conjugated) or not.
+        transA: **[in]** [hipblasOperation_t]
+            indicates whether each matrix A_i is tranposed (conjugated) or not.
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT: The main diagonal of each A_i is assumed to consist of only
-                                       1's and is not referenced.
-                HIPBLAS_DIAG_NON_UNIT: No assumptions are made of each A_i's main diagonal.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT: The main diagonal of each A_i is assumed to consist of only
+                                   1's and is not referenced.
+            HIPBLAS_DIAG_NON_UNIT: No assumptions are made of each A_i's main diagonal.
 
-        m: [int]
-                the number of rows and columns of the matrix represented by each A_i.
+        m: **[in]** [int]
+            the number of rows and columns of the matrix represented by each A_i.
 
-        k: [int]
-                if uplo == HIPBLAS_FILL_MODE_UPPER, k specifies the number of super-diagonals
-                of each matrix A_i.
-                if uplo == HIPBLAS_FILL_MODE_LOWER, k specifies the number of sub-diagonals
-                of each matrix A_i.
-                k must satisfy k > 0 && k < lda.
+        k: **[in]** [int]
+            if uplo == HIPBLAS_FILL_MODE_UPPER, k specifies the number of super-diagonals
+            of each matrix A_i.
+            if uplo == HIPBLAS_FILL_MODE_LOWER, k specifies the number of sub-diagonals
+            of each matrix A_i.
+            k must satisfy k > 0 && k < lda.
 
-        AP: device array of device pointers storing each banded triangular matrix A_i.
-                if uplo == HIPBLAS_FILL_MODE_UPPER:
-                  The matrix represented is an upper banded triangular matrix
-                  with the main diagonal and k super-diagonals, everything
-                  else can be assumed to be 0.
-                  The matrix is compacted so that the main diagonal resides on the k'th
-                  row, the first super diagonal resides on the RHS of the k-1'th row, etc,
-                  with the k'th diagonal on the RHS of the 0'th row.
-                     Ex: (HIPBLAS_FILL_MODE_UPPER; m = 5; k = 2)
-                        1 6 9 0 0              0 0 9 8 7
-                        0 2 7 8 0              0 6 7 8 9
-                        0 0 3 8 7     ---->    1 2 3 4 5
-                        0 0 0 4 9              0 0 0 0 0
-                        0 0 0 0 5              0 0 0 0 0
-                if uplo == HIPBLAS_FILL_MODE_LOWER:
-                  The matrix represnted is a lower banded triangular matrix
-                  with the main diagonal and k sub-diagonals, everything else can be
-                  assumed to be 0.
-                  The matrix is compacted so that the main diagonal resides on the 0'th row,
-                  working up to the k'th diagonal residing on the LHS of the k'th row.
-                     Ex: (HIPBLAS_FILL_MODE_LOWER; m = 5; k = 2)
-                        1 0 0 0 0              1 2 3 4 5
-                        6 2 0 0 0              6 7 8 9 0
-                        9 7 3 0 0     ---->    9 8 7 0 0
-                        0 8 8 4 0              0 0 0 0 0
-                        0 0 7 9 5              0 0 0 0 0
+        AP: **[in]** device array of device pointers storing each banded triangular matrix A_i.
+            if uplo == HIPBLAS_FILL_MODE_UPPER:
+              The matrix represented is an upper banded triangular matrix
+              with the main diagonal and k super-diagonals, everything
+              else can be assumed to be 0.
+              The matrix is compacted so that the main diagonal resides on the k'th
+              row, the first super diagonal resides on the RHS of the k-1'th row, etc,
+              with the k'th diagonal on the RHS of the 0'th row.
+                 Ex: (HIPBLAS_FILL_MODE_UPPER; m = 5; k = 2)
+                    1 6 9 0 0              0 0 9 8 7
+                    0 2 7 8 0              0 6 7 8 9
+                    0 0 3 8 7     ---->    1 2 3 4 5
+                    0 0 0 4 9              0 0 0 0 0
+                    0 0 0 0 5              0 0 0 0 0
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+              The matrix represnted is a lower banded triangular matrix
+              with the main diagonal and k sub-diagonals, everything else can be
+              assumed to be 0.
+              The matrix is compacted so that the main diagonal resides on the 0'th row,
+              working up to the k'th diagonal residing on the LHS of the k'th row.
+                 Ex: (HIPBLAS_FILL_MODE_LOWER; m = 5; k = 2)
+                    1 0 0 0 0              1 2 3 4 5
+                    6 2 0 0 0              6 7 8 9 0
+                    9 7 3 0 0     ---->    9 8 7 0 0
+                    0 8 8 4 0              0 0 0 0 0
+                    0 0 7 9 5              0 0 0 0 0
 
-        lda: [int]
-                          specifies the leading dimension of each A_i. lda must satisfy lda > k.
-                @param[inout]
-                x         device array of device pointer storing each vector x_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i. lda must satisfy lda > k.
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        x: **[inout]** device array of device pointer storing each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -9534,74 +9731,74 @@ def hipblasStbmvStridedBatched(object handle, object uplo, object transA, object
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER: each A_i is an upper banded triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER: each A_i is a  lower banded triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER: each A_i is an upper banded triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER: each A_i is a  lower banded triangular matrix.
 
-        transA: [hipblasOperation_t]
-                indicates whether each matrix A_i is tranposed (conjugated) or not.
+        transA: **[in]** [hipblasOperation_t]
+            indicates whether each matrix A_i is tranposed (conjugated) or not.
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT: The main diagonal of each A_i is assumed to consist of only
-                                       1's and is not referenced.
-                HIPBLAS_DIAG_NON_UNIT: No assumptions are made of each A_i's main diagonal.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT: The main diagonal of each A_i is assumed to consist of only
+                                   1's and is not referenced.
+            HIPBLAS_DIAG_NON_UNIT: No assumptions are made of each A_i's main diagonal.
 
-        m: [int]
-                the number of rows and columns of the matrix represented by each A_i.
+        m: **[in]** [int]
+            the number of rows and columns of the matrix represented by each A_i.
 
-        k: [int]
-                if uplo == HIPBLAS_FILL_MODE_UPPER, k specifies the number of super-diagonals
-                of each matrix A_i.
-                if uplo == HIPBLAS_FILL_MODE_LOWER, k specifies the number of sub-diagonals
-                of each matrix A_i.
-                k must satisfy k > 0 && k < lda.
+        k: **[in]** [int]
+            if uplo == HIPBLAS_FILL_MODE_UPPER, k specifies the number of super-diagonals
+            of each matrix A_i.
+            if uplo == HIPBLAS_FILL_MODE_LOWER, k specifies the number of sub-diagonals
+            of each matrix A_i.
+            k must satisfy k > 0 && k < lda.
 
-        AP: device array to the first matrix A_i of the batch. Stores each banded triangular matrix A_i.
-                if uplo == HIPBLAS_FILL_MODE_UPPER:
-                  The matrix represented is an upper banded triangular matrix
-                  with the main diagonal and k super-diagonals, everything
-                  else can be assumed to be 0.
-                  The matrix is compacted so that the main diagonal resides on the k'th
-                  row, the first super diagonal resides on the RHS of the k-1'th row, etc,
-                  with the k'th diagonal on the RHS of the 0'th row.
-                     Ex: (HIPBLAS_FILL_MODE_UPPER; m = 5; k = 2)
-                        1 6 9 0 0              0 0 9 8 7
-                        0 2 7 8 0              0 6 7 8 9
-                        0 0 3 8 7     ---->    1 2 3 4 5
-                        0 0 0 4 9              0 0 0 0 0
-                        0 0 0 0 5              0 0 0 0 0
-                if uplo == HIPBLAS_FILL_MODE_LOWER:
-                  The matrix represnted is a lower banded triangular matrix
-                  with the main diagonal and k sub-diagonals, everything else can be
-                  assumed to be 0.
-                  The matrix is compacted so that the main diagonal resides on the 0'th row,
-                  working up to the k'th diagonal residing on the LHS of the k'th row.
-                     Ex: (HIPBLAS_FILL_MODE_LOWER; m = 5; k = 2)
-                        1 0 0 0 0              1 2 3 4 5
-                        6 2 0 0 0              6 7 8 9 0
-                        9 7 3 0 0     ---->    9 8 7 0 0
-                        0 8 8 4 0              0 0 0 0 0
-                        0 0 7 9 5              0 0 0 0 0
+        AP: **[in]** device array to the first matrix A_i of the batch. Stores each banded triangular matrix A_i.
+            if uplo == HIPBLAS_FILL_MODE_UPPER:
+              The matrix represented is an upper banded triangular matrix
+              with the main diagonal and k super-diagonals, everything
+              else can be assumed to be 0.
+              The matrix is compacted so that the main diagonal resides on the k'th
+              row, the first super diagonal resides on the RHS of the k-1'th row, etc,
+              with the k'th diagonal on the RHS of the 0'th row.
+                 Ex: (HIPBLAS_FILL_MODE_UPPER; m = 5; k = 2)
+                    1 6 9 0 0              0 0 9 8 7
+                    0 2 7 8 0              0 6 7 8 9
+                    0 0 3 8 7     ---->    1 2 3 4 5
+                    0 0 0 4 9              0 0 0 0 0
+                    0 0 0 0 5              0 0 0 0 0
+            if uplo == HIPBLAS_FILL_MODE_LOWER:
+              The matrix represnted is a lower banded triangular matrix
+              with the main diagonal and k sub-diagonals, everything else can be
+              assumed to be 0.
+              The matrix is compacted so that the main diagonal resides on the 0'th row,
+              working up to the k'th diagonal residing on the LHS of the k'th row.
+                 Ex: (HIPBLAS_FILL_MODE_LOWER; m = 5; k = 2)
+                    1 0 0 0 0              1 2 3 4 5
+                    6 2 0 0 0              6 7 8 9 0
+                    9 7 3 0 0     ---->    9 8 7 0 0
+                    0 8 8 4 0              0 0 0 0 0
+                    0 0 7 9 5              0 0 0 0 0
 
-        lda: [int]
-                specifies the leading dimension of each A_i. lda must satisfy lda > k.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i. lda must satisfy lda > k.
 
-        strideA: [hipblasStride]
-                          stride from the start of one A_i matrix to the next A_(i + 1).
-                @param[inout]
-                x         device array to the first vector x_i of the batch.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one A_i matrix to the next A_(i + 1).
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        x: **[inout]** device array to the first vector x_i of the batch.
 
-        stridex: [hipblasStride]
-                stride from the start of one x_i matrix to the next x_(i + 1).
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one x_i matrix to the next x_(i + 1).
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -9680,46 +9877,46 @@ def hipblasStbsv(object handle, object uplo, object transA, object diag, int n, 
     - Supported precisions in rocBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : s,d,c,z
 
-    @param[inout]
-    x         device pointer storing input vector b. Overwritten by the output vector x.
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: Solves A*x = b
-                HIPBLAS_OP_T: Solves A**T*x = b
-                HIPBLAS_OP_C: Solves A**H*x = b
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: Solves A*x = b
+            HIPBLAS_OP_T: Solves A**T*x = b
+            HIPBLAS_OP_C: Solves A**H*x = b
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular (i.e. the diagonal elements
-                                           of A are not used in computations).
-                HIPBLAS_DIAG_NON_UNIT: A is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular (i.e. the diagonal elements
+                                       of A are not used in computations).
+            HIPBLAS_DIAG_NON_UNIT: A is not assumed to be unit triangular.
 
-        n: [int]
-                n specifies the number of rows of b. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows of b. n >= 0.
 
-        k: [int]
-                if(uplo == HIPBLAS_FILL_MODE_UPPER)
-                  k specifies the number of super-diagonals of A.
-                if(uplo == HIPBLAS_FILL_MODE_LOWER)
-                  k specifies the number of sub-diagonals of A.
-                k >= 0.
+        k: **[in]** [int]
+            if(uplo == HIPBLAS_FILL_MODE_UPPER)
+              k specifies the number of super-diagonals of A.
+            if(uplo == HIPBLAS_FILL_MODE_LOWER)
+              k specifies the number of sub-diagonals of A.
+            k >= 0.
 
-        AP: device pointer storing the matrix A in banded format.
-        lda: [int]
-                specifies the leading dimension of A.
-                lda >= (k + 1).
+        AP: **[in]** device pointer storing the matrix A in banded format.
 
-        incx: [int]
-                specifies the increment for the elements of x.
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
+            lda >= (k + 1).
+
+        x: **[inout]** device pointer storing input vector b. Overwritten by the output vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -9801,50 +9998,50 @@ def hipblasStbsvBatched(object handle, object uplo, object transA, object diag, 
     - Supported precisions in rocBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    x         device vector of device pointers storing each input vector b_i. Overwritten by each output
-              vector x_i.
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: Solves A_i*x_i = b_i
-                HIPBLAS_OP_T: Solves A_i**T*x_i = b_i
-                HIPBLAS_OP_C: Solves A_i**H*x_i = b_i
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: Solves A_i*x_i = b_i
+            HIPBLAS_OP_T: Solves A_i**T*x_i = b_i
+            HIPBLAS_OP_C: Solves A_i**H*x_i = b_i
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular (i.e. the diagonal elements
-                                           of each A_i are not used in computations).
-                HIPBLAS_DIAG_NON_UNIT: each A_i is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular (i.e. the diagonal elements
+                                       of each A_i are not used in computations).
+            HIPBLAS_DIAG_NON_UNIT: each A_i is not assumed to be unit triangular.
 
-        n: [int]
-                n specifies the number of rows of each b_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows of each b_i. n >= 0.
 
-        k: [int]
-                if(uplo == HIPBLAS_FILL_MODE_UPPER)
-                  k specifies the number of super-diagonals of each A_i.
-                if(uplo == HIPBLAS_FILL_MODE_LOWER)
-                  k specifies the number of sub-diagonals of each A_i.
-                k >= 0.
+        k: **[in]** [int]
+            if(uplo == HIPBLAS_FILL_MODE_UPPER)
+              k specifies the number of super-diagonals of each A_i.
+            if(uplo == HIPBLAS_FILL_MODE_LOWER)
+              k specifies the number of sub-diagonals of each A_i.
+            k >= 0.
 
-        AP: device vector of device pointers storing each matrix A_i in banded format.
-        lda: [int]
-                specifies the leading dimension of each A_i.
-                lda >= (k + 1).
+        AP: **[in]** device vector of device pointers storing each matrix A_i in banded format.
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+            lda >= (k + 1).
 
-        batchCount: [int]
-                number of instances in the batch.
+        x: **[inout]** device vector of device pointers storing each input vector b_i. Overwritten by each output
+            vector x_i.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -9926,55 +10123,55 @@ def hipblasStbsvStridedBatched(object handle, object uplo, object transA, object
     - Supported precisions in rocBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    x         device pointer pointing to the first input vector b_1. Overwritten by output vectors x.
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: Solves A_i*x_i = b_i
-                HIPBLAS_OP_T: Solves A_i**T*x_i = b_i
-                HIPBLAS_OP_C: Solves A_i**H*x_i = b_i
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: Solves A_i*x_i = b_i
+            HIPBLAS_OP_T: Solves A_i**T*x_i = b_i
+            HIPBLAS_OP_C: Solves A_i**H*x_i = b_i
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular (i.e. the diagonal elements
-                                           of each A_i are not used in computations).
-                HIPBLAS_DIAG_NON_UNIT: each A_i is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular (i.e. the diagonal elements
+                                       of each A_i are not used in computations).
+            HIPBLAS_DIAG_NON_UNIT: each A_i is not assumed to be unit triangular.
 
-        n: [int]
-                n specifies the number of rows of each b_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows of each b_i. n >= 0.
 
-        k: [int]
-                if(uplo == HIPBLAS_FILL_MODE_UPPER)
-                  k specifies the number of super-diagonals of each A_i.
-                if(uplo == HIPBLAS_FILL_MODE_LOWER)
-                  k specifies the number of sub-diagonals of each A_i.
-                k >= 0.
+        k: **[in]** [int]
+            if(uplo == HIPBLAS_FILL_MODE_UPPER)
+              k specifies the number of super-diagonals of each A_i.
+            if(uplo == HIPBLAS_FILL_MODE_LOWER)
+              k specifies the number of sub-diagonals of each A_i.
+            k >= 0.
 
-        AP: device pointer pointing to the first banded matrix A_1.
-        lda: [int]
-                specifies the leading dimension of each A_i.
-                lda >= (k + 1).
+        AP: **[in]** device pointer pointing to the first banded matrix A_1.
 
-        strideA: [hipblasStride]
-                specifies the distance between the start of one matrix (A_i) and the next (A_i+1).
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+            lda >= (k + 1).
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        strideA: **[in]** [hipblasStride]
+            specifies the distance between the start of one matrix (A_i) and the next (A_i+1).
 
-        stridex: [hipblasStride]
-                specifies the distance between the start of one vector (x_i) and the next (x_i+1).
+        x: **[inout]** device pointer pointing to the first input vector b_1. Overwritten by output vectors x.
 
-        batchCount: [int]
-                number of instances in the batch.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        stridex: **[in]** [hipblasStride]
+            specifies the distance between the start of one vector (x_i) and the next (x_i+1).
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -10058,37 +10255,39 @@ def hipblasStpmv(object handle, object uplo, object transA, object diag, int m, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
+        transA: **[in]** [hipblasOperation_t]
 
-        m: [int]
-                m specifies the number of rows of A. m >= 0.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
 
-        AP: device pointer storing matrix A,
-                  of dimension at leat ( m * ( m + 1 ) / 2 ).
-                Before entry with uplo = HIPBLAS_FILL_MODE_UPPER, the array A
-                must contain the upper triangular matrix packed sequentially,
-                column by column, so that A[0] contains a_{0,0}, A[1] and A[2] contain
-                a_{0,1} and a_{1, 1} respectively, and so on.
-                Before entry with uplo = HIPBLAS_FILL_MODE_LOWER, the array A
-                must contain the lower triangular matrix packed sequentially,
-                column by column, so that A[0] contains a_{0,0}, A[1] and A[2] contain
-                a_{1,0} and a_{2,0} respectively, and so on.
-                Note that when DIAG = HIPBLAS_DIAG_UNIT, the diagonal elements of A are
-                not referenced, but are assumed to be unity.
+        m: **[in]** [int]
+            m specifies the number of rows of A. m >= 0.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x. incx must not be zero.
+        AP: **[in]** device pointer storing matrix A,
+              of dimension at leat ( m * ( m + 1 ) / 2 ).
+            Before entry with uplo = HIPBLAS_FILL_MODE_UPPER, the array A
+            must contain the upper triangular matrix packed sequentially,
+            column by column, so that A[0] contains a_{0,0}, A[1] and A[2] contain
+            a_{0,1} and a_{1, 1} respectively, and so on.
+            Before entry with uplo = HIPBLAS_FILL_MODE_LOWER, the array A
+            must contain the lower triangular matrix packed sequentially,
+            column by column, so that A[0] contains a_{0,0}, A[1] and A[2] contain
+            a_{1,0} and a_{2,0} respectively, and so on.
+            Note that when DIAG = HIPBLAS_DIAG_UNIT, the diagonal elements of A are
+            not referenced, but are assumed to be unity.
+
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x. incx must not be zero.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -10172,30 +10371,32 @@ def hipblasStpmvBatched(object handle, object uplo, object transA, object diag, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A_i is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
+        transA: **[in]** [hipblasOperation_t]
 
-        m: [int]
-                m specifies the number of rows of matrices A_i. m >= 0.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A_i is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
 
-        AP: device pointer storing pointer of matrices A_i,
-                of dimension ( lda, m )
+        m: **[in]** [int]
+            m specifies the number of rows of matrices A_i. m >= 0.
 
-        x: device pointer storing vectors x_i.
-        incx: [int]
-                specifies the increment for the elements of vectors x_i.
+        AP: **[in]** device pointer storing pointer of matrices A_i,
+            of dimension ( lda, m )
 
-        batchCount: [int]
-                The number of batched matrices/vectors.
+        x: **[in]** device pointer storing vectors x_i.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of vectors x_i.
+
+        batchCount: **[in]** [int]
+            The number of batched matrices/vectors.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -10280,36 +10481,38 @@ def hipblasStpmvStridedBatched(object handle, object uplo, object transA, object
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A_i is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
+        transA: **[in]** [hipblasOperation_t]
 
-        m: [int]
-                m specifies the number of rows of matrices A_i. m >= 0.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A_i is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
 
-        AP: device pointer of the matrix A_0,
-                of dimension ( lda, m )
+        m: **[in]** [int]
+            m specifies the number of rows of matrices A_i. m >= 0.
 
-        strideA: [hipblasStride]
-                stride from the start of one A_i matrix to the next A_{i + 1}
+        AP: **[in]** device pointer of the matrix A_0,
+            of dimension ( lda, m )
 
-        x: device pointer storing the vector x_0.
-        incx: [int]
-                specifies the increment for the elements of one vector x.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one A_i matrix to the next A_{i + 1}
 
-        stridex: [hipblasStride]
-                stride from the start of one x_i vector to the next x_{i + 1}
+        x: **[in]** device pointer storing the vector x_0.
 
-        batchCount: [int]
-                The number of batched matrices/vectors.
+        incx: **[in]** [int]
+            specifies the increment for the elements of one vector x.
+
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one x_i vector to the next x_{i + 1}
+
+        batchCount: **[in]** [int]
+            The number of batched matrices/vectors.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -10390,37 +10593,36 @@ def hipblasStpsv(object handle, object uplo, object transA, object diag, int m, 
     - Supported precisions in rocBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : s,d,c,z
 
-    @param[inout]
-    x         device pointer storing vector b on input, overwritten by x on output.
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: Solves A*x = b
-                HIPBLAS_OP_T: Solves A**T*x = b
-                HIPBLAS_OP_C: Solves A**H*x = b
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: Solves A*x = b
+            HIPBLAS_OP_T: Solves A**T*x = b
+            HIPBLAS_OP_C: Solves A**H*x = b
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular (i.e. the diagonal elements
-                                           of A are not used in computations).
-                HIPBLAS_DIAG_NON_UNIT: A is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular (i.e. the diagonal elements
+                                       of A are not used in computations).
+            HIPBLAS_DIAG_NON_UNIT: A is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of b. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of b. m >= 0.
 
-        AP: device pointer storing the packed version of matrix A,
-                of dimension >= (n * (n + 1) / 2)
+        AP: **[in]** device pointer storing the packed version of matrix A,
+            of dimension >= (n * (n + 1) / 2)
 
-        incx: [int]
-                specifies the increment for the elements of x.
+        x: **[inout]** device pointer storing vector b on input, overwritten by x on output.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -10502,40 +10704,39 @@ def hipblasStpsvBatched(object handle, object uplo, object transA, object diag, 
     - Supported precisions in rocBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    x         device array of device pointers storing each input vector b_i, overwritten by x_i on output.
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  each A_i is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  each A_i is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: Solves A*x = b
-                HIPBLAS_OP_T: Solves A**T*x = b
-                HIPBLAS_OP_C: Solves A**H*x = b
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: Solves A*x = b
+            HIPBLAS_OP_T: Solves A**T*x = b
+            HIPBLAS_OP_C: Solves A**H*x = b
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular (i.e. the diagonal elements
-                                           of each A_i are not used in computations).
-                HIPBLAS_DIAG_NON_UNIT: each A_i is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular (i.e. the diagonal elements
+                                       of each A_i are not used in computations).
+            HIPBLAS_DIAG_NON_UNIT: each A_i is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of each b_i. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of each b_i. m >= 0.
 
-        AP: device array of device pointers storing the packed versions of each matrix A_i,
-                of dimension >= (n * (n + 1) / 2)
+        AP: **[in]** device array of device pointers storing the packed versions of each matrix A_i,
+            of dimension >= (n * (n + 1) / 2)
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        x: **[inout]** device array of device pointers storing each input vector b_i, overwritten by x_i on output.
 
-        batchCount: [int]
-                specifies the number of instances in the batch.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        batchCount: **[in]** [int]
+            specifies the number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -10617,46 +10818,45 @@ def hipblasStpsvStridedBatched(object handle, object uplo, object transA, object
     - Supported precisions in rocBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    x         device pointer pointing to the first input vector b_1. Overwritten by each x_i on output.
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  each A_i is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  each A_i is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: Solves A*x = b
-                HIPBLAS_OP_T: Solves A**T*x = b
-                HIPBLAS_OP_C: Solves A**H*x = b
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: Solves A*x = b
+            HIPBLAS_OP_T: Solves A**T*x = b
+            HIPBLAS_OP_C: Solves A**H*x = b
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular (i.e. the diagonal elements
-                                           of each A_i are not used in computations).
-                HIPBLAS_DIAG_NON_UNIT: each A_i is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular (i.e. the diagonal elements
+                                       of each A_i are not used in computations).
+            HIPBLAS_DIAG_NON_UNIT: each A_i is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of each b_i. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of each b_i. m >= 0.
 
-        AP: device pointer pointing to the first packed matrix A_1,
-                of dimension >= (n * (n + 1) / 2)
+        AP: **[in]** device pointer pointing to the first packed matrix A_1,
+            of dimension >= (n * (n + 1) / 2)
 
-        strideA: [hipblasStride]
-                stride from the beginning of one packed matrix (AP_i) and the next (AP_i+1).
+        strideA: **[in]** [hipblasStride]
+            stride from the beginning of one packed matrix (AP_i) and the next (AP_i+1).
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        x: **[inout]** device pointer pointing to the first input vector b_1. Overwritten by each x_i on output.
 
-        stridex: [hipblasStride]
-                stride from the beginning of one vector (x_i) and the next (x_i+1).
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                specifies the number of instances in the batch.
+        stridex: **[in]** [hipblasStride]
+            stride from the beginning of one vector (x_i) and the next (x_i+1).
+
+        batchCount: **[in]** [int]
+            specifies the number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -10740,31 +10940,33 @@ def hipblasStrmv(object handle, object uplo, object transA, object diag, int m, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
+        transA: **[in]** [hipblasOperation_t]
 
-        m: [int]
-                m specifies the number of rows of A. m >= 0.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
 
-        AP: device pointer storing matrix A,
-                of dimension ( lda, m )
+        m: **[in]** [int]
+            m specifies the number of rows of A. m >= 0.
 
-        lda: [int]
-                specifies the leading dimension of A.
-                lda = max( 1, m ).
+        AP: **[in]** device pointer storing matrix A,
+            of dimension ( lda, m )
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
+            lda = max( 1, m ).
+
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -10848,34 +11050,36 @@ def hipblasStrmvBatched(object handle, object uplo, object transA, object diag, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A_i is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
+        transA: **[in]** [hipblasOperation_t]
 
-        m: [int]
-                m specifies the number of rows of matrices A_i. m >= 0.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A_i is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
 
-        AP: device pointer storing pointer of matrices A_i,
-                of dimension ( lda, m )
+        m: **[in]** [int]
+            m specifies the number of rows of matrices A_i. m >= 0.
 
-        lda: [int]
-                specifies the leading dimension of A_i.
-                lda >= max( 1, m ).
+        AP: **[in]** device pointer storing pointer of matrices A_i,
+            of dimension ( lda, m )
 
-        x: device pointer storing vectors x_i.
-        incx: [int]
-                specifies the increment for the elements of vectors x_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of A_i.
+            lda >= max( 1, m ).
 
-        batchCount: [int]
-                The number of batched matrices/vectors.
+        x: **[in]** device pointer storing vectors x_i.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of vectors x_i.
+
+        batchCount: **[in]** [int]
+            The number of batched matrices/vectors.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -10960,40 +11164,42 @@ def hipblasStrmvStridedBatched(object handle, object uplo, object transA, object
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A_i is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
+        transA: **[in]** [hipblasOperation_t]
 
-        m: [int]
-                m specifies the number of rows of matrices A_i. m >= 0.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A_i is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
 
-        AP: device pointer of the matrix A_0,
-                of dimension ( lda, m )
+        m: **[in]** [int]
+            m specifies the number of rows of matrices A_i. m >= 0.
 
-        lda: [int]
-                specifies the leading dimension of A_i.
-                lda >= max( 1, m ).
+        AP: **[in]** device pointer of the matrix A_0,
+            of dimension ( lda, m )
 
-        strideA: [hipblasStride]
-                stride from the start of one A_i matrix to the next A_{i + 1}
+        lda: **[in]** [int]
+            specifies the leading dimension of A_i.
+            lda >= max( 1, m ).
 
-        x: device pointer storing the vector x_0.
-        incx: [int]
-                specifies the increment for the elements of one vector x.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one A_i matrix to the next A_{i + 1}
 
-        stridex: [hipblasStride]
-                stride from the start of one x_i vector to the next x_{i + 1}
+        x: **[in]** device pointer storing the vector x_0.
 
-        batchCount: [int]
-                The number of batched matrices/vectors.
+        incx: **[in]** [int]
+            specifies the increment for the elements of one vector x.
+
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one x_i vector to the next x_{i + 1}
+
+        batchCount: **[in]** [int]
+            The number of batched matrices/vectors.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -11077,31 +11283,33 @@ def hipblasStrsv(object handle, object uplo, object transA, object diag, int m, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
+        transA: **[in]** [hipblasOperation_t]
 
-        m: [int]
-                m specifies the number of rows of b. m >= 0.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
 
-        AP: device pointer storing matrix A,
-                of dimension ( lda, m )
+        m: **[in]** [int]
+            m specifies the number of rows of b. m >= 0.
 
-        lda: [int]
-                specifies the leading dimension of A.
-                lda = max( 1, m ).
+        AP: **[in]** device pointer storing matrix A,
+            of dimension ( lda, m )
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment for the elements of x.
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
+            lda = max( 1, m ).
+
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -11187,32 +11395,35 @@ def hipblasStrsvBatched(object handle, object uplo, object transA, object diag, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
+        transA: **[in]** [hipblasOperation_t]
 
-        m: [int]
-                m specifies the number of rows of b. m >= 0.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
 
-        AP: device array of device pointers storing each matrix A_i.
-        lda: [int]
-                specifies the leading dimension of each A_i.
-                lda = max(1, m)
+        m: **[in]** [int]
+            m specifies the number of rows of b. m >= 0.
 
-        x: device array of device pointers storing each vector x_i.
-        incx: [int]
-                specifies the increment for the elements of x.
+        AP: **[in]** device array of device pointers storing each matrix A_i.
 
-        batchCount: [int]
-                number of instances in the batch
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+            lda = max(1, m)
+
+        x: **[in]** device array of device pointers storing each vector x_i.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -11297,38 +11508,41 @@ def hipblasStrsvStridedBatched(object handle, object uplo, object transA, object
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
+        transA: **[in]** [hipblasOperation_t]
 
-        m: [int]
-                m specifies the number of rows of each b_i. m >= 0.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
 
-        AP: device pointer to the first matrix (A_1) in the batch, of dimension ( lda, m )
-        strideA: [hipblasStride]
-                stride from the start of one A_i matrix to the next A_(i + 1)
+        m: **[in]** [int]
+            m specifies the number of rows of each b_i. m >= 0.
 
-        lda: [int]
-                specifies the leading dimension of each A_i.
-                lda = max( 1, m ).
+        AP: **[in]** device pointer to the first matrix (A_1) in the batch, of dimension ( lda, m )
 
-        x: device pointer to the first vector (x_1) in the batch.
-        stridex: [hipblasStride]
-                stride from the start of one x_i vector to the next x_(i + 1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one A_i matrix to the next A_(i + 1)
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
+            lda = max( 1, m ).
 
-        batchCount: [int]
-                number of instances in the batch
+        x: **[in,out]** device pointer to the first vector (x_1) in the batch.
+
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one x_i vector to the next x_(i + 1)
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -11419,35 +11633,41 @@ def hipblasHgemm(object handle, object transA, object transB, int m, int n, int 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-        transA: [hipblasOperation_t]
-                specifies the form of op( A )
+        handle: **[in]** [hipblasHandle_t]
 
-        transB: [hipblasOperation_t]
-                specifies the form of op( B )
+        transA: **[in]** [hipblasOperation_t]
+            specifies the form of op( A )
 
-        m: [int]
-                number or rows of matrices op( A ) and C
+        transB: **[in]** [hipblasOperation_t]
+            specifies the form of op( B )
 
-        n: [int]
-                number of columns of matrices op( B ) and C
+        m: **[in]** [int]
+            number or rows of matrices op( A ) and C
 
-        k: [int]
-                number of columns of matrix op( A ) and number of rows of matrix op( B )
+        n: **[in]** [int]
+            number of columns of matrices op( B ) and C
 
-        alpha: device pointer or host pointer specifying the scalar alpha.
-        AP: device pointer storing matrix A.
-        lda: [int]
-                specifies the leading dimension of A.
+        k: **[in]** [int]
+            number of columns of matrix op( A ) and number of rows of matrix op( B )
 
-        BP: device pointer storing matrix B.
-        ldb: [int]
-                specifies the leading dimension of B.
+        alpha: **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        beta: device pointer or host pointer specifying the scalar beta.
-        CP: device pointer storing matrix C on the GPU.
-        ldc: [int]
-                specifies the leading dimension of C.
+        AP: **[in]** device pointer storing matrix A.
+
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
+
+        BP: **[in]** device pointer storing matrix B.
+
+        ldb: **[in]** [int]
+            specifies the leading dimension of B.
+
+        beta: **[in]** device pointer or host pointer specifying the scalar beta.
+
+        CP: **[in,out]** device pointer storing matrix C on the GPU.
+
+        ldc: **[in]** [int]
+            specifies the leading dimension of C.
     """
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
@@ -11554,41 +11774,46 @@ def hipblasHgemmBatched(object handle, object transA, object transB, int m, int 
     - Supported precisions in cuBLAS  : h,s,d,c,z
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        transA: [hipblasOperation_t]
-                specifies the form of op( A )
+        transA: **[in]** [hipblasOperation_t]
+            specifies the form of op( A )
 
-        transB: [hipblasOperation_t]
-                specifies the form of op( B )
+        transB: **[in]** [hipblasOperation_t]
+            specifies the form of op( B )
 
-        m: [int]
-                matrix dimention m.
+        m: **[in]** [int]
+            matrix dimention m.
 
-        n: [int]
-                matrix dimention n.
+        n: **[in]** [int]
+            matrix dimention n.
 
-        k: [int]
-                matrix dimention k.
+        k: **[in]** [int]
+            matrix dimention k.
 
-        alpha: device pointer or host pointer specifying the scalar alpha.
-        AP: device array of device pointers storing each matrix A_i.
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        alpha: **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        BP: device array of device pointers storing each matrix B_i.
-        ldb: [int]
-                specifies the leading dimension of each B_i.
+        AP: **[in]** device array of device pointers storing each matrix A_i.
 
-        beta: device pointer or host pointer specifying the scalar beta.
-        CP: device array of device pointers storing each matrix C_i.
-        ldc: [int]
-                specifies the leading dimension of each C_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
 
-        batchCount: [int]
-                        number of gemm operations in the batch
-                ******************************************************************
+        BP: **[in]** device array of device pointers storing each matrix B_i.
+
+        ldb: **[in]** [int]
+            specifies the leading dimension of each B_i.
+
+        beta: **[in]** device pointer or host pointer specifying the scalar beta.
+
+        CP: **[in,out]** device array of device pointers storing each matrix C_i.
+
+        ldc: **[in]** [int]
+            specifies the leading dimension of each C_i.
+
+        batchCount: **[in]** [int]
+                    number of gemm operations in the batch
+            ******************************************************************
     """
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
@@ -11701,49 +11926,54 @@ def hipblasHgemmStridedBatched(object handle, object transA, object transB, int 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        transA: [hipblasOperation_t]
-                specifies the form of op( A )
+        transA: **[in]** [hipblasOperation_t]
+            specifies the form of op( A )
 
-        transB: [hipblasOperation_t]
-                specifies the form of op( B )
+        transB: **[in]** [hipblasOperation_t]
+            specifies the form of op( B )
 
-        m: [int]
-                matrix dimention m.
+        m: **[in]** [int]
+            matrix dimention m.
 
-        n: [int]
-                matrix dimention n.
+        n: **[in]** [int]
+            matrix dimention n.
 
-        k: [int]
-                matrix dimention k.
+        k: **[in]** [int]
+            matrix dimention k.
 
-        alpha: device pointer or host pointer specifying the scalar alpha.
-        AP: device pointer pointing to the first matrix A_1.
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        alpha: **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        strideA: [hipblasStride]
-                stride from the start of one A_i matrix to the next A_(i + 1).
+        AP: **[in]** device pointer pointing to the first matrix A_1.
 
-        BP: device pointer pointing to the first matrix B_1.
-        ldb: [int]
-                specifies the leading dimension of each B_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
 
-        strideB: [hipblasStride]
-                stride from the start of one B_i matrix to the next B_(i + 1).
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one A_i matrix to the next A_(i + 1).
 
-        beta: device pointer or host pointer specifying the scalar beta.
-        CP: device pointer pointing to the first matrix C_1.
-        ldc: [int]
-                specifies the leading dimension of each C_i.
+        BP: **[in]** device pointer pointing to the first matrix B_1.
 
-        strideC: [hipblasStride]
-                stride from the start of one C_i matrix to the next C_(i + 1).
+        ldb: **[in]** [int]
+            specifies the leading dimension of each B_i.
 
-        batchCount: [int]
-                number of gemm operatons in the batch
+        strideB: **[in]** [hipblasStride]
+            stride from the start of one B_i matrix to the next B_(i + 1).
+
+        beta: **[in]** device pointer or host pointer specifying the scalar beta.
+
+        CP: **[in,out]** device pointer pointing to the first matrix C_1.
+
+        ldc: **[in]** [int]
+            specifies the leading dimension of each C_i.
+
+        strideC: **[in]** [hipblasStride]
+            stride from the start of one C_i matrix to the next C_(i + 1).
+
+        batchCount: **[in]** [int]
+            number of gemm operatons in the batch
     """
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
@@ -11851,44 +12081,44 @@ def hipblasCherk(object handle, object uplo, object transA, int n, int k, object
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_C:  op(A) = A^H
-                HIPBLAS_ON_N:  op(A) = A
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_C:  op(A) = A^H
+            HIPBLAS_ON_N:  op(A) = A
 
-        n: [int]
-                n specifies the number of rows and columns of C. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: pointer storing matrix A on the GPU.
-                Martrix dimension is ( lda, k ) when if transA = HIPBLAS_OP_N, otherwise (lda, n)
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** pointer storing matrix A on the GPU.
+            Martrix dimension is ( lda, k ) when if transA = HIPBLAS_OP_N, otherwise (lda, n)
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: pointer storing matrix C on the GPU.
-                The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
+        CP: **[in]** pointer storing matrix C on the GPU.
+            The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -11940,46 +12170,46 @@ def hipblasCherkBatched(object handle, object uplo, object transA, int n, int k,
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_C: op(A) = A^H
-                HIPBLAS_OP_N: op(A) = A
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_C: op(A) = A^H
+            HIPBLAS_OP_N: op(A) = A
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: device array of device pointers storing each matrix_i A of dimension (lda, k)
-                when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+            when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: device array of device pointers storing each matrix C_i on the GPU.
-                The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
+        CP: **[in]** device array of device pointers storing each matrix C_i on the GPU.
+            The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
-        batchCount: [int]
-                number of instances in the batch.
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -12028,56 +12258,55 @@ def hipblasCherkStridedBatched(object handle, object uplo, object transA, int n,
     - Supported precisions in rocBLAS : c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    strideC  [hipblasStride]
-              stride from the start of one matrix (C_i) and the next one (C_i+1)
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_C: op(A) = A^H
-                HIPBLAS_OP_N: op(A) = A
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_C: op(A) = A^H
+            HIPBLAS_OP_N: op(A) = A
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
-                when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
+            when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: Device pointer to the first matrix C_1 on the GPU.
-                The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
+        CP: **[in]** Device pointer to the first matrix C_1 on the GPU.
+            The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
-        batchCount: [int]
-                number of instances in the batch.
+        strideC: **[inout]** [hipblasStride]
+            stride from the start of one matrix (C_i) and the next one (C_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -12130,53 +12359,53 @@ def hipblasCherkx(object handle, object uplo, object transA, int n, int k, objec
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_C:  op( A ) = A^H, op( B ) = B^H
-                HIPBLAS_OP_N:  op( A ) = A, op( B ) = B
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_C:  op( A ) = A^H, op( B ) = B^H
+            HIPBLAS_OP_N:  op( A ) = A, op( B ) = B
 
-        n: [int]
-                n specifies the number of rows and columns of C. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: pointer storing matrix A on the GPU.
-                Martrix dimension is ( lda, k ) when if trans = HIPBLAS_OP_N, otherwise (lda, n)
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** pointer storing matrix A on the GPU.
+            Martrix dimension is ( lda, k ) when if trans = HIPBLAS_OP_N, otherwise (lda, n)
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        BP: pointer storing matrix B on the GPU.
-                Martrix dimension is ( ldb, k ) when if trans = HIPBLAS_OP_N, otherwise (ldb, n)
-                only the upper/lower triangular part is accessed.
+        BP: **[in]** pointer storing matrix B on the GPU.
+            Martrix dimension is ( ldb, k ) when if trans = HIPBLAS_OP_N, otherwise (ldb, n)
+            only the upper/lower triangular part is accessed.
 
-        ldb: [int]
-                ldb specifies the first dimension of B.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: pointer storing matrix C on the GPU.
-                The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
+        CP: **[in]** pointer storing matrix C on the GPU.
+            The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -12231,54 +12460,54 @@ def hipblasCherkxBatched(object handle, object uplo, object transA, int n, int k
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_C: op(A) = A^H
-                HIPBLAS_OP_N: op(A) = A
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_C: op(A) = A^H
+            HIPBLAS_OP_N: op(A) = A
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: device array of device pointers storing each matrix_i A of dimension (lda, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        BP: device array of device pointers storing each matrix_i B of dimension (ldb, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
+        BP: **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
-        ldb: [int]
-                ldb specifies the first dimension of B_i.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: device array of device pointers storing each matrix C_i on the GPU.
-                The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
+        CP: **[in]** device array of device pointers storing each matrix C_i on the GPU.
+            The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
-        batchCount: [int]
-                number of instances in the batch.
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -12330,67 +12559,66 @@ def hipblasCherkxStridedBatched(object handle, object uplo, object transA, int n
     - Supported precisions in rocBLAS : c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    strideC  [hipblasStride]
-              stride from the start of one matrix (C_i) and the next one (C_i+1)
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_C: op( A_i ) = A_i^H, op( B_i ) = B_i^H
-                HIPBLAS_OP_N: op( A_i ) = A_i, op( B_i ) = B_i
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_C: op( A_i ) = A_i^H, op( B_i ) = B_i^H
+            HIPBLAS_OP_N: op( A_i ) = A_i, op( B_i ) = B_i
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        BP: Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
+        BP: **[in]** Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
-        ldb: [int]
-                ldb specifies the first dimension of B_i.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        strideB: [hipblasStride]
-                stride from the start of one matrix (B_i) and the next one (B_i+1)
+        strideB: **[in]** [hipblasStride]
+            stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: Device pointer to the first matrix C_1 on the GPU.
-                The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
+        CP: **[in]** Device pointer to the first matrix C_1 on the GPU.
+            The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
-        batchCount: [int]
-                number of instances in the batch.
+        strideC: **[inout]** [hipblasStride]
+            stride from the start of one matrix (C_i) and the next one (C_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -12444,53 +12672,53 @@ def hipblasCher2k(object handle, object uplo, object transA, int n, int k, objec
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_C:  op( A ) = A^H, op( B ) = B^H
-                HIPBLAS_OP_N:  op( A ) = A, op( B ) = B
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_C:  op( A ) = A^H, op( B ) = B^H
+            HIPBLAS_OP_N:  op( A ) = A, op( B ) = B
 
-        n: [int]
-                n specifies the number of rows and columns of C. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: pointer storing matrix A on the GPU.
-                Martrix dimension is ( lda, k ) when if trans = HIPBLAS_OP_N, otherwise (lda, n)
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** pointer storing matrix A on the GPU.
+            Martrix dimension is ( lda, k ) when if trans = HIPBLAS_OP_N, otherwise (lda, n)
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        BP: pointer storing matrix B on the GPU.
-                Martrix dimension is ( ldb, k ) when if trans = HIPBLAS_OP_N, otherwise (ldb, n)
-                only the upper/lower triangular part is accessed.
+        BP: **[in]** pointer storing matrix B on the GPU.
+            Martrix dimension is ( ldb, k ) when if trans = HIPBLAS_OP_N, otherwise (ldb, n)
+            only the upper/lower triangular part is accessed.
 
-        ldb: [int]
-                ldb specifies the first dimension of B.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: pointer storing matrix C on the GPU.
-                The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
+        CP: **[in]** pointer storing matrix C on the GPU.
+            The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -12544,54 +12772,54 @@ def hipblasCher2kBatched(object handle, object uplo, object transA, int n, int k
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_C: op(A) = A^H
-                HIPBLAS_OP_N: op(A) = A
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_C: op(A) = A^H
+            HIPBLAS_OP_N: op(A) = A
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: device array of device pointers storing each matrix_i A of dimension (lda, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        BP: device array of device pointers storing each matrix_i B of dimension (ldb, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
+        BP: **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
-        ldb: [int]
-                ldb specifies the first dimension of B_i.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: device array of device pointers storing each matrix C_i on the GPU.
-                The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
+        CP: **[in]** device array of device pointers storing each matrix C_i on the GPU.
+            The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
-        batchCount: [int]
-                number of instances in the batch.
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -12642,67 +12870,66 @@ def hipblasCher2kStridedBatched(object handle, object uplo, object transA, int n
     - Supported precisions in rocBLAS : c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    strideC  [hipblasStride]
-              stride from the start of one matrix (C_i) and the next one (C_i+1)
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_C: op( A_i ) = A_i^H, op( B_i ) = B_i^H
-                HIPBLAS_OP_N: op( A_i ) = A_i, op( B_i ) = B_i
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_C: op( A_i ) = A_i^H, op( B_i ) = B_i^H
+            HIPBLAS_OP_N: op( A_i ) = A_i, op( B_i ) = B_i
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        BP: Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
+        BP: **[in]** Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
-        ldb: [int]
-                ldb specifies the first dimension of B_i.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        strideB: [hipblasStride]
-                stride from the start of one matrix (B_i) and the next one (B_i+1)
+        strideB: **[in]** [hipblasStride]
+            stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: Device pointer to the first matrix C_1 on the GPU.
-                The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
+        CP: **[in]** Device pointer to the first matrix C_1 on the GPU.
+            The imaginary component of the diagonal elements are not used but are set to zero unless quick return.
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
 
-        batchCount: [int]
-                number of instances in the batch.
+        strideC: **[inout]** [hipblasStride]
+            stride from the start of one matrix (C_i) and the next one (C_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -12754,50 +12981,50 @@ def hipblasSsymm(object handle, object side, object uplo, int m, int n, object a
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:      C := alpha*A*B + beta*C
-                HIPBLAS_SIDE_RIGHT:     C := alpha*B*A + beta*C
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:      C := alpha*A*B + beta*C
+            HIPBLAS_SIDE_RIGHT:     C := alpha*B*A + beta*C
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix
 
-        m: [int]
-                m specifies the number of rows of B and C. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of B and C. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of B and C. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of B and C. n >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A and B are not referenced.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A and B are not referenced.
 
-        AP: pointer storing matrix A on the GPU.
-                A is m by m if side == HIPBLAS_SIDE_LEFT
-                A is n by n if side == HIPBLAS_SIDE_RIGHT
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** pointer storing matrix A on the GPU.
+            A is m by m if side == HIPBLAS_SIDE_LEFT
+            A is n by n if side == HIPBLAS_SIDE_RIGHT
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                otherwise lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            otherwise lda >= max( 1, n ).
 
-        BP: pointer storing matrix B on the GPU.
-                Matrix dimension is m by n
+        BP: **[in]** pointer storing matrix B on the GPU.
+            Matrix dimension is m by n
 
-        ldb: [int]
-                ldb specifies the first dimension of B. ldb >= max( 1, m )
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B. ldb >= max( 1, m )
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: pointer storing matrix C on the GPU.
-                Matrix dimension is m by n
+        CP: **[in]** pointer storing matrix C on the GPU.
+            Matrix dimension is m by n
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, m )
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, m )
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -12885,53 +13112,53 @@ def hipblasSsymmBatched(object handle, object side, object uplo, int m, int n, o
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:      C_i := alpha*A_i*B_i + beta*C_i
-                HIPBLAS_SIDE_RIGHT:     C_i := alpha*B_i*A_i + beta*C_i
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:      C_i := alpha*A_i*B_i + beta*C_i
+            HIPBLAS_SIDE_RIGHT:     C_i := alpha*B_i*A_i + beta*C_i
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix
 
-        m: [int]
-                m specifies the number of rows of B_i and C_i. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of B_i and C_i. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of B_i and C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of B_i and C_i. n >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A_i and B_i are not referenced.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A_i and B_i are not referenced.
 
-        AP: device array of device pointers storing each matrix A_i on the GPU.
-                A_i is m by m if side == HIPBLAS_SIDE_LEFT
-                A_i is n by n if side == HIPBLAS_SIDE_RIGHT
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** device array of device pointers storing each matrix A_i on the GPU.
+            A_i is m by m if side == HIPBLAS_SIDE_LEFT
+            A_i is n by n if side == HIPBLAS_SIDE_RIGHT
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                otherwise lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            otherwise lda >= max( 1, n ).
 
-        BP: device array of device pointers storing each matrix B_i on the GPU.
-                Matrix dimension is m by n
+        BP: **[in]** device array of device pointers storing each matrix B_i on the GPU.
+            Matrix dimension is m by n
 
-        ldb: [int]
-                ldb specifies the first dimension of B_i. ldb >= max( 1, m )
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i. ldb >= max( 1, m )
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C_i need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C_i need not be set before entry.
 
-        CP: device array of device pointers storing each matrix C_i on the GPU.
-                Matrix dimension is m by n
+        CP: **[in]** device array of device pointers storing each matrix C_i on the GPU.
+            Matrix dimension is m by n
 
-        ldc: [int]
-                ldc specifies the first dimension of C_i. ldc >= max( 1, m )
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C_i. ldc >= max( 1, m )
 
-        batchCount: [int]
-                number of instances in the batch.
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -13016,62 +13243,63 @@ def hipblasSsymmStridedBatched(object handle, object side, object uplo, int m, i
     - Supported precisions in rocBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    strideC  [hipblasStride]
-              stride from the start of one matrix (C_i) and the next one (C_i+1)
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:      C_i := alpha*A_i*B_i + beta*C_i
-                HIPBLAS_SIDE_RIGHT:     C_i := alpha*B_i*A_i + beta*C_i
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:      C_i := alpha*A_i*B_i + beta*C_i
+            HIPBLAS_SIDE_RIGHT:     C_i := alpha*B_i*A_i + beta*C_i
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix
 
-        m: [int]
-                m specifies the number of rows of B_i and C_i. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of B_i and C_i. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of B_i and C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of B_i and C_i. n >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A_i and B_i are not referenced.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A_i and B_i are not referenced.
 
-        AP: device pointer to first matrix A_1
-                A_i is m by m if side == HIPBLAS_SIDE_LEFT
-                A_i is n by n if side == HIPBLAS_SIDE_RIGHT
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** device pointer to first matrix A_1
+            A_i is m by m if side == HIPBLAS_SIDE_LEFT
+            A_i is n by n if side == HIPBLAS_SIDE_RIGHT
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                otherwise lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            otherwise lda >= max( 1, n ).
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        BP: device pointer to first matrix B_1 of dimension (ldb, n) on the GPU.
-        ldb: [int]
-                ldb specifies the first dimension of B_i. ldb >= max( 1, m )
+        BP: **[in]** device pointer to first matrix B_1 of dimension (ldb, n) on the GPU.
 
-        strideB: [hipblasStride]
-                stride from the start of one matrix (B_i) and the next one (B_i+1)
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i. ldb >= max( 1, m )
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        strideB: **[in]** [hipblasStride]
+            stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        CP: device pointer to first matrix C_1 of dimension (ldc, n) on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, m ).
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        batchCount: [int]
-                number of instances in the batch.
+        CP: **[in]** device pointer to first matrix C_1 of dimension (ldc, n) on the GPU.
+
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, m ).
+
+        strideC: **[inout]** [hipblasStride]
+            stride from the start of one matrix (C_i) and the next one (C_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -13164,43 +13392,44 @@ def hipblasSsyrk(object handle, object uplo, object transA, int n, int k, object
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_T: op(A) = A^T
-                HIPBLAS_OP_N: op(A) = A
-                HIPBLAS_OP_C: op(A) = A^T
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_T: op(A) = A^T
+            HIPBLAS_OP_N: op(A) = A
+            HIPBLAS_OP_C: op(A) = A^T
 
-        n: [int]
-                n specifies the number of rows and columns of C. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: pointer storing matrix A on the GPU.
-                Martrix dimension is ( lda, k ) when if transA = HIPBLAS_OP_N, otherwise (lda, n)
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** pointer storing matrix A on the GPU.
+            Martrix dimension is ( lda, k ) when if transA = HIPBLAS_OP_N, otherwise (lda, n)
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: pointer storing matrix C on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        CP: **[in]** pointer storing matrix C on the GPU.
+
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -13289,45 +13518,46 @@ def hipblasSsyrkBatched(object handle, object uplo, object transA, int n, int k,
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_T: op(A) = A^T
-                HIPBLAS_OP_N: op(A) = A
-                HIPBLAS_OP_C: op(A) = A^T
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_T: op(A) = A^T
+            HIPBLAS_OP_N: op(A) = A
+            HIPBLAS_OP_C: op(A) = A^T
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: device array of device pointers storing each matrix_i A of dimension (lda, k)
-                when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+            when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: device array of device pointers storing each matrix C_i on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        CP: **[in]** device array of device pointers storing each matrix C_i on the GPU.
 
-        batchCount: [int]
-                number of instances in the batch.
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -13413,55 +13643,55 @@ def hipblasSsyrkStridedBatched(object handle, object uplo, object transA, int n,
     HIPBLAS_OP_C is not supported for complex types, see cherk
     and zherk.
 
-    @param[inout]
-    strideC  [hipblasStride]
-              stride from the start of one matrix (C_i) and the next one (C_i+1)
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_T: op(A) = A^T
-                HIPBLAS_OP_N: op(A) = A
-                HIPBLAS_OP_C: op(A) = A^T
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_T: op(A) = A^T
+            HIPBLAS_OP_N: op(A) = A
+            HIPBLAS_OP_C: op(A) = A^T
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
-                when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
+            when transA is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if transA = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: Device pointer to the first matrix C_1 on the GPU. on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        CP: **[in]** Device pointer to the first matrix C_1 on the GPU. on the GPU.
 
-        batchCount: [int]
-                number of instances in the batch.
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
+
+        strideC: **[inout]** [hipblasStride]
+            stride from the start of one matrix (C_i) and the next one (C_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -13547,51 +13777,52 @@ def hipblasSsyr2k(object handle, object uplo, object transA, int n, int k, objec
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_T:      op( A ) = A^T, op( B ) = B^T
-                HIPBLAS_OP_N:           op( A ) = A, op( B ) = B
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_T:      op( A ) = A^T, op( B ) = B^T
+            HIPBLAS_OP_N:           op( A ) = A, op( B ) = B
 
-        n: [int]
-                n specifies the number of rows and columns of C. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A) and op(B). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A) and op(B). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: pointer storing matrix A on the GPU.
-                Martrix dimension is ( lda, k ) when if trans = HIPBLAS_OP_N, otherwise (lda, n)
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** pointer storing matrix A on the GPU.
+            Martrix dimension is ( lda, k ) when if trans = HIPBLAS_OP_N, otherwise (lda, n)
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        BP: pointer storing matrix B on the GPU.
-                Martrix dimension is ( ldb, k ) when if trans = HIPBLAS_OP_N, otherwise (ldb, n)
-                only the upper/lower triangular part is accessed.
+        BP: **[in]** pointer storing matrix B on the GPU.
+            Martrix dimension is ( ldb, k ) when if trans = HIPBLAS_OP_N, otherwise (ldb, n)
+            only the upper/lower triangular part is accessed.
 
-        ldb: [int]
-                ldb specifies the first dimension of B.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: pointer storing matrix C on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        CP: **[in]** pointer storing matrix C on the GPU.
+
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -13681,52 +13912,53 @@ def hipblasSsyr2kBatched(object handle, object uplo, object transA, int n, int k
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_T:      op( A_i ) = A_i^T, op( B_i ) = B_i^T
-                HIPBLAS_OP_N:           op( A_i ) = A_i, op( B_i ) = B_i
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_T:      op( A_i ) = A_i^T, op( B_i ) = B_i^T
+            HIPBLAS_OP_N:           op( A_i ) = A_i, op( B_i ) = B_i
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: device array of device pointers storing each matrix_i A of dimension (lda, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        BP: device array of device pointers storing each matrix_i B of dimension (ldb, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
+        BP: **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
-        ldb: [int]
-                ldb specifies the first dimension of B.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: device array of device pointers storing each matrix C_i on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        CP: **[in]** device array of device pointers storing each matrix C_i on the GPU.
 
-        batchCount: [int]
-                number of instances in the batch.
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -13813,65 +14045,65 @@ def hipblasSsyr2kStridedBatched(object handle, object uplo, object transA, int n
     - Supported precisions in rocBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    strideC  [hipblasStride]
-              stride from the start of one matrix (C_i) and the next one (C_i+1)
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_T:      op( A_i ) = A_i^T, op( B_i ) = B_i^T
-                HIPBLAS_OP_N:           op( A_i ) = A_i, op( B_i ) = B_i
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_T:      op( A_i ) = A_i^T, op( B_i ) = B_i^T
+            HIPBLAS_OP_N:           op( A_i ) = A_i, op( B_i ) = B_i
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        BP: Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
+        BP: **[in]** Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
-        ldb: [int]
-                ldb specifies the first dimension of B_i.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        strideB: [hipblasStride]
-                stride from the start of one matrix (B_i) and the next one (B_i+1)
+        strideB: **[in]** [hipblasStride]
+            stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: Device pointer to the first matrix C_1 on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        CP: **[in]** Device pointer to the first matrix C_1 on the GPU.
 
-        batchCount: [int]
-                number of instances in the batch.
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
+
+        strideC: **[inout]** [hipblasStride]
+            stride from the start of one matrix (C_i) and the next one (C_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -13962,51 +14194,52 @@ def hipblasSsyrkx(object handle, object uplo, object transA, int n, int k, objec
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_T:      op( A ) = A^T, op( B ) = B^T
-                HIPBLAS_OP_N:           op( A ) = A, op( B ) = B
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_T:      op( A ) = A^T, op( B ) = B^T
+            HIPBLAS_OP_N:           op( A ) = A, op( B ) = B
 
-        n: [int]
-                n specifies the number of rows and columns of C. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A) and op(B). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A) and op(B). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: pointer storing matrix A on the GPU.
-                Martrix dimension is ( lda, k ) when if trans = HIPBLAS_OP_N, otherwise (lda, n)
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** pointer storing matrix A on the GPU.
+            Martrix dimension is ( lda, k ) when if trans = HIPBLAS_OP_N, otherwise (lda, n)
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        BP: pointer storing matrix B on the GPU.
-                Martrix dimension is ( ldb, k ) when if trans = HIPBLAS_OP_N, otherwise (ldb, n)
-                only the upper/lower triangular part is accessed.
+        BP: **[in]** pointer storing matrix B on the GPU.
+            Martrix dimension is ( ldb, k ) when if trans = HIPBLAS_OP_N, otherwise (ldb, n)
+            only the upper/lower triangular part is accessed.
 
-        ldb: [int]
-                ldb specifies the first dimension of B.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: pointer storing matrix C on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        CP: **[in]** pointer storing matrix C on the GPU.
+
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -14097,52 +14330,53 @@ def hipblasSsyrkxBatched(object handle, object uplo, object transA, int n, int k
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_T:      op( A_i ) = A_i^T, op( B_i ) = B_i^T
-                HIPBLAS_OP_N:           op( A_i ) = A_i, op( B_i ) = B_i
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_T:      op( A_i ) = A_i^T, op( B_i ) = B_i^T
+            HIPBLAS_OP_N:           op( A_i ) = A_i, op( B_i ) = B_i
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: device array of device pointers storing each matrix_i A of dimension (lda, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** device array of device pointers storing each matrix_i A of dimension (lda, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        BP: device array of device pointers storing each matrix_i B of dimension (ldb, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
+        BP: **[in]** device array of device pointers storing each matrix_i B of dimension (ldb, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
-        ldb: [int]
-                ldb specifies the first dimension of B.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: device array of device pointers storing each matrix C_i on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        CP: **[in]** device array of device pointers storing each matrix C_i on the GPU.
 
-        batchCount: [int]
-                number of instances in the batch.
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -14230,65 +14464,65 @@ def hipblasSsyrkxStridedBatched(object handle, object uplo, object transA, int n
     - Supported precisions in rocBLAS : s,d,c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    strideC  [hipblasStride]
-              stride from the start of one matrix (C_i) and the next one (C_i+1)
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  C_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  C_i is a  lower triangular matrix
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_T:      op( A_i ) = A_i^T, op( B_i ) = B_i^T
-                HIPBLAS_OP_N:           op( A_i ) = A_i, op( B_i ) = B_i
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_T:      op( A_i ) = A_i^T, op( B_i ) = B_i^T
+            HIPBLAS_OP_N:           op( A_i ) = A_i, op( B_i ) = B_i
 
-        n: [int]
-                n specifies the number of rows and columns of C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows and columns of C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of op(A). k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of op(A). k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and A need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and A need not be set before
+            entry.
 
-        AP: Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
+        AP: **[in]** Device pointer to the first matrix A_1 on the GPU of dimension (lda, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (lda, n)
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
-                otherwise lda >= max( 1, k ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if trans = HIPBLAS_OP_N,  lda >= max( 1, n ),
+            otherwise lda >= max( 1, k ).
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        BP: Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
-                when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
+        BP: **[in]** Device pointer to the first matrix B_1 on the GPU of dimension (ldb, k)
+            when trans is HIPBLAS_OP_N, otherwise of dimension (ldb, n)
 
-        ldb: [int]
-                ldb specifies the first dimension of B_i.
-                if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
-                otherwise ldb >= max( 1, k ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i.
+            if trans = HIPBLAS_OP_N,  ldb >= max( 1, n ),
+            otherwise ldb >= max( 1, k ).
 
-        strideB: [hipblasStride]
-                stride from the start of one matrix (B_i) and the next one (B_i+1)
+        strideB: **[in]** [hipblasStride]
+            stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: Device pointer to the first matrix C_1 on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, n ).
+        CP: **[in]** Device pointer to the first matrix C_1 on the GPU.
 
-        batchCount: [int]
-                number of instances in the batch.
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, n ).
+
+        strideC: **[inout]** [hipblasStride]
+            stride from the start of one matrix (C_i) and the next one (C_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -14381,34 +14615,39 @@ def hipblasSgeam(object handle, object transA, object transB, int m, int n, obje
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        transA: [hipblasOperation_t]
-                specifies the form of op( A )
+        transA: **[in]** [hipblasOperation_t]
+            specifies the form of op( A )
 
-        transB: [hipblasOperation_t]
-                specifies the form of op( B )
+        transB: **[in]** [hipblasOperation_t]
+            specifies the form of op( B )
 
-        m: [int]
-                matrix dimension m.
+        m: **[in]** [int]
+            matrix dimension m.
 
-        n: [int]
-                matrix dimension n.
+        n: **[in]** [int]
+            matrix dimension n.
 
-        alpha: device pointer or host pointer specifying the scalar alpha.
-        AP: device pointer storing matrix A.
-        lda: [int]
-                specifies the leading dimension of A.
+        alpha: **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        beta: device pointer or host pointer specifying the scalar beta.
-        BP: device pointer storing matrix B.
-        ldb: [int]
-                specifies the leading dimension of B.
+        AP: **[in]** device pointer storing matrix A.
 
-        CP: device pointer storing matrix C.
-        ldc: [int]
-                specifies the leading dimension of C.
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
+
+        beta: **[in]** device pointer or host pointer specifying the scalar beta.
+
+        BP: **[in]** device pointer storing matrix B.
+
+        ldb: **[in]** [int]
+            specifies the leading dimension of B.
+
+        CP: **[in,out]** device pointer storing matrix C.
+
+        ldc: **[in]** [int]
+            specifies the leading dimension of C.
     """
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
@@ -14498,47 +14737,49 @@ def hipblasSgeamBatched(object handle, object transA, object transB, int m, int 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        transA: [hipblasOperation_t]
-                specifies the form of op( A )
+        transA: **[in]** [hipblasOperation_t]
+            specifies the form of op( A )
 
-        transB: [hipblasOperation_t]
-                specifies the form of op( B )
+        transB: **[in]** [hipblasOperation_t]
+            specifies the form of op( B )
 
-        m: [int]
-                matrix dimension m.
+        m: **[in]** [int]
+            matrix dimension m.
 
-        n: [int]
-                matrix dimension n.
+        n: **[in]** [int]
+            matrix dimension n.
 
-        alpha: device pointer or host pointer specifying the scalar alpha.
-        AP: device array of device pointers storing each matrix A_i on the GPU.
-                Each A_i is of dimension ( lda, k ), where k is m
-                when  transA == HIPBLAS_OP_N and
-                is  n  when  transA == HIPBLAS_OP_T.
+        alpha: **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of A.
+        AP: **[in]** device array of device pointers storing each matrix A_i on the GPU.
+            Each A_i is of dimension ( lda, k ), where k is m
+            when  transA == HIPBLAS_OP_N and
+            is  n  when  transA == HIPBLAS_OP_T.
 
-        beta: device pointer or host pointer specifying the scalar beta.
-        BP: device array of device pointers storing each matrix B_i on the GPU.
-                Each B_i is of dimension ( ldb, k ), where k is m
-                when  transB == HIPBLAS_OP_N and
-                is  n  when  transB == HIPBLAS_OP_T.
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
 
-        ldb: [int]
-                specifies the leading dimension of B.
+        beta: **[in]** device pointer or host pointer specifying the scalar beta.
 
-        CP: device array of device pointers storing each matrix C_i on the GPU.
-                Each C_i is of dimension ( ldc, n ).
+        BP: **[in]** device array of device pointers storing each matrix B_i on the GPU.
+            Each B_i is of dimension ( ldb, k ), where k is m
+            when  transB == HIPBLAS_OP_N and
+            is  n  when  transB == HIPBLAS_OP_T.
 
-        ldc: [int]
-                specifies the leading dimension of C.
+        ldb: **[in]** [int]
+            specifies the leading dimension of B.
 
-        batchCount: [int]
-                number of instances i in the batch.
+        CP: **[in,out]** device array of device pointers storing each matrix C_i on the GPU.
+            Each C_i is of dimension ( ldc, n ).
+
+        ldc: **[in]** [int]
+            specifies the leading dimension of C.
+
+        batchCount: **[in]** [int]
+            number of instances i in the batch.
     """
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
@@ -14628,56 +14869,58 @@ def hipblasSgeamStridedBatched(object handle, object transA, object transB, int 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        transA: [hipblasOperation_t]
-                specifies the form of op( A )
+        transA: **[in]** [hipblasOperation_t]
+            specifies the form of op( A )
 
-        transB: [hipblasOperation_t]
-                specifies the form of op( B )
+        transB: **[in]** [hipblasOperation_t]
+            specifies the form of op( B )
 
-        m: [int]
-                matrix dimension m.
+        m: **[in]** [int]
+            matrix dimension m.
 
-        n: [int]
-                matrix dimension n.
+        n: **[in]** [int]
+            matrix dimension n.
 
-        alpha: device pointer or host pointer specifying the scalar alpha.
-        AP: device pointer to the first matrix A_0 on the GPU.
-                Each A_i is of dimension ( lda, k ), where k is m
-                when  transA == HIPBLAS_OP_N and
-                is  n  when  transA == HIPBLAS_OP_T.
+        alpha: **[in]** device pointer or host pointer specifying the scalar alpha.
 
-        lda: [int]
-                specifies the leading dimension of A.
+        AP: **[in]** device pointer to the first matrix A_0 on the GPU.
+            Each A_i is of dimension ( lda, k ), where k is m
+            when  transA == HIPBLAS_OP_N and
+            is  n  when  transA == HIPBLAS_OP_T.
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
 
-        beta: device pointer or host pointer specifying the scalar beta.
-        BP: pointer to the first matrix B_0 on the GPU.
-                Each B_i is of dimension ( ldb, k ), where k is m
-                when  transB == HIPBLAS_OP_N and
-                is  n  when  transB == HIPBLAS_OP_T.
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        ldb: [int]
-                specifies the leading dimension of B.
+        beta: **[in]** device pointer or host pointer specifying the scalar beta.
 
-        strideB: [hipblasStride]
-                stride from the start of one matrix (B_i) and the next one (B_i+1)
+        BP: **[in]** pointer to the first matrix B_0 on the GPU.
+            Each B_i is of dimension ( ldb, k ), where k is m
+            when  transB == HIPBLAS_OP_N and
+            is  n  when  transB == HIPBLAS_OP_T.
 
-        CP: pointer to the first matrix C_0 on the GPU.
-                Each C_i is of dimension ( ldc, n ).
+        ldb: **[in]** [int]
+            specifies the leading dimension of B.
 
-        ldc: [int]
-                specifies the leading dimension of C.
+        strideB: **[in]** [hipblasStride]
+            stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        strideC: [hipblasStride]
-                stride from the start of one matrix (C_i) and the next one (C_i+1)
+        CP: **[in,out]** pointer to the first matrix C_0 on the GPU.
+            Each C_i is of dimension ( ldc, n ).
 
-        batchCount: [int]
-                number of instances i in the batch.
+        ldc: **[in]** [int]
+            specifies the leading dimension of C.
+
+        strideC: **[in]** [hipblasStride]
+            stride from the start of one matrix (C_i) and the next one (C_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances i in the batch.
     """
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
@@ -14765,51 +15008,51 @@ def hipblasChemm(object handle, object side, object uplo, int n, int k, object a
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:      C := alpha*A*B + beta*C
-                HIPBLAS_SIDE_RIGHT:     C := alpha*B*A + beta*C
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:      C := alpha*A*B + beta*C
+            HIPBLAS_SIDE_RIGHT:     C := alpha*B*A + beta*C
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix
 
-        n: [int]
-                n specifies the number of rows of B and C. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows of B and C. n >= 0.
 
-        k: [int]
-                n specifies the number of columns of B and C. k >= 0.
+        k: **[in]** [int]
+            n specifies the number of columns of B and C. k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A and B are not referenced.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A and B are not referenced.
 
-        AP: pointer storing matrix A on the GPU.
-                A is m by m if side == HIPBLAS_SIDE_LEFT
-                A is n by n if side == HIPBLAS_SIDE_RIGHT
-                Only the upper/lower triangular part is accessed.
-                The imaginary component of the diagonal elements is not used.
+        AP: **[in]** pointer storing matrix A on the GPU.
+            A is m by m if side == HIPBLAS_SIDE_LEFT
+            A is n by n if side == HIPBLAS_SIDE_RIGHT
+            Only the upper/lower triangular part is accessed.
+            The imaginary component of the diagonal elements is not used.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                otherwise lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            otherwise lda >= max( 1, n ).
 
-        BP: pointer storing matrix B on the GPU.
-                Matrix dimension is m by n
+        BP: **[in]** pointer storing matrix B on the GPU.
+            Matrix dimension is m by n
 
-        ldb: [int]
-                ldb specifies the first dimension of B. ldb >= max( 1, m )
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B. ldb >= max( 1, m )
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        CP: pointer storing matrix C on the GPU.
-                Matrix dimension is m by n
+        CP: **[in]** pointer storing matrix C on the GPU.
+            Matrix dimension is m by n
 
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, m )
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, m )
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -14861,54 +15104,54 @@ def hipblasChemmBatched(object handle, object side, object uplo, int n, int k, o
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:      C_i := alpha*A_i*B_i + beta*C_i
-                HIPBLAS_SIDE_RIGHT:     C_i := alpha*B_i*A_i + beta*C_i
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:      C_i := alpha*A_i*B_i + beta*C_i
+            HIPBLAS_SIDE_RIGHT:     C_i := alpha*B_i*A_i + beta*C_i
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix
 
-        n: [int]
-                n specifies the number of rows of B_i and C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows of B_i and C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of B_i and C_i. k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of B_i and C_i. k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A_i and B_i are not referenced.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A_i and B_i are not referenced.
 
-        AP: device array of device pointers storing each matrix A_i on the GPU.
-                A_i is m by m if side == HIPBLAS_SIDE_LEFT
-                A_i is n by n if side == HIPBLAS_SIDE_RIGHT
-                Only the upper/lower triangular part is accessed.
-                The imaginary component of the diagonal elements is not used.
+        AP: **[in]** device array of device pointers storing each matrix A_i on the GPU.
+            A_i is m by m if side == HIPBLAS_SIDE_LEFT
+            A_i is n by n if side == HIPBLAS_SIDE_RIGHT
+            Only the upper/lower triangular part is accessed.
+            The imaginary component of the diagonal elements is not used.
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                otherwise lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            otherwise lda >= max( 1, n ).
 
-        BP: device array of device pointers storing each matrix B_i on the GPU.
-                Matrix dimension is m by n
+        BP: **[in]** device array of device pointers storing each matrix B_i on the GPU.
+            Matrix dimension is m by n
 
-        ldb: [int]
-                ldb specifies the first dimension of B_i. ldb >= max( 1, m )
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i. ldb >= max( 1, m )
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C_i need not be set before entry.
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C_i need not be set before entry.
 
-        CP: device array of device pointers storing each matrix C_i on the GPU.
-                Matrix dimension is m by n
+        CP: **[in]** device array of device pointers storing each matrix C_i on the GPU.
+            Matrix dimension is m by n
 
-        ldc: [int]
-                ldc specifies the first dimension of C_i. ldc >= max( 1, m )
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C_i. ldc >= max( 1, m )
 
-        batchCount: [int]
-                number of instances in the batch.
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -14957,65 +15200,66 @@ def hipblasChemmStridedBatched(object handle, object side, object uplo, int n, i
     - Supported precisions in rocBLAS : c,z
     - Supported precisions in cuBLAS  : No support
 
-    @param[inout]
-    strideC  [hipblasStride]
-              stride from the start of one matrix (C_i) and the next one (C_i+1)
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:      C_i := alpha*A_i*B_i + beta*C_i
-                HIPBLAS_SIDE_RIGHT:     C_i := alpha*B_i*A_i + beta*C_i
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:      C_i := alpha*A_i*B_i + beta*C_i
+            HIPBLAS_SIDE_RIGHT:     C_i := alpha*B_i*A_i + beta*C_i
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix
-                HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A_i is an upper triangular matrix
+            HIPBLAS_FILL_MODE_LOWER:  A_i is a  lower triangular matrix
 
-        n: [int]
-                n specifies the number of rows of B_i and C_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of rows of B_i and C_i. n >= 0.
 
-        k: [int]
-                k specifies the number of columns of B_i and C_i. k >= 0.
+        k: **[in]** [int]
+            k specifies the number of columns of B_i and C_i. k >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A_i and B_i are not referenced.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A_i and B_i are not referenced.
 
-        AP: device pointer to first matrix A_1
-                A_i is m by m if side == HIPBLAS_SIDE_LEFT
-                A_i is n by n if side == HIPBLAS_SIDE_RIGHT
-                Only the upper/lower triangular part is accessed.
-                The imaginary component of the diagonal elements is not used.
+        AP: **[in]** device pointer to first matrix A_1
+            A_i is m by m if side == HIPBLAS_SIDE_LEFT
+            A_i is n by n if side == HIPBLAS_SIDE_RIGHT
+            Only the upper/lower triangular part is accessed.
+            The imaginary component of the diagonal elements is not used.
 
-        lda: [int]
-                lda specifies the first dimension of A_i.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                otherwise lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A_i.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            otherwise lda >= max( 1, n ).
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        BP: device pointer to first matrix B_1 of dimension (ldb, n) on the GPU
-        ldb: [int]
-                ldb specifies the first dimension of B_i.
-                if side = HIPBLAS_OP_N,  ldb >= max( 1, m ),
-                otherwise ldb >= max( 1, n ).
+        BP: **[in]** device pointer to first matrix B_1 of dimension (ldb, n) on the GPU
 
-        strideB: [hipblasStride]
-                stride from the start of one matrix (B_i) and the next one (B_i+1)
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i.
+            if side = HIPBLAS_OP_N,  ldb >= max( 1, m ),
+            otherwise ldb >= max( 1, n ).
 
-        beta: beta specifies the scalar beta. When beta is
-                zero then C need not be set before entry.
+        strideB: **[in]** [hipblasStride]
+            stride from the start of one matrix (B_i) and the next one (B_i+1)
 
-        CP: device pointer to first matrix C_1 of dimension (ldc, n) on the GPU.
-        ldc: [int]
-                ldc specifies the first dimension of C. ldc >= max( 1, m )
+        beta: **[in]** beta specifies the scalar beta. When beta is
+            zero then C need not be set before entry.
 
-        batchCount: [int]
-                number of instances in the batch
+        CP: **[in]** device pointer to first matrix C_1 of dimension (ldc, n) on the GPU.
+
+        ldc: **[in]** [int]
+            ldc specifies the first dimension of C. ldc >= max( 1, m )
+
+        strideC: **[inout]** [hipblasStride]
+            stride from the start of one matrix (C_i) and the next one (C_i+1)
+
+        batchCount: **[in]** [int]
+            number of instances in the batch
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -15078,61 +15322,60 @@ def hipblasStrmm(object handle, object side, object uplo, object transA, object 
     Note that when  diag == HIPBLAS_DIAG_UNIT  the diagonal elements of
     A  are not referenced either,  but are assumed to be  unity.
 
-    @param[inout]
-    BP       Device pointer to the first matrix B_0 on the GPU.
-            On entry,  the leading  m by n part of the array  B must
-           contain the matrix  B,  and  on exit  is overwritten  by the
-           transformed matrix.
-
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                Specifies whether op(A) multiplies B from the left or right as follows:
-                HIPBLAS_SIDE_LEFT:       B := alpha*op( A )*B.
-                HIPBLAS_SIDE_RIGHT:      B := alpha*B*op( A ).
+        side: **[in]** [hipblasSideMode_t]
+            Specifies whether op(A) multiplies B from the left or right as follows:
+            HIPBLAS_SIDE_LEFT:       B := alpha*op( A )*B.
+            HIPBLAS_SIDE_RIGHT:      B := alpha*B*op( A ).
 
-        uplo: [hipblasFillMode_t]
-                Specifies whether the matrix A is an upper or lower triangular matrix as follows:
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            Specifies whether the matrix A is an upper or lower triangular matrix as follows:
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                Specifies the form of op(A) to be used in the matrix multiplication as follows:
-                HIPBLAS_OP_N: op(A) = A.
-                HIPBLAS_OP_T: op(A) = A^T.
-                HIPBLAS_OP_C:  op(A) = A^H.
+        transA: **[in]** [hipblasOperation_t]
+            Specifies the form of op(A) to be used in the matrix multiplication as follows:
+            HIPBLAS_OP_N: op(A) = A.
+            HIPBLAS_OP_T: op(A) = A^T.
+            HIPBLAS_OP_C:  op(A) = A^H.
 
-        diag: [hipblasDiagType_t]
-                Specifies whether or not A is unit triangular as follows:
-                HIPBLAS_DIAG_UNIT:      A is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            Specifies whether or not A is unit triangular as follows:
+            HIPBLAS_DIAG_UNIT:      A is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of B. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of B. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of B. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of B. n >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A is not referenced and B need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A is not referenced and B need not be set before
+            entry.
 
-        AP: Device pointer to matrix A on the GPU.
-                A has dimension ( lda, k ), where k is m
-                when  side == HIPBLAS_SIDE_LEFT  and
-                is  n  when  side == HIPBLAS_SIDE_RIGHT.
+        AP: **[in]** Device pointer to matrix A on the GPU.
+            A has dimension ( lda, k ), where k is m
+            when  side == HIPBLAS_SIDE_LEFT  and
+            is  n  when  side == HIPBLAS_SIDE_RIGHT.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if side == HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                if side == HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if side == HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            if side == HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        ldb: [int]
-                ldb specifies the first dimension of B. ldb >= max( 1, m ).
+        BP: **[inout]** Device pointer to the first matrix B_0 on the GPU.
+             On entry,  the leading  m by n part of the array  B must
+            contain the matrix  B,  and  on exit  is overwritten  by the
+            transformed matrix.
+
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B. ldb >= max( 1, m ).
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -15239,63 +15482,62 @@ def hipblasStrmmBatched(object handle, object side, object uplo, object transA, 
     Note that when  diag == HIPBLAS_DIAG_UNIT  the diagonal elements of
     A_i  are not referenced either,  but are assumed to be  unity.
 
-    @param[inout]
-    BP       device array of device pointers storing each matrix B_i on the GPU.
-            On entry,  the leading  m by n part of the array  B_i must
-           contain the matrix  B_i,  and  on exit  is overwritten  by the
-           transformed matrix.
-
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                Specifies whether op(A_i) multiplies B_i from the left or right as follows:
-                HIPBLAS_SIDE_LEFT:       B_i := alpha*op( A_i )*B_i.
-                HIPBLAS_SIDE_RIGHT:      B_i := alpha*B_i*op( A_i ).
+        side: **[in]** [hipblasSideMode_t]
+            Specifies whether op(A_i) multiplies B_i from the left or right as follows:
+            HIPBLAS_SIDE_LEFT:       B_i := alpha*op( A_i )*B_i.
+            HIPBLAS_SIDE_RIGHT:      B_i := alpha*B_i*op( A_i ).
 
-        uplo: [hipblasFillMode_t]
-                Specifies whether the matrix A is an upper or lower triangular matrix as follows:
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            Specifies whether the matrix A is an upper or lower triangular matrix as follows:
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                Specifies the form of op(A_i) to be used in the matrix multiplication as follows:
-                HIPBLAS_OP_N:    op(A_i) = A_i.
-                HIPBLAS_OP_T:      op(A_i) = A_i^T.
-                HIPBLAS_OP_C:  op(A_i) = A_i^H.
+        transA: **[in]** [hipblasOperation_t]
+            Specifies the form of op(A_i) to be used in the matrix multiplication as follows:
+            HIPBLAS_OP_N:    op(A_i) = A_i.
+            HIPBLAS_OP_T:      op(A_i) = A_i^T.
+            HIPBLAS_OP_C:  op(A_i) = A_i^H.
 
-        diag: [hipblasDiagType_t]
-                Specifies whether or not A_i is unit triangular as follows:
-                HIPBLAS_DIAG_UNIT:      A_i is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            Specifies whether or not A_i is unit triangular as follows:
+            HIPBLAS_DIAG_UNIT:      A_i is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of B_i. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of B_i. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of B_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of B_i. n >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A_i is not referenced and B_i need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A_i is not referenced and B_i need not be set before
+            entry.
 
-        AP: Device array of device pointers storing each matrix A_i on the GPU.
-                Each A_i is of dimension ( lda, k ), where k is m
-                when  side == HIPBLAS_SIDE_LEFT  and
-                is  n  when  side == HIPBLAS_SIDE_RIGHT.
+        AP: **[in]** Device array of device pointers storing each matrix A_i on the GPU.
+            Each A_i is of dimension ( lda, k ), where k is m
+            when  side == HIPBLAS_SIDE_LEFT  and
+            is  n  when  side == HIPBLAS_SIDE_RIGHT.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if side == HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                if side == HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if side == HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            if side == HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        ldb: [int]
-                ldb specifies the first dimension of B_i. ldb >= max( 1, m ).
+        BP: **[inout]** device array of device pointers storing each matrix B_i on the GPU.
+             On entry,  the leading  m by n part of the array  B_i must
+            contain the matrix  B_i,  and  on exit  is overwritten  by the
+            transformed matrix.
 
-        batchCount: [int]
-                           number of instances i in the batch.
-                ******************************************************************
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i. ldb >= max( 1, m ).
+
+        batchCount: **[in]** [int]
+                       number of instances i in the batch.
+            ******************************************************************
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -15402,69 +15644,68 @@ def hipblasStrmmStridedBatched(object handle, object side, object uplo, object t
     Note that when  diag == HIPBLAS_DIAG_UNIT  the diagonal elements of
     A_i  are not referenced either,  but are assumed to be  unity.
 
-    @param[inout]
-    BP       Device pointer to the first matrix B_0 on the GPU.
-            On entry,  the leading  m by n part of the array  B_i must
-           contain the matrix  B_i,  and  on exit  is overwritten  by the
-           transformed matrix.
-
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                Specifies whether op(A_i) multiplies B_i from the left or right as follows:
-                HIPBLAS_SIDE_LEFT:       B_i := alpha*op( A_i )*B_i.
-                HIPBLAS_SIDE_RIGHT:      B_i := alpha*B_i*op( A_i ).
+        side: **[in]** [hipblasSideMode_t]
+            Specifies whether op(A_i) multiplies B_i from the left or right as follows:
+            HIPBLAS_SIDE_LEFT:       B_i := alpha*op( A_i )*B_i.
+            HIPBLAS_SIDE_RIGHT:      B_i := alpha*B_i*op( A_i ).
 
-        uplo: [hipblasFillMode_t]
-                Specifies whether the matrix A is an upper or lower triangular matrix as follows:
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            Specifies whether the matrix A is an upper or lower triangular matrix as follows:
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                Specifies the form of op(A_i) to be used in the matrix multiplication as follows:
-                HIPBLAS_OP_N:    op(A_i) = A_i.
-                HIPBLAS_OP_T:      op(A_i) = A_i^T.
-                HIPBLAS_OP_C:  op(A_i) = A_i^H.
+        transA: **[in]** [hipblasOperation_t]
+            Specifies the form of op(A_i) to be used in the matrix multiplication as follows:
+            HIPBLAS_OP_N:    op(A_i) = A_i.
+            HIPBLAS_OP_T:      op(A_i) = A_i^T.
+            HIPBLAS_OP_C:  op(A_i) = A_i^H.
 
-        diag: [hipblasDiagType_t]
-                Specifies whether or not A_i is unit triangular as follows:
-                HIPBLAS_DIAG_UNIT:      A_i is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            Specifies whether or not A_i is unit triangular as follows:
+            HIPBLAS_DIAG_UNIT:      A_i is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A_i is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of B_i. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of B_i. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of B_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of B_i. n >= 0.
 
-        alpha: alpha specifies the scalar alpha. When alpha is
-                zero then A_i is not referenced and B_i need not be set before
-                entry.
+        alpha: **[in]** alpha specifies the scalar alpha. When alpha is
+            zero then A_i is not referenced and B_i need not be set before
+            entry.
 
-        AP: Device pointer to the first matrix A_0 on the GPU.
-                Each A_i is of dimension ( lda, k ), where k is m
-                when  side == HIPBLAS_SIDE_LEFT  and
-                is  n  when  side == HIPBLAS_SIDE_RIGHT.
+        AP: **[in]** Device pointer to the first matrix A_0 on the GPU.
+            Each A_i is of dimension ( lda, k ), where k is m
+            when  side == HIPBLAS_SIDE_LEFT  and
+            is  n  when  side == HIPBLAS_SIDE_RIGHT.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if side == HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                if side == HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if side == HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            if side == HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        ldb: [int]
-                ldb specifies the first dimension of B_i. ldb >= max( 1, m ).
+        BP: **[inout]** Device pointer to the first matrix B_0 on the GPU.
+             On entry,  the leading  m by n part of the array  B_i must
+            contain the matrix  B_i,  and  on exit  is overwritten  by the
+            transformed matrix.
 
-        strideB: [hipblasStride]
-                stride from the start of one matrix (B_i) and the next one (B_i+1)
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B_i. ldb >= max( 1, m ).
 
-        batchCount: [int]
-                           number of instances i in the batch.
-                ******************************************************************
+        strideB: **[in]** [hipblasStride]
+            stride from the start of one matrix (B_i) and the next one (B_i+1)
+
+        batchCount: **[in]** [int]
+                       number of instances i in the batch.
+            ******************************************************************
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -15574,50 +15815,51 @@ def hipblasStrsm(object handle, object side, object uplo, object transA, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
-                HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
+            HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: op(A) = A.
-                HIPBLAS_OP_T: op(A) = A^T.
-                HIPBLAS_OP_C: op(A) = A^H.
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: op(A) = A.
+            HIPBLAS_OP_T: op(A) = A^T.
+            HIPBLAS_OP_C: op(A) = A^H.
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of B. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of B. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of B. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of B. n >= 0.
 
-        alpha: device pointer or host pointer specifying the scalar alpha. When alpha is
-                &zero then A is not referenced and B need not be set before
-                entry.
+        alpha: **[in]** device pointer or host pointer specifying the scalar alpha. When alpha is
+            &zero then A is not referenced and B need not be set before
+            entry.
 
-        AP: device pointer storing matrix A.
-                of dimension ( lda, k ), where k is m
-                when  HIPBLAS_SIDE_LEFT  and
-                is  n  when  HIPBLAS_SIDE_RIGHT
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** device pointer storing matrix A.
+            of dimension ( lda, k ), where k is m
+            when  HIPBLAS_SIDE_LEFT  and
+            is  n  when  HIPBLAS_SIDE_RIGHT
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        BP: device pointer storing matrix B.
-        ldb: [int]
-                ldb specifies the first dimension of B. ldb >= max( 1, m ).
+        BP: **[in,out]** device pointer storing matrix B.
+
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B. ldb >= max( 1, m ).
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -15724,53 +15966,54 @@ def hipblasStrsmBatched(object handle, object side, object uplo, object transA, 
     - Supported precisions in cuBLAS  : s,d,c,z
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
-                HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
+            HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  each A_i is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  each A_i is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: op(A) = A.
-                HIPBLAS_OP_T: op(A) = A^T.
-                HIPBLAS_OP_C: op(A) = A^H.
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: op(A) = A.
+            HIPBLAS_OP_T: op(A) = A^T.
+            HIPBLAS_OP_C: op(A) = A^H.
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  each A_i is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  each A_i is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of each B_i. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of each B_i. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of each B_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of each B_i. n >= 0.
 
-        alpha: device pointer or host pointer specifying the scalar alpha. When alpha is
-                &zero then A is not referenced and B need not be set before
-                entry.
+        alpha: **[in]** device pointer or host pointer specifying the scalar alpha. When alpha is
+            &zero then A is not referenced and B need not be set before
+            entry.
 
-        AP: device array of device pointers storing each matrix A_i on the GPU.
-                Matricies are of dimension ( lda, k ), where k is m
-                when  HIPBLAS_SIDE_LEFT  and is  n  when  HIPBLAS_SIDE_RIGHT
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** device array of device pointers storing each matrix A_i on the GPU.
+            Matricies are of dimension ( lda, k ), where k is m
+            when  HIPBLAS_SIDE_LEFT  and is  n  when  HIPBLAS_SIDE_RIGHT
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of each A_i.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of each A_i.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        BP: device array of device pointers storing each matrix B_i on the GPU.
-        ldb: [int]
-                ldb specifies the first dimension of each B_i. ldb >= max( 1, m ).
+        BP: **[in,out]** device array of device pointers storing each matrix B_i on the GPU.
 
-        batchCount: [int]
-                           number of trsm operatons in the batch.
-                ******************************************************************
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of each B_i. ldb >= max( 1, m ).
+
+        batchCount: **[in]** [int]
+                       number of trsm operatons in the batch.
+            ******************************************************************
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -15877,60 +16120,61 @@ def hipblasStrsmStridedBatched(object handle, object side, object uplo, object t
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
-                HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
+            HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  each A_i is a  lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  each A_i is a  lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: op(A) = A.
-                HIPBLAS_OP_T: op(A) = A^T.
-                HIPBLAS_OP_C: op(A) = A^H.
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: op(A) = A.
+            HIPBLAS_OP_T: op(A) = A^T.
+            HIPBLAS_OP_C: op(A) = A^H.
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  each A_i is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  each A_i is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of each B_i. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of each B_i. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of each B_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of each B_i. n >= 0.
 
-        alpha: device pointer or host pointer specifying the scalar alpha. When alpha is
-                &zero then A is not referenced and B need not be set before
-                entry.
+        alpha: **[in]** device pointer or host pointer specifying the scalar alpha. When alpha is
+            &zero then A is not referenced and B need not be set before
+            entry.
 
-        AP: device pointer pointing to the first matrix A_1.
-                of dimension ( lda, k ), where k is m
-                when  HIPBLAS_SIDE_LEFT  and
-                is  n  when  HIPBLAS_SIDE_RIGHT
-                only the upper/lower triangular part is accessed.
+        AP: **[in]** device pointer pointing to the first matrix A_1.
+            of dimension ( lda, k ), where k is m
+            when  HIPBLAS_SIDE_LEFT  and
+            is  n  when  HIPBLAS_SIDE_RIGHT
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of each A_i.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of each A_i.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        strideA: [hipblasStride]
-                stride from the start of one A_i matrix to the next A_(i + 1).
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one A_i matrix to the next A_(i + 1).
 
-        BP: device pointer pointing to the first matrix B_1.
-        ldb: [int]
-                ldb specifies the first dimension of each B_i. ldb >= max( 1, m ).
+        BP: **[in,out]** device pointer pointing to the first matrix B_1.
 
-        strideB: [hipblasStride]
-                stride from the start of one B_i matrix to the next B_(i + 1).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of each B_i. ldb >= max( 1, m ).
 
-        batchCount: [int]
-                           number of trsm operatons in the batch.
-                ******************************************************************
+        strideB: **[in]** [hipblasStride]
+            stride from the start of one B_i matrix to the next B_(i + 1).
+
+        batchCount: **[in]** [int]
+                       number of trsm operatons in the batch.
+            ******************************************************************
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -16022,28 +16266,30 @@ def hipblasStrtri(object handle, object uplo, object diag, int n, object AP, int
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
-                if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
-                if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+            if HIPBLAS_FILL_MODE_UPPER, the lower part of A is not referenced
+            if HIPBLAS_FILL_MODE_LOWER, the upper part of A is not referenced
 
-        diag: [hipblasDiagType_t]
-                = 'HIPBLAS_DIAG_NON_UNIT', A is non-unit triangular;
-                = 'HIPBLAS_DIAG_UNIT', A is unit triangular;
+        diag: **[in]** [hipblasDiagType_t]
+            = 'HIPBLAS_DIAG_NON_UNIT', A is non-unit triangular;
+            = 'HIPBLAS_DIAG_UNIT', A is unit triangular;
 
-        n: [int]
-                size of matrix A and invA
+        n: **[in]** [int]
+            size of matrix A and invA
 
-        AP: device pointer storing matrix A.
-        lda: [int]
-                specifies the leading dimension of A.
+        AP: **[in]** device pointer storing matrix A.
 
-        invA: device pointer storing matrix invA.
-        ldinvA: [int]
-                specifies the leading dimension of invA.
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
+
+        invA: **[out]** device pointer storing matrix invA.
+
+        ldinvA: **[in]** [int]
+            specifies the leading dimension of invA.
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -16113,36 +16359,38 @@ def hipblasStrtriBatched(object handle, object uplo, object diag, int n, object 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
 
-        diag: [hipblasDiagType_t]
-                = 'HIPBLAS_DIAG_NON_UNIT', A is non-unit triangular;
-                = 'HIPBLAS_DIAG_UNIT', A is unit triangular;
+        diag: **[in]** [hipblasDiagType_t]
+            = 'HIPBLAS_DIAG_NON_UNIT', A is non-unit triangular;
+            = 'HIPBLAS_DIAG_UNIT', A is unit triangular;
 
-        n: [int]
-        AP: device array of device pointers storing each matrix A_i.
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        n: **[in]** [int]
 
-        invA: device array of device pointers storing the inverse of each matrix A_i.
-                Partial inplace operation is supported, see below.
-                If UPLO = 'U', the leading N-by-N upper triangular part of the invA will store
-                the inverse of the upper triangular matrix, and the strictly lower
-                triangular part of invA is cleared.
-                If UPLO = 'L', the leading N-by-N lower triangular part of the invA will store
-                the inverse of the lower triangular matrix, and the strictly upper
-                triangular part of invA is cleared.
+        AP: **[in]** device array of device pointers storing each matrix A_i.
 
-        ldinvA: [int]
-                specifies the leading dimension of each invA_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
 
-        batchCount: [int]
-                         numbers of matrices in the batch
-                ******************************************************************
+        invA: **[out]** device array of device pointers storing the inverse of each matrix A_i.
+            Partial inplace operation is supported, see below.
+            If UPLO = 'U', the leading N-by-N upper triangular part of the invA will store
+            the inverse of the upper triangular matrix, and the strictly lower
+            triangular part of invA is cleared.
+            If UPLO = 'L', the leading N-by-N lower triangular part of the invA will store
+            the inverse of the lower triangular matrix, and the strictly upper
+            triangular part of invA is cleared.
+
+        ldinvA: **[in]** [int]
+            specifies the leading dimension of each invA_i.
+
+        batchCount: **[in]** [int]
+                     numbers of matrices in the batch
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -16212,42 +16460,44 @@ def hipblasStrtriStridedBatched(object handle, object uplo, object diag, int n, 
     - Supported precisions in cuBLAS  : No support
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        uplo: [hipblasFillMode_t]
-                specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
+        uplo: **[in]** [hipblasFillMode_t]
+            specifies whether the upper 'HIPBLAS_FILL_MODE_UPPER' or lower 'HIPBLAS_FILL_MODE_LOWER'
 
-        diag: [hipblasDiagType_t]
-                = 'HIPBLAS_DIAG_NON_UNIT', A is non-unit triangular;
-                = 'HIPBLAS_DIAG_UNIT', A is unit triangular;
+        diag: **[in]** [hipblasDiagType_t]
+            = 'HIPBLAS_DIAG_NON_UNIT', A is non-unit triangular;
+            = 'HIPBLAS_DIAG_UNIT', A is unit triangular;
 
-        n: [int]
-        AP: device pointer pointing to address of first matrix A_1.
-        lda: [int]
-                specifies the leading dimension of each A.
+        n: **[in]** [int]
 
-        strideA: [hipblasStride]
-                "batch stride a": stride from the start of one A_i matrix to the next A_(i + 1).
+        AP: **[in]** device pointer pointing to address of first matrix A_1.
 
-        invA: device pointer storing the inverses of each matrix A_i.
-                Partial inplace operation is supported, see below.
-                If UPLO = 'U', the leading N-by-N upper triangular part of the invA will store
-                the inverse of the upper triangular matrix, and the strictly lower
-                triangular part of invA is cleared.
-                If UPLO = 'L', the leading N-by-N lower triangular part of the invA will store
-                the inverse of the lower triangular matrix, and the strictly upper
-                triangular part of invA is cleared.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A.
 
-        ldinvA: [int]
-                specifies the leading dimension of each invA_i.
+        strideA: **[in]** [hipblasStride]
+            "batch stride a": stride from the start of one A_i matrix to the next A_(i + 1).
 
-        stride_invA: [hipblasStride]
-                "batch stride invA": stride from the start of one invA_i matrix to the next invA_(i + 1).
+        invA: **[out]** device pointer storing the inverses of each matrix A_i.
+            Partial inplace operation is supported, see below.
+            If UPLO = 'U', the leading N-by-N upper triangular part of the invA will store
+            the inverse of the upper triangular matrix, and the strictly lower
+            triangular part of invA is cleared.
+            If UPLO = 'L', the leading N-by-N lower triangular part of the invA will store
+            the inverse of the lower triangular matrix, and the strictly upper
+            triangular part of invA is cleared.
 
-        batchCount: [int]
-                            numbers of matrices in the batch
-                ******************************************************************
+        ldinvA: **[in]** [int]
+            specifies the leading dimension of each invA_i.
+
+        stride_invA: **[in]** [hipblasStride]
+            "batch stride invA": stride from the start of one invA_i matrix to the next invA_(i + 1).
+
+        batchCount: **[in]** [int]
+                        numbers of matrices in the batch
+            ******************************************************************
     """
     if not isinstance(uplo,_hipblasFillMode_t__Base):
         raise TypeError("argument 'uplo' must be of type '_hipblasFillMode_t__Base'")                    
@@ -16324,29 +16574,32 @@ def hipblasSdgmm(object handle, object side, int m, int n, object AP, int lda, o
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                specifies the side of diag(x)
+        side: **[in]** [hipblasSideMode_t]
+            specifies the side of diag(x)
 
-        m: [int]
-                matrix dimension m.
+        m: **[in]** [int]
+            matrix dimension m.
 
-        n: [int]
-                matrix dimension n.
+        n: **[in]** [int]
+            matrix dimension n.
 
-        AP: device pointer storing matrix A.
-        lda: [int]
-                specifies the leading dimension of A.
+        AP: **[in]** device pointer storing matrix A.
 
-        x: device pointer storing vector x.
-        incx: [int]
-                specifies the increment between values of x
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
 
-        CP: device pointer storing matrix C.
-        ldc: [int]
-                specifies the leading dimension of C.
+        x: **[in]** device pointer storing vector x.
+
+        incx: **[in]** [int]
+            specifies the increment between values of x
+
+        CP: **[in,out]** device pointer storing matrix C.
+
+        ldc: **[in]** [int]
+            specifies the leading dimension of C.
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
@@ -16419,39 +16672,39 @@ def hipblasSdgmmBatched(object handle, object side, int m, int n, object AP, int
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                specifies the side of diag(x)
+        side: **[in]** [hipblasSideMode_t]
+            specifies the side of diag(x)
 
-        m: [int]
-                matrix dimension m.
+        m: **[in]** [int]
+            matrix dimension m.
 
-        n: [int]
-                matrix dimension n.
+        n: **[in]** [int]
+            matrix dimension n.
 
-        AP: device array of device pointers storing each matrix A_i on the GPU.
-                Each A_i is of dimension ( lda, n )
+        AP: **[in]** device array of device pointers storing each matrix A_i on the GPU.
+            Each A_i is of dimension ( lda, n )
 
-        lda: [int]
-                specifies the leading dimension of A_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of A_i.
 
-        x: device array of device pointers storing each vector x_i on the GPU.
-                Each x_i is of dimension n if side == HIPBLAS_SIDE_RIGHT and dimension
-                m if side == HIPBLAS_SIDE_LEFT
+        x: **[in]** device array of device pointers storing each vector x_i on the GPU.
+            Each x_i is of dimension n if side == HIPBLAS_SIDE_RIGHT and dimension
+            m if side == HIPBLAS_SIDE_LEFT
 
-        incx: [int]
-                specifies the increment between values of x_i
+        incx: **[in]** [int]
+            specifies the increment between values of x_i
 
-        CP: device array of device pointers storing each matrix C_i on the GPU.
-                Each C_i is of dimension ( ldc, n ).
+        CP: **[in,out]** device array of device pointers storing each matrix C_i on the GPU.
+            Each C_i is of dimension ( ldc, n ).
 
-        ldc: [int]
-                specifies the leading dimension of C_i.
+        ldc: **[in]** [int]
+            specifies the leading dimension of C_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        batchCount: **[in]** [int]
+            number of instances in the batch.
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
@@ -16524,48 +16777,48 @@ def hipblasSdgmmStridedBatched(object handle, object side, int m, int n, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                specifies the side of diag(x)
+        side: **[in]** [hipblasSideMode_t]
+            specifies the side of diag(x)
 
-        m: [int]
-                matrix dimension m.
+        m: **[in]** [int]
+            matrix dimension m.
 
-        n: [int]
-                matrix dimension n.
+        n: **[in]** [int]
+            matrix dimension n.
 
-        AP: device pointer to the first matrix A_0 on the GPU.
-                Each A_i is of dimension ( lda, n )
+        AP: **[in]** device pointer to the first matrix A_0 on the GPU.
+            Each A_i is of dimension ( lda, n )
 
-        lda: [int]
-                specifies the leading dimension of A.
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
 
-        strideA: [hipblasStride]
-                stride from the start of one matrix (A_i) and the next one (A_i+1)
+        strideA: **[in]** [hipblasStride]
+            stride from the start of one matrix (A_i) and the next one (A_i+1)
 
-        x: pointer to the first vector x_0 on the GPU.
-                Each x_i is of dimension n if side == HIPBLAS_SIDE_RIGHT and dimension
-                m if side == HIPBLAS_SIDE_LEFT
+        x: **[in]** pointer to the first vector x_0 on the GPU.
+            Each x_i is of dimension n if side == HIPBLAS_SIDE_RIGHT and dimension
+            m if side == HIPBLAS_SIDE_LEFT
 
-        incx: [int]
-                specifies the increment between values of x
+        incx: **[in]** [int]
+            specifies the increment between values of x
 
-        stridex: [hipblasStride]
-                stride from the start of one vector(x_i) and the next one (x_i+1)
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector(x_i) and the next one (x_i+1)
 
-        CP: device pointer to the first matrix C_0 on the GPU.
-                Each C_i is of dimension ( ldc, n ).
+        CP: **[in,out]** device pointer to the first matrix C_0 on the GPU.
+            Each C_i is of dimension ( ldc, n ).
 
-        ldc: [int]
-                specifies the leading dimension of C.
+        ldc: **[in]** [int]
+            specifies the leading dimension of C.
 
-        strideC: [hipblasStride]
-                stride from the start of one matrix (C_i) and the next one (C_i+1)
+        strideC: **[in]** [hipblasStride]
+            stride from the start of one matrix (C_i) and the next one (C_i+1)
 
-        batchCount: [int]
-                number of instances i in the batch.
+        batchCount: **[in]** [int]
+            number of instances i in the batch.
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")
@@ -16631,7 +16884,7 @@ def hipblasSgetrf(object handle, const int n, object A, const int lda, object ip
 
     .. math::
 
-        A = PLU
+       A = PLU
 
     where P is a permutation matrix, L is lower triangular with unit
     diagonal elements, and U is upper triangular.
@@ -16640,33 +16893,39 @@ def hipblasSgetrf(object handle, const int n, object A, const int lda, object ip
 
     .. math::
 
-        A = LU
+       A = LU
 
     Args:
-        handle: hipblasHandle_t.
-        n: int. n >= 0.\n
-                          The number of columns and rows of the matrix A.
-                @param[inout]
-                A         pointer to type. Array on the GPU of dimension lda*n.\n
-                          On entry, the n-by-n matrix A to be factored.
-                          On exit, the factors L and U from the factorization.
-                          The unit diagonal elements of L are not stored.
+        handle: **[in]** hipblasHandle_t.
 
-        lda: int. lda >= n.\n
-                Specifies the leading dimension of A.
+        n: **[in]** int. n >= 0.
 
-        ipiv: pointer to int. Array on the GPU of dimension n.\n
-                The vector of pivot indices. Elements of ipiv are 1-based indices.
-                For 1 <= i <= n, the row i of the
-                matrix was interchanged with row ipiv[i].
-                Matrix P of the factorization can be derived from ipiv.
-                The factorization here can be done without pivoting if ipiv is passed
-                in as a nullptr.
+            The number of columns and rows of the matrix A.
 
-        info: pointer to a int on the GPU.\n
-                         If info = 0, successful exit.
-                         If info = j > 0, U is singular. U[j,j] is the first zero pivot.
-                ******************************************************************
+        A: **[inout]** pointer to type. Array on the GPU of dimension lda*n.
+
+            On entry, the n-by-n matrix A to be factored.
+            On exit, the factors L and U from the factorization.
+            The unit diagonal elements of L are not stored.
+
+        lda: **[in]** int. lda >= n.
+
+            Specifies the leading dimension of A.
+
+        ipiv: **[out]** pointer to int. Array on the GPU of dimension n.
+
+            The vector of pivot indices. Elements of ipiv are 1-based indices.
+            For 1 <= i <= n, the row i of the
+            matrix was interchanged with row ipiv[i].
+            Matrix P of the factorization can be derived from ipiv.
+            The factorization here can be done without pivoting if ipiv is passed
+            in as a nullptr.
+
+        info: **[out]** pointer to a int on the GPU.
+
+                     If info = 0, successful exit.
+                     If info = j > 0, U is singular. U[j,j] is the first zero pivot.
+            ******************************************************************
     """
     _hipblasSgetrf__retval = hipblasStatus_t(chipblas.hipblasSgetrf(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -16724,7 +16983,7 @@ def hipblasSgetrfBatched(object handle, const int n, object A, const int lda, ob
 
     .. math::
 
-        A_i = P_iL_iU_i
+       A_i = P_iL_iU_i
 
     where math:`P_i` is a permutation matrix, math:`L_i` is lower triangular with unit
     diagonal elements, and math:`U_i` is upper triangular.
@@ -16733,38 +16992,45 @@ def hipblasSgetrfBatched(object handle, const int n, object A, const int lda, ob
 
     .. math::
 
-        A_i = L_iU_i
+       A_i = L_iU_i
 
     Args:
-        handle: hipblasHandle_t.
-        n: int. n >= 0.\n
-                          The number of columns and rows of all matrices A_i in the batch.
-                @param[inout]
-                A         array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.\n
-                          On entry, the n-by-n matrices A_i to be factored.
-                          On exit, the factors L_i and U_i from the factorizations.
-                          The unit diagonal elements of L_i are not stored.
+        handle: **[in]** hipblasHandle_t.
 
-        lda: int. lda >= n.\n
-                Specifies the leading dimension of matrices A_i.
+        n: **[in]** int. n >= 0.
 
-        ipiv: pointer to int. Array on the GPU.\n
-                Contains the vectors of pivot indices ipiv_i (corresponding to A_i).
-                Dimension of ipiv_i is n.
-                Elements of ipiv_i are 1-based indices.
-                For each instance A_i in the batch and for 1 <= j <= n, the row j of the
-                matrix A_i was interchanged with row ipiv_i[j].
-                Matrix P_i of the factorization can be derived from ipiv_i.
-                The factorization here can be done without pivoting if ipiv is passed
-                in as a nullptr.
+            The number of columns and rows of all matrices A_i in the batch.
 
-        info: pointer to int. Array of batchCount integers on the GPU.\n
-                If info[i] = 0, successful exit for factorization of A_i.
-                If info[i] = j > 0, U_i is singular. U_i[j,j] is the first zero pivot.
+        A: **[inout]** array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
 
-        batchCount: int. batchCount >= 0.\n
-                           Number of matrices in the batch.
-                ******************************************************************
+            On entry, the n-by-n matrices A_i to be factored.
+            On exit, the factors L_i and U_i from the factorizations.
+            The unit diagonal elements of L_i are not stored.
+
+        lda: **[in]** int. lda >= n.
+
+            Specifies the leading dimension of matrices A_i.
+
+        ipiv: **[out]** pointer to int. Array on the GPU.
+
+            Contains the vectors of pivot indices ipiv_i (corresponding to A_i).
+            Dimension of ipiv_i is n.
+            Elements of ipiv_i are 1-based indices.
+            For each instance A_i in the batch and for 1 <= j <= n, the row j of the
+            matrix A_i was interchanged with row ipiv_i[j].
+            Matrix P_i of the factorization can be derived from ipiv_i.
+            The factorization here can be done without pivoting if ipiv is passed
+            in as a nullptr.
+
+        info: **[out]** pointer to int. Array of batchCount integers on the GPU.
+
+            If info[i] = 0, successful exit for factorization of A_i.
+            If info[i] = j > 0, U_i is singular. U_i[j,j] is the first zero pivot.
+
+        batchCount: **[in]** int. batchCount >= 0.
+
+                       Number of matrices in the batch.
+            ******************************************************************
     """
     _hipblasSgetrfBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrfBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -16822,7 +17088,7 @@ def hipblasSgetrfStridedBatched(object handle, const int n, object A, const int 
 
     .. math::
 
-        A_i = P_iL_iU_i
+       A_i = P_iL_iU_i
 
     where math:`P_i` is a permutation matrix, math:`L_i` is lower triangular with unit
     diagonal elements, and math:`U_i` is upper triangular.
@@ -16831,46 +17097,55 @@ def hipblasSgetrfStridedBatched(object handle, const int n, object A, const int 
 
     .. math::
 
-        A_i = L_iU_i
+       A_i = L_iU_i
 
     Args:
-        handle: hipblasHandle_t.
-        n: int. n >= 0.\n
-                          The number of columns and rows of all matrices A_i in the batch.
-                @param[inout]
-                A         pointer to type. Array on the GPU (the size depends on the value of strideA).\n
-                          On entry, the n-by-n matrices A_i to be factored.
-                          On exit, the factors L_i and U_i from the factorization.
-                          The unit diagonal elements of L_i are not stored.
+        handle: **[in]** hipblasHandle_t.
 
-        lda: int. lda >= n.\n
-                Specifies the leading dimension of matrices A_i.
+        n: **[in]** int. n >= 0.
 
-        strideA: hipblasStride.\n
-                Stride from the start of one matrix A_i to the next one A_(i+1).
-                There is no restriction for the value of strideA. Normal use case is strideA >= lda*n
+            The number of columns and rows of all matrices A_i in the batch.
 
-        ipiv: pointer to int. Array on the GPU (the size depends on the value of strideP).\n
-                Contains the vectors of pivots indices ipiv_i (corresponding to A_i).
-                Dimension of ipiv_i is n.
-                Elements of ipiv_i are 1-based indices.
-                For each instance A_i in the batch and for 1 <= j <= n, the row j of the
-                matrix A_i was interchanged with row ipiv_i[j].
-                Matrix P_i of the factorization can be derived from ipiv_i.
-                The factorization here can be done without pivoting if ipiv is passed
-                in as a nullptr.
+        A: **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideA).
 
-        strideP: hipblasStride.\n
-                Stride from the start of one vector ipiv_i to the next one ipiv_(i+1).
-                There is no restriction for the value of strideP. Normal use case is strideP >= n.
+            On entry, the n-by-n matrices A_i to be factored.
+            On exit, the factors L_i and U_i from the factorization.
+            The unit diagonal elements of L_i are not stored.
 
-        info: pointer to int. Array of batchCount integers on the GPU.\n
-                If info[i] = 0, successful exit for factorization of A_i.
-                If info[i] = j > 0, U_i is singular. U_i[j,j] is the first zero pivot.
+        lda: **[in]** int. lda >= n.
 
-        batchCount: int. batchCount >= 0.\n
-                           Number of matrices in the batch.
-                ******************************************************************
+            Specifies the leading dimension of matrices A_i.
+
+        strideA: **[in]** hipblasStride.
+
+            Stride from the start of one matrix A_i to the next one A_(i+1).
+            There is no restriction for the value of strideA. Normal use case is strideA >= lda*n
+
+        ipiv: **[out]** pointer to int. Array on the GPU (the size depends on the value of strideP).
+
+            Contains the vectors of pivots indices ipiv_i (corresponding to A_i).
+            Dimension of ipiv_i is n.
+            Elements of ipiv_i are 1-based indices.
+            For each instance A_i in the batch and for 1 <= j <= n, the row j of the
+            matrix A_i was interchanged with row ipiv_i[j].
+            Matrix P_i of the factorization can be derived from ipiv_i.
+            The factorization here can be done without pivoting if ipiv is passed
+            in as a nullptr.
+
+        strideP: **[in]** hipblasStride.
+
+            Stride from the start of one vector ipiv_i to the next one ipiv_(i+1).
+            There is no restriction for the value of strideP. Normal use case is strideP >= n.
+
+        info: **[out]** pointer to int. Array of batchCount integers on the GPU.
+
+            If info[i] = 0, successful exit for factorization of A_i.
+            If info[i] = j > 0, U_i is singular. U_i[j,j] is the first zero pivot.
+
+        batchCount: **[in]** int. batchCount >= 0.
+
+                       Number of matrices in the batch.
+            ******************************************************************
     """
     _hipblasSgetrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgetrfStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -16926,44 +17201,54 @@ def hipblasSgetrs(object handle, object trans, const int n, const int nrhs, obje
 
     .. math::
 
-        \begin{array}{cl}
-        A X = B & \: \text{not transposed,}\\
-        A^T X = B & \: \text{transposed, or}\\
-        A^H X = B & \: \text{conjugate transposed.}
-        \end{array}
+       \begin{array}{cl}
+       A X = B & \: \text{not transposed,}\\
+       A^T X = B & \: \text{transposed, or}\\
+       A^H X = B & \: \text{conjugate transposed.}
+       \end{array}
 
     Args:
-        handle: hipblasHandle_t.
-        trans: hipblasOperation_t.\n
-                Specifies the form of the system of equations.
+        handle: **[in]** hipblasHandle_t.
 
-        n: int. n >= 0.\n
-                The order of the system, i.e. the number of columns and rows of A.
+        trans: **[in]** hipblasOperation_t.
 
-        nrhs: int. nrhs >= 0.\n
-                The number of right hand sides, i.e., the number of columns
-                of the matrix B.
+            Specifies the form of the system of equations.
 
-        A: pointer to type. Array on the GPU of dimension lda*n.\n
-                The factors L and U of the factorization A = P*L*U returned by ``hipblasSgetrf`` .
+        n: **[in]** int. n >= 0.
 
-        lda: int. lda >= n.\n
-                The leading dimension of A.
+            The order of the system, i.e. the number of columns and rows of A.
 
-        ipiv: pointer to int. Array on the GPU of dimension n.\n
-                The pivot indices returned by ``hipblasSgetrf`` .
+        nrhs: **[in]** int. nrhs >= 0.
 
-        B: pointer to type. Array on the GPU of dimension ldb*nrhs.\n
-                On entry, the right hand side matrix B.
-                On exit, the solution matrix X.
+            The number of right hand sides, i.e., the number of columns
+            of the matrix B.
 
-        ldb: int. ldb >= n.\n
-                The leading dimension of B.
+        A: **[in]** pointer to type. Array on the GPU of dimension lda*n.
 
-        info: pointer to a int on the host.\n
-                          If info = 0, successful exit.
-                          If info = j < 0, the j-th argument is invalid.
-                ******************************************************************
+            The factors L and U of the factorization A = P*L*U returned by ``hipblasSgetrf`` .
+
+        lda: **[in]** int. lda >= n.
+
+            The leading dimension of A.
+
+        ipiv: **[in]** pointer to int. Array on the GPU of dimension n.
+
+            The pivot indices returned by ``hipblasSgetrf`` .
+
+        B: **[in,out]** pointer to type. Array on the GPU of dimension ldb*nrhs.
+
+            On entry, the right hand side matrix B.
+            On exit, the solution matrix X.
+
+        ldb: **[in]** int. ldb >= n.
+
+            The leading dimension of B.
+
+        info: **[out]** pointer to a int on the host.
+
+                      If info = 0, successful exit.
+                      If info = j < 0, the j-th argument is invalid.
+            ******************************************************************
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -17032,48 +17317,59 @@ def hipblasSgetrsBatched(object handle, object trans, const int n, const int nrh
 
     .. math::
 
-        \begin{array}{cl}
-        A_i X_i = B_i & \: \text{not transposed,}\\
-        A_i^T X_i = B_i & \: \text{transposed, or}\\
-        A_i^H X_i = B_i & \: \text{conjugate transposed.}
-        \end{array}
+       \begin{array}{cl}
+       A_i X_i = B_i & \: \text{not transposed,}\\
+       A_i^T X_i = B_i & \: \text{transposed, or}\\
+       A_i^H X_i = B_i & \: \text{conjugate transposed.}
+       \end{array}
 
     ******************************************************************
 
     Args:
-        handle: hipblasHandle_t.
-        trans: hipblasOperation_t.\n
-                Specifies the form of the system of equations of each instance in the batch.
+        handle: **[in]** hipblasHandle_t.
 
-        n: int. n >= 0.\n
-                The order of the system, i.e. the number of columns and rows of all A_i matrices.
+        trans: **[in]** hipblasOperation_t.
 
-        nrhs: int. nrhs >= 0.\n
-                The number of right hand sides, i.e., the number of columns
-                of all the matrices B_i.
+            Specifies the form of the system of equations of each instance in the batch.
 
-        A: Array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.\n
-                The factors L_i and U_i of the factorization A_i = P_i*L_i*U_i returned by ``hipblasSgetrfBatched`` .
+        n: **[in]** int. n >= 0.
 
-        lda: int. lda >= n.\n
-                The leading dimension of matrices A_i.
+            The order of the system, i.e. the number of columns and rows of all A_i matrices.
 
-        ipiv: pointer to int. Array on the GPU.\n
-                Contains the vectors ipiv_i of pivot indices returned by ``hipblasSgetrfBatched`` .
+        nrhs: **[in]** int. nrhs >= 0.
 
-        B: Array of pointers to type. Each pointer points to an array on the GPU of dimension ldb*nrhs.\n
-                On entry, the right hand side matrices B_i.
-                On exit, the solution matrix X_i of each system in the batch.
+            The number of right hand sides, i.e., the number of columns
+            of all the matrices B_i.
 
-        ldb: int. ldb >= n.\n
-                The leading dimension of matrices B_i.
+        A: **[in]** Array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
 
-        info: pointer to a int on the host.\n
-                If info = 0, successful exit.
-                If info = j < 0, the j-th argument is invalid.
+            The factors L_i and U_i of the factorization A_i = P_i*L_i*U_i returned by ``hipblasSgetrfBatched`` .
 
-        batchCount: int. batchCount >= 0.\n
-                Number of instances (systems) in the batch.
+        lda: **[in]** int. lda >= n.
+
+            The leading dimension of matrices A_i.
+
+        ipiv: **[in]** pointer to int. Array on the GPU.
+
+            Contains the vectors ipiv_i of pivot indices returned by ``hipblasSgetrfBatched`` .
+
+        B: **[in,out]** Array of pointers to type. Each pointer points to an array on the GPU of dimension ldb*nrhs.
+
+            On entry, the right hand side matrices B_i.
+            On exit, the solution matrix X_i of each system in the batch.
+
+        ldb: **[in]** int. ldb >= n.
+
+            The leading dimension of matrices B_i.
+
+        info: **[out]** pointer to a int on the host.
+
+            If info = 0, successful exit.
+            If info = j < 0, the j-th argument is invalid.
+
+        batchCount: **[in]** int. batchCount >= 0.
+
+            Number of instances (systems) in the batch.
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -17142,60 +17438,74 @@ def hipblasSgetrsStridedBatched(object handle, object trans, const int n, const 
 
     .. math::
 
-        \begin{array}{cl}
-        A_i X_i = B_i & \: \text{not transposed,}\\
-        A_i^T X_i = B_i & \: \text{transposed, or}\\
-        A_i^H X_i = B_i & \: \text{conjugate transposed.}
-        \end{array}
+       \begin{array}{cl}
+       A_i X_i = B_i & \: \text{not transposed,}\\
+       A_i^T X_i = B_i & \: \text{transposed, or}\\
+       A_i^H X_i = B_i & \: \text{conjugate transposed.}
+       \end{array}
 
     ******************************************************************
 
     Args:
-        handle: hipblasHandle_t.
-        trans: hipblasOperation_t.\n
-                Specifies the form of the system of equations of each instance in the batch.
+        handle: **[in]** hipblasHandle_t.
 
-        n: int. n >= 0.\n
-                The order of the system, i.e. the number of columns and rows of all A_i matrices.
+        trans: **[in]** hipblasOperation_t.
 
-        nrhs: int. nrhs >= 0.\n
-                The number of right hand sides, i.e., the number of columns
-                of all the matrices B_i.
+            Specifies the form of the system of equations of each instance in the batch.
 
-        A: pointer to type. Array on the GPU (the size depends on the value of strideA).\n
-                The factors L_i and U_i of the factorization A_i = P_i*L_i*U_i returned by ``hipblasSgetrfStridedBatched`` .
+        n: **[in]** int. n >= 0.
 
-        lda: int. lda >= n.\n
-                The leading dimension of matrices A_i.
+            The order of the system, i.e. the number of columns and rows of all A_i matrices.
 
-        strideA: hipblasStride.\n
-                Stride from the start of one matrix A_i to the next one A_(i+1).
-                There is no restriction for the value of strideA. Normal use case is strideA >= lda*n.
+        nrhs: **[in]** int. nrhs >= 0.
 
-        ipiv: pointer to int. Array on the GPU (the size depends on the value of strideP).\n
-                Contains the vectors ipiv_i of pivot indices returned by ``hipblasSgetrfStridedBatched`` .
+            The number of right hand sides, i.e., the number of columns
+            of all the matrices B_i.
 
-        strideP: hipblasStride.\n
-                Stride from the start of one vector ipiv_i to the next one ipiv_(i+1).
-                There is no restriction for the value of strideP. Normal use case is strideP >= n.
+        A: **[in]** pointer to type. Array on the GPU (the size depends on the value of strideA).
 
-        B: pointer to type. Array on the GPU (size depends on the value of strideB).\n
-                On entry, the right hand side matrices B_i.
-                On exit, the solution matrix X_i of each system in the batch.
+            The factors L_i and U_i of the factorization A_i = P_i*L_i*U_i returned by ``hipblasSgetrfStridedBatched`` .
 
-        ldb: int. ldb >= n.\n
-                The leading dimension of matrices B_i.
+        lda: **[in]** int. lda >= n.
 
-        strideB: hipblasStride.\n
-                Stride from the start of one matrix B_i to the next one B_(i+1).
-                There is no restriction for the value of strideB. Normal use case is strideB >= ldb*nrhs.
+            The leading dimension of matrices A_i.
 
-        info: pointer to a int on the host.\n
-                If info = 0, successful exit.
-                If info = j < 0, the j-th argument is invalid.
+        strideA: **[in]** hipblasStride.
 
-        batchCount: int. batchCount >= 0.\n
-                Number of instances (systems) in the batch.
+            Stride from the start of one matrix A_i to the next one A_(i+1).
+            There is no restriction for the value of strideA. Normal use case is strideA >= lda*n.
+
+        ipiv: **[in]** pointer to int. Array on the GPU (the size depends on the value of strideP).
+
+            Contains the vectors ipiv_i of pivot indices returned by ``hipblasSgetrfStridedBatched`` .
+
+        strideP: **[in]** hipblasStride.
+
+            Stride from the start of one vector ipiv_i to the next one ipiv_(i+1).
+            There is no restriction for the value of strideP. Normal use case is strideP >= n.
+
+        B: **[in,out]** pointer to type. Array on the GPU (size depends on the value of strideB).
+
+            On entry, the right hand side matrices B_i.
+            On exit, the solution matrix X_i of each system in the batch.
+
+        ldb: **[in]** int. ldb >= n.
+
+            The leading dimension of matrices B_i.
+
+        strideB: **[in]** hipblasStride.
+
+            Stride from the start of one matrix B_i to the next one B_(i+1).
+            There is no restriction for the value of strideB. Normal use case is strideB >= ldb*nrhs.
+
+        info: **[out]** pointer to a int on the host.
+
+            If info = 0, successful exit.
+            If info = j < 0, the j-th argument is invalid.
+
+        batchCount: **[in]** int. batchCount >= 0.
+
+            Number of instances (systems) in the batch.
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -17263,37 +17573,46 @@ def hipblasSgetriBatched(object handle, const int n, object A, const int lda, ob
 
     .. math::
 
-        A_i C_i = I
+       A_i C_i = I
 
     ******************************************************************
 
     Args:
-        handle: hipblasHandle_t.
-        n: int. n >= 0.\n
-                The number of rows and columns of all matrices A_i in the batch.
+        handle: **[in]** hipblasHandle_t.
 
-        A: array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.\n
-                The factors L_i and U_i of the factorization A_i = P_i*L_i*U_i returned by ``hipblasSgetrfBatched`` .
+        n: **[in]** int. n >= 0.
 
-        lda: int. lda >= n.\n
-                Specifies the leading dimension of matrices A_i.
+            The number of rows and columns of all matrices A_i in the batch.
 
-        ipiv: pointer to int. Array on the GPU (the size depends on the value of strideP).\n
-                The pivot indices returned by ``hipblasSgetrfBatched`` .
-                ipiv can be passed in as a nullptr, this will assume that getrfBatched was called without partial pivoting.
+        A: **[in]** array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
 
-        C: array of pointers to type. Each pointer points to an array on the GPU of dimension ldc*n.\n
-                If info[i] = 0, the inverse of matrices A_i. Otherwise, undefined.
+            The factors L_i and U_i of the factorization A_i = P_i*L_i*U_i returned by ``hipblasSgetrfBatched`` .
 
-        ldc: int. ldc >= n.\n
-                Specifies the leading dimension of C_i.
+        lda: **[in]** int. lda >= n.
 
-        info: pointer to int. Array of batchCount integers on the GPU.\n
-                If info[i] = 0, successful exit for inversion of A_i.
-                If info[i] = j > 0, U_i is singular. U_i[j,j] is the first zero pivot.
+            Specifies the leading dimension of matrices A_i.
 
-        batchCount: int. batchCount >= 0.\n
-                Number of matrices in the batch.
+        ipiv: **[in]** pointer to int. Array on the GPU (the size depends on the value of strideP).
+
+            The pivot indices returned by ``hipblasSgetrfBatched`` .
+            ipiv can be passed in as a nullptr, this will assume that getrfBatched was called without partial pivoting.
+
+        C: **[out]** array of pointers to type. Each pointer points to an array on the GPU of dimension ldc*n.
+
+            If info[i] = 0, the inverse of matrices A_i. Otherwise, undefined.
+
+        ldc: **[in]** int. ldc >= n.
+
+            Specifies the leading dimension of C_i.
+
+        info: **[out]** pointer to int. Array of batchCount integers on the GPU.
+
+            If info[i] = 0, successful exit for inversion of A_i.
+            If info[i] = j > 0, U_i is singular. U_i[j,j] is the first zero pivot.
+
+        batchCount: **[in]** int. batchCount >= 0.
+
+            Number of matrices in the batch.
     """
     _hipblasSgetriBatched__retval = hipblasStatus_t(chipblas.hipblasSgetriBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,n,
@@ -17353,57 +17672,68 @@ def hipblasSgels(object handle, object trans, const int m, const int n, const in
 
     .. math::
 
-        \begin{array}{cl}
-        A X = B & \: \text{not transposed, or}\\
-        A' X = B & \: \text{transposed if real, or conjugate transposed if complex}
-        \end{array}
+       \begin{array}{cl}
+       A X = B & \: \text{not transposed, or}\\
+       A' X = B & \: \text{transposed if real, or conjugate transposed if complex}
+       \end{array}
 
     If m >= n (or m < n in the case of transpose/conjugate transpose), the system is overdetermined
     and a least-squares solution approximating X is found by minimizing
 
     .. math::
 
-        || B - A  X || \quad \text{(or} \: || B - A' X ||\text{)}
+       || B - A  X || \quad \text{(or} \: || B - A' X ||\text{)}
 
     Args:
-        handle: hipblasHandle_t.
-        trans: hipblasOperation_t.\n
-                Specifies the form of the system of equations.
+        handle: **[in]** hipblasHandle_t.
 
-        m: int. m >= 0.\n
-                The number of rows of matrix A.
+        trans: **[in]** hipblasOperation_t.
 
-        n: int. n >= 0.\n
-                The number of columns of matrix A.
+            Specifies the form of the system of equations.
 
-        nrhs: int. nrhs >= 0.\n
-                            The number of columns of matrices B and X;
-                            i.e., the columns on the right hand side.
-                @param[inout]
-                A           pointer to type. Array on the GPU of dimension lda*n.\n
-                            On entry, the matrix A.
-                            On exit, the QR (or LQ) factorization of A as returned by "GEQRF" (or "GELQF").
+        m: **[in]** int. m >= 0.
 
-        lda: int. lda >= m.\n
-                            Specifies the leading dimension of matrix A.
-                @param[inout]
-                B           pointer to type. Array on the GPU of dimension ldb*nrhs.\n
-                            On entry, the matrix B.
-                            On exit, when info = 0, B is overwritten by the solution vectors (and the residuals in
-                            the overdetermined cases) stored as columns.
+            The number of rows of matrix A.
 
-        ldb: int. ldb >= max(m,n).\n
-                Specifies the leading dimension of matrix B.
+        n: **[in]** int. n >= 0.
 
-        info: pointer to an int on the host.\n
-                If info = 0, successful exit.
-                If info = j < 0, the j-th argument is invalid.
+            The number of columns of matrix A.
 
-        deviceInfo: pointer to int on the GPU.\n
-                           If info = 0, successful exit.
-                           If info = i > 0, the solution could not be computed because input matrix A is
-                           rank deficient; the i-th diagonal element of its triangular factor is zero.
-                ******************************************************************
+        nrhs: **[in]** int. nrhs >= 0.
+
+            The number of columns of matrices B and X;
+            i.e., the columns on the right hand side.
+
+        A: **[inout]** pointer to type. Array on the GPU of dimension lda*n.
+
+            On entry, the matrix A.
+            On exit, the QR (or LQ) factorization of A as returned by "GEQRF" (or "GELQF").
+
+        lda: **[in]** int. lda >= m.
+
+            Specifies the leading dimension of matrix A.
+
+        B: **[inout]** pointer to type. Array on the GPU of dimension ldb*nrhs.
+
+            On entry, the matrix B.
+            On exit, when info = 0, B is overwritten by the solution vectors (and the residuals in
+            the overdetermined cases) stored as columns.
+
+        ldb: **[in]** int. ldb >= max(m,n).
+
+            Specifies the leading dimension of matrix B.
+
+        info: **[out]** pointer to an int on the host.
+
+            If info = 0, successful exit.
+            If info = j < 0, the j-th argument is invalid.
+
+        deviceInfo: **[out]** pointer to int on the GPU.
+
+                       If info = 0, successful exit.
+                       If info = i > 0, the solution could not be computed because input matrix A is
+                       rank deficient; the i-th diagonal element of its triangular factor is zero.
+            ******************************************************************
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -17471,61 +17801,73 @@ def hipblasSgelsBatched(object handle, object trans, const int m, const int n, c
 
     .. math::
 
-        \begin{array}{cl}
-        A_j X_j = B_j & \: \text{not transposed, or}\\
-        A_j' X_j = B_j & \: \text{transposed if real, or conjugate transposed if complex}
-        \end{array}
+       \begin{array}{cl}
+       A_j X_j = B_j & \: \text{not transposed, or}\\
+       A_j' X_j = B_j & \: \text{transposed if real, or conjugate transposed if complex}
+       \end{array}
 
     If m >= n (or m < n in the case of transpose/conjugate transpose), the system is overdetermined
     and a least-squares solution approximating X_j is found by minimizing
 
     .. math::
 
-        || B_j - A_j  X_j || \quad \text{(or} \: || B_j - A_j' X_j ||\text{)}
+       || B_j - A_j  X_j || \quad \text{(or} \: || B_j - A_j' X_j ||\text{)}
 
     Args:
-        handle: hipblasHandle_t.
-        trans: hipblasOperation_t.\n
-                Specifies the form of the system of equations.
+        handle: **[in]** hipblasHandle_t.
 
-        m: int. m >= 0.\n
-                The number of rows of all matrices A_j in the batch.
+        trans: **[in]** hipblasOperation_t.
 
-        n: int. n >= 0.\n
-                The number of columns of all matrices A_j in the batch.
+            Specifies the form of the system of equations.
 
-        nrhs: int. nrhs >= 0.\n
-                            The number of columns of all matrices B_j and X_j in the batch;
-                            i.e., the columns on the right hand side.
-                @param[inout]
-                A           array of pointer to type. Each pointer points to an array on the GPU of dimension lda*n.\n
-                            On entry, the matrices A_j.
-                            On exit, the QR (or LQ) factorizations of A_j as returned by "GEQRF_BATCHED"
-                            (or "GELQF_BATCHED").
+        m: **[in]** int. m >= 0.
 
-        lda: int. lda >= m.\n
-                            Specifies the leading dimension of matrices A_j.
-                @param[inout]
-                B           array of pointer to type. Each pointer points to an array on the GPU of dimension ldb*nrhs.\n
-                            On entry, the matrices B_j.
-                            On exit, when info[j] = 0, B_j is overwritten by the solution vectors (and the residuals in
-                            the overdetermined cases) stored as columns.
+            The number of rows of all matrices A_j in the batch.
 
-        ldb: int. ldb >= max(m,n).\n
-                Specifies the leading dimension of matrices B_j.
+        n: **[in]** int. n >= 0.
 
-        info: pointer to an int on the host.\n
-                If info = 0, successful exit.
-                If info = j < 0, the j-th argument is invalid.
+            The number of columns of all matrices A_j in the batch.
 
-        deviceInfo: pointer to int. Array of batchCount integers on the GPU.\n
-                If deviceInfo[j] = 0, successful exit for solution of A_j.
-                If deviceInfo[j] = i > 0, the solution of A_j could not be computed because input
-                matrix A_j is rank deficient; the i-th diagonal element of its triangular factor is zero.
+        nrhs: **[in]** int. nrhs >= 0.
 
-        batchCount: int. batchCount >= 0.\n
-                           Number of matrices in the batch.
-                ******************************************************************
+            The number of columns of all matrices B_j and X_j in the batch;
+            i.e., the columns on the right hand side.
+
+        A: **[inout]** array of pointer to type. Each pointer points to an array on the GPU of dimension lda*n.
+
+            On entry, the matrices A_j.
+            On exit, the QR (or LQ) factorizations of A_j as returned by "GEQRF_BATCHED"
+            (or "GELQF_BATCHED").
+
+        lda: **[in]** int. lda >= m.
+
+            Specifies the leading dimension of matrices A_j.
+
+        B: **[inout]** array of pointer to type. Each pointer points to an array on the GPU of dimension ldb*nrhs.
+
+            On entry, the matrices B_j.
+            On exit, when info[j] = 0, B_j is overwritten by the solution vectors (and the residuals in
+            the overdetermined cases) stored as columns.
+
+        ldb: **[in]** int. ldb >= max(m,n).
+
+            Specifies the leading dimension of matrices B_j.
+
+        info: **[out]** pointer to an int on the host.
+
+            If info = 0, successful exit.
+            If info = j < 0, the j-th argument is invalid.
+
+        deviceInfo: **[out]** pointer to int. Array of batchCount integers on the GPU.
+
+            If deviceInfo[j] = 0, successful exit for solution of A_j.
+            If deviceInfo[j] = i > 0, the solution of A_j could not be computed because input
+            matrix A_j is rank deficient; the i-th diagonal element of its triangular factor is zero.
+
+        batchCount: **[in]** int. batchCount >= 0.
+
+                       Number of matrices in the batch.
+            ******************************************************************
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -17594,69 +17936,83 @@ def hipblasSgelsStridedBatched(object handle, object trans, const int m, const i
 
     .. math::
 
-        \begin{array}{cl}
-        A_j X_j = B_j & \: \text{not transposed, or}\\
-        A_j' X_j = B_j & \: \text{transposed if real, or conjugate transposed if complex}
-        \end{array}
+       \begin{array}{cl}
+       A_j X_j = B_j & \: \text{not transposed, or}\\
+       A_j' X_j = B_j & \: \text{transposed if real, or conjugate transposed if complex}
+       \end{array}
 
     If m >= n (or m < n in the case of transpose/conjugate transpose), the system is overdetermined
     and a least-squares solution approximating X_j is found by minimizing
 
     .. math::
 
-        || B_j - A_j  X_j || \quad \text{(or} \: || B_j - A_j' X_j ||\text{)}
+       || B_j - A_j  X_j || \quad \text{(or} \: || B_j - A_j' X_j ||\text{)}
 
     Args:
-        handle: hipblasHandle_t.
-        trans: hipblasOperation_t.\n
-                Specifies the form of the system of equations.
+        handle: **[in]** hipblasHandle_t.
 
-        m: int. m >= 0.\n
-                The number of rows of all matrices A_j in the batch.
+        trans: **[in]** hipblasOperation_t.
 
-        n: int. n >= 0.\n
-                The number of columns of all matrices A_j in the batch.
+            Specifies the form of the system of equations.
 
-        nrhs: int. nrhs >= 0.\n
-                            The number of columns of all matrices B_j and X_j in the batch;
-                            i.e., the columns on the right hand side.
-                @param[inout]
-                A           pointer to type. Array on the GPU (the size depends on the value of strideA).\n
-                            On entry, the matrices A_j.
-                            On exit, the QR (or LQ) factorizations of A_j as returned by "GEQRF_STRIDED_BATCHED"
-                            (or "GELQF_STRIDED_BATCHED").
+        m: **[in]** int. m >= 0.
 
-        lda: int. lda >= m.\n
-                Specifies the leading dimension of matrices A_j.
+            The number of rows of all matrices A_j in the batch.
 
-        strideA: hipblasStride.\n
-                            Stride from the start of one matrix A_j to the next one A_(j+1).
-                            There is no restriction for the value of strideA. Normal use case is strideA >= lda*n
-                @param[inout]
-                B           pointer to type. Array on the GPU (the size depends on the value of strideB).\n
-                            On entry, the matrices B_j.
-                            On exit, when info[j] = 0, each B_j is overwritten by the solution vectors (and the residuals in
-                            the overdetermined cases) stored as columns.
+        n: **[in]** int. n >= 0.
 
-        ldb: int. ldb >= max(m,n).\n
-                Specifies the leading dimension of matrices B_j.
+            The number of columns of all matrices A_j in the batch.
 
-        strideB: hipblasStride.\n
-                Stride from the start of one matrix B_j to the next one B_(j+1).
-                There is no restriction for the value of strideB. Normal use case is strideB >= ldb*nrhs
+        nrhs: **[in]** int. nrhs >= 0.
 
-        info: pointer to an int on the host.\n
-                If info = 0, successful exit.
-                If info = j < 0, the j-th argument is invalid.
+            The number of columns of all matrices B_j and X_j in the batch;
+            i.e., the columns on the right hand side.
 
-        deviceInfo: pointer to int. Array of batchCount integers on the GPU.\n
-                If deviceInfo[j] = 0, successful exit for solution of A_j.
-                If deviceInfo[j] = i > 0, the solution of A_j could not be computed because input
-                matrix A_j is rank deficient; the i-th diagonal element of its triangular factor is zero.
+        A: **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideA).
 
-        batchCount: int. batchCount >= 0.\n
-                           Number of matrices in the batch.
-                ******************************************************************
+            On entry, the matrices A_j.
+            On exit, the QR (or LQ) factorizations of A_j as returned by "GEQRF_STRIDED_BATCHED"
+            (or "GELQF_STRIDED_BATCHED").
+
+        lda: **[in]** int. lda >= m.
+
+            Specifies the leading dimension of matrices A_j.
+
+        strideA: **[in]** hipblasStride.
+
+            Stride from the start of one matrix A_j to the next one A_(j+1).
+            There is no restriction for the value of strideA. Normal use case is strideA >= lda*n
+
+        B: **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideB).
+
+            On entry, the matrices B_j.
+            On exit, when info[j] = 0, each B_j is overwritten by the solution vectors (and the residuals in
+            the overdetermined cases) stored as columns.
+
+        ldb: **[in]** int. ldb >= max(m,n).
+
+            Specifies the leading dimension of matrices B_j.
+
+        strideB: **[in]** hipblasStride.
+
+            Stride from the start of one matrix B_j to the next one B_(j+1).
+            There is no restriction for the value of strideB. Normal use case is strideB >= ldb*nrhs
+
+        info: **[out]** pointer to an int on the host.
+
+            If info = 0, successful exit.
+            If info = j < 0, the j-th argument is invalid.
+
+        deviceInfo: **[out]** pointer to int. Array of batchCount integers on the GPU.
+
+            If deviceInfo[j] = 0, successful exit for solution of A_j.
+            If deviceInfo[j] = i > 0, the solution of A_j could not be computed because input
+            matrix A_j is rank deficient; the i-th diagonal element of its triangular factor is zero.
+
+        batchCount: **[in]** int. batchCount >= 0.
+
+                       Number of matrices in the batch.
+            ******************************************************************
     """
     if not isinstance(trans,_hipblasOperation_t__Base):
         raise TypeError("argument 'trans' must be of type '_hipblasOperation_t__Base'")
@@ -17724,49 +18080,56 @@ def hipblasSgeqrf(object handle, const int m, const int n, object A, const int l
 
     .. math::
 
-        A = Q\left[\begin{array}{c}
-        R\\
-        0
-        \end{array}\right]
+       A = Q\left[\begin{array}{c}
+       R\\
+       0
+       \end{array}\right]
 
     where R is upper triangular (upper trapezoidal if m < n), and Q is
     a m-by-m orthogonal/unitary matrix represented as the product of Householder matrices
 
     .. math::
 
-        Q = H_1H_2\cdots H_k, \quad \text{with} \: k = \text{min}(m,n)
+       Q = H_1H_2\cdots H_k, \quad \text{with} \: k = \text{min}(m,n)
 
     Each Householder matrix math:`H_i` is given by
 
     .. math::
 
-        H_i = I - \text{ipiv}[i] \cdot v_i v_i'
+       H_i = I - \text{ipiv}[i] \cdot v_i v_i'
 
     ******************************************************************
 
     Args:
-        handle: hipblasHandle_t.
-        m: int. m >= 0.\n
-                The number of rows of the matrix A.
+        handle: **[in]** hipblasHandle_t.
 
-        n: int. n >= 0.\n
-                          The number of columns of the matrix A.
-                @param[inout]
-                A         pointer to type. Array on the GPU of dimension lda*n.\n
-                          On entry, the m-by-n matrix to be factored.
-                          On exit, the elements on and above the diagonal contain the
-                          factor R; the elements below the diagonal are the last m - i elements
-                          of Householder vector v_i.
+        m: **[in]** int. m >= 0.
 
-        lda: int. lda >= m.\n
-                Specifies the leading dimension of A.
+            The number of rows of the matrix A.
 
-        ipiv: pointer to type. Array on the GPU of dimension min(m,n).\n
-                The Householder scalars.
+        n: **[in]** int. n >= 0.
 
-        info: pointer to a int on the host.\n
-                If info = 0, successful exit.
-                If info = j < 0, the j-th argument is invalid.
+            The number of columns of the matrix A.
+
+        A: **[inout]** pointer to type. Array on the GPU of dimension lda*n.
+
+            On entry, the m-by-n matrix to be factored.
+            On exit, the elements on and above the diagonal contain the
+            factor R; the elements below the diagonal are the last m - i elements
+            of Householder vector v_i.
+
+        lda: **[in]** int. lda >= m.
+
+            Specifies the leading dimension of A.
+
+        ipiv: **[out]** pointer to type. Array on the GPU of dimension min(m,n).
+
+            The Householder scalars.
+
+        info: **[out]** pointer to a int on the host.
+
+            If info = 0, successful exit.
+            If info = j < 0, the j-th argument is invalid.
     """
     _hipblasSgeqrf__retval = hipblasStatus_t(chipblas.hipblasSgeqrf(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -17823,52 +18186,60 @@ def hipblasSgeqrfBatched(object handle, const int m, const int n, object A, cons
 
     .. math::
 
-        A_i = Q_i\left[\begin{array}{c}
-        R_i\\
-        0
-        \end{array}\right]
+       A_i = Q_i\left[\begin{array}{c}
+       R_i\\
+       0
+       \end{array}\right]
 
     where math:`R_i` is upper triangular (upper trapezoidal if m < n), and math:`Q_i` is
     a m-by-m orthogonal/unitary matrix represented as the product of Householder matrices
 
     .. math::
 
-        Q_i = H_{i_1}H_{i_2}\cdots H_{i_k}, \quad \text{with} \: k = \text{min}(m,n)
+       Q_i = H_{i_1}H_{i_2}\cdots H_{i_k}, \quad \text{with} \: k = \text{min}(m,n)
 
     Each Householder matrix math:`H_{i_j}` is given by
 
     .. math::
 
-        H_{i_j} = I - \text{ipiv}_i[j] \cdot v_{i_j} v_{i_j}'
+       H_{i_j} = I - \text{ipiv}_i[j] \cdot v_{i_j} v_{i_j}'
 
     Args:
-        handle: hipblasHandle_t.
-        m: int. m >= 0.\n
-                The number of rows of all the matrices A_i in the batch.
+        handle: **[in]** hipblasHandle_t.
 
-        n: int. n >= 0.\n
-                          The number of columns of all the matrices A_i in the batch.
-                @param[inout]
-                A         Array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.\n
-                          On entry, the m-by-n matrices A_i to be factored.
-                          On exit, the elements on and above the diagonal contain the
-                          factor R_i. The elements below the diagonal are the last m - j elements
-                          of Householder vector v_(i_j).
+        m: **[in]** int. m >= 0.
 
-        lda: int. lda >= m.\n
-                Specifies the leading dimension of matrices A_i.
+            The number of rows of all the matrices A_i in the batch.
 
-        ipiv: array of pointers to type. Each pointer points to an array on the GPU
-                of dimension min(m, n).\n
-                Contains the vectors ipiv_i of corresponding Householder scalars.
+        n: **[in]** int. n >= 0.
 
-        info: pointer to a int on the host.\n
-                If info = 0, successful exit.
-                If info = k < 0, the k-th argument is invalid.
+            The number of columns of all the matrices A_i in the batch.
 
-        batchCount: int. batchCount >= 0.\n
-                            Number of matrices in the batch.
-                ******************************************************************
+        A: **[inout]** Array of pointers to type. Each pointer points to an array on the GPU of dimension lda*n.
+
+            On entry, the m-by-n matrices A_i to be factored.
+            On exit, the elements on and above the diagonal contain the
+            factor R_i. The elements below the diagonal are the last m - j elements
+            of Householder vector v_(i_j).
+
+        lda: **[in]** int. lda >= m.
+
+            Specifies the leading dimension of matrices A_i.
+
+        ipiv: **[out]** array of pointers to type. Each pointer points to an array on the GPU
+            of dimension min(m, n).
+
+            Contains the vectors ipiv_i of corresponding Householder scalars.
+
+        info: **[out]** pointer to a int on the host.
+
+            If info = 0, successful exit.
+            If info = k < 0, the k-th argument is invalid.
+
+        batchCount: **[in]** int. batchCount >= 0.
+
+                        Number of matrices in the batch.
+            ******************************************************************
     """
     _hipblasSgeqrfBatched__retval = hipblasStatus_t(chipblas.hipblasSgeqrfBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -17925,60 +18296,70 @@ def hipblasSgeqrfStridedBatched(object handle, const int m, const int n, object 
 
     .. math::
 
-        A_i = Q_i\left[\begin{array}{c}
-        R_i\\
-        0
-        \end{array}\right]
+       A_i = Q_i\left[\begin{array}{c}
+       R_i\\
+       0
+       \end{array}\right]
 
     where math:`R_i` is upper triangular (upper trapezoidal if m < n), and math:`Q_i` is
     a m-by-m orthogonal/unitary matrix represented as the product of Householder matrices
 
     .. math::
 
-        Q_i = H_{i_1}H_{i_2}\cdots H_{i_k}, \quad \text{with} \: k = \text{min}(m,n)
+       Q_i = H_{i_1}H_{i_2}\cdots H_{i_k}, \quad \text{with} \: k = \text{min}(m,n)
 
     Each Householder matrix math:`H_{i_j}` is given by
 
     .. math::
 
-        H_{i_j} = I - \text{ipiv}_j[j] \cdot v_{i_j} v_{i_j}'
+       H_{i_j} = I - \text{ipiv}_j[j] \cdot v_{i_j} v_{i_j}'
 
     Args:
-        handle: hipblasHandle_t.
-        m: int. m >= 0.\n
-                The number of rows of all the matrices A_i in the batch.
+        handle: **[in]** hipblasHandle_t.
 
-        n: int. n >= 0.\n
-                          The number of columns of all the matrices A_i in the batch.
-                @param[inout]
-                A         pointer to type. Array on the GPU (the size depends on the value of strideA).\n
-                          On entry, the m-by-n matrices A_i to be factored.
-                          On exit, the elements on and above the diagonal contain the
-                          factor R_i. The elements below the diagonal are the last m - j elements
-                          of Householder vector v_(i_j).
+        m: **[in]** int. m >= 0.
 
-        lda: int. lda >= m.\n
-                Specifies the leading dimension of matrices A_i.
+            The number of rows of all the matrices A_i in the batch.
 
-        strideA: hipblasStride.\n
-                Stride from the start of one matrix A_i to the next one A_(i+1).
-                There is no restriction for the value of strideA. Normal use case is strideA >= lda*n.
+        n: **[in]** int. n >= 0.
 
-        ipiv: pointer to type. Array on the GPU (the size depends on the value of strideP).\n
-                Contains the vectors ipiv_i of corresponding Householder scalars.
+            The number of columns of all the matrices A_i in the batch.
 
-        strideP: hipblasStride.\n
-                Stride from the start of one vector ipiv_i to the next one ipiv_(i+1).
-                There is no restriction for the value
-                of strideP. Normal use is strideP >= min(m,n).
+        A: **[inout]** pointer to type. Array on the GPU (the size depends on the value of strideA).
 
-        info: pointer to a int on the host.\n
-                If info = 0, successful exit.
-                If info = k < 0, the k-th argument is invalid.
+            On entry, the m-by-n matrices A_i to be factored.
+            On exit, the elements on and above the diagonal contain the
+            factor R_i. The elements below the diagonal are the last m - j elements
+            of Householder vector v_(i_j).
 
-        batchCount: int. batchCount >= 0.\n
-                            Number of matrices in the batch.
-                ******************************************************************
+        lda: **[in]** int. lda >= m.
+
+            Specifies the leading dimension of matrices A_i.
+
+        strideA: **[in]** hipblasStride.
+
+            Stride from the start of one matrix A_i to the next one A_(i+1).
+            There is no restriction for the value of strideA. Normal use case is strideA >= lda*n.
+
+        ipiv: **[out]** pointer to type. Array on the GPU (the size depends on the value of strideP).
+
+            Contains the vectors ipiv_i of corresponding Householder scalars.
+
+        strideP: **[in]** hipblasStride.
+
+            Stride from the start of one vector ipiv_i to the next one ipiv_(i+1).
+            There is no restriction for the value
+            of strideP. Normal use is strideP >= min(m,n).
+
+        info: **[out]** pointer to a int on the host.
+
+            If info = 0, successful exit.
+            If info = k < 0, the k-th argument is invalid.
+
+        batchCount: **[in]** int. batchCount >= 0.
+
+                        Number of matrices in the batch.
+            ******************************************************************
     """
     _hipblasSgeqrfStridedBatched__retval = hipblasStatus_t(chipblas.hipblasSgeqrfStridedBatched(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -18050,62 +18431,62 @@ def hipblasGemmEx(object handle, object transA, object transB, int m, int n, int
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        transA: [hipblasOperation_t]
-                specifies the form of op( A ).
+        transA: **[in]** [hipblasOperation_t]
+            specifies the form of op( A ).
 
-        transB: [hipblasOperation_t]
-                specifies the form of op( B ).
+        transB: **[in]** [hipblasOperation_t]
+            specifies the form of op( B ).
 
-        m: [int]
-                matrix dimension m.
+        m: **[in]** [int]
+            matrix dimension m.
 
-        n: [int]
-                matrix dimension n.
+        n: **[in]** [int]
+            matrix dimension n.
 
-        k: [int]
-                matrix dimension k.
+        k: **[in]** [int]
+            matrix dimension k.
 
-        alpha: [const void *]
-                device pointer or host pointer specifying the scalar alpha. Same datatype as computeType.
+        alpha: **[in]** [const void *]
+            device pointer or host pointer specifying the scalar alpha. Same datatype as computeType.
 
-        A: [void *]
-                device pointer storing matrix A.
+        A: **[in]** [void *]
+            device pointer storing matrix A.
 
-        aType: [hipblasDatatype_t]
-                specifies the datatype of matrix A.
+        aType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of matrix A.
 
-        lda: [int]
-                specifies the leading dimension of A.
+        lda: **[in]** [int]
+            specifies the leading dimension of A.
 
-        B: [void *]
-                device pointer storing matrix B.
+        B: **[in]** [void *]
+            device pointer storing matrix B.
 
-        bType: [hipblasDatatype_t]
-                specifies the datatype of matrix B.
+        bType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of matrix B.
 
-        ldb: [int]
-                specifies the leading dimension of B.
+        ldb: **[in]** [int]
+            specifies the leading dimension of B.
 
-        beta: [const void *]
-                device pointer or host pointer specifying the scalar beta. Same datatype as computeType.
+        beta: **[in]** [const void *]
+            device pointer or host pointer specifying the scalar beta. Same datatype as computeType.
 
-        C: [void *]
-                device pointer storing matrix C.
+        C: **[in]** [void *]
+            device pointer storing matrix C.
 
-        cType: [hipblasDatatype_t]
-                specifies the datatype of matrix C.
+        cType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of matrix C.
 
-        ldc: [int]
-                specifies the leading dimension of C.
+        ldc: **[in]** [int]
+            specifies the leading dimension of C.
 
-        computeType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        computeType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
 
-        algo: [hipblasGemmAlgo_t]
-                enumerant specifying the algorithm type.
+        algo: **[in]** [hipblasGemmAlgo_t]
+            enumerant specifying the algorithm type.
     """
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
@@ -18157,65 +18538,65 @@ def hipblasGemmBatchedEx(object handle, object transA, object transB, int m, int
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        transA: [hipblasOperation_t]
-                specifies the form of op( A ).
+        transA: **[in]** [hipblasOperation_t]
+            specifies the form of op( A ).
 
-        transB: [hipblasOperation_t]
-                specifies the form of op( B ).
+        transB: **[in]** [hipblasOperation_t]
+            specifies the form of op( B ).
 
-        m: [int]
-                matrix dimension m.
+        m: **[in]** [int]
+            matrix dimension m.
 
-        n: [int]
-                matrix dimension n.
+        n: **[in]** [int]
+            matrix dimension n.
 
-        k: [int]
-                matrix dimension k.
+        k: **[in]** [int]
+            matrix dimension k.
 
-        alpha: [const void *]
-                device pointer or host pointer specifying the scalar alpha. Same datatype as computeType.
+        alpha: **[in]** [const void *]
+            device pointer or host pointer specifying the scalar alpha. Same datatype as computeType.
 
-        A: [void *]
-                device pointer storing array of pointers to each matrix A_i.
+        A: **[in]** [void *]
+            device pointer storing array of pointers to each matrix A_i.
 
-        aType: [hipblasDatatype_t]
-                specifies the datatype of each matrix A_i.
+        aType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each matrix A_i.
 
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
 
-        B: [void *]
-                device pointer storing array of pointers to each matrix B_i.
+        B: **[in]** [void *]
+            device pointer storing array of pointers to each matrix B_i.
 
-        bType: [hipblasDatatype_t]
-                specifies the datatype of each matrix B_i.
+        bType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each matrix B_i.
 
-        ldb: [int]
-                specifies the leading dimension of each B_i.
+        ldb: **[in]** [int]
+            specifies the leading dimension of each B_i.
 
-        beta: [const void *]
-                device pointer or host pointer specifying the scalar beta. Same datatype as computeType.
+        beta: **[in]** [const void *]
+            device pointer or host pointer specifying the scalar beta. Same datatype as computeType.
 
-        C: [void *]
-                device array of device pointers to each matrix C_i.
+        C: **[in]** [void *]
+            device array of device pointers to each matrix C_i.
 
-        cType: [hipblasDatatype_t]
-                specifies the datatype of each matrix C_i.
+        cType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each matrix C_i.
 
-        ldc: [int]
-                specifies the leading dimension of each C_i.
+        ldc: **[in]** [int]
+            specifies the leading dimension of each C_i.
 
-        batchCount: [int]
-                number of gemm operations in the batch.
+        batchCount: **[in]** [int]
+            number of gemm operations in the batch.
 
-        computeType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        computeType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
 
-        algo: [hipblasGemmAlgo_t]
-                enumerant specifying the algorithm type.
+        algo: **[in]** [hipblasGemmAlgo_t]
+            enumerant specifying the algorithm type.
     """
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
@@ -18272,74 +18653,74 @@ def hipblasGemmStridedBatchedEx(object handle, object transA, object transB, int
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        transA: [hipblasOperation_t]
-                specifies the form of op( A ).
+        transA: **[in]** [hipblasOperation_t]
+            specifies the form of op( A ).
 
-        transB: [hipblasOperation_t]
-                specifies the form of op( B ).
+        transB: **[in]** [hipblasOperation_t]
+            specifies the form of op( B ).
 
-        m: [int]
-                matrix dimension m.
+        m: **[in]** [int]
+            matrix dimension m.
 
-        n: [int]
-                matrix dimension n.
+        n: **[in]** [int]
+            matrix dimension n.
 
-        k: [int]
-                matrix dimension k.
+        k: **[in]** [int]
+            matrix dimension k.
 
-        alpha: [const void *]
-                device pointer or host pointer specifying the scalar alpha. Same datatype as computeType.
+        alpha: **[in]** [const void *]
+            device pointer or host pointer specifying the scalar alpha. Same datatype as computeType.
 
-        A: [void *]
-                device pointer pointing to first matrix A_1.
+        A: **[in]** [void *]
+            device pointer pointing to first matrix A_1.
 
-        aType: [hipblasDatatype_t]
-                specifies the datatype of each matrix A_i.
+        aType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each matrix A_i.
 
-        lda: [int]
-                specifies the leading dimension of each A_i.
+        lda: **[in]** [int]
+            specifies the leading dimension of each A_i.
 
-        strideA: [hipblasStride]
-                specifies stride from start of one A_i matrix to the next A_(i + 1).
+        strideA: **[in]** [hipblasStride]
+            specifies stride from start of one A_i matrix to the next A_(i + 1).
 
-        B: [void *]
-                device pointer pointing to first matrix B_1.
+        B: **[in]** [void *]
+            device pointer pointing to first matrix B_1.
 
-        bType: [hipblasDatatype_t]
-                specifies the datatype of each matrix B_i.
+        bType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each matrix B_i.
 
-        ldb: [int]
-                specifies the leading dimension of each B_i.
+        ldb: **[in]** [int]
+            specifies the leading dimension of each B_i.
 
-        strideB: [hipblasStride]
-                specifies stride from start of one B_i matrix to the next B_(i + 1).
+        strideB: **[in]** [hipblasStride]
+            specifies stride from start of one B_i matrix to the next B_(i + 1).
 
-        beta: [const void *]
-                device pointer or host pointer specifying the scalar beta. Same datatype as computeType.
+        beta: **[in]** [const void *]
+            device pointer or host pointer specifying the scalar beta. Same datatype as computeType.
 
-        C: [void *]
-                device pointer pointing to first matrix C_1.
+        C: **[in]** [void *]
+            device pointer pointing to first matrix C_1.
 
-        cType: [hipblasDatatype_t]
-                specifies the datatype of each matrix C_i.
+        cType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each matrix C_i.
 
-        ldc: [int]
-                specifies the leading dimension of each C_i.
+        ldc: **[in]** [int]
+            specifies the leading dimension of each C_i.
 
-        strideC: [hipblasStride]
-                specifies stride from start of one C_i matrix to the next C_(i + 1).
+        strideC: **[in]** [hipblasStride]
+            specifies stride from start of one C_i matrix to the next C_(i + 1).
 
-        batchCount: [int]
-                number of gemm operations in the batch.
+        batchCount: **[in]** [int]
+            number of gemm operations in the batch.
 
-        computeType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        computeType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
 
-        algo: [hipblasGemmAlgo_t]
-                enumerant specifying the algorithm type.
+        algo: **[in]** [hipblasGemmAlgo_t]
+            enumerant specifying the algorithm type.
     """
     if not isinstance(transA,_hipblasOperation_t__Base):
         raise TypeError("argument 'transA' must be of type '_hipblasOperation_t__Base'")                    
@@ -18410,71 +18791,71 @@ def hipblasTrsmEx(object handle, object side, object uplo, object transA, object
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
-                HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
+            HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  A is a lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  A is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  A is a lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: op(A) = A.
-                HIPBLAS_OP_T: op(A) = A^T.
-                HIPBLAS_ON_C: op(A) = A^H.
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: op(A) = A.
+            HIPBLAS_OP_T: op(A) = A^T.
+            HIPBLAS_ON_C: op(A) = A^H.
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     A is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  A is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of B. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of B. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of B. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of B. n >= 0.
 
-        alpha: [void *]
-                device pointer or host pointer specifying the scalar alpha. When alpha is
-                &zero then A is not referenced, and B need not be set before
-                entry.
+        alpha: **[in]** [void *]
+            device pointer or host pointer specifying the scalar alpha. When alpha is
+            &zero then A is not referenced, and B need not be set before
+            entry.
 
-        A: [void *]
-                device pointer storing matrix A.
-                of dimension ( lda, k ), where k is m
-                when HIPBLAS_SIDE_LEFT and
-                is n when HIPBLAS_SIDE_RIGHT
-                only the upper/lower triangular part is accessed.
+        A: **[in]** [void *]
+            device pointer storing matrix A.
+            of dimension ( lda, k ), where k is m
+            when HIPBLAS_SIDE_LEFT and
+            is n when HIPBLAS_SIDE_RIGHT
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        B: [void *]
-                device pointer storing matrix B.
-                B is of dimension ( ldb, n ).
-                Before entry, the leading m by n part of the array B must
-                contain the right-hand side matrix B, and on exit is
-                overwritten by the solution matrix X.
+        B: **[in,out]** [void *]
+            device pointer storing matrix B.
+            B is of dimension ( ldb, n ).
+            Before entry, the leading m by n part of the array B must
+            contain the right-hand side matrix B, and on exit is
+            overwritten by the solution matrix X.
 
-        ldb: [int]
-                ldb specifies the first dimension of B. ldb >= max( 1, m ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of B. ldb >= max( 1, m ).
 
-        invA: [void *]
-                device pointer storing the inverse diagonal blocks of A.
-                invA is of dimension ( ld_invA, k ), where k is m
-                when HIPBLAS_SIDE_LEFT and
-                is n when HIPBLAS_SIDE_RIGHT.
-                ld_invA must be equal to 128.
+        invA: **[in]** [void *]
+            device pointer storing the inverse diagonal blocks of A.
+            invA is of dimension ( ld_invA, k ), where k is m
+            when HIPBLAS_SIDE_LEFT and
+            is n when HIPBLAS_SIDE_RIGHT.
+            ld_invA must be equal to 128.
 
-        invAsize: [int]
-                invAsize specifies the number of elements of device memory in invA.
+        invAsize: **[in]** [int]
+            invAsize specifies the number of elements of device memory in invA.
 
-        computeType: [hipblasDatatype_t]
-                specifies the datatype of computation
+        computeType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -18541,74 +18922,74 @@ def hipblasTrsmBatchedEx(object handle, object side, object uplo, object transA,
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
-                HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
+            HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  each A_i is a lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  each A_i is a lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: op(A) = A.
-                HIPBLAS_OP_T: op(A) = A^T.
-                HIPBLAS_OP_C: op(A) = A^H.
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: op(A) = A.
+            HIPBLAS_OP_T: op(A) = A^T.
+            HIPBLAS_OP_C: op(A) = A^H.
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  each A_i is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  each A_i is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of each B_i. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of each B_i. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of each B_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of each B_i. n >= 0.
 
-        alpha: [void *]
-                device pointer or host pointer alpha specifying the scalar alpha. When alpha is
-                &zero then A is not referenced, and B need not be set before
-                entry.
+        alpha: **[in]** [void *]
+            device pointer or host pointer alpha specifying the scalar alpha. When alpha is
+            &zero then A is not referenced, and B need not be set before
+            entry.
 
-        A: [void *]
-                device array of device pointers storing each matrix A_i.
-                each A_i is of dimension ( lda, k ), where k is m
-                when HIPBLAS_SIDE_LEFT and
-                is n when HIPBLAS_SIDE_RIGHT
-                only the upper/lower triangular part is accessed.
+        A: **[in]** [void *]
+            device array of device pointers storing each matrix A_i.
+            each A_i is of dimension ( lda, k ), where k is m
+            when HIPBLAS_SIDE_LEFT and
+            is n when HIPBLAS_SIDE_RIGHT
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of each A_i.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of each A_i.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        B: [void *]
-                device array of device pointers storing each matrix B_i.
-                each B_i is of dimension ( ldb, n ).
-                Before entry, the leading m by n part of the array B_i must
-                contain the right-hand side matrix B_i, and on exit is
-                overwritten by the solution matrix X_i
+        B: **[in,out]** [void *]
+            device array of device pointers storing each matrix B_i.
+            each B_i is of dimension ( ldb, n ).
+            Before entry, the leading m by n part of the array B_i must
+            contain the right-hand side matrix B_i, and on exit is
+            overwritten by the solution matrix X_i
 
-        ldb: [int]
-                ldb specifies the first dimension of each B_i. ldb >= max( 1, m ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of each B_i. ldb >= max( 1, m ).
 
-        batchCount: [int]
-                specifies how many batches.
+        batchCount: **[in]** [int]
+            specifies how many batches.
 
-        invA: [void *]
-                device array of device pointers storing the inverse diagonal blocks of each A_i.
-                each invA_i is of dimension ( ld_invA, k ), where k is m
-                when HIPBLAS_SIDE_LEFT and
-                is n when HIPBLAS_SIDE_RIGHT.
-                ld_invA must be equal to 128.
+        invA: **[in]** [void *]
+            device array of device pointers storing the inverse diagonal blocks of each A_i.
+            each invA_i is of dimension ( ld_invA, k ), where k is m
+            when HIPBLAS_SIDE_LEFT and
+            is n when HIPBLAS_SIDE_RIGHT.
+            ld_invA must be equal to 128.
 
-        invAsize: [int]
-                invAsize specifies the number of elements of device memory in each invA_i.
+        invAsize: **[in]** [int]
+            invAsize specifies the number of elements of device memory in each invA_i.
 
-        computeType: [hipblasDatatype_t]
-                specifies the datatype of computation
+        computeType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -18675,84 +19056,84 @@ def hipblasTrsmStridedBatchedEx(object handle, object side, object uplo, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        side: [hipblasSideMode_t]
-                HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
-                HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
+        side: **[in]** [hipblasSideMode_t]
+            HIPBLAS_SIDE_LEFT:       op(A)*X = alpha*B.
+            HIPBLAS_SIDE_RIGHT:      X*op(A) = alpha*B.
 
-        uplo: [hipblasFillMode_t]
-                HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
-                HIPBLAS_FILL_MODE_LOWER:  each A_i is a lower triangular matrix.
+        uplo: **[in]** [hipblasFillMode_t]
+            HIPBLAS_FILL_MODE_UPPER:  each A_i is an upper triangular matrix.
+            HIPBLAS_FILL_MODE_LOWER:  each A_i is a lower triangular matrix.
 
-        transA: [hipblasOperation_t]
-                HIPBLAS_OP_N: op(A) = A.
-                HIPBLAS_OP_T: op(A) = A^T.
-                HIPBLAS_OP_C: op(A) = A^H.
+        transA: **[in]** [hipblasOperation_t]
+            HIPBLAS_OP_N: op(A) = A.
+            HIPBLAS_OP_T: op(A) = A^T.
+            HIPBLAS_OP_C: op(A) = A^H.
 
-        diag: [hipblasDiagType_t]
-                HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular.
-                HIPBLAS_DIAG_NON_UNIT:  each A_i is not assumed to be unit triangular.
+        diag: **[in]** [hipblasDiagType_t]
+            HIPBLAS_DIAG_UNIT:     each A_i is assumed to be unit triangular.
+            HIPBLAS_DIAG_NON_UNIT:  each A_i is not assumed to be unit triangular.
 
-        m: [int]
-                m specifies the number of rows of each B_i. m >= 0.
+        m: **[in]** [int]
+            m specifies the number of rows of each B_i. m >= 0.
 
-        n: [int]
-                n specifies the number of columns of each B_i. n >= 0.
+        n: **[in]** [int]
+            n specifies the number of columns of each B_i. n >= 0.
 
-        alpha: [void *]
-                device pointer or host pointer specifying the scalar alpha. When alpha is
-                &zero then A is not referenced, and B need not be set before
-                entry.
+        alpha: **[in]** [void *]
+            device pointer or host pointer specifying the scalar alpha. When alpha is
+            &zero then A is not referenced, and B need not be set before
+            entry.
 
-        A: [void *]
-                device pointer storing matrix A.
-                of dimension ( lda, k ), where k is m
-                when HIPBLAS_SIDE_LEFT and
-                is n when HIPBLAS_SIDE_RIGHT
-                only the upper/lower triangular part is accessed.
+        A: **[in]** [void *]
+            device pointer storing matrix A.
+            of dimension ( lda, k ), where k is m
+            when HIPBLAS_SIDE_LEFT and
+            is n when HIPBLAS_SIDE_RIGHT
+            only the upper/lower triangular part is accessed.
 
-        lda: [int]
-                lda specifies the first dimension of A.
-                if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
-                if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
+        lda: **[in]** [int]
+            lda specifies the first dimension of A.
+            if side = HIPBLAS_SIDE_LEFT,  lda >= max( 1, m ),
+            if side = HIPBLAS_SIDE_RIGHT, lda >= max( 1, n ).
 
-        strideA: [hipblasStride]
-                The stride between each A matrix.
+        strideA: **[in]** [hipblasStride]
+            The stride between each A matrix.
 
-        B: [void *]
-                device pointer pointing to first matrix B_i.
-                each B_i is of dimension ( ldb, n ).
-                Before entry, the leading m by n part of each array B_i must
-                contain the right-hand side of matrix B_i, and on exit is
-                overwritten by the solution matrix X_i.
+        B: **[in,out]** [void *]
+            device pointer pointing to first matrix B_i.
+            each B_i is of dimension ( ldb, n ).
+            Before entry, the leading m by n part of each array B_i must
+            contain the right-hand side of matrix B_i, and on exit is
+            overwritten by the solution matrix X_i.
 
-        ldb: [int]
-                ldb specifies the first dimension of each B_i. ldb >= max( 1, m ).
+        ldb: **[in]** [int]
+            ldb specifies the first dimension of each B_i. ldb >= max( 1, m ).
 
-        strideB: [hipblasStride]
-                The stride between each B_i matrix.
+        strideB: **[in]** [hipblasStride]
+            The stride between each B_i matrix.
 
-        batchCount: [int]
-                specifies how many batches.
+        batchCount: **[in]** [int]
+            specifies how many batches.
 
-        invA: [void *]
-                device pointer storing the inverse diagonal blocks of each A_i.
-                invA points to the first invA_1.
-                each invA_i is of dimension ( ld_invA, k ), where k is m
-                when HIPBLAS_SIDE_LEFT and
-                is n when HIPBLAS_SIDE_RIGHT.
-                ld_invA must be equal to 128.
+        invA: **[in]** [void *]
+            device pointer storing the inverse diagonal blocks of each A_i.
+            invA points to the first invA_1.
+            each invA_i is of dimension ( ld_invA, k ), where k is m
+            when HIPBLAS_SIDE_LEFT and
+            is n when HIPBLAS_SIDE_RIGHT.
+            ld_invA must be equal to 128.
 
-        invAsize: [int]
-                invAsize specifies the number of elements of device memory in each invA_i.
+        invAsize: **[in]** [int]
+            invAsize specifies the number of elements of device memory in each invA_i.
 
-        strideInvA: [hipblasStride]
-                The stride between each invA matrix.
+        strideInvA: **[in]** [hipblasStride]
+            The stride between each invA matrix.
 
-        computeType: [hipblasDatatype_t]
-                specifies the datatype of computation
+        computeType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation
     """
     if not isinstance(side,_hipblasSideMode_t__Base):
         raise TypeError("argument 'side' must be of type '_hipblasSideMode_t__Base'")                    
@@ -18786,33 +19167,35 @@ def hipblasAxpyEx(object handle, int n, object alpha, object alphaType, object x
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x and y.
+        n: **[in]** [int]
+            the number of elements in x and y.
 
-        alpha: device pointer or host pointer to specify the scalar alpha.
-        alphaType: [hipblasDatatype_t]
-                specifies the datatype of alpha.
+        alpha: **[in]** device pointer or host pointer to specify the scalar alpha.
 
-        x: device pointer storing vector x.
-        xType: [hipblasDatatype_t]
-                specifies the datatype of vector x.
+        alphaType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of alpha.
 
-        incx: [int]
-                          specifies the increment for the elements of x.
-                @param[inout]
-                y         device pointer storing vector y.
+        x: **[in]** device pointer storing vector x.
 
-        yType: [hipblasDatatype_t]
-                specifies the datatype of vector y.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of vector x.
 
-        incy: [int]
-                specifies the increment for the elements of y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        y: **[inout]** device pointer storing vector y.
+
+        yType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of vector y.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(alphaType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -18844,36 +19227,38 @@ def hipblasAxpyBatchedEx(object handle, int n, object alpha, object alphaType, o
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in each x_i and y_i.
+        n: **[in]** [int]
+            the number of elements in each x_i and y_i.
 
-        alpha: device pointer or host pointer to specify the scalar alpha.
-        alphaType: [hipblasDatatype_t]
-                specifies the datatype of alpha.
+        alpha: **[in]** device pointer or host pointer to specify the scalar alpha.
 
-        x: device array of device pointers storing each vector x_i.
-        xType: [hipblasDatatype_t]
-                specifies the datatype of each vector x_i.
+        alphaType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of alpha.
 
-        incx: [int]
-                          specifies the increment for the elements of each x_i.
-                @param[inout]
-                y         device array of device pointers storing each vector y_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        yType: [hipblasDatatype_t]
-                specifies the datatype of each vector y_i.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector x_i.
 
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        y: **[inout]** device array of device pointers storing each vector y_i.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        yType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector y_i.
+
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(alphaType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -18905,48 +19290,50 @@ def hipblasAxpyStridedBatchedEx(object handle, int n, object alpha, object alpha
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in each x_i and y_i.
+        n: **[in]** [int]
+            the number of elements in each x_i and y_i.
 
-        alpha: device pointer or host pointer to specify the scalar alpha.
-        alphaType: [hipblasDatatype_t]
-                specifies the datatype of alpha.
+        alpha: **[in]** device pointer or host pointer to specify the scalar alpha.
 
-        x: device pointer to the first vector x_1.
-        xType: [hipblasDatatype_t]
-                specifies the datatype of each vector x_i.
+        alphaType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of alpha.
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        x: **[in]** device pointer to the first vector x_1.
 
-        stridex: [hipblasStride]
-                          stride from the start of one vector (x_i) to the next one (x_i+1).
-                          There are no restrictions placed on stridex, however the user should
-                          take care to ensure that stridex is of appropriate size, for a typical
-                          case this means stridex >= n * incx.
-                @param[inout]
-                y         device pointer to the first vector y_1.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector x_i.
 
-        yType: [hipblasDatatype_t]
-                specifies the datatype of each vector y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) to the next one (x_i+1).
+            There are no restrictions placed on stridex, however the user should
+            take care to ensure that stridex is of appropriate size, for a typical
+            case this means stridex >= n * incx.
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) to the next one (y_i+1).
-                There are no restrictions placed on stridey, however the user should
-                take care to ensure that stridey is of appropriate size, for a typical
-                case this means stridey >= n * incy.
+        y: **[inout]** device pointer to the first vector y_1.
 
-        batchCount: [int]
-                number of instances in the batch.
+        yType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector y_i.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
+
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) to the next one (y_i+1).
+            There are no restrictions placed on stridey, however the user should
+            take care to ensure that stridey is of appropriate size, for a typical
+            case this means stridey >= n * incy.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(alphaType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -18981,35 +19368,36 @@ def hipblasDotEx(object handle, int n, object x, object xType, int incx, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x and y.
+        n: **[in]** [int]
+            the number of elements in x and y.
 
-        x: device pointer storing vector x.
-        xType: [hipblasDatatype_t]
-                specifies the datatype of vector x.
+        x: **[in]** device pointer storing vector x.
 
-        incx: [int]
-                specifies the increment for the elements of y.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of vector x.
 
-        y: device pointer storing vector y.
-        yType: [hipblasDatatype_t]
-                specifies the datatype of vector y.
+        incx: **[in]** [int]
+            specifies the increment for the elements of y.
 
-        incy: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                result
-                          device pointer or host pointer to store the dot product.
-                          return is 0.0 if n <= 0.
+        y: **[in]** device pointer storing vector y.
 
-        resultType: [hipblasDatatype_t]
-                specifies the datatype of the result.
+        yType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of vector y.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        incy: **[in]** [int]
+            specifies the increment for the elements of y.
+
+        result: **[inout]** device pointer or host pointer to store the dot product.
+            return is 0.0 if n <= 0.
+
+        resultType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of the result.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(xType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19067,38 +19455,39 @@ def hipblasDotBatchedEx(object handle, int n, object x, object xType, int incx, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in each x_i and y_i.
+        n: **[in]** [int]
+            the number of elements in each x_i and y_i.
 
-        x: device array of device pointers storing each vector x_i.
-        xType: [hipblasDatatype_t]
-                specifies the datatype of each vector x_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector x_i.
 
-        y: device array of device pointers storing each vector y_i.
-        yType: [hipblasDatatype_t]
-                specifies the datatype of each vector y_i.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        y: **[in]** device array of device pointers storing each vector y_i.
 
-        batchCount: [int]
-                            number of instances in the batch
-                @param[inout]
-                result
-                          device array or host array of batchCount size to store the dot products of each batch.
-                          return 0.0 for each element if n <= 0.
+        yType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector y_i.
 
-        resultType: [hipblasDatatype_t]
-                specifies the datatype of the result.
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        batchCount: **[in]** [int]
+            number of instances in the batch
+
+        result: **[inout]** device array or host array of batchCount size to store the dot products of each batch.
+            return 0.0 for each element if n <= 0.
+
+        resultType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of the result.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(xType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19156,44 +19545,45 @@ def hipblasDotStridedBatchedEx(object handle, int n, object x, object xType, int
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in each x_i and y_i.
+        n: **[in]** [int]
+            the number of elements in each x_i and y_i.
 
-        x: device pointer to the first vector (x_1) in the batch.
-        xType: [hipblasDatatype_t]
-                specifies the datatype of each vector x_i.
+        x: **[in]** device pointer to the first vector (x_1) in the batch.
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector x_i.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1)
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        y: device pointer to the first vector (y_1) in the batch.
-        yType: [hipblasDatatype_t]
-                specifies the datatype of each vector y_i.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1)
 
-        incy: [int]
-                specifies the increment for the elements of each y_i.
+        y: **[in]** device pointer to the first vector (y_1) in the batch.
 
-        stridey: [hipblasStride]
-                stride from the start of one vector (y_i) and the next one (y_i+1)
+        yType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector y_i.
 
-        batchCount: [int]
-                            number of instances in the batch
-                @param[inout]
-                result
-                          device array or host array of batchCount size to store the dot products of each batch.
-                          return 0.0 for each element if n <= 0.
+        incy: **[in]** [int]
+            specifies the increment for the elements of each y_i.
 
-        resultType: [hipblasDatatype_t]
-                specifies the datatype of the result.
+        stridey: **[in]** [hipblasStride]
+            stride from the start of one vector (y_i) and the next one (y_i+1)
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        batchCount: **[in]** [int]
+            number of instances in the batch
+
+        result: **[inout]** device array or host array of batchCount size to store the dot products of each batch.
+            return 0.0 for each element if n <= 0.
+
+        resultType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of the result.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(xType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19243,29 +19633,29 @@ def hipblasNrm2Ex(object handle, int n, object x, object xType, int incx, object
     - Supported types are determined by the backend. See rocBLAS/cuBLAS documentation.
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x.
+        n: **[in]** [int]
+            the number of elements in x.
 
-        x: device pointer storing vector x.
-        xType: [hipblasDatatype_t]
-                specifies the datatype of the vector x.
+        x: **[in]** device pointer storing vector x.
 
-        incx: [int]
-                          specifies the increment for the elements of y.
-                @param[inout]
-                result
-                          device pointer or host pointer to store the nrm2 product.
-                          return is 0.0 if n, incx<=0.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of the vector x.
 
-        resultType: [hipblasDatatype_t]
-                specifies the datatype of the result.
+        incx: **[in]** [int]
+            specifies the increment for the elements of y.
 
-        executionType: [hipblasDatatype_t]
-                             specifies the datatype of computation.
-                ******************************************************************
+        result: **[inout]** device pointer or host pointer to store the nrm2 product.
+            return is 0.0 if n, incx<=0.
+
+        resultType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of the result.
+
+        executionType: **[in]** [hipblasDatatype_t]
+                         specifies the datatype of computation.
+            ******************************************************************
     """
     if not isinstance(xType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19294,30 +19684,31 @@ def hipblasNrm2BatchedEx(object handle, int n, object x, object xType, int incx,
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                number of elements in each x_i.
+        n: **[in]** [int]
+            number of elements in each x_i.
 
-        x: device array of device pointers storing each vector x_i.
-        xType: [hipblasDatatype_t]
-                specifies the datatype of each vector x_i.
+        x: **[in]** device array of device pointers storing each vector x_i.
 
-        incx: [int]
-                specifies the increment for the elements of each x_i. incx must be > 0.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i. incx must be > 0.
 
-        result: device pointer or host pointer to array of batchCount size for nrm2 results.
-                return is 0.0 for each element if n <= 0, incx<=0.
+        batchCount: **[in]** [int]
+            number of instances in the batch
 
-        resultType: [hipblasDatatype_t]
-                specifies the datatype of the result.
+        result: **[out]** device pointer or host pointer to array of batchCount size for nrm2 results.
+            return is 0.0 for each element if n <= 0, incx<=0.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        resultType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of the result.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(xType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19346,36 +19737,37 @@ def hipblasNrm2StridedBatchedEx(object handle, int n, object x, object xType, in
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                number of elements in each x_i.
+        n: **[in]** [int]
+            number of elements in each x_i.
 
-        x: device pointer to the first vector x_1.
-        xType: [hipblasDatatype_t]
-                specifies the datatype of each vector x_i.
+        x: **[in]** device pointer to the first vector x_1.
 
-        incx: [int]
-                specifies the increment for the elements of each x_i. incx must be > 0.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector x_i.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) and the next one (x_i+1).
-                There are no restrictions placed on stride_x, however the user should
-                take care to ensure that stride_x is of appropriate size, for a typical
-                case this means stride_x >= n * incx.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i. incx must be > 0.
 
-        batchCount: [int]
-                number of instances in the batch
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) and the next one (x_i+1).
+            There are no restrictions placed on stride_x, however the user should
+            take care to ensure that stride_x is of appropriate size, for a typical
+            case this means stride_x >= n * incx.
 
-        result: device pointer or host pointer to array for storing contiguous batchCount results.
-                return is 0.0 for each element if n <= 0, incx<=0.
+        batchCount: **[in]** [int]
+            number of instances in the batch
 
-        resultType: [hipblasDatatype_t]
-                specifies the datatype of the result.
+        result: **[out]** device pointer or host pointer to array for storing contiguous batchCount results.
+            return is 0.0 for each element if n <= 0, incx<=0.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        resultType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of the result.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(xType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19410,35 +19802,37 @@ def hipblasRotEx(object handle, int n, object x, object xType, int incx, object 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                        number of elements in the x and y vectors.
-                @param[inout]
-                x       device pointer storing vector x.
+        n: **[in]** [int]
+            number of elements in the x and y vectors.
 
-        xType: [hipblasDatatype_t]
-                specifies the datatype of vector x.
+        x: **[inout]** device pointer storing vector x.
 
-        incx: [int]
-                        specifies the increment between elements of x.
-                @param[inout]
-                y       device pointer storing vector y.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of vector x.
 
-        yType: [hipblasDatatype_t]
-                specifies the datatype of vector y.
+        incx: **[in]** [int]
+            specifies the increment between elements of x.
 
-        incy: [int]
-                specifies the increment between elements of y.
+        y: **[inout]** device pointer storing vector y.
 
-        c: device pointer or host pointer storing scalar cosine component of the rotation matrix.
-        s: device pointer or host pointer storing scalar sine component of the rotation matrix.
-        csType: [hipblasDatatype_t]
-                specifies the datatype of c and s.
+        yType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of vector y.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        incy: **[in]** [int]
+            specifies the increment between elements of y.
+
+        c: **[in]** device pointer or host pointer storing scalar cosine component of the rotation matrix.
+
+        s: **[in]** device pointer or host pointer storing scalar sine component of the rotation matrix.
+
+        csType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of c and s.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(xType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19477,38 +19871,40 @@ def hipblasRotBatchedEx(object handle, int n, object x, object xType, int incx, 
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                        number of elements in each x_i and y_i vectors.
-                @param[inout]
-                x       device array of deivce pointers storing each vector x_i.
+        n: **[in]** [int]
+            number of elements in each x_i and y_i vectors.
 
-        xType: [hipblasDatatype_t]
-                specifies the datatype of each vector x_i.
+        x: **[inout]** device array of deivce pointers storing each vector x_i.
 
-        incx: [int]
-                        specifies the increment between elements of each x_i.
-                @param[inout]
-                y       device array of device pointers storing each vector y_i.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector x_i.
 
-        yType: [hipblasDatatype_t]
-                specifies the datatype of each vector y_i.
+        incx: **[in]** [int]
+            specifies the increment between elements of each x_i.
 
-        incy: [int]
-                specifies the increment between elements of each y_i.
+        y: **[inout]** device array of device pointers storing each vector y_i.
 
-        c: device pointer or host pointer to scalar cosine component of the rotation matrix.
-        s: device pointer or host pointer to scalar sine component of the rotation matrix.
-        csType: [hipblasDatatype_t]
-                specifies the datatype of c and s.
+        yType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector y_i.
 
-        batchCount: [int]
-                the number of x and y arrays, i.e. the number of batches.
+        incy: **[in]** [int]
+            specifies the increment between elements of each y_i.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        c: **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
+
+        s: **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
+
+        csType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of c and s.
+
+        batchCount: **[in]** [int]
+            the number of x and y arrays, i.e. the number of batches.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(xType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19547,44 +19943,46 @@ def hipblasRotStridedBatchedEx(object handle, int n, object x, object xType, int
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                        number of elements in each x_i and y_i vectors.
-                @param[inout]
-                x       device pointer to the first vector x_1.
+        n: **[in]** [int]
+            number of elements in each x_i and y_i vectors.
 
-        xType: [hipblasDatatype_t]
-                specifies the datatype of each vector x_i.
+        x: **[inout]** device pointer to the first vector x_1.
 
-        incx: [int]
-                specifies the increment between elements of each x_i.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector x_i.
 
-        stridex: [hipblasStride]
-                         specifies the increment from the beginning of x_i to the beginning of x_(i+1)
-                @param[inout]
-                y       device pointer to the first vector y_1.
+        incx: **[in]** [int]
+            specifies the increment between elements of each x_i.
 
-        yType: [hipblasDatatype_t]
-                specifies the datatype of each vector y_i.
+        stridex: **[in]** [hipblasStride]
+            specifies the increment from the beginning of x_i to the beginning of x_(i+1)
 
-        incy: [int]
-                specifies the increment between elements of each y_i.
+        y: **[inout]** device pointer to the first vector y_1.
 
-        stridey: [hipblasStride]
-                specifies the increment from the beginning of y_i to the beginning of y_(i+1)
+        yType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector y_i.
 
-        c: device pointer or host pointer to scalar cosine component of the rotation matrix.
-        s: device pointer or host pointer to scalar sine component of the rotation matrix.
-        csType: [hipblasDatatype_t]
-                specifies the datatype of c and s.
+        incy: **[in]** [int]
+            specifies the increment between elements of each y_i.
 
-        batchCount: [int]
-                the number of x and y arrays, i.e. the number of batches.
+        stridey: **[in]** [hipblasStride]
+            specifies the increment from the beginning of y_i to the beginning of y_(i+1)
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        c: **[in]** device pointer or host pointer to scalar cosine component of the rotation matrix.
+
+        s: **[in]** device pointer or host pointer to scalar sine component of the rotation matrix.
+
+        csType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of c and s.
+
+        batchCount: **[in]** [int]
+            the number of x and y arrays, i.e. the number of batches.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(xType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'xType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19616,26 +20014,27 @@ def hipblasScalEx(object handle, int n, object alpha, object alphaType, object x
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x.
+        n: **[in]** [int]
+            the number of elements in x.
 
-        alpha: device pointer or host pointer for the scalar alpha.
-        alphaType: [hipblasDatatype_t]
-                           specifies the datatype of alpha.
-                @param[inout]
-                x         device pointer storing vector x.
+        alpha: **[in]** device pointer or host pointer for the scalar alpha.
 
-        xType: [hipblasDatatype_t]
-                specifies the datatype of vector x.
+        alphaType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of alpha.
 
-        incx: [int]
-                specifies the increment for the elements of x.
+        x: **[inout]** device pointer storing vector x.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of vector x.
+
+        incx: **[in]** [int]
+            specifies the increment for the elements of x.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(alphaType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19663,29 +20062,30 @@ def hipblasScalBatchedEx(object handle, int n, object alpha, object alphaType, o
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x.
+        n: **[in]** [int]
+            the number of elements in x.
 
-        alpha: device pointer or host pointer for the scalar alpha.
-        alphaType: [hipblasDatatype_t]
-                           specifies the datatype of alpha.
-                @param[inout]
-                x         device array of device pointers storing each vector x_i.
+        alpha: **[in]** device pointer or host pointer for the scalar alpha.
 
-        xType: [hipblasDatatype_t]
-                specifies the datatype of each vector x_i.
+        alphaType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of alpha.
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        x: **[inout]** device array of device pointers storing each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector x_i.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(alphaType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19714,35 +20114,36 @@ def hipblasScalStridedBatchedEx(object handle, int n, object alpha, object alpha
     ******************************************************************
 
     Args:
-        handle: [hipblasHandle_t]
-                handle to the hipblas library context queue.
+        handle: **[in]** [hipblasHandle_t]
+            handle to the hipblas library context queue.
 
-        n: [int]
-                the number of elements in x.
+        n: **[in]** [int]
+            the number of elements in x.
 
-        alpha: device pointer or host pointer for the scalar alpha.
-        alphaType: [hipblasDatatype_t]
-                           specifies the datatype of alpha.
-                @param[inout]
-                x         device pointer to the first vector x_1.
+        alpha: **[in]** device pointer or host pointer for the scalar alpha.
 
-        xType: [hipblasDatatype_t]
-                specifies the datatype of each vector x_i.
+        alphaType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of alpha.
 
-        incx: [int]
-                specifies the increment for the elements of each x_i.
+        x: **[inout]** device pointer to the first vector x_1.
 
-        stridex: [hipblasStride]
-                stride from the start of one vector (x_i) to the next one (x_i+1).
-                There are no restrictions placed on stridex, however the user should
-                take care to ensure that stridex is of appropriate size, for a typical
-                case this means stridex >= n * incx.
+        xType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of each vector x_i.
 
-        batchCount: [int]
-                number of instances in the batch.
+        incx: **[in]** [int]
+            specifies the increment for the elements of each x_i.
 
-        executionType: [hipblasDatatype_t]
-                specifies the datatype of computation.
+        stridex: **[in]** [hipblasStride]
+            stride from the start of one vector (x_i) to the next one (x_i+1).
+            There are no restrictions placed on stridex, however the user should
+            take care to ensure that stridex is of appropriate size, for a typical
+            case this means stridex >= n * incx.
+
+        batchCount: **[in]** [int]
+            number of instances in the batch.
+
+        executionType: **[in]** [hipblasDatatype_t]
+            specifies the datatype of computation.
     """
     if not isinstance(alphaType,_hipblasDatatype_t__Base):
         raise TypeError("argument 'alphaType' must be of type '_hipblasDatatype_t__Base'")                    
@@ -19768,9 +20169,9 @@ def hipblasStatusToString(object status):
     Returns string representing hipblasStatus_t value
 
     Args:
-        status: [hipblasStatus_t]
-                           hipBLAS status to convert to string
-                /
+        status: **[in]** [hipblasStatus_t]
+                       hipBLAS status to convert to string
+            /
     """
     if not isinstance(status,_hipblasStatus_t__Base):
         raise TypeError("argument 'status' must be of type '_hipblasStatus_t__Base'")

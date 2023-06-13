@@ -17,11 +17,12 @@ either process. Operations on the imported event after the exported event has be
 will result in undefined behavior.
 
 \details
-   \p hipsparseCreateIdentityPermutation stores the identity map in \p p, such that
-   \f$p = 0:1:(n-1)\f$.
+\p hipsparseCreateIdentityPermutation stores the identity map in \p p, such that
+\f$p = 0:1:(n-1)\f$.
 
-\param[in] param1 My description ending at the next param section. \a Italic text.
-\param[in,out] param2 My multiline
+\param[in]
+param1 My description ending at the next param section. \a Italic text.
+\param[in,out] param2 My multiline\>\n
                 description ending
                 at a blank line. \b BOLD text.
                 \f[
@@ -70,6 +71,27 @@ will result in undefined behavior.
 hipHostFree, hipHostMalloc
 """
 
+#doxygen_input = r"""
+#   \brief Sparse matrix dense matrix multiplication using CSR storage format
+#
+#   \details
+#   \p hipsparseXcsrmm2 multiplies the scalar \f$\alpha\f$ with a sparse \f$m \times k\f$
+#   matrix \f$A\f$, defined in CSR storage format, and the dense \f$k \times n\f$
+#   matrix \f$B\f$ and adds the result to the dense \f$m \times n\f$ matrix \f$C\f$ that
+#   is multiplied by the scalar \f$\beta\f$, such that
+#   \f[
+#     C := \alpha \cdot op(A) \cdot op(B) + \beta \cdot C,
+#   \f]
+#"""
+
+#doxygen_input = r"""
+#   \brief Sparse matrix dense matrix multiplication using CSR storage format
+#
+#   \details
+#   \p hipsparseXcsrmm2 multiplies the scalar \f$\alpha\f$ with a sparse \f$m \times k\f$.
+#"""
+
+
 for mtch in grammar.all.scanString(doxygen_input):
     print(mtch)
 
@@ -78,15 +100,31 @@ grammar.with_word.setParseAction(doxyparser.format.PythonDocstrings.with_word)
 grammar.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
 
 for node in grammar.parse_structure(doxygen_input).walk():
-    print(f"{' '*node.level}{str(node)}")
+    indent = ' '*node.level
+    print(f"{indent}{str(node)}")
+    if isinstance(node,doxyparser.Section):
+        print(f"{indent}{node.kind}")
     if isinstance(node,doxyparser.MathBlock):
-        print(node.text)
+        print(textwrap.indent(
+          '"""'
+          + node.text
+          + '"""',
+          indent
+        ))
     elif isinstance(node,doxyparser.VerbatimBlock):
-        print(node.text)
+        print(textwrap.indent(
+          '"""'
+          + node.text
+          + '"""',
+          indent
+        ))
     elif isinstance(node,doxyparser.TextBlock):
-        print(node.parent.parent.tokens)
-        print(node.parent.tokens)
-        print(node.transformed_text)
+        print(textwrap.indent(
+          '"""'
+          + node.transformed_text
+          + '"""',
+          indent
+        ))
 
 #
 
@@ -128,3 +166,10 @@ comments = """\
 #    print(tokens)
 
 print(doxyparser.remove_doxygen_cpp_comments(comments))
+
+
+print(grammar.section.parseString(
+r"""  \details 
+  \p first line
+"""
+))
