@@ -980,8 +980,15 @@ class DoxygenGrammar:
         and ``<this_doxygenparser>.other``. Returning ``None`` implies no action, ``[]`` that all
         tokens get removed.
 
+        Implementation details:
+
+            1. We remember the original text.
+            2. We identify and substitute every verbatim/math area by an equally sized amount of whitespaces.
+            3. In the preprocessed text, we then identify doxygen sections.
+            4. In each doxygen sections, we use the original text to identify text and verbatim/math blocks.
+
         Note:
-            Inserts '\details*' sections for free text envclosed between other sections/begin/end of the docu.
+            Inserts '\details*' sections for free text envclosed between sections, begin, or end of the input text.
         """
         tree = self.__tree
         tree.section.setParseAction(Section)
@@ -991,23 +998,10 @@ class DoxygenGrammar:
         verbatim_or_math = tree.verbatim|tree.math_block
         verbatim_or_math_ext = verbatim_or_math|tree.fdollar|tree.frnd # include inline math
 
-
-        # alpha, beta is the problem
-        # may appear in math and as section terminator
-
-        verbatim_or_math_areas = []
         preprocessed = "".join(original) # copy the text
         for tokens, start, end in verbatim_or_math_ext.scanString(original):
-            #print(f"verbatim_or_math_area:{start=},{end=},tokens={str(tokens)}")
-            verbatim_or_math_areas.append((start,end))
-            # insert whitespace so that the section detection is not confused
-            # by anything in the verbatim or math areas
-            # at the end, we will substitute 'text' again by 'original'
-            # in each node
             preprocessed = preprocessed[0:start] + " "*(end-start) + preprocessed[end:]
         assert len(original) == len(preprocessed)
-    
-        #print(f"{verbatim_or_math_areas=}")
 
         def scan_for_verbatim_or_math_(section_body: SectionBody):
             nonlocal verbatim_or_math
