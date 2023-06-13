@@ -193,7 +193,7 @@ def hiprtcGetErrorString(object result):
         hiprtcResult
 
     Args:
-        result: code to convert to string.
+        result: **[in]** code to convert to string.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -326,8 +326,9 @@ def hiprtcAddNameExpression(object prog, const char * name_expression):
         hiprtcResult
 
     Args:
-        prog: runtime compilation program instance.
-        name_expression: const char pointer to the name expression.
+        prog: **[in]** runtime compilation program instance.
+
+        name_expression: **[in]** const char pointer to the name expression.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -349,9 +350,11 @@ def hiprtcCompileProgram(object prog, int numOptions, object options):
         hiprtcResult
 
     Args:
-        prog: runtime compilation program instance.
-        numOptions: number of compiler options.
-        options: compiler options as const array of strins.
+        prog: **[in]** runtime compilation program instance.
+
+        numOptions: **[in]** number of compiler options.
+
+        options: **[in]** compiler options as const array of strins.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -377,11 +380,15 @@ def hiprtcCreateProgram(const char * src, const char * name, int numHeaders, obj
         hiprtcResult
 
     Args:
-        src: const char pointer to the program source.
-        name: const char pointer to the program name.
-        numHeaders: number of headers.
-        headers: array of strings pointing to headers.
-        includeNames: array of strings pointing to names included in program source.
+        src: **[in]** const char pointer to the program source.
+
+        name: **[in]** const char pointer to the program name.
+
+        numHeaders: **[in]** number of headers.
+
+        headers: **[in]** array of strings pointing to headers.
+
+        includeNames: **[in]** array of strings pointing to names included in program source.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -405,7 +412,7 @@ def hiprtcDestroyProgram(object prog):
         hiprtcResult
 
     Args:
-        prog: runtime compilation program instance.
+        prog: **[in]** runtime compilation program instance.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -431,8 +438,9 @@ def hiprtcGetLoweredName(object prog, const char * name_expression):
         hiprtcResult
 
     Args:
-        prog: runtime compilation program instance.
-        name_expression: const char pointer to the name expression.
+        prog: **[in]** runtime compilation program instance.
+
+        name_expression: **[in]** const char pointer to the name expression.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -453,8 +461,9 @@ def hiprtcGetProgramLog(object prog, object log):
         hiprtcResult
 
     Args:
-        prog: runtime compilation program instance.
-        log: memory pointer to the generated log.
+        prog: **[in]** runtime compilation program instance.
+
+        log: **[out]** memory pointer to the generated log.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -474,7 +483,7 @@ def hiprtcGetProgramLogSize(object prog):
         hiprtcResult
 
     Args:
-        prog: runtime compilation program instance.
+        prog: **[in]** runtime compilation program instance.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -495,8 +504,9 @@ def hiprtcGetCode(object prog, object code):
         hiprtcResult
 
     Args:
-        prog: runtime compilation program instance.
-        code: char pointer to binary.
+        prog: **[in]** runtime compilation program instance.
+
+        code: **[out]** char pointer to binary.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -516,8 +526,9 @@ def hiprtcGetCodeSize(object prog):
         hiprtcResult
 
     Args:
-        prog: runtime compilation program instance.
-        code: the size of binary.
+        prog: **[in]** runtime compilation program instance.
+
+        code: **[out]** the size of binary.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -537,8 +548,9 @@ def hiprtcGetBitcode(object prog, object bitcode):
         hiprtcResult
 
     Args:
-        prog: runtime compilation program instance.
-        code: char pointer to bitcode.
+        prog: **[in]** runtime compilation program instance.
+
+        code: **[out]** char pointer to bitcode.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -558,8 +570,9 @@ def hiprtcGetBitcodeSize(object prog):
         hiprtcResult
 
     Args:
-        prog: runtime compilation program instance.
-        code: the size of bitcode.
+        prog: **[in]** runtime compilation program instance.
+
+        code: **[out]** the size of bitcode.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -579,8 +592,9 @@ def hiprtcLinkCreate(unsigned int num_options, object option_ptr, object option_
         hiprtcResult
 
     Args:
-        hip_jit_options: 
-        hiprtc: link state instance
+        hip_jit_options: **[in]** 
+
+        hiprtc: **[out]** link state instance
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -603,10 +617,10 @@ def hiprtcLinkAddFile(object hip_link_state, object input_type, const char * fil
         hiprtcResult
 
     Args:
-        hiprtc: link state, jit input type, file path,
-                option reated parameters.
+        hiprtc: **[in]** link state, jit input type, file path,
+            option reated parameters.
 
-        None: .
+        None: **[out]** .
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -632,10 +646,10 @@ def hiprtcLinkAddData(object hip_link_state, object input_type, object image, un
         hiprtcResult
 
     Args:
-        hiprtc: link state, jit input type, image_ptr ,
-                option reated parameters.
+        hiprtc: **[in]** link state, jit input type, image_ptr ,
+            option reated parameters.
 
-        None: .
+        None: **[out]** .
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -662,9 +676,11 @@ def hiprtcLinkComplete(object hip_link_state):
         hiprtcResult
 
     Args:
-        hiprtc: link state instance
-        linked_binary: .
-        linked_binary_size: .
+        hiprtc: **[in]** link state instance
+
+        linked_binary: **[out]** .
+
+        linked_binary_size: **[out]** .
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -689,8 +705,9 @@ def hiprtcLinkDestroy(object hip_link_state):
         hiprtcResult
 
     Args:
-        hiprtc: link state instance
-        code: the size of binary.
+        hiprtc: **[in]** link state instance
+
+        code: **[out]** the size of binary.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):

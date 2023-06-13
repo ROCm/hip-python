@@ -26016,7 +26016,7 @@ def hipDeviceGet(int ordinal):
     r"""Returns a handle to a compute device
 
     Args:
-        ordinal: 
+        ordinal: **[in]** 
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -26033,7 +26033,7 @@ def hipDeviceComputeCapability(int device):
     r"""Returns the compute capability of the device
 
     Args:
-        device: 
+        device: **[in]** 
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -26052,9 +26052,11 @@ def hipDeviceGetName(char * name, int len, int device):
     r"""Returns an identifer string for the device.
 
     Args:
-        name: 
-        len: 
-        device: 
+        name: **[out]** 
+
+        len: **[in]** 
+
+        device: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26073,8 +26075,9 @@ def hipDeviceGetUuid(object uuid, int device):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        uuid: 
-        device: 
+        uuid: **[out]** 
+
+        device: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26091,9 +26094,11 @@ def hipDeviceGetP2PAttribute(object attr, int srcDevice, int dstDevice):
     r"""Returns a value for attr of link between two devices
 
     Args:
-        attr: 
-        srcDevice: 
-        dstDevice: 
+        attr: **[in]** 
+
+        srcDevice: **[in]** 
+
+        dstDevice: **[in]** 
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -26112,9 +26117,11 @@ def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
     r"""Returns a PCI Bus Id string for the device, overloaded to take int device ID.
 
     Args:
-        pciBusId: 
-        len: 
-        device: 
+        pciBusId: **[out]** 
+
+        len: **[in]** 
+
+        device: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26129,7 +26136,7 @@ def hipDeviceGetByPCIBusId(const char * pciBusId):
     r"""Returns a handle to a compute device.
 
     Args:
-        PCI: Bus ID
+        PCI: **[in]** Bus ID
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -26146,7 +26153,7 @@ def hipDeviceTotalMem(int device):
     r"""Returns the total amount of memory on the device.
 
     Args:
-        device: 
+        device: **[in]** 
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -26225,7 +26232,7 @@ def hipSetDevice(int deviceId):
         hipGetDevice, hipGetDeviceCount
 
     Args:
-        deviceId: Valid device in range 0...hipGetDeviceCount().
+        deviceId: **[in]** Valid device in range 0...hipGetDeviceCount().
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26247,7 +26254,7 @@ def hipGetDevice():
         hipSetDevice, hipGetDevicesizeBytes
 
     Args:
-        device: *device is written with the default device
+        device: **[out]** device is written with the default device
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26282,9 +26289,11 @@ def hipDeviceGetAttribute(object pi, object attr, int deviceId):
     r"""Query for a specific device attribute.
 
     Args:
-        pi: pointer to value to return
-        attr: attribute to query
-        deviceId: which device to query for information
+        pi: **[out]** pointer to value to return
+
+        attr: **[in]** attribute to query
+
+        deviceId: **[in]** which device to query for information
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26310,7 +26319,7 @@ def hipDeviceGetDefaultMemPool(int device):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device: Device index for query the default memory pool
+        device: **[in]** Device index for query the default memory pool
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -26343,8 +26352,9 @@ def hipDeviceSetMemPool(int device, object mem_pool):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device: Device index for the update
-        mem_pool: Memory pool for update as the current on the specified device
+        device: **[in]** Device index for the update
+
+        mem_pool: **[in]** Memory pool for update as the current on the specified device
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26373,7 +26383,7 @@ def hipDeviceGetMemPool(int device):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device: Device index to query the current memory pool
+        device: **[in]** Device index to query the current memory pool
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -26401,8 +26411,9 @@ def hipGetDeviceProperties(object prop, int deviceId):
     Populates hipGetDeviceProperties with information for the specified device.
 
     Args:
-        prop: written with device properties
-        deviceId: which device to query for information
+        prop: **[out]** written with device properties
+
+        deviceId: **[in]** which device to query for information
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26418,7 +26429,7 @@ def hipDeviceSetCacheConfig(object cacheConfig):
     r"""Set L1/Shared cache partition.
 
     Args:
-        cacheConfig: 
+        cacheConfig: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26453,7 +26464,7 @@ def hipDeviceGetLimit(object limit):
     r"""Get Resource limits of current device
 
     Args:
-        limit: 
+        limit: **[in]** 
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -26473,8 +26484,9 @@ def hipDeviceSetLimit(object limit, unsigned long value):
     r"""Set Resource limits of current device
 
     Args:
-        limit: 
-        value: 
+        limit: **[in]** 
+
+        value: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26525,7 +26537,7 @@ def hipDeviceSetSharedMemConfig(object config):
     ignored on those architectures.
 
     Args:
-        config: 
+        config: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26559,7 +26571,7 @@ def hipSetDeviceFlags(unsigned int flags):
         ROCm silently ignores this flag.
 
     Args:
-        flags: 
+        flags: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26592,8 +26604,9 @@ def hipExtGetLinkTypeAndHopCount(int device1, int device2):
     Queries and returns the HSA link type and the hop count between the two specified devices.
 
     Args:
-        device1: Ordinal for device1
-        device2: Ordinal for device2
+        device1: **[in]** Ordinal for device1
+
+        device2: **[in]** Ordinal for device2
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -26623,10 +26636,10 @@ def hipIpcGetMemHandle(object handle, object devPtr):
     new memory.
 
     Args:
-        handle: - Pointer to user allocated hipIpcMemHandle to return
-                the handle in.
+        handle:  Pointer to user allocated hipIpcMemHandle to return
+            the handle in.
 
-        devPtr: - Base pointer to previously allocated device memory
+        devPtr:  Base pointer to previously allocated device memory
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26670,8 +26683,9 @@ def hipIpcOpenMemHandle(object handle, unsigned int flags):
         This is diffrent from CUDA.
 
     Args:
-        handle: - hipIpcMemHandle to open
-        flags: - Flags for this operation. Must be specified as hipIpcMemLazyEnablePeerAccess
+        handle:  hipIpcMemHandle to open
+
+        flags:  Flags for this operation. Must be specified as hipIpcMemLazyEnablePeerAccess
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -26679,7 +26693,7 @@ def hipIpcOpenMemHandle(object handle, unsigned int flags):
             hipErrorMapFailed,
             hipErrorInvalidHandle,
             hipErrorTooManyPeers
-        - devPtr: - Returned device pointer
+        - devPtr:  Returned device pointer
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipIpcOpenMemHandle__retval = hipError_t(chip.hipIpcOpenMemHandle(
@@ -26700,7 +26714,7 @@ def hipIpcCloseMemHandle(object devPtr):
     last mapping using them.
 
     Args:
-        devPtr: - Device pointer returned by hipIpcOpenMemHandle
+        devPtr:  Device pointer returned by hipIpcOpenMemHandle
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26723,8 +26737,9 @@ def hipIpcGetEventHandle(object handle, object event):
     will result in undefined behavior.
 
     Args:
-        handle: Pointer to hipIpcEventHandle to return the opaque event handle
-        event: Event allocated with hipEventInterprocess and hipEventDisableTiming flags
+        handle: **[out]** Pointer to hipIpcEventHandle to return the opaque event handle
+
+        event: **[in]** Event allocated with hipEventInterprocess and hipEventDisableTiming flags
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26747,7 +26762,7 @@ def hipIpcOpenEventHandle(object handle):
     handle is returned by hipIpcGetEventHandle, it will return hipErrorInvalidContext.
 
     Args:
-        handle: The opaque interprocess handle to open
+        handle: **[in]** The opaque interprocess handle to open
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -26768,9 +26783,11 @@ def hipFuncSetAttribute(object func, object attr, int value):
     ignored on those architectures.
 
     Args:
-        func: ;
-        attr: ;
-        value: ;
+        func: **[in]** ;
+
+        attr: **[in]** ;
+
+        value: **[in]** ;
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26788,7 +26805,7 @@ def hipFuncSetCacheConfig(object func, object config):
     r"""Set Cache configuration for a specific function
 
     Args:
-        config: ;
+        config: **[in]** ;
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26811,8 +26828,9 @@ def hipFuncSetSharedMemConfig(object func, object config):
     ignored on those architectures.
 
     Args:
-        func: 
-        config: 
+        func: **[in]** 
+
+        config: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26910,8 +26928,9 @@ def hipDrvGetErrorName(object hipError, object errorString):
         hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
 
     Args:
-        hipError: Error code to convert to string.
-        const: char pointer to the NULL-terminated error string
+        hipError: **[in]** Error code to convert to string.
+
+        const: **[out]** char pointer to the NULL-terminated error string
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26932,8 +26951,9 @@ def hipDrvGetErrorString(object hipError, object errorString):
         hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
 
     Args:
-        hipError: Error code to convert to string.
-        const: char pointer to the NULL-terminated error string
+        hipError: **[in]** Error code to convert to string.
+
+        const: **[out]** char pointer to the NULL-terminated error string
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -26963,7 +26983,7 @@ def hipStreamCreate():
         - #hipSuccess, #hipErrorInvalidValue
         - #hipSuccess, #hipErrorInvalidValue
         - stream: Valid pointer to hipStream_t.  This function writes the memory with the
-                    newly created stream.
+                newly created stream.
     """
     stream = ihipStream_t.from_ptr(NULL)
     _hipStreamCreate__retval = hipError_t(chip.hipStreamCreate(&stream._ptr))    # fully specified
@@ -26984,7 +27004,7 @@ def hipStreamCreateWithFlags(unsigned int flags):
         hipStreamCreate, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 
     Args:
-        flags: to control stream creation.
+        flags: **[in]** to control stream creation.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -27010,8 +27030,9 @@ def hipStreamCreateWithPriority(unsigned int flags, int priority):
         hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 
     Args:
-        flags: to control stream creation.
-        priority: of the stream. Lower numbers represent higher priorities.
+        flags: **[in]** to control stream creation.
+
+        priority: **[in]** of the stream. Lower numbers represent higher priorities.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -27062,8 +27083,8 @@ def hipStreamDestroy(object stream):
         hipStreamSynchronize
 
     Args:
-        stream: Valid pointer to hipStream_t.  This function writes the memory with the
-                newly created stream.
+        stream: **[in,out]** Valid pointer to hipStream_t.  This function writes the memory with the
+            newly created stream.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27088,7 +27109,7 @@ def hipStreamQuery(object stream):
         hipStreamDestroy
 
     Args:
-        stream: stream to query
+        stream: **[in]** stream to query
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27116,7 +27137,7 @@ def hipStreamSynchronize(object stream):
         hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamDestroy
 
     Args:
-        stream: stream identifier.
+        stream: **[in]** stream identifier.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27143,9 +27164,11 @@ def hipStreamWaitEvent(object stream, object event, unsigned int flags):
         hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamDestroy
 
     Args:
-        stream: stream to make wait.
-        event: event to wait on
-        flags: control operation [must be 0]
+        stream: **[in]** stream to make wait.
+
+        event: **[in]** event to wait on
+
+        flags: **[in]** control operation [must be 0]
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27167,7 +27190,7 @@ def hipStreamGetFlags(object stream):
         hipStreamCreateWithFlags
 
     Args:
-        stream: stream to be queried
+        stream: **[in]** stream to be queried
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -27191,7 +27214,7 @@ def hipStreamGetPriority(object stream):
         hipStreamCreateWithFlags
 
     Args:
-        stream: stream to be queried
+        stream: **[in]** stream to be queried
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -27218,16 +27241,16 @@ def hipExtStreamCreateWithCUMask(unsigned int cuMaskSize):
         hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 
     Args:
-        cuMaskSize: Size of CU mask bit array passed in.
+        cuMaskSize: **[in]** Size of CU mask bit array passed in.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
         - stream: Pointer to new stream
         - cuMask: Bit-vector representing the CU mask. Each active bit represents using one CU.
-                    The first 32 bits represent the first 32 CUs, and so on. If its size is greater than physical
-                    CU number (i.e., multiProcessorCount member of hipDeviceProp_t), the extra elements are ignored.
-                    It is user's responsibility to make sure the input is meaningful.
+                The first 32 bits represent the first 32 CUs, and so on. If its size is greater than physical
+                CU number (i.e., multiProcessorCount member of hipDeviceProp_t), the extra elements are ignored.
+                It is user's responsibility to make sure the input is meaningful.
     """
     stream = ihipStream_t.from_ptr(NULL)
     cdef const unsigned int cuMask
@@ -27243,15 +27266,16 @@ def hipExtStreamGetCUMask(object stream, unsigned int cuMaskSize):
         hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
 
     Args:
-        stream: stream to be queried
-        cuMaskSize: number of the block of memories (uint32_t *) allocated by user
+        stream: **[in]** stream to be queried
+
+        cuMaskSize: **[in]** number of the block of memories (uint32_t *) allocated by user
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
         - cuMask: Pointer to a pre-allocated block of memories (uint32_t *) in which
-                    the stream's CU mask is returned. The CU mask is returned in a chunck of 32 bits where
-                    each active bit represents one active CU
+                the stream's CU mask is returned. The CU mask is returned in a chunck of 32 bits where
+                each active bit represents one active CU
     """
     cdef unsigned int cuMask
     _hipExtStreamGetCUMask__retval = hipError_t(chip.hipExtStreamGetCUMask(
@@ -27337,10 +27361,13 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
         hipStreamWaitEvent, hipStreamDestroy, hipStreamCreateWithPriority
 
     Args:
-        stream: - Stream to add callback to
-        callback: - The function to call once preceding stream operations are complete
-        userData: - User specified data to be passed to the callback function
-        flags: - Reserved for future use, must be 0
+        stream: **[in]**  Stream to add callback to
+
+        callback: **[in]**  The function to call once preceding stream operations are complete
+
+        userData: **[in]**  User specified data to be passed to the callback function
+
+        flags: **[in]**  Reserved for future use, must be 0
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27381,14 +27408,17 @@ def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned
         hipStreamWriteValue32, hipDeviceGetAttribute
 
     Args:
-        stream: - Stream identifier
-        ptr: - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
-        value: - Value to be used in compare operation
-        flags: - Defines the compare operation, supported values are hipStreamWaitValueGte
-                hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor
+        stream: **[in]**  Stream identifier
 
-        mask: - Mask to be applied on value at memory before it is compared with value,
-                default value is set to enable every bit
+        ptr: **[in]**  Pointer to memory object allocated using 'hipMallocSignalMemory' flag
+
+        value: **[in]**  Value to be used in compare operation
+
+        flags: **[in]**  Defines the compare operation, supported values are hipStreamWaitValueGte
+            hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor
+
+        mask: **[in]**  Mask to be applied on value at memory before it is compared with value,
+            default value is set to enable every bit
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27428,14 +27458,17 @@ def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigne
         hipStreamWriteValue32, hipDeviceGetAttribute
 
     Args:
-        stream: - Stream identifier
-        ptr: - Pointer to memory object allocated using 'hipMallocSignalMemory' flag
-        value: - Value to be used in compare operation
-        flags: - Defines the compare operation, supported values are hipStreamWaitValueGte
-                hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor.
+        stream: **[in]**  Stream identifier
 
-        mask: - Mask to be applied on value at memory before it is compared with value
-                default value is set to enable every bit
+        ptr: **[in]**  Pointer to memory object allocated using 'hipMallocSignalMemory' flag
+
+        value: **[in]**  Value to be used in compare operation
+
+        flags: **[in]**  Defines the compare operation, supported values are hipStreamWaitValueGte
+            hipStreamWaitValueEq, hipStreamWaitValueAnd and hipStreamWaitValueNor.
+
+        mask: **[in]**  Mask to be applied on value at memory before it is compared with value
+            default value is set to enable every bit
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27463,10 +27496,13 @@ def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigne
         hipStreamWaitValue64
 
     Args:
-        stream: - Stream identifier
-        ptr: - Pointer to a GPU accessible memory object
-        value: - Value to be written
-        flags: - reserved, ignored for now, will be used in future releases
+        stream: **[in]**  Stream identifier
+
+        ptr: **[in]**  Pointer to a GPU accessible memory object
+
+        value: **[in]**  Value to be written
+
+        flags: **[in]**  reserved, ignored for now, will be used in future releases
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27494,10 +27530,13 @@ def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsign
         hipStreamWaitValue64
 
     Args:
-        stream: - Stream identifier
-        ptr: - Pointer to a GPU accessible memory object
-        value: - Value to be written
-        flags: - reserved, ignored for now, will be used in future releases
+        stream: **[in]**  Stream identifier
+
+        ptr: **[in]**  Pointer to a GPU accessible memory object
+
+        value: **[in]**  Value to be written
+
+        flags: **[in]**  reserved, ignored for now, will be used in future releases
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27517,18 +27556,18 @@ def hipEventCreateWithFlags(unsigned int flags):
         hipEventCreate, hipEventSynchronize, hipEventDestroy, hipEventElapsedTime
 
     Args:
-        flags: Flags to control event behavior.  Valid values are #hipEventDefault,
-                #hipEventBlockingSync, #hipEventDisableTiming, #hipEventInterprocess
-                  #hipEventDefault : Default flag.  The event will use active synchronization and will support
-                timing.  Blocking synchronization provides lowest possible latency at the expense of dedicating a
-                CPU to poll on the event.
-                  #hipEventBlockingSync : The event will use blocking synchronization : if hipEventSynchronize is
-                called on this event, the thread will block until the event completes.  This can increase latency
-                for the synchroniation but can result in lower power and more resources for other CPU threads.
-                  #hipEventDisableTiming : Disable recording of timing information. Events created with this flag
-                would not record profiling data and provide best performance if used for synchronization.
-                  #hipEventInterprocess : The event can be used as an interprocess event. hipEventDisableTiming
-                flag also must be set when hipEventInterprocess flag is set.
+        flags: **[in]** Flags to control event behavior.  Valid values are #hipEventDefault,
+            #hipEventBlockingSync, #hipEventDisableTiming, #hipEventInterprocess
+              #hipEventDefault : Default flag.  The event will use active synchronization and will support
+            timing.  Blocking synchronization provides lowest possible latency at the expense of dedicating a
+            CPU to poll on the event.
+              #hipEventBlockingSync : The event will use blocking synchronization : if hipEventSynchronize is
+            called on this event, the thread will block until the event completes.  This can increase latency
+            for the synchroniation but can result in lower power and more resources for other CPU threads.
+              #hipEventDisableTiming : Disable recording of timing information. Events created with this flag
+            would not record profiling data and provide best performance if used for synchronization.
+              #hipEventInterprocess : The event can be used as an interprocess event. hipEventDisableTiming
+            flag also must be set when hipEventInterprocess flag is set.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -27585,7 +27624,7 @@ def hipEventDestroy(object event):
         hipEventElapsedTime
 
     Args:
-        event: Event to destroy.
+        event: **[in]** Event to destroy.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -27614,7 +27653,7 @@ def hipEventSynchronize(object event):
         hipEventElapsedTime
 
     Args:
-        event: Event on which to wait.
+        event: **[in]** Event on which to wait.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27651,8 +27690,9 @@ def hipEventElapsedTime(object start, object stop):
         hipEventSynchronize
 
     Args:
-        start: Start event.
-        stop: Stop event.
+        start: **[in]** Start event.
+
+        stop: **[in]** Stop event.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -27681,7 +27721,7 @@ def hipEventQuery(object event):
         hipEventSynchronize, hipEventElapsedTime
 
     Args:
-        event: Event to query.
+        event: **[in]** Event to query.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27701,8 +27741,9 @@ def hipPointerGetAttributes(object attributes, object ptr):
         hipPointerGetAttribute
 
     Args:
-        attributes: attributes for the specified pointer
-        ptr: pointer to get attributes for
+        attributes: **[out]** attributes for the specified pointer
+
+        ptr: **[in]** pointer to get attributes for
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27726,9 +27767,11 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
         hipPointerGetAttributes
 
     Args:
-        data: returned pointer attribute value
-        atribute: attribute to query for
-        ptr: pointer to get attributes for
+        data: **[in,out]** returned pointer attribute value
+
+        atribute: **[in]** attribute to query for
+
+        ptr: **[in]** pointer to get attributes for
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27754,15 +27797,16 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
         hipPointerGetAttribute
 
     Args:
-        numAttributes: number of attributes to query for
-        ptr: pointer to get attributes for
+        numAttributes: **[in]** number of attributes to query for
+
+        ptr: **[in]** pointer to get attributes for
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
         - attributes: attributes to query for
         - data: a two-dimensional containing pointers to memory locations
-                    where the result of each attribute query will be written to
+                where the result of each attribute query will be written to
     """
     cdef chip.hipPointer_attribute attributes
     data = hip._util.types.DataHandle.from_ptr(NULL)
@@ -27779,8 +27823,9 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
     See:
 
     Args:
-        extSem_out: External semaphores to be waited on
-        semHandleDesc: Semaphore import handle descriptor
+        extSem_out: **[out]** External semaphores to be waited on
+
+        semHandleDesc: **[in]** Semaphore import handle descriptor
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27799,10 +27844,13 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
     See:
 
     Args:
-        extSem_out: External semaphores to be waited on
-        paramsArray: Array of semaphore parameters
-        numExtSems: Number of semaphores to wait on
-        stream: Stream to enqueue the wait operations in
+        extSem_out: **[in]** External semaphores to be waited on
+
+        paramsArray: **[in]** Array of semaphore parameters
+
+        numExtSems: **[in]** Number of semaphores to wait on
+
+        stream: **[in]** Stream to enqueue the wait operations in
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27822,10 +27870,13 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
     See:
 
     Args:
-        extSem_out: External semaphores to be waited on
-        paramsArray: Array of semaphore parameters
-        numExtSems: Number of semaphores to wait on
-        stream: Stream to enqueue the wait operations in
+        extSem_out: **[in]** External semaphores to be waited on
+
+        paramsArray: **[in]** Array of semaphore parameters
+
+        numExtSems: **[in]** Number of semaphores to wait on
+
+        stream: **[in]** Stream to enqueue the wait operations in
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27845,7 +27896,7 @@ def hipDestroyExternalSemaphore(object extSem):
     See:
 
     Args:
-        extSem: handle to an external memory object
+        extSem: **[in]** handle to an external memory object
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27864,8 +27915,9 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
         /
 
     Args:
-        extMem_out: Returned handle to an external memory object
-        memHandleDesc: Memory import handle descriptor
+        extMem_out: **[out]** Returned handle to an external memory object
+
+        memHandleDesc: **[in]** Memory import handle descriptor
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27885,8 +27937,9 @@ def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
         /
 
     Args:
-        extMem: Handle to external memory object
-        bufferDesc: Buffer descriptor
+        extMem: **[in]** Handle to external memory object
+
+        bufferDesc: **[in]** Buffer descriptor
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -27909,7 +27962,7 @@ def hipDestroyExternalMemory(object extMem):
         /
 
     Args:
-        extMem: External memory object to be destroyed
+        extMem: **[in]** External memory object to be destroyed
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -27931,7 +27984,7 @@ def hipMalloc(unsigned long size):
         hipHostFree, hipHostMalloc
 
     Args:
-        size: Requested memory size
+        size: **[in]** Requested memory size
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -27956,8 +28009,9 @@ def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
         hipHostFree, hipHostMalloc
 
     Args:
-        size: Requested memory size
-        flags: Type of memory allocation
+        size: **[in]** Requested memory size
+
+        flags: **[in]** Type of memory allocation
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -27981,7 +28035,7 @@ def hipMallocHost(unsigned long size):
         use hipHostMalloc() instead
 
     Args:
-        size: Requested memory size
+        size: **[in]** Requested memory size
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28004,7 +28058,7 @@ def hipMemAllocHost(unsigned long size):
         use hipHostMalloc() instead
 
     Args:
-        size: Requested memory size
+        size: **[in]** Requested memory size
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28027,8 +28081,9 @@ def hipHostMalloc(unsigned long size, unsigned int flags):
         hipSetDeviceFlags, hipHostFree
 
     Args:
-        size: Requested memory size
-        flags: Type of host memory allocation
+        size: **[in]** Requested memory size
+
+        flags: **[in]** Type of host memory allocation
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28046,14 +28101,15 @@ def hipMallocManaged(unsigned long size, unsigned int flags):
     r"""Allocates memory that will be automatically managed by HIP.
 
     Args:
-        size: - requested allocation size in bytes
-        flags: - must be either hipMemAttachGlobal or hipMemAttachHost
-                (defaults to hipMemAttachGlobal)
+        size: **[in]**  requested allocation size in bytes
+
+        flags: **[in]**  must be either hipMemAttachGlobal or hipMemAttachHost
+            (defaults to hipMemAttachGlobal)
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
-        - dev_ptr: - pointer to allocated device memory
+        - dev_ptr:  pointer to allocated device memory
     """
     dev_ptr = hip._util.types.DeviceArray.from_ptr(NULL)
     _hipMallocManaged__retval = hipError_t(chip.hipMallocManaged(
@@ -28067,10 +28123,13 @@ def hipMemPrefetchAsync(object dev_ptr, unsigned long count, int device, object 
     r"""Prefetches memory to the specified destination device using HIP.
 
     Args:
-        dev_ptr: pointer to be prefetched
-        count: size in bytes for prefetching
-        device: destination device to prefetch to
-        stream: stream to enqueue prefetch operation
+        dev_ptr: **[in]** pointer to be prefetched
+
+        count: **[in]** size in bytes for prefetching
+
+        device: **[in]** destination device to prefetch to
+
+        stream: **[in]** stream to enqueue prefetch operation
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28087,10 +28146,13 @@ def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device)
     r"""Advise about the usage of a given memory range to HIP.
 
     Args:
-        dev_ptr: pointer to memory to set the advice for
-        count: size in bytes of the memory range
-        advice: advice to be applied for the specified memory range
-        device: device to apply the advice for
+        dev_ptr: **[in]** pointer to memory to set the advice for
+
+        count: **[in]** size in bytes of the memory range
+
+        advice: **[in]** advice to be applied for the specified memory range
+
+        device: **[in]** device to apply the advice for
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28108,13 +28170,16 @@ def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribu
     r"""Query an attribute of a given memory range in HIP.
 
     Args:
-        data: a pointer to a memory location where the result of each
-                attribute query will be written to
+        data: **[in,out]** a pointer to a memory location where the result of each
+            attribute query will be written to
 
-        data_size: the size of data
-        attribute: the attribute to query
-        dev_ptr: start of the range to query
-        count: size of the range to query
+        data_size: **[in]** the size of data
+
+        attribute: **[in]** the attribute to query
+
+        dev_ptr: **[in]** start of the range to query
+
+        count: **[in]** size of the range to query
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28133,17 +28198,18 @@ def hipMemRangeGetAttributes(unsigned long num_attributes, object dev_ptr, unsig
     r"""Query attributes of a given memory range in HIP.
 
     Args:
-        num_attributes: an array of attributes to query (numAttributes and the number
-                of attributes in this array should match)
+        num_attributes: **[in]** an array of attributes to query (numAttributes and the number
+            of attributes in this array should match)
 
-        dev_ptr: start of the range to query
-        count: size of the range to query
+        dev_ptr: **[in]** start of the range to query
+
+        count: **[in]** size of the range to query
 
     Returns:
         A ``tuple`` of size 4 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
         - data: a two-dimensional array containing pointers to memory locations
-                    where the result of each attribute query will be written to
+                where the result of each attribute query will be written to
         - data_sizes: an array, containing the sizes of each result
         - attributes: the attribute to query
     """
@@ -28161,13 +28227,15 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length,
     r"""Attach memory to a stream asynchronously in HIP.
 
     Args:
-        stream: - stream in which to enqueue the attach operation
-        dev_ptr: - pointer to memory (must be a pointer to managed memory or
-                to a valid host-accessible region of system-allocated memory)
+        stream: **[in]**  stream in which to enqueue the attach operation
 
-        length: - length of memory (defaults to zero)
-        flags: - must be one of hipMemAttachGlobal, hipMemAttachHost or
-                hipMemAttachSingle (defaults to hipMemAttachSingle)
+        dev_ptr: **[in]**  pointer to memory (must be a pointer to managed memory or
+            to a valid host-accessible region of system-allocated memory)
+
+        length: **[in]**  length of memory (defaults to zero)
+
+        flags: **[in]**  must be one of hipMemAttachGlobal, hipMemAttachHost or
+            hipMemAttachSingle (defaults to hipMemAttachSingle)
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28210,9 +28278,10 @@ def hipMallocAsync(unsigned long size, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        size: Number of bytes to allocate
-        stream: The stream establishing the stream ordering contract and
-                the memory pool to allocate from
+        size: **[in]** Number of bytes to allocate
+
+        stream: **[in]** The stream establishing the stream ordering contract and
+            the memory pool to allocate from
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28249,8 +28318,9 @@ def hipFreeAsync(object dev_ptr, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        dev_ptr: Pointer to device memory to free
-        stream: The stream, where the destruciton will occur according to the execution order
+        dev_ptr: **[in]** Pointer to device memory to free
+
+        stream: **[in]** The stream, where the destruciton will occur according to the execution order
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28287,10 +28357,11 @@ def hipMemPoolTrimTo(object mem_pool, unsigned long min_bytes_to_hold):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool: The memory pool to trim allocations
-        min_bytes_to_hold: If the pool has less than min_bytes_to_hold reserved,
-                then the TrimTo operation is a no-op.  Otherwise the memory pool will contain
-                at least min_bytes_to_hold bytes reserved after the operation.
+        mem_pool: **[in]** The memory pool to trim allocations
+
+        min_bytes_to_hold: **[in]** If the pool has less than min_bytes_to_hold reserved,
+            then the TrimTo operation is a no-op.  Otherwise the memory pool will contain
+            at least min_bytes_to_hold bytes reserved after the operation.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28335,9 +28406,11 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool: The memory pool to modify
-        attr: The attribute to modify
-        value: Pointer to the value to assign
+        mem_pool: **[in]** The memory pool to modify
+
+        attr: **[in]** The attribute to modify
+
+        value: **[in]** Pointer to the value to assign
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28385,9 +28458,11 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool: The memory pool to get attributes of
-        attr: The attribute to get
-        value: Retrieved value
+        mem_pool: **[in]** The memory pool to get attributes of
+
+        attr: **[in]** The attribute to get
+
+        value: **[in]** Retrieved value
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28414,9 +28489,11 @@ def hipMemPoolSetAccess(object mem_pool, object desc_list, unsigned long count):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool: Memory pool for acccess change
-        desc_list: Array of access descriptors. Each descriptor instructs the access to enable for a single gpu
-        count: Number of descriptors in the map array.
+        mem_pool: **[in]** Memory pool for acccess change
+
+        desc_list: **[in]** Array of access descriptors. Each descriptor instructs the access to enable for a single gpu
+
+        count: **[in]** Number of descriptors in the map array.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28443,8 +28520,9 @@ def hipMemPoolGetAccess(object mem_pool, object location):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool: Memory pool being queried
-        location: Location/device for memory pool access
+        mem_pool: **[in]** Memory pool being queried
+
+        location: **[in]** Location/device for memory pool access
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28479,7 +28557,7 @@ def hipMemPoolCreate(object pool_props):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        pool_props: Memory pool properties
+        pool_props: **[in]** Memory pool properties
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28517,7 +28595,7 @@ def hipMemPoolDestroy(object mem_pool):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool: Memory pool for destruction
+        mem_pool: **[in]** Memory pool for destruction
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28558,9 +28636,11 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        size: Number of bytes to allocate
-        mem_pool: The pool to allocate from
-        stream: The stream establishing the stream ordering semantic
+        size: **[in]** Number of bytes to allocate
+
+        mem_pool: **[in]** The pool to allocate from
+
+        stream: **[in]** The stream establishing the stream ordering semantic
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28598,10 +28678,13 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
         it is still open to changes and may have outstanding issues.
 
     Args:
-        shared_handle: Pointer to the location in which to store the requested handle
-        mem_pool: Pool to export
-        handle_type: The type of handle to create
-        flags: Must be 0
+        shared_handle: **[out]** Pointer to the location in which to store the requested handle
+
+        mem_pool: **[in]** Pool to export
+
+        handle_type: **[in]** The type of handle to create
+
+        flags: **[in]** Must be 0
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28634,9 +28717,11 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
         it is still open to changes and may have outstanding issues.
 
     Args:
-        shared_handle: OS handle of the pool to open
-        handle_type: The type of handle being imported
-        flags: Must be 0
+        shared_handle: **[in]** OS handle of the pool to open
+
+        handle_type: **[in]** The type of handle being imported
+
+        flags: **[in]** Must be 0
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28667,8 +28752,9 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        export_data: Returned export data
-        dev_ptr: Pointer to memory being exported
+        export_data: **[out]** Returned export data
+
+        dev_ptr: **[in]** Pointer to memory being exported
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28705,8 +28791,9 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mem_pool: Memory pool from which to import a pointer
-        export_data: Data specifying the memory to import
+        mem_pool: **[in]** Memory pool from which to import a pointer
+
+        export_data: **[in]** Data specifying the memory to import
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28731,8 +28818,9 @@ def hipHostAlloc(unsigned long size, unsigned int flags):
         use hipHostMalloc() instead
 
     Args:
-        size: Requested memory size
-        flags: Type of host memory allocation
+        size: **[in]** Requested memory size
+
+        flags: **[in]** Type of host memory allocation
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28753,9 +28841,11 @@ def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
         hipSetDeviceFlags, hipHostMalloc
 
     Args:
-        dstPtr: Device Pointer mapped to passed host pointer
-        hstPtr: Host Pointer allocated through hipHostMalloc
-        flags: Flags to be passed for extension
+        dstPtr: **[out]** Device Pointer mapped to passed host pointer
+
+        hstPtr: **[in]** Host Pointer allocated through hipHostMalloc
+
+        flags: **[in]** Flags to be passed for extension
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28776,7 +28866,7 @@ def hipHostGetFlags(object hostPtr):
         hipHostMalloc
 
     Args:
-        hostPtr: Host Pointer allocated through hipHostMalloc
+        hostPtr: **[in]** Host Pointer allocated through hipHostMalloc
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28821,9 +28911,11 @@ def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags)
         hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
 
     Args:
-        hostPtr: Pointer to host memory to be registered.
-        sizeBytes: size of the host memory
-        flags: .  See below.
+        hostPtr: **[out]** Pointer to host memory to be registered.
+
+        sizeBytes: **[in]** size of the host memory
+
+        flags: **[in]** .  See below.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28842,7 +28934,7 @@ def hipHostUnregister(object hostPtr):
         hipHostRegister
 
     Args:
-        hostPtr: Host pointer previously registered with #hipHostRegister
+        hostPtr: **[in]** Host pointer previously registered with #hipHostRegister
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28869,8 +28961,9 @@ def hipMallocPitch(unsigned long width, unsigned long height):
         hipMalloc3DArray, hipHostMalloc
 
     Args:
-        width: Requested pitched allocation width (in bytes)
-        height: Requested pitched allocation height
+        width: **[in]** Requested pitched allocation width (in bytes)
+
+        height: **[in]** Requested pitched allocation height
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -28904,8 +28997,9 @@ def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned 
         hipMalloc3DArray, hipHostMalloc
 
     Args:
-        width: Requested pitched allocation width (in bytes)
-        height: Requested pitched allocation height
+        width: **[in]** Requested pitched allocation width (in bytes)
+
+        height: **[in]** Requested pitched allocation height
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -28931,7 +29025,7 @@ def hipFree(object ptr):
         hipMalloc3DArray, hipHostMalloc
 
     Args:
-        ptr: Pointer to memory to be freed
+        ptr: **[in]** Pointer to memory to be freed
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -28952,7 +29046,7 @@ def hipFreeHost(object ptr):
         use hipHostFree() instead
 
     Args:
-        ptr: Pointer to memory to be freed
+        ptr: **[in]** Pointer to memory to be freed
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -28976,7 +29070,7 @@ def hipHostFree(object ptr):
         hipMalloc3DArray, hipHostMalloc
 
     Args:
-        ptr: Pointer to memory to be freed
+        ptr: **[in]** Pointer to memory to be freed
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29015,10 +29109,13 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
         hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
-        copyType: Memory copy type
+        dst: **[out]** Data being copy to
+
+        src: **[in]** Data being copy from
+
+        sizeBytes: **[in]** Data size in bytes
+
+        copyType: **[in]** Memory copy type
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29058,9 +29155,11 @@ def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
         hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+        dst: **[out]** Data being copy to
+
+        src: **[in]** Data being copy from
+
+        sizeBytes: **[in]** Data size in bytes
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29086,9 +29185,11 @@ def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
         hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+        dst: **[out]** Data being copy to
+
+        src: **[in]** Data being copy from
+
+        sizeBytes: **[in]** Data size in bytes
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29114,9 +29215,11 @@ def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
         hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+        dst: **[out]** Data being copy to
+
+        src: **[in]** Data being copy from
+
+        sizeBytes: **[in]** Data size in bytes
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29142,9 +29245,11 @@ def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object s
         hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+        dst: **[out]** Data being copy to
+
+        src: **[in]** Data being copy from
+
+        sizeBytes: **[in]** Data size in bytes
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29171,9 +29276,11 @@ def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object s
         hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+        dst: **[out]** Data being copy to
+
+        src: **[in]** Data being copy from
+
+        sizeBytes: **[in]** Data size in bytes
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29200,9 +29307,11 @@ def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object s
         hipMemHostAlloc, hipMemHostGetDevicePointer
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
+        dst: **[out]** Data being copy to
+
+        src: **[in]** Data being copy from
+
+        sizeBytes: **[in]** Data size in bytes
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29224,8 +29333,9 @@ def hipModuleGetGlobal(object hmod, const char * name):
     If one of them is NULL, it is ignored and hipSuccess is returned.
 
     Args:
-        hmod: Module to retrieve global from
-        name: Name of global to retrieve
+        hmod: **[in]** Module to retrieve global from
+
+        name: **[in]** Name of global to retrieve
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -29246,7 +29356,7 @@ def hipGetSymbolAddress(object symbol):
     r"""Gets device pointer associated with symbol on the device.
 
     Args:
-        symbol: pointer to the symbole of the device
+        symbol: **[in]** pointer to the symbole of the device
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -29265,7 +29375,7 @@ def hipGetSymbolSize(object symbol):
     r"""Gets the size of the given symbol on the device.
 
     Args:
-        symbol: pointer to the device symbole
+        symbol: **[in]** pointer to the device symbole
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -29289,11 +29399,15 @@ def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsign
     https://github.com/ROCm-Developer-Tools/HIP/blob/rocm-5.0.x/docs/markdown/hip_porting_guide.md
 
     Args:
-        symbol: pointer to the device symbole
-        src: pointer to the source address
-        sizeBytes: size in bytes to copy
-        offset: offset in bytes from start of symbole
-        kind: type of memory transfer
+        symbol: **[out]** pointer to the device symbole
+
+        src: **[in]** pointer to the source address
+
+        sizeBytes: **[in]** size in bytes to copy
+
+        offset: **[in]** offset in bytes from start of symbole
+
+        kind: **[in]** type of memory transfer
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29312,12 +29426,17 @@ def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, u
     r"""Copies data to the given symbol on the device asynchronously.
 
     Args:
-        symbol: pointer to the device symbole
-        src: pointer to the source address
-        sizeBytes: size in bytes to copy
-        offset: offset in bytes from start of symbole
-        kind: type of memory transfer
-        stream: stream identifier
+        symbol: **[out]** pointer to the device symbole
+
+        src: **[in]** pointer to the source address
+
+        sizeBytes: **[in]** size in bytes to copy
+
+        offset: **[in]** offset in bytes from start of symbole
+
+        kind: **[in]** type of memory transfer
+
+        stream: **[in]** stream identifier
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29337,11 +29456,15 @@ def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsi
     r"""Copies data from the given symbol on the device.
 
     Args:
-        dptr: Returns pointer to destinition memory address
-        symbol: pointer to the symbole address on the device
-        sizeBytes: size in bytes to copy
-        offset: offset in bytes from the start of symbole
-        kind: type of memory transfer
+        dptr: **[out]** Returns pointer to destinition memory address
+
+        symbol: **[in]** pointer to the symbole address on the device
+
+        sizeBytes: **[in]** size in bytes to copy
+
+        offset: **[in]** offset in bytes from the start of symbole
+
+        kind: **[in]** type of memory transfer
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29360,12 +29483,17 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
     r"""Copies data from the given symbol on the device asynchronously.
 
     Args:
-        dptr: Returns pointer to destinition memory address
-        symbol: pointer to the symbole address on the device
-        sizeBytes: size in bytes to copy
-        offset: offset in bytes from the start of symbole
-        kind: type of memory transfer
-        stream: stream identifier
+        dptr: **[out]** Returns pointer to destinition memory address
+
+        symbol: **[in]** pointer to the symbole address on the device
+
+        sizeBytes: **[in]** size in bytes to copy
+
+        offset: **[in]** offset in bytes from the start of symbole
+
+        kind: **[in]** type of memory transfer
+
+        stream: **[in]** stream identifier
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29407,10 +29535,13 @@ def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind,
         hipMemcpyFromSymbolAsync
 
     Args:
-        dst: Data being copy to
-        src: Data being copy from
-        sizeBytes: Data size in bytes
-        accelerator_view: Accelerator view which the copy is being enqueued
+        dst: **[out]** Data being copy to
+
+        src: **[in]** Data being copy from
+
+        sizeBytes: **[in]** Data size in bytes
+
+        accelerator_view: **[in]** Accelerator view which the copy is being enqueued
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29431,9 +29562,11 @@ def hipMemset(object dst, int value, unsigned long sizeBytes):
     byte value value.
 
     Args:
-        dst: Data being filled
-        constant: value to be set
-        sizeBytes: Data size in bytes
+        dst: **[out]** Data being filled
+
+        constant: **[in]** value to be set
+
+        sizeBytes: **[in]** Data size in bytes
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29450,9 +29583,11 @@ def hipMemsetD8(object dest, unsigned char value, unsigned long count):
     byte value value.
 
     Args:
-        dst: Data ptr to be filled
-        constant: value to be set
-        number: of values to be set
+        dst: **[out]** Data ptr to be filled
+
+        constant: **[in]** value to be set
+
+        number: **[in]** of values to be set
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29474,10 +29609,13 @@ def hipMemsetD8Async(object dest, unsigned char value, unsigned long count, obje
     streams.
 
     Args:
-        dst: Data ptr to be filled
-        constant: value to be set
-        number: of values to be set
-        stream: - Stream identifier
+        dst: **[out]** Data ptr to be filled
+
+        constant: **[in]** value to be set
+
+        number: **[in]** of values to be set
+
+        stream: **[in]**  Stream identifier
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29495,9 +29633,11 @@ def hipMemsetD16(object dest, unsigned short value, unsigned long count):
     short value value.
 
     Args:
-        dst: Data ptr to be filled
-        constant: value to be set
-        number: of values to be set
+        dst: **[out]** Data ptr to be filled
+
+        constant: **[in]** value to be set
+
+        number: **[in]** of values to be set
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29519,10 +29659,13 @@ def hipMemsetD16Async(object dest, unsigned short value, unsigned long count, ob
     streams.
 
     Args:
-        dst: Data ptr to be filled
-        constant: value to be set
-        number: of values to be set
-        stream: - Stream identifier
+        dst: **[out]** Data ptr to be filled
+
+        constant: **[in]** value to be set
+
+        number: **[in]** of values to be set
+
+        stream: **[in]**  Stream identifier
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29540,9 +29683,11 @@ def hipMemsetD32(object dest, int value, unsigned long count):
     value for specified number of times.
 
     Args:
-        dst: Data being filled
-        constant: value to be set
-        number: of values to be set
+        dst: **[out]** Data being filled
+
+        constant: **[in]** value to be set
+
+        number: **[in]** of values to be set
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29564,10 +29709,13 @@ def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream
     streams.
 
     Args:
-        dst: Pointer to device memory
-        value: - Value to set for each byte of specified memory
-        sizeBytes: - Size in bytes to set
-        stream: - Stream identifier
+        dst: **[out]** Pointer to device memory
+
+        value: **[in]**  Value to set for each byte of specified memory
+
+        sizeBytes: **[in]**  Size in bytes to set
+
+        stream: **[in]**  Stream identifier
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29590,10 +29738,13 @@ def hipMemsetD32Async(object dst, int value, unsigned long count, object stream)
     streams.
 
     Args:
-        dst: Pointer to device memory
-        value: - Value to set for each byte of specified memory
-        count: - number of values to be set
-        stream: - Stream identifier
+        dst: **[out]** Pointer to device memory
+
+        value: **[in]**  Value to set for each byte of specified memory
+
+        count: **[in]**  number of values to be set
+
+        stream: **[in]**  Stream identifier
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29610,11 +29761,15 @@ def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width,
     r"""Fills the memory area pointed to by dst with the constant value.
 
     Args:
-        dst: Pointer to device memory
-        pitch: - data size in bytes
-        value: - constant value to be set
-        width: 
-        height: 
+        dst: **[out]** Pointer to device memory
+
+        pitch: **[in]**  data size in bytes
+
+        value: **[in]**  constant value to be set
+
+        width: **[in]** 
+
+        height: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29630,12 +29785,17 @@ def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long w
     r"""Fills asynchronously the memory area pointed to by dst with the constant value.
 
     Args:
-        dst: Pointer to device memory
-        pitch: - data size in bytes
-        value: - constant value to be set
-        width: 
-        height: 
-        stream: 
+        dst: **[in]** Pointer to device memory
+
+        pitch: **[in]**  data size in bytes
+
+        value: **[in]**  constant value to be set
+
+        width: **[in]** 
+
+        height: **[in]** 
+
+        stream: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29652,9 +29812,11 @@ def hipMemset3D(object pitchedDevPtr, int value, object extent):
     r"""Fills synchronously the memory area pointed to by pitchedDevPtr with the constant value.
 
     Args:
-        pitchedDevPtr: 
-        value: - constant value to be set
-        extent: 
+        pitchedDevPtr: **[in]** 
+
+        value: **[in]**  constant value to be set
+
+        extent: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29671,10 +29833,13 @@ def hipMemset3DAsync(object pitchedDevPtr, int value, object extent, object stre
     r"""Fills asynchronously the memory area pointed to by pitchedDevPtr with the constant value.
 
     Args:
-        pitchedDevPtr: 
-        value: - constant value to be set
-        extent: 
-        stream: 
+        pitchedDevPtr: **[in]** 
+
+        value: **[in]**  constant value to be set
+
+        extent: **[in]** 
+
+        stream: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29726,10 +29891,13 @@ def hipMallocArray(object desc, unsigned long width, unsigned long height, unsig
         hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
 
     Args:
-        desc: Requested channel format
-        width: Requested array allocation width
-        height: Requested array allocation height
-        flags: Requested properties of allocated array
+        desc: **[in]** Requested channel format
+
+        width: **[in]** Requested array allocation width
+
+        height: **[in]** Requested array allocation height
+
+        flags: **[in]** Requested properties of allocated array
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -29789,7 +29957,7 @@ def hipFreeArray(object array):
         hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipHostMalloc, hipHostFree
 
     Args:
-        array: Pointer to array to free
+        array: **[in]** Pointer to array to free
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29805,7 +29973,7 @@ def hipFreeMipmappedArray(object mipmappedArray):
     r"""Frees a mipmapped array on the device
 
     Args:
-        mipmappedArray: - Pointer to mipmapped array to free
+        mipmappedArray: **[in]**  Pointer to mipmapped array to free
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29824,9 +29992,11 @@ def hipMalloc3DArray(object desc, object extent, unsigned int flags):
         hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
 
     Args:
-        desc: Requested channel format
-        extent: Requested array allocation width, height and depth
-        flags: Requested properties of allocated array
+        desc: **[in]** Requested channel format
+
+        extent: **[in]** Requested array allocation width, height and depth
+
+        flags: **[in]** Requested properties of allocated array
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -29845,15 +30015,18 @@ def hipMallocMipmappedArray(object desc, object extent, unsigned int numLevels, 
     r"""Allocate a mipmapped array on the device
 
     Args:
-        desc: - Requested channel format
-        extent: - Requested allocation size (width field in elements)
-        numLevels: - Number of mipmap levels to allocate
-        flags: - Flags for extensions
+        desc: **[in]**  Requested channel format
+
+        extent: **[in]**  Requested allocation size (width field in elements)
+
+        numLevels: **[in]**  Number of mipmap levels to allocate
+
+        flags: **[in]**  Flags for extensions
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
-        - mipmappedArray: - Pointer to allocated mipmapped array in device memory
+        - mipmappedArray:  Pointer to allocated mipmapped array in device memory
     """
     mipmappedArray = hipMipmappedArray.from_ptr(NULL)
     _hipMallocMipmappedArray__retval = hipError_t(chip.hipMallocMipmappedArray(&mipmappedArray._ptr,
@@ -29867,13 +30040,14 @@ def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
     r"""Gets a mipmap level of a HIP mipmapped array
 
     Args:
-        mipmappedArray: - HIP mipmapped array
-        level: - Mipmap level
+        mipmappedArray: **[in]**  HIP mipmapped array
+
+        level: **[in]**  Mipmap level
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - levelArray: - Returned mipmap level HIP array
+        - levelArray:  Returned mipmap level HIP array
     """
     levelArray = hipArray.from_ptr(NULL)
     _hipGetMipmappedArrayLevel__retval = hipError_t(chip.hipGetMipmappedArrayLevel(&levelArray._ptr,
@@ -29890,13 +30064,19 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
         hipMemcpyAsync
 
     Args:
-        dst: Destination memory address
-        dpitch: Pitch of destination memory
-        src: Source memory address
-        spitch: Pitch of source memory
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
+        dst: **[in]** Destination memory address
+
+        dpitch: **[in]** Pitch of destination memory
+
+        src: **[in]** Source memory address
+
+        spitch: **[in]** Pitch of source memory
+
+        width: **[in]** Width of matrix transfer (columns in bytes)
+
+        height: **[in]** Height of matrix transfer (rows)
+
+        kind: **[in]** Type of transfer
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29921,7 +30101,7 @@ def hipMemcpyParam2D(object pCopy):
         /
 
     Args:
-        pCopy: Parameters for the memory copy
+        pCopy: **[in]** Parameters for the memory copy
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29943,8 +30123,9 @@ def hipMemcpyParam2DAsync(object pCopy, object stream):
         /
 
     Args:
-        pCopy: Parameters for the memory copy
-        stream: Stream to use
+        pCopy: **[in]** Parameters for the memory copy
+
+        stream: **[in]** Stream to use
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29966,14 +30147,21 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
         hipMemcpyAsync
 
     Args:
-        dst: Destination memory address
-        dpitch: Pitch of destination memory
-        src: Source memory address
-        spitch: Pitch of source memory
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
-        stream: Stream to use
+        dst: **[in]** Destination memory address
+
+        dpitch: **[in]** Pitch of destination memory
+
+        src: **[in]** Source memory address
+
+        spitch: **[in]** Pitch of source memory
+
+        width: **[in]** Width of matrix transfer (columns in bytes)
+
+        height: **[in]** Height of matrix transfer (rows)
+
+        kind: **[in]** Type of transfer
+
+        stream: **[in]** Stream to use
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -29998,14 +30186,21 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
         hipMemcpyAsync
 
     Args:
-        dst: Destination memory address
-        wOffset: Destination starting X offset
-        hOffset: Destination starting Y offset
-        src: Source memory address
-        spitch: Pitch of source memory
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
+        dst: **[in]** Destination memory address
+
+        wOffset: **[in]** Destination starting X offset
+
+        hOffset: **[in]** Destination starting Y offset
+
+        src: **[in]** Source memory address
+
+        spitch: **[in]** Pitch of source memory
+
+        width: **[in]** Width of matrix transfer (columns in bytes)
+
+        height: **[in]** Height of matrix transfer (rows)
+
+        kind: **[in]** Type of transfer
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30029,15 +30224,23 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
         hipMemcpyAsync
 
     Args:
-        dst: Destination memory address
-        wOffset: Destination starting X offset
-        hOffset: Destination starting Y offset
-        src: Source memory address
-        spitch: Pitch of source memory
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
-        stream: Accelerator view which the copy is being enqueued
+        dst: **[in]** Destination memory address
+
+        wOffset: **[in]** Destination starting X offset
+
+        hOffset: **[in]** Destination starting Y offset
+
+        src: **[in]** Source memory address
+
+        spitch: **[in]** Pitch of source memory
+
+        width: **[in]** Width of matrix transfer (columns in bytes)
+
+        height: **[in]** Height of matrix transfer (rows)
+
+        kind: **[in]** Type of transfer
+
+        stream: **[in]** Accelerator view which the copy is being enqueued
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30062,12 +30265,17 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
         hipMemcpyAsync
 
     Args:
-        dst: Destination memory address
-        wOffset: Destination starting X offset
-        hOffset: Destination starting Y offset
-        src: Source memory address
-        count: size in bytes to copy
-        kind: Type of transfer
+        dst: **[in]** Destination memory address
+
+        wOffset: **[in]** Destination starting X offset
+
+        hOffset: **[in]** Destination starting Y offset
+
+        src: **[in]** Source memory address
+
+        count: **[in]** size in bytes to copy
+
+        kind: **[in]** Type of transfer
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30091,12 +30299,17 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
         hipMemcpyAsync
 
     Args:
-        dst: Destination memory address
-        srcArray: Source memory address
-        woffset: Source starting X offset
-        hOffset: Source starting Y offset
-        count: Size in bytes to copy
-        kind: Type of transfer
+        dst: **[in]** Destination memory address
+
+        srcArray: **[in]** Source memory address
+
+        woffset: **[in]** Source starting X offset
+
+        hOffset: **[in]** Source starting Y offset
+
+        count: **[in]** Size in bytes to copy
+
+        kind: **[in]** Type of transfer
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30120,14 +30333,21 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
         hipMemcpyAsync
 
     Args:
-        dst: Destination memory address
-        dpitch: Pitch of destination memory
-        src: Source memory address
-        wOffset: Source starting X offset
-        hOffset: Source starting Y offset
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
+        dst: **[in]** Destination memory address
+
+        dpitch: **[in]** Pitch of destination memory
+
+        src: **[in]** Source memory address
+
+        wOffset: **[in]** Source starting X offset
+
+        hOffset: **[in]** Source starting Y offset
+
+        width: **[in]** Width of matrix transfer (columns in bytes)
+
+        height: **[in]** Height of matrix transfer (rows)
+
+        kind: **[in]** Type of transfer
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30151,15 +30371,23 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
         hipMemcpyAsync
 
     Args:
-        dst: Destination memory address
-        dpitch: Pitch of destination memory
-        src: Source memory address
-        wOffset: Source starting X offset
-        hOffset: Source starting Y offset
-        width: Width of matrix transfer (columns in bytes)
-        height: Height of matrix transfer (rows)
-        kind: Type of transfer
-        stream: Accelerator view which the copy is being enqueued
+        dst: **[in]** Destination memory address
+
+        dpitch: **[in]** Pitch of destination memory
+
+        src: **[in]** Source memory address
+
+        wOffset: **[in]** Source starting X offset
+
+        hOffset: **[in]** Source starting Y offset
+
+        width: **[in]** Width of matrix transfer (columns in bytes)
+
+        height: **[in]** Height of matrix transfer (rows)
+
+        kind: **[in]** Type of transfer
+
+        stream: **[in]** Accelerator view which the copy is being enqueued
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30184,10 +30412,13 @@ def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned
         hipMemcpyAsync
 
     Args:
-        dst: Destination memory address
-        srcArray: Source array
-        srcoffset: Offset in bytes of source array
-        count: Size of memory copy in bytes
+        dst: **[in]** Destination memory address
+
+        srcArray: **[in]** Source array
+
+        srcoffset: **[in]** Offset in bytes of source array
+
+        count: **[in]** Size of memory copy in bytes
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30209,10 +30440,13 @@ def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsi
         hipMemcpyAsync
 
     Args:
-        dstArray: Destination memory address
-        dstOffset: Offset in bytes of destination array
-        srcHost: Source host pointer
-        count: Size of memory copy in bytes
+        dstArray: **[in]** Destination memory address
+
+        dstOffset: **[in]** Offset in bytes of destination array
+
+        srcHost: **[in]** Source host pointer
+
+        count: **[in]** Size of memory copy in bytes
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30234,7 +30468,7 @@ def hipMemcpy3D(object p):
         hipMemcpyAsync
 
     Args:
-        p: 3D memory copy parameters
+        p: **[in]** 3D memory copy parameters
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30255,8 +30489,9 @@ def hipMemcpy3DAsync(object p, object stream):
         hipMemcpyAsync
 
     Args:
-        p: 3D memory copy parameters
-        stream: Stream to use
+        p: **[in]** 3D memory copy parameters
+
+        stream: **[in]** Stream to use
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30278,7 +30513,7 @@ def hipDrvMemcpy3D(object pCopy):
         hipMemcpyAsync
 
     Args:
-        pCopy: 3D memory copy parameters
+        pCopy: **[in]** 3D memory copy parameters
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30299,8 +30534,9 @@ def hipDrvMemcpy3DAsync(object pCopy, object stream):
         hipMemcpyAsync
 
     Args:
-        pCopy: 3D memory copy parameters
-        stream: Stream to use
+        pCopy: **[in]** 3D memory copy parameters
+
+        stream: **[in]** Stream to use
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30324,8 +30560,9 @@ def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
     device is not a peer of itself.
 
     Args:
-        device: - device from where memory may be accessed.
-        peerDevice: - device where memory is physically located
+        device: **[in]**  device from where memory may be accessed.
+
+        peerDevice: **[in]**  device where memory is physically located
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -30351,8 +30588,9 @@ def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
     Returns #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
 
     Args:
-        peerDeviceId: 
-        flags: 
+        peerDeviceId: **[in]** 
+
+        flags: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30371,7 +30609,7 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
     enabled from the current device.
 
     Args:
-        peerDeviceId: 
+        peerDeviceId: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30390,13 +30628,14 @@ def hipMemGetAddressRange(object pbase, object dptr):
         hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        pbase: - BAse pointer address
-        dptr: - Device Pointer
+        pbase: **[out]**  BAse pointer address
+
+        dptr: **[in]**  Device Pointer
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidDevicePointer
-        - psize: - Size of allocation
+        - psize:  Size of allocation
     """
     cdef unsigned long psize
     _hipMemGetAddressRange__retval = hipError_t(chip.hipMemGetAddressRange(
@@ -30410,11 +30649,15 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsi
     r"""Copies memory from one device to memory on another device.
 
     Args:
-        dst: - Destination device pointer.
-        dstDeviceId: - Destination device
-        src: - Source device pointer
-        srcDeviceId: - Source device
-        sizeBytes: - Size of memory copy in bytes
+        dst: **[out]**  Destination device pointer.
+
+        dstDeviceId: **[in]**  Destination device
+
+        src: **[in]**  Source device pointer
+
+        srcDeviceId: **[in]**  Source device
+
+        sizeBytes: **[in]**  Size of memory copy in bytes
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30431,12 +30674,17 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, u
     r"""Copies memory from one device to memory on another device.
 
     Args:
-        dst: - Destination device pointer.
-        dstDevice: - Destination device
-        src: - Source device pointer
-        srcDevice: - Source device
-        sizeBytes: - Size of memory copy in bytes
-        stream: - Stream identifier
+        dst: **[out]**  Destination device pointer.
+
+        dstDevice: **[in]**  Destination device
+
+        src: **[in]**  Source device pointer
+
+        srcDevice: **[in]**  Source device
+
+        sizeBytes: **[in]**  Size of memory copy in bytes
+
+        stream: **[in]**  Stream identifier
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30458,8 +30706,9 @@ def hipCtxCreate(unsigned int flags, int device):
         hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        flags: 
-        associated: device handle
+        flags: **[in]** 
+
+        associated: **[in]** device handle
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -30480,7 +30729,7 @@ def hipCtxDestroy(object ctx):
         hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 
     Args:
-        ctx: Context to destroy
+        ctx: **[in]** Context to destroy
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30518,7 +30767,7 @@ def hipCtxPushCurrent(object ctx):
         hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 
     Args:
-        ctx: 
+        ctx: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30538,7 +30787,7 @@ def hipCtxSetCurrent(object ctx):
         hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
 
     Args:
-        ctx: 
+        ctx: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30601,7 +30850,7 @@ def hipCtxGetApiVersion(object ctx):
         hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        ctx: Context to check
+        ctx: **[in]** Context to check
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -30627,7 +30876,7 @@ def hipCtxGetCacheConfig():
         hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        cacheConfiguration: 
+        cacheConfiguration: **[out]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30651,7 +30900,7 @@ def hipCtxSetCacheConfig(object cacheConfig):
         hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        cacheConfiguration: 
+        cacheConfiguration: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30676,7 +30925,7 @@ def hipCtxSetSharedMemConfig(object config):
         hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        sharedMemoryConfiguration: 
+        sharedMemoryConfiguration: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30701,7 +30950,7 @@ def hipCtxGetSharedMemConfig():
         hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        sharedMemoryConfiguration: 
+        sharedMemoryConfiguration: **[out]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30767,8 +31016,9 @@ def hipCtxEnablePeerAccess(object peerCtx, unsigned int flags):
         PeerToPeer support is experimental.
 
     Args:
-        peerCtx: 
-        flags: 
+        peerCtx: **[in]** 
+
+        flags: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30797,7 +31047,7 @@ def hipCtxDisablePeerAccess(object peerCtx):
         PeerToPeer support is experimental.
 
     Args:
-        peerCtx: 
+        peerCtx: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30817,9 +31067,11 @@ def hipDevicePrimaryCtxGetState(int dev):
         hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        Device: to get primary context flags for
-        Pointer: to store flags
-        Pointer: to store context state; 0 = inactive, 1 = active
+        Device: **[in]** to get primary context flags for
+
+        Pointer: **[out]** to store flags
+
+        Pointer: **[out]** to store context state; 0 = inactive, 1 = active
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30844,7 +31096,7 @@ def hipDevicePrimaryCtxRelease(int dev):
         HIP/HCC path.
 
     Args:
-        Device: which primary context is released
+        Device: **[in]** which primary context is released
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30863,8 +31115,9 @@ def hipDevicePrimaryCtxRetain(int dev):
         hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        Returned: context handle of the new context
-        Device: which primary context is released
+        Returned: **[out]** context handle of the new context
+
+        Device: **[in]** which primary context is released
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30884,7 +31137,7 @@ def hipDevicePrimaryCtxReset(int dev):
         hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        Device: which primary context is reset
+        Device: **[in]** which primary context is reset
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30903,8 +31156,9 @@ def hipDevicePrimaryCtxSetFlags(int dev, unsigned int flags):
         hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
 
     Args:
-        Device: for which the primary context flags are set
-        New: flags for the device
+        Device: **[in]** for which the primary context flags are set
+
+        New: **[in]** flags for the device
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30922,7 +31176,7 @@ def hipModuleLoad(const char * fname):
         File/memory resources allocated in this function are released only in hipModuleUnload.
 
     Args:
-        fname: 
+        fname: **[in]** 
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -30940,7 +31194,7 @@ def hipModuleUnload(object module):
     r"""Frees the module
 
     Args:
-        module: 
+        module: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30957,8 +31211,9 @@ def hipModuleGetFunction(object module, const char * kname):
     r"""Function with kname will be extracted if present in module
 
     Args:
-        module: 
-        kname: 
+        module: **[in]** 
+
+        kname: **[in]** 
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -30977,8 +31232,9 @@ def hipFuncGetAttributes(object attr, object func):
     r"""Find out attributes for a given function.
 
     Args:
-        attr: 
-        func: 
+        attr: **[out]** 
+
+        func: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -30995,8 +31251,9 @@ def hipFuncGetAttribute(object attrib, object hfunc):
     r"""Find out a specific attribute for a given function.
 
     Args:
-        attrib: 
-        hfunc: 
+        attrib: **[in]** 
+
+        hfunc: **[in]** 
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -31016,8 +31273,9 @@ def hipModuleGetTexRef(object hmod, const char * name):
     r"""returns the handle of the texture reference with the name from the module.
 
     Args:
-        hmod: 
-        name: 
+        hmod: **[in]** 
+
+        name: **[in]** 
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -31036,7 +31294,7 @@ def hipModuleLoadData(object image):
     location.
 
     Args:
-        image: 
+        image: **[in]** 
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -31050,14 +31308,16 @@ def hipModuleLoadData(object image):
 
 
 @cython.embedsignature(True)
-def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValues):mv h
+def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValues):
     r"""builds module from code object which resides in host memory. Image is pointer to that
     location. Options are not used. hipModuleLoadData is called.
 
     Args:
-        image: 
-        number: of options
-        option: values for JIT
+        image: **[in]** 
+
+        number: **[in]** of options
+
+        option: **[in]** values for JIT
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -31087,22 +31347,30 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
         refer to hip_porting_driver_api.md for sample usage.
 
     Args:
-        f: Kernel to launch.
-        gridDimX: X grid dimension specified as multiple of blockDimX.
-        gridDimY: Y grid dimension specified as multiple of blockDimY.
-        gridDimZ: Z grid dimension specified as multiple of blockDimZ.
-        blockDimX: X block dimensions specified in work-items
-        blockDimY: Y grid dimension specified in work-items
-        blockDimZ: Z grid dimension specified in work-items
-        sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel. The
-                HIP-Clang compiler provides support for extern shared declarations.
+        f: **[in]** Kernel to launch.
 
-        stream: Stream where the kernel should be dispatched.  May be 0, in which case th
-                default stream is used with associated synchronization rules.
+        gridDimX: **[in]** X grid dimension specified as multiple of blockDimX.
 
-        kernelParams: 
-        extra: Pointer to kernel arguments.   These are passed directly to the kernel and
-                must be in the memory layout and alignment expected by the kernel.
+        gridDimY: **[in]** Y grid dimension specified as multiple of blockDimY.
+
+        gridDimZ: **[in]** Z grid dimension specified as multiple of blockDimZ.
+
+        blockDimX: **[in]** X block dimensions specified in work-items
+
+        blockDimY: **[in]** Y grid dimension specified in work-items
+
+        blockDimZ: **[in]** Z grid dimension specified in work-items
+
+        sharedMemBytes: **[in]** Amount of dynamic shared memory to allocate for this kernel. The
+            HIP-Clang compiler provides support for extern shared declarations.
+
+        stream: **[in]** Stream where the kernel should be dispatched.  May be 0, in which case th
+            default stream is used with associated synchronization rules.
+
+        kernelParams: **[in]** 
+
+        extra: **[in]** Pointer to kernel arguments.   These are passed directly to the kernel and
+            must be in the memory layout and alignment expected by the kernel.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31125,15 +31393,19 @@ def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, objec
     size gridDim x blockDim >= 2^32.
 
     Args:
-        f: Kernel to launch.
-        gridDim: Grid dimensions specified as multiple of blockDim.
-        blockDim: Block dimensions specified in work-items
-        kernelParams: A list of kernel arguments
-        sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel. The
-                HIP-Clang compiler provides support for extern shared declarations.
+        f: **[in]** Kernel to launch.
 
-        stream: Stream where the kernel should be dispatched.  May be 0, in which case th
-                default stream is used with associated synchronization rules.
+        gridDim: **[in]** Grid dimensions specified as multiple of blockDim.
+
+        blockDim: **[in]** Block dimensions specified in work-items
+
+        kernelParams: **[in]** A list of kernel arguments
+
+        sharedMemBytes: **[in]** Amount of dynamic shared memory to allocate for this kernel. The
+            HIP-Clang compiler provides support for extern shared declarations.
+
+        stream: **[in]** Stream where the kernel should be dispatched.  May be 0, in which case th
+            default stream is used with associated synchronization rules.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31154,9 +31426,11 @@ def hipLaunchCooperativeKernelMultiDevice(object launchParamsList, int numDevice
     synchronize as they execute.
 
     Args:
-        launchParamsList: List of launch parameters, one per device.
-        numDevices: Size of the launchParamsList array.
-        flags: Flags to control launch behavior.
+        launchParamsList: **[in]** List of launch parameters, one per device.
+
+        numDevices: **[in]** Size of the launchParamsList array.
+
+        flags: **[in]** Flags to control launch behavior.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31173,9 +31447,11 @@ def hipExtLaunchMultiKernelMultiDevice(object launchParamsList, int numDevices, 
     on respective streams before enqueuing any other work on the specified streams from any other threads
 
     Args:
-        hipLaunchParams: List of launch parameters, one per device.
-        numDevices: Size of the launchParamsList array.
-        flags: Flags to control launch behavior.
+        hipLaunchParams: **[in]** List of launch parameters, one per device.
+
+        numDevices: **[in]** Size of the launchParamsList array.
+
+        flags: **[in]** Flags to control launch behavior.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31194,9 +31470,11 @@ def hipModuleOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMem
     size gridDim x blockDim >= 2^32.
 
     Args:
-        f: kernel function for which occupancy is calulated
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
-        blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
+        f: **[in]** kernel function for which occupancy is calulated
+
+        dynSharedMemPerBlk: **[in]** dynamic shared memory usage (in bytes) intended for each block
+
+        blockSizeLimit: **[in]** the maximum block size for the kernel, use 0 for no limit
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -31219,10 +31497,13 @@ def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, unsigned long dyn
     size gridDim x blockDim >= 2^32.
 
     Args:
-        f: kernel function for which occupancy is calulated
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
-        blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
-        flags: Extra flags for occupancy calculation (only default supported)
+        f: **[in]** kernel function for which occupancy is calulated
+
+        dynSharedMemPerBlk: **[in]** dynamic shared memory usage (in bytes) intended for each block
+
+        blockSizeLimit: **[in]** the maximum block size for the kernel, use 0 for no limit
+
+        flags: **[in]** Extra flags for occupancy calculation (only default supported)
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -31242,9 +31523,11 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, 
     r"""Returns occupancy for a device function.
 
     Args:
-        func: Kernel function (hipFunction) for which occupancy is calulated
-        blockSize: Block size the kernel is intended to be launched with
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+        func: **[in]** Kernel function (hipFunction) for which occupancy is calulated
+
+        blockSize: **[in]** Block size the kernel is intended to be launched with
+
+        dynSharedMemPerBlk: **[in]** dynamic shared memory usage (in bytes) intended for each block
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31261,10 +31544,13 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int bl
     r"""Returns occupancy for a device function.
 
     Args:
-        f: Kernel function(hipFunction_t) for which occupancy is calulated
-        blockSize: Block size the kernel is intended to be launched with
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
-        flags: Extra flags for occupancy calculation (only default supported)
+        f: **[in]** Kernel function(hipFunction_t) for which occupancy is calulated
+
+        blockSize: **[in]** Block size the kernel is intended to be launched with
+
+        dynSharedMemPerBlk: **[in]** dynamic shared memory usage (in bytes) intended for each block
+
+        flags: **[in]** Extra flags for occupancy calculation (only default supported)
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31281,9 +31567,11 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsign
     r"""Returns occupancy for a device function.
 
     Args:
-        func: Kernel function for which occupancy is calulated
-        blockSize: Block size the kernel is intended to be launched with
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
+        func: **[in]** Kernel function for which occupancy is calulated
+
+        blockSize: **[in]** Block size the kernel is intended to be launched with
+
+        dynSharedMemPerBlk: **[in]** dynamic shared memory usage (in bytes) intended for each block
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31300,10 +31588,13 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSiz
     r"""Returns occupancy for a device function.
 
     Args:
-        f: Kernel function for which occupancy is calulated
-        blockSize: Block size the kernel is intended to be launched with
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
-        flags: Extra flags for occupancy calculation (currently ignored)
+        f: **[in]** Kernel function for which occupancy is calulated
+
+        blockSize: **[in]** Block size the kernel is intended to be launched with
+
+        dynSharedMemPerBlk: **[in]** dynamic shared memory usage (in bytes) intended for each block
+
+        flags: **[in]** Extra flags for occupancy calculation (currently ignored)
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31323,9 +31614,11 @@ def hipOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk
     size gridDim x blockDim >= 2^32.
 
     Args:
-        f: kernel function for which occupancy is calulated
-        dynSharedMemPerBlk: dynamic shared memory usage (in bytes) intended for each block
-        blockSizeLimit: the maximum block size for the kernel, use 0 for no limit
+        f: **[in]** kernel function for which occupancy is calulated
+
+        dynSharedMemPerBlk: **[in]** dynamic shared memory usage (in bytes) intended for each block
+
+        blockSizeLimit: **[in]** the maximum block size for the kernel, use 0 for no limit
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
@@ -31372,13 +31665,15 @@ def hipConfigureCall(object gridDim, object blockDim, unsigned long sharedMem, o
     size gridDim x blockDim >= 2^32.
 
     Args:
-        gridDim: grid dimension specified as multiple of blockDim.
-        blockDim: block dimensions specified in work-items
-        sharedMem: Amount of dynamic shared memory to allocate for this kernel. The
-                HIP-Clang compiler provides support for extern shared declarations.
+        gridDim: **[in]** grid dimension specified as multiple of blockDim.
 
-        stream: Stream where the kernel should be dispatched.  May be 0, in which case the
-                default stream is used with associated synchronization rules.
+        blockDim: **[in]** block dimensions specified in work-items
+
+        sharedMem: **[in]** Amount of dynamic shared memory to allocate for this kernel. The
+            HIP-Clang compiler provides support for extern shared declarations.
+
+        stream: **[in]** Stream where the kernel should be dispatched.  May be 0, in which case the
+            default stream is used with associated synchronization rules.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31396,9 +31691,11 @@ def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
     r"""Set a kernel argument.
 
     Args:
-        arg: Pointer the argument in host memory.
-        size: Size of the argument.
-        offset: Offset of the argument on the argument stack.
+        arg: **[in]** Pointer the argument in host memory.
+
+        size: **[in]** Size of the argument.
+
+        offset: **[in]** Offset of the argument on the argument stack.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31414,7 +31711,7 @@ def hipLaunchByPtr(object func):
     r"""Launch a kernel.
 
     Args:
-        func: Kernel to launch.
+        func: **[in]** Kernel to launch.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31430,15 +31727,19 @@ def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks,
     r"""C compliant kernel launch API
 
     Args:
-        function_address: - kernel stub function pointer.
-        numBlocks: - number of blocks
-        dimBlocks: - dimension of a block
-        args: - kernel arguments
-        sharedMemBytes: - Amount of dynamic shared memory to allocate for this kernel. The
-                HIP-Clang compiler provides support for extern shared declarations.
+        function_address: **[in]**  kernel stub function pointer.
 
-        stream: - Stream where the kernel should be dispatched.  May be 0, in which case th
-                default stream is used with associated synchronization rules.
+        numBlocks: **[in]**  number of blocks
+
+        dimBlocks: **[in]**  dimension of a block
+
+        args: **[in]**  kernel arguments
+
+        sharedMemBytes: **[in]**  Amount of dynamic shared memory to allocate for this kernel. The
+            HIP-Clang compiler provides support for extern shared declarations.
+
+        stream: **[in]**  Stream where the kernel should be dispatched.  May be 0, in which case th
+            default stream is used with associated synchronization rules.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31462,9 +31763,11 @@ def hipLaunchHostFunc(object stream, object fn, object userData):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream: - stream to enqueue work to.
-        fn: - function to call once operations enqueued preceeding are complete.
-        userData: - User-specified data to be passed to the function.
+        stream: **[in]**  stream to enqueue work to.
+
+        fn: **[in]**  function to call once operations enqueued preceeding are complete.
+
+        userData: **[in]**  User-specified data to be passed to the function.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31485,7 +31788,7 @@ def hipDrvMemcpy2DUnaligned(object pCopy):
     Copies memory for 2D arrays.
 
     Args:
-        pCopy: - Parameters for the memory copy
+        pCopy:  Parameters for the memory copy
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31501,23 +31804,28 @@ def hipExtLaunchKernel(object function_address, object numBlocks, object dimBloc
     r"""Launches kernel from the pointer address, with arguments and shared memory on stream.
 
     Args:
-        function_address: pointer to the Kernel to launch.
-        numBlocks: number of blocks.
-        dimBlocks: dimension of a block.
-        args: pointer to kernel arguments.
-        sharedMemBytes: Amount of dynamic shared memory to allocate for this kernel.
-                HIP-Clang compiler provides support for extern shared declarations.
+        function_address: **[in]** pointer to the Kernel to launch.
 
-        stream: Stream where the kernel should be dispatched.
-        startEvent: If non-null, specified event will be updated to track the start time of
-                the kernel launch. The event must be created before calling this API.
+        numBlocks: **[in]** number of blocks.
 
-        stopEvent: If non-null, specified event will be updated to track the stop time of
-                the kernel launch. The event must be created before calling this API.
-                May be 0, in which case the default stream is used with associated synchronization rules.
+        dimBlocks: **[in]** dimension of a block.
 
-        flags: . The value of hipExtAnyOrderLaunch, signifies if kernel can be
-                launched in any order.
+        args: **[in]** pointer to kernel arguments.
+
+        sharedMemBytes: **[in]** Amount of dynamic shared memory to allocate for this kernel.
+            HIP-Clang compiler provides support for extern shared declarations.
+
+        stream: **[in]** Stream where the kernel should be dispatched.
+
+        startEvent: **[in]** If non-null, specified event will be updated to track the start time of
+            the kernel launch. The event must be created before calling this API.
+
+        stopEvent: **[in]** If non-null, specified event will be updated to track the stop time of
+            the kernel launch. The event must be created before calling this API.
+            May be 0, in which case the default stream is used with associated synchronization rules.
+
+        flags: **[in]** . The value of hipExtAnyOrderLaunch, signifies if kernel can be
+            launched in any order.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31539,9 +31847,11 @@ def hipBindTextureToMipmappedArray(object tex, object mipmappedArray, object des
     r"""Binds a mipmapped array to a texture.
 
     Args:
-        tex: pointer to the texture reference to bind
-        mipmappedArray: memory mipmapped array on the device
-        desc: opointer to the channel format
+        tex: **[in]** pointer to the texture reference to bind
+
+        mipmappedArray: **[in]** memory mipmapped array on the device
+
+        desc: **[in]** opointer to the channel format
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31563,9 +31873,11 @@ def hipCreateTextureObject(object pResDesc, object pTexDesc, object pResViewDesc
         return hipErrorNotSupported.
 
     Args:
-        pResDesc: pointer to resource descriptor
-        pTexDesc: pointer to texture descriptor
-        pResViewDesc: pointer to resource view descriptor
+        pResDesc: **[in]** pointer to resource descriptor
+
+        pTexDesc: **[in]** pointer to texture descriptor
+
+        pResViewDesc: **[in]** pointer to resource view descriptor
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -31585,7 +31897,7 @@ def hipDestroyTextureObject(object textureObject):
     r"""Destroys a texture object.
 
     Args:
-        textureObject: texture object to destroy
+        textureObject: **[in]** texture object to destroy
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31601,8 +31913,9 @@ def hipGetChannelDesc(object desc, object array):
     r"""Gets the channel descriptor in an array.
 
     Args:
-        desc: pointer to channel format descriptor
-        array: memory array on the device
+        desc: **[in]** pointer to channel format descriptor
+
+        array: **[out]** memory array on the device
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31619,8 +31932,9 @@ def hipGetTextureObjectResourceDesc(object pResDesc, object textureObject):
     r"""Gets resource descriptor for the texture object.
 
     Args:
-        pResDesc: pointer to resource descriptor
-        textureObject: texture object
+        pResDesc: **[out]** pointer to resource descriptor
+
+        textureObject: **[in]** texture object
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31637,8 +31951,9 @@ def hipGetTextureObjectResourceViewDesc(object pResViewDesc, object textureObjec
     r"""Gets resource view descriptor for the texture object.
 
     Args:
-        pResViewDesc: pointer to resource view descriptor
-        textureObject: texture object
+        pResViewDesc: **[out]** pointer to resource view descriptor
+
+        textureObject: **[in]** texture object
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31655,8 +31970,9 @@ def hipGetTextureObjectTextureDesc(object pTexDesc, object textureObject):
     r"""Gets texture descriptor for the texture object.
 
     Args:
-        pTexDesc: pointer to texture descriptor
-        textureObject: texture object
+        pTexDesc: **[out]** pointer to texture descriptor
+
+        textureObject: **[in]** texture object
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31673,9 +31989,11 @@ def hipTexObjectCreate(object pResDesc, object pTexDesc, object pResViewDesc):
     r"""Creates a texture object.
 
     Args:
-        pResDesc: pointer to resource descriptor
-        pTexDesc: pointer to texture descriptor
-        pResViewDesc: pointer to resource view descriptor
+        pResDesc: **[in]** pointer to resource descriptor
+
+        pTexDesc: **[in]** pointer to texture descriptor
+
+        pResViewDesc: **[in]** pointer to resource view descriptor
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -31695,7 +32013,7 @@ def hipTexObjectDestroy(object texObject):
     r"""Destroys a texture object.
 
     Args:
-        texObject: texture object to destroy
+        texObject: **[in]** texture object to destroy
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31711,8 +32029,9 @@ def hipTexObjectGetResourceDesc(object pResDesc, object texObject):
     r"""Gets resource descriptor of a texture object.
 
     Args:
-        pResDesc: pointer to resource descriptor
-        texObject: texture object
+        pResDesc: **[out]** pointer to resource descriptor
+
+        texObject: **[in]** texture object
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31729,8 +32048,9 @@ def hipTexObjectGetResourceViewDesc(object pResViewDesc, object texObject):
     r"""Gets resource view descriptor of a texture object.
 
     Args:
-        pResViewDesc: pointer to resource view descriptor
-        texObject: texture object
+        pResViewDesc: **[out]** pointer to resource view descriptor
+
+        texObject: **[in]** texture object
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31747,8 +32067,9 @@ def hipTexObjectGetTextureDesc(object pTexDesc, object texObject):
     r"""Gets texture descriptor of a texture object.
 
     Args:
-        pTexDesc: pointer to texture descriptor
-        texObject: texture object
+        pTexDesc: **[out]** pointer to texture descriptor
+
+        texObject: **[in]** texture object
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -31765,7 +32086,7 @@ def hipGetTextureReference(object symbol):
     r"""Gets the texture reference related with the symbol.
 
     Args:
-        symbol: pointer to the symbol related with the texture for the reference
+        symbol: **[in]** pointer to the symbol related with the texture for the reference
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
@@ -32148,9 +32469,10 @@ def hipStreamBeginCapture(object stream, object mode):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream: - Stream to initiate capture.
-        mode: - Controls the interaction of this capture sequence with other API calls that
-                are not safe.
+        stream: **[in]**  Stream to initiate capture.
+
+        mode: **[in]**  Controls the interaction of this capture sequence with other API calls that
+            are not safe.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32172,12 +32494,12 @@ def hipStreamEndCapture(object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream: - Stream to end capture.
+        stream: **[in]**  Stream to end capture.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraph: - returns the graph captured.
+        - pGraph:  returns the graph captured.
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipStreamEndCapture__retval = hipError_t(chip.hipStreamEndCapture(
@@ -32194,13 +32516,13 @@ def hipStreamGetCaptureInfo(object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream: - Stream under capture.
+        stream: **[in]**  Stream under capture.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorStreamCaptureImplicit
-        - pCaptureStatus: - returns current status of the capture.
-        - pId: - unique ID of the capture.
+        - pCaptureStatus:  returns current status of the capture.
+        - pId:  unique ID of the capture.
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     cdef unsigned long long pId
@@ -32218,16 +32540,17 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream: - Stream under capture.
-        dependencies_out: - returns pointer to an array of nodes.
+        stream: **[in]**  Stream under capture.
+
+        dependencies_out: **[out]**  returns pointer to an array of nodes.
 
     Returns:
         A ``tuple`` of size 5 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
-        - captureStatus_out: - returns current status of the capture.
-        - id_out: - unique ID of the capture.
-        - graph_out: - returns the graph being captured into.
-        - numDependencies_out: - returns size of the array returned in dependencies_out.
+        - captureStatus_out:  returns current status of the capture.
+        - id_out:  unique ID of the capture.
+        - graph_out:  returns the graph being captured into.
+        - numDependencies_out:  returns size of the array returned in dependencies_out.
     """
     cdef chip.hipStreamCaptureStatus captureStatus_out
     cdef unsigned long long id_out
@@ -32248,12 +32571,12 @@ def hipStreamIsCapturing(object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream: - Stream under capture.
+        stream: **[in]**  Stream under capture.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
-        - pCaptureStatus: - returns current status of the capture.
+        - pCaptureStatus:  returns current status of the capture.
     """
     cdef chip.hipStreamCaptureStatus pCaptureStatus
     _hipStreamIsCapturing__retval = hipError_t(chip.hipStreamIsCapturing(
@@ -32270,13 +32593,14 @@ def hipStreamUpdateCaptureDependencies(object stream, unsigned long numDependenc
         it is still open to changes and may have outstanding issues.
 
     Args:
-        stream: - Stream under capture.
-        numDependencies: - size of the array in dependencies.
+        stream: **[in]**  Stream under capture.
+
+        numDependencies: **[in]**  size of the array in dependencies.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorIllegalState
-        - dependencies: - pointer to an array of nodes to Add/Replace.
+        - dependencies:  pointer to an array of nodes to Add/Replace.
     """
     dependencies = hipGraphNode.from_ptr(NULL)
     _hipStreamUpdateCaptureDependencies__retval = hipError_t(chip.hipStreamUpdateCaptureDependencies(
@@ -32295,7 +32619,7 @@ def hipThreadExchangeStreamCaptureMode():
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - mode: - Pointer to mode value to swap with the current mode
+        - mode:  Pointer to mode value to swap with the current mode
     """
     cdef chip.hipStreamCaptureMode mode
     _hipThreadExchangeStreamCaptureMode__retval = hipError_t(chip.hipThreadExchangeStreamCaptureMode(&mode))    # fully specified
@@ -32311,12 +32635,12 @@ def hipGraphCreate(unsigned int flags):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        flags: - flags for graph creation, must be 0.
+        flags: **[in]**  flags for graph creation, must be 0.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
-        - pGraph: - pointer to graph to create.
+        - pGraph:  pointer to graph to create.
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipGraphCreate__retval = hipError_t(chip.hipGraphCreate(&pGraph._ptr,flags))    # fully specified
@@ -32332,7 +32656,7 @@ def hipGraphDestroy(object graph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of graph to destroy.
+        graph: **[in]**  instance of graph to destroy.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32352,14 +32676,15 @@ def hipGraphAddDependencies(object graph, unsigned long numDependencies):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of the graph to add dependencies.
-        numDependencies: - the number of dependencies to add.
+        graph: **[in]**  instance of the graph to add dependencies.
+
+        numDependencies: **[in]**  the number of dependencies to add.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - from_: - pointer to the graph nodes with dependenties to add from.
-        - to: - pointer to the graph nodes to add dependenties to.
+        - from_:  pointer to the graph nodes with dependenties to add from.
+        - to:  pointer to the graph nodes to add dependenties to.
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -32377,14 +32702,15 @@ def hipGraphRemoveDependencies(object graph, unsigned long numDependencies):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of the graph to remove dependencies.
-        numDependencies: - the number of dependencies to remove.
+        graph: **[in]**  instance of the graph to remove dependencies.
+
+        numDependencies: **[in]**  the number of dependencies to remove.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - from_: - Array of nodes that provide the dependencies.
-        - to: - Array of dependent nodes.
+        - from_:  Array of nodes that provide the dependencies.
+        - to:  Array of dependent nodes.
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -32407,14 +32733,14 @@ def hipGraphGetEdges(object graph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of the graph to get the edges from.
+        graph: **[in]**  instance of the graph to get the edges from.
 
     Returns:
         A ``tuple`` of size 4 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - from_: - pointer to the graph nodes to return edge endpoints.
-        - to: - pointer to the graph nodes to return edge endpoints.
-        - numEdges: - returns number of edges.
+        - from_:  pointer to the graph nodes to return edge endpoints.
+        - to:  pointer to the graph nodes to return edge endpoints.
+        - numEdges:  returns number of edges.
     """
     from_ = hipGraphNode.from_ptr(NULL)
     to = hipGraphNode.from_ptr(NULL)
@@ -32438,13 +32764,13 @@ def hipGraphGetNodes(object graph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of graph to get the nodes.
+        graph: **[in]**  instance of graph to get the nodes.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - nodes: - pointer to return the  graph nodes.
-        - numNodes: - returns number of graph nodes.
+        - nodes:  pointer to return the  graph nodes.
+        - numNodes:  returns number of graph nodes.
     """
     nodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long numNodes
@@ -32467,13 +32793,13 @@ def hipGraphGetRootNodes(object graph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of the graph to get the nodes.
+        graph: **[in]**  instance of the graph to get the nodes.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pRootNodes: - pointer to return the graph's root nodes.
-        - pNumRootNodes: - returns the number of graph's root nodes.
+        - pRootNodes:  pointer to return the graph's root nodes.
+        - pNumRootNodes:  returns the number of graph's root nodes.
     """
     pRootNodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumRootNodes
@@ -32496,13 +32822,13 @@ def hipGraphNodeGetDependencies(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - graph node to get the dependencies from.
+        node: **[in]**  graph node to get the dependencies from.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pDependencies: - pointer to to return the dependencies.
-        - pNumDependencies: -  returns the number of graph node dependencies.
+        - pDependencies:  pointer to to return the dependencies.
+        - pNumDependencies:   returns the number of graph node dependencies.
     """
     pDependencies = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumDependencies
@@ -32526,13 +32852,13 @@ def hipGraphNodeGetDependentNodes(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - graph node to get the Dependent nodes from.
+        node: **[in]**  graph node to get the Dependent nodes from.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pDependentNodes: - pointer to return the graph dependent nodes.
-        - pNumDependentNodes: - returns the number of graph node dependent nodes.
+        - pDependentNodes:  pointer to return the graph dependent nodes.
+        - pNumDependentNodes:  returns the number of graph node dependent nodes.
     """
     pDependentNodes = hipGraphNode.from_ptr(NULL)
     cdef unsigned long pNumDependentNodes
@@ -32550,12 +32876,12 @@ def hipGraphNodeGetType(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instance of the graph to add dependencies.
+        node: **[in]**  instance of the graph to add dependencies.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pType: - pointer to the return the type
+        - pType:  pointer to the return the type
     """
     cdef chip.hipGraphNodeType pType
     _hipGraphNodeGetType__retval = hipError_t(chip.hipGraphNodeGetType(
@@ -32572,7 +32898,7 @@ def hipGraphDestroyNode(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - graph node to remove
+        node: **[in]**  graph node to remove
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32592,12 +32918,12 @@ def hipGraphClone(object originalGraph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        originalGraph: - original graph to clone from.
+        originalGraph: **[in]**  original graph to clone from.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
-        - pGraphClone: - Returns newly created cloned graph.
+        - pGraphClone:  Returns newly created cloned graph.
     """
     pGraphClone = ihipGraph.from_ptr(NULL)
     _hipGraphClone__retval = hipError_t(chip.hipGraphClone(&pGraphClone._ptr,
@@ -32614,13 +32940,14 @@ def hipGraphNodeFindInClone(object originalNode, object clonedGraph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        originalNode: - original node handle.
-        clonedGraph: - Cloned graph to query.
+        originalNode: **[in]**  original node handle.
+
+        clonedGraph: **[in]**  Cloned graph to query.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pNode: - Returns the cloned node.
+        - pNode:  Returns the cloned node.
     """
     pNode = hipGraphNode.from_ptr(NULL)
     _hipGraphNodeFindInClone__retval = hipError_t(chip.hipGraphNodeFindInClone(&pNode._ptr,
@@ -32638,16 +32965,18 @@ def hipGraphInstantiate(object graph, char * pLogBuffer, unsigned long bufferSiz
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of graph to instantiate.
-        pLogBuffer: - pointer to log buffer.
-        bufferSize: - the size of log buffer.
+        graph: **[in]**  instance of graph to instantiate.
+
+        pLogBuffer: **[out]**  pointer to log buffer.
+
+        bufferSize: **[out]**  the size of log buffer.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorOutOfMemory
-        - pGraphExec: - pointer to instantiated executable graph that is created.
-        - pErrorNode: - pointer to error node in case error occured in graph instantiation,
-                    it could modify the correponding node.
+        - pGraphExec:  pointer to instantiated executable graph that is created.
+        - pErrorNode:  pointer to error node in case error occured in graph instantiation,
+                it could modify the correponding node.
     """
     pGraphExec = hipGraphExec.from_ptr(NULL)
     pErrorNode = hipGraphNode.from_ptr(NULL)
@@ -32665,13 +32994,14 @@ def hipGraphInstantiateWithFlags(object graph, unsigned long long flags):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of graph to instantiate.
-        flags: - Flags to control instantiation.
+        graph: **[in]**  instance of graph to instantiate.
+
+        flags: **[in]**  Flags to control instantiation.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphExec: - pointer to instantiated executable graph that is created.
+        - pGraphExec:  pointer to instantiated executable graph that is created.
     """
     pGraphExec = hipGraphExec.from_ptr(NULL)
     _hipGraphInstantiateWithFlags__retval = hipError_t(chip.hipGraphInstantiateWithFlags(&pGraphExec._ptr,
@@ -32688,8 +33018,9 @@ def hipGraphLaunch(object graphExec, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graphExec: - instance of executable graph to launch.
-        stream: - instance of stream in which to launch executable graph.
+        graphExec: **[in]**  instance of executable graph to launch.
+
+        stream: **[in]**  instance of stream in which to launch executable graph.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32710,8 +33041,9 @@ def hipGraphUpload(object graphExec, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graphExec: - instance of executable graph to launch.
-        stream: - instance of stream in which to launch executable graph.
+        graphExec: **[in]**  instance of executable graph to launch.
+
+        stream: **[in]**  instance of stream in which to launch executable graph.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32732,7 +33064,7 @@ def hipGraphExecDestroy(object graphExec):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        pGraphExec: - instance of executable graph to destry.
+        pGraphExec: **[in]**  instance of executable graph to destry.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32753,14 +33085,15 @@ def hipGraphExecUpdate(object hGraphExec, object hGraph):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of executable graph to update.
-        hGraph: - graph that contains the updated parameters.
+        hGraphExec: **[in]**  instance of executable graph to update.
+
+        hGraph: **[in]**  graph that contains the updated parameters.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorGraphExecUpdateFailure
-        - hErrorNode_out: -  node which caused the permissibility check to forbid the update.
-        - updateResult_out: - Whether the graph update was permitted.
+        - hErrorNode_out:   node which caused the permissibility check to forbid the update.
+        - updateResult_out:  Whether the graph update was permitted.
     """
     hErrorNode_out = hipGraphNode.from_ptr(NULL)
     cdef chip.hipGraphExecUpdateResult updateResult_out
@@ -32779,15 +33112,17 @@ def hipGraphAddKernelNode(object graph, unsigned long numDependencies, object pN
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of graph to add the created node.
-        numDependencies: - the number of the dependencies.
-        pNodeParams: - pointer to the parameters to the kernel execution node on the GPU.
+        graph: **[in]**  instance of graph to add the created node.
+
+        numDependencies: **[in]**  the number of the dependencies.
+
+        pNodeParams: **[in]**  pointer to the parameters to the kernel execution node on the GPU.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
-        - pGraphNode: - pointer to graph node to create.
-        - pDependencies: - pointer to the dependencies on the kernel execution node.
+        - pGraphNode:  pointer to graph node to create.
+        - pDependencies:  pointer to the dependencies on the kernel execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -32806,8 +33141,9 @@ def hipGraphKernelNodeGetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instance of the node to get parameters from.
-        pNodeParams: - pointer to the parameters
+        node: **[in]**  instance of the node to get parameters from.
+
+        pNodeParams: **[out]**  pointer to the parameters
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32828,8 +33164,9 @@ def hipGraphKernelNodeSetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instance of the node to set parameters to.
-        pNodeParams: - const pointer to the parameters.
+        node: **[in]**  instance of the node to set parameters to.
+
+        pNodeParams: **[in]**  const pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32850,9 +33187,11 @@ def hipGraphExecKernelNodeSetParams(object hGraphExec, object node, object pNode
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        pNodeParams: - const pointer to the kernel node parameters.
+        hGraphExec: **[in]**  instance of the executable graph with the node.
+
+        node: **[in]**  instance of the node to set parameters to.
+
+        pNodeParams: **[in]**  const pointer to the kernel node parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32874,15 +33213,17 @@ def hipGraphAddMemcpyNode(object graph, unsigned long numDependencies, object pC
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of graph to add the created node.
-        numDependencies: - the number of the dependencies.
-        pCopyParams: - const pointer to the parameters for the memory copy.
+        graph: **[in]**  instance of graph to add the created node.
+
+        numDependencies: **[in]**  the number of the dependencies.
+
+        pCopyParams: **[in]**  const pointer to the parameters for the memory copy.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphNode: - pointer to graph node to create.
-        - pDependencies: - const pointer to the dependencies on the memcpy execution node.
+        - pGraphNode:  pointer to graph node to create.
+        - pDependencies:  const pointer to the dependencies on the memcpy execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -32901,8 +33242,9 @@ def hipGraphMemcpyNodeGetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instance of the node to get parameters from.
-        pNodeParams: - pointer to the parameters.
+        node: **[in]**  instance of the node to get parameters from.
+
+        pNodeParams: **[out]**  pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32923,8 +33265,9 @@ def hipGraphMemcpyNodeSetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instance of the node to set parameters to.
-        pNodeParams: - const pointer to the parameters.
+        node: **[in]**  instance of the node to set parameters to.
+
+        pNodeParams: **[in]**  const pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32945,9 +33288,11 @@ def hipGraphKernelNodeSetAttribute(object hNode, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hNode: - instance of the node to set parameters to.
-        attr: - the attribute node is set to.
-        value: - const pointer to the parameters.
+        hNode: **[in]**  instance of the node to set parameters to.
+
+        attr: **[in]**  the attribute node is set to.
+
+        value: **[in]**  const pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32970,9 +33315,11 @@ def hipGraphKernelNodeGetAttribute(object hNode, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hNode: - instance of the node to set parameters to.
-        attr: - the attribute node is set to.
-        value: - const pointer to the parameters.
+        hNode: **[in]**  instance of the node to set parameters to.
+
+        attr: **[in]**  the attribute node is set to.
+
+        value: **[in]**  const pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -32995,9 +33342,11 @@ def hipGraphExecMemcpyNodeSetParams(object hGraphExec, object node, object pNode
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        pNodeParams: - const pointer to the kernel node parameters.
+        hGraphExec: **[in]**  instance of the executable graph with the node.
+
+        node: **[in]**  instance of the node to set parameters to.
+
+        pNodeParams: **[in]**  const pointer to the kernel node parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33019,18 +33368,23 @@ def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of graph to add the created node.
-        numDependencies: - the number of the dependencies.
-        dst: - pointer to memory address to the destination.
-        src: - pointer to memory address to the source.
-        count: - the size of the memory to copy.
-        kind: - the type of memory copy.
+        graph: **[in]**  instance of graph to add the created node.
+
+        numDependencies: **[in]**  the number of the dependencies.
+
+        dst: **[in]**  pointer to memory address to the destination.
+
+        src: **[in]**  pointer to memory address to the source.
+
+        count: **[in]**  the size of the memory to copy.
+
+        kind: **[in]**  the type of memory copy.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphNode: - pointer to graph node to create.
-        - pDependencies: - const pointer to the dependencies on the memcpy execution node.
+        - pGraphNode:  pointer to graph node to create.
+        - pDependencies:  const pointer to the dependencies on the memcpy execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -33052,11 +33406,15 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instance of the node to set parameters to.
-        dst: - pointer to memory address to the destination.
-        src: - pointer to memory address to the source.
-        count: - the size of the memory to copy.
-        kind: - the type of memory copy.
+        node: **[in]**  instance of the node to set parameters to.
+
+        dst: **[in]**  pointer to memory address to the destination.
+
+        src: **[in]**  pointer to memory address to the source.
+
+        count: **[in]**  the size of the memory to copy.
+
+        kind: **[in]**  the type of memory copy.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33081,12 +33439,17 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        dst: - pointer to memory address to the destination.
-        src: - pointer to memory address to the source.
-        count: - the size of the memory to copy.
-        kind: - the type of memory copy.
+        hGraphExec: **[in]**  instance of the executable graph with the node.
+
+        node: **[in]**  instance of the node to set parameters to.
+
+        dst: **[in]**  pointer to memory address to the destination.
+
+        src: **[in]**  pointer to memory address to the source.
+
+        count: **[in]**  the size of the memory to copy.
+
+        kind: **[in]**  the type of memory copy.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33111,19 +33474,25 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies,
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of graph to add the created node.
-        numDependencies: - the number of the dependencies.
-        dst: - pointer to memory address to the destination.
-        symbol: - Device symbol address.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+        graph: **[in]**  instance of graph to add the created node.
+
+        numDependencies: **[in]**  the number of the dependencies.
+
+        dst: **[in]**  pointer to memory address to the destination.
+
+        symbol: **[in]**  Device symbol address.
+
+        count: **[in]**  the size of the memory to copy.
+
+        offset: **[in]**  Offset from start of symbol in bytes.
+
+        kind: **[in]**  the type of memory copy.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphNode: - pointer to graph node to create.
-        - pDependencies: - const pointer to the dependencies on the memcpy execution node.
+        - pGraphNode:  pointer to graph node to create.
+        - pDependencies:  const pointer to the dependencies on the memcpy execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -33145,12 +33514,17 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instance of the node to set parameters to.
-        dst: - pointer to memory address to the destination.
-        symbol: - Device symbol address.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+        node: **[in]**  instance of the node to set parameters to.
+
+        dst: **[in]**  pointer to memory address to the destination.
+
+        symbol: **[in]**  Device symbol address.
+
+        count: **[in]**  the size of the memory to copy.
+
+        offset: **[in]**  Offset from start of symbol in bytes.
+
+        kind: **[in]**  the type of memory copy.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33175,13 +33549,19 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        dst: - pointer to memory address to the destination.
-        symbol: - Device symbol address.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+        hGraphExec: **[in]**  instance of the executable graph with the node.
+
+        node: **[in]**  instance of the node to set parameters to.
+
+        dst: **[in]**  pointer to memory address to the destination.
+
+        symbol: **[in]**  Device symbol address.
+
+        count: **[in]**  the size of the memory to copy.
+
+        offset: **[in]**  Offset from start of symbol in bytes.
+
+        kind: **[in]**  the type of memory copy.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33206,19 +33586,25 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, o
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of graph to add the created node.
-        numDependencies: - the number of the dependencies.
-        symbol: - Device symbol address.
-        src: - pointer to memory address of the src.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+        graph: **[in]**  instance of graph to add the created node.
+
+        numDependencies: **[in]**  the number of the dependencies.
+
+        symbol: **[in]**  Device symbol address.
+
+        src: **[in]**  pointer to memory address of the src.
+
+        count: **[in]**  the size of the memory to copy.
+
+        offset: **[in]**  Offset from start of symbol in bytes.
+
+        kind: **[in]**  the type of memory copy.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphNode: - pointer to graph node to create.
-        - pDependencies: - const pointer to the dependencies on the memcpy execution node.
+        - pGraphNode:  pointer to graph node to create.
+        - pDependencies:  const pointer to the dependencies on the memcpy execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -33240,12 +33626,17 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instance of the node to set parameters to.
-        symbol: - Device symbol address.
-        src: - pointer to memory address of the src.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+        node: **[in]**  instance of the node to set parameters to.
+
+        symbol: **[in]**  Device symbol address.
+
+        src: **[in]**  pointer to memory address of the src.
+
+        count: **[in]**  the size of the memory to copy.
+
+        offset: **[in]**  Offset from start of symbol in bytes.
+
+        kind: **[in]**  the type of memory copy.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33270,13 +33661,19 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        symbol: - Device symbol address.
-        src: - pointer to memory address of the src.
-        count: - the size of the memory to copy.
-        offset: - Offset from start of symbol in bytes.
-        kind: - the type of memory copy.
+        hGraphExec: **[in]**  instance of the executable graph with the node.
+
+        node: **[in]**  instance of the node to set parameters to.
+
+        symbol: **[in]**  Device symbol address.
+
+        src: **[in]**  pointer to memory address of the src.
+
+        count: **[in]**  the size of the memory to copy.
+
+        offset: **[in]**  Offset from start of symbol in bytes.
+
+        kind: **[in]**  the type of memory copy.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33301,15 +33698,17 @@ def hipGraphAddMemsetNode(object graph, unsigned long numDependencies, object pM
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of the graph to add the created node.
-        numDependencies: - the number of the dependencies.
-        pMemsetParams: - const pointer to the parameters for the memory set.
+        graph: **[in]**  instance of the graph to add the created node.
+
+        numDependencies: **[in]**  the number of the dependencies.
+
+        pMemsetParams: **[in]**  const pointer to the parameters for the memory set.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphNode: - pointer to the graph node to create.
-        - pDependencies: - const pointer to the dependencies on the memset execution node.
+        - pGraphNode:  pointer to the graph node to create.
+        - pDependencies:  const pointer to the dependencies on the memset execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -33328,8 +33727,9 @@ def hipGraphMemsetNodeGetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instane of the node to get parameters from.
-        pNodeParams: - pointer to the parameters.
+        node: **[in]**  instane of the node to get parameters from.
+
+        pNodeParams: **[out]**  pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33350,8 +33750,9 @@ def hipGraphMemsetNodeSetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instance of the node to set parameters to.
-        pNodeParams: - pointer to the parameters.
+        node: **[in]**  instance of the node to set parameters to.
+
+        pNodeParams: **[in]**  pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33372,9 +33773,11 @@ def hipGraphExecMemsetNodeSetParams(object hGraphExec, object node, object pNode
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        pNodeParams: - pointer to the parameters.
+        hGraphExec: **[in]**  instance of the executable graph with the node.
+
+        node: **[in]**  instance of the node to set parameters to.
+
+        pNodeParams: **[in]**  pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33396,15 +33799,17 @@ def hipGraphAddHostNode(object graph, unsigned long numDependencies, object pNod
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of the graph to add the created node.
-        numDependencies: - the number of the dependencies.
-        pNodeParams: -pointer to the parameters.
+        graph: **[in]**  instance of the graph to add the created node.
+
+        numDependencies: **[in]**  the number of the dependencies.
+
+        pNodeParams: **[in]** pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphNode: - pointer to the graph node to create.
-        - pDependencies: - const pointer to the dependencies on the memset execution node.
+        - pGraphNode:  pointer to the graph node to create.
+        - pDependencies:  const pointer to the dependencies on the memset execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -33423,8 +33828,9 @@ def hipGraphHostNodeGetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instane of the node to get parameters from.
-        pNodeParams: - pointer to the parameters.
+        node: **[in]**  instane of the node to get parameters from.
+
+        pNodeParams: **[out]**  pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33445,8 +33851,9 @@ def hipGraphHostNodeSetParams(object node, object pNodeParams):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instance of the node to set parameters to.
-        pNodeParams: - pointer to the parameters.
+        node: **[in]**  instance of the node to set parameters to.
+
+        pNodeParams: **[in]**  pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33467,9 +33874,11 @@ def hipGraphExecHostNodeSetParams(object hGraphExec, object node, object pNodePa
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - instance of the node to set parameters to.
-        pNodeParams: - pointer to the parameters.
+        hGraphExec: **[in]**  instance of the executable graph with the node.
+
+        node: **[in]**  instance of the node to set parameters to.
+
+        pNodeParams: **[in]**  pointer to the parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33491,15 +33900,17 @@ def hipGraphAddChildGraphNode(object graph, unsigned long numDependencies, objec
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instance of the graph to add the created node.
-        numDependencies: - the number of the dependencies.
-        childGraph: - the graph to clone into this node
+        graph: **[in]**  instance of the graph to add the created node.
+
+        numDependencies: **[in]**  the number of the dependencies.
+
+        childGraph: **[in]**  the graph to clone into this node
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphNode: - pointer to the graph node to create.
-        - pDependencies: - const pointer to the dependencies on the memset execution node.
+        - pGraphNode:  pointer to the graph node to create.
+        - pDependencies:  const pointer to the dependencies on the memset execution node.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -33518,12 +33929,12 @@ def hipGraphChildGraphNodeGetGraph(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instane of the node to get child graph.
+        node: **[in]**  instane of the node to get child graph.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraph: - pointer to get the graph.
+        - pGraph:  pointer to get the graph.
     """
     pGraph = ihipGraph.from_ptr(NULL)
     _hipGraphChildGraphNodeGetGraph__retval = hipError_t(chip.hipGraphChildGraphNodeGetGraph(
@@ -33540,9 +33951,11 @@ def hipGraphExecChildGraphNodeSetParams(object hGraphExec, object node, object c
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        node: - node from the graph which was used to instantiate graphExec.
-        childGraph: - child graph with updated parameters.
+        hGraphExec: **[in]**  instance of the executable graph with the node.
+
+        node: **[in]**  node from the graph which was used to instantiate graphExec.
+
+        childGraph: **[in]**  child graph with updated parameters.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33564,14 +33977,15 @@ def hipGraphAddEmptyNode(object graph, unsigned long numDependencies):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instane of the graph the node is add to.
-        numDependencies: - the number of dependencies.
+        graph: **[in]**  instane of the graph the node is add to.
+
+        numDependencies: **[in]**  the number of dependencies.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphNode: - pointer to the graph node to create and add to the graph.
-        - pDependencies: - const pointer to the node dependenties.
+        - pGraphNode:  pointer to the graph node to create and add to the graph.
+        - pDependencies:  const pointer to the node dependenties.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -33589,15 +34003,17 @@ def hipGraphAddEventRecordNode(object graph, unsigned long numDependencies, obje
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instane of the graph the node to be added.
-        numDependencies: - the number of dependencies.
-        event: - Event for the node.
+        graph: **[in]**  instane of the graph the node to be added.
+
+        numDependencies: **[in]**  the number of dependencies.
+
+        event: **[in]**  Event for the node.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphNode: - pointer to the graph node to create and add to the graph.
-        - pDependencies: - const pointer to the node dependenties.
+        - pGraphNode:  pointer to the graph node to create and add to the graph.
+        - pDependencies:  const pointer to the node dependenties.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -33616,12 +34032,12 @@ def hipGraphEventRecordNodeGetEvent(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: -  instane of the node to get event from.
+        node: **[in]**   instane of the node to get event from.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - event_out: - Pointer to return the event.
+        - event_out:  Pointer to return the event.
     """
     event_out = ihipEvent_t.from_ptr(NULL)
     _hipGraphEventRecordNodeGetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeGetEvent(
@@ -33638,8 +34054,9 @@ def hipGraphEventRecordNodeSetEvent(object node, object event):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instane of the node to set event to.
-        event: - pointer to the event.
+        node: **[in]**  instane of the node to set event to.
+
+        event: **[in]**  pointer to the event.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33660,9 +34077,11 @@ def hipGraphExecEventRecordNodeSetEvent(object hGraphExec, object hNode, object 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        hNode: - node from the graph which was used to instantiate graphExec.
-        event: - pointer to the event.
+        hGraphExec: **[in]**  instance of the executable graph with the node.
+
+        hNode: **[in]**  node from the graph which was used to instantiate graphExec.
+
+        event: **[in]**  pointer to the event.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33684,15 +34103,17 @@ def hipGraphAddEventWaitNode(object graph, unsigned long numDependencies, object
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - instane of the graph the node to be added.
-        numDependencies: - the number of dependencies.
-        event: - Event for the node.
+        graph: **[in]**  instane of the graph the node to be added.
+
+        numDependencies: **[in]**  the number of dependencies.
+
+        event: **[in]**  Event for the node.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - pGraphNode: - pointer to the graph node to create and add to the graph.
-        - pDependencies: - const pointer to the node dependenties.
+        - pGraphNode:  pointer to the graph node to create and add to the graph.
+        - pDependencies:  const pointer to the node dependenties.
     """
     pGraphNode = hipGraphNode.from_ptr(NULL)
     pDependencies = hipGraphNode.from_ptr(NULL)
@@ -33711,12 +34132,12 @@ def hipGraphEventWaitNodeGetEvent(object node):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: -  instane of the node to get event from.
+        node: **[in]**   instane of the node to get event from.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - event_out: - Pointer to return the event.
+        - event_out:  Pointer to return the event.
     """
     event_out = ihipEvent_t.from_ptr(NULL)
     _hipGraphEventWaitNodeGetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeGetEvent(
@@ -33733,8 +34154,9 @@ def hipGraphEventWaitNodeSetEvent(object node, object event):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        node: - instane of the node to set event to.
-        event: - pointer to the event.
+        node: **[in]**  instane of the node to set event to.
+
+        event: **[in]**  pointer to the event.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33755,9 +34177,11 @@ def hipGraphExecEventWaitNodeSetEvent(object hGraphExec, object hNode, object ev
         it is still open to changes and may have outstanding issues.
 
     Args:
-        hGraphExec: - instance of the executable graph with the node.
-        hNode: - node from the graph which was used to instantiate graphExec.
-        event: - pointer to the event.
+        hGraphExec: **[in]**  instance of the executable graph with the node.
+
+        hNode: **[in]**  node from the graph which was used to instantiate graphExec.
+
+        event: **[in]**  pointer to the event.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33779,9 +34203,11 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device: - device the attr is get for.
-        attr: - attr to get.
-        value: - value for specific attr.
+        device: **[in]**  device the attr is get for.
+
+        attr: **[in]**  attr to get.
+
+        value: **[out]**  value for specific attr.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33803,9 +34229,11 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device: - device the attr is set for.
-        attr: - attr to set.
-        value: - value for specific attr.
+        device: **[in]**  device the attr is set for.
+
+        attr: **[in]**  attr to set.
+
+        value: **[in]**  value for specific attr.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33827,7 +34255,7 @@ def hipDeviceGraphMemTrim(int device):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        device: - device the memory is used for graphs
+        device: **[in]**  device the memory is used for graphs
     """
     _hipDeviceGraphMemTrim__retval = hipError_t(chip.hipDeviceGraphMemTrim(device))    # fully specified
     return (_hipDeviceGraphMemTrim__retval,)
@@ -33842,15 +34270,18 @@ def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr: - pointer to pass to destroy function.
-        destroy: - destroy callback to remove resource.
-        initialRefcount: - reference to resource.
-        flags: - flags passed to API.
+        ptr: **[in]**  pointer to pass to destroy function.
+
+        destroy: **[in]**  destroy callback to remove resource.
+
+        initialRefcount: **[in]**  reference to resource.
+
+        flags: **[in]**  flags passed to API.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue
-        - object_out: - pointer to instace of userobj.
+        - object_out:  pointer to instace of userobj.
     """
     object_out = hipUserObject.from_ptr(NULL)
     _hipUserObjectCreate__retval = hipError_t(chip.hipUserObjectCreate(&object_out._ptr,
@@ -33868,8 +34299,9 @@ def hipUserObjectRelease(object object, unsigned int count):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        object: - pointer to instace of userobj.
-        count: - reference to resource to be retained.
+        object: **[in]**  pointer to instace of userobj.
+
+        count: **[in]**  reference to resource to be retained.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33889,8 +34321,9 @@ def hipUserObjectRetain(object object, unsigned int count):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        object: - pointer to instace of userobj.
-        count: - reference to resource to be retained.
+        object: **[in]**  pointer to instace of userobj.
+
+        count: **[in]**  reference to resource to be retained.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33910,10 +34343,13 @@ def hipGraphRetainUserObject(object graph, object object, unsigned int count, un
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - pointer to graph to retain the user object for.
-        object: - pointer to instace of userobj.
-        count: - reference to resource to be retained.
-        flags: - flags passed to API.
+        graph: **[in]**  pointer to graph to retain the user object for.
+
+        object: **[in]**  pointer to instace of userobj.
+
+        count: **[in]**  reference to resource to be retained.
+
+        flags: **[in]**  flags passed to API.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33934,9 +34370,11 @@ def hipGraphReleaseUserObject(object graph, object object, unsigned int count):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        graph: - pointer to graph to retain the user object for.
-        object: - pointer to instace of userobj.
-        count: - reference to resource to be retained.
+        graph: **[in]**  pointer to graph to retain the user object for.
+
+        object: **[in]**  pointer to instace of userobj.
+
+        count: **[in]**  reference to resource to be retained.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33957,8 +34395,9 @@ def hipMemAddressFree(object devPtr, unsigned long size):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        devPtr: - starting address of the range.
-        size: - size of the range.
+        devPtr: **[in]**  starting address of the range.
+
+        size: **[in]**  size of the range.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -33978,15 +34417,18 @@ def hipMemAddressReserve(unsigned long size, unsigned long alignment, object add
         it is still open to changes and may have outstanding issues.
 
     Args:
-        size: - size of the reservation.
-        alignment: - alignment of the address.
-        addr: - requested starting address of the range.
-        flags: - currently unused, must be zero.
+        size: **[in]**  size of the reservation.
+
+        alignment: **[in]**  alignment of the address.
+
+        addr: **[in]**  requested starting address of the range.
+
+        flags: **[in]**  currently unused, must be zero.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-        - ptr: - starting address of the reserved range.
+        - ptr:  starting address of the reserved range.
     """
     ptr = hip._util.types.DataHandle.from_ptr(NULL)
     _hipMemAddressReserve__retval = hipError_t(chip.hipMemAddressReserve(
@@ -34004,14 +34446,16 @@ def hipMemCreate(unsigned long size, object prop, unsigned long long flags):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        size: - size of the allocation.
-        prop: - properties of the allocation.
-        flags: - currently unused, must be zero.
+        size: **[in]**  size of the allocation.
+
+        prop: **[in]**  properties of the allocation.
+
+        flags: **[in]**  currently unused, must be zero.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-        - handle: - value of the returned handle.
+        - handle:  value of the returned handle.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemCreate__retval = hipError_t(chip.hipMemCreate(&handle._ptr,size,
@@ -34028,10 +34472,13 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
         it is still open to changes and may have outstanding issues.
 
     Args:
-        shareableHandle: - value of the returned handle.
-        handle: - handle to share.
-        handleType: - type of the shareable handle.
-        flags: - currently unused, must be zero.
+        shareableHandle: **[out]**  value of the returned handle.
+
+        handle: **[in]**  handle to share.
+
+        handleType: **[in]**  type of the shareable handle.
+
+        flags: **[in]**  currently unused, must be zero.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -34054,13 +34501,14 @@ def hipMemGetAccess(object location, object ptr):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        location: - target location.
-        ptr: - address to check the access flags.
+        location: **[in]**  target location.
+
+        ptr: **[in]**  address to check the access flags.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-        - flags: - flags for this location.
+        - flags:  flags for this location.
     """
     cdef unsigned long long flags
     _hipMemGetAccess__retval = hipError_t(chip.hipMemGetAccess(&flags,
@@ -34078,13 +34526,14 @@ def hipMemGetAllocationGranularity(object prop, object option):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        prop: - location properties.
-        option: - determines which granularity to return.
+        prop: **[in]**  location properties.
+
+        option: **[in]**  determines which granularity to return.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-        - granularity: - returned granularity.
+        - granularity:  returned granularity.
     """
     cdef unsigned long granularity
     if not isinstance(option,_hipMemAllocationGranularity_flags__Base):
@@ -34103,8 +34552,9 @@ def hipMemGetAllocationPropertiesFromHandle(object prop, object handle):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        prop: - properties of the given handle.
-        handle: - handle to perform the query on.
+        prop: **[out]**  properties of the given handle.
+
+        handle: **[in]**  handle to perform the query on.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -34125,13 +34575,14 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        osHandle: - shareable handle representing the memory allocation.
-        shHandleType: - handle type.
+        osHandle: **[in]**  shareable handle representing the memory allocation.
+
+        shHandleType: **[in]**  handle type.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-        - handle: - returned value.
+        - handle:  returned value.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     if not isinstance(shHandleType,_hipMemAllocationHandleType__Base):
@@ -34150,11 +34601,15 @@ def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handl
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr: - address where the memory will be mapped.
-        size: - size of the mapping.
-        offset: - offset into the memory, currently must be zero.
-        handle: - memory allocation to be mapped.
-        flags: - currently unused, must be zero.
+        ptr: **[in]**  address where the memory will be mapped.
+
+        size: **[in]**  size of the mapping.
+
+        offset: **[in]**  offset into the memory, currently must be zero.
+
+        handle: **[in]**  memory allocation to be mapped.
+
+        flags: **[in]**  currently unused, must be zero.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -34175,9 +34630,11 @@ def hipMemMapArrayAsync(object mapInfoList, unsigned int count, object stream):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        mapInfoList: - list of hipArrayMapInfo.
-        count: - number of hipArrayMapInfo in mapInfoList.
-        stream: - stream identifier for the stream to use for map or unmap operations.
+        mapInfoList: **[in]**  list of hipArrayMapInfo.
+
+        count: **[in]**  number of hipArrayMapInfo in mapInfoList.
+
+        stream: **[in]**  stream identifier for the stream to use for map or unmap operations.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -34198,7 +34655,7 @@ def hipMemRelease(object handle):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        handle: - handle of the memory allocation.
+        handle: **[in]**  handle of the memory allocation.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -34218,12 +34675,12 @@ def hipMemRetainAllocationHandle(object addr):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        addr: - address to look up.
+        addr: **[in]**  address to look up.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
-        - handle: - handle representing addr.
+        - handle:  handle representing addr.
     """
     handle = ihipMemGenericAllocationHandle.from_ptr(NULL)
     _hipMemRetainAllocationHandle__retval = hipError_t(chip.hipMemRetainAllocationHandle(&handle._ptr,
@@ -34240,10 +34697,13 @@ def hipMemSetAccess(object ptr, unsigned long size, object desc, unsigned long c
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr: - starting address of the virtual address range.
-        size: - size of the range.
-        desc: - array of hipMemAccessDesc.
-        count: - number of hipMemAccessDesc in desc.
+        ptr: **[in]**  starting address of the virtual address range.
+
+        size: **[in]**  size of the range.
+
+        desc: **[in]**  array of hipMemAccessDesc.
+
+        count: **[in]**  number of hipMemAccessDesc in desc.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
@@ -34264,8 +34724,9 @@ def hipMemUnmap(object ptr, unsigned long size):
         it is still open to changes and may have outstanding issues.
 
     Args:
-        ptr: - starting address of the range to unmap.
-        size: - size of the virtual address range.
+        ptr: **[in]**  starting address of the range to unmap.
+
+        size: **[in]**  size of the virtual address range.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):

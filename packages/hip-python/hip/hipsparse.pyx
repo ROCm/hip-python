@@ -1794,20 +1794,19 @@ def hipsparseDestroyPruneInfo(object info):
 def hipsparseSaxpyi(object handle, int nnz, object alpha, object xVal, object xInd, object y, object idxBase):
     r"""Scale a sparse vector and add it to a dense vector.
 
-    \details
     ``hipsparseXaxpyi`` multiplies the sparse vector math:`x` with scalar math:`\alpha` and
     adds the result to the dense vector math:`y`, such that
 
     .. math::
 
-        y := y + \alpha \cdot x
+       y := y + \alpha \cdot x
 
     .. code-block::
 
-        for(i = 0; i < nnz; ++i)
-        {
-            y[x_ind[i]] = y[x_ind[i]] + alpha * x_val[i];
-        }
+       for(i = 0; i < nnz; ++i)
+       {
+           y[x_ind[i]] = y[x_ind[i]] + alpha * x_val[i];
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -1880,14 +1879,14 @@ def hipsparseSdoti(object handle, int nnz, object xVal, object xInd, object y, o
 
     .. math::
 
-        \text{result} := y^T x
+       \text{result} := y^T x
 
     .. code-block::
 
-        for(i = 0; i < nnz; ++i)
-        {
-            result += x_val[i] * y[x_ind[i]];
-        }
+       for(i = 0; i < nnz; ++i)
+       {
+           result += x_val[i] * y[x_ind[i]];
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -1961,14 +1960,14 @@ def hipsparseCdotci(object handle, int nnz, object xVal, object xInd, object y, 
 
     .. math::
 
-        \text{result} := \bar{x}^H y
+       \text{result} := \bar{x}^H y
 
     .. code-block::
 
-        for(i = 0; i < nnz; ++i)
-        {
-            result += conj(x_val[i]) * y[x_ind[i]];
-        }
+       for(i = 0; i < nnz; ++i)
+       {
+           result += conj(x_val[i]) * y[x_ind[i]];
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -2011,10 +2010,10 @@ def hipsparseSgthr(object handle, int nnz, object y, object xVal, object xInd, o
 
     .. code-block::
 
-        for(i = 0; i < nnz; ++i)
-        {
-            x_val[i] = y[x_ind[i]];
-        }
+       for(i = 0; i < nnz; ++i)
+       {
+           x_val[i] = y[x_ind[i]];
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -2085,11 +2084,11 @@ def hipsparseSgthrz(object handle, int nnz, object y, object xVal, object xInd, 
 
     .. code-block::
 
-        for(i = 0; i < nnz; ++i)
-        {
-            x_val[i]    = y[x_ind[i]];
-            y[x_ind[i]] = 0;
-        }
+       for(i = 0; i < nnz; ++i)
+       {
+           x_val[i]    = y[x_ind[i]];
+           y[x_ind[i]] = 0;
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -2158,18 +2157,18 @@ def hipsparseSroti(object handle, int nnz, object xVal, object xInd, object y, o
 
     .. math::
 
-        G = \begin{pmatrix} c & s \\ -s & c \end{pmatrix}
+       G = \begin{pmatrix} c & s \\ -s & c \end{pmatrix}
 
     .. code-block::
 
-        for(i = 0; i < nnz; ++i)
-        {
-            x_tmp = x_val[i];
-            y_tmp = y[x_ind[i]];
+       for(i = 0; i < nnz; ++i)
+       {
+           x_tmp = x_val[i];
+           y_tmp = y[x_ind[i]];
 
-            x_val[i]    = c * x_tmp + s * y_tmp;
-            y[x_ind[i]] = c * y_tmp - s * x_tmp;
-        }
+           x_val[i]    = c * x_tmp + s * y_tmp;
+           y[x_ind[i]] = c * y_tmp - s * x_tmp;
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -2215,10 +2214,10 @@ def hipsparseSsctr(object handle, int nnz, object xVal, object xInd, object y, o
 
     .. code-block::
 
-        for(i = 0; i < nnz; ++i)
-        {
-            y[x_ind[i]] = x_val[i];
-        }
+       for(i = 0; i < nnz; ++i)
+       {
+           y[x_ind[i]] = x_val[i];
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -2282,7 +2281,6 @@ def hipsparseZsctr(object handle, int nnz, object xVal, object xInd, object y, o
 def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object x, object beta, object y):
     r"""Sparse matrix vector multiplication using CSR storage format
 
-    \details
     ``hipsparseXcsrmv`` multiplies the scalar math:`\alpha` with a sparse math:`m \times n`
     matrix, defined in CSR storage format, and the dense vector math:`x` and adds the
     result to the dense vector math:`y` that is multiplied by the scalar math:`\beta`,
@@ -2290,31 +2288,31 @@ def hipsparseScsrmv(object handle, object transA, int m, int n, int nnz, object 
 
     .. math::
 
-        y := \alpha \cdot op(A) \cdot x + \beta \cdot y,
+       y := \alpha \cdot op(A) \cdot x + \beta \cdot y,
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     .. code-block::
 
-        for(i = 0; i < m; ++i)
-        {
-            y[i] = beta * y[i];
+       for(i = 0; i < m; ++i)
+       {
+           y[i] = beta * y[i];
 
-            for(j = csr_row_ptr[i]; j < csr_row_ptr[i + 1]; ++j)
-            {
-                y[i] = y[i] + alpha * csr_val[j] * x[csr_col_ind[j]];
-            }
-        }
+           for(j = csr_row_ptr[i]; j < csr_row_ptr[i + 1]; ++j)
+           {
+               y[i] = y[i] + alpha * csr_val[j] * x[csr_col_ind[j]];
+           }
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -2663,26 +2661,25 @@ def hipsparseZcsrsv2_analysis(object handle, object transA, int m, int nnz, obje
 def hipsparseScsrsv2_solve(object handle, object transA, int m, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object info, object f, object x, object policy, object pBuffer):
     r"""Sparse triangular solve using CSR storage format
 
-    \details
     ``hipsparseXcsrsv2_solve`` solves a sparse triangular linear system of a sparse
     math:`m \times m` matrix, defined in CSR storage format, a dense solution vector
     math:`y` and the right-hand side math:`x` that is multiplied by math:`\alpha`, such that
 
     .. math::
 
-        op(A) \cdot y = \alpha \cdot x,
+       op(A) \cdot y = \alpha \cdot x,
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     Note:
         The sparse CSR matrix has to be sorted. This can be achieved by calling
@@ -2786,7 +2783,6 @@ def hipsparseZcsrsv2_solve(object handle, object transA, int m, int nnz, object 
 def hipsparseShybmv(object handle, object transA, object alpha, object descrA, object hybA, object x, object beta, object y):
     r"""Sparse matrix vector multiplication using HYB storage format
 
-    \details
     ``hipsparseXhybmv`` multiplies the scalar math:`\alpha` with a sparse math:`m \times n`
     matrix, defined in HYB storage format, and the dense vector math:`x` and adds the
     result to the dense vector math:`y` that is multiplied by the scalar math:`\beta`,
@@ -2794,19 +2790,19 @@ def hipsparseShybmv(object handle, object transA, object alpha, object descrA, o
 
     .. math::
 
-        y := \alpha \cdot op(A) \cdot x + \beta \cdot y,
+       y := \alpha \cdot op(A) \cdot x + \beta \cdot y,
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -2885,8 +2881,8 @@ def hipsparseZhybmv(object handle, object transA, object alpha, object descrA, o
 def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object x, object beta, object y):
     r"""Sparse matrix vector multiplication using BSR storage format
 
-    \details
     ``hipsparseXbsrmv`` multiplies the scalar math:`\alpha` with a sparse
+
     math:`(mb \cdot \text{block_dim}) \times (nb \cdot \text{block_dim})`
     matrix, defined in BSR storage format, and the dense vector math:`x` and adds the
     result to the dense vector math:`y` that is multiplied by the scalar math:`\beta`,
@@ -2894,19 +2890,19 @@ def hipsparseSbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 
     .. math::
 
-        y := \alpha \cdot op(A) \cdot x + \beta \cdot y,
+       y := \alpha \cdot op(A) \cdot x + \beta \cdot y,
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -3001,8 +2997,8 @@ def hipsparseZbsrmv(object handle, object dirA, object transA, int mb, int nb, i
 def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, int mb, int nb, int nnzb, object alpha, object descr, object bsrVal, object bsrMaskPtr, object bsrRowPtr, object bsrEndPtr, object bsrColInd, int blockDim, object x, object beta, object y):
     r"""Sparse matrix vector multiplication with mask operation using BSR storage format
 
-    \details
     ``hipsparseXbsrxmv`` multiplies the scalar math:`\alpha` with a sparse
+
     math:`(mb \cdot \text{block_dim}) \times (nb \cdot \text{block_dim})`
     modified matrix, defined in BSR storage format, and the dense vector math:`x` and adds the
     result to the dense vector math:`y` that is multiplied by the scalar math:`\beta`,
@@ -3010,19 +3006,19 @@ def hipsparseSbsrxmv(object handle, object dir, object trans, int sizeOfMask, in
 
     .. math::
 
-        y := \left( \alpha \cdot op(A) \cdot x + \beta \cdot y \right)\left( \text{mask} \right),
+       y := \left( \alpha \cdot op(A) \cdot x + \beta \cdot y \right)\left( \text{mask} \right),
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -3409,26 +3405,25 @@ def hipsparseZbsrsv2_analysis(object handle, object dirA, object transA, int mb,
 def hipsparseSbsrsv2_solve(object handle, object dirA, object transA, int mb, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object f, object x, object policy, object pBuffer):
     r"""Sparse triangular solve using BSR storage format
 
-    \details
     ``hipsparseXbsrsv2_solve`` solves a sparse triangular linear system of a sparse
     math:`m \times m` matrix, defined in BSR storage format, a dense solution vector
     math:`y` and the right-hand side math:`x` that is multiplied by math:`\alpha`, such that
 
     .. math::
 
-        op(A) \cdot y = \alpha \cdot x,
+       op(A) \cdot y = \alpha \cdot x,
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     Note:
         The sparse BSR matrix has to be sorted.
@@ -3593,26 +3588,25 @@ def hipsparseZgemvi_bufferSize(object handle, object transA, int m, int n, int n
 def hipsparseSgemvi(object handle, object transA, int m, int n, object alpha, object A, int lda, int nnz, object x, object xInd, object beta, object y, object idxBase, object pBuffer):
     r"""Dense matrix sparse vector multiplication
 
-    \details
     ``hipsparseXgemvi`` multiplies the scalar math:`\alpha` with a dense math:`m \times n`
     matrix math:`A` and the sparse vector math:`x` and adds the result to the dense vector
     math:`y` that is multiplied by the scalar math:`\beta`, such that
 
     .. math::
 
-        y := \alpha \cdot op(A) \cdot x + \beta \cdot y,
+       y := \alpha \cdot op(A) \cdot x + \beta \cdot y,
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -3703,7 +3697,6 @@ def hipsparseZgemvi(object handle, object transA, int m, int n, object alpha, ob
 def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, int mb, int n, int kb, int nnzb, object alpha, object descrA, object bsrValA, object bsrRowPtrA, object bsrColIndA, int blockDim, object B, int ldb, object beta, object C, int ldc):
     r"""Sparse matrix dense matrix multiplication using BSR storage format
 
-    \details
     ``hipsparseXbsrmm`` multiplies the scalar math:`\alpha` with a sparse math:`mb \times kb`
     matrix math:`A`, defined in BSR storage format, and the dense math:`k \times n`
     matrix math:`B` (where math:`k = block\_dim \times kb`) and adds the result to the dense
@@ -3712,28 +3705,28 @@ def hipsparseSbsrmm(object handle, object dirA, object transA, object transB, in
 
     .. math::
 
-        C := \alpha \cdot op(A) \cdot op(B) + \beta \cdot C,
+       C := \alpha \cdot op(A) \cdot op(B) + \beta \cdot C,
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+       \end{array}
+       \right.
 
     and
 
     .. math::
 
-        op(B) = \left\{
-        \begin{array}{ll}
-            B,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            B^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
-        \end{array}
-        \right.
+       op(B) = \left\{
+       \begin{array}{ll}
+           B,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           B^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
+       \end{array}
+       \right.
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -3836,7 +3829,6 @@ def hipsparseZbsrmm(object handle, object dirA, object transA, object transB, in
 def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     r"""Sparse matrix dense matrix multiplication using CSR storage format
 
-    \details
     ``hipsparseXcsrmm`` multiplies the scalar math:`\alpha` with a sparse math:`m \times k`
     matrix math:`A`, defined in CSR storage format, and the dense math:`k \times n`
     matrix math:`B` and adds the result to the dense math:`m \times n` matrix math:`C` that
@@ -3844,34 +3836,34 @@ def hipsparseScsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 
     .. math::
 
-        C := \alpha \cdot op(A) \cdot B + \beta \cdot C,
+       C := \alpha \cdot op(A) \cdot B + \beta \cdot C,
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     .. code-block::
 
-        for(i = 0; i < ldc; ++i)
-        {
-            for(j = 0; j < n; ++j)
-            {
-                C[i][j] = beta * C[i][j];
+       for(i = 0; i < ldc; ++i)
+       {
+           for(j = 0; j < n; ++j)
+           {
+               C[i][j] = beta * C[i][j];
 
-                for(k = csr_row_ptr[i]; k < csr_row_ptr[i + 1]; ++k)
-                {
-                    C[i][j] += alpha * csr_val[k] * B[csr_col_ind[k]][j];
-                }
-            }
-        }
+               for(k = csr_row_ptr[i]; k < csr_row_ptr[i + 1]; ++k)
+               {
+                   C[i][j] += alpha * csr_val[k] * B[csr_col_ind[k]][j];
+               }
+           }
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -3955,7 +3947,6 @@ def hipsparseZcsrmm(object handle, object transA, int m, int n, int k, int nnz, 
 def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, int k, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object beta, object C, int ldc):
     r"""Sparse matrix dense matrix multiplication using CSR storage format
 
-    \details
     ``hipsparseXcsrmm2`` multiplies the scalar math:`\alpha` with a sparse math:`m \times k`
     matrix math:`A`, defined in CSR storage format, and the dense math:`k \times n`
     matrix math:`B` and adds the result to the dense math:`m \times n` matrix math:`C` that
@@ -3963,46 +3954,46 @@ def hipsparseScsrmm2(object handle, object transA, object transB, int m, int n, 
 
     .. math::
 
-        C := \alpha \cdot op(A) \cdot op(B) + \beta \cdot C,
+       C := \alpha \cdot op(A) \cdot op(B) + \beta \cdot C,
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     and
 
     .. math::
 
-        op(B) = \left\{
-        \begin{array}{ll}
-            B,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            B^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            B^H, & \text{if trans_B == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(B) = \left\{
+       \begin{array}{ll}
+           B,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           B^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           B^H, & \text{if trans_B == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     .. code-block::
 
-        for(i = 0; i < ldc; ++i)
-        {
-            for(j = 0; j < n; ++j)
-            {
-                C[i][j] = beta * C[i][j];
+       for(i = 0; i < ldc; ++i)
+       {
+           for(j = 0; j < n; ++j)
+           {
+               C[i][j] = beta * C[i][j];
 
-                for(k = csr_row_ptr[i]; k < csr_row_ptr[i + 1]; ++k)
-                {
-                    C[i][j] += alpha * csr_val[k] * B[csr_col_ind[k]][j];
-                }
-            }
-        }
+               for(k = csr_row_ptr[i]; k < csr_row_ptr[i + 1]; ++k)
+               {
+                   C[i][j] += alpha * csr_val[k] * B[csr_col_ind[k]][j];
+               }
+           }
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -4311,38 +4302,37 @@ def hipsparseZbsrsm2_analysis(object handle, object dirA, object transA, object 
 def hipsparseSbsrsm2_solve(object handle, object dirA, object transA, object transX, int mb, int nrhs, int nnzb, object alpha, object descrA, object bsrSortedValA, object bsrSortedRowPtrA, object bsrSortedColIndA, int blockDim, object info, object B, int ldb, object X, int ldx, object policy, object pBuffer):
     r"""Sparse triangular system solve using BSR storage format
 
-    \details
     ``hipsparseXbsrsm2_solve`` solves a sparse triangular linear system of a sparse
     math:`m \times m` matrix, defined in BSR storage format, a dense solution matrix
     math:`X` and the right-hand side matrix math:`B` that is multiplied by math:`\alpha`, such that
 
     .. math::
 
-        op(A) \cdot op(X) = \alpha \cdot op(B),
+       op(A) \cdot op(X) = \alpha \cdot op(B),
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     ,
 
     .. math::
 
-        op(X) = \left\{
-        \begin{array}{ll}
-            X,   & \text{if trans_X == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            X^T, & \text{if trans_X == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            X^H, & \text{if trans_X == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(X) = \left\{
+       \begin{array}{ll}
+           X,   & \text{if trans_X == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           X^T, & \text{if trans_X == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           X^H, & \text{if trans_X == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     Note:
         The sparse BSR matrix has to be sorted.
@@ -4689,50 +4679,49 @@ def hipsparseZcsrsm2_analysis(object handle, int algo, object transA, object tra
 def hipsparseScsrsm2_solve(object handle, int algo, object transA, object transB, int m, int nrhs, int nnz, object alpha, object descrA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object B, int ldb, object info, object policy, object pBuffer):
     r"""Sparse triangular system solve using CSR storage format
 
-    \details
     ``hipsparseXcsrsm2_solve`` solves a sparse triangular linear system of a sparse
     math:`m \times m` matrix, defined in CSR storage format, a dense solution matrix
     math:`X` and the right-hand side matrix math:`B` that is multiplied by math:`\alpha`, such that
 
     .. math::
 
-        op(A) \cdot op(X) = \alpha \cdot op(B),
+       op(A) \cdot op(X) = \alpha \cdot op(B),
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     ,
 
     .. math::
 
-        op(B) = \left\{
-        \begin{array}{ll}
-            B,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            B^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            B^H, & \text{if trans_B == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(B) = \left\{
+       \begin{array}{ll}
+           B,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           B^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           B^H, & \text{if trans_B == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     and
 
     .. math::
 
-        op(X) = \left\{
-        \begin{array}{ll}
-            X,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            X^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            X^H, & \text{if trans_B == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(X) = \left\{
+       \begin{array}{ll}
+           X,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           X^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           X^H, & \text{if trans_B == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     Note:
         The sparse CSR matrix has to be sorted. This can be achieved by calling
@@ -4840,7 +4829,6 @@ def hipsparseZcsrsm2_solve(object handle, int algo, object transA, object transB
 def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, object A, int lda, object cscValB, object cscColPtrB, object cscRowIndB, object beta, object C, int ldc):
     r"""Dense matrix sparse matrix multiplication using CSR storage format
 
-    \details
     ``hipsparseXgemmi`` multiplies the scalar math:`\alpha` with a dense math:`m \times k`
     matrix math:`A` and the sparse math:`k \times n` matrix math:`B`, defined in CSR
     storage format and adds the result to the dense math:`m \times n` matrix math:`C` that
@@ -4848,31 +4836,31 @@ def hipsparseSgemmi(object handle, int m, int n, int k, int nnz, object alpha, o
 
     .. math::
 
-        C := \alpha \cdot op(A) \cdot op(B) + \beta \cdot C
+       C := \alpha \cdot op(A) \cdot op(B) + \beta \cdot C
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     and
 
     .. math::
 
-        op(B) = \left\{
-        \begin{array}{ll}
-            B,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            B^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            B^H, & \text{if trans_B == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(B) = \left\{
+       \begin{array}{ll}
+           B,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           B^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           B^H, & \text{if trans_B == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -4975,7 +4963,6 @@ def hipsparseXcsrgeamNnz(object handle, int m, int n, object descrA, int nnzA, o
 def hipsparseScsrgeam(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object beta, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object descrC, object csrValC, object csrRowPtrC, object csrColIndC):
     r"""Sparse matrix sparse matrix addition using CSR storage format
 
-    \details
     ``hipsparseXcsrgeam`` multiplies the scalar math:`\alpha` with the sparse
     math:`m \times n` matrix math:`A`, defined in CSR storage format, multiplies the
     scalar math:`\beta` with the sparse math:`m \times n` matrix math:`B`, defined in CSR
@@ -4984,7 +4971,10 @@ def hipsparseScsrgeam(object handle, int m, int n, object alpha, object descrA, 
 
     .. math::
 
-        C := \alpha \cdot A + \beta \cdot B.
+       C := \alpha \cdot A + \beta \cdot B.
+
+    Note:
+        Both scalars math:`\alpha` and math:`beta` have to be valid.
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
@@ -5224,7 +5214,6 @@ def hipsparseXcsrgeam2Nnz(object handle, int m, int n, object descrA, int nnzA, 
 def hipsparseScsrgeam2(object handle, int m, int n, object alpha, object descrA, int nnzA, object csrSortedValA, object csrSortedRowPtrA, object csrSortedColIndA, object beta, object descrB, int nnzB, object csrSortedValB, object csrSortedRowPtrB, object csrSortedColIndB, object descrC, object csrSortedValC, object csrSortedRowPtrC, object csrSortedColIndC, object pBuffer):
     r"""Sparse matrix sparse matrix addition using CSR storage format
 
-    \details
     ``hipsparseXcsrgeam2`` multiplies the scalar math:`\alpha` with the sparse
     math:`m \times n` matrix math:`A`, defined in CSR storage format, multiplies the
     scalar math:`\beta` with the sparse math:`m \times n` matrix math:`B`, defined in CSR
@@ -5233,7 +5222,10 @@ def hipsparseScsrgeam2(object handle, int m, int n, object alpha, object descrA,
 
     .. math::
 
-        C := \alpha \cdot A + \beta \cdot B.
+       C := \alpha \cdot A + \beta \cdot B.
+
+    Note:
+        Both scalars math:`\alpha` and math:`beta` have to be valid.
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
@@ -5390,36 +5382,31 @@ def hipsparseScsrgemm(object handle, object transA, object transB, int m, int n,
 
     .. math::
 
-        C := op(A) \cdot op(B),
+       C := op(A) \cdot op(B),
 
     with
 
     .. math::
 
-        op(A) = \left\{
-        \begin{array}{ll}
-            A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
+       op(A) = \left\{
+       \begin{array}{ll}
+           A,   & \text{if trans_A == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           A^T, & \text{if trans_A == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           A^H, & \text{if trans_A == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     and
 
     .. math::
 
-        op(B) = \left\{
-        \begin{array}{ll}
-            B,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
-            B^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
-            B^H, & \text{if trans_B == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
-        \end{array}
-        \right.
-
-    It is assumed that ``csr_row_ptr_C`` has already been filled and that ``csr_val_C`` and
-    ``csr_col_ind_C`` are allocated by the user. ``csr_row_ptr_C`` and allocation size of
-    ``csr_col_ind_C`` and ``csr_val_C`` is defined by the number of non-zero elements of
-    the sparse CSR matrix C. Both can be obtained by hipsparseXcsrgemmNnz().
+       op(B) = \left\{
+       \begin{array}{ll}
+           B,   & \text{if trans_B == HIPSPARSE_OPERATION_NON_TRANSPOSE} \\
+           B^T, & \text{if trans_B == HIPSPARSE_OPERATION_TRANSPOSE} \\
+           B^H, & \text{if trans_B == HIPSPARSE_OPERATION_CONJUGATE_TRANSPOSE}
+       \end{array}
+       \right.
 
     Note:
         Currently, only ``trans_A`` == ``HIPSPARSE_OPERATION_NON_TRANSPOSE`` is supported.
@@ -5686,7 +5673,6 @@ def hipsparseXcsrgemm2Nnz(object handle, int m, int n, int k, object descrA, int
 def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object descrA, int nnzA, object csrValA, object csrRowPtrA, object csrColIndA, object descrB, int nnzB, object csrValB, object csrRowPtrB, object csrColIndB, object beta, object descrD, int nnzD, object csrValD, object csrRowPtrD, object csrColIndD, object descrC, object csrValC, object csrRowPtrC, object csrColIndC, object info, object pBuffer):
     r"""Sparse matrix sparse matrix multiplication using CSR storage format
 
-    \details
     ``hipsparseXcsrgemm2`` multiplies the scalar math:`\alpha` with the sparse
     math:`m \times k` matrix math:`A`, defined in CSR storage format, and the sparse
     math:`k \times n` matrix math:`B`, defined in CSR storage format, and adds the result
@@ -5697,7 +5683,16 @@ def hipsparseScsrgemm2(object handle, int m, int n, int k, object alpha, object 
 
     .. math::
 
-        C := \alpha \cdot A \cdot B + \beta \cdot D
+       C := \alpha \cdot A \cdot B + \beta \cdot D
+
+    Note:
+        If math:`\alpha == 0`, then math:`C = \beta \cdot D` will be computed.
+
+    Note:
+        If math:`\beta == 0`, then math:`C = \alpha \cdot A \cdot B` will be computed.
+
+    Note:
+        math:`\alpha == beta == 0` is invalid.
 
     Note:
         Currently, only ``HIPSPARSE_MATRIX_TYPE_GENERAL`` is supported.
@@ -6089,13 +6084,7 @@ def hipsparseSbsrilu02(object handle, object dirA, int mb, int nnzb, object desc
 
     .. math::
 
-        A \approx LU
-
-    ``hipsparseXbsrilu02`` requires a user allocated temporary buffer. Its size is
-    returned by hipsparseXbsrilu02_bufferSize(). Furthermore, analysis meta data is
-    required. It can be obtained by hipsparseXbsrilu02_analysis(). ``hipsparseXbsrilu02``
-    reports the first zero pivot (either numerical or structural zero). The zero pivot
-    status can be obtained by calling hipsparseXbsrilu02_zeroPivot().
+       A \approx LU
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -6487,13 +6476,7 @@ def hipsparseScsrilu02(object handle, int m, int nnz, object descrA, object csrS
 
     .. math::
 
-        A \approx LU
-
-    ``hipsparseXcsrilu02`` requires a user allocated temporary buffer. Its size is returned
-    by hipsparseXcsrilu02_bufferSize() or hipsparseXcsrilu02_bufferSizeExt(). Furthermore,
-    analysis meta data is required. It can be obtained by hipsparseXcsrilu02_analysis().
-    ``hipsparseXcsrilu02`` reports the first zero pivot (either numerical or structural
-    zero). The zero pivot status can be obtained by calling hipsparseXcsrilu02_zeroPivot().
+       A \approx LU
 
     Note:
         The sparse CSR matrix has to be sorted. This can be achieved by calling
@@ -6771,13 +6754,7 @@ def hipsparseSbsric02(object handle, object dirA, int mb, int nnzb, object descr
 
     .. math::
 
-        A \approx LL^T
-
-    ``hipsparseXbsric02`` requires a user allocated temporary buffer. Its size is returned
-    by hipsparseXbsric02_bufferSize(). Furthermore, analysis meta data is required. It
-    can be obtained by hipsparseXbsric02_analysis(). ``hipsparseXbsric02`` reports the
-    first zero pivot (either numerical or structural zero). The zero pivot status can be
-    obtained by calling hipsparseXbsric02_zeroPivot().
+       A \approx LL^T
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.
@@ -7104,13 +7081,7 @@ def hipsparseScsric02(object handle, int m, int nnz, object descrA, object csrSo
 
     .. math::
 
-        A \approx LL^T
-
-    ``hipsparseXcsric02`` requires a user allocated temporary buffer. Its size is returned
-    by hipsparseXcsric02_bufferSize() or hipsparseXcsric02_bufferSizeExt(). Furthermore,
-    analysis meta data is required. It can be obtained by hipsparseXcsric02_analysis().
-    ``hipsparseXcsric02`` reports the first zero pivot (either numerical or structural
-    zero). The zero pivot status can be obtained by calling hipsparseXcsric02_zeroPivot().
+       A \approx LL^T
 
     Note:
         The sparse CSR matrix has to be sorted. This can be achieved by calling
@@ -8136,10 +8107,10 @@ def hipsparseSpruneDense2csrByPercentage_bufferSize(object handle, int m, int n,
 
     .. math::
 
-        pos = ceil(m*n*(percentage/100)) - 1
-        pos = min(pos, m*n-1)
-        pos = max(pos, 0)
-        threshold = sorted_A[pos]
+       pos = ceil(m*n*(percentage/100)) - 1
+       pos = min(pos, m*n-1)
+       pos = max(pos, 0)
+       threshold = sorted_A[pos]
     """
     _hipsparseSpruneDense2csrByPercentage_bufferSize__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrByPercentage_bufferSize(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8188,10 +8159,10 @@ def hipsparseSpruneDense2csrByPercentage_bufferSizeExt(object handle, int m, int
 
     .. math::
 
-        pos = ceil(m*n*(percentage/100)) - 1
-        pos = min(pos, m*n-1)
-        pos = max(pos, 0)
-        threshold = sorted_A[pos]
+       pos = ceil(m*n*(percentage/100)) - 1
+       pos = min(pos, m*n-1)
+       pos = max(pos, 0)
+       threshold = sorted_A[pos]
     """
     _hipsparseSpruneDense2csrByPercentage_bufferSizeExt__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrByPercentage_bufferSizeExt(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8241,10 +8212,10 @@ def hipsparseSpruneDense2csrNnzByPercentage(object handle, int m, int n, object 
 
     .. math::
 
-        pos = ceil(m*n*(percentage/100)) - 1
-        pos = min(pos, m*n-1)
-        pos = max(pos, 0)
-        threshold = sorted_A[pos]
+       pos = ceil(m*n*(percentage/100)) - 1
+       pos = min(pos, m*n-1)
+       pos = max(pos, 0)
+       threshold = sorted_A[pos]
     """
     _hipsparseSpruneDense2csrNnzByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrNnzByPercentage(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -8292,10 +8263,10 @@ def hipsparseSpruneDense2csrByPercentage(object handle, int m, int n, object A, 
 
     .. math::
 
-        pos = ceil(m*n*(percentage/100)) - 1
-        pos = min(pos, m*n-1)
-        pos = max(pos, 0)
-        threshold = sorted_A[pos]
+       pos = ceil(m*n*(percentage/100)) - 1
+       pos = min(pos, m*n-1)
+       pos = max(pos, 0)
+       threshold = sorted_A[pos]
     """
     _hipsparseSpruneDense2csrByPercentage__retval = hipsparseStatus_t(chipsparse.hipsparseSpruneDense2csrByPercentage(
         <void *>hip._util.types.DataHandle.from_pyobj(handle)._ptr,m,n,
@@ -10021,10 +9992,10 @@ def hipsparseCreateIdentityPermutation(object handle, int n, object p):
 
     .. code-block::
 
-        for(i = 0; i < n; ++i)
-        {
-            p[i] = i;
-        }
+       for(i = 0; i < n; ++i)
+       {
+           p[i] = i;
+       }
 
     Note:
         This function is non blocking and executed asynchronously with respect to the host.

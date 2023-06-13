@@ -321,8 +321,8 @@ def ncclGetUniqueId(object uniqueId):
     /
 
     Args:
-        uniqueId: ncclUniqueId*
-                pointer to uniqueId
+        uniqueId: **[in]** ncclUniqueId*
+            pointer to uniqueId
     """
     _ncclGetUniqueId__retval = ncclResult_t(crccl.ncclGetUniqueId(
         ncclUniqueId.from_pyobj(uniqueId)._ptr))    # fully specified
@@ -351,7 +351,7 @@ def ncclCommInitRank(int nranks, object commId, int rank):
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
         - comm: ncclComm_t*
-                    communicator struct pointer
+                communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
     _ncclCommInitRank__retval = ncclResult_t(crccl.ncclCommInitRank(&comm._ptr,nranks,
@@ -385,7 +385,7 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
         - comm: ncclComm_t*
-                    communicator struct pointer
+                communicator struct pointer
     """
     comm = ncclComm.from_ptr(NULL)
     _ncclCommInitRankMulti__retval = ncclResult_t(crccl.ncclCommInitRankMulti(&comm._ptr,nranks,

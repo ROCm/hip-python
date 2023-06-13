@@ -1085,7 +1085,7 @@ def from_libclang_translation_unit(
                     f"VAR_DECL cursor '{cursor.spelling}' not handled (not implemented)"
                 )
                 if warn == control.Warnings.WARN:
-                    warnings.warn(msg,RuntimeWarning)
+                    warnings.warn(msg)
                 else:
                     print(f"ERROR: {msg}'", file=sys.stderr)
                     sys.exit(2)

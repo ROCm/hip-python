@@ -67,10 +67,10 @@ class format:
         @staticmethod
         def escaped(tokens):
             expr = tokens[0]
-            if expr == r"\\n":
+            if expr == r"\n":
                 return "\n"
             else:
-                return expr
+                return expr[1:]
 
         @staticmethod
         def with_word(tokens):
@@ -87,20 +87,49 @@ class format:
             
         @staticmethod
         def fdollar(tokens):
+            r"""\f$ .. \f$
+            """
             return f"math:`{tokens[1]}`"
+        
+        @staticmethod
+        def frnd(tokens):
+            r"""\f( ... \f)
+            Note:
+                No explicit latex mode in sphinxdoc.
+            """
+            return f"`{tokens[1]}`"
 
 # for structuring the input
 
 class Node:
 
     def __init__(self,s,loc,tokens):
-        self.s = s
+        """Pyparsing parse action compatible constructor.
+
+        Note:
+            This __init__ routine has the shape of a pyparsing parse action constructor.
+        Note:
+            Param ``s``, the input string, is ignored.
+            Instead, the input string is obtained from the root.
+        """
         self.parent = None
         self.children = []
         self.begin = loc
         self.end = None
         self.tokens = tokens
 
+    @property
+    def root(self):
+        curr = self
+        while curr.parent != None:
+            curr = curr.parent
+        assert isinstance(curr,Root)
+        return curr
+    
+    @property
+    def input_string(self):
+        return self.root._input_string
+    
     def get_text(self,transform_formatting=False,transform_other=False):
         """Returns the text contained by this node.
 
@@ -113,7 +142,7 @@ class Node:
               Defaults to False.
         """
         if self.end != None:
-            result = self.s[self.begin:self.end]
+            result = self.input_string[self.begin:self.end]
             if transform_formatting:
                 result = self.parser.formatting.transformString(result)
             if transform_other:
@@ -133,14 +162,6 @@ class Node:
         r"""Shortcut for ```self.get_text(transform_formatting=True,transform_other=True)```.
         """
         return self.get_text(transform_formatting=True,transform_other=True)
-
-    @property
-    def root(self):
-        curr = self
-        while curr.parent != None:
-            curr = curr.parent
-        assert isinstance(curr,Root)
-        return curr
 
     @property
     def parser(self):
@@ -172,18 +193,18 @@ class Node:
         
 class Root(Node):
 
-    def __init__(self,s,parser):
-        self.s = s
+    def __init__(self,input_string,parser):
         self.parent = None
         self.children = []
         self._parser = parser
+        self._input_string = input_string
 
     def add_details_section(self,start,end):
         self.children.append(
             Section(
-                self.s,
+                self._input_string,
                 start,
-                [ "\\details", self.s[start:end] ]
+                [ r"\details*", self._input_string[start:end] ]
             )
         )
         self.children[-1].parent = self
@@ -207,7 +228,7 @@ class Section(Node):
         assert len(self.children) == 0
         self.children.append(
             SectionBody(
-                self.s,
+                self.input_string,
                 self.begin,
                 self.tokens,
             )
@@ -232,15 +253,20 @@ class Section(Node):
     
     def set_body_from_tokens(self):
         body = self.tokens[-1]
+        body.end = self.end
         assert isinstance(body,SectionBody)
         self.children.append(body)
         self.children[-1].parent = self
+
+    def sync_with_root(self):
+        assert self.parent != None
+        assert self.body != None
+        self.body.sync_with_root()
 
 class SectionBody(Node):
 
     def __init__(self,s,loc,tokens):
         Node.__init__(self,s,loc,tokens)
-        self.kind = tokens[0][1:]
         self.end = None
 
     def add_text_block(self,s,start,tokens,end):
@@ -253,6 +279,12 @@ class SectionBody(Node):
         )
         self.children[-1].end = end
         return self.children[-1]
+    
+    def sync_with_root(self):
+        """Write the root's input text to the token."""
+        assert self.parent != None
+        assert self.end != None
+        self.tokens[-1] = self.input_string[self.begin:self.end]
 
 class VerbatimBlock(Node):
     r"""Verbatim text block expression such
@@ -284,9 +316,11 @@ class MathBlock(Node):
     def __init__(self,s,loc,tokens):
         Node.__init__(self,s,loc,tokens)
         self.kind = tokens[0][1:]
-        if len(tokens) == 5:
-            # '\f{' 'env' '}' '...' '\f}'
+        if len(tokens) == 6:
+            # '\f{' 'env' '}' '{' '...' '\f}'
             self.env = tokens[2]
+        else:
+            self.env = None
     
     @property
     def code(self):
@@ -704,7 +738,6 @@ class DoxygenGrammar:
         CODE = self._pyp_cmd("code") + pyp.Optional(LBRACE + pyp.Regex(r"\.\w+") + RBRACE, default=[None,None,None])
         code = CODE + pyp.SkipTo(ENDCODE) + ENDCODE
 
-
         # \cond [(section-label)]
         cond = self._pyp_cmd("cond") + OPT_UNTIL_LINE_END
 
@@ -738,7 +771,7 @@ class DoxygenGrammar:
         fdollar = FDOLLAR +  pyp.SkipTo(FDOLLAR) + FDOLLAR
         fbr = FBROPEN +  pyp.SkipTo(FBRCLOSE) + FBRCLOSE
         frnd = FRNDOPEN +  pyp.SkipTo(FRNDCLOSE) + FRNDCLOSE
-        fcurly = FCURLYOPEN + IDENT + RBRACE + LBRACE + pyp.SkipTo(FCURLYCLOSE) + FCURLYCLOSE
+        fcurly = FCURLYOPEN + IDENT + RBRACE + pyp.Optional(LBRACE,default=None) + pyp.SkipTo(FCURLYCLOSE) + FCURLYCLOSE
 
         # \{
         groupopen = self._pyp_cmd(r"\{",words=False)
@@ -807,9 +840,7 @@ class DoxygenGrammar:
         )
 
         # \param '['dir']' <parameter-name> { parameter description }
-        PARAM_DIR = pyp.Regex(r"\[\s*(in|out|(\s*in,\s*out))\s*\]").setParseAction(
-            lambda tokens: tokens[0][1:-1].replace(" ","")
-        ) # remove [] and whitespace
+        PARAM_DIR = pyp.Regex(r"\[\s*(in|out|inout|(\s*in,\s*out))\s*\]")
         PARAM_NAMES = pyp.Group(pyp.delimitedList(IDENT))
         param = (
             self._pyp_cmd("param")
@@ -875,8 +906,8 @@ class DoxygenGrammar:
 
         section <<= section_no_args | param | tparam | retval | xrefitem | par | with_exceptionobject
         verbatim = code | verbatim_no_args | verbatim_with_caption | startuml
-        math_block = fbr | frnd | fcurly
-        formatting = escaped | with_word | fdollar
+        math_block = fbr | fcurly
+        formatting = escaped | with_word | fdollar | frnd
         other = (
             no_args
             |with_single_line_text
@@ -920,7 +951,7 @@ class DoxygenGrammar:
         for kind in self.kinds:
             yield self.__dict__[kind]
 
-    def parse_structure(self,text: str) -> Root:
+    def parse_structure(self,original: str) -> Root:
         r"""Parses a snippet of doxygen documentation and
         returns a high-level tree structure:
 
@@ -950,7 +981,7 @@ class DoxygenGrammar:
         tokens get removed.
 
         Note:
-            Inserts fake 'details' sections for free text envclosed between other sections/begin of the docu.
+            Inserts '\details*' sections for free text envclosed between other sections/begin/end of the docu.
         """
         tree = self.__tree
         tree.section.setParseAction(Section)
@@ -958,69 +989,70 @@ class DoxygenGrammar:
         tree.verbatim.setParseAction(VerbatimBlock)
         tree.math_block.setParseAction(MathBlock)
         verbatim_or_math = tree.verbatim|tree.math_block
-        verbatim_or_math_ext = verbatim_or_math|tree.fdollar # include inline math
+        verbatim_or_math_ext = verbatim_or_math|tree.fdollar|tree.frnd # include inline math
+
+
+        # alpha, beta is the problem
+        # may appear in math and as section terminator
 
         verbatim_or_math_areas = []
-        for _, start, end in verbatim_or_math_ext.scanString(text):
+        preprocessed = "".join(original) # copy the text
+        for tokens, start, end in verbatim_or_math_ext.scanString(original):
+            #print(f"verbatim_or_math_area:{start=},{end=},tokens={str(tokens)}")
             verbatim_or_math_areas.append((start,end))
-
-        def overlaps_with_verbatim_or_math_area_(start,end):
-            for (area_start,area_end) in verbatim_or_math_areas:
-                if start > area_start and start < area_end:
-                    return True
-                elif end > area_start and end < area_end:
-                    return True
-            return False
+            # insert whitespace so that the section detection is not confused
+            # by anything in the verbatim or math areas
+            # at the end, we will substitute 'text' again by 'original'
+            # in each node
+            preprocessed = preprocessed[0:start] + " "*(end-start) + preprocessed[end:]
+        assert len(original) == len(preprocessed)
     
         #print(f"{verbatim_or_math_areas=}")
 
-        def scan_for_verbatim_or_math_(section_body: SectionBody,text,text_start,text_end):
+        def scan_for_verbatim_or_math_(section_body: SectionBody):
             nonlocal verbatim_or_math
             # look for verbatim/code
-            section_text = text[text_start:text_end]
+            body_text = section_body.input_string
+            body_start = section_body.begin
+            body_end = section_body.end
             previous_end = 0
             #print(f"{section_text=}")
-            for tokens, start, end in verbatim_or_math.scanString(section_text):
+            for tokens, start, end in verbatim_or_math.scanString(body_text[body_start:body_end]):
                 #print(tokens)
                 if start != previous_end:
-                    block = section_body.add_text_block(text,text_start+previous_end,tokens,text_start+start)
+                    block = section_body.add_text_block(body_text,body_start+previous_end,tokens,body_start+start)
                     block.parent = section_body
                 block = tokens[0]
                 assert isinstance(block,(TextBlock,VerbatimBlock,MathBlock))
-                block.s = text
-                block.begin = text_start + start
-                block.end = text_start + end
+                block.s = body_text
+                block.begin = body_start + start
+                block.end = body_start + end
                 block.parent = section_body
                 section_body.children.append(block)
                 previous_end = end
                 #print(f"{block=}")
             if not len(section_body.children):
-                block = section_body.add_text_block(text,text_start,[section_body.tokens[-1]],text_end)
+                block = section_body.add_text_block(body_text,body_start,[section_body.tokens[-1]],body_end)
                 block.parent = section_body
 
-        root = Root(text,self)
+        root = Root(original,self) # note; the use of original instead of preprocessed
         previous_end = 0
-        for tokens, start, end in tree.section.scanString(text):
+        for tokens, start, end in tree.section.scanString(preprocessed):
             #print(f"{(start,end)=}")
-            if overlaps_with_verbatim_or_math_area_(start,end):
-                #print(f"is_in_verbatim_or_math_area_={str(tokens[1:])}")
-                continue
             if start != previous_end:
                 # insert fake details section
                 section = root.add_details_section(previous_end,start)
-                scan_for_verbatim_or_math_(section.body,text,previous_end,start)
+                scan_for_verbatim_or_math_(section.body)
             section = tokens[0]
             section.parent = root
             section.end = end
             section.set_body_from_tokens()
-            scan_for_verbatim_or_math_(section.body,
-                                       text,
-                                       section.body.begin, # excludes the command and command parameters
-                                       end)
+            section.body.sync_with_root()
+            scan_for_verbatim_or_math_(section.body)
             root.children.append(section)
             previous_end = end
-        if previous_end < len(text):
+        if previous_end < len(original):
             # insert fake details section
-            section = root.add_details_section(previous_end,len(text))
-            scan_for_verbatim_or_math_(section.body,text,previous_end,len(text))
+            section = root.add_details_section(previous_end,len(original))
+            scan_for_verbatim_or_math_(section.body)
         return root

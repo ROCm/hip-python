@@ -16,6 +16,15 @@ import enum
 import textwrap
 import argparse
 
+original_formatwarning = warnings.formatwarning
+def custom_formatwarning(warnobj,*args,**kwargs):
+    global original_formatwarning
+    if isinstance(warnobj,UserWarning):
+        return f"Warning: {str(warnobj)}\n"
+    else:
+        return original_formatwarning(warnobj,*args,**kwargs)
+warnings.formatwarning = custom_formatwarning
+
 import _controls
 import _cuda_interop_layer_gen
 import _gitversion
