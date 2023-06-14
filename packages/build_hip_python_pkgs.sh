@@ -31,7 +31,8 @@ python3 -m venv venv
   venv/bin/python3 -m pip install --upgrade hip-python/dist/hip*whl
   venv/bin/python3 -m pip install --upgrade hip-python-as-cuda/dist/hip*whl
   venv/bin/python3 -m pip install -r hip-python/docs/requirements.txt
-  ( cd hip-python/docs && source build.sh )
+  DOCS_DIR="hip-python/docs"
+  venv/bin/python3 -m sphinx -T -E -b html -d _build/doctrees -D language=en ${DOCS_DIR} ${DOCS_DIR}/_build/html
 
 
 rm -rf venv
