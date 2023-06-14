@@ -25976,10 +25976,11 @@ def hipDriverGetVersion():
         use arch feature flags to test device capabilities or conditional compilation.
 
     See:
-        hipRuntimeGetVersion
+        :py:obj:`~.hipRuntimeGetVersion`
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - driverVersion:
     """
@@ -25999,10 +26000,11 @@ def hipRuntimeGetVersion():
         And there is no mapping/correlation between HIP version and CUDA version.
 
     See:
-        hipDriverGetVersion
+        :py:obj:`~.hipDriverGetVersion`
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - runtimeVersion:
     """
@@ -26020,6 +26022,7 @@ def hipDeviceGet(int ordinal):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice
         - device:
     """
@@ -26037,6 +26040,7 @@ def hipDeviceComputeCapability(int device):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice
         - major:
         - minor:
@@ -26060,6 +26064,7 @@ def hipDeviceGetName(char * name, int len, int device):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice
     """
     _hipDeviceGetName__retval = hipError_t(chip.hipDeviceGetName(name,len,device))    # fully specified
@@ -26081,6 +26086,7 @@ def hipDeviceGetUuid(object uuid, int device):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotInitialized,
             #hipErrorDeinitialized
     """
@@ -26102,6 +26108,7 @@ def hipDeviceGetP2PAttribute(object attr, int srcDevice, int dstDevice):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice
         - value:
     """
@@ -26125,6 +26132,7 @@ def hipDeviceGetPCIBusId(char * pciBusId, int len, int device):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice
     """
     _hipDeviceGetPCIBusId__retval = hipError_t(chip.hipDeviceGetPCIBusId(pciBusId,len,device))    # fully specified
@@ -26140,6 +26148,7 @@ def hipDeviceGetByPCIBusId(const char * pciBusId):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
         - device: handle
     """
@@ -26157,6 +26166,7 @@ def hipDeviceTotalMem(int device):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice
         - bytes:
     """
@@ -26173,10 +26183,11 @@ def hipDeviceSynchronize():
     with streams associated with the device. HIP does not support multiple blocking modes (yet!).
 
     See:
-        hipSetDevice, hipDeviceReset
+        :py:obj:`~.hipSetDevice`, :py:obj:`~.hipDeviceReset`
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     _hipDeviceSynchronize__retval = hipError_t(chip.hipDeviceSynchronize())    # fully specified
@@ -26192,10 +26203,11 @@ def hipDeviceReset():
     associated with the current device.
 
     See:
-        hipDeviceSynchronize
+        :py:obj:`~.hipDeviceSynchronize`
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     _hipDeviceReset__retval = hipError_t(chip.hipDeviceReset())    # fully specified
@@ -26229,13 +26241,14 @@ def hipSetDevice(int deviceId):
     standard device.
 
     See:
-        hipGetDevice, hipGetDeviceCount
+        :py:obj:`~.hipGetDevice`, :py:obj:`~.hipGetDeviceCount`
 
     Args:
         deviceId: **[in]** Valid device in range 0...hipGetDeviceCount().
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorDeviceAlreadyInUse
     """
     _hipSetDevice__retval = hipError_t(chip.hipSetDevice(deviceId))    # fully specified
@@ -26251,13 +26264,14 @@ def hipGetDevice():
     hipGetDevice returns in * ``device`` the default device for the calling host thread.
 
     See:
-        hipSetDevice, hipGetDevicesizeBytes
+        :py:obj:`~.hipSetDevice`, :py:obj:`~.hipGetDevicesizeBytes`
 
     Args:
         device: **[out]** device is written with the default device
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     cdef int deviceId
@@ -26277,6 +26291,7 @@ def hipGetDeviceCount():
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorNoDevice
     """
     cdef int count
@@ -26297,6 +26312,7 @@ def hipDeviceGetAttribute(object pi, object attr, int deviceId):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     if not isinstance(attr,_hipDeviceAttribute_t__Base):
@@ -26311,8 +26327,8 @@ def hipDeviceGetDefaultMemPool(int device):
     r"""Returns the default memory pool of the specified device
 
     See:
-        hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+        :py:obj:`~.hipDeviceGetDefaultMemPool`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipMemPoolGetAttribute`,
+        :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -26323,6 +26339,7 @@ def hipDeviceGetDefaultMemPool(int device):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #chipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue, #hipErrorNotSupported
         - mem_pool: Default memory pool to return
     """
@@ -26344,8 +26361,8 @@ def hipDeviceSetMemPool(int device, object mem_pool):
         different than the one the stream runs on.
 
     See:
-        hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+        :py:obj:`~.hipDeviceGetDefaultMemPool`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipMemPoolGetAttribute`,
+        :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -26358,6 +26375,7 @@ def hipDeviceSetMemPool(int device, object mem_pool):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice, #hipErrorNotSupported
     """
     _hipDeviceSetMemPool__retval = hipError_t(chip.hipDeviceSetMemPool(device,
@@ -26375,8 +26393,8 @@ def hipDeviceGetMemPool(int device):
     otherwise the returned pool must have been set with ``hipDeviceSetMemPool.``
 
     See:
-        hipDeviceGetDefaultMemPool, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+        :py:obj:`~.hipDeviceGetDefaultMemPool`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipMemPoolGetAttribute`,
+        :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -26387,6 +26405,7 @@ def hipDeviceGetMemPool(int device):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
         - mem_pool: Current memory pool on the specified device
     """
@@ -26417,6 +26436,7 @@ def hipGetDeviceProperties(object prop, int deviceId):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice
     """
     _hipGetDeviceProperties__retval = hipError_t(chip.hipGetDeviceProperties(
@@ -26433,6 +26453,7 @@ def hipDeviceSetCacheConfig(object cacheConfig):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorNotInitialized
             Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
             on those architectures.
@@ -26449,6 +26470,7 @@ def hipDeviceGetCacheConfig():
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorNotInitialized
             Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
             on those architectures.
@@ -26468,6 +26490,7 @@ def hipDeviceGetLimit(object limit):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
             Note: Currently, only hipLimitMallocHeapSize is available
         - pValue:
@@ -26490,6 +26513,7 @@ def hipDeviceSetLimit(object limit, unsigned long value):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorUnsupportedLimit, #hipErrorInvalidValue
     """
     if not isinstance(limit,_hipLimit_t__Base):
@@ -26507,6 +26531,7 @@ def hipDeviceGetSharedMemConfig():
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
         - pConfig:
     """
@@ -26521,6 +26546,7 @@ def hipGetDeviceFlags():
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
         - flags:
     """
@@ -26541,6 +26567,7 @@ def hipDeviceSetSharedMemConfig(object config):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     if not isinstance(config,_hipSharedMemConfig__Base):
@@ -26575,6 +26602,7 @@ def hipSetDeviceFlags(unsigned int flags):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorSetOnActiveProcess
     """
     _hipSetDeviceFlags__retval = hipError_t(chip.hipSetDeviceFlags(flags))    # fully specified
@@ -26587,6 +26615,7 @@ def hipChooseDevice(object prop):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - device: ID
         - device: properties pointer
@@ -26610,6 +26639,7 @@ def hipExtGetLinkTypeAndHopCount(int device1, int device2):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipInvalidDevice, #hipErrorRuntimeOther
         - linktype: Returns the link type (See hsa_amd_link_info_type_t) between the two devices
         - hopcount: Returns the hop count between the two devices
@@ -26643,6 +26673,7 @@ def hipIpcGetMemHandle(object handle, object devPtr):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess,
             hipErrorInvalidHandle,
             hipErrorOutOfMemory,
@@ -26689,6 +26720,7 @@ def hipIpcOpenMemHandle(object handle, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - hipSuccess,
             hipErrorMapFailed,
             hipErrorInvalidHandle,
@@ -26718,6 +26750,7 @@ def hipIpcCloseMemHandle(object devPtr):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess,
             hipErrorMapFailed,
             hipErrorInvalidHandle,
@@ -26743,6 +26776,7 @@ def hipIpcGetEventHandle(object handle, object event):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidConfiguration, #hipErrorInvalidValue
     """
     _hipIpcGetEventHandle__retval = hipError_t(chip.hipIpcGetEventHandle(
@@ -26766,6 +26800,7 @@ def hipIpcOpenEventHandle(object handle):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidContext
         - event: Pointer to hipEvent_t to return the event
     """
@@ -26791,6 +26826,7 @@ def hipFuncSetAttribute(object func, object attr, int value):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
     """
     if not isinstance(attr,_hipFuncAttribute__Base):
@@ -26809,6 +26845,7 @@ def hipFuncSetCacheConfig(object func, object config):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorNotInitialized
             Note: AMD devices and some Nvidia GPUS do not support reconfigurable cache.  This hint is ignored
             on those architectures.
@@ -26834,6 +26871,7 @@ def hipFuncSetSharedMemConfig(object func, object config):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDeviceFunction, #hipErrorInvalidValue
     """
     if not isinstance(config,_hipSharedMemConfig__Base):
@@ -26852,10 +26890,11 @@ def hipGetLastError():
     thread, and then resets the saved error to #hipSuccess.
 
     See:
-        hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
+        :py:obj:`~.hipGetErrorString`, :py:obj:`~.hipGetLastError`, :py:obj:`~.hipPeakAtLastError`, :py:obj:`~.hipError_t`
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - return code from last HIP called from the active host thread
     """
     _hipGetLastError__retval = hipError_t(chip.hipGetLastError())    # fully specified
@@ -26870,10 +26909,11 @@ def hipPeekAtLastError():
     thread. Unlike hipGetLastError, this function does not reset the saved error code.
 
     See:
-        hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
+        :py:obj:`~.hipGetErrorString`, :py:obj:`~.hipGetLastError`, :py:obj:`~.hipPeakAtLastError`, :py:obj:`~.hipError_t`
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     _hipPeekAtLastError__retval = hipError_t(chip.hipPeekAtLastError())    # fully specified
@@ -26885,13 +26925,14 @@ def hipGetErrorName(object hip_error):
     r"""Return hip error as text string form.
 
     See:
-        hipGetErrorString, hipGetLastError, hipPeakAtLastError, hipError_t
+        :py:obj:`~.hipGetErrorString`, :py:obj:`~.hipGetLastError`, :py:obj:`~.hipPeakAtLastError`, :py:obj:`~.hipError_t`
 
     Args:
         hip_error: Error code to convert to name.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - const char pointer to the NULL-terminated error name
     """
     if not isinstance(hip_error,_hipError_t__Base):
@@ -26905,13 +26946,14 @@ def hipGetErrorString(object hipError):
     r"""Return handy text string message to explain the error which occurred
 
     See:
-        hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
+        :py:obj:`~.hipGetErrorName`, :py:obj:`~.hipGetLastError`, :py:obj:`~.hipPeakAtLastError`, :py:obj:`~.hipError_t`
 
     Args:
         hipError: Error code to convert to string.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - const char pointer to the NULL-terminated error string
     """
     if not isinstance(hipError,_hipError_t__Base):
@@ -26925,7 +26967,7 @@ def hipDrvGetErrorName(object hipError, object errorString):
     r"""Return hip error as text string form.
 
     See:
-        hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
+        :py:obj:`~.hipGetErrorName`, :py:obj:`~.hipGetLastError`, :py:obj:`~.hipPeakAtLastError`, :py:obj:`~.hipError_t`
 
     Args:
         hipError: **[in]** Error code to convert to string.
@@ -26934,6 +26976,7 @@ def hipDrvGetErrorName(object hipError, object errorString):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(hipError,_hipError_t__Base):
@@ -26948,7 +26991,7 @@ def hipDrvGetErrorString(object hipError, object errorString):
     r"""Return handy text string message to explain the error which occurred
 
     See:
-        hipGetErrorName, hipGetLastError, hipPeakAtLastError, hipError_t
+        :py:obj:`~.hipGetErrorName`, :py:obj:`~.hipGetLastError`, :py:obj:`~.hipPeakAtLastError`, :py:obj:`~.hipError_t`
 
     Args:
         hipError: **[in]** Error code to convert to string.
@@ -26957,6 +27000,7 @@ def hipDrvGetErrorString(object hipError, object errorString):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(hipError,_hipError_t__Base):
@@ -26976,10 +27020,11 @@ def hipStreamCreate():
     used by the stream, applicaiton must call hipStreamDestroy.
 
     See:
-        hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
+        :py:obj:`~.hipStreamCreateWithFlags`, :py:obj:`~.hipStreamCreateWithPriority`, :py:obj:`~.hipStreamSynchronize`, :py:obj:`~.hipStreamWaitEvent`, :py:obj:`~.hipStreamDestroy`
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - #hipSuccess, #hipErrorInvalidValue
         - stream: Valid pointer to hipStream_t.  This function writes the memory with the
@@ -27001,13 +27046,14 @@ def hipStreamCreateWithFlags(unsigned int flags):
     stream.  See #hipStreamDefault, #hipStreamNonBlocking.
 
     See:
-        hipStreamCreate, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
+        :py:obj:`~.hipStreamCreate`, :py:obj:`~.hipStreamCreateWithPriority`, :py:obj:`~.hipStreamSynchronize`, :py:obj:`~.hipStreamWaitEvent`, :py:obj:`~.hipStreamDestroy`
 
     Args:
         flags: **[in]** to control stream creation.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - stream: Pointer to new stream
     """
@@ -27027,7 +27073,7 @@ def hipStreamCreateWithPriority(unsigned int flags, int priority):
     behavior of the stream.  See #hipStreamDefault, #hipStreamNonBlocking.
 
     See:
-        hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
+        :py:obj:`~.hipStreamCreate`, :py:obj:`~.hipStreamSynchronize`, :py:obj:`~.hipStreamWaitEvent`, :py:obj:`~.hipStreamDestroy`
 
     Args:
         flags: **[in]** to control stream creation.
@@ -27036,6 +27082,7 @@ def hipStreamCreateWithPriority(unsigned int flags, int priority):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - stream: Pointer to new stream
     """
@@ -27057,6 +27104,7 @@ def hipDeviceGetStreamPriorityRange():
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - leastPriority: pointer in which value corresponding to least priority is returned.
         - greatestPriority: pointer in which value corresponding to greatest priority is returned.
     """
@@ -27079,8 +27127,8 @@ def hipStreamDestroy(object stream):
     queued to the stream before destroying it.
 
     See:
-        hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamQuery, hipStreamWaitEvent,
-        hipStreamSynchronize
+        :py:obj:`~.hipStreamCreate`, :py:obj:`~.hipStreamCreateWithFlags`, :py:obj:`~.hipStreamCreateWithPriority`, :py:obj:`~.hipStreamQuery`, :py:obj:`~.hipStreamWaitEvent`,
+        :py:obj:`~.hipStreamSynchronize`
 
     Args:
         stream: **[in,out]** Valid pointer to hipStream_t.  This function writes the memory with the
@@ -27088,6 +27136,7 @@ def hipStreamDestroy(object stream):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess #hipErrorInvalidHandle
     """
     _hipStreamDestroy__retval = hipError_t(chip.hipStreamDestroy(
@@ -27105,14 +27154,15 @@ def hipStreamQuery(object stream):
     is called.  It is typically used for debug.
 
     See:
-        hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamSynchronize,
-        hipStreamDestroy
+        :py:obj:`~.hipStreamCreate`, :py:obj:`~.hipStreamCreateWithFlags`, :py:obj:`~.hipStreamCreateWithPriority`, :py:obj:`~.hipStreamWaitEvent`, :py:obj:`~.hipStreamSynchronize`,
+        :py:obj:`~.hipStreamDestroy`
 
     Args:
         stream: **[in]** stream to query
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle
     """
     _hipStreamQuery__retval = hipError_t(chip.hipStreamQuery(
@@ -27134,13 +27184,14 @@ def hipStreamSynchronize(object stream):
     or blocking.
 
     See:
-        hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamWaitEvent, hipStreamDestroy
+        :py:obj:`~.hipStreamCreate`, :py:obj:`~.hipStreamCreateWithFlags`, :py:obj:`~.hipStreamCreateWithPriority`, :py:obj:`~.hipStreamWaitEvent`, :py:obj:`~.hipStreamDestroy`
 
     Args:
         stream: **[in]** stream identifier.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidHandle
     """
     _hipStreamSynchronize__retval = hipError_t(chip.hipStreamSynchronize(
@@ -27161,7 +27212,7 @@ def hipStreamWaitEvent(object stream, object event, unsigned int flags):
     stream is created with hipStreamNonBlocking = 0.
 
     See:
-        hipStreamCreate, hipStreamCreateWithFlags, hipStreamCreateWithPriority, hipStreamSynchronize, hipStreamDestroy
+        :py:obj:`~.hipStreamCreate`, :py:obj:`~.hipStreamCreateWithFlags`, :py:obj:`~.hipStreamCreateWithPriority`, :py:obj:`~.hipStreamSynchronize`, :py:obj:`~.hipStreamDestroy`
 
     Args:
         stream: **[in]** stream to make wait.
@@ -27172,6 +27223,7 @@ def hipStreamWaitEvent(object stream, object event, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidHandle
     """
     _hipStreamWaitEvent__retval = hipError_t(chip.hipStreamWaitEvent(
@@ -27187,13 +27239,14 @@ def hipStreamGetFlags(object stream):
     Return flags associated with this stream in *``flags.``
 
     See:
-        hipStreamCreateWithFlags
+        :py:obj:`~.hipStreamCreateWithFlags`
 
     Args:
         stream: **[in]** stream to be queried
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidHandle
         - #hipSuccess #hipErrorInvalidValue #hipErrorInvalidHandle
         - flags: Pointer to an unsigned integer in which the stream's flags are returned
@@ -27211,13 +27264,14 @@ def hipStreamGetPriority(object stream):
     Query the priority of a stream. The priority is returned in in priority.
 
     See:
-        hipStreamCreateWithFlags
+        :py:obj:`~.hipStreamCreateWithFlags`
 
     Args:
         stream: **[in]** stream to be queried
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidHandle
         - #hipSuccess #hipErrorInvalidValue #hipErrorInvalidHandle
         - priority: Pointer to an unsigned integer in which the stream's priority is returned
@@ -27238,13 +27292,14 @@ def hipExtStreamCreateWithCUMask(unsigned int cuMaskSize):
     To release the memory used by the stream, application must call hipStreamDestroy.
 
     See:
-        hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
+        :py:obj:`~.hipStreamCreate`, :py:obj:`~.hipStreamSynchronize`, :py:obj:`~.hipStreamWaitEvent`, :py:obj:`~.hipStreamDestroy`
 
     Args:
         cuMaskSize: **[in]** Size of CU mask bit array passed in.
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
         - stream: Pointer to new stream
         - cuMask: Bit-vector representing the CU mask. Each active bit represents using one CU.
@@ -27263,7 +27318,7 @@ def hipExtStreamGetCUMask(object stream, unsigned int cuMaskSize):
     r"""Get CU mask associated with an asynchronous stream
 
     See:
-        hipStreamCreate, hipStreamSynchronize, hipStreamWaitEvent, hipStreamDestroy
+        :py:obj:`~.hipStreamCreate`, :py:obj:`~.hipStreamSynchronize`, :py:obj:`~.hipStreamWaitEvent`, :py:obj:`~.hipStreamDestroy`
 
     Args:
         stream: **[in]** stream to be queried
@@ -27272,6 +27327,7 @@ def hipExtStreamGetCUMask(object stream, unsigned int cuMaskSize):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidHandle, #hipErrorInvalidValue
         - cuMask: Pointer to a pre-allocated block of memories (uint32_t *) in which
                 the stream's CU mask is returned. The CU mask is returned in a chunck of 32 bits where
@@ -27357,8 +27413,8 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
     The callback will block later work in the stream until it is finished.
 
     See:
-        hipStreamCreate, hipStreamCreateWithFlags, hipStreamQuery, hipStreamSynchronize,
-        hipStreamWaitEvent, hipStreamDestroy, hipStreamCreateWithPriority
+        :py:obj:`~.hipStreamCreate`, :py:obj:`~.hipStreamCreateWithFlags`, :py:obj:`~.hipStreamQuery`, :py:obj:`~.hipStreamSynchronize`,
+        :py:obj:`~.hipStreamWaitEvent`, :py:obj:`~.hipStreamDestroy`, :py:obj:`~.hipStreamCreateWithPriority`
 
     Args:
         stream: **[in]**  Stream to add callback to
@@ -27371,6 +27427,7 @@ def hipStreamAddCallback(object stream, object callback, object userData, unsign
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidHandle, #hipErrorNotSupported
     """
     _hipStreamAddCallback__retval = hipError_t(chip.hipStreamAddCallback(
@@ -27404,8 +27461,8 @@ def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned
         it is still open to changes and may have outstanding issues.
 
     See:
-        hipExtMallocWithFlags, hipFree, hipStreamWaitValue64, hipStreamWriteValue64,
-        hipStreamWriteValue32, hipDeviceGetAttribute
+        :py:obj:`~.hipExtMallocWithFlags`, :py:obj:`~.hipFree`, :py:obj:`~.hipStreamWaitValue64`, :py:obj:`~.hipStreamWriteValue64`,
+        :py:obj:`~.hipStreamWriteValue32`, :py:obj:`~.hipDeviceGetAttribute`
 
     Args:
         stream: **[in]**  Stream identifier
@@ -27422,6 +27479,7 @@ def hipStreamWaitValue32(object stream, object ptr, unsigned int value, unsigned
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipStreamWaitValue32__retval = hipError_t(chip.hipStreamWaitValue32(
@@ -27454,8 +27512,8 @@ def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigne
         it is still open to changes and may have outstanding issues.
 
     See:
-        hipExtMallocWithFlags, hipFree, hipStreamWaitValue32, hipStreamWriteValue64,
-        hipStreamWriteValue32, hipDeviceGetAttribute
+        :py:obj:`~.hipExtMallocWithFlags`, :py:obj:`~.hipFree`, :py:obj:`~.hipStreamWaitValue32`, :py:obj:`~.hipStreamWriteValue64`,
+        :py:obj:`~.hipStreamWriteValue32`, :py:obj:`~.hipDeviceGetAttribute`
 
     Args:
         stream: **[in]**  Stream identifier
@@ -27472,6 +27530,7 @@ def hipStreamWaitValue64(object stream, object ptr, unsigned long value, unsigne
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipStreamWaitValue64__retval = hipError_t(chip.hipStreamWaitValue64(
@@ -27492,8 +27551,8 @@ def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigne
         it is still open to changes and may have outstanding issues.
 
     See:
-        hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
-        hipStreamWaitValue64
+        :py:obj:`~.hipExtMallocWithFlags`, :py:obj:`~.hipFree`, :py:obj:`~.hipStreamWriteValue32`, :py:obj:`~.hipStreamWaitValue32`,
+        :py:obj:`~.hipStreamWaitValue64`
 
     Args:
         stream: **[in]**  Stream identifier
@@ -27506,6 +27565,7 @@ def hipStreamWriteValue32(object stream, object ptr, unsigned int value, unsigne
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipStreamWriteValue32__retval = hipError_t(chip.hipStreamWriteValue32(
@@ -27526,8 +27586,8 @@ def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsign
         it is still open to changes and may have outstanding issues.
 
     See:
-        hipExtMallocWithFlags, hipFree, hipStreamWriteValue32, hipStreamWaitValue32,
-        hipStreamWaitValue64
+        :py:obj:`~.hipExtMallocWithFlags`, :py:obj:`~.hipFree`, :py:obj:`~.hipStreamWriteValue32`, :py:obj:`~.hipStreamWaitValue32`,
+        :py:obj:`~.hipStreamWaitValue64`
 
     Args:
         stream: **[in]**  Stream identifier
@@ -27540,6 +27600,7 @@ def hipStreamWriteValue64(object stream, object ptr, unsigned long value, unsign
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipStreamWriteValue64__retval = hipError_t(chip.hipStreamWriteValue64(
@@ -27553,7 +27614,7 @@ def hipEventCreateWithFlags(unsigned int flags):
     r"""Create an event with the specified flags
 
     See:
-        hipEventCreate, hipEventSynchronize, hipEventDestroy, hipEventElapsedTime
+        :py:obj:`~.hipEventCreate`, :py:obj:`~.hipEventSynchronize`, :py:obj:`~.hipEventDestroy`, :py:obj:`~.hipEventElapsedTime`
 
     Args:
         flags: **[in]** Flags to control event behavior.  Valid values are #hipEventDefault,
@@ -27571,6 +27632,7 @@ def hipEventCreateWithFlags(unsigned int flags):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
             #hipErrorLaunchFailure, #hipErrorOutOfMemory
         - event: Returns the newly created event.
@@ -27587,11 +27649,12 @@ def hipEventCreate():
     Create an event
 
     See:
-        hipEventCreateWithFlags, hipEventRecord, hipEventQuery, hipEventSynchronize,
-        hipEventDestroy, hipEventElapsedTime
+        :py:obj:`~.hipEventCreateWithFlags`, :py:obj:`~.hipEventRecord`, :py:obj:`~.hipEventQuery`, :py:obj:`~.hipEventSynchronize`,
+        :py:obj:`~.hipEventDestroy`, :py:obj:`~.hipEventElapsedTime`
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
             #hipErrorLaunchFailure, #hipErrorOutOfMemory
         - event: Returns the newly created event.
@@ -27620,14 +27683,15 @@ def hipEventDestroy(object event):
     completion_future resources will be released later, when the hipDevice is synchronized.
 
     See:
-        hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventSynchronize, hipEventRecord,
-        hipEventElapsedTime
+        :py:obj:`~.hipEventCreate`, :py:obj:`~.hipEventCreateWithFlags`, :py:obj:`~.hipEventQuery`, :py:obj:`~.hipEventSynchronize`, :py:obj:`~.hipEventRecord`,
+        :py:obj:`~.hipEventElapsedTime`
 
     Args:
         event: **[in]** Event to destroy.
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorNotInitialized, #hipErrorInvalidValue,
             #hipErrorLaunchFailure
         - #hipSuccess
@@ -27649,14 +27713,15 @@ def hipEventSynchronize(object event):
      TODO-hip- This function needs to support hipEventBlockingSync parameter.
 
     See:
-        hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
-        hipEventElapsedTime
+        :py:obj:`~.hipEventCreate`, :py:obj:`~.hipEventCreateWithFlags`, :py:obj:`~.hipEventQuery`, :py:obj:`~.hipEventDestroy`, :py:obj:`~.hipEventRecord`,
+        :py:obj:`~.hipEventElapsedTime`
 
     Args:
         event: **[in]** Event on which to wait.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized,
             #hipErrorInvalidHandle, #hipErrorLaunchFailure
     """
@@ -27686,8 +27751,8 @@ def hipEventElapsedTime(object start, object stop):
     least one of the events), then #hipErrorNotReady is returned.
 
     See:
-        hipEventCreate, hipEventCreateWithFlags, hipEventQuery, hipEventDestroy, hipEventRecord,
-        hipEventSynchronize
+        :py:obj:`~.hipEventCreate`, :py:obj:`~.hipEventCreateWithFlags`, :py:obj:`~.hipEventQuery`, :py:obj:`~.hipEventDestroy`, :py:obj:`~.hipEventRecord`,
+        :py:obj:`~.hipEventSynchronize`
 
     Args:
         start: **[in]** Start event.
@@ -27696,6 +27761,7 @@ def hipEventElapsedTime(object start, object stop):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotReady, #hipErrorInvalidHandle,
             #hipErrorNotInitialized, #hipErrorLaunchFailure
         - ms: Return time between start and stop in ms.
@@ -27717,14 +27783,15 @@ def hipEventQuery(object event):
     returned.
 
     See:
-        hipEventCreate, hipEventCreateWithFlags, hipEventRecord, hipEventDestroy,
-        hipEventSynchronize, hipEventElapsedTime
+        :py:obj:`~.hipEventCreate`, :py:obj:`~.hipEventCreateWithFlags`, :py:obj:`~.hipEventRecord`, :py:obj:`~.hipEventDestroy`,
+        :py:obj:`~.hipEventSynchronize`, :py:obj:`~.hipEventElapsedTime`
 
     Args:
         event: **[in]** Event to query.
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorNotReady, #hipErrorInvalidHandle, #hipErrorInvalidValue,
             #hipErrorNotInitialized, #hipErrorLaunchFailure
     """
@@ -27738,7 +27805,7 @@ def hipPointerGetAttributes(object attributes, object ptr):
     r"""Return attributes for the specified pointer
 
     See:
-        hipPointerGetAttribute
+        :py:obj:`~.hipPointerGetAttribute`
 
     Args:
         attributes: **[out]** attributes for the specified pointer
@@ -27747,6 +27814,7 @@ def hipPointerGetAttributes(object attributes, object ptr):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     _hipPointerGetAttributes__retval = hipError_t(chip.hipPointerGetAttributes(
@@ -27764,7 +27832,7 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
         it is still open to changes and may have outstanding issues.
 
     See:
-        hipPointerGetAttributes
+        :py:obj:`~.hipPointerGetAttributes`
 
     Args:
         data: **[in,out]** returned pointer attribute value
@@ -27775,6 +27843,7 @@ def hipPointerGetAttribute(object data, object attribute, object ptr):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     if not isinstance(attribute,_hipPointer_attribute__Base):
@@ -27794,7 +27863,7 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
         it is still open to changes and may have outstanding issues.
 
     See:
-        hipPointerGetAttribute
+        :py:obj:`~.hipPointerGetAttribute`
 
     Args:
         numAttributes: **[in]** number of attributes to query for
@@ -27803,6 +27872,7 @@ def hipDrvPointerGetAttributes(unsigned int numAttributes, object ptr):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
         - attributes: attributes to query for
         - data: a two-dimensional containing pointers to memory locations
@@ -27829,6 +27899,7 @@ def hipImportExternalSemaphore(object extSem_out, object semHandleDesc):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     _hipImportExternalSemaphore__retval = hipError_t(chip.hipImportExternalSemaphore(
@@ -27854,6 +27925,7 @@ def hipSignalExternalSemaphoresAsync(object extSemArray, object paramsArray, uns
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     _hipSignalExternalSemaphoresAsync__retval = hipError_t(chip.hipSignalExternalSemaphoresAsync(
@@ -27880,6 +27952,7 @@ def hipWaitExternalSemaphoresAsync(object extSemArray, object paramsArray, unsig
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     _hipWaitExternalSemaphoresAsync__retval = hipError_t(chip.hipWaitExternalSemaphoresAsync(
@@ -27900,6 +27973,7 @@ def hipDestroyExternalSemaphore(object extSem):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     _hipDestroyExternalSemaphore__retval = hipError_t(chip.hipDestroyExternalSemaphore(
@@ -27921,6 +27995,7 @@ def hipImportExternalMemory(object extMem_out, object memHandleDesc):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     _hipImportExternalMemory__retval = hipError_t(chip.hipImportExternalMemory(
@@ -27943,6 +28018,7 @@ def hipExternalMemoryGetMappedBuffer(object extMem, object bufferDesc):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
         - devPtr: Returned device pointer to buffer
     """
@@ -27966,6 +28042,7 @@ def hipDestroyExternalMemory(object extMem):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     _hipDestroyExternalMemory__retval = hipError_t(chip.hipDestroyExternalMemory(
@@ -27980,14 +28057,15 @@ def hipMalloc(unsigned long size):
     If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 
     See:
-        hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
-        hipHostFree, hipHostMalloc
+        :py:obj:`~.hipMallocPitch`, :py:obj:`~.hipFree`, :py:obj:`~.hipMallocArray`, :py:obj:`~.hipFreeArray`, :py:obj:`~.hipMalloc3D`, :py:obj:`~.hipMalloc3DArray`,
+        :py:obj:`~.hipHostFree`, :py:obj:`~.hipHostMalloc`
 
     Args:
         size: **[in]** Requested memory size
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
         - ptr: Pointer to the allocated memory
     """
@@ -28005,8 +28083,8 @@ def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
     If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 
     See:
-        hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D, hipMalloc3DArray,
-        hipHostFree, hipHostMalloc
+        :py:obj:`~.hipMallocPitch`, :py:obj:`~.hipFree`, :py:obj:`~.hipMallocArray`, :py:obj:`~.hipFreeArray`, :py:obj:`~.hipMalloc3D`, :py:obj:`~.hipMalloc3DArray`,
+        :py:obj:`~.hipHostFree`, :py:obj:`~.hipHostMalloc`
 
     Args:
         size: **[in]** Requested memory size
@@ -28015,6 +28093,7 @@ def hipExtMallocWithFlags(unsigned long sizeBytes, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorOutOfMemory, #hipErrorInvalidValue (bad context, null *ptr)
         - ptr: Pointer to the allocated memory
     """
@@ -28039,6 +28118,7 @@ def hipMallocHost(unsigned long size):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorOutOfMemory
         - ptr: Pointer to the allocated host pinned memory
     """
@@ -28062,6 +28142,7 @@ def hipMemAllocHost(unsigned long size):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorOutOfMemory
         - ptr: Pointer to the allocated host pinned memory
     """
@@ -28078,7 +28159,7 @@ def hipHostMalloc(unsigned long size, unsigned int flags):
     If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 
     See:
-        hipSetDeviceFlags, hipHostFree
+        :py:obj:`~.hipSetDeviceFlags`, :py:obj:`~.hipHostFree`
 
     Args:
         size: **[in]** Requested memory size
@@ -28087,6 +28168,7 @@ def hipHostMalloc(unsigned long size, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorOutOfMemory
         - ptr: Pointer to the allocated host pinned memory
     """
@@ -28108,6 +28190,7 @@ def hipMallocManaged(unsigned long size, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorMemoryAllocation, #hipErrorNotSupported, #hipErrorInvalidValue
         - dev_ptr:  pointer to allocated device memory
     """
@@ -28133,6 +28216,7 @@ def hipMemPrefetchAsync(object dev_ptr, unsigned long count, int device, object 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipMemPrefetchAsync__retval = hipError_t(chip.hipMemPrefetchAsync(
@@ -28156,6 +28240,7 @@ def hipMemAdvise(object dev_ptr, unsigned long count, object advice, int device)
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(advice,_hipMemoryAdvise__Base):
@@ -28183,6 +28268,7 @@ def hipMemRangeGetAttribute(object data, unsigned long data_size, object attribu
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(attribute,_hipMemRangeAttribute__Base):
@@ -28207,6 +28293,7 @@ def hipMemRangeGetAttributes(unsigned long num_attributes, object dev_ptr, unsig
 
     Returns:
         A ``tuple`` of size 4 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - data: a two-dimensional array containing pointers to memory locations
                 where the result of each attribute query will be written to
@@ -28239,6 +28326,7 @@ def hipStreamAttachMemAsync(object stream, object dev_ptr, unsigned long length,
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipStreamAttachMemAsync__retval = hipError_t(chip.hipStreamAttachMemAsync(
@@ -28270,8 +28358,8 @@ def hipMallocAsync(unsigned long size, object stream):
         are used to set the node's creation parameters.
 
     See:
-        hipMallocFromPoolAsync, hipFreeAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+        :py:obj:`~.hipMallocFromPoolAsync`, :py:obj:`~.hipFreeAsync`, :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipMemPoolGetAttribute`,
+        :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28285,6 +28373,7 @@ def hipMallocAsync(unsigned long size, object stream):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
         - dev_ptr: Returned device pointer of memory allocation
     """
@@ -28310,8 +28399,8 @@ def hipFreeAsync(object dev_ptr, object stream):
         must therefore be passed the address of a graph allocation.
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipMemPoolTrimTo, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+        :py:obj:`~.hipMallocFromPoolAsync`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipMemPoolGetAttribute`,
+        :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28324,6 +28413,7 @@ def hipFreeAsync(object dev_ptr, object stream):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue, hipErrorNotSupported
     """
     _hipFreeAsync__retval = hipError_t(chip.hipFreeAsync(
@@ -28349,8 +28439,8 @@ def hipMemPoolTrimTo(object mem_pool, unsigned long min_bytes_to_hold):
         not been observed on the host (eg. by a synchronize) can count as outstanding.
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-        hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+        :py:obj:`~.hipMallocFromPoolAsync`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipFreeAsync`, :py:obj:`~.hipMemPoolGetAttribute`,
+        :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28365,6 +28455,7 @@ def hipMemPoolTrimTo(object mem_pool, unsigned long min_bytes_to_hold):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipMemPoolTrimTo__retval = hipError_t(chip.hipMemPoolTrimTo(
@@ -28398,8 +28489,8 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
                                      a piece of memory released by ``hipFreeAsync`` (default enabled).
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAccess, hipMemPoolGetAccess
+        :py:obj:`~.hipMallocFromPoolAsync`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipFreeAsync`, :py:obj:`~.hipMemPoolGetAttribute`,
+        :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28414,6 +28505,7 @@ def hipMemPoolSetAttribute(object mem_pool, object attr, object value):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(attr,_hipMemPoolAttr__Base):
@@ -28450,8 +28542,8 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
                                      a piece of memory released by ``hipFreeAsync`` (default enabled).
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync,
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+        :py:obj:`~.hipMallocFromPoolAsync`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipFreeAsync`,
+        :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28466,6 +28558,7 @@ def hipMemPoolGetAttribute(object mem_pool, object attr, object value):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(attr,_hipMemPoolAttr__Base):
@@ -28481,8 +28574,8 @@ def hipMemPoolSetAccess(object mem_pool, object desc_list, unsigned long count):
     r"""Controls visibility of the specified pool between devices
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolGetAccess
+        :py:obj:`~.hipMallocFromPoolAsync`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipFreeAsync`, :py:obj:`~.hipMemPoolGetAttribute`,
+        :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28497,6 +28590,7 @@ def hipMemPoolSetAccess(object mem_pool, object desc_list, unsigned long count):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipMemPoolSetAccess__retval = hipError_t(chip.hipMemPoolSetAccess(
@@ -28512,8 +28606,8 @@ def hipMemPoolGetAccess(object mem_pool, object location):
     Returns the accessibility of the pool's memory from the specified location.
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute,
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess
+        :py:obj:`~.hipMallocFromPoolAsync`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipFreeAsync`, :py:obj:`~.hipMemPoolGetAttribute`,
+        :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28526,6 +28620,7 @@ def hipMemPoolGetAccess(object mem_pool, object location):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - flags: Accessibility of the memory pool from the specified location/device
     """
@@ -28549,8 +28644,8 @@ def hipMemPoolCreate(object pool_props):
         Specifying hipMemHandleTypeNone creates a memory pool that will not support IPC.
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolDestroy,
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+        :py:obj:`~.hipMallocFromPoolAsync`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipFreeAsync`, :py:obj:`~.hipMemPoolGetAttribute`, :py:obj:`~.hipMemPoolDestroy`,
+        :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28561,6 +28656,7 @@ def hipMemPoolCreate(object pool_props):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
         - mem_pool: Contains createed memory pool
     """
@@ -28587,8 +28683,8 @@ def hipMemPoolDestroy(object mem_pool):
         A device's default memory pool cannot be destroyed.
 
     See:
-        hipMallocFromPoolAsync, hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolCreate
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess
+        :py:obj:`~.hipMallocFromPoolAsync`, :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipFreeAsync`, :py:obj:`~.hipMemPoolGetAttribute`, :py:obj:`~.hipMemPoolCreate`
+        :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28599,6 +28695,7 @@ def hipMemPoolDestroy(object mem_pool):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipMemPoolDestroy__retval = hipError_t(chip.hipMemPoolDestroy(
@@ -28628,8 +28725,8 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
         are used to set the node's creation parameters.
 
     See:
-        hipMallocAsync, hipFreeAsync, hipMemPoolGetAttribute, hipMemPoolCreate
-        hipMemPoolTrimTo, hipDeviceSetMemPool, hipMemPoolSetAttribute, hipMemPoolSetAccess, hipMemPoolGetAccess,
+        :py:obj:`~.hipMallocAsync`, :py:obj:`~.hipFreeAsync`, :py:obj:`~.hipMemPoolGetAttribute`, :py:obj:`~.hipMemPoolCreate`
+        :py:obj:`~.hipMemPoolTrimTo`, :py:obj:`~.hipDeviceSetMemPool`, :py:obj:`~.hipMemPoolSetAttribute`, :py:obj:`~.hipMemPoolSetAccess`, :py:obj:`~.hipMemPoolGetAccess`,
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28644,6 +28741,7 @@ def hipMallocFromPoolAsync(unsigned long size, object mem_pool, object stream):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported, #hipErrorOutOfMemory
         - dev_ptr: Returned device pointer
     """
@@ -28671,7 +28769,7 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
         than ``hipMemHandleTypeNone.``
 
     See:
-        hipMemPoolImportFromShareableHandle
+        :py:obj:`~.hipMemPoolImportFromShareableHandle`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28688,6 +28786,7 @@ def hipMemPoolExportToShareableHandle(object shared_handle, object mem_pool, obj
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
     """
     if not isinstance(handle_type,_hipMemAllocationHandleType__Base):
@@ -28710,7 +28809,7 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
         or ``hipMallocFromPoolAsync`` calls.
 
     See:
-        hipMemPoolExportToShareableHandle
+        :py:obj:`~.hipMemPoolExportToShareableHandle`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28725,6 +28824,7 @@ def hipMemPoolImportFromShareableHandle(object shared_handle, object handle_type
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
         - mem_pool: Returned memory pool
     """
@@ -28745,7 +28845,7 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
     The data is not a handle and may be shared through any IPC mechanism.
 
     See:
-        hipMemPoolImportPointer
+        :py:obj:`~.hipMemPoolImportPointer`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28758,6 +28858,7 @@ def hipMemPoolExportPointer(object export_data, object dev_ptr):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
     """
     _hipMemPoolExportPointer__retval = hipError_t(chip.hipMemPoolExportPointer(
@@ -28784,7 +28885,7 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
         a stream dependency on the importing process's ``hipFreeAsync.``
 
     See:
-        hipMemPoolExportPointer
+        :py:obj:`~.hipMemPoolExportPointer`
 
     Warning:
         This API is marked as beta, meaning, while this is feature complete,
@@ -28797,6 +28898,7 @@ def hipMemPoolImportPointer(object mem_pool, object export_data):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized, #hipErrorOutOfMemory
         - dev_ptr: Pointer to imported memory
     """
@@ -28824,6 +28926,7 @@ def hipHostAlloc(unsigned long size, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorOutOfMemory
         - ptr: Pointer to the allocated host pinned memory
     """
@@ -28838,7 +28941,7 @@ def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
     r"""Get Device pointer from Host Pointer allocated through hipHostMalloc
 
     See:
-        hipSetDeviceFlags, hipHostMalloc
+        :py:obj:`~.hipSetDeviceFlags`, :py:obj:`~.hipHostMalloc`
 
     Args:
         dstPtr: **[out]** Device Pointer mapped to passed host pointer
@@ -28849,6 +28952,7 @@ def hipHostGetDevicePointer(object hstPtr, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorOutOfMemory
     """
     devPtr = hip._util.types.DataHandle.from_ptr(NULL)
@@ -28863,13 +28967,14 @@ def hipHostGetFlags(object hostPtr):
     r"""Return flags associated with host pointer
 
     See:
-        hipHostMalloc
+        :py:obj:`~.hipHostMalloc`
 
     Args:
         hostPtr: **[in]** Host Pointer allocated through hipHostMalloc
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - flagsPtr: Memory location to store flags
     """
@@ -28908,7 +29013,7 @@ def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags)
     region.
 
     See:
-        hipHostUnregister, hipHostGetFlags, hipHostGetDevicePointer
+        :py:obj:`~.hipHostUnregister`, :py:obj:`~.hipHostGetFlags`, :py:obj:`~.hipHostGetDevicePointer`
 
     Args:
         hostPtr: **[out]** Pointer to host memory to be registered.
@@ -28919,6 +29024,7 @@ def hipHostRegister(object hostPtr, unsigned long sizeBytes, unsigned int flags)
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorOutOfMemory
     """
     _hipHostRegister__retval = hipError_t(chip.hipHostRegister(
@@ -28931,13 +29037,14 @@ def hipHostUnregister(object hostPtr):
     r"""Un-register host pointer
 
     See:
-        hipHostRegister
+        :py:obj:`~.hipHostRegister`
 
     Args:
         hostPtr: **[in]** Host pointer previously registered with #hipHostRegister
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - Error code
     """
     _hipHostUnregister__retval = hipError_t(chip.hipHostUnregister(
@@ -28957,8 +29064,8 @@ def hipMallocPitch(unsigned long width, unsigned long height):
     If size is 0, no memory is allocated, *ptr returns nullptr, and hipSuccess is returned.
 
     See:
-        hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
-        hipMalloc3DArray, hipHostMalloc
+        :py:obj:`~.hipMalloc`, :py:obj:`~.hipFree`, :py:obj:`~.hipMallocArray`, :py:obj:`~.hipFreeArray`, :py:obj:`~.hipHostFree`, :py:obj:`~.hipMalloc3D`,
+        :py:obj:`~.hipMalloc3DArray`, :py:obj:`~.hipHostMalloc`
 
     Args:
         width: **[in]** Requested pitched allocation width (in bytes)
@@ -28967,6 +29074,7 @@ def hipMallocPitch(unsigned long width, unsigned long height):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - Error code
         - ptr: Pointer to the allocated device memory
         - pitch: Pitch for allocation (in bytes)
@@ -28993,8 +29101,8 @@ def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned 
     T* pElement = (T*)((char*)BaseAddress + Row * Pitch) + Column;
 
     See:
-        hipMalloc, hipFree, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
-        hipMalloc3DArray, hipHostMalloc
+        :py:obj:`~.hipMalloc`, :py:obj:`~.hipFree`, :py:obj:`~.hipMallocArray`, :py:obj:`~.hipFreeArray`, :py:obj:`~.hipHostFree`, :py:obj:`~.hipMalloc3D`,
+        :py:obj:`~.hipMalloc3DArray`, :py:obj:`~.hipHostMalloc`
 
     Args:
         width: **[in]** Requested pitched allocation width (in bytes)
@@ -29003,6 +29111,7 @@ def hipMemAllocPitch(unsigned long widthInBytes, unsigned long height, unsigned 
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - Error code
         - dptr: Pointer to the allocated device memory
         - pitch: Pitch for allocation (in bytes)
@@ -29021,14 +29130,15 @@ def hipFree(object ptr):
      If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
 
     See:
-        hipMalloc, hipMallocPitch, hipMallocArray, hipFreeArray, hipHostFree, hipMalloc3D,
-        hipMalloc3DArray, hipHostMalloc
+        :py:obj:`~.hipMalloc`, :py:obj:`~.hipMallocPitch`, :py:obj:`~.hipMallocArray`, :py:obj:`~.hipFreeArray`, :py:obj:`~.hipHostFree`, :py:obj:`~.hipMalloc3D`,
+        :py:obj:`~.hipMalloc3DArray`, :py:obj:`~.hipHostMalloc`
 
     Args:
         ptr: **[in]** Pointer to memory to be freed
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess
         - #hipErrorInvalidDevicePointer (if pointer is invalid, including host pointers allocated
             with hipHostMalloc)
@@ -29050,6 +29160,7 @@ def hipFreeHost(object ptr):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess,
                        #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
             hipMalloc)
@@ -29066,14 +29177,15 @@ def hipHostFree(object ptr):
      If pointer is NULL, the hip runtime is initialized and hipSuccess is returned.
 
     See:
-        hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipFreeArray, hipMalloc3D,
-        hipMalloc3DArray, hipHostMalloc
+        :py:obj:`~.hipMalloc`, :py:obj:`~.hipMallocPitch`, :py:obj:`~.hipFree`, :py:obj:`~.hipMallocArray`, :py:obj:`~.hipFreeArray`, :py:obj:`~.hipMalloc3D`,
+        :py:obj:`~.hipMalloc3DArray`, :py:obj:`~.hipHostMalloc`
 
     Args:
         ptr: **[in]** Pointer to memory to be freed
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess,
                      #hipErrorInvalidValue (if pointer is invalid, including device pointers allocated with
             hipMalloc)
@@ -29101,12 +29213,12 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
     undefined behavior.
 
     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+        :py:obj:`~.hipArrayCreate`, :py:obj:`~.hipArrayDestroy`, :py:obj:`~.hipArrayGetDescriptor`, :py:obj:`~.hipMemAlloc`, :py:obj:`~.hipMemAllocHost`,
+        :py:obj:`~.hipMemAllocPitch`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpy2DAsync`, :py:obj:`~.hipMemcpy2DUnaligned`, :py:obj:`~.hipMemcpyAtoA`,
+        :py:obj:`~.hipMemcpyAtoD`, :py:obj:`~.hipMemcpyAtoH`, :py:obj:`~.hipMemcpyAtoHAsync`, :py:obj:`~.hipMemcpyDtoA`, :py:obj:`~.hipMemcpyDtoD`,
+        :py:obj:`~.hipMemcpyDtoDAsync`, :py:obj:`~.hipMemcpyDtoH`, :py:obj:`~.hipMemcpyDtoHAsync`, :py:obj:`~.hipMemcpyHtoA`, :py:obj:`~.hipMemcpyHtoAAsync`,
+        :py:obj:`~.hipMemcpyHtoDAsync`, :py:obj:`~.hipMemFree`, :py:obj:`~.hipMemFreeHost`, :py:obj:`~.hipMemGetAddressRange`, :py:obj:`~.hipMemGetInfo`,
+        :py:obj:`~.hipMemHostAlloc`, :py:obj:`~.hipMemHostGetDevicePointer`
 
     Args:
         dst: **[out]** Data being copy to
@@ -29119,6 +29231,7 @@ def hipMemcpy(object dst, object src, unsigned long sizeBytes, object kind):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknowni
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -29147,12 +29260,12 @@ def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
     r"""Copy data from Host to Device
 
     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+        :py:obj:`~.hipArrayCreate`, :py:obj:`~.hipArrayDestroy`, :py:obj:`~.hipArrayGetDescriptor`, :py:obj:`~.hipMemAlloc`, :py:obj:`~.hipMemAllocHost`,
+        :py:obj:`~.hipMemAllocPitch`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpy2DAsync`, :py:obj:`~.hipMemcpy2DUnaligned`, :py:obj:`~.hipMemcpyAtoA`,
+        :py:obj:`~.hipMemcpyAtoD`, :py:obj:`~.hipMemcpyAtoH`, :py:obj:`~.hipMemcpyAtoHAsync`, :py:obj:`~.hipMemcpyDtoA`, :py:obj:`~.hipMemcpyDtoD`,
+        :py:obj:`~.hipMemcpyDtoDAsync`, :py:obj:`~.hipMemcpyDtoH`, :py:obj:`~.hipMemcpyDtoHAsync`, :py:obj:`~.hipMemcpyHtoA`, :py:obj:`~.hipMemcpyHtoAAsync`,
+        :py:obj:`~.hipMemcpyHtoDAsync`, :py:obj:`~.hipMemFree`, :py:obj:`~.hipMemFreeHost`, :py:obj:`~.hipMemGetAddressRange`, :py:obj:`~.hipMemGetInfo`,
+        :py:obj:`~.hipMemHostAlloc`, :py:obj:`~.hipMemHostGetDevicePointer`
 
     Args:
         dst: **[out]** Data being copy to
@@ -29163,6 +29276,7 @@ def hipMemcpyHtoD(object dst, object src, unsigned long sizeBytes):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
             #hipErrorInvalidValue
     """
@@ -29177,12 +29291,12 @@ def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
     r"""Copy data from Device to Host
 
     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+        :py:obj:`~.hipArrayCreate`, :py:obj:`~.hipArrayDestroy`, :py:obj:`~.hipArrayGetDescriptor`, :py:obj:`~.hipMemAlloc`, :py:obj:`~.hipMemAllocHost`,
+        :py:obj:`~.hipMemAllocPitch`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpy2DAsync`, :py:obj:`~.hipMemcpy2DUnaligned`, :py:obj:`~.hipMemcpyAtoA`,
+        :py:obj:`~.hipMemcpyAtoD`, :py:obj:`~.hipMemcpyAtoH`, :py:obj:`~.hipMemcpyAtoHAsync`, :py:obj:`~.hipMemcpyDtoA`, :py:obj:`~.hipMemcpyDtoD`,
+        :py:obj:`~.hipMemcpyDtoDAsync`, :py:obj:`~.hipMemcpyDtoH`, :py:obj:`~.hipMemcpyDtoHAsync`, :py:obj:`~.hipMemcpyHtoA`, :py:obj:`~.hipMemcpyHtoAAsync`,
+        :py:obj:`~.hipMemcpyHtoDAsync`, :py:obj:`~.hipMemFree`, :py:obj:`~.hipMemFreeHost`, :py:obj:`~.hipMemGetAddressRange`, :py:obj:`~.hipMemGetInfo`,
+        :py:obj:`~.hipMemHostAlloc`, :py:obj:`~.hipMemHostGetDevicePointer`
 
     Args:
         dst: **[out]** Data being copy to
@@ -29193,6 +29307,7 @@ def hipMemcpyDtoH(object dst, object src, unsigned long sizeBytes):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
             #hipErrorInvalidValue
     """
@@ -29207,12 +29322,12 @@ def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
     r"""Copy data from Device to Device
 
     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+        :py:obj:`~.hipArrayCreate`, :py:obj:`~.hipArrayDestroy`, :py:obj:`~.hipArrayGetDescriptor`, :py:obj:`~.hipMemAlloc`, :py:obj:`~.hipMemAllocHost`,
+        :py:obj:`~.hipMemAllocPitch`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpy2DAsync`, :py:obj:`~.hipMemcpy2DUnaligned`, :py:obj:`~.hipMemcpyAtoA`,
+        :py:obj:`~.hipMemcpyAtoD`, :py:obj:`~.hipMemcpyAtoH`, :py:obj:`~.hipMemcpyAtoHAsync`, :py:obj:`~.hipMemcpyDtoA`, :py:obj:`~.hipMemcpyDtoD`,
+        :py:obj:`~.hipMemcpyDtoDAsync`, :py:obj:`~.hipMemcpyDtoH`, :py:obj:`~.hipMemcpyDtoHAsync`, :py:obj:`~.hipMemcpyHtoA`, :py:obj:`~.hipMemcpyHtoAAsync`,
+        :py:obj:`~.hipMemcpyHtoDAsync`, :py:obj:`~.hipMemFree`, :py:obj:`~.hipMemFreeHost`, :py:obj:`~.hipMemGetAddressRange`, :py:obj:`~.hipMemGetInfo`,
+        :py:obj:`~.hipMemHostAlloc`, :py:obj:`~.hipMemHostGetDevicePointer`
 
     Args:
         dst: **[out]** Data being copy to
@@ -29223,6 +29338,7 @@ def hipMemcpyDtoD(object dst, object src, unsigned long sizeBytes):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
             #hipErrorInvalidValue
     """
@@ -29237,12 +29353,12 @@ def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object s
     r"""Copy data from Host to Device asynchronously
 
     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+        :py:obj:`~.hipArrayCreate`, :py:obj:`~.hipArrayDestroy`, :py:obj:`~.hipArrayGetDescriptor`, :py:obj:`~.hipMemAlloc`, :py:obj:`~.hipMemAllocHost`,
+        :py:obj:`~.hipMemAllocPitch`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpy2DAsync`, :py:obj:`~.hipMemcpy2DUnaligned`, :py:obj:`~.hipMemcpyAtoA`,
+        :py:obj:`~.hipMemcpyAtoD`, :py:obj:`~.hipMemcpyAtoH`, :py:obj:`~.hipMemcpyAtoHAsync`, :py:obj:`~.hipMemcpyDtoA`, :py:obj:`~.hipMemcpyDtoD`,
+        :py:obj:`~.hipMemcpyDtoDAsync`, :py:obj:`~.hipMemcpyDtoH`, :py:obj:`~.hipMemcpyDtoHAsync`, :py:obj:`~.hipMemcpyHtoA`, :py:obj:`~.hipMemcpyHtoAAsync`,
+        :py:obj:`~.hipMemcpyHtoDAsync`, :py:obj:`~.hipMemFree`, :py:obj:`~.hipMemFreeHost`, :py:obj:`~.hipMemGetAddressRange`, :py:obj:`~.hipMemGetInfo`,
+        :py:obj:`~.hipMemHostAlloc`, :py:obj:`~.hipMemHostGetDevicePointer`
 
     Args:
         dst: **[out]** Data being copy to
@@ -29253,6 +29369,7 @@ def hipMemcpyHtoDAsync(object dst, object src, unsigned long sizeBytes, object s
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
             #hipErrorInvalidValue
     """
@@ -29268,12 +29385,12 @@ def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object s
     r"""Copy data from Device to Host asynchronously
 
     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+        :py:obj:`~.hipArrayCreate`, :py:obj:`~.hipArrayDestroy`, :py:obj:`~.hipArrayGetDescriptor`, :py:obj:`~.hipMemAlloc`, :py:obj:`~.hipMemAllocHost`,
+        :py:obj:`~.hipMemAllocPitch`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpy2DAsync`, :py:obj:`~.hipMemcpy2DUnaligned`, :py:obj:`~.hipMemcpyAtoA`,
+        :py:obj:`~.hipMemcpyAtoD`, :py:obj:`~.hipMemcpyAtoH`, :py:obj:`~.hipMemcpyAtoHAsync`, :py:obj:`~.hipMemcpyDtoA`, :py:obj:`~.hipMemcpyDtoD`,
+        :py:obj:`~.hipMemcpyDtoDAsync`, :py:obj:`~.hipMemcpyDtoH`, :py:obj:`~.hipMemcpyDtoHAsync`, :py:obj:`~.hipMemcpyHtoA`, :py:obj:`~.hipMemcpyHtoAAsync`,
+        :py:obj:`~.hipMemcpyHtoDAsync`, :py:obj:`~.hipMemFree`, :py:obj:`~.hipMemFreeHost`, :py:obj:`~.hipMemGetAddressRange`, :py:obj:`~.hipMemGetInfo`,
+        :py:obj:`~.hipMemHostAlloc`, :py:obj:`~.hipMemHostGetDevicePointer`
 
     Args:
         dst: **[out]** Data being copy to
@@ -29284,6 +29401,7 @@ def hipMemcpyDtoHAsync(object dst, object src, unsigned long sizeBytes, object s
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
             #hipErrorInvalidValue
     """
@@ -29299,12 +29417,12 @@ def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object s
     r"""Copy data from Device to Device asynchronously
 
     See:
-        hipArrayCreate, hipArrayDestroy, hipArrayGetDescriptor, hipMemAlloc, hipMemAllocHost,
-        hipMemAllocPitch, hipMemcpy2D, hipMemcpy2DAsync, hipMemcpy2DUnaligned, hipMemcpyAtoA,
-        hipMemcpyAtoD, hipMemcpyAtoH, hipMemcpyAtoHAsync, hipMemcpyDtoA, hipMemcpyDtoD,
-        hipMemcpyDtoDAsync, hipMemcpyDtoH, hipMemcpyDtoHAsync, hipMemcpyHtoA, hipMemcpyHtoAAsync,
-        hipMemcpyHtoDAsync, hipMemFree, hipMemFreeHost, hipMemGetAddressRange, hipMemGetInfo,
-        hipMemHostAlloc, hipMemHostGetDevicePointer
+        :py:obj:`~.hipArrayCreate`, :py:obj:`~.hipArrayDestroy`, :py:obj:`~.hipArrayGetDescriptor`, :py:obj:`~.hipMemAlloc`, :py:obj:`~.hipMemAllocHost`,
+        :py:obj:`~.hipMemAllocPitch`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpy2DAsync`, :py:obj:`~.hipMemcpy2DUnaligned`, :py:obj:`~.hipMemcpyAtoA`,
+        :py:obj:`~.hipMemcpyAtoD`, :py:obj:`~.hipMemcpyAtoH`, :py:obj:`~.hipMemcpyAtoHAsync`, :py:obj:`~.hipMemcpyDtoA`, :py:obj:`~.hipMemcpyDtoD`,
+        :py:obj:`~.hipMemcpyDtoDAsync`, :py:obj:`~.hipMemcpyDtoH`, :py:obj:`~.hipMemcpyDtoHAsync`, :py:obj:`~.hipMemcpyHtoA`, :py:obj:`~.hipMemcpyHtoAAsync`,
+        :py:obj:`~.hipMemcpyHtoDAsync`, :py:obj:`~.hipMemFree`, :py:obj:`~.hipMemFreeHost`, :py:obj:`~.hipMemGetAddressRange`, :py:obj:`~.hipMemGetInfo`,
+        :py:obj:`~.hipMemHostAlloc`, :py:obj:`~.hipMemHostGetDevicePointer`
 
     Args:
         dst: **[out]** Data being copy to
@@ -29315,6 +29433,7 @@ def hipMemcpyDtoDAsync(object dst, object src, unsigned long sizeBytes, object s
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorDeinitialized, #hipErrorNotInitialized, #hipErrorInvalidContext,
             #hipErrorInvalidValue
     """
@@ -29339,6 +29458,7 @@ def hipModuleGetGlobal(object hmod, const char * name):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotFound, #hipErrorInvalidContext
         - dptr: Returns global device pointer
         - bytes: Returns global size in bytes
@@ -29360,6 +29480,7 @@ def hipGetSymbolAddress(object symbol):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - devPtr: pointer to the device associated the symbole
     """
@@ -29379,6 +29500,7 @@ def hipGetSymbolSize(object symbol):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - size: pointer to the size
     """
@@ -29411,6 +29533,7 @@ def hipMemcpyToSymbol(object symbol, object src, unsigned long sizeBytes, unsign
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -29440,6 +29563,7 @@ def hipMemcpyToSymbolAsync(object symbol, object src, unsigned long sizeBytes, u
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -29468,6 +29592,7 @@ def hipMemcpyFromSymbol(object dst, object symbol, unsigned long sizeBytes, unsi
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -29497,6 +29622,7 @@ def hipMemcpyFromSymbolAsync(object dst, object symbol, unsigned long sizeBytes,
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -29528,11 +29654,11 @@ def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind,
     staging buffer on the host.
 
     See:
-        hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-        hipMemcpy2DFromArray, hipMemcpyArrayToArray, hipMemcpy2DArrayToArray, hipMemcpyToSymbol,
-        hipMemcpyFromSymbol, hipMemcpy2DAsync, hipMemcpyToArrayAsync, hipMemcpy2DToArrayAsync,
-        hipMemcpyFromArrayAsync, hipMemcpy2DFromArrayAsync, hipMemcpyToSymbolAsync,
-        hipMemcpyFromSymbolAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyToArray`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpyFromArray`,
+        :py:obj:`~.hipMemcpy2DFromArray`, :py:obj:`~.hipMemcpyArrayToArray`, :py:obj:`~.hipMemcpy2DArrayToArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyFromSymbol`, :py:obj:`~.hipMemcpy2DAsync`, :py:obj:`~.hipMemcpyToArrayAsync`, :py:obj:`~.hipMemcpy2DToArrayAsync`,
+        :py:obj:`~.hipMemcpyFromArrayAsync`, :py:obj:`~.hipMemcpy2DFromArrayAsync`, :py:obj:`~.hipMemcpyToSymbolAsync`,
+        :py:obj:`~.hipMemcpyFromSymbolAsync`
 
     Args:
         dst: **[out]** Data being copy to
@@ -29545,6 +29671,7 @@ def hipMemcpyAsync(object dst, object src, unsigned long sizeBytes, object kind,
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree, #hipErrorUnknown
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -29570,6 +29697,7 @@ def hipMemset(object dst, int value, unsigned long sizeBytes):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemset__retval = hipError_t(chip.hipMemset(
@@ -29591,6 +29719,7 @@ def hipMemsetD8(object dest, unsigned char value, unsigned long count):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD8__retval = hipError_t(chip.hipMemsetD8(
@@ -29619,6 +29748,7 @@ def hipMemsetD8Async(object dest, unsigned char value, unsigned long count, obje
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD8Async__retval = hipError_t(chip.hipMemsetD8Async(
@@ -29641,6 +29771,7 @@ def hipMemsetD16(object dest, unsigned short value, unsigned long count):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD16__retval = hipError_t(chip.hipMemsetD16(
@@ -29669,6 +29800,7 @@ def hipMemsetD16Async(object dest, unsigned short value, unsigned long count, ob
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD16Async__retval = hipError_t(chip.hipMemsetD16Async(
@@ -29691,6 +29823,7 @@ def hipMemsetD32(object dest, int value, unsigned long count):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipMemsetD32__retval = hipError_t(chip.hipMemsetD32(
@@ -29719,6 +29852,7 @@ def hipMemsetAsync(object dst, int value, unsigned long sizeBytes, object stream
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemsetAsync__retval = hipError_t(chip.hipMemsetAsync(
@@ -29748,6 +29882,7 @@ def hipMemsetD32Async(object dst, int value, unsigned long count, object stream)
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemsetD32Async__retval = hipError_t(chip.hipMemsetD32Async(
@@ -29773,6 +29908,7 @@ def hipMemset2D(object dst, unsigned long pitch, int value, unsigned long width,
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemset2D__retval = hipError_t(chip.hipMemset2D(
@@ -29799,6 +29935,7 @@ def hipMemset2DAsync(object dst, unsigned long pitch, int value, unsigned long w
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemset2DAsync__retval = hipError_t(chip.hipMemset2DAsync(
@@ -29820,6 +29957,7 @@ def hipMemset3D(object pitchedDevPtr, int value, object extent):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemset3D__retval = hipError_t(chip.hipMemset3D(
@@ -29843,6 +29981,7 @@ def hipMemset3DAsync(object pitchedDevPtr, int value, object extent, object stre
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryFree
     """
     _hipMemset3DAsync__retval = hipError_t(chip.hipMemset3DAsync(
@@ -29865,6 +30004,7 @@ def hipMemGetInfo():
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue
     """
     cdef unsigned long free
@@ -29888,7 +30028,7 @@ def hipMallocArray(object desc, unsigned long width, unsigned long height, unsig
     r"""Allocate an array on the device.
 
     See:
-        hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
+        :py:obj:`~.hipMalloc`, :py:obj:`~.hipMallocPitch`, :py:obj:`~.hipFree`, :py:obj:`~.hipFreeArray`, :py:obj:`~.hipHostMalloc`, :py:obj:`~.hipHostFree`
 
     Args:
         desc: **[in]** Requested channel format
@@ -29901,6 +30041,7 @@ def hipMallocArray(object desc, unsigned long width, unsigned long height, unsig
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorOutOfMemory
         - array: Pointer to allocated array in device memory
     """
@@ -29954,13 +30095,14 @@ def hipFreeArray(object array):
     r"""Frees an array on the device.
 
     See:
-        hipMalloc, hipMallocPitch, hipFree, hipMallocArray, hipHostMalloc, hipHostFree
+        :py:obj:`~.hipMalloc`, :py:obj:`~.hipMallocPitch`, :py:obj:`~.hipFree`, :py:obj:`~.hipMallocArray`, :py:obj:`~.hipHostMalloc`, :py:obj:`~.hipHostFree`
 
     Args:
         array: **[in]** Pointer to array to free
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotInitialized
     """
     _hipFreeArray__retval = hipError_t(chip.hipFreeArray(
@@ -29977,6 +30119,7 @@ def hipFreeMipmappedArray(object mipmappedArray):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipFreeMipmappedArray__retval = hipError_t(chip.hipFreeMipmappedArray(
@@ -29989,7 +30132,7 @@ def hipMalloc3DArray(object desc, object extent, unsigned int flags):
     r"""Allocate an array on the device.
 
     See:
-        hipMalloc, hipMallocPitch, hipFree, hipFreeArray, hipHostMalloc, hipHostFree
+        :py:obj:`~.hipMalloc`, :py:obj:`~.hipMallocPitch`, :py:obj:`~.hipFree`, :py:obj:`~.hipFreeArray`, :py:obj:`~.hipHostMalloc`, :py:obj:`~.hipHostFree`
 
     Args:
         desc: **[in]** Requested channel format
@@ -30000,6 +30143,7 @@ def hipMalloc3DArray(object desc, object extent, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorOutOfMemory
         - array: Pointer to allocated array in device memory
     """
@@ -30025,6 +30169,7 @@ def hipMallocMipmappedArray(object desc, object extent, unsigned int numLevels, 
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
         - mipmappedArray:  Pointer to allocated mipmapped array in device memory
     """
@@ -30046,6 +30191,7 @@ def hipGetMipmappedArrayLevel(object mipmappedArray, unsigned int level):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - levelArray:  Returned mipmap level HIP array
     """
@@ -30060,8 +30206,8 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpyToArray`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         dst: **[in]** Destination memory address
@@ -30080,6 +30226,7 @@ def hipMemcpy2D(object dst, unsigned long dpitch, object src, unsigned long spit
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30096,8 +30243,8 @@ def hipMemcpyParam2D(object pCopy):
     r"""Copies memory for 2D arrays.
 
     See:
-        hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-          hipMemcpyToSymbol, hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyToArray`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpyFromArray`,
+          :py:obj:`~.hipMemcpyToSymbol`, :py:obj:`~.hipMemcpyAsync`
         /
 
     Args:
@@ -30105,6 +30252,7 @@ def hipMemcpyParam2D(object pCopy):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30118,8 +30266,8 @@ def hipMemcpyParam2DAsync(object pCopy, object stream):
     r"""Copies memory for 2D arrays.
 
     See:
-        hipMemcpy, hipMemcpy2D, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray,
-          hipMemcpyToSymbol, hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyToArray`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpyFromArray`,
+          :py:obj:`~.hipMemcpyToSymbol`, :py:obj:`~.hipMemcpyAsync`
         /
 
     Args:
@@ -30129,6 +30277,7 @@ def hipMemcpyParam2DAsync(object pCopy, object stream):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30143,8 +30292,8 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpyToArray, hipMemcpy2DToArray, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpyToArray`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         dst: **[in]** Destination memory address
@@ -30165,6 +30314,7 @@ def hipMemcpy2DAsync(object dst, unsigned long dpitch, object src, unsigned long
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30182,8 +30332,8 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpyToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         dst: **[in]** Destination memory address
@@ -30204,6 +30354,7 @@ def hipMemcpy2DToArray(object dst, unsigned long wOffset, unsigned long hOffset,
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30220,8 +30371,8 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpyToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpyToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         dst: **[in]** Destination memory address
@@ -30244,6 +30395,7 @@ def hipMemcpy2DToArrayAsync(object dst, unsigned long wOffset, unsigned long hOf
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30261,8 +30413,8 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         dst: **[in]** Destination memory address
@@ -30279,6 +30431,7 @@ def hipMemcpyToArray(object dst, unsigned long wOffset, unsigned long hOffset, o
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30295,8 +30448,8 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         dst: **[in]** Destination memory address
@@ -30313,6 +30466,7 @@ def hipMemcpyFromArray(object dst, object srcArray, unsigned long wOffset, unsig
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30329,8 +30483,8 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         dst: **[in]** Destination memory address
@@ -30351,6 +30505,7 @@ def hipMemcpy2DFromArray(object dst, unsigned long dpitch, object src, unsigned 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30367,8 +30522,8 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
     r"""Copies data between host and device asynchronously.
 
     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         dst: **[in]** Destination memory address
@@ -30391,6 +30546,7 @@ def hipMemcpy2DFromArrayAsync(object dst, unsigned long dpitch, object src, unsi
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30408,8 +30564,8 @@ def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         dst: **[in]** Destination memory address
@@ -30422,6 +30578,7 @@ def hipMemcpyAtoH(object dst, object srcArray, unsigned long srcOffset, unsigned
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30436,8 +30593,8 @@ def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsi
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         dstArray: **[in]** Destination memory address
@@ -30450,6 +30607,7 @@ def hipMemcpyHtoA(object dstArray, unsigned long dstOffset, object srcHost, unsi
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30464,14 +30622,15 @@ def hipMemcpy3D(object p):
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         p: **[in]** 3D memory copy parameters
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30485,8 +30644,8 @@ def hipMemcpy3DAsync(object p, object stream):
     r"""Copies data between host and device asynchronously.
 
     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         p: **[in]** 3D memory copy parameters
@@ -30495,6 +30654,7 @@ def hipMemcpy3DAsync(object p, object stream):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30509,14 +30669,15 @@ def hipDrvMemcpy3D(object pCopy):
     r"""Copies data between host and device.
 
     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         pCopy: **[in]** 3D memory copy parameters
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30530,8 +30691,8 @@ def hipDrvMemcpy3DAsync(object pCopy, object stream):
     r"""Copies data between host and device asynchronously.
 
     See:
-        hipMemcpy, hipMemcpy2DToArray, hipMemcpy2D, hipMemcpyFromArray, hipMemcpyToSymbol,
-        hipMemcpyAsync
+        :py:obj:`~.hipMemcpy`, :py:obj:`~.hipMemcpy2DToArray`, :py:obj:`~.hipMemcpy2D`, :py:obj:`~.hipMemcpyFromArray`, :py:obj:`~.hipMemcpyToSymbol`,
+        :py:obj:`~.hipMemcpyAsync`
 
     Args:
         pCopy: **[in]** 3D memory copy parameters
@@ -30540,6 +30701,7 @@ def hipDrvMemcpy3DAsync(object pCopy, object stream):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidPitchValue,
             #hipErrorInvalidDevicePointer, #hipErrorInvalidMemcpyDirection
     """
@@ -30566,6 +30728,7 @@ def hipDeviceCanAccessPeer(int deviceId, int peerDeviceId):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess,
         - #hipErrorInvalidDevice if deviceId or peerDeviceId are not valid devices
         - canAccessPeer: Returns the peer access capability (0 or 1)
@@ -30594,6 +30757,7 @@ def hipDeviceEnablePeerAccess(int peerDeviceId, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipErrorPeerAccessAlreadyEnabled if peer access is already enabled for this device.
     """
     _hipDeviceEnablePeerAccess__retval = hipError_t(chip.hipDeviceEnablePeerAccess(peerDeviceId,flags))    # fully specified
@@ -30613,6 +30777,7 @@ def hipDeviceDisablePeerAccess(int peerDeviceId):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorPeerAccessNotEnabled
     """
     _hipDeviceDisablePeerAccess__retval = hipError_t(chip.hipDeviceDisablePeerAccess(peerDeviceId))    # fully specified
@@ -30624,8 +30789,8 @@ def hipMemGetAddressRange(object pbase, object dptr):
     r"""Get information on memory allocations.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         pbase: **[out]**  BAse pointer address
@@ -30634,6 +30799,7 @@ def hipMemGetAddressRange(object pbase, object dptr):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevicePointer
         - psize:  Size of allocation
     """
@@ -30661,6 +30827,7 @@ def hipMemcpyPeer(object dst, int dstDeviceId, object src, int srcDeviceId, unsi
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
     """
     _hipMemcpyPeer__retval = hipError_t(chip.hipMemcpyPeer(
@@ -30688,6 +30855,7 @@ def hipMemcpyPeerAsync(object dst, int dstDeviceId, object src, int srcDevice, u
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDevice
     """
     _hipMemcpyPeerAsync__retval = hipError_t(chip.hipMemcpyPeerAsync(
@@ -30702,8 +30870,8 @@ def hipCtxCreate(unsigned int flags, int device):
     r"""Create a context and set it as current/ default context
 
     See:
-        hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxPushCurrent,
-        hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`, :py:obj:`~.hipCtxPushCurrent`,
+        :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         flags: **[in]** 
@@ -30712,6 +30880,7 @@ def hipCtxCreate(unsigned int flags, int device):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess
         - ctx:
     """
@@ -30725,14 +30894,15 @@ def hipCtxDestroy(object ctx):
     r"""Destroy a HIP context.
 
     See:
-        hipCtxCreate, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,hipCtxSetCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,:py:obj:`~.hipCtxSetCurrent`,
+        :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize` , :py:obj:`~.hipCtxGetDevice`
 
     Args:
         ctx: **[in]** Context to destroy
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipCtxDestroy__retval = hipError_t(chip.hipCtxDestroy(
@@ -30745,11 +30915,12 @@ def hipCtxPopCurrent():
     r"""Pop the current/default context and return the popped context.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxSetCurrent, hipCtxGetCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidContext
         - ctx:
     """
@@ -30763,14 +30934,15 @@ def hipCtxPushCurrent(object ctx):
     r"""Push the context to be set as current/ default context
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize` , :py:obj:`~.hipCtxGetDevice`
 
     Args:
         ctx: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidContext
     """
     _hipCtxPushCurrent__retval = hipError_t(chip.hipCtxPushCurrent(
@@ -30783,14 +30955,15 @@ def hipCtxSetCurrent(object ctx):
     r"""Set the passed context as current/default
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize , hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize` , :py:obj:`~.hipCtxGetDevice`
 
     Args:
         ctx: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidContext
     """
     _hipCtxSetCurrent__retval = hipError_t(chip.hipCtxSetCurrent(
@@ -30803,11 +30976,12 @@ def hipCtxGetCurrent():
     r"""Get the handle of the current/ default context
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetDevice`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`,
+        :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidContext
         - ctx:
     """
@@ -30821,11 +30995,12 @@ def hipCtxGetDevice():
     r"""Get the handle of the device associated with current/default context
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidContext
         - device:
     """
@@ -30846,14 +31021,15 @@ def hipCtxGetApiVersion(object ctx):
         use arch feature flags to test device capabilities or conditional compilation.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetDevice, hipCtxGetFlags, hipCtxPopCurrent,
-        hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetDevice`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`,
+        :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         ctx: **[in]** Context to check
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess
         - apiVersion:
     """
@@ -30872,14 +31048,15 @@ def hipCtxGetCacheConfig():
         ignored on those architectures.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         cacheConfiguration: **[out]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     cdef chip.hipFuncCache_t cacheConfig
@@ -30896,14 +31073,15 @@ def hipCtxSetCacheConfig(object cacheConfig):
         ignored on those architectures.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         cacheConfiguration: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     if not isinstance(cacheConfig,_hipFuncCache_t__Base):
@@ -30921,14 +31099,15 @@ def hipCtxSetSharedMemConfig(object config):
         ignored on those architectures.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         sharedMemoryConfiguration: **[in]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     if not isinstance(config,_hipSharedMemConfig__Base):
@@ -30946,14 +31125,15 @@ def hipCtxGetSharedMemConfig():
         ignored on those architectures.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         sharedMemoryConfiguration: **[out]** 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     cdef chip.hipSharedMemConfig pConfig
@@ -30970,11 +31150,12 @@ def hipCtxSynchronize():
         then returns.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxGetDevice`
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     _hipCtxSynchronize__retval = hipError_t(chip.hipCtxSynchronize())    # fully specified
@@ -30986,11 +31167,12 @@ def hipCtxGetFlags():
     r"""Return flags used for creating default context.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxPopCurrent, hipCtxGetCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess
         - flags:
     """
@@ -31009,8 +31191,8 @@ def hipCtxEnablePeerAccess(object peerCtx, unsigned int flags):
     accessible from the current device until a call to hipDeviceDisablePeerAccess or hipDeviceReset.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Warning:
         PeerToPeer support is experimental.
@@ -31022,6 +31204,7 @@ def hipCtxEnablePeerAccess(object peerCtx, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice, #hipErrorInvalidValue,
             #hipErrorPeerAccessAlreadyEnabled
     """
@@ -31040,8 +31223,8 @@ def hipCtxDisablePeerAccess(object peerCtx):
     enabled from the current device.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Warning:
         PeerToPeer support is experimental.
@@ -31051,6 +31234,7 @@ def hipCtxDisablePeerAccess(object peerCtx):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorPeerAccessNotEnabled
     """
     _hipCtxDisablePeerAccess__retval = hipError_t(chip.hipCtxDisablePeerAccess(
@@ -31063,8 +31247,8 @@ def hipDevicePrimaryCtxGetState(int dev):
     r"""Get the state of the primary context.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         Device: **[in]** to get primary context flags for
@@ -31075,6 +31259,7 @@ def hipDevicePrimaryCtxGetState(int dev):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     cdef unsigned int flags
@@ -31088,8 +31273,8 @@ def hipDevicePrimaryCtxRelease(int dev):
     r"""Release the primary context on the GPU.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Warning:
         This function return #hipSuccess though doesn't release the primaryCtx by design on
@@ -31100,6 +31285,7 @@ def hipDevicePrimaryCtxRelease(int dev):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     _hipDevicePrimaryCtxRelease__retval = hipError_t(chip.hipDevicePrimaryCtxRelease(dev))    # fully specified
@@ -31111,8 +31297,8 @@ def hipDevicePrimaryCtxRetain(int dev):
     r"""Retain the primary context on the GPU.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         Returned: **[out]** context handle of the new context
@@ -31121,6 +31307,7 @@ def hipDevicePrimaryCtxRetain(int dev):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     pctx = ihipCtx_t.from_ptr(NULL)
@@ -31133,14 +31320,15 @@ def hipDevicePrimaryCtxReset(int dev):
     r"""Resets the primary context on the GPU.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         Device: **[in]** which primary context is reset
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess
     """
     _hipDevicePrimaryCtxReset__retval = hipError_t(chip.hipDevicePrimaryCtxReset(dev))    # fully specified
@@ -31152,8 +31340,8 @@ def hipDevicePrimaryCtxSetFlags(int dev, unsigned int flags):
     r"""Set flags for the primary context.
 
     See:
-        hipCtxCreate, hipCtxDestroy, hipCtxGetFlags, hipCtxPopCurrent, hipCtxGetCurrent,
-        hipCtxSetCurrent, hipCtxPushCurrent, hipCtxSetCacheConfig, hipCtxSynchronize, hipCtxGetDevice
+        :py:obj:`~.hipCtxCreate`, :py:obj:`~.hipCtxDestroy`, :py:obj:`~.hipCtxGetFlags`, :py:obj:`~.hipCtxPopCurrent`, :py:obj:`~.hipCtxGetCurrent`,
+        :py:obj:`~.hipCtxSetCurrent`, :py:obj:`~.hipCtxPushCurrent`, :py:obj:`~.hipCtxSetCacheConfig`, :py:obj:`~.hipCtxSynchronize`, :py:obj:`~.hipCtxGetDevice`
 
     Args:
         Device: **[in]** for which the primary context flags are set
@@ -31162,6 +31350,7 @@ def hipDevicePrimaryCtxSetFlags(int dev, unsigned int flags):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorContextAlreadyInUse
     """
     _hipDevicePrimaryCtxSetFlags__retval = hipError_t(chip.hipDevicePrimaryCtxSetFlags(dev,flags))    # fully specified
@@ -31180,6 +31369,7 @@ def hipModuleLoad(const char * fname):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorFileNotFound,
             hipErrorOutOfMemory, hipErrorSharedObjectInitFailed, hipErrorNotInitialized
         - module:
@@ -31198,6 +31388,7 @@ def hipModuleUnload(object module):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipInvalidValue
             module is freed and the code objects associated with it are destroyed
     """
@@ -31217,6 +31408,7 @@ def hipModuleGetFunction(object module, const char * kname):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue, hipErrorInvalidContext, hipErrorNotInitialized,
             hipErrorNotFound,
         - function:
@@ -31238,6 +31430,7 @@ def hipFuncGetAttributes(object attr, object func):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
     """
     _hipFuncGetAttributes__retval = hipError_t(chip.hipFuncGetAttributes(
@@ -31257,6 +31450,7 @@ def hipFuncGetAttribute(object attrib, object hfunc):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue, hipErrorInvalidDeviceFunction
         - value:
     """
@@ -31279,6 +31473,7 @@ def hipModuleGetTexRef(object hmod, const char * name):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - hipSuccess, hipErrorNotInitialized, hipErrorNotFound, hipErrorInvalidValue
         - texRef:
     """
@@ -31298,6 +31493,7 @@ def hipModuleLoadData(object image):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
         - module:
     """
@@ -31321,6 +31517,7 @@ def hipModuleLoadDataEx(object image, unsigned int numOptions, object optionValu
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - hipSuccess, hipErrorNotInitialized, hipErrorOutOfMemory, hipErrorNotInitialized
         - module:
         - options: for JIT
@@ -31374,6 +31571,7 @@ def hipModuleLaunchKernel(object f, unsigned int gridDimX, unsigned int gridDimY
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipModuleLaunchKernel__retval = hipError_t(chip.hipModuleLaunchKernel(
@@ -31409,6 +31607,7 @@ def hipLaunchCooperativeKernel(object f, object gridDim, object blockDimX, objec
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
     """
     _hipLaunchCooperativeKernel__retval = hipError_t(chip.hipLaunchCooperativeKernel(
@@ -31434,6 +31633,7 @@ def hipLaunchCooperativeKernelMultiDevice(object launchParamsList, int numDevice
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue, hipErrorCooperativeLaunchTooLarge
     """
     _hipLaunchCooperativeKernelMultiDevice__retval = hipError_t(chip.hipLaunchCooperativeKernelMultiDevice(
@@ -31455,6 +31655,7 @@ def hipExtLaunchMultiKernelMultiDevice(object launchParamsList, int numDevices, 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipExtLaunchMultiKernelMultiDevice__retval = hipError_t(chip.hipExtLaunchMultiKernelMultiDevice(
@@ -31478,6 +31679,7 @@ def hipModuleOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMem
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorInvalidValue
         - gridSize: minimum grid size for maximum potential occupancy
         - blockSize: block size for maximum potential occupancy
@@ -31507,6 +31709,7 @@ def hipModuleOccupancyMaxPotentialBlockSizeWithFlags(object f, unsigned long dyn
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorInvalidValue
         - gridSize: minimum grid size for maximum potential occupancy
         - blockSize: block size for maximum potential occupancy
@@ -31531,6 +31734,7 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - numBlocks: Returned occupancy
     """
     cdef int numBlocks
@@ -31554,6 +31758,7 @@ def hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int bl
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - numBlocks: Returned occupancy
     """
     cdef int numBlocks
@@ -31575,6 +31780,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessor(object f, int blockSize, unsign
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - numBlocks: Returned occupancy
     """
     cdef int numBlocks
@@ -31598,6 +31804,7 @@ def hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(object f, int blockSiz
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - numBlocks: Returned occupancy
     """
     cdef int numBlocks
@@ -31622,6 +31829,7 @@ def hipOccupancyMaxPotentialBlockSize(object f, unsigned long dynSharedMemPerBlk
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorInvalidValue
         - gridSize: minimum grid size for maximum potential occupancy
         - blockSize: block size for maximum potential occupancy
@@ -31677,6 +31885,7 @@ def hipConfigureCall(object gridDim, object blockDim, unsigned long sharedMem, o
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipConfigureCall__retval = hipError_t(chip.hipConfigureCall(
@@ -31699,6 +31908,7 @@ def hipSetupArgument(object arg, unsigned long size, unsigned long offset):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipSetupArgument__retval = hipError_t(chip.hipSetupArgument(
@@ -31715,6 +31925,7 @@ def hipLaunchByPtr(object func):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue
     """
     _hipLaunchByPtr__retval = hipError_t(chip.hipLaunchByPtr(
@@ -31743,6 +31954,7 @@ def hipLaunchKernel(object function_address, object numBlocks, object dimBlocks,
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, hipInvalidDevice
     """
     _hipLaunchKernel__retval = hipError_t(chip.hipLaunchKernel(
@@ -31771,6 +31983,7 @@ def hipLaunchHostFunc(object stream, object fn, object userData):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidResourceHandle, #hipErrorInvalidValue,
             #hipErrorNotSupported
     """
@@ -31792,6 +32005,7 @@ def hipDrvMemcpy2DUnaligned(object pCopy):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipDrvMemcpy2DUnaligned__retval = hipError_t(chip.hipDrvMemcpy2DUnaligned(
@@ -31829,6 +32043,7 @@ def hipExtLaunchKernel(object function_address, object numBlocks, object dimBloc
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipInvalidDevice, hipErrorNotInitialized, hipErrorInvalidValue.
     """
     _hipExtLaunchKernel__retval = hipError_t(chip.hipExtLaunchKernel(
@@ -31855,6 +32070,7 @@ def hipBindTextureToMipmappedArray(object tex, object mipmappedArray, object des
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue
     """
     _hipBindTextureToMipmappedArray__retval = hipError_t(chip.hipBindTextureToMipmappedArray(
@@ -31881,6 +32097,7 @@ def hipCreateTextureObject(object pResDesc, object pTexDesc, object pResViewDesc
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue, hipErrorNotSupported, hipErrorOutOfMemory
         - pTexObject: pointer to the texture object to create
     """
@@ -31901,6 +32118,7 @@ def hipDestroyTextureObject(object textureObject):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue
     """
     _hipDestroyTextureObject__retval = hipError_t(chip.hipDestroyTextureObject(
@@ -31919,6 +32137,7 @@ def hipGetChannelDesc(object desc, object array):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue
     """
     _hipGetChannelDesc__retval = hipError_t(chip.hipGetChannelDesc(
@@ -31938,6 +32157,7 @@ def hipGetTextureObjectResourceDesc(object pResDesc, object textureObject):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue
     """
     _hipGetTextureObjectResourceDesc__retval = hipError_t(chip.hipGetTextureObjectResourceDesc(
@@ -31957,6 +32177,7 @@ def hipGetTextureObjectResourceViewDesc(object pResViewDesc, object textureObjec
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue
     """
     _hipGetTextureObjectResourceViewDesc__retval = hipError_t(chip.hipGetTextureObjectResourceViewDesc(
@@ -31976,6 +32197,7 @@ def hipGetTextureObjectTextureDesc(object pTexDesc, object textureObject):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue
     """
     _hipGetTextureObjectTextureDesc__retval = hipError_t(chip.hipGetTextureObjectTextureDesc(
@@ -31997,6 +32219,7 @@ def hipTexObjectCreate(object pResDesc, object pTexDesc, object pResViewDesc):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue
         - pTexObject: pointer to texture object to create
     """
@@ -32017,6 +32240,7 @@ def hipTexObjectDestroy(object texObject):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue
     """
     _hipTexObjectDestroy__retval = hipError_t(chip.hipTexObjectDestroy(
@@ -32035,6 +32259,7 @@ def hipTexObjectGetResourceDesc(object pResDesc, object texObject):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
     _hipTexObjectGetResourceDesc__retval = hipError_t(chip.hipTexObjectGetResourceDesc(
@@ -32054,6 +32279,7 @@ def hipTexObjectGetResourceViewDesc(object pResViewDesc, object texObject):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
     _hipTexObjectGetResourceViewDesc__retval = hipError_t(chip.hipTexObjectGetResourceViewDesc(
@@ -32073,6 +32299,7 @@ def hipTexObjectGetTextureDesc(object pTexDesc, object texObject):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - hipSuccess, hipErrorNotSupported, hipErrorInvalidValue
     """
     _hipTexObjectGetTextureDesc__retval = hipError_t(chip.hipTexObjectGetTextureDesc(
@@ -32090,6 +32317,7 @@ def hipGetTextureReference(object symbol):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - hipSuccess, hipErrorInvalidValue
         - texref: texture reference
     """
@@ -32476,6 +32704,7 @@ def hipStreamBeginCapture(object stream, object mode):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(mode,_hipStreamCaptureMode__Base):
@@ -32498,6 +32727,7 @@ def hipStreamEndCapture(object stream):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraph:  returns the graph captured.
     """
@@ -32520,6 +32750,7 @@ def hipStreamGetCaptureInfo(object stream):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorStreamCaptureImplicit
         - pCaptureStatus:  returns current status of the capture.
         - pId:  unique ID of the capture.
@@ -32546,6 +32777,7 @@ def hipStreamGetCaptureInfo_v2(object stream, object dependencies_out):
 
     Returns:
         A ``tuple`` of size 5 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
         - captureStatus_out:  returns current status of the capture.
         - id_out:  unique ID of the capture.
@@ -32575,6 +32807,7 @@ def hipStreamIsCapturing(object stream):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorStreamCaptureImplicit
         - pCaptureStatus:  returns current status of the capture.
     """
@@ -32599,6 +32832,7 @@ def hipStreamUpdateCaptureDependencies(object stream, unsigned long numDependenc
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorIllegalState
         - dependencies:  pointer to an array of nodes to Add/Replace.
     """
@@ -32618,6 +32852,7 @@ def hipThreadExchangeStreamCaptureMode():
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - mode:  Pointer to mode value to swap with the current mode
     """
@@ -32639,6 +32874,7 @@ def hipGraphCreate(unsigned int flags):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
         - pGraph:  pointer to graph to create.
     """
@@ -32660,6 +32896,7 @@ def hipGraphDestroy(object graph):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphDestroy__retval = hipError_t(chip.hipGraphDestroy(
@@ -32682,6 +32919,7 @@ def hipGraphAddDependencies(object graph, unsigned long numDependencies):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - from_:  pointer to the graph nodes with dependenties to add from.
         - to:  pointer to the graph nodes to add dependenties to.
@@ -32708,6 +32946,7 @@ def hipGraphRemoveDependencies(object graph, unsigned long numDependencies):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - from_:  Array of nodes that provide the dependencies.
         - to:  Array of dependent nodes.
@@ -32737,6 +32976,7 @@ def hipGraphGetEdges(object graph):
 
     Returns:
         A ``tuple`` of size 4 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - from_:  pointer to the graph nodes to return edge endpoints.
         - to:  pointer to the graph nodes to return edge endpoints.
@@ -32768,6 +33008,7 @@ def hipGraphGetNodes(object graph):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - nodes:  pointer to return the  graph nodes.
         - numNodes:  returns number of graph nodes.
@@ -32797,6 +33038,7 @@ def hipGraphGetRootNodes(object graph):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pRootNodes:  pointer to return the graph's root nodes.
         - pNumRootNodes:  returns the number of graph's root nodes.
@@ -32826,6 +33068,7 @@ def hipGraphNodeGetDependencies(object node):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pDependencies:  pointer to to return the dependencies.
         - pNumDependencies:   returns the number of graph node dependencies.
@@ -32856,6 +33099,7 @@ def hipGraphNodeGetDependentNodes(object node):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pDependentNodes:  pointer to return the graph dependent nodes.
         - pNumDependentNodes:  returns the number of graph node dependent nodes.
@@ -32880,6 +33124,7 @@ def hipGraphNodeGetType(object node):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pType:  pointer to the return the type
     """
@@ -32902,6 +33147,7 @@ def hipGraphDestroyNode(object node):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphDestroyNode__retval = hipError_t(chip.hipGraphDestroyNode(
@@ -32922,6 +33168,7 @@ def hipGraphClone(object originalGraph):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorMemoryAllocation
         - pGraphClone:  Returns newly created cloned graph.
     """
@@ -32946,6 +33193,7 @@ def hipGraphNodeFindInClone(object originalNode, object clonedGraph):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pNode:  Returns the cloned node.
     """
@@ -32973,6 +33221,7 @@ def hipGraphInstantiate(object graph, char * pLogBuffer, unsigned long bufferSiz
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorOutOfMemory
         - pGraphExec:  pointer to instantiated executable graph that is created.
         - pErrorNode:  pointer to error node in case error occured in graph instantiation,
@@ -33000,6 +33249,7 @@ def hipGraphInstantiateWithFlags(object graph, unsigned long long flags):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphExec:  pointer to instantiated executable graph that is created.
     """
@@ -33024,6 +33274,7 @@ def hipGraphLaunch(object graphExec, object stream):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphLaunch__retval = hipError_t(chip.hipGraphLaunch(
@@ -33047,6 +33298,7 @@ def hipGraphUpload(object graphExec, object stream):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphUpload__retval = hipError_t(chip.hipGraphUpload(
@@ -33068,6 +33320,7 @@ def hipGraphExecDestroy(object graphExec):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess.
     """
     _hipGraphExecDestroy__retval = hipError_t(chip.hipGraphExecDestroy(
@@ -33091,6 +33344,7 @@ def hipGraphExecUpdate(object hGraphExec, object hGraph):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorGraphExecUpdateFailure
         - hErrorNode_out:   node which caused the permissibility check to forbid the update.
         - updateResult_out:  Whether the graph update was permitted.
@@ -33120,6 +33374,7 @@ def hipGraphAddKernelNode(object graph, unsigned long numDependencies, object pN
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorInvalidDeviceFunction
         - pGraphNode:  pointer to graph node to create.
         - pDependencies:  pointer to the dependencies on the kernel execution node.
@@ -33147,6 +33402,7 @@ def hipGraphKernelNodeGetParams(object node, object pNodeParams):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphKernelNodeGetParams__retval = hipError_t(chip.hipGraphKernelNodeGetParams(
@@ -33170,6 +33426,7 @@ def hipGraphKernelNodeSetParams(object node, object pNodeParams):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphKernelNodeSetParams__retval = hipError_t(chip.hipGraphKernelNodeSetParams(
@@ -33195,6 +33452,7 @@ def hipGraphExecKernelNodeSetParams(object hGraphExec, object node, object pNode
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphExecKernelNodeSetParams__retval = hipError_t(chip.hipGraphExecKernelNodeSetParams(
@@ -33221,6 +33479,7 @@ def hipGraphAddMemcpyNode(object graph, unsigned long numDependencies, object pC
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphNode:  pointer to graph node to create.
         - pDependencies:  const pointer to the dependencies on the memcpy execution node.
@@ -33248,6 +33507,7 @@ def hipGraphMemcpyNodeGetParams(object node, object pNodeParams):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphMemcpyNodeGetParams__retval = hipError_t(chip.hipGraphMemcpyNodeGetParams(
@@ -33271,6 +33531,7 @@ def hipGraphMemcpyNodeSetParams(object node, object pNodeParams):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphMemcpyNodeSetParams__retval = hipError_t(chip.hipGraphMemcpyNodeSetParams(
@@ -33296,6 +33557,7 @@ def hipGraphKernelNodeSetAttribute(object hNode, object attr, object value):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(attr,_hipKernelNodeAttrID__Base):
@@ -33323,6 +33585,7 @@ def hipGraphKernelNodeGetAttribute(object hNode, object attr, object value):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(attr,_hipKernelNodeAttrID__Base):
@@ -33350,6 +33613,7 @@ def hipGraphExecMemcpyNodeSetParams(object hGraphExec, object node, object pNode
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphExecMemcpyNodeSetParams__retval = hipError_t(chip.hipGraphExecMemcpyNodeSetParams(
@@ -33382,6 +33646,7 @@ def hipGraphAddMemcpyNode1D(object graph, unsigned long numDependencies, object 
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphNode:  pointer to graph node to create.
         - pDependencies:  const pointer to the dependencies on the memcpy execution node.
@@ -33418,6 +33683,7 @@ def hipGraphMemcpyNodeSetParams1D(object node, object dst, object src, unsigned 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -33453,6 +33719,7 @@ def hipGraphExecMemcpyNodeSetParams1D(object hGraphExec, object node, object dst
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -33490,6 +33757,7 @@ def hipGraphAddMemcpyNodeFromSymbol(object graph, unsigned long numDependencies,
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphNode:  pointer to graph node to create.
         - pDependencies:  const pointer to the dependencies on the memcpy execution node.
@@ -33528,6 +33796,7 @@ def hipGraphMemcpyNodeSetParamsFromSymbol(object node, object dst, object symbol
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -33565,6 +33834,7 @@ def hipGraphExecMemcpyNodeSetParamsFromSymbol(object hGraphExec, object node, ob
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -33602,6 +33872,7 @@ def hipGraphAddMemcpyNodeToSymbol(object graph, unsigned long numDependencies, o
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphNode:  pointer to graph node to create.
         - pDependencies:  const pointer to the dependencies on the memcpy execution node.
@@ -33640,6 +33911,7 @@ def hipGraphMemcpyNodeSetParamsToSymbol(object node, object symbol, object src, 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -33677,6 +33949,7 @@ def hipGraphExecMemcpyNodeSetParamsToSymbol(object hGraphExec, object node, obje
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     if not isinstance(kind,_hipMemcpyKind__Base):
@@ -33706,6 +33979,7 @@ def hipGraphAddMemsetNode(object graph, unsigned long numDependencies, object pM
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphNode:  pointer to the graph node to create.
         - pDependencies:  const pointer to the dependencies on the memset execution node.
@@ -33733,6 +34007,7 @@ def hipGraphMemsetNodeGetParams(object node, object pNodeParams):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphMemsetNodeGetParams__retval = hipError_t(chip.hipGraphMemsetNodeGetParams(
@@ -33756,6 +34031,7 @@ def hipGraphMemsetNodeSetParams(object node, object pNodeParams):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphMemsetNodeSetParams__retval = hipError_t(chip.hipGraphMemsetNodeSetParams(
@@ -33781,6 +34057,7 @@ def hipGraphExecMemsetNodeSetParams(object hGraphExec, object node, object pNode
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphExecMemsetNodeSetParams__retval = hipError_t(chip.hipGraphExecMemsetNodeSetParams(
@@ -33807,6 +34084,7 @@ def hipGraphAddHostNode(object graph, unsigned long numDependencies, object pNod
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphNode:  pointer to the graph node to create.
         - pDependencies:  const pointer to the dependencies on the memset execution node.
@@ -33834,6 +34112,7 @@ def hipGraphHostNodeGetParams(object node, object pNodeParams):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphHostNodeGetParams__retval = hipError_t(chip.hipGraphHostNodeGetParams(
@@ -33857,6 +34136,7 @@ def hipGraphHostNodeSetParams(object node, object pNodeParams):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphHostNodeSetParams__retval = hipError_t(chip.hipGraphHostNodeSetParams(
@@ -33882,6 +34162,7 @@ def hipGraphExecHostNodeSetParams(object hGraphExec, object node, object pNodePa
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphExecHostNodeSetParams__retval = hipError_t(chip.hipGraphExecHostNodeSetParams(
@@ -33908,6 +34189,7 @@ def hipGraphAddChildGraphNode(object graph, unsigned long numDependencies, objec
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphNode:  pointer to the graph node to create.
         - pDependencies:  const pointer to the dependencies on the memset execution node.
@@ -33933,6 +34215,7 @@ def hipGraphChildGraphNodeGetGraph(object node):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraph:  pointer to get the graph.
     """
@@ -33959,6 +34242,7 @@ def hipGraphExecChildGraphNodeSetParams(object hGraphExec, object node, object c
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphExecChildGraphNodeSetParams__retval = hipError_t(chip.hipGraphExecChildGraphNodeSetParams(
@@ -33983,6 +34267,7 @@ def hipGraphAddEmptyNode(object graph, unsigned long numDependencies):
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphNode:  pointer to the graph node to create and add to the graph.
         - pDependencies:  const pointer to the node dependenties.
@@ -34011,6 +34296,7 @@ def hipGraphAddEventRecordNode(object graph, unsigned long numDependencies, obje
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphNode:  pointer to the graph node to create and add to the graph.
         - pDependencies:  const pointer to the node dependenties.
@@ -34036,6 +34322,7 @@ def hipGraphEventRecordNodeGetEvent(object node):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - event_out:  Pointer to return the event.
     """
@@ -34060,6 +34347,7 @@ def hipGraphEventRecordNodeSetEvent(object node, object event):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphEventRecordNodeSetEvent__retval = hipError_t(chip.hipGraphEventRecordNodeSetEvent(
@@ -34085,6 +34373,7 @@ def hipGraphExecEventRecordNodeSetEvent(object hGraphExec, object hNode, object 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphExecEventRecordNodeSetEvent__retval = hipError_t(chip.hipGraphExecEventRecordNodeSetEvent(
@@ -34111,6 +34400,7 @@ def hipGraphAddEventWaitNode(object graph, unsigned long numDependencies, object
 
     Returns:
         A ``tuple`` of size 3 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - pGraphNode:  pointer to the graph node to create and add to the graph.
         - pDependencies:  const pointer to the node dependenties.
@@ -34136,6 +34426,7 @@ def hipGraphEventWaitNodeGetEvent(object node):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - event_out:  Pointer to return the event.
     """
@@ -34160,6 +34451,7 @@ def hipGraphEventWaitNodeSetEvent(object node, object event):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphEventWaitNodeSetEvent__retval = hipError_t(chip.hipGraphEventWaitNodeSetEvent(
@@ -34185,6 +34477,7 @@ def hipGraphExecEventWaitNodeSetEvent(object hGraphExec, object hNode, object ev
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphExecEventWaitNodeSetEvent__retval = hipError_t(chip.hipGraphExecEventWaitNodeSetEvent(
@@ -34211,6 +34504,7 @@ def hipDeviceGetGraphMemAttribute(int device, object attr, object value):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice
     """
     if not isinstance(attr,_hipGraphMemAttributeType__Base):
@@ -34237,6 +34531,7 @@ def hipDeviceSetGraphMemAttribute(int device, object attr, object value):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidDevice
     """
     if not isinstance(attr,_hipGraphMemAttributeType__Base):
@@ -34280,6 +34575,7 @@ def hipUserObjectCreate(object ptr, object destroy, unsigned int initialRefcount
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
         - object_out:  pointer to instace of userobj.
     """
@@ -34305,6 +34601,7 @@ def hipUserObjectRelease(object object, unsigned int count):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipUserObjectRelease__retval = hipError_t(chip.hipUserObjectRelease(
@@ -34327,6 +34624,7 @@ def hipUserObjectRetain(object object, unsigned int count):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipUserObjectRetain__retval = hipError_t(chip.hipUserObjectRetain(
@@ -34353,6 +34651,7 @@ def hipGraphRetainUserObject(object graph, object object, unsigned int count, un
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphRetainUserObject__retval = hipError_t(chip.hipGraphRetainUserObject(
@@ -34378,6 +34677,7 @@ def hipGraphReleaseUserObject(object graph, object object, unsigned int count):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue
     """
     _hipGraphReleaseUserObject__retval = hipError_t(chip.hipGraphReleaseUserObject(
@@ -34401,6 +34701,7 @@ def hipMemAddressFree(object devPtr, unsigned long size):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
     """
     _hipMemAddressFree__retval = hipError_t(chip.hipMemAddressFree(
@@ -34427,6 +34728,7 @@ def hipMemAddressReserve(unsigned long size, unsigned long alignment, object add
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
         - ptr:  starting address of the reserved range.
     """
@@ -34454,6 +34756,7 @@ def hipMemCreate(unsigned long size, object prop, unsigned long long flags):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
         - handle:  value of the returned handle.
     """
@@ -34482,6 +34785,7 @@ def hipMemExportToShareableHandle(object shareableHandle, object handle, object 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
     """
     if not isinstance(handleType,_hipMemAllocationHandleType__Base):
@@ -34507,6 +34811,7 @@ def hipMemGetAccess(object location, object ptr):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
         - flags:  flags for this location.
     """
@@ -34532,6 +34837,7 @@ def hipMemGetAllocationGranularity(object prop, object option):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
         - granularity:  returned granularity.
     """
@@ -34558,6 +34864,7 @@ def hipMemGetAllocationPropertiesFromHandle(object prop, object handle):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
     """
     _hipMemGetAllocationPropertiesFromHandle__retval = hipError_t(chip.hipMemGetAllocationPropertiesFromHandle(
@@ -34581,6 +34888,7 @@ def hipMemImportFromShareableHandle(object osHandle, object shHandleType):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
         - handle:  returned value.
     """
@@ -34613,6 +34921,7 @@ def hipMemMap(object ptr, unsigned long size, unsigned long offset, object handl
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
     """
     _hipMemMap__retval = hipError_t(chip.hipMemMap(
@@ -34638,6 +34947,7 @@ def hipMemMapArrayAsync(object mapInfoList, unsigned int count, object stream):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
     """
     _hipMemMapArrayAsync__retval = hipError_t(chip.hipMemMapArrayAsync(
@@ -34659,6 +34969,7 @@ def hipMemRelease(object handle):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
     """
     _hipMemRelease__retval = hipError_t(chip.hipMemRelease(
@@ -34679,6 +34990,7 @@ def hipMemRetainAllocationHandle(object addr):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
         - handle:  handle representing addr.
     """
@@ -34707,6 +35019,7 @@ def hipMemSetAccess(object ptr, unsigned long size, object desc, unsigned long c
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
     """
     _hipMemSetAccess__retval = hipError_t(chip.hipMemSetAccess(
@@ -34730,6 +35043,7 @@ def hipMemUnmap(object ptr, unsigned long size):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - #hipSuccess, #hipErrorInvalidValue, #hipErrorNotSupported
     """
     _hipMemUnmap__retval = hipError_t(chip.hipMemUnmap(

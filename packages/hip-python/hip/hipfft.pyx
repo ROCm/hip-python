@@ -185,6 +185,7 @@ def hipfftPlan1d(int nx, object type, int batch):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - plan: Pointer to the FFT plan handle.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
@@ -212,6 +213,7 @@ def hipfftPlan2d(int nx, int ny, object type):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - plan: Pointer to the FFT plan handle.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
@@ -241,6 +243,7 @@ def hipfftPlan3d(int nx, int ny, int nz, object type):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - plan: Pointer to the FFT plan handle.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
@@ -298,6 +301,7 @@ def hipfftPlanMany(int rank, object n, object inembed, int istride, int idist, o
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - plan: Pointer to the FFT plan handle.
     """
     plan = hipfftHandle_t.from_ptr(NULL)
@@ -381,6 +385,7 @@ def hipfftMakePlan2d(object plan, int nx, int ny, object type):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
@@ -414,6 +419,7 @@ def hipfftMakePlan3d(object plan, int nx, int ny, int nz, object type):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
@@ -475,6 +481,7 @@ def hipfftMakePlanMany(object plan, int rank, object n, object inembed, int istr
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
@@ -514,6 +521,7 @@ def hipfftEstimate1d(int nx, object type, int batch):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
@@ -536,6 +544,7 @@ def hipfftEstimate2d(int nx, int ny, object type):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
@@ -560,6 +569,7 @@ def hipfftEstimate3d(int nx, int ny, int nz, object type):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
@@ -596,6 +606,7 @@ def hipfftEstimateMany(int rank, object n, object inembed, int istride, int idis
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
@@ -621,6 +632,7 @@ def hipfftGetSize1d(object plan, int nx, object type, int batch):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
@@ -646,6 +658,7 @@ def hipfftGetSize2d(object plan, int nx, int ny, object type):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
@@ -673,6 +686,7 @@ def hipfftGetSize3d(object plan, int nx, int ny, int nz, object type):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):
@@ -712,6 +726,7 @@ def hipfftGetSizeMany(object plan, int rank, object n, object inembed, int istri
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - workSize: Pointer to work area size (returned value).
     """
     if not isinstance(type,_hipfftType_t__Base):

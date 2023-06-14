@@ -48,6 +48,9 @@ def DEFAULT_RENAMER(name):  # backend-specific
     return result
 
 
+def DEFAULT_DOCSTRING_CLEANER(docstring: str):
+    return docstring
+
 def DEFAULT_MACRO_TYPE(node):  # backend-specific
     return "int"
 
@@ -1048,7 +1051,7 @@ cdef void* {funptr_name} = NULL
             result += "".join(lines[1:])
         return result
 
-    def _raw_comment_as_docstring(self,out_parms): # TODO make optional
+    def _create_python_docstring(self,out_parms): # TODO make optional
         """Converts doxygen comment to a Python docstring using the doxyparser API.
         """
         # TODO handle groups; issue detecting addgroup; detecting ingroup is easier
@@ -1067,6 +1070,7 @@ cdef void* {funptr_name} = NULL
         translater.with_word.setParseAction(doxyparser.format.PythonDocstrings.with_word)
         translater.fdollar.setParseAction(doxyparser.format.PythonDocstrings.fdollar)
         translater.frnd.setParseAction(doxyparser.format.PythonDocstrings.frnd)
+        translater.see_reference.setParseAction(doxyparser.format.PythonDocstrings.see_reference)
         def other_parse_action(tokens):
             cmd = tokens[0][1:]
             if cmd == "ref":
@@ -1134,7 +1138,11 @@ cdef void* {funptr_name} = NULL
                 else:
                     docstring_body += f"\n{section.kind[0].upper() + section.kind[1:]}:\n"
                     outer_indent = single_level_indent
-                docstring_body += self._render_doxygen_section_body(section,single_level_indent,outer_indent)
+                body = self._render_doxygen_section_body(section,single_level_indent,outer_indent)
+                if section.kind in ("see","sa"):
+                    docstring_body += translater.see_reference.transformString(body)
+                else:
+                    docstring_body += body
         # Args
         if len(undocumented_parms_dict):
             for name in undocumented_parms_dict:
@@ -1152,7 +1160,7 @@ cdef void* {funptr_name} = NULL
         if len(docstring_returns):
             docstring_body += "\nReturns:\n"
             if len(docstring_returns) > 1 or python_interface_always_return_tuple:
-                docstring_body += f"{single_level_indent}A ``tuple`` of size {len(docstring_returns)} that contains (in that order):\n"
+                docstring_body += f"{single_level_indent}A ``tuple`` of size {len(docstring_returns)} that contains (in that order):\n\n"
                 prefix = "- "
             else:
                 prefix = ""
@@ -1379,7 +1387,7 @@ cdef void* {funptr_name} = NULL
         result = "@cython.embedsignature(True)\n"
         result += (
             f"def {self.cython_name}({', '.join(sig_args)}):\n"
-            + textwrap.indent(self._raw_comment_as_docstring(out_parms), indent).rstrip()
+            + textwrap.indent(self._create_python_docstring(out_parms), indent).rstrip()
             + "\n"
         )
         if self.has_python_body_prolog:
@@ -1417,11 +1425,12 @@ class CythonBackend:
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
-        warnings: control.Warnings = control.Warnings.IGNORE,
+        docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
+        warn_mode: control.Warnings = control.Warnings.IGNORE,
     ):
         from . import tree
 
-        root = tree.from_libclang_translation_unit(translation_unit, warnings)
+        root = tree.from_libclang_translation_unit(translation_unit, warn_mode)
         return CythonBackend(
             root,
             filename,
@@ -1431,6 +1440,7 @@ class CythonBackend:
             ptr_rank,
             ptr_complicated_type_handler,
             renamer,
+            docstring_cleaner,
         )
 
     def __init__(
@@ -1443,6 +1453,7 @@ class CythonBackend:
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
+        docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
     ):
         """
         Note:
@@ -1460,6 +1471,7 @@ class CythonBackend:
         self.ptr_rank = ptr_rank
         self.ptr_complicated_type_handler = ptr_complicated_type_handler
         self.renamer = renamer
+        self.docstring_cleaner = docstring_cleaner
 
     def walk_filtered_nodes(self):
         """Walks the filtered nodes in post-order and sets the renamer of each node.
@@ -1665,7 +1677,8 @@ class CythonPackageGenerator:
         ptr_rank: callable = control.DEFAULT_PTR_RANK,
         ptr_complicated_type_handler=DEFAULT_PTR_COMPLICATED_TYPE_HANDLER,
         renamer: callable = DEFAULT_RENAMER,
-        warnings=control.Warnings.WARN,
+        docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
+        warn_mode=control.Warnings.WARN,
         cflags=[],
     ):
         """Constructor.
@@ -1726,7 +1739,8 @@ class CythonPackageGenerator:
             ptr_rank,
             ptr_complicated_type_handler,
             renamer,
-            warnings,
+            docstring_cleaner,
+            warn_mode,
         )
 
     def write_package_files(self, output_dir: str = None):

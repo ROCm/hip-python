@@ -1042,7 +1042,7 @@ class Function(Node, Typed, *__FunctionMixin):
         return self.cursor.brief_comment
 
 def from_libclang_translation_unit(
-    translation_unit: clang.cindex.TranslationUnit, warn=control.Warnings.WARN
+    translation_unit: clang.cindex.TranslationUnit, warn_mode=control.Warnings.WARN
 ) -> Root:
     """Create a tree from a libclang translation unit."""
 
@@ -1073,18 +1073,18 @@ def from_libclang_translation_unit(
     def handle_top_level_cursor_(cursor: clang.cindex.Cursor, root: Root):
         """Handle cursors whose parent is the cursor of kind TRANSLATION_UNIT."""
         nonlocal structure_types
-        nonlocal warn
+        nonlocal warn_mode
 
         if cursor.kind in structure_types.keys():
             handle_nested_record_or_enum_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
             handle_typedef_cursor_(cursor, root)
         elif cursor.kind == clang.cindex.CursorKind.VAR_DECL:
-            if warn in (control.Warnings.WARN, control.Warnings.ERROR):
+            if warn_mode in (control.Warnings.WARN, control.Warnings.ERROR):
                 msg = (
                     f"VAR_DECL cursor '{cursor.spelling}' not handled (not implemented)"
                 )
-                if warn == control.Warnings.WARN:
+                if warn_mode == control.Warnings.WARN:
                     warnings.warn(msg)
                 else:
                     print(f"ERROR: {msg}'", file=sys.stderr)

@@ -8,6 +8,8 @@ import pyparsing as pyp
 
 import warnings
 
+# TODO implement: https://www.doxygen.nl/manual/htmlcmds.html
+
 pyp.ParserElement.setDefaultWhitespaceChars(' \t')
 
 def remove_doxygen_cpp_comments(text: str, dedent=True):
@@ -89,7 +91,7 @@ class format:
         def fdollar(tokens):
             r"""\f$ .. \f$
             """
-            return f"math:`{tokens[1]}`"
+            return f":math:`{tokens[1]}`"
         
         @staticmethod
         def frnd(tokens):
@@ -98,6 +100,12 @@ class format:
                 No explicit latex mode in sphinxdoc.
             """
             return f"`{tokens[1]}`"
+        
+        @staticmethod
+        def see_reference(tokens):
+            reference: str = tokens[0].replace("#",".")
+            reference = reference.replace("::",".")
+            return f":py:obj:`~.{reference}`"
 
 # for structuring the input
 
@@ -778,6 +786,14 @@ class DoxygenGrammar:
         
         # \}
         groupclose = self._pyp_cmd(r"\}",words=False)
+
+        # object reference:
+        # class
+        # class#member
+        # class::member
+        # #class#member
+        see_reference = pyp.Regex(r"(#|::)?(\w+(#|::)?)+")
+        #reference_with_prefix = pyp.Regex(r"(#|::)(\w+(#|::)?)+")
 
         # \file [<name>]
         file = self._pyp_cmd("file") + OPT_WORD_OF_PRINTABLES

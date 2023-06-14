@@ -350,6 +350,7 @@ def ncclCommInitRank(int nranks, object commId, int rank):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - comm: ncclComm_t*
                 communicator struct pointer
     """
@@ -384,6 +385,7 @@ def ncclCommInitRankMulti(int nranks, object commId, int rank, int virtualId):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - comm: ncclComm_t*
                 communicator struct pointer
     """
