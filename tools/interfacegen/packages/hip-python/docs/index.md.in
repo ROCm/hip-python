@@ -1,0 +1,34 @@
+# HIP Python
+
+Low-level Cython and Python bindings for HIP.
+Based on HIP version {HIP_VERSION_NAME}.
+
+## Overview
+
+::::{grid} 1 1 2 2
+:gutter: 1
+
+:::{grid-item-card} User Guide
+- {doc}`/user_guide/0_install`
+- {doc}`/user_guide/1_usage`
+- {doc}`/user_guide/2_cuda_python_interop`
+- {doc}`/user_guide/3_report_bugs`
+:::
+
+:::{grid-item-card} Developer Guide
+- {doc}`developer_guide/0_overview`
+- {doc}`developer_guide/1_code_generation`
+- {doc}`developer_guide/2_packaging`
+- {doc}`developer_guide/3_building_docs`
+- {doc}`developer_guide/4_commit_guide`
+:::
+
+:::{grid-item-card} HIP Python: Python API
+{PYTHON_API_DOC_NAMES}
+:::
+
+:::{grid-item-card} CUDA Python Interoperability Layer: Python API
+{PYTHON_API_DOC_NAMES_CUDA}
+:::
+
+::::

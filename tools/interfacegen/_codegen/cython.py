@@ -1156,12 +1156,13 @@ cdef void* {funptr_name} = NULL
         # Return values
         if not len(docstring_returns) and not self.is_void:
             warnings.warn(f"function {self.name}: doxygen: undocumented return value")
+            docstring_returns.append(f":pyp:obj:`{self.cython_global_typename}`")
         docstring_returns += docstring_out_arg_returns # add the additional return parameter
         if len(docstring_returns):
             docstring_body += "\nReturns:\n"
             if len(docstring_returns) > 1 or python_interface_always_return_tuple:
                 docstring_body += f"{single_level_indent}A ``tuple`` of size {len(docstring_returns)} that contains (in that order):\n\n"
-                prefix = "- "
+                prefix = "* "
             else:
                 prefix = ""
             for descr in docstring_returns:

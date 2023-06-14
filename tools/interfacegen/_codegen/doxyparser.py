@@ -105,7 +105,7 @@ class format:
         def see_reference(tokens):
             reference: str = tokens[0].replace("#",".")
             reference = reference.replace("::",".")
-            return f":py:obj:`~.{reference}`"
+            return f":py:obj:`{reference}`"
 
 # for structuring the input
 
