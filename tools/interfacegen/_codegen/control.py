@@ -18,7 +18,6 @@ class Warnings(enum.IntEnum):
 def DEFAULT_RENAMER(name: str):
     return name
 
-
 def DEFAULT_NODE_FILTER(node: "tree.Node"):
     return True
 

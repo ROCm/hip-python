@@ -527,6 +527,9 @@ if __name__ == "__main__":
                 ).strip()
             )
         # hip|cuda/__init__.py
+        # TODO make option to use all generators or only specified ones
+        HIP_PYTHON_LIB_NAMES = AVAILABLE_GENERATORS.keys()
+
         with open(os.path.join(output_dir, "__init__.py"), "w") as f:
             init_content = textwrap.dedent(
                 f"""\
@@ -539,14 +542,15 @@ if __name__ == "__main__":
                 HIP_VERSION_NAME = hip_version_name = "{HIP_VERSION_NAME}"
                 HIP_VERSION_TUPLE = hip_version_tuple = ({HIP_VERSION_MAJOR},{HIP_VERSION_MINOR},{HIP_VERSION_PATCH},"{HIP_VERSION_GITHASH}")
 
-                from . import _util"""
+                """
             )
             if output_dir == hip_output_dir:
-                for pkg_name in AVAILABLE_GENERATORS.keys():
-                    init_content += f"from . import {pkg_name}\n"
+                init_content += "\nfrom . import _util"
+                for pkg_name in HIP_PYTHON_LIB_NAMES:
+                    init_content += f"\nfrom . import {pkg_name}"
             else:
                 for pkg_name in ("cuda", "cudart", "nvrtc"):
-                    init_content += f"from . import {pkg_name}\n"
+                    init_content += f"\nfrom . import {pkg_name}"
             f.write(init_content)
     # hip-python-as-cuda/requirements.txt
     requirements_file = os.path.join(
@@ -568,3 +572,56 @@ if __name__ == "__main__":
                 hip-python=={VERSION}"""
             )
         )
+    # hip-python docs
+    # files per api
+
+    def write_pkg_markdown_file_(pkg,lib):
+        with open(os.path.join(HIP_PYTHON_DOCS, "python_api", f"{lib}.md"),"w") as outfile:
+            outfile.write(textwrap.dedent(
+                f"""\
+                # {pkg}.{lib}
+
+                ```{{eval-rst}}
+                .. automodule:: {pkg}.{lib}
+                    :members:
+                    :undoc-members:
+                    :show-inheritance:
+                ```
+                """
+            ))
+
+    HIP_PYTHON_DOCS = os.path.join("packages","hip-python","docs")
+    for lib in HIP_PYTHON_LIB_NAMES:
+        write_pkg_markdown_file_("hip",lib)
+    CUDA_PYTHON_LIB_NAMES = ["cuda","cudart","nvrtc"]
+    for lib in CUDA_PYTHON_LIB_NAMES:
+        write_pkg_markdown_file_("cuda",lib)
+    # index.md from index.md.in
+    index_md = os.path.join(
+        HIP_PYTHON_DOCS, "index.md"
+    )
+    PYTHON_API_DOC_NAMES = [f"- {{doc}}`python_api/{lib}`" for lib in HIP_PYTHON_LIB_NAMES]
+    PYTHON_API_DOC_NAMES_CUDA = [f"- {{doc}}`python_api/{lib}`" for lib in CUDA_PYTHON_LIB_NAMES]
+    with open(index_md + ".in","r"
+         ) as infile, open(index_md, "w") as outfile:
+        
+        for key in AVAILABLE_GENERATORS:
+            rendered = infile.read()
+            rendered = rendered.replace("{PYTHON_API_DOC_NAMES}","\n".join(PYTHON_API_DOC_NAMES))
+            rendered = rendered.replace("{PYTHON_API_DOC_NAMES_CUDA}","\n".join(PYTHON_API_DOC_NAMES_CUDA))
+            rendered = rendered.replace("{HIP_VERSION_NAME}", HIP_VERSION_NAME)
+            outfile.write(rendered)
+    # _toc.yml.in from _toc.yml.in.in
+    toc_yml_md_in = os.path.join(
+        HIP_PYTHON_DOCS, ".sphinx", "_toc.yml.in"
+    )
+    PYTHON_API_FILE_NAMES = [f"      - file: python_api/{lib}" for lib in HIP_PYTHON_LIB_NAMES]
+    PYTHON_API_FILE_NAMES_CUDA = [f"      - file: python_api/{lib}" for lib in CUDA_PYTHON_LIB_NAMES]
+    with open(toc_yml_md_in + ".in","r"
+         ) as infile, open(toc_yml_md_in, "w") as outfile:
+        
+        for key in AVAILABLE_GENERATORS:
+            rendered = infile.read()
+            rendered = rendered.replace("{PYTHON_API_FILE_NAMES}","\n".join(PYTHON_API_FILE_NAMES))
+            rendered = rendered.replace("{PYTHON_API_FILE_NAMES_CUDA}","\n".join(PYTHON_API_FILE_NAMES_CUDA))
+            outfile.write(rendered)

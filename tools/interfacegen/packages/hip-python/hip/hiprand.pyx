@@ -668,6 +668,7 @@ def hiprandCreateGenerator(object rng_type):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
 
             - HIPRAND_STATUS_INITIALIZATION_FAILED if there was a problem setting up the GPU 
@@ -715,6 +716,7 @@ def hiprandCreateGeneratorHost(object rng_type):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed 
 
             - HIPRAND_STATUS_VERSION_MISMATCH if the header file version does not match the
@@ -745,6 +747,7 @@ def hiprandDestroyGenerator(object generator):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_SUCCESS if generator was destroyed successfully
@@ -773,6 +776,7 @@ def hiprandGenerate(object generator, object output_data, unsigned long n):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -804,6 +808,7 @@ def hiprandGenerateChar(object generator, object output_data, unsigned long n):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -835,6 +840,7 @@ def hiprandGenerateShort(object generator, object output_data, unsigned long n):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -866,6 +872,7 @@ def hiprandGenerateUniform(object generator, object output_data, unsigned long n
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -905,6 +912,7 @@ def hiprandGenerateUniformDouble(object generator, object output_data, unsigned 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -939,6 +947,7 @@ def hiprandGenerateUniformHalf(object generator, object output_data, unsigned lo
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
              - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -976,6 +985,7 @@ def hiprandGenerateNormal(object generator, object output_data, unsigned long n,
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -1012,6 +1022,7 @@ def hiprandGenerateNormalDouble(object generator, object output_data, unsigned l
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -1048,6 +1059,7 @@ def hiprandGenerateNormalHalf(object generator, object output_data, unsigned lon
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -1084,6 +1096,7 @@ def hiprandGenerateLogNormal(object generator, object output_data, unsigned long
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -1120,6 +1133,7 @@ def hiprandGenerateLogNormalDouble(object generator, object output_data, unsigne
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -1156,6 +1170,7 @@ def hiprandGenerateLogNormalHalf(object generator, object output_data, unsigned 
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
              - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -1192,6 +1207,7 @@ def hiprandGeneratePoisson(object generator, object output_data, unsigned long n
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel 
@@ -1224,6 +1240,7 @@ def hiprandGenerateSeeds(object generator):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was never created 
 
             - HIPRAND_STATUS_PREEXISTING_FAILURE if there was an existing error from
@@ -1252,6 +1269,7 @@ def hiprandSetStream(object generator, object stream):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_SUCCESS if stream was set successfully
@@ -1278,6 +1296,7 @@ def hiprandSetPseudoRandomGeneratorSeed(object generator, unsigned long long see
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_TYPE_ERROR if the generator is a quasi random number generator 
@@ -1308,6 +1327,7 @@ def hiprandSetGeneratorOffset(object generator, unsigned long long offset):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized 
 
             - HIPRAND_STATUS_SUCCESS if offset was successfully set 
@@ -1337,6 +1357,7 @@ def hiprandSetQuasiRandomGeneratorDimensions(object generator, unsigned int dime
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_NOT_CREATED if the generator wasn't created 
 
             - HIPRAND_STATUS_TYPE_ERROR if the generator is not a quasi-random number generator 
@@ -1359,6 +1380,7 @@ def hiprandGetVersion():
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - HIPRAND_STATUS_OUT_OF_RANGE if ``version`` is NULL 
 
             - HIPRAND_STATUS_SUCCESS if the version number was successfully returned
@@ -1380,6 +1402,7 @@ def hiprandCreatePoissonDistribution(double lambda_):
 
     Returns:
         A ``tuple`` of size 2 that contains (in that order):
+
         - HIPRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated 
 
             - HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` pointer was null 
@@ -1406,6 +1429,7 @@ def hiprandDestroyDistribution(object discrete_distribution):
 
     Returns:
         A ``tuple`` of size 1 that contains (in that order):
+
         - HIPRAND_STATUS_OUT_OF_RANGE if ``discrete_distribution`` was null 
 
             - HIPRAND_STATUS_SUCCESS if the histogram was destroyed successfully
